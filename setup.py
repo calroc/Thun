@@ -34,7 +34,7 @@ setup(
     behaviour of the original version written in C.'''),
   author='Simon Forman',
   author_email='forman.simon@gmail.com',
-  url='https://github.com/calroc/joypy',
+  url='https://osdn.net/projects/joypy',
   packages=['joy', 'joy.utils'],
   classifiers=[
     'Development Status :: 3 - Alpha',

@@ -1,22 +1,28 @@
 # -*- coding: utf-8 -*-
 #
-#    Copyright © 2014, 2015, 2017 Simon Forman
+#    Copyright © 2014, 2015, 2017, 2018 Simon Forman
 #
-#    This file is part of joy.py
+#    This file is part of Joypy
 #
-#    joy.py is free software: you can redistribute it and/or modify
+#    Joypy is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    joy.py is distributed in the hope that it will be useful,
+#    Joypy is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
+#    along with Joypy.  If not see <http://www.gnu.org/licenses/>.
 #
+'''
+This module contains the Joy function infrastructure and a library of
+functions.  It's main export is a Python function initialize() that
+returns a dictionary of Joy functions suitable for use with the joy()
+function.
+'''
 from inspect import getdoc
 import operator, math
 
@@ -24,9 +30,24 @@ from .parser import text_to_expression, Symbol
 from .utils.stack import list_to_stack, iter_stack, pick, pushback
 
 
+_dictionary = {}
+
+
+def inscribe(function):
+  '''A decorator to inscribe functions in to the default dictionary.'''
+  _dictionary[function.name] = function
+  return function
+
+
+def initialize():
+  '''Return a dictionary of Joy functions for use with joy().'''
+  return _dictionary.copy()
+
+
 ALIASES = (
   ('add', ['+']),
   ('and', ['&']),
+  ('bool', ['truthy']),
   ('mul', ['*']),
   ('truediv', ['/']),
   ('mod', ['%', 'rem', 'remainder', 'modulus']),
@@ -231,28 +252,30 @@ def _text_to_defs(text):
 #
 
 
+@inscribe
+@SimpleFunctionWrapper
 def parse((text, stack)):
   '''Parse the string on the stack to a Joy expression.'''
   expression = text_to_expression(text)
   return expression, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def first(((head, tail), stack)):
   '''first == uncons pop'''
   return head, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def rest(((head, tail), stack)):
   '''rest == uncons popd'''
   return tail, stack
 
 
-def truthy(stack):
-  '''Coerce the item on the top of the stack to its Boolean value.'''
-  n, stack = stack
-  return bool(n), stack
-
-
+@inscribe
+@SimpleFunctionWrapper
 def getitem(stack):
   '''
   getitem == drop first
@@ -269,6 +292,8 @@ def getitem(stack):
   return pick(Q, n), stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def drop(stack):
   '''
   drop == [rest] times
@@ -291,6 +316,8 @@ def drop(stack):
   return Q, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def take(stack):
   '''
   Expects an integer and a quote on the stack and returns the quote with
@@ -314,6 +341,8 @@ def take(stack):
   return x, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def choice(stack):
   '''
   Use a Boolean value to select one of two items.
@@ -334,6 +363,8 @@ def choice(stack):
   return then if if_ else else_, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def select(stack):
   '''
   Use a Boolean value to select one of two items from a sequence.
@@ -356,18 +387,24 @@ def select(stack):
   return then if flag else else_, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def max_(S):
   '''Given a list find the maximum.'''
   tos, stack = S
   return max(iter_stack(tos)), stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def min_(S):
   '''Given a list find the minimum.'''
   tos, stack = S
   return min(iter_stack(tos)), stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def sum_(S):
   '''Given a quoted sequence of numbers return the sum.
 
@@ -377,6 +414,8 @@ def sum_(S):
   return sum(iter_stack(tos)), stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def remove(S):
   '''
   Expects an item on the stack and a quote under it and removes that item
@@ -393,6 +432,8 @@ def remove(S):
   return list_to_stack(l), stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def unique(S):
   '''Given a list remove duplicate items.'''
   tos, stack = S
@@ -401,12 +442,16 @@ def unique(S):
   return list_to_stack(sorted(set(I), key=I.index)), stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def sort_(S):
   '''Given a list return it sorted.'''
   tos, stack = S
   return list_to_stack(sorted(iter_stack(tos))), stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def cons(S):
   '''
   The cons operator expects a list on top of the stack and the potential
@@ -417,6 +462,8 @@ def cons(S):
   return (second, tos), stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def uncons(S):
   '''
   Inverse of cons, removes an item from the top of the list on the stack
@@ -427,6 +474,8 @@ def uncons(S):
   return tos, (item, stack)
 
 
+@inscribe
+@SimpleFunctionWrapper
 def clear(stack):
   '''Clear everything from the stack.
 
@@ -437,12 +486,16 @@ def clear(stack):
   return ()
 
 
+@inscribe
+@SimpleFunctionWrapper
 def dup(S):
   '''Duplicate the top item on the stack.'''
   (tos, stack) = S
   return tos, (tos, stack)
 
 
+@inscribe
+@SimpleFunctionWrapper
 def over(S):
   '''
   Copy the second item down on the stack to the top of the stack.
@@ -456,6 +509,8 @@ def over(S):
   return second, S
 
 
+@inscribe
+@SimpleFunctionWrapper
 def tuck(S):
   '''
   Copy the item at TOS under the second item of the stack.
@@ -469,18 +524,24 @@ def tuck(S):
   return tos, (second, (tos, stack))
 
 
+@inscribe
+@SimpleFunctionWrapper
 def swap(S):
   '''Swap the top two items on stack.'''
   (tos, (second, stack)) = S
   return second, (tos, stack)
 
 
+@inscribe
+@SimpleFunctionWrapper
 def swaack(stack):
   '''swap stack'''
   old_stack, stack = stack
   return stack, old_stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def stack_(stack):
   '''
   The stack operator pushes onto the stack a list containing all the
@@ -489,45 +550,56 @@ def stack_(stack):
   return stack, stack
 
 
-def unstack(S):
+@inscribe
+@SimpleFunctionWrapper
+def unstack(stack):
   '''
   The unstack operator expects a list on top of the stack and makes that
   the stack discarding the rest of the stack.
   '''
-  (tos, stack) = S
-  return tos
+  return stack[0]
 
 
-def pop(S):
+@inscribe
+@SimpleFunctionWrapper
+def pop(stack):
   '''Pop and discard the top item from the stack.'''
-  (tos, stack) = S
-  return stack
+  return stack[1]
 
 
-def popd(S):
+@inscribe
+@SimpleFunctionWrapper
+def popd(stack):
   '''Pop and discard the second item from the stack.'''
-  (tos, (second, stack)) = S
+  (tos, (_, stack)) = stack
   return tos, stack
 
 
-def popdd(S):
+@inscribe
+@SimpleFunctionWrapper
+def popdd(stack):
   '''Pop and discard the third item from the stack.'''
-  (tos, (second, (third, stack))) = S
+  (tos, (second, (_, stack))) = stack
   return tos, (second, stack)
 
 
-def popop(S):
+@inscribe
+@SimpleFunctionWrapper
+def popop(stack):
   '''Pop and discard the first and second items from the stack.'''
-  (tos, (second, stack)) = S
-  return stack
+  return stack[1][1]
 
 
+@inscribe
+@SimpleFunctionWrapper
 def dupd(S):
   '''Duplicate the second item on the stack.'''
   (tos, (second, stack)) = S
   return tos, (second, (second, stack))
 
 
+@inscribe
+@SimpleFunctionWrapper
 def reverse(S):
   '''Reverse the list on the top of the stack.
 
@@ -540,6 +612,8 @@ def reverse(S):
   return res, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def concat(S):
   '''Concatinate the two lists on the top of the stack.'''
   (tos, (second, stack)) = S
@@ -548,6 +622,8 @@ def concat(S):
   return tos, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def shunt((tos, (second, stack))):
   '''
   shunt == [swons] step
@@ -560,6 +636,8 @@ def shunt((tos, (second, stack))):
   return second, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def zip_(S):
   '''
   Replace the two lists on the top of the stack with a list of the pairs
@@ -573,18 +651,24 @@ def zip_(S):
   return list_to_stack(accumulator), stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def succ(S):
   '''Increment TOS.'''
   (tos, stack) = S
   return tos + 1, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def pred(S):
   '''Decrement TOS.'''
   (tos, stack) = S
   return tos - 1, stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def pm(stack):
   '''
   Plus or minus
@@ -605,6 +689,8 @@ def floor(n):
 floor.__doc__ = math.floor.__doc__
 
 
+@inscribe
+@SimpleFunctionWrapper
 def divmod_(S):
   a, (b, stack) = S
   d, m = divmod(a, b)
@@ -626,12 +712,16 @@ def sqrt(a):
   return r
 
 
+@inscribe
+@SimpleFunctionWrapper
 def rollup(S):
   '''a b c -> b c a'''
   (a, (b, (c, stack))) = S
   return b, (c, (a, stack))
 
 
+@inscribe
+@SimpleFunctionWrapper
 def rolldown(S):
   '''a b c -> c a b'''
   (a, (b, (c, stack))) = S
@@ -645,10 +735,14 @@ def rolldown(S):
 #  return stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def id_(stack):
   return stack
 
 
+@inscribe
+@SimpleFunctionWrapper
 def void(stack):
   form, stack = stack
   return _void(form), stack
@@ -664,12 +758,16 @@ def _void(form):
 ##  take
 
 
+@inscribe
+@FunctionWrapper
 def words(stack, expression, dictionary):
   '''Print all the words in alphabetical order.'''
   print(' '.join(sorted(dictionary)))
   return stack, expression, dictionary
 
 
+@inscribe
+@FunctionWrapper
 def sharing(stack, expression, dictionary):
   '''Print redistribution information.'''
   print("You may convey verbatim copies of the Program's source code as"
@@ -685,6 +783,8 @@ def sharing(stack, expression, dictionary):
   return stack, expression, dictionary
 
 
+@inscribe
+@FunctionWrapper
 def warranty(stack, expression, dictionary):
   '''Print warranty information.'''
   print('THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY'
@@ -718,6 +818,8 @@ def warranty(stack, expression, dictionary):
 #   return stack
 
 
+@inscribe
+@FunctionWrapper
 def help_(S, expression, dictionary):
   '''Accepts a quoted symbol on the top of the stack and prints its docs.'''
   ((symbol, _), stack) = S
@@ -748,6 +850,8 @@ S_swaack = Symbol('swaack')
 S_truthy = Symbol('truthy')
 
 
+@inscribe
+@FunctionWrapper
 def i(stack, expression, dictionary):
   '''
   The i combinator expects a quoted program on the stack and unpacks it
@@ -762,6 +866,8 @@ def i(stack, expression, dictionary):
   return stack, pushback(quote, expression), dictionary
 
 
+@inscribe
+@FunctionWrapper
 def x(stack, expression, dictionary):
   '''
   x == dup i
@@ -775,6 +881,8 @@ def x(stack, expression, dictionary):
   return stack, pushback(quote, expression), dictionary
 
 
+@inscribe
+@FunctionWrapper
 def b(stack, expression, dictionary):
   '''
   b == [i] dip i
@@ -787,6 +895,8 @@ def b(stack, expression, dictionary):
   return stack, pushback(p, pushback(q, expression)), dictionary
 
 
+@inscribe
+@FunctionWrapper
 def dupdip(stack, expression, dictionary):
   '''
   [F] dupdip == dup [F] dip
@@ -802,6 +912,8 @@ def dupdip(stack, expression, dictionary):
   return stack, pushback(F, (a,  expression)), dictionary
 
 
+@inscribe
+@FunctionWrapper
 def infra(stack, expression, dictionary):
   '''
   Accept a quoted program and a list on the stack and run the program
@@ -816,6 +928,8 @@ def infra(stack, expression, dictionary):
   return aggregate, pushback(quote, (stack, (S_swaack, expression))), dictionary
 
 
+@inscribe
+@FunctionWrapper
 def genrec(stack, expression, dictionary):
   '''
   General Recursion Combinator.
@@ -870,6 +984,8 @@ def genrec(stack, expression, dictionary):
   return (else_, stack), (S_ifte, expression), dictionary
 
 
+@inscribe
+@FunctionWrapper
 def map_(S, expression, dictionary):
   '''
   Run the quoted program on TOS on the items in the list under it, push a
@@ -906,6 +1022,8 @@ def map_(S, expression, dictionary):
 #  return (q, (p, stack)), expression, dictionary
 
 
+@inscribe
+@FunctionWrapper
 def branch(stack, expression, dictionary):
   '''
   Use a Boolean value to select one of two quoted programs to run.
@@ -926,6 +1044,8 @@ def branch(stack, expression, dictionary):
   return stack, pushback(then if flag else else_, expression), dictionary
 
 
+@inscribe
+@FunctionWrapper
 def ifte(stack, expression, dictionary):
   '''
   If-Then-Else Combinator
@@ -951,6 +1071,8 @@ def ifte(stack, expression, dictionary):
   return stack, expression, dictionary
 
 
+@inscribe
+@FunctionWrapper
 def dip(stack, expression, dictionary):
   '''
   The dip combinator expects a quoted program on the stack and below it
@@ -967,6 +1089,8 @@ def dip(stack, expression, dictionary):
   return stack, pushback(quote, expression), dictionary
 
 
+@inscribe
+@FunctionWrapper
 def dipd(S, expression, dictionary):
   '''
   Like dip but expects two items.
@@ -981,6 +1105,8 @@ def dipd(S, expression, dictionary):
   return stack, pushback(quote, expression), dictionary
 
 
+@inscribe
+@FunctionWrapper
 def dipdd(S, expression, dictionary):
   '''
   Like dip but expects three items.
@@ -995,6 +1121,8 @@ def dipdd(S, expression, dictionary):
   return stack, pushback(quote, expression), dictionary
 
 
+@inscribe
+@FunctionWrapper
 def app1(S, expression, dictionary):
   '''
   Given a quoted program on TOS and anything as the second stack item run
@@ -1011,6 +1139,8 @@ def app1(S, expression, dictionary):
   return stack, expression, dictionary
 
 
+@inscribe
+@FunctionWrapper
 def app2(S, expression, dictionary):
   '''Like app1 with two items.
 
@@ -1028,6 +1158,8 @@ def app2(S, expression, dictionary):
   return stack, expression, dictionary
 
 
+@inscribe
+@FunctionWrapper
 def app3(S, expression, dictionary):
   '''Like app1 with three items.
 
@@ -1047,6 +1179,8 @@ def app3(S, expression, dictionary):
   return stack, expression, dictionary
 
 
+@inscribe
+@FunctionWrapper
 def step(S, expression, dictionary):
   '''
   Run a quoted program on each item in a sequence.
@@ -1079,6 +1213,8 @@ def step(S, expression, dictionary):
   return stack, expression, dictionary
 
 
+@inscribe
+@FunctionWrapper
 def times(stack, expression, dictionary):
   '''
   times == [-- dip] cons [swap] infra [0 >] swap while pop
@@ -1125,6 +1261,8 @@ def times(stack, expression, dictionary):
 #  return stack, expression, dictionary
 
 
+@inscribe
+@FunctionWrapper
 def loop(stack, expression, dictionary):
   '''
   Basic loop combinator.
@@ -1175,7 +1313,15 @@ def loop(stack, expression, dictionary):
 #  return (result[0], return_stack), expression, dictionary
 
 
-builtins = (
+#  FunctionWrapper(binary),
+#  FunctionWrapper(cleave),
+#  FunctionWrapper(nullary),
+#  FunctionWrapper(ternary),
+#  FunctionWrapper(unary),
+#  FunctionWrapper(while_),
+
+
+for F in (
   BinaryBuiltinWrapper(operator.add),
   BinaryBuiltinWrapper(operator.and_),
   BinaryBuiltinWrapper(operator.div),
@@ -1197,99 +1343,16 @@ builtins = (
   BinaryBuiltinWrapper(operator.xor),
 
   UnaryBuiltinWrapper(abs),
+  UnaryBuiltinWrapper(bool),
   UnaryBuiltinWrapper(floor),
   UnaryBuiltinWrapper(operator.neg),
   UnaryBuiltinWrapper(operator.not_),
   UnaryBuiltinWrapper(sqrt),
-  )
+  ):
+  inscribe(F)
 
 
-combinators = (
-  FunctionWrapper(app1),
-  FunctionWrapper(app2),
-  FunctionWrapper(app3),
-  FunctionWrapper(b),
-  FunctionWrapper(branch),
-#  FunctionWrapper(binary),
-#  FunctionWrapper(cleave),
-  FunctionWrapper(dip),
-  FunctionWrapper(dipd),
-  FunctionWrapper(dipdd),
-  FunctionWrapper(dupdip),
-  FunctionWrapper(genrec),
-  FunctionWrapper(help_),
-  FunctionWrapper(i),
-  FunctionWrapper(ifte),
-  FunctionWrapper(infra),
-  FunctionWrapper(loop),
-  FunctionWrapper(map_),
-#  FunctionWrapper(nullary),
-  FunctionWrapper(step),
-  FunctionWrapper(times),
-#  FunctionWrapper(ternary),
-#  FunctionWrapper(unary),
-#  FunctionWrapper(while_),
-  FunctionWrapper(words),
-  FunctionWrapper(x),
-  )
+add_aliases(_dictionary)
 
 
-primitives = (
-  SimpleFunctionWrapper(choice),
-  SimpleFunctionWrapper(clear),
-  SimpleFunctionWrapper(concat),
-  SimpleFunctionWrapper(cons),
-  SimpleFunctionWrapper(divmod_),
-  SimpleFunctionWrapper(drop),
-  SimpleFunctionWrapper(dup),
-  SimpleFunctionWrapper(dupd),
-  SimpleFunctionWrapper(first),
-  SimpleFunctionWrapper(getitem),
-  SimpleFunctionWrapper(id_),
-  SimpleFunctionWrapper(max_),
-  SimpleFunctionWrapper(min_),
-  SimpleFunctionWrapper(over),
-  SimpleFunctionWrapper(parse),
-  SimpleFunctionWrapper(pm),
-  SimpleFunctionWrapper(pop),
-  SimpleFunctionWrapper(popd),
-  SimpleFunctionWrapper(popdd),
-  SimpleFunctionWrapper(popop),
-  SimpleFunctionWrapper(pred),
-  SimpleFunctionWrapper(remove),
-  SimpleFunctionWrapper(rest),
-  SimpleFunctionWrapper(reverse),
-  SimpleFunctionWrapper(rolldown),
-  SimpleFunctionWrapper(rollup),
-  SimpleFunctionWrapper(select),
-  SimpleFunctionWrapper(shunt),
-  SimpleFunctionWrapper(sort_),
-  SimpleFunctionWrapper(stack_),
-  SimpleFunctionWrapper(succ),
-  SimpleFunctionWrapper(sum_),
-  SimpleFunctionWrapper(swaack),
-  SimpleFunctionWrapper(swap),
-  SimpleFunctionWrapper(take),
-  SimpleFunctionWrapper(truthy),
-  SimpleFunctionWrapper(tuck),
-  SimpleFunctionWrapper(uncons),
-  SimpleFunctionWrapper(unique),
-  SimpleFunctionWrapper(unstack),
-  SimpleFunctionWrapper(unstack),
-  SimpleFunctionWrapper(void),
-  SimpleFunctionWrapper(zip_),
-
-  FunctionWrapper(sharing),
-  FunctionWrapper(warranty),
-  )
-
-
-def initialize(dictionary=None):
-  if dictionary is None:
-    dictionary = {}
-  dictionary.update((F.name, F) for F in builtins)
-  dictionary.update((F.name, F) for F in combinators)
-  dictionary.update((F.name, F) for F in primitives)
-  add_aliases(dictionary)
-  DefinitionWrapper.add_definitions(definitions, dictionary)
-  return dictionary
+DefinitionWrapper.add_definitions(definitions, _dictionary)
