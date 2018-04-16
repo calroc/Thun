@@ -19,7 +19,7 @@
 #
 '''
 This module contains the Joy function infrastructure and a library of
-functions.  It's main export is a Python function initialize() that
+functions.  Its main export is a Python function initialize() that
 returns a dictionary of Joy functions suitable for use with the joy()
 function.
 '''
