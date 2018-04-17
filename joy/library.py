@@ -34,7 +34,7 @@ _dictionary = {}
 
 
 def inscribe(function):
-  '''A decorator to inscribe functions in to the default dictionary.'''
+  '''A decorator to inscribe functions into the default dictionary.'''
   _dictionary[function.name] = function
   return function
 
