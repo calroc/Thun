@@ -244,7 +244,7 @@ class DefinitionWrapper(FunctionWrapper):
 
 
 def _text_to_defs(text):
-  return filter(None, (line.strip() for line in text.splitlines()))
+  return (line.strip() for line in text.splitlines() if '==' in line)
 
 
 #
