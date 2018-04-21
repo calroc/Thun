@@ -29,6 +29,7 @@ import operator, math
 
 from .parser import text_to_expression, Symbol
 from .utils.stack import list_to_stack, iter_stack, pick, pushback
+from .utils.brutal_hackery import rename_code_object
 
 
 _dictionary = {}
@@ -167,6 +168,7 @@ def SimpleFunctionWrapper(f):
   '''
   @FunctionWrapper
   @wraps(f)
+  @rename_code_object(f.__name__)
   def inner(stack, expression, dictionary):
     return f(stack), expression, dictionary
   return inner
@@ -178,6 +180,7 @@ def BinaryBuiltinWrapper(f):
   '''
   @FunctionWrapper
   @wraps(f)
+  @rename_code_object(f.__name__)
   def inner(stack, expression, dictionary):
     (a, (b, stack)) = stack
     result = f(b, a)
@@ -191,6 +194,7 @@ def UnaryBuiltinWrapper(f):
   '''
   @FunctionWrapper
   @wraps(f)
+  @rename_code_object(f.__name__)
   def inner(stack, expression, dictionary):
     (a, stack) = stack
     result = f(a)
