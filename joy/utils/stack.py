@@ -134,7 +134,26 @@ def pushback(quote, expression):
 
   In joy [1 2] [3 4] would become [1 2 3 4].
   '''
-  return list_to_stack(list(iter_stack(quote)), expression)
+
+  # Original implementation.
+
+##  return list_to_stack(list(iter_stack(quote)), expression)
+
+  # This is slightly faster and won't break the
+  # recursion limit on long quotes.
+
+##  temp = []
+##  while quote:
+##    item, quote = quote
+##    temp.append(item)
+##  for item in reversed(temp):
+##    expression = item, expression
+##  return expression
+
+  # This is the fastest, but will trigger
+  # RuntimeError: maximum recursion depth exceeded
+  # on quotes longer than sys.getrecursionlimit().
+  return (quote[0], pushback(quote[1], expression)) if quote else expression
 
 
 def pick(s, n):
