@@ -82,29 +82,21 @@ def _parse(tokens):
       try:
         frame = stack.pop()
       except IndexError:
-        raise ParseError('One or more extra closing brackets.')
+        raise ParseError('Extra closing bracket.')
       frame[-1] = list_to_stack(frame[-1])
     else:
       frame.append(tok)
   if stack:
-    raise ParseError('One or more unclosed brackets.')
+    raise ParseError('Unclosed bracket.')
   return list_to_stack(frame)
 
 
-def _scan_identifier(scanner, token): return Symbol(token)
-def _scan_bracket(scanner, token): return token
-def _scan_float(scanner, token): return float(token)
-def _scan_int(scanner, token): return int(token)
-def _scan_dstr(scanner, token): return token[1:-1].replace('\\"', '"')
-def _scan_sstr(scanner, token): return token[1:-1].replace("\\'", "'")
-
-
 _scanner = Scanner([
-  (r'-?\d+\.\d*', _scan_float),
-  (r'-?\d+', _scan_int),
-  (r'[•\w!@$%^&*()_+<>?|\/;:`~,.=-]+', _scan_identifier),
-  (r'\[|\]', _scan_bracket),
-  (r'"(?:[^"\\]|\\.)*"', _scan_dstr),
-  (r"'(?:[^'\\]|\\.)*'", _scan_sstr),
+  (r'-?\d+\.\d*', lambda _, token: float(token)),
+  (r'-?\d+', lambda _, token: int(token)),
+  (r'[•\w!@$%^&*()_+<>?|\/;:`~,.=-]+', lambda _, token: Symbol(token)),
+  (r'\[|\]', lambda _, token: token),
+  (r'"(?:[^"\\]|\\.)*"', lambda _, token: token[1:-1].replace('\\"', '"')),
+  (r"'(?:[^'\\]|\\.)*'", lambda _, token: token[1:-1].replace("\\'", "'")),
   (r'\s+', None),
   ])
