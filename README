@@ -1,10 +1,4 @@
-﻿   ____  ____     _    _____ _____
-  |  _ \|  _ \   / \  |  ___|_   _|
-  | | | | |_) | / A \ | |_    | |
-  | |_| |  _ < / ___ \|  _|   | |
-  |____/|_| \_\_/   \_\_|     |_|
-
---------------------------------------------------
+﻿--------------------------------------------------
 
 
             Joypy
@@ -15,7 +9,7 @@
 --------------------------------------------------
 
 
-Copyright © 2014, 2015, 2017 Simon Forman
+Copyright © 2014, 2015, 2017, 2018 Simon Forman
 
 This file is part of Joypy
 
@@ -41,18 +35,9 @@ Joy is a programming language created by Manfred von Thun that is easy to
 use and understand and has many other nice properties.  This Python
 package implements an interpreter for a dialect of Joy that attempts to
 stay very close to the spirit of Joy but does not precisely match the
-behaviour of the original version(s) written in C.
-
-The main difference between Joypy and the originals, other than being
-written in Python, is that it works by the "Continuation-Passing Style".
-In Joy, control-flow is done by combinators that expect quoted programs
-on the stack and execute them in various ways.  In Joypy they work by
-changing the pending expression that the interpreter is about to execute.
-In concrete terms, the combinators could work by making recursive calls
-to the interpreter and all intermediate state would be held in the call
-stack of the implementation language, in this Joypy implementation they
-work instead by changing the pending expression and intermediate state
-is put there.
+behaviour of the original version(s) written in C.  The main difference
+between Joypy and the originals, other than being written in Python, is
+that it works by the "Continuation-Passing Style".
 
 As I study Joy I find that it is very aptly named.  It is clear, concise,
 and ameniable to advanced techniques for constructing bug-free software.
@@ -125,9 +110,15 @@ are called "combinators", which accept quoted programs on the stack and
 run them in various ways.  These combinators factor specific patterns
 that provide the effect of control-flow in other languages (such as ifte
 which is like if..then..else..)  Combinators receive the current
-expession in addition to the stack and return the next expression. As
-mentioned above, the combinators in Joypy work by changing the pending
-expression before returning it.
+expession in addition to the stack and return the next expression.
+In Joy control-flow is done by combinators that expect quoted programs
+on the stack and execute them in various ways.  In Joypy they work by
+changing the pending expression that the interpreter is about to execute.
+In concrete terms, the combinators could work by making recursive calls
+to the interpreter and all intermediate state would be held in the call
+stack of the implementation language, in this Joypy implementation they
+work instead by changing the pending expression and intermediate state
+is put there.
 
 In general, where otherwise unspecified, the semantics of Joypy are that
 of the underlying Python. That means, for example, that integers are

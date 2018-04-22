@@ -10,5 +10,6 @@ joy/joy.py
 joy/library.py
 joy/parser.py
 joy/utils/__init__.py
+joy/utils/brutal_hackery.py
 joy/utils/pretty_print.py
 joy/utils/stack.py
