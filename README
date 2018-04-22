@@ -1,7 +1,7 @@
 ﻿--------------------------------------------------
 
 
-            Joypy
+            Thun
 
   A dialect of Joy in Python.
 
@@ -11,19 +11,19 @@
 
 Copyright © 2014, 2015, 2017, 2018 Simon Forman
 
-This file is part of Joypy
+This file is part of Thun
 
-Joypy is free software: you can redistribute it and/or modify it under the
+Thun is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version.
 
-Joypy is distributed in the hope that it will be useful, but WITHOUT ANY
+Thun is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-Joypy.  If not see <http://www.gnu.org/licenses/>.
+Thun.  If not see <http://www.gnu.org/licenses/>.
 
 
 --------------------------------------------------
@@ -36,7 +36,7 @@ use and understand and has many other nice properties.  This Python
 package implements an interpreter for a dialect of Joy that attempts to
 stay very close to the spirit of Joy but does not precisely match the
 behaviour of the original version(s) written in C.  The main difference
-between Joypy and the originals, other than being written in Python, is
+between Thun and the originals, other than being written in Python, is
 that it works by the "Continuation-Passing Style".
 
 As I study Joy I find that it is very aptly named.  It is clear, concise,
@@ -77,7 +77,7 @@ interesting aspects.  It's quite a treasure trove.
 
 From PyPI in the usual way, e.g.:
 
-    pip install joypy
+    pip install Thun
 
 Or if you have downloaded the source, from the joypy directory:
 
@@ -112,15 +112,15 @@ that provide the effect of control-flow in other languages (such as ifte
 which is like if..then..else..)  Combinators receive the current
 expession in addition to the stack and return the next expression.
 In Joy control-flow is done by combinators that expect quoted programs
-on the stack and execute them in various ways.  In Joypy they work by
+on the stack and execute them in various ways.  In Thun they work by
 changing the pending expression that the interpreter is about to execute.
 In concrete terms, the combinators could work by making recursive calls
 to the interpreter and all intermediate state would be held in the call
-stack of the implementation language, in this Joypy implementation they
+stack of the implementation language, in this joy implementation they
 work instead by changing the pending expression and intermediate state
 is put there.
 
-In general, where otherwise unspecified, the semantics of Joypy are that
+In general, where otherwise unspecified, the semantics of Thun are that
 of the underlying Python. That means, for example, that integers are
 unbounded (whatever your machine can handle), strings cannot be added to
 integers but can be multiplied, Boolean True and False are effectively
@@ -188,7 +188,7 @@ joypy
  |   `-- README
  |
  |-- docs - Various Examples and Demos
- |   |-- * - Jupyter Notebooks on Joypy and supporting modules
+ |   |-- * - Jupyter Notebooks on Thun and supporting modules
  |   `-- README - Table of Contents
  |
  |-- joy

@@ -7,7 +7,7 @@ VERSION = 0.1.0
 
 
 clean:
-	$(RM) -r Joypy.egg-info/ dist/ $(TESTDIR)
+	$(RM) -r Thun.egg-info/ dist/ $(TESTDIR)
 	find . -name '*.pyc' | xargs $(RM)
 
 sdist:
@@ -19,7 +19,7 @@ test: sdist
 	$(RM) -r $(TESTDIR)
 	virtualenv --system-site-packages --never-download $(TESTDIR)
 	. $(TESTDIR)/bin/activate && \
-		pip install --no-cache-dir --no-index ./dist/Joypy-$(VERSION).tar.gz
+		pip install --no-cache-dir --no-index ./dist/Thun-$(VERSION).tar.gz
 	echo "Type: source $(TESTDIR)/bin/activate"
 
 
