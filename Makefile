@@ -7,7 +7,7 @@ VERSION = 0.1.0
 
 
 clean:
-	$(RM) -r Thun.egg-info/ dist/ $(TESTDIR)
+	$(RM) -r Thun.egg-info/ dist/ build/ __pycache__/ $(TESTDIR)
 	find . -name '*.pyc' | xargs $(RM)
 
 sdist:

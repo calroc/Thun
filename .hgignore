@@ -1,2 +1,6 @@
 .*\.pyc$
 build
+.hypothesis
+.pytest_cache
+.vscode
+
