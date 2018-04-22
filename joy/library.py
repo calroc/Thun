@@ -24,10 +24,12 @@ returns a dictionary of Joy functions suitable for use with the joy()
 function.
 '''
 from inspect import getdoc
+from functools import wraps
 import operator, math
 
 from .parser import text_to_expression, Symbol
 from .utils.stack import list_to_stack, iter_stack, pick, pushback
+from .utils.brutal_hackery import rename_code_object
 
 
 _dictionary = {}
@@ -152,61 +154,55 @@ step_zero == 0 roll> step
 )
 
 
-class FunctionWrapper(object):
-  '''
-  Allow functions to have a nice repr().
-
-  At some point it's likely this class and its subclasses would gain
-  machinery to support type checking and inference.
-  '''
-
-  def __init__(self, f):
-    self.f = f
-    self.name = f.__name__.rstrip('_')  # Don't shadow builtins.
-    self.__doc__ = f.__doc__ or str(f)
-
-  def __call__(self, stack, expression, dictionary):
-    '''
-    Functions in general receive and return all three.
-    '''
-    return self.f(stack, expression, dictionary)
-
-  def __repr__(self):
-    return self.name
+def FunctionWrapper(f):
+  '''Set name attribute.'''
+  if not f.__doc__:
+    raise ValueError('Function %s must have doc string.' % f.__name__)
+  f.name = f.__name__.rstrip('_')  # Don't shadow builtins.
+  return f
 
 
-class SimpleFunctionWrapper(FunctionWrapper):
+def SimpleFunctionWrapper(f):
   '''
   Wrap functions that take and return just a stack.
   '''
+  @FunctionWrapper
+  @wraps(f)
+  @rename_code_object(f.__name__)
+  def inner(stack, expression, dictionary):
+    return f(stack), expression, dictionary
+  return inner
 
-  def __call__(self, stack, expression, dictionary):
-    return self.f(stack), expression, dictionary
 
-
-class BinaryBuiltinWrapper(FunctionWrapper):
+def BinaryBuiltinWrapper(f):
   '''
   Wrap functions that take two arguments and return a single result.
   '''
-
-  def __call__(self, stack, expression, dictionary):
+  @FunctionWrapper
+  @wraps(f)
+  @rename_code_object(f.__name__)
+  def inner(stack, expression, dictionary):
     (a, (b, stack)) = stack
-    result = self.f(b, a)
+    result = f(b, a)
     return (result, stack), expression, dictionary
+  return inner
 
 
-class UnaryBuiltinWrapper(FunctionWrapper):
+def UnaryBuiltinWrapper(f):
   '''
   Wrap functions that take one argument and return a single result.
   '''
-
-  def __call__(self, stack, expression, dictionary):
+  @FunctionWrapper
+  @wraps(f)
+  @rename_code_object(f.__name__)
+  def inner(stack, expression, dictionary):
     (a, stack) = stack
-    result = self.f(a)
+    result = f(a)
     return (result, stack), expression, dictionary
+  return inner
 
 
-class DefinitionWrapper(FunctionWrapper):
+class DefinitionWrapper(object):
   '''
   Provide implementation of defined functions, and some helper methods.
   '''
@@ -692,11 +688,14 @@ floor.__doc__ = math.floor.__doc__
 @inscribe
 @SimpleFunctionWrapper
 def divmod_(S):
+  '''
+  divmod(x, y) -> (quotient, remainder)
+
+  Return the tuple (x//y, x%y).  Invariant: div*y + mod == x.
+  '''
   a, (b, stack) = S
   d, m = divmod(a, b)
   return d, (m, stack)
-
-divmod_.__doc__ = divmod.__doc__
 
 
 def sqrt(a):
@@ -738,12 +737,14 @@ def rolldown(S):
 @inscribe
 @SimpleFunctionWrapper
 def id_(stack):
+  '''The identity function.'''
   return stack
 
 
 @inscribe
 @SimpleFunctionWrapper
 def void(stack):
+  '''True if the form on TOS is void otherwise False.'''
   form, stack = stack
   return _void(form), stack
 
