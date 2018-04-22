@@ -56,8 +56,11 @@ function name!  Hopefully they will discover this documentation.
 def rename_code_object(new_name):
   '''
   If you want to wrap a function in another function and have the wrapped
-  function's name show up in the traceback, you must do this brutal
-  hackery to change the func.__code__.co_name attribute.  See:
+  function's name show up in the traceback when an exception occurs in
+  the wrapper function, you must do this brutal hackery to change the
+  func.__code__.co_name attribute.  Just functools.wraps() is not enough.
+
+  See:
 
   https://stackoverflow.com/questions/29919804/function-decorated-using-functools-wraps-raises-typeerror-with-the-name-of-the-w
 

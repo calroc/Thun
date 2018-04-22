@@ -1,15 +1,16 @@
-﻿--------------------------------------------------
-
+﻿
 
             Thun
 
   A dialect of Joy in Python.
 
+           v0.1.0
+
 
 --------------------------------------------------
 
 
-Copyright © 2014, 2015, 2017, 2018 Simon Forman
+Copyright © 2014-2018 Simon Forman
 
 This file is part of Thun
 
@@ -29,7 +30,7 @@ Thun.  If not see <http://www.gnu.org/licenses/>.
 --------------------------------------------------
 
 
-§ Introduction
+§.1 Introduction
 
 Joy is a programming language created by Manfred von Thun that is easy to
 use and understand and has many other nice properties.  This Python
@@ -42,16 +43,16 @@ that it works by the "Continuation-Passing Style".
 As I study Joy I find that it is very aptly named.  It is clear, concise,
 and ameniable to advanced techniques for constructing bug-free software.
 
-Developed by Manfred von Thun, don't know much about him, not much on
-the web about Joy and von Thun (Von Thun?) See references below.
+Developed by Manfred von Thun, don't know much about him, not much on the
+web about Joy and von Thun (Von Thun?) See references below.
 
 Because it has desirable properties (concise, highly factored) the
 programming process changes, the ratio of designing to writing code
-shifts in favor of design.  The documentation becomes extensive while
-the code shrinks to stable bodies of small well-factored incantations
-that are highly expressive, much like mathematical papers consist of
-large bodies of exposition interlaced with mathematical formula that
-concisely and precisely express the meaning of the text.
+shifts in favor of design.  The documentation becomes extensive while the
+code shrinks to stable bodies of small well-factored incantations that
+are highly expressive, much like mathematical papers consist of large
+bodies of exposition interlaced with mathematical formula that concisely
+and precisely express the meaning of the text.
 
 The time and attention of the programmer shifts from thinking about the
 language to thinking in the language, and the development process feels
@@ -73,24 +74,27 @@ Joy and its deeper facets as well as how to program in it and several
 interesting aspects.  It's quite a treasure trove.
 
 
-§ Installation
+§.2 Installation
 
 From PyPI in the usual way, e.g.:
 
     pip install Thun
 
-Or if you have downloaded the source, from the joypy directory:
+Or if you have downloaded the source, from the top directory:
 
     python ./setup.py install
 
-Or you can run the module from the joypy directory (see below.)
-
-To start a crude REPL:
+Or you can run the package from the top directory.  To start a crude REPL:
 
     python -m joy
 
 
-§ Basics of Joy
+§.3 Documentation
+
+The docs/ folder contains Jupyter notebooks, ... TODO
+
+
+§.4 Basics of Joy
 
 Joy is stack-based.  There is a main stack that holds data items:
 integers, floats, strings, functions, and sequences or quotes which hold
@@ -98,27 +102,13 @@ data items themselves.
 
     23 1.8 'a string' "another" dup [21 18 /] [1 [2 [3]]]
 
-A Joy expression is just a sequence of items, also called lists.
-Sequences intended as programs are called "quoted programs".  The
-evaluation proceeds by iterating through the terms in the expression,
-putting all literals onto the main stack and executing functions as they
-are encountered.  Functions receive the current stack and return the next
-stack.
+A Joy expression is just a sequence (a.k.a. "list") of items.  Sequences
+intended as programs are called "quoted programs".  Evaluation proceeds
+by iterating through the terms in the expression, putting all literals
+onto the main stack and executing functions as they are encountered.
+Functions receive the current stack and return the next stack.
 
-The main loop is very simple as most of the action happens through what
-are called "combinators", which accept quoted programs on the stack and
-run them in various ways.  These combinators factor specific patterns
-that provide the effect of control-flow in other languages (such as ifte
-which is like if..then..else..)  Combinators receive the current
-expession in addition to the stack and return the next expression.
-In Joy control-flow is done by combinators that expect quoted programs
-on the stack and execute them in various ways.  In Thun they work by
-changing the pending expression that the interpreter is about to execute.
-In concrete terms, the combinators could work by making recursive calls
-to the interpreter and all intermediate state would be held in the call
-stack of the implementation language, in this joy implementation they
-work instead by changing the pending expression and intermediate state
-is put there.
+§.4.1 Python Semantics
 
 In general, where otherwise unspecified, the semantics of Thun are that
 of the underlying Python. That means, for example, that integers are
@@ -133,47 +123,65 @@ just datastructures, you could immediately retry them under a debugger,
 or edit either or both of the stack and expression.  All state is in one
 or the other.
 
-§ Literals and Simple Functions
+§.4.2 Literals and Simple Functions
 
     joy? 1 2 3
-    -> 3 2 1
+          . 1 2 3
+        1 . 2 3
+      1 2 . 3
+    1 2 3 . 
 
-    joy? +
-    -> 5 1
+    1 2 3 <-top
 
-    joy? +
-    -> 6
+    joy? + +
+    1 2 3 . + +
+      1 5 . +
+        6 . 
 
-    joy? 7
-    -> 7 6
+    6 <-top
 
-    joy? *
-    -> 42
+    joy? 7 *
+      6 . 7 *
+    6 7 . *
+     42 . 
 
-    joy?
+    42 <-top
+
+    joy? 
 
 
-§ Simple Combinators
+§.4.3 Combinators
+
+The main loop is very simple as most of the action happens through what
+are called "combinators": functions which accept quoted programs on the
+stack and run them in various ways.  These combinators factor specific
+patterns that provide the effect of control-flow in other languages (such
+as ifte which is like if..then..else..)  Combinators receive the current
+expession in addition to the stack and return the next expression.  They
+work by changing the pending expression the interpreter is about to
+execute.  The combinators could work by making recursive calls to the
+interpreter and all intermediate state would be held in the call stack of
+the implementation language, in this joy implementation they work instead
+by changing the pending expression and intermediate state is put there.
 
     joy? 23 [0 >] [dup --] while
+
+    ...
 
     -> 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
 
 
 TODO:
 
-§ Definitions and More Elaborate Functions
-  Refactoring
+§.4.4 Definitions and More Elaborate Functions
 
-§ Programming and Metaprogramming
+§.4.5 Programming and Metaprogramming
 
-§ Further Reading
-
-
---------------------------------------------------
+§.4.6 Refactoring
 
 
-This Implementation
+
+§.5 This Implementation
 
 Run with:
 
@@ -203,10 +211,8 @@ joypy
  `-- setup.py
 
 
---------------------------------------------------
 
-
-References
+§.6 References & Further Reading
 
 
 Wikipedia entry for Joy:
@@ -216,6 +222,9 @@ https://en.wikipedia.org/wiki/Joy_%28programming_language%29
 Homepage at La Trobe University:
 http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language
 
+
+
+--------------------------------------------------
 
 Misc...
 
