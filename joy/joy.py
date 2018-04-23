@@ -64,6 +64,12 @@ from .utils.pretty_print import TracePrinter
 def joy(stack, expression, dictionary, viewer=None):
   '''
   Evaluate the Joy expression on the stack.
+
+  :param quote stack: The stack.
+  :param quote expression: The expression to evaluate.
+  :param dict dictionary: A `dict` mapping names to Joy functions.
+  :param function viewer: Optional viewer function.
+
   '''
   while expression:
 

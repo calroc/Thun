@@ -18,45 +18,55 @@
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
 '''
+This module exports a single function for converting text to a joy
+expression as well as a single Symbol class and a single Exception type.
+
+The Symbol string class is used by the interpreter to recognize literals
+by the fact that they are not Symbol objects.
+
+A crude grammar::
+
+  joy = term*
+  term = int | float | string | '[' joy ']' | function
+
+A Joy expression is a sequence of zero or more terms
 
 
-§ Converting text to a joy expression.
-
-This module exports a single function:
-
-  text_to_expression(text)
-
-As well as a single Symbol class and a single Exception type:
-
-  ParseError
-
-When supplied with a string this function returns a Python datastructure
-that represents the Joy datastructure described by the text expression.
-Any unbalanced square brackets will raise a ParseError.
 '''
+#TODO: explain the details of float lits and strings.
 from re import Scanner
 from .utils.stack import list_to_stack
 
 
 class Symbol(str):
+  '''A string class that represents Joy function names.'''
   __repr__ = str.__str__
 
 
 def text_to_expression(text):
-  '''
-  Convert a text to a Joy expression.
+  '''Convert a string to a Joy expression.
+
+  When supplied with a string this function returns a Python datastructure
+  that represents the Joy datastructure described by the text expression.
+  Any unbalanced square brackets will raise a ParseError.
+
+  :param str text: Text to convert.
+  :rtype: quote
+  :raises ParseError: if the parse fails.
   '''
   return _parse(_tokenize(text))
 
 
-class ParseError(ValueError): pass
+class ParseError(ValueError):
+  '''Raised when there is a error while parsing text.'''
 
 
 def _tokenize(text):
-  '''
-  Convert a text into a stream of tokens, converting symbols using
-  symbol(token).  Raise ValueError (with some of the failing text)
-  if the scan fails.
+  '''Convert a text into a stream of tokens.
+
+  Converts function names to Symbols.
+
+  Raise ParseError (with some of the failing text) if the scan fails.
   '''
   tokens, rest = _scanner.scan(text)
   if rest:

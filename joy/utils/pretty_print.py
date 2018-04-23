@@ -19,16 +19,6 @@
 #
 '''
 Pretty printing support.
-
-This is what does the formatting, e.g.:
-
-           . 23 18 mul 99 add
-        23 . 18 mul 99 add
-     23 18 . mul 99 add
-       414 . 99 add
-    414 99 . add
-       513 . 
-
 '''
 # (Kinda clunky and hacky.  This should be swapped out in favor of much
 # smarter stuff.)
@@ -38,6 +28,18 @@ from .stack import expression_to_string, stack_to_string
 
 
 class TracePrinter(object):
+  '''
+  This is what does the formatting, e.g.::
+
+    Joy? 23 18 * 99 +
+           . 23 18 mul 99 add
+        23 . 18 mul 99 add
+     23 18 . mul 99 add
+       414 . 99 add
+    414 99 . add
+       513 . 
+
+  '''
 
   def __init__(self):
     self.history = []

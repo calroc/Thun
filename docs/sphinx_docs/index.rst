@@ -6,13 +6,15 @@
 Thun Documentation
 ==================
 
-Hey
+Hey there!
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-There!
+   stack
+   parser
+   pretty
 
 .. automodule:: joy.joy
    :members:
