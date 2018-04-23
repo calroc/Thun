@@ -3,13 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Thun's documentation!
-================================
+Thun Documentation
+==================
+
+Hey
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+There!
+
+.. automodule:: joy.joy
+   :members:
 
 
 Indices and tables
