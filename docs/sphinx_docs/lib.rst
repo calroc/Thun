@@ -1,6 +1,6 @@
 
-Examples (and some documentation) for the Words in the Library
-==============================================================
+Functions Grouped by, er, Function with Examples
+------------------------------------------------
 
 .. code:: ipython2
 
@@ -11,7 +11,7 @@ Stack Chatter
 
 This is what I like to call the functions that just rearrange things on
 the stack. (One thing I want to mention is that during a hypothetical
-compilation phase these "stack chatter" words effectively disappear,
+compilation phase these "stack chatter" words effectively disappear
 because we can map the logical stack locations to registers that remain
 static for the duration of the computation. This remains to be done but
 it's "off the shelf" technology.)
@@ -26,7 +26,7 @@ it's "off the shelf" technology.)
 
 .. parsed-literal::
 
-    
+    (nothing)
 
 
 ``dup`` ``dupd``
@@ -682,8 +682,8 @@ Math words
     -23 5
 
 
-pow
-~~~
+``pow``
+~~~~~~~
 
 .. code:: ipython2
 

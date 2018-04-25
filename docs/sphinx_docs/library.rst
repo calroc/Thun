@@ -3,7 +3,11 @@ Function Reference
 ======================================
 
 
-.. automodule:: joy.pribrary
+``joy.library``
+----------------------
+
+
+.. automodule:: joy.library
    :members:
 
 
