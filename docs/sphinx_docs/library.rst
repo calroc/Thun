@@ -1,9 +1,9 @@
 
-Functions, Combinators and Definitions
+Function Reference
 ======================================
 
 
-. . automodule:: joy.library
+.. automodule:: joy.pribrary
    :members:
 
 

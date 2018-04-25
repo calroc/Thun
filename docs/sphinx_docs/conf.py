@@ -24,7 +24,7 @@ copyright = u'2018, Simon Forman'
 author = u'Simon Forman'
 
 # The short X.Y version
-version = u''
+version = u'0.1'
 # The full version, including alpha/beta/rc tags
 release = u'0.1.0'
 

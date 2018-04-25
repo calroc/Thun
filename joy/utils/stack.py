@@ -23,8 +23,8 @@ When talking about Joy we use the terms "stack", "list", "sequence",
 permits certain operations such as iterating and pushing and popping
 values from (at least) one end.
 
-We use the venerable two-tuple recursive form of sequences where the
-empty tuple () is the empty stack and (head, rest) gives the recursive
+We use the  `cons list`_, a venerable two-tuple recursive sequence datastructure, where the
+empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the recursive
 form of a stack with one or more items on it::
 
     stack := () | (item, stack)
@@ -50,6 +50,9 @@ in this case "(head, tail)", and Python takes care of unpacking the
 incoming tuple and assigning values to the names.  (Note that Python
 syntax doesn't require parentheses around tuples used in expressions
 where they would be redundant.)
+
+.. _cons list: https://en.wikipedia.org/wiki/Cons#Lists
+
 '''
 
 ##We have two very simple functions to build up a stack from a Python
@@ -135,8 +138,8 @@ def pushback(quote, expression):
 
 ##  return list_to_stack(list(iter_stack(quote)), expression)
 
-  # This is slightly faster and won't break the
-  # recursion limit on long quotes.
+  # In-lining is slightly faster (and won't break the
+  # recursion limit on long quotes.)
 
 ##  temp = []
 ##  while quote:
