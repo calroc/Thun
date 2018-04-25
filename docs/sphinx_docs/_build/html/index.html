@@ -1,0 +1,194 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Thun 0.1.0 Documentation &#8212; Thun 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Joy Interpreter" href="joy.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="thun-release-documentation">
+<h1>Thun 0.1.0 Documentation<a class="headerlink" href="#thun-release-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Thun is dialect of Joy written in Python.</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Joy_(programming_language)">Joy</a> is a programming language created by Manfred von Thun that is easy to
+use and understand and has many other nice properties.  This Python
+package implements an interpreter for a dialect of Joy that attempts to
+stay very close to the spirit of Joy but does not precisely match the
+behaviour of the original version(s) written in C.  The main difference
+between Thun and the originals, other than being written in Python, is
+that it works by the “Continuation-Passing Style”.</p>
+<p>I hope that this package is useful in the sense that it provides an
+additional joy interpreter (the binary in the archive from La Trobe seems
+to run just fine on my modern Linux machine!)  But I also hope that you
+can read and understand the Python code and play with the implementation
+itself.</p>
+<div class="section" id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<p>Install from <a class="reference external" href="https://pypi.org/project/Thun/">PyPI</a> in the usual way:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install Thun
+</pre></div>
+</div>
+<p>To start the REPL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m joy
+</pre></div>
+</div>
+</div>
+<div class="section" id="project-hosted-on-osdn">
+<h2>Project Hosted on <a class="reference external" href="https://osdn.net/projects/joypy/">OSDN</a><a class="headerlink" href="#project-hosted-on-osdn" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://osdn.net/projects/joypy/scm/hg/Joypy/tree/tip/">Source Repository</a> (Mercurial)</li>
+<li><a class="reference external" href="https://osdn.net/projects/joypy/ticket/">Bug tracker</a></li>
+<li><a class="reference external" href="https://osdn.net/projects/joypy/forums/">Forums</a></li>
+<li><a class="reference external" href="https://osdn.net/projects/joypy/lists/">Mailing list</a></li>
+</ul>
+</div>
+<div class="section" id="information-on-the-joy-language">
+<h2>Information on the Joy language<a class="headerlink" href="#information-on-the-joy-language" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference external" href="https://en.wikipedia.org/wiki/Joy_(programming_language)">the Wikipedia article</a> and <a class="reference external" href="http://www.kevinalbrecht.com/code/joy-mirror/index.html">Kevin Albrecht’s mirror of Manfred von Thun’s original website for the Joy Programming Language</a> for more information on the Joy language.</p>
+<p>The best source (no pun intended) for learning about Joy is the
+information made available at the website of La Trobe University (see the
+mirror link above) which contains source code for the
+original C interpreter, Joy language source code for various functions,
+and a great deal of fascinating material mostly written by Von Thun on
+Joy and its deeper facets as well as how to program in it and several
+interesting aspects.  It’s quite a treasure trove.</p>
+</div>
+<div class="section" id="documentation-on-thun-dialect">
+<h2>Documentation on Thun Dialect<a class="headerlink" href="#documentation-on-thun-dialect" title="Permalink to this headline">¶</a></h2>
+<p>Thun is implemented in Python.  The following is specific information for this dialect of Joy.
+There are also some Jupyter notebooks.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="joy.html">Joy Interpreter</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="joy.html#module-joy.joy"><code class="docutils literal notranslate"><span class="pre">joy.joy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Stack or Quote or Sequence or List…</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="stack.html#module-joy.utils.stack"><code class="docutils literal notranslate"><span class="pre">joy.utils.stack</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parser.html">Parsing Text into Joy Expressions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="parser.html#module-joy.parser"><code class="docutils literal notranslate"><span class="pre">joy.parser</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html#parser-internals">Parser Internals</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pretty.html">Tracing Joy Execution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pretty.html#module-joy.utils.pretty_print"><code class="docutils literal notranslate"><span class="pre">joy.utils.pretty_print</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Function Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="library.html#module-joy.library"><code class="docutils literal notranslate"><span class="pre">joy.library</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lib.html">Functions Grouped by, er, Function with Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#stack-chatter">Stack Chatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#list-words">List words</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#math-words">Math words</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#logic-and-comparison">Logic and Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#miscellaneous">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#combinators">Combinators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#void"><code class="docutils literal notranslate"><span class="pre">void</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Thun 0.1.0 Documentation</a><ul>
+<li><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li><a class="reference internal" href="#project-hosted-on-osdn">Project Hosted on OSDN</a></li>
+<li><a class="reference internal" href="#information-on-the-joy-language">Information on the Joy language</a></li>
+<li><a class="reference internal" href="#documentation-on-thun-dialect">Documentation on Thun Dialect</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="joy.html" title="next chapter">Joy Interpreter</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Simon Forman.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

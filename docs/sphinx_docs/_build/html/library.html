@@ -1,0 +1,846 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Function Reference &#8212; Thun 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples (and some documentation) for the Words in the Library" href="lib.html" />
+    <link rel="prev" title="Tracing Joy Execution" href="pretty.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="function-reference">
+<h1>Function Reference<a class="headerlink" href="#function-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-joy.library">
+<span id="joy-library"></span><h2><code class="docutils literal notranslate"><span class="pre">joy.library</span></code><a class="headerlink" href="#module-joy.library" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the Joy function infrastructure and a library of
+functions.  Its main export is a Python function initialize() that
+returns a dictionary of Joy functions suitable for use with the joy()
+function.</p>
+<dl class="function">
+<dt id="joy.library.BinaryBuiltinWrapper">
+<code class="descclassname">joy.library.</code><code class="descname">BinaryBuiltinWrapper</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#BinaryBuiltinWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.BinaryBuiltinWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap functions that take two arguments and return a single result.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="joy.library.DefinitionWrapper">
+<em class="property">class </em><code class="descclassname">joy.library.</code><code class="descname">DefinitionWrapper</code><span class="sig-paren">(</span><em>name</em>, <em>body_text</em>, <em>doc=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#DefinitionWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.DefinitionWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide implementation of defined functions, and some helper methods.</p>
+<dl class="classmethod">
+<dt id="joy.library.DefinitionWrapper.add_def">
+<em class="property">classmethod </em><code class="descname">add_def</code><span class="sig-paren">(</span><em>definition</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#DefinitionWrapper.add_def"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.DefinitionWrapper.add_def" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the definition to the dictionary.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="joy.library.DefinitionWrapper.add_definitions">
+<em class="property">classmethod </em><code class="descname">add_definitions</code><span class="sig-paren">(</span><em>defs</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#DefinitionWrapper.add_definitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.DefinitionWrapper.add_definitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scan multi-line string defs for definitions and add them to the
+dictionary.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="joy.library.DefinitionWrapper.parse_definition">
+<em class="property">classmethod </em><code class="descname">parse_definition</code><span class="sig-paren">(</span><em>defi</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#DefinitionWrapper.parse_definition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.DefinitionWrapper.parse_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given some text describing a Joy function definition parse it and
+return a DefinitionWrapper.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.FunctionWrapper">
+<code class="descclassname">joy.library.</code><code class="descname">FunctionWrapper</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#FunctionWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.FunctionWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set name attribute.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.SimpleFunctionWrapper">
+<code class="descclassname">joy.library.</code><code class="descname">SimpleFunctionWrapper</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#SimpleFunctionWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.SimpleFunctionWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap functions that take and return just a stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.UnaryBuiltinWrapper">
+<code class="descclassname">joy.library.</code><code class="descname">UnaryBuiltinWrapper</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#UnaryBuiltinWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.UnaryBuiltinWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap functions that take one argument and return a single result.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.add_aliases">
+<code class="descclassname">joy.library.</code><code class="descname">add_aliases</code><span class="sig-paren">(</span><em>D</em>, <em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#add_aliases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.add_aliases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a dict and a iterable of (name, [alias, …]) pairs, create
+additional entries in the dict mapping each alias to the named function
+if it’s in the dict.  Aliases for functions not in the dict are ignored.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.app1">
+<code class="descclassname">joy.library.</code><code class="descname">app1</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#app1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.app1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a quoted program on TOS and anything as the second stack item run
+the program and replace the two args with the first result of the
+program.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="o">...</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">app1</span>
+<span class="o">-----------------------------------</span>
+   <span class="o">...</span> <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.app2">
+<code class="descclassname">joy.library.</code><code class="descname">app2</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#app2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.app2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like app1 with two items.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>       <span class="o">...</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">app2</span>
+<span class="o">-----------------------------------</span>
+   <span class="o">...</span> <span class="p">[</span><span class="n">y</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
+       <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>   <span class="n">infra</span> <span class="n">first</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.app3">
+<code class="descclassname">joy.library.</code><code class="descname">app3</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#app3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.app3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like app1 with three items.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>       <span class="o">...</span> <span class="n">z</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">app3</span>
+<span class="o">-----------------------------------</span>
+   <span class="o">...</span> <span class="p">[</span><span class="n">z</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
+       <span class="p">[</span><span class="n">y</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>   <span class="n">infra</span> <span class="n">first</span>
+       <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>   <span class="n">infra</span> <span class="n">first</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.b">
+<code class="descclassname">joy.library.</code><code class="descname">b</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#b"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.b" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">==</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="n">dip</span> <span class="n">i</span>
+
+<span class="o">...</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">b</span> <span class="o">==</span> <span class="o">...</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="n">i</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">i</span>
+<span class="o">...</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">b</span> <span class="o">==</span> <span class="o">...</span> <span class="n">P</span> <span class="n">Q</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.branch">
+<code class="descclassname">joy.library.</code><code class="descname">branch</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#branch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.branch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use a Boolean value to select one of two quoted programs to run.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">branch</span> <span class="o">==</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">choice</span> <span class="n">i</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="kc">False</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="n">branch</span>
+<span class="o">--------------------------</span>
+          <span class="n">F</span>
+
+   <span class="kc">True</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="n">branch</span>
+<span class="o">-------------------------</span>
+             <span class="n">T</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.choice">
+<code class="descclassname">joy.library.</code><code class="descname">choice</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.choice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use a Boolean value to select one of two items.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">A</span> <span class="n">B</span> <span class="kc">False</span> <span class="n">choice</span>
+<span class="o">----------------------</span>
+          <span class="n">A</span>
+
+
+   <span class="n">A</span> <span class="n">B</span> <span class="kc">True</span> <span class="n">choice</span>
+<span class="o">---------------------</span>
+          <span class="n">B</span>
+</pre></div>
+</div>
+<p>Currently Python semantics are used to evaluate the “truthiness” of the
+Boolean value (so empty string, zero, etc. are counted as false, etc.)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.clear">
+<code class="descclassname">joy.library.</code><code class="descname">clear</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear everything from the stack.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="n">clear</span>
+<span class="o">---------------</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.concat">
+<code class="descclassname">joy.library.</code><code class="descname">concat</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#concat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.concat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatinate the two lists on the top of the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.cons">
+<code class="descclassname">joy.library.</code><code class="descname">cons</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#cons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.cons" title="Permalink to this definition">¶</a></dt>
+<dd><p>The cons operator expects a list on top of the stack and the potential
+member below. The effect is to add the potential member into the
+aggregate.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.dip">
+<code class="descclassname">joy.library.</code><code class="descname">dip</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dip" title="Permalink to this definition">¶</a></dt>
+<dd><p>The dip combinator expects a quoted program on the stack and below it
+some item, it hoists the item into the expression and runs the program
+on the rest of the stack.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span>
+<span class="o">-------------------</span>
+     <span class="o">...</span> <span class="n">Q</span> <span class="n">x</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.dipd">
+<code class="descclassname">joy.library.</code><code class="descname">dipd</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dipd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dipd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like dip but expects two items.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span>
+<span class="o">---------------------</span>
+     <span class="o">...</span> <span class="n">Q</span> <span class="n">y</span> <span class="n">x</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.dipdd">
+<code class="descclassname">joy.library.</code><code class="descname">dipdd</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dipdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dipdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like dip but expects three items.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="n">z</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span>
+<span class="o">-----------------------</span>
+     <span class="o">...</span> <span class="n">Q</span> <span class="n">z</span> <span class="n">y</span> <span class="n">x</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.divmod_">
+<code class="descclassname">joy.library.</code><code class="descname">divmod_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#divmod_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.divmod_" title="Permalink to this definition">¶</a></dt>
+<dd><p>divmod(x, y) -&gt; (quotient, remainder)</p>
+<p>Return the tuple (x//y, x%y).  Invariant: div*y + mod == x.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.drop">
+<code class="descclassname">joy.library.</code><code class="descname">drop</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#drop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.drop" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">drop</span> <span class="o">==</span> <span class="p">[</span><span class="n">rest</span><span class="p">]</span> <span class="n">times</span>
+</pre></div>
+</div>
+<p>Expects an integer and a quote on the stack and returns the quote with
+n items removed off the top.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">2</span> <span class="n">drop</span>
+<span class="o">----------------------</span>
+       <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.dup">
+<code class="descclassname">joy.library.</code><code class="descname">dup</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate the top item on the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.dupd">
+<code class="descclassname">joy.library.</code><code class="descname">dupd</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dupd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dupd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate the second item on the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.dupdip">
+<code class="descclassname">joy.library.</code><code class="descname">dupdip</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dupdip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dupdip" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">dupdip</span> <span class="o">==</span> <span class="n">dup</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">dip</span>
+
+<span class="o">...</span> <span class="n">a</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">dupdip</span>
+<span class="o">...</span> <span class="n">a</span> <span class="n">dup</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">dip</span>
+<span class="o">...</span> <span class="n">a</span> <span class="n">a</span>   <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">dip</span>
+<span class="o">...</span> <span class="n">a</span> <span class="n">F</span> <span class="n">a</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.first">
+<code class="descclassname">joy.library.</code><code class="descname">first</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.first" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">first</span> <span class="o">==</span> <span class="n">uncons</span> <span class="n">pop</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.floor">
+<code class="descclassname">joy.library.</code><code class="descname">floor</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#floor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.floor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the floor of x as a float.
+This is the largest integral value &lt;= x.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.genrec">
+<code class="descclassname">joy.library.</code><code class="descname">genrec</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#genrec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.genrec" title="Permalink to this definition">¶</a></dt>
+<dd><p>General Recursion Combinator.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                      <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="n">rec1</span><span class="p">]</span> <span class="p">[</span><span class="n">rec2</span><span class="p">]</span> <span class="n">genrec</span>
+<span class="o">---------------------------------------------------------------------</span>
+   <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="n">rec1</span> <span class="p">[[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="n">rec1</span><span class="p">]</span> <span class="p">[</span><span class="n">rec2</span><span class="p">]</span> <span class="n">genrec</span><span class="p">]</span> <span class="n">rec2</span><span class="p">]</span> <span class="n">ifte</span>
+</pre></div>
+</div>
+<p>From “Recursion Theory and Joy” (j05cmp.html) by Manfred von Thun:
+“The genrec combinator takes four program parameters in addition to
+whatever data parameters it needs. Fourth from the top is an if-part,
+followed by a then-part. If the if-part yields true, then the then-part
+is executed and the combinator terminates. The other two parameters are
+the rec1-part and the rec2-part. If the if-part yields false, the
+rec1-part is executed. Following that the four program parameters and
+the combinator are again pushed onto the stack bundled up in a quoted
+form. Then the rec2-part is executed, where it will find the bundled
+form. Typically it will then execute the bundled form, either with i or
+with app2, or some other combinator.”</p>
+<p>The way to design one of these is to fix your base case [then] and the
+test [if], and then treat rec1 and rec2 as an else-part “sandwiching”
+a quotation of the whole function.</p>
+<p>For example, given a (general recursive) function ‘F’:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="p">[</span><span class="n">R2</span><span class="p">]</span> <span class="n">genrec</span>
+</pre></div>
+</div>
+<p>If the [I] if-part fails you must derive R1 and R2 from:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span> <span class="n">R1</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">R2</span>
+</pre></div>
+</div>
+<p>Just set the stack arguments in front, and figure out what R1 and R2
+have to do to apply the quoted [F] in the proper way.  In effect, the
+genrec combinator turns into an ifte combinator with a quoted copy of
+the original definition in the else-part:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span>   <span class="p">[</span><span class="n">R2</span><span class="p">]</span> <span class="n">genrec</span>
+  <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">R2</span><span class="p">]</span> <span class="n">ifte</span>
+</pre></div>
+</div>
+<p>Primitive recursive functions are those where R2 == i.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">P</span> <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R</span><span class="p">]</span> <span class="n">primrec</span>
+  <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="n">i</span><span class="p">]</span> <span class="n">ifte</span>
+  <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R</span> <span class="n">P</span><span class="p">]</span> <span class="n">ifte</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.getitem">
+<code class="descclassname">joy.library.</code><code class="descname">getitem</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#getitem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.getitem" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">getitem</span> <span class="o">==</span> <span class="n">drop</span> <span class="n">first</span>
+</pre></div>
+</div>
+<p>Expects an integer and a quote on the stack and returns the item at the
+nth position in the quote counting from 0.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">0</span> <span class="n">getitem</span>
+<span class="o">-------------------------</span>
+            <span class="n">a</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.help_">
+<code class="descclassname">joy.library.</code><code class="descname">help_</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#help_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.help_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accepts a quoted symbol on the top of the stack and prints its docs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.i">
+<code class="descclassname">joy.library.</code><code class="descname">i</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#i"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.i" title="Permalink to this definition">¶</a></dt>
+<dd><p>The i combinator expects a quoted program on the stack and unpacks it
+onto the pending expression for evaluation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">i</span>
+<span class="o">-----------</span>
+    <span class="n">Q</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.id_">
+<code class="descclassname">joy.library.</code><code class="descname">id_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#id_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.id_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The identity function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.ifte">
+<code class="descclassname">joy.library.</code><code class="descname">ifte</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#ifte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.ifte" title="Permalink to this definition">¶</a></dt>
+<dd><p>If-Then-Else Combinator</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>           <span class="o">...</span> <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="k">else</span><span class="p">]</span> <span class="n">ifte</span>
+<span class="o">---------------------------------------------------</span>
+   <span class="o">...</span> <span class="p">[[</span><span class="k">else</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]]</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="n">infra</span> <span class="n">select</span> <span class="n">i</span>
+
+
+
+
+         <span class="o">...</span> <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="k">else</span><span class="p">]</span> <span class="n">ifte</span>
+<span class="o">-------------------------------------------------------</span>
+   <span class="o">...</span> <span class="p">[</span><span class="k">else</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="n">infra</span> <span class="n">first</span> <span class="n">choice</span> <span class="n">i</span>
+</pre></div>
+</div>
+<p>Has the effect of grabbing a copy of the stack on which to run the
+if-part using infra.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.infra">
+<code class="descclassname">joy.library.</code><code class="descname">infra</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#infra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.infra" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accept a quoted program and a list on the stack and run the program
+with the list as its stack.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span>
+<span class="o">-----------------------------</span>
+   <span class="n">c</span> <span class="n">b</span> <span class="n">a</span> <span class="o">.</span> <span class="n">Q</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">swaack</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.initialize">
+<code class="descclassname">joy.library.</code><code class="descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary of Joy functions for use with joy().</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.inscribe">
+<code class="descclassname">joy.library.</code><code class="descname">inscribe</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#inscribe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.inscribe" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator to inscribe functions into the default dictionary.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.loop">
+<code class="descclassname">joy.library.</code><code class="descname">loop</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#loop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic loop combinator.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="kc">True</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
+<span class="o">-----------------------</span>
+      <span class="o">...</span> <span class="n">Q</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
+
+   <span class="o">...</span> <span class="kc">False</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
+<span class="o">------------------------</span>
+          <span class="o">...</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.map_">
+<code class="descclassname">joy.library.</code><code class="descname">map_</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#map_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.map_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the quoted program on TOS on the items in the list under it, push a
+new list with the results (in place of the program and original list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.max_">
+<code class="descclassname">joy.library.</code><code class="descname">max_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#max_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.max_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list find the maximum.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.min_">
+<code class="descclassname">joy.library.</code><code class="descname">min_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#min_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.min_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list find the minimum.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.over">
+<code class="descclassname">joy.library.</code><code class="descname">over</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#over"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.over" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the second item down on the stack to the top of the stack.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="n">over</span>
+<span class="o">--------------</span>
+    <span class="n">a</span> <span class="n">b</span> <span class="n">a</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.parse">
+<code class="descclassname">joy.library.</code><code class="descname">parse</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the string on the stack to a Joy expression.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.pm">
+<code class="descclassname">joy.library.</code><code class="descname">pm</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#pm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.pm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plus or minus</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="n">pm</span>
+<span class="o">-------------</span>
+   <span class="n">a</span><span class="o">+</span><span class="n">b</span> <span class="n">a</span><span class="o">-</span><span class="n">b</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.pop">
+<code class="descclassname">joy.library.</code><code class="descname">pop</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pop and discard the top item from the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.popd">
+<code class="descclassname">joy.library.</code><code class="descname">popd</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#popd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.popd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pop and discard the second item from the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.popdd">
+<code class="descclassname">joy.library.</code><code class="descname">popdd</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#popdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.popdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pop and discard the third item from the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.popop">
+<code class="descclassname">joy.library.</code><code class="descname">popop</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#popop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.popop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pop and discard the first and second items from the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.pred">
+<code class="descclassname">joy.library.</code><code class="descname">pred</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#pred"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.pred" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrement TOS.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.remove">
+<code class="descclassname">joy.library.</code><code class="descname">remove</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expects an item on the stack and a quote under it and removes that item
+from the the quote.  The item is only removed once.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]</span> <span class="mi">1</span> <span class="n">remove</span>
+<span class="o">------------------------</span>
+        <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.rest">
+<code class="descclassname">joy.library.</code><code class="descname">rest</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#rest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.rest" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rest</span> <span class="o">==</span> <span class="n">uncons</span> <span class="n">popd</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.reverse">
+<code class="descclassname">joy.library.</code><code class="descname">reverse</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse the list on the top of the stack.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reverse</span> <span class="o">==</span> <span class="p">[]</span> <span class="n">swap</span> <span class="n">shunt</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.rolldown">
+<code class="descclassname">joy.library.</code><code class="descname">rolldown</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#rolldown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.rolldown" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="n">c</span>
+<span class="o">-----------</span>
+   <span class="n">c</span> <span class="n">a</span> <span class="n">b</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.rollup">
+<code class="descclassname">joy.library.</code><code class="descname">rollup</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#rollup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.rollup" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="n">c</span>
+<span class="o">-----------</span>
+   <span class="n">b</span> <span class="n">c</span> <span class="n">a</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.select">
+<code class="descclassname">joy.library.</code><code class="descname">select</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use a Boolean value to select one of two items from a sequence.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">A</span> <span class="n">B</span><span class="p">]</span> <span class="kc">False</span> <span class="n">select</span>
+<span class="o">------------------------</span>
+           <span class="n">A</span>
+
+
+   <span class="p">[</span><span class="n">A</span> <span class="n">B</span><span class="p">]</span> <span class="kc">True</span> <span class="n">select</span>
+<span class="o">-----------------------</span>
+          <span class="n">B</span>
+</pre></div>
+</div>
+<p>The sequence can contain more than two items but not fewer.
+Currently Python semantics are used to evaluate the “truthiness” of the
+Boolean value (so empty string, zero, etc. are counted as false, etc.)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.sharing">
+<code class="descclassname">joy.library.</code><code class="descname">sharing</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#sharing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.sharing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print redistribution information.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.shunt">
+<code class="descclassname">joy.library.</code><code class="descname">shunt</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#shunt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.shunt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like concat but reverses the top list into the second.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shunt</span> <span class="o">==</span> <span class="p">[</span><span class="n">swons</span><span class="p">]</span> <span class="n">step</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.sort_">
+<code class="descclassname">joy.library.</code><code class="descname">sort_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#sort_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.sort_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list return it sorted.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.sqrt">
+<code class="descclassname">joy.library.</code><code class="descname">sqrt</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#sqrt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.sqrt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the square root of the number a.
+Negative numbers return complex roots.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.stack_">
+<code class="descclassname">joy.library.</code><code class="descname">stack_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#stack_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.stack_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The stack operator pushes onto the stack a list containing all the
+elements of the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.step">
+<code class="descclassname">joy.library.</code><code class="descname">step</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a quoted program on each item in a sequence.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="o">...</span> <span class="p">[]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span>
+   <span class="o">-----------------------</span>
+             <span class="o">...</span> <span class="o">.</span>
+
+
+     <span class="o">...</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span>
+  <span class="o">------------------------</span>
+           <span class="o">...</span> <span class="n">a</span> <span class="o">.</span> <span class="n">Q</span>
+
+
+   <span class="o">...</span> <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span>
+<span class="o">----------------------------------------</span>
+             <span class="o">...</span> <span class="n">a</span> <span class="o">.</span> <span class="n">Q</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">step</span>
+</pre></div>
+</div>
+<p>The step combinator executes the quotation on each member of the list
+on top of the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.succ">
+<code class="descclassname">joy.library.</code><code class="descname">succ</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#succ"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.succ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment TOS.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.sum_">
+<code class="descclassname">joy.library.</code><code class="descname">sum_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#sum_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.sum_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a quoted sequence of numbers return the sum.</p>
+<p>sum == 0 swap [+] step</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.swaack">
+<code class="descclassname">joy.library.</code><code class="descname">swaack</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#swaack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.swaack" title="Permalink to this definition">¶</a></dt>
+<dd><p>swap stack</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.swap">
+<code class="descclassname">joy.library.</code><code class="descname">swap</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#swap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.swap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swap the top two items on stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.take">
+<code class="descclassname">joy.library.</code><code class="descname">take</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#take"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.take" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expects an integer and a quote on the stack and returns the quote with
+just the top n items in reverse order (because that’s easier and you can
+use reverse if needed.)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">2</span> <span class="n">take</span>
+<span class="o">----------------------</span>
+       <span class="p">[</span><span class="n">b</span> <span class="n">a</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.times">
+<code class="descclassname">joy.library.</code><code class="descname">times</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#times"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.times" title="Permalink to this definition">¶</a></dt>
+<dd><p>times == [– dip] cons [swap] infra [0 &gt;] swap while pop</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="n">n</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">times</span>
+<span class="o">---------------------</span>  <span class="n">w</span><span class="o">/</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+         <span class="o">...</span> <span class="o">.</span>
+
+
+   <span class="o">...</span> <span class="mi">1</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">times</span>
+<span class="o">---------------------------------</span>
+         <span class="o">...</span> <span class="o">.</span> <span class="n">Q</span>
+
+
+   <span class="o">...</span> <span class="n">n</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">times</span>
+<span class="o">---------------------------------</span>  <span class="n">w</span><span class="o">/</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
+         <span class="o">...</span> <span class="o">.</span> <span class="n">Q</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">times</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.tuck">
+<code class="descclassname">joy.library.</code><code class="descname">tuck</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#tuck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.tuck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the item at TOS under the second item of the stack.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="n">tuck</span>
+<span class="o">--------------</span>
+    <span class="n">b</span> <span class="n">a</span> <span class="n">b</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.uncons">
+<code class="descclassname">joy.library.</code><code class="descname">uncons</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#uncons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.uncons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse of cons, removes an item from the top of the list on the stack
+and places it under the remaining list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.unique">
+<code class="descclassname">joy.library.</code><code class="descname">unique</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#unique"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.unique" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list remove duplicate items.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.unstack">
+<code class="descclassname">joy.library.</code><code class="descname">unstack</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#unstack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.unstack" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unstack operator expects a list on top of the stack and makes that
+the stack discarding the rest of the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.void">
+<code class="descclassname">joy.library.</code><code class="descname">void</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#void"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.void" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the form on TOS is void otherwise False.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.warranty">
+<code class="descclassname">joy.library.</code><code class="descname">warranty</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#warranty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.warranty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print warranty information.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.words">
+<code class="descclassname">joy.library.</code><code class="descname">words</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#words"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.words" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print all the words in alphabetical order.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.x">
+<code class="descclassname">joy.library.</code><code class="descname">x</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.x" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">==</span> <span class="n">dup</span> <span class="n">i</span>
+
+<span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">x</span> <span class="o">=</span> <span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dup</span> <span class="n">i</span>
+<span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">x</span> <span class="o">=</span> <span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">i</span>
+<span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">x</span> <span class="o">=</span> <span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>  <span class="n">Q</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.zip_">
+<code class="descclassname">joy.library.</code><code class="descname">zip_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#zip_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.zip_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the two lists on the top of the stack with a list of the pairs
+from each list.  The smallest list sets the length of the result list.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Function Reference</a><ul>
+<li><a class="reference internal" href="#module-joy.library"><code class="docutils literal notranslate"><span class="pre">joy.library</span></code></a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="pretty.html" title="previous chapter">Tracing Joy Execution</a></li>
+      <li>Next: <a href="lib.html" title="next chapter">Examples (and some documentation) for the Words in the Library</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/library.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Simon Forman.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/library.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
