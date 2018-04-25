@@ -15,7 +15,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with Thun.  If not see <http://www.gnu.org/licenses/>.
+#    along with Thun.  If not see <http://www.gnu.org/licenses/>. 
 #
 '''
 This module contains the Joy function infrastructure and a library of
@@ -72,7 +72,7 @@ ALIASES = (
   )
 
 
-def add_aliases(D, A=ALIASES):
+def add_aliases(D, A):
   '''
   Given a dict and a iterable of (name, [alias, ...]) pairs, create
   additional entries in the dict mapping each alias to the named function
@@ -230,11 +230,18 @@ class DefinitionWrapper(object):
 
   @classmethod
   def add_definitions(class_, defs, dictionary):
+    '''
+    Scan multi-line string defs for definitions and add them to the
+    dictionary.
+    '''
     for definition in _text_to_defs(defs):
       class_.add_def(definition, dictionary)
 
   @classmethod
   def add_def(class_, definition, dictionary):
+    '''
+    Add the definition to the dictionary.
+    '''
     F = class_.parse_definition(definition)
     dictionary[F.name] = F
 
@@ -250,23 +257,36 @@ def _text_to_defs(text):
 
 @inscribe
 @SimpleFunctionWrapper
-def parse((text, stack)):
+def parse(stack):
   '''Parse the string on the stack to a Joy expression.'''
+  text, stack = stack
   expression = text_to_expression(text)
   return expression, stack
 
 
 @inscribe
 @SimpleFunctionWrapper
-def first(((head, tail), stack)):
-  '''first == uncons pop'''
+def first(stack):
+  '''
+  ::
+
+    first == uncons pop
+
+  '''
+  ((head, tail), stack) = stack
   return head, stack
 
 
 @inscribe
 @SimpleFunctionWrapper
-def rest(((head, tail), stack)):
-  '''rest == uncons popd'''
+def rest(stack):
+  '''
+  ::
+
+    rest == uncons popd
+
+  '''
+  ((head, tail), stack) = stack
   return tail, stack
 
 
@@ -274,14 +294,17 @@ def rest(((head, tail), stack)):
 @SimpleFunctionWrapper
 def getitem(stack):
   '''
-  getitem == drop first
+  ::
+
+    getitem == drop first
 
   Expects an integer and a quote on the stack and returns the item at the
   nth position in the quote counting from 0.
+  ::
 
-     [a b c d] 0 getitem
-  -------------------------
-              a
+       [a b c d] 0 getitem
+    -------------------------
+                a
 
   '''
   n, (Q, stack) = stack
@@ -292,14 +315,17 @@ def getitem(stack):
 @SimpleFunctionWrapper
 def drop(stack):
   '''
-  drop == [rest] times
+  ::
+
+    drop == [rest] times
 
   Expects an integer and a quote on the stack and returns the quote with
   n items removed off the top.
+  ::
 
-     [a b c d] 2 drop
-  ----------------------
-         [c d]
+       [a b c d] 2 drop
+    ----------------------
+           [c d]
 
   '''
   n, (Q, stack) = stack
@@ -319,10 +345,11 @@ def take(stack):
   Expects an integer and a quote on the stack and returns the quote with
   just the top n items in reverse order (because that's easier and you can
   use reverse if needed.)
+  ::
 
-     [a b c d] 2 take
-  ----------------------
-         [b a]
+       [a b c d] 2 take
+    ----------------------
+           [b a]
 
   '''
   n, (Q, stack) = stack
@@ -342,6 +369,7 @@ def take(stack):
 def choice(stack):
   '''
   Use a Boolean value to select one of two items.
+  ::
 
         A B False choice
      ----------------------
@@ -364,6 +392,7 @@ def choice(stack):
 def select(stack):
   '''
   Use a Boolean value to select one of two items from a sequence.
+  ::
 
         [A B] False select
      ------------------------
@@ -416,10 +445,11 @@ def remove(S):
   '''
   Expects an item on the stack and a quote under it and removes that item
   from the the quote.  The item is only removed once.
+  ::
 
-     [1 2 3 1] 1 remove
-  ------------------------
-          [2 3 1]
+       [1 2 3 1] 1 remove
+    ------------------------
+            [2 3 1]
 
   '''
   (tos, (second, stack)) = S
@@ -474,9 +504,10 @@ def uncons(S):
 @SimpleFunctionWrapper
 def clear(stack):
   '''Clear everything from the stack.
+  ::
 
-     ... clear
-  ---------------
+       ... clear
+    ---------------
 
   '''
   return ()
@@ -495,10 +526,11 @@ def dup(S):
 def over(S):
   '''
   Copy the second item down on the stack to the top of the stack.
+  ::
 
-     a b over
-  --------------
-      a b a
+       a b over
+    --------------
+        a b a
 
   '''
   second = S[1][0]
@@ -510,10 +542,11 @@ def over(S):
 def tuck(S):
   '''
   Copy the item at TOS under the second item of the stack.
+  ::
 
-     a b tuck
-  --------------
-      b a b
+       a b tuck
+    --------------
+        b a b
 
   '''
   (tos, (second, stack)) = S
@@ -598,8 +631,9 @@ def dupd(S):
 @SimpleFunctionWrapper
 def reverse(S):
   '''Reverse the list on the top of the stack.
+  ::
 
-  reverse == [] swap shunt
+    reverse == [] swap shunt
   '''
   (tos, stack) = S
   res = ()
@@ -620,12 +654,14 @@ def concat(S):
 
 @inscribe
 @SimpleFunctionWrapper
-def shunt((tos, (second, stack))):
-  '''
-  shunt == [swons] step
+def shunt(stack):
+  '''Like concat but reverses the top list into the second.
+  ::
 
-  Like concat but reverses the top list into the second.
+    shunt == [swons] step
+
   '''
+  (tos, (second, stack)) = stack
   while tos:
     term, tos = tos
     second = term, second
@@ -668,10 +704,11 @@ def pred(S):
 def pm(stack):
   '''
   Plus or minus
+  ::
 
-     a b pm
-  -------------
-     a+b a-b
+       a b pm
+    -------------
+       a+b a-b
 
   '''
   a, (b, stack) = stack
@@ -714,7 +751,14 @@ def sqrt(a):
 @inscribe
 @SimpleFunctionWrapper
 def rollup(S):
-  '''a b c -> b c a'''
+  '''
+  ::
+
+       a b c
+    -----------
+       b c a
+
+  '''
   (a, (b, (c, stack))) = S
   return b, (c, (a, stack))
 
@@ -722,7 +766,14 @@ def rollup(S):
 @inscribe
 @SimpleFunctionWrapper
 def rolldown(S):
-  '''a b c -> c a b'''
+  '''
+  ::
+
+       a b c
+    -----------
+       c a b
+
+  '''
   (a, (b, (c, stack))) = S
   return c, (a, (b, stack))
 
@@ -857,10 +908,11 @@ def i(stack, expression, dictionary):
   '''
   The i combinator expects a quoted program on the stack and unpacks it
   onto the pending expression for evaluation.
+  ::
 
-     [Q] i
-  -----------
-      Q
+       [Q] i
+    -----------
+        Q
 
   '''
   quote, stack = stack
@@ -871,11 +923,13 @@ def i(stack, expression, dictionary):
 @FunctionWrapper
 def x(stack, expression, dictionary):
   '''
-  x == dup i
+  ::
 
-  ... [Q] x = ... [Q] dup i
-  ... [Q] x = ... [Q] [Q] i
-  ... [Q] x = ... [Q]  Q
+    x == dup i
+
+    ... [Q] x = ... [Q] dup i
+    ... [Q] x = ... [Q] [Q] i
+    ... [Q] x = ... [Q]  Q
 
   '''
   quote, _ = stack
@@ -886,10 +940,12 @@ def x(stack, expression, dictionary):
 @FunctionWrapper
 def b(stack, expression, dictionary):
   '''
-  b == [i] dip i
+  ::
 
-  ... [P] [Q] b == ... [P] i [Q] i
-  ... [P] [Q] b == ... P Q
+    b == [i] dip i
+
+    ... [P] [Q] b == ... [P] i [Q] i
+    ... [P] [Q] b == ... P Q
 
   '''
   q, (p, (stack)) = stack
@@ -900,12 +956,14 @@ def b(stack, expression, dictionary):
 @FunctionWrapper
 def dupdip(stack, expression, dictionary):
   '''
-  [F] dupdip == dup [F] dip
+  ::
 
-  ... a [F] dupdip
-  ... a dup [F] dip
-  ... a a   [F] dip
-  ... a F a
+    [F] dupdip == dup [F] dip
+
+    ... a [F] dupdip
+    ... a dup [F] dip
+    ... a a   [F] dip
+    ... a F a
 
   '''
   F, stack = stack
@@ -919,10 +977,11 @@ def infra(stack, expression, dictionary):
   '''
   Accept a quoted program and a list on the stack and run the program
   with the list as its stack.
+  ::
 
-     ... [a b c] [Q] . infra
-  -----------------------------
-     c b a . Q [...] swaack
+       ... [a b c] [Q] . infra
+    -----------------------------
+       c b a . Q [...] swaack
 
   '''
   (quote, (aggregate, stack)) = stack
@@ -934,6 +993,7 @@ def infra(stack, expression, dictionary):
 def genrec(stack, expression, dictionary):
   '''
   General Recursion Combinator.
+  ::
 
                           [if] [then] [rec1] [rec2] genrec
     ---------------------------------------------------------------------
@@ -956,10 +1016,12 @@ def genrec(stack, expression, dictionary):
   a quotation of the whole function.
 
   For example, given a (general recursive) function 'F':
+  ::
 
       F == [I] [T] [R1] [R2] genrec
 
   If the [I] if-part fails you must derive R1 and R2 from:
+  ::
 
       ... R1 [F] R2
 
@@ -967,16 +1029,18 @@ def genrec(stack, expression, dictionary):
   have to do to apply the quoted [F] in the proper way.  In effect, the
   genrec combinator turns into an ifte combinator with a quoted copy of
   the original definition in the else-part:
+  ::
 
       F == [I] [T] [R1]   [R2] genrec
         == [I] [T] [R1 [F] R2] ifte
 
-  (Primitive recursive functions are those where R2 == i.
+  Primitive recursive functions are those where R2 == i.
+  ::
 
       P == [I] [T] [R] primrec
         == [I] [T] [R [P] i] ifte
         == [I] [T] [R P] ifte
-  )
+
   '''
   (rec2, (rec1, stack)) = stack
   (then, (if_, _)) = stack
@@ -1029,8 +1093,11 @@ def branch(stack, expression, dictionary):
   '''
   Use a Boolean value to select one of two quoted programs to run.
 
+  ::
+
       branch == roll< choice i
 
+  ::
 
         False [F] [T] branch
      --------------------------
@@ -1038,7 +1105,7 @@ def branch(stack, expression, dictionary):
 
         True [F] [T] branch
      -------------------------
-               T
+                  T
 
   '''
   (then, (else_, (flag, stack))) = stack
@@ -1050,6 +1117,7 @@ def branch(stack, expression, dictionary):
 def ifte(stack, expression, dictionary):
   '''
   If-Then-Else Combinator
+  ::
 
                   ... [if] [then] [else] ifte
        ---------------------------------------------------
@@ -1079,10 +1147,11 @@ def dip(stack, expression, dictionary):
   The dip combinator expects a quoted program on the stack and below it
   some item, it hoists the item into the expression and runs the program
   on the rest of the stack.
+  ::
 
-     ... x [Q] dip
-  -------------------
-       ... Q x
+       ... x [Q] dip
+    -------------------
+         ... Q x
 
   '''
   (quote, (x, stack)) = stack
@@ -1095,10 +1164,11 @@ def dip(stack, expression, dictionary):
 def dipd(S, expression, dictionary):
   '''
   Like dip but expects two items.
+  ::
 
-     ... y x [Q] dip
-  ---------------------
-       ... Q y x
+       ... y x [Q] dip
+    ---------------------
+         ... Q y x
 
   '''
   (quote, (x, (y, stack))) = S
@@ -1111,10 +1181,11 @@ def dipd(S, expression, dictionary):
 def dipdd(S, expression, dictionary):
   '''
   Like dip but expects three items.
+  ::
 
-     ... z y x [Q] dip
-  -----------------------
-       ... Q z y x
+       ... z y x [Q] dip
+    -----------------------
+         ... Q z y x
 
   '''
   (quote, (x, (y, (z, stack)))) = S
@@ -1129,6 +1200,7 @@ def app1(S, expression, dictionary):
   Given a quoted program on TOS and anything as the second stack item run
   the program and replace the two args with the first result of the
   program.
+  ::
 
               ... x [Q] . app1
      -----------------------------------
@@ -1144,6 +1216,7 @@ def app1(S, expression, dictionary):
 @FunctionWrapper
 def app2(S, expression, dictionary):
   '''Like app1 with two items.
+  ::
 
             ... y x [Q] . app2
      -----------------------------------
@@ -1163,6 +1236,7 @@ def app2(S, expression, dictionary):
 @FunctionWrapper
 def app3(S, expression, dictionary):
   '''Like app1 with three items.
+  ::
 
             ... z y x [Q] . app3
      -----------------------------------
@@ -1185,6 +1259,7 @@ def app3(S, expression, dictionary):
 def step(S, expression, dictionary):
   '''
   Run a quoted program on each item in a sequence.
+  ::
 
           ... [] [Q] . step
        -----------------------
@@ -1196,9 +1271,9 @@ def step(S, expression, dictionary):
                ... a . Q
 
 
-     ... [a b c] [Q] . step
-  ----------------------------------------
-               ... a . Q [b c] [Q] step
+       ... [a b c] [Q] . step
+    ----------------------------------------
+                 ... a . Q [b c] [Q] step
 
   The step combinator executes the quotation on each member of the list
   on top of the stack.
@@ -1219,20 +1294,21 @@ def step(S, expression, dictionary):
 def times(stack, expression, dictionary):
   '''
   times == [-- dip] cons [swap] infra [0 >] swap while pop
+  ::
 
-     ... n [Q] . times
-  ---------------------  w/ n <= 0
-           ... .
-
-
-     ... 1 [Q] . times
-  ---------------------------------
-           ... . Q
+       ... n [Q] . times
+    ---------------------  w/ n <= 0
+             ... .
 
 
-     ... n [Q] . times
-  ---------------------------------  w/ n > 1
-           ... . Q (n - 1) [Q] times
+       ... 1 [Q] . times
+    ---------------------------------
+             ... . Q
+
+
+       ... n [Q] . times
+    ---------------------------------  w/ n > 1
+             ... . Q (n - 1) [Q] times
 
   '''
   # times == [-- dip] cons [swap] infra [0 >] swap while pop
@@ -1267,14 +1343,15 @@ def times(stack, expression, dictionary):
 def loop(stack, expression, dictionary):
   '''
   Basic loop combinator.
+  ::
 
-     ... True [Q] loop
-  -----------------------
-       ... Q [Q] loop
+       ... True [Q] loop
+    -----------------------
+          ... Q [Q] loop
 
-     ... False [Q] loop
-  ------------------------
-            ...
+       ... False [Q] loop
+    ------------------------
+              ...
 
   '''
   quote, (flag, stack) = stack
@@ -1351,9 +1428,10 @@ for F in (
   UnaryBuiltinWrapper(sqrt),
   ):
   inscribe(F)
+del F  # Otherwise Sphinx autodoc will pick it up.
 
 
-add_aliases(_dictionary)
+add_aliases(_dictionary, ALIASES)
 
 
 DefinitionWrapper.add_definitions(definitions, _dictionary)
