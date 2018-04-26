@@ -24,7 +24,7 @@ from textwrap import dedent
 
 setup(
   name='Thun',
-  version='0.1.0',
+  version='0.1.1',
   description='Python Implementation of Joy',
   long_description=dedent('''\
     Joy is a programming language created by Manfred von Thun that is easy to
@@ -34,7 +34,7 @@ setup(
     behaviour of the original version written in C.'''),
   author='Simon Forman',
   author_email='forman.simon@gmail.com',
-  url='https://osdn.net/projects/joypy',
+  url='https://joypy.osdn.io',
   license='GPLv3+',
   packages=['joy', 'joy.utils'],
   classifiers=[
