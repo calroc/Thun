@@ -1,0 +1,250 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>joy.utils.stack &#8212; Thun 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for joy.utils.stack</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1">#    Copyright © 2014, 2015, 2017 Simon Forman</span>
+<span class="c1">#</span>
+<span class="c1">#    This file is part of Thun</span>
+<span class="c1">#</span>
+<span class="c1">#    Thun is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c1">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1">#    (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#    Thun is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#    You should have received a copy of the GNU General Public License</span>
+<span class="c1">#    along with Thun.  If not see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">When talking about Joy we use the terms &quot;stack&quot;, &quot;list&quot;, &quot;sequence&quot;,</span>
+<span class="sd">&quot;quote&quot; and others to mean the same thing: a simple linear datatype that</span>
+<span class="sd">permits certain operations such as iterating and pushing and popping</span>
+<span class="sd">values from (at least) one end.</span>
+
+<span class="sd">We use the  `cons list`_, a venerable two-tuple recursive sequence datastructure, where the</span>
+<span class="sd">empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the recursive</span>
+<span class="sd">form of a stack with one or more items on it::</span>
+
+<span class="sd">    stack := () | (item, stack)</span>
+
+<span class="sd">Putting some numbers onto a stack::</span>
+
+<span class="sd">    ()</span>
+<span class="sd">    (1, ())</span>
+<span class="sd">    (2, (1, ()))</span>
+<span class="sd">    (3, (2, (1, ())))</span>
+<span class="sd">    ...</span>
+
+<span class="sd">Python has very nice &quot;tuple packing and unpacking&quot; in its syntax which</span>
+<span class="sd">means we can directly &quot;unpack&quot; the expected arguments to a Joy function.</span>
+
+<span class="sd">For example::</span>
+
+<span class="sd">  def dup((head, tail)):</span>
+<span class="sd">    return head, (head, tail)</span>
+
+<span class="sd">We replace the argument &quot;stack&quot; by the expected structure of the stack,</span>
+<span class="sd">in this case &quot;(head, tail)&quot;, and Python takes care of unpacking the</span>
+<span class="sd">incoming tuple and assigning values to the names.  (Note that Python</span>
+<span class="sd">syntax doesn&#39;t require parentheses around tuples used in expressions</span>
+<span class="sd">where they would be redundant.)</span>
+
+<span class="sd">.. _cons list: https://en.wikipedia.org/wiki/Cons#Lists</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c1">##We have two very simple functions to build up a stack from a Python</span>
+<span class="c1">##iterable and also to iterate through a stack and yield its items</span>
+<span class="c1">##one-by-one in order, and two functions to generate string representations</span>
+<span class="c1">##of stacks::</span>
+<span class="c1">##</span>
+<span class="c1">##  list_to_stack()</span>
+<span class="c1">##</span>
+<span class="c1">##  iter_stack()</span>
+<span class="c1">##</span>
+<span class="c1">##  expression_to_string()  (prints left-to-right)</span>
+<span class="c1">##</span>
+<span class="c1">##  stack_to_string()  (prints right-to-left)</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">##A word about the stack data structure.</span>
+
+
+
+<div class="viewcode-block" id="list_to_stack"><a class="viewcode-back" href="../../../stack.html#joy.utils.stack.list_to_stack">[docs]</a><span class="k">def</span> <span class="nf">list_to_stack</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">stack</span><span class="o">=</span><span class="p">()):</span>
+  <span class="sd">&#39;&#39;&#39;Convert a Python list (or other sequence) to a Joy stack::</span>
+
+<span class="sd">  [1, 2, 3] -&gt; (1, (2, (3, ())))</span>
+
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">el</span><span class="p">):</span>
+    <span class="n">stack</span> <span class="o">=</span> <span class="n">item</span><span class="p">,</span> <span class="n">stack</span>
+  <span class="k">return</span> <span class="n">stack</span></div>
+
+
+<div class="viewcode-block" id="iter_stack"><a class="viewcode-back" href="../../../stack.html#joy.utils.stack.iter_stack">[docs]</a><span class="k">def</span> <span class="nf">iter_stack</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;Iterate through the items on the stack.&#39;&#39;&#39;</span>
+  <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>
+    <span class="n">item</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">stack</span>
+    <span class="k">yield</span> <span class="n">item</span></div>
+
+
+<div class="viewcode-block" id="stack_to_string"><a class="viewcode-back" href="../../../stack.html#joy.utils.stack.stack_to_string">[docs]</a><span class="k">def</span> <span class="nf">stack_to_string</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Return a &quot;pretty print&quot; string for a stack.</span>
+
+<span class="sd">  The items are written right-to-left::</span>
+
+<span class="sd">    (top, (second, ...)) -&gt; &#39;... second top&#39;</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">stack</span><span class="p">:</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">iter_stack</span><span class="p">(</span><span class="n">stack</span><span class="p">)))</span>
+  <span class="k">return</span> <span class="n">_to_string</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="expression_to_string"><a class="viewcode-back" href="../../../stack.html#joy.utils.stack.expression_to_string">[docs]</a><span class="k">def</span> <span class="nf">expression_to_string</span><span class="p">(</span><span class="n">expression</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Return a &quot;pretty print&quot; string for a expression.</span>
+
+<span class="sd">  The items are written left-to-right::</span>
+
+<span class="sd">    (top, (second, ...)) -&gt; &#39;top second ...&#39;</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">return</span> <span class="n">_to_string</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">iter_stack</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_to_string</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">long</span><span class="p">):</span> <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">)</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span> <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">stack</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># shortcut</span>
+  <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_s</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">stack</span><span class="p">)))</span>
+
+
+<span class="n">_s</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="p">(</span>
+  <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">expression_to_string</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
+  <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">long</span><span class="p">)</span>
+  <span class="k">else</span> <span class="nb">repr</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+  <span class="p">)</span>
+
+
+<div class="viewcode-block" id="pushback"><a class="viewcode-back" href="../../../stack.html#joy.utils.stack.pushback">[docs]</a><span class="k">def</span> <span class="nf">pushback</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;Concatinate quote onto expression.</span>
+
+<span class="sd">  In joy [1 2] [3 4] would become [1 2 3 4].</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+
+  <span class="c1"># Original implementation.</span>
+
+<span class="c1">##  return list_to_stack(list(iter_stack(quote)), expression)</span>
+
+  <span class="c1"># In-lining is slightly faster (and won&#39;t break the</span>
+  <span class="c1"># recursion limit on long quotes.)</span>
+
+<span class="c1">##  temp = []</span>
+<span class="c1">##  while quote:</span>
+<span class="c1">##    item, quote = quote</span>
+<span class="c1">##    temp.append(item)</span>
+<span class="c1">##  for item in reversed(temp):</span>
+<span class="c1">##    expression = item, expression</span>
+<span class="c1">##  return expression</span>
+
+  <span class="c1"># This is the fastest, but will trigger</span>
+  <span class="c1"># RuntimeError: maximum recursion depth exceeded</span>
+  <span class="c1"># on quotes longer than sys.getrecursionlimit().</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">quote</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pushback</span><span class="p">(</span><span class="n">quote</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">expression</span><span class="p">))</span> <span class="k">if</span> <span class="n">quote</span> <span class="k">else</span> <span class="n">expression</span></div>
+
+
+<div class="viewcode-block" id="pick"><a class="viewcode-back" href="../../../stack.html#joy.utils.stack.pick">[docs]</a><span class="k">def</span> <span class="nf">pick</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Find the nth item on the stack. (Pick with zero is the same as &quot;dup&quot;.)</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span>
+  <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">item</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">s</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">IndexError</span>
+    <span class="n">n</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">break</span>
+  <span class="k">return</span> <span class="n">item</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Simon Forman.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
