@@ -1,6 +1,7 @@
 
+**************
 Treating Trees
-==============
+**************
 
 Although any expression in Joy can be considered to describe a
 `tree <https://en.wikipedia.org/wiki/Tree_structure>`__ with the quotes
@@ -20,8 +21,8 @@ That says that a BTree is either the empty quote ``[]`` or a quote with
 four items: a key, a value, and two BTrees representing the left and
 right branches of the tree.
 
-A Function to Traverse this Structure
--------------------------------------
+A Function to Traverse a BTree
+=====================================
 
 Let's take a crack at writing a function that can recursively iterate or
 traverse these trees.
@@ -102,9 +103,7 @@ Hmm, will ``step`` do?
     key left-keys right BTree-iter
     key left-keys right-keys
 
-Wow. So:
-
-::
+So::
 
     R1 == [rest rest] dip step
 
@@ -133,17 +132,13 @@ Parameterizing the ``F`` per-node processing function.
 
     [F] BTree-iter == [not] [pop] [[F] dupdip rest rest] [step] genrec
 
-Working backward:
-
-::
+Working backward::
 
     [not] [pop] [[F] dupdip rest rest]            [step] genrec
     [not] [pop] [F]       [dupdip rest rest] cons [step] genrec
     [F] [not] [pop] roll< [dupdip rest rest] cons [step] genrec
 
-Ergo:
-
-::
+Ergo::
 
     BTree-iter == [not] [pop] roll< [dupdip rest rest] cons [step] genrec
 
@@ -162,7 +157,7 @@ Ergo:
 
 .. parsed-literal::
 
-    
+    (nothing)
 
 
 .. code:: ipython2
@@ -646,6 +641,9 @@ Putting it all together:
     ['a' 23 [] ['b' 88 [] ['c' 44 [] []]]]
 
 
+A Set-Like Datastructure
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 We can use this to make a set-like datastructure by just setting values
 to e.g. 0 and ignoring them. It's set-like in that duplicate items added
 to it will only occur once within it, and we can query it in
@@ -693,8 +691,8 @@ from a list.
     [7 6 8 4 5 9 2 3]
 
 
-``cmp`` combinator
-==================
+Interlude: The ``cmp`` combinator
+=================================
 
 Instead of all this mucking about with nested ``ifte`` let's just go
 whole hog and define ``cmp`` which takes two values and three quoted
@@ -877,8 +875,8 @@ to understand:
     ['a' 23 [] ['b' 88 [] ['c' 44 [] []]]]
 
 
-Factoring and naming
-====================
+Interlude: Factoring and Naming
+================================
 
 It may seem silly, but a big part of programming in Forth (and therefore
 in Joy) is the idea of small, highly-factored definitions. If you choose
@@ -1210,9 +1208,6 @@ So:
 TODO: BTree-delete
 ==================
 
-Then, once we have add, get, and delete we can see about abstracting
-them.
-
 ::
 
        tree key [E] BTree-delete
@@ -1256,6 +1251,10 @@ And:
 Tree with node and list of trees.
 =================================
 
+Once we have add, get, and delete we can see about abstracting
+them.
+
+
 Let's consider a tree structure, similar to one described `"Why
 functional programming matters" by John
 Hughes <https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf>`__,
@@ -1268,7 +1267,7 @@ star <https://en.wikipedia.org/wiki/Kleene_star>`__.)
     tree = [] | [node [tree*]]
 
 ``treestep``
-~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^
 
 In the spirit of ``step`` we are going to define a combinator
 ``treestep`` which expects a tree and three additional items: a
@@ -1298,7 +1297,7 @@ combine the result with ``C``.
            node N [tree*] [K] map C
 
 Derive the recursive form.
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Since this is a recursive function, we can begin to derive it by finding
 the ``ifte`` stage that ``genrec`` will produce. The predicate and
@@ -1353,7 +1352,7 @@ Plug it in and convert to ``genrec``:
     K == [not] [pop z] [i [N] dip]   [map C] genrec
 
 Extract the givens to parameterize the program.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
@@ -1379,7 +1378,7 @@ Extract the givens to parameterize the program.
 The givens are all to the left so we have our definition.
 
 Define ``treestep``
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 ::
 
@@ -1439,7 +1438,7 @@ Define ``treestep``
 
 
 A slight modification.
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Let's simplify the tree datastructure definition slightly by just
 letting the children be the ``rest`` of the tree:
@@ -1494,7 +1493,7 @@ The ``J`` function changes slightly.
 I think these trees seem a little easier to read.
 
 Redefining our BTree in terms of this form.
--------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
@@ -1560,7 +1559,10 @@ So:
     [3 2 9 5 4 8 6 7]
 
 
-There we go. #### In-order traversal with ``treestep``.
+There we go.
+
+In-order traversal with ``treestep``.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 From here:
 
@@ -1590,10 +1592,10 @@ So:
 
 
 Miscellaneous Crap
-------------------
+==================
 
 Toy with it.
-~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Let's reexamine:
 
@@ -1658,7 +1660,7 @@ items" in each node. This point to a more general factorization that
 would render a combinator that could work for other geometries of trees.
 
 A General Form for Trees
-------------------------
+========================
 
 A general form for tree data with N children per node:
 
@@ -1779,7 +1781,7 @@ Hmm...
 We could just let ``[R1]`` be a parameter too, for maximum flexibility.
 
 Automatically deriving the recursion combinator for a data type?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+================================================================
 
 If I understand it correctly, the "Bananas..." paper talks about a way
 to build the processor function automatically from the description of

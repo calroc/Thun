@@ -87,6 +87,7 @@ There are also some Jupyter notebooks.
    pretty
    library
    lib
+   notebooks/index
 
 
 

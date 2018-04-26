@@ -1,8 +1,12 @@
+***************************
+Developing a Program in Joy
+***************************
+
+As an example of developing a program in Joy let's take the first problem from the Project Euler website.
 
 `Project Euler, first problem: "Multiples of 3 and 5" <https://projecteuler.net/problem=1>`__
 =============================================================================================
 
-::
 
     If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
 
@@ -11,6 +15,9 @@
 .. code:: ipython2
 
     from notebook_preamble import J, V, define
+
+Sum a range filtered by a predicate
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Let's create a predicate that returns ``True`` if a number is a multiple
 of 3 or 5 and ``False`` otherwise.
@@ -54,7 +61,10 @@ Logically this is fine, but pragmatically we are doing more work than we
 should be; we generate one thousand integers but actually use less than
 half of them. A better solution would be to generate just the multiples
 we want to sum, and to add them as we go rather than storing them and
-adding summing them at the end.
+and summing them at the end.
+
+Generate just the multiples
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 At first I had the idea to use two counters and increase them by three
 and five, respectively. This way we only generate the terms that we
@@ -206,6 +216,9 @@ the counter to the running sum. This function will do that:
 So one ``step`` through all seven terms brings the counter to 15 and the
 total to 60.
 
+How many multiples to sum?
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. code:: ipython2
 
     1000 / 15
@@ -276,6 +289,8 @@ get to 990 and then the first four numbers 3 2 1 3 to get to 999.
 
     233168
 
+Packing the terms into an integer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This form uses no extra storage and produces no unused summands. It's
 good but there's one more trick we can apply. The list of seven terms
@@ -517,7 +532,8 @@ And so we have at last:
     233168
 
 
-Let's refactor.
+Let's refactor
+^^^^^^^^^^^^^^^
 
 ::
 
