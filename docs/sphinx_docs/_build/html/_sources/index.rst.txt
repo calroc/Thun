@@ -16,6 +16,13 @@ behaviour of the original version(s) written in C.  The main difference
 between Thun and the originals, other than being written in Python, is
 that it works by the "Continuation-Passing Style".
 
+Joy is:
+
+* `Purely Functional <https://en.wikipedia.org/wiki/Purely_functional_programming>`__
+* `Stack-based <https://en.wikipedia.org/wiki/Stack-oriented_programming_language>`__
+* `Concatinative`_ ( See also `concatenative.org <http://www.concatenative.org/wiki/view/Concatenative%20language>`__)
+* :doc:`Categorical <notebooks/Categorical>`
+
 I hope that this package is useful in the sense that it provides an
 additional joy interpreter (the binary in the archive from La Trobe seems
 to run just fine on my modern Linux machine!)  But I also hope that you
@@ -23,6 +30,8 @@ can read and understand the Python code and play with the implementation
 itself.
 
 .. _Joy: https://en.wikipedia.org/wiki/Joy_(programming_language)
+
+.. _Concatinative: https://en.wikipedia.org/wiki/Concatenative_programming_language
 
 
 Quick Start
@@ -76,7 +85,6 @@ Documentation on Thun Dialect
 -----------------------------
 
 The following is specific information for this dialect of Joy.
-There are also some Jupyter notebooks.
 
 .. toctree::
    :maxdepth: 2
