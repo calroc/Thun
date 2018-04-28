@@ -45,6 +45,8 @@ To start the REPL::
 
     $ python -m joy
 
+Continue with :doc:`the introduction <notebooks/Intro>`.
+
 .. _PyPI: https://pypi.org/project/Thun/
 
 
@@ -89,6 +91,7 @@ The following is specific information for this dialect of Joy.
 .. toctree::
    :maxdepth: 2
 
+   notebooks/Intro
    joy
    stack
    parser

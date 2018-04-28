@@ -1,21 +1,20 @@
 
-Joypy
-=====
-
-Joy in Python
--------------
+*******************
+Thun: Joy in Python
+*******************
 
 This implementation is meant as a tool for exploring the programming
 model and method of Joy. Python seems like a great implementation
 language for Joy for several reasons.
 
-We can lean on the Python immutable types for our basic semantics and
-types: ints, floats, strings, and tuples, which enforces functional
-purity. We get garbage collection for free. Compilation via Cython. Glue
-language with loads of libraries.
+* We can lean on the Python immutable types for our basic semantics and types: ints, floats, strings, and tuples, which enforces functional purity.
+* We get garbage collection for free.
+* Compilation via Cython.
+* Python is a "glue language" with loads of libraries which we can wrap in Joy functions.
+
 
 `Read-Eval-Print Loop (REPL) <https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop>`__
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+====================================================================================================
 
 The main way to interact with the Joy interpreter is through a simple
 `REPL <https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop>`__
@@ -37,11 +36,8 @@ that you start by running the package:
     joy? _
 
 The ``<-top`` marker points to the top of the (initially empty) stack.
-You can enter Joy notation at the prompt and a `trace of
-evaluation <#The-TracePrinter.>`__ will be printed followed by the stack
-and prompt again:
-
-::
+You can enter Joy notation at the prompt and a :doc:`trace of evaluation <../pretty>` will
+be printed followed by the stack and prompt again::
 
     joy? 23 sqr 18 +
            . 23 sqr 18 +
@@ -56,194 +52,58 @@ and prompt again:
 
     joy? 
 
-Stacks (aka list, quote, sequence, etc.)
-========================================
+
+The Stack
+=============
 
 In Joy, in addition to the types Boolean, integer, float, and string,
-there is a single sequence type represented by enclosing a sequence of
+there is a :doc:`single sequence type <../stack>` represented by enclosing a sequence of
 terms in brackets ``[...]``. This sequence type is used to represent
 both the stack and the expression. It is a `cons
 list <https://en.wikipedia.org/wiki/Cons#Lists>`__ made from Python
 tuples.
 
-.. code:: ipython2
 
-    import inspect
-    import joy.utils.stack
-    
-    
-    print inspect.getdoc(joy.utils.stack)
+Purely Functional Datastructures
+=================================
+
+Because Joy stacks are made out of Python tuples they are immutable, as are the other Python types we "borrow" for Joy, so all Joy datastructures are `purely functional <https://en.wikipedia.org/wiki/Purely_functional_data_structure>`__.
 
 
-.. parsed-literal::
-
-    § Stack
-    
-    
-    When talking about Joy we use the terms "stack", "list", "sequence" and
-    "aggregate" to mean the same thing: a simple datatype that permits
-    certain operations such as iterating and pushing and popping values from
-    (at least) one end.
-    
-    We use the venerable two-tuple recursive form of sequences where the
-    empty tuple () is the empty stack and (head, rest) gives the recursive
-    form of a stack with one or more items on it.
-    
-      ()
-      (1, ())
-      (2, (1, ()))
-      (3, (2, (1, ())))
-      ...
-    
-    And so on.
-    
-    
-    We have two very simple functions to build up a stack from a Python
-    iterable and also to iterate through a stack and yield its items
-    one-by-one in order, and two functions to generate string representations
-    of stacks:
-    
-      list_to_stack()
-    
-      iter_stack()
-    
-      expression_to_string()  (prints left-to-right)
-    
-      stack_to_string()  (prints right-to-left)
-    
-    
-    A word about the stack data structure.
-    
-    Python has very nice "tuple packing and unpacking" in its syntax which
-    means we can directly "unpack" the expected arguments to a Joy function.
-    
-    For example:
-    
-      def dup(stack):
-        head, tail = stack
-        return head, (head, tail)
-    
-    We replace the argument "stack" by the expected structure of the stack,
-    in this case "(head, tail)", and Python takes care of de-structuring the
-    incoming argument and assigning values to the names.  Note that Python
-    syntax doesn't require parentheses around tuples used in expressions
-    where they would be redundant.
-
-
-The utility functions maintain order.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The 0th item in the list will be on the top of the stack and *vise
-versa*.
-
-.. code:: ipython2
-
-    joy.utils.stack.list_to_stack([1, 2, 3])
-
-
-
-
-.. parsed-literal::
-
-    (1, (2, (3, ())))
-
-
-
-.. code:: ipython2
-
-    list(joy.utils.stack.iter_stack((1, (2, (3, ())))))
-
-
-
-
-.. parsed-literal::
-
-    [1, 2, 3]
-
-
-
-This requires reversing the sequence (or iterating backwards) otherwise:
-
-.. code:: ipython2
-
-    stack = ()
-    
-    for n in [1, 2, 3]:
-        stack = n, stack
-    
-    print stack
-    print list(joy.utils.stack.iter_stack(stack))
-
-
-.. parsed-literal::
-
-    (3, (2, (1, ())))
-    [3, 2, 1]
-
-
-Purely Functional Datastructures.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Because Joy lists are made out of Python tuples they are immutable, so
-all Joy datastructures are *`purely
-functional <https://en.wikipedia.org/wiki/Purely_functional_data_structure>`__*.
-
-The ``joy()`` function.
+The ``joy()`` function
 =======================
 
 An Interpreter
---------------
+~~~~~~~~~~~~~~~~~
 
-The ``joy()`` function is extrememly simple. It accepts a stack, an
+The ``joy()`` interpreter function is extrememly simple. It accepts a stack, an
 expression, and a dictionary, and it iterates through the expression
-putting values onto the stack and delegating execution to functions it
+putting values onto the stack and delegating execution to functions which it
 looks up in the dictionary.
 
-Each function is passed the stack, expression, and dictionary and
-returns them. Whatever the function returns becomes the new stack,
-expression, and dictionary. (The dictionary is passed to enable e.g.
-writing words that let you enter new words into the dictionary at
-runtime, which nothing does yet and may be a bad idea, and the ``help``
-command.)
 
-.. code:: ipython2
+`Continuation-Passing Style <https://en.wikipedia.org/wiki/Continuation-passing_style>`__
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    import joy.joy
-    
-    print inspect.getsource(joy.joy.joy)
-
-
-.. parsed-literal::
-
-    def joy(stack, expression, dictionary, viewer=None):
-      '''
-      Evaluate the Joy expression on the stack.
-      '''
-      while expression:
-    
-        if viewer: viewer(stack, expression)
-    
-        term, expression = expression
-        if isinstance(term, Symbol):
-          term = dictionary[term]
-          stack, expression, dictionary = term(stack, expression, dictionary)
-        else:
-          stack = term, stack
-    
-      if viewer: viewer(stack, expression)
-      return stack, expression, dictionary
-    
+One day I thought, What happens if you rewrite Joy to use
+`CPS <https://en.wikipedia.org/wiki/Continuation-passing_style>`__? I
+made all the functions accept and return the expression as well as the
+stack and found that all the combinators could be rewritten to work by
+modifying the expression rather than making recursive calls to the
+``joy()`` function.
 
 
 View function
 ~~~~~~~~~~~~~
 
-The ``joy()`` function accepts a "viewer" function which it calls on
+The ``joy()`` function accepts an optional ``viewer`` argument that
+is a function which it calls on
 each iteration passing the current stack and expression just before
 evaluation. This can be used for tracing, breakpoints, retrying after
 exceptions, or interrupting an evaluation and saving to disk or sending
 over the network to resume later. The stack and expression together
 contain all the state of the computation at each step.
+
 
 The ``TracePrinter``.
 ~~~~~~~~~~~~~~~~~~~~~
@@ -254,87 +114,38 @@ evaluation, one line per step. Each step is aligned to the current
 interpreter position, signified by a period separating the stack on the
 left from the pending expression ("continuation") on the right.
 
-`Continuation-Passing Style <https://en.wikipedia.org/wiki/Continuation-passing_style>`__
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-One day I thought, What happens if you rewrite Joy to use
-`CSP <https://en.wikipedia.org/wiki/Continuation-passing_style>`__? I
-made all the functions accept and return the expression as well as the
-stack and found that all the combinators could be rewritten to work by
-modifying the expression rather than making recursive calls to the
-``joy()`` function.
 
 Parser
 ======
 
-.. code:: ipython2
-
-    import joy.parser
-    
-    print inspect.getdoc(joy.parser)
-
-
-.. parsed-literal::
-
-    § Converting text to a joy expression.
-    
-    This module exports a single function:
-    
-      text_to_expression(text)
-    
-    As well as a single Symbol class and a single Exception type:
-    
-      ParseError
-    
-    When supplied with a string this function returns a Python datastructure
-    that represents the Joy datastructure described by the text expression.
-    Any unbalanced square brackets will raise a ParseError.
-
-
-The parser is extremely simple, the undocumented ``re.Scanner`` class
-does most of the tokenizing work and then you just build the tuple
+The parser is extremely simple.  The undocumented ``re.Scanner`` class
+does the tokenizing and then the parser builds the tuple
 structure out of the tokens. There's no Abstract Syntax Tree or anything
 like that.
 
-.. code:: ipython2
 
-    print inspect.getsource(joy.parser._parse)
+Symbols
+~~~~~~~~~~~~~
 
-
-.. parsed-literal::
-
-    def _parse(tokens):
-      '''
-      Return a stack/list expression of the tokens.
-      '''
-      frame = []
-      stack = []
-      for tok in tokens:
-        if tok == '[':
-          stack.append(frame)
-          frame = []
-          stack[-1].append(frame)
-        elif tok == ']':
-          try:
-            frame = stack.pop()
-          except IndexError:
-            raise ParseError('One or more extra closing brackets.')
-          frame[-1] = list_to_stack(frame[-1])
-        else:
-          frame.append(tok)
-      if stack:
-        raise ParseError('One or more unclosed brackets.')
-      return list_to_stack(frame)
-    
+TODO: Symbols are just a string subclass; used by the parser to represent function names and by the interpreter to look up functions in the dictionary.  N.B.: Symbols are not looked up at parse-time.  You *could* define recursive functions, er, recusively, without ``genrec`` or other recursion combinators  ``foo == ... foo ...`` but don't do that.
 
 
-That's pretty much all there is to it.
+Token Regular Expressions
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    123   1.2   'single quotes'  "double quotes"   function
+
+TBD (look in the :module: joy.parser  module.)
+
+
+Examples
+~~~~~~~~~~~
 
 .. code:: ipython2
 
     joy.parser.text_to_expression('1 2 3 4 5')  # A simple sequence.
-
-
 
 
 .. parsed-literal::
@@ -342,12 +153,9 @@ That's pretty much all there is to it.
     (1, (2, (3, (4, (5, ())))))
 
 
-
 .. code:: ipython2
 
     joy.parser.text_to_expression('[1 2 3] 4 5')  # Three items, the first is a list with three items
-
-
 
 
 .. parsed-literal::
@@ -355,13 +163,11 @@ That's pretty much all there is to it.
     ((1, (2, (3, ()))), (4, (5, ())))
 
 
-
 .. code:: ipython2
 
     joy.parser.text_to_expression('1 23 ["four" [-5.0] cons] 8888')  # A mixed bag. cons is
                                                                      # a Symbol, no lookup at
                                                                      # parse-time.  Haiku docs.
-
 
 
 
@@ -406,18 +212,6 @@ the Joy system. There are simple functions such as addition ``add`` (or
 ``+``, the library module supports aliases), and combinators which
 provide control-flow and higher-order operations.
 
-.. code:: ipython2
-
-    import joy.library
-    
-    print ' '.join(sorted(joy.library.initialize()))
-
-
-.. parsed-literal::
-
-    != % & * *fraction *fraction0 + ++ - -- / < << <= <> = > >= >> ? ^ add anamorphism and app1 app2 app3 average b binary branch choice clear cleave concat cons dinfrirst dip dipd dipdd disenstacken div down_to_zero dudipd dup dupd dupdip enstacken eq first flatten floordiv gcd ge genrec getitem gt help i id ifte infra le least_fraction loop lshift lt map min mod modulus mul ne neg not nullary or over pam parse pm pop popd popdd popop pow pred primrec product quoted range range_to_zero rem remainder remove rest reverse roll< roll> rolldown rollup rshift run second select sharing shunt size sqr sqrt stack step sub succ sum swaack swap swoncat swons ternary third times truediv truthy tuck unary uncons unit unquoted unstack void warranty while words x xor zip •
-
-
 Many of the functions are defined in Python, like ``dip``:
 
 .. code:: ipython2
@@ -432,7 +226,6 @@ Many of the functions are defined in Python, like ``dip``:
       expression = x, expression
       return stack, pushback(quote, expression), dictionary
     
-
 
 Some functions are defined in equations in terms of other functions.
 When the interpreter executes a definition function that function just
@@ -496,7 +289,7 @@ datastructures (which only contain symbols, not the actual functions.
 Pickle some and see for yourself.)
 
 "There should be only one."
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Which brings me to talking about one of my hopes and dreams for this
 notation: "There should be only one." What I mean is that there should
@@ -516,7 +309,7 @@ attack <https://en.wikipedia.org/wiki/Thundering_herd_problem>`__ on
 human mentality.
 
 Literary Code Library
-^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~
 
 If you read over the other notebooks you'll see that developing code in
 Joy is a lot like doing simple mathematics, and the descriptions of the
