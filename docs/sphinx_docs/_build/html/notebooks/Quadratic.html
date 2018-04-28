@@ -1,0 +1,255 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Quadratic formula &#8212; Thun 0.1.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="No Updates" href="NoUpdates.html" />
+    <link rel="prev" title="Newton’s method" href="Newton-Raphson.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="quadratic-formula">
+<h1><a class="reference external" href="https://en.wikipedia.org/wiki/Quadratic_formula">Quadratic formula</a><a class="headerlink" href="#quadratic-formula" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Quadratic_formula">The Quadratic formula</a></p>
+<p><span class="math notranslate nohighlight">\(\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}\)</span></p>
+<p>In
+<a class="reference external" href="http://www.kevinalbrecht.com/code/joy-mirror/jp-quadratic.html">jp-quadratic.html</a>
+a Joy function for the Quadratic formula is derived (along with one of my favorite combinators <code class="docutils literal notranslate"><span class="pre">[i]</span> <span class="pre">map</span></code>,
+which I like to call <code class="docutils literal notranslate"><span class="pre">pam</span></code>) starting with a version written in Scheme.  Here we investigate a different approach.</p>
+<div class="section" id="write-a-program-with-variable-names">
+<h2>Write a program with variable names.<a class="headerlink" href="#write-a-program-with-variable-names" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="n">neg</span> <span class="n">b</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="n">a</span> <span class="n">c</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+</pre></div>
+</div>
+<p>We use <code class="docutils literal notranslate"><span class="pre">cleave</span></code> to compute the sum and difference (“plus-or-minus”) and then <code class="docutils literal notranslate"><span class="pre">app2</span></code> to finish computing both roots using a quoted program <code class="docutils literal notranslate"><span class="pre">[2a</span> <span class="pre">truediv]</span></code> built with <code class="docutils literal notranslate"><span class="pre">cons</span></code>.</p>
+<div class="section" id="check-it">
+<h3>Check it.<a class="headerlink" href="#check-it" title="Permalink to this headline">¶</a></h3>
+<p>Evaluating by hand:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">b</span> <span class="n">neg</span> <span class="n">b</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="n">a</span> <span class="n">c</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+<span class="o">-</span><span class="n">b</span>     <span class="n">b</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="n">a</span> <span class="n">c</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+<span class="o">-</span><span class="n">b</span>     <span class="n">b</span><span class="o">^</span><span class="mi">2</span>   <span class="mi">4</span> <span class="n">a</span> <span class="n">c</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+<span class="o">-</span><span class="n">b</span>     <span class="n">b</span><span class="o">^</span><span class="mi">2</span> <span class="mi">4</span><span class="n">ac</span>         <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+<span class="o">-</span><span class="n">b</span>     <span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span>           <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+<span class="o">-</span><span class="n">b</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span>              <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+
+<span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span>    <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span>    <span class="n">a</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+<span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span>    <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span>    <span class="mi">2</span><span class="n">a</span>    <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+<span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span>    <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span>    <span class="p">[</span><span class="mi">2</span><span class="n">a</span> <span class="n">truediv</span><span class="p">]</span>         <span class="n">app2</span>
+<span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span>
+</pre></div>
+</div>
+<p>(Eventually we’ll be able to use e.g. Sympy versions of the Joy commands to do this sort of thing symbolically.  This is part of what is meant by a “categorical” language.)</p>
+</div>
+<div class="section" id="cleanup">
+<h3>Cleanup<a class="headerlink" href="#cleanup" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span>    <span class="n">roll</span><span class="o">&lt;</span> <span class="n">pop</span>
+   <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span>       <span class="n">pop</span>
+   <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="derive-a-definition">
+<h2>Derive a definition.<a class="headerlink" href="#derive-a-definition" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="n">neg</span> <span class="n">b</span>           <span class="n">sqr</span> <span class="mi">4</span> <span class="n">a</span> <span class="n">c</span>        <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span>       <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">pop</span>
+<span class="n">b</span>    <span class="p">[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="n">a</span> <span class="n">c</span>        <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span>       <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">pop</span>
+<span class="n">b</span> <span class="n">a</span> <span class="n">c</span>    <span class="p">[[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span><span class="p">]</span> <span class="n">dipd</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span>       <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">pop</span>
+<span class="n">b</span> <span class="n">a</span> <span class="n">c</span> <span class="n">a</span>    <span class="p">[[[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span><span class="p">]</span> <span class="n">dipd</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span><span class="p">]</span> <span class="n">dip</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">pop</span>
+<span class="n">b</span> <span class="n">a</span> <span class="n">c</span> <span class="n">over</span> <span class="p">[[[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span><span class="p">]</span> <span class="n">dipd</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span><span class="p">]</span> <span class="n">dip</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">pop</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt [+] [-] cleave] dip 2 * [truediv] cons app2 roll&lt; pop&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 1 1 quadratic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="o">-</span><span class="mf">2.618033988749895</span>
+</pre></div>
+</div>
+<div class="section" id="simplify">
+<h3>Simplify<a class="headerlink" href="#simplify" title="Permalink to this headline">¶</a></h3>
+<p>We can define a <code class="docutils literal notranslate"><span class="pre">pm</span></code> plus-or-minus function:</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;pm == [+] [-] cleave popdd&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then <code class="docutils literal notranslate"><span class="pre">quadratic</span></code> becomes:</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [truediv] cons app2&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 1 1 quadratic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="o">-</span><span class="mf">2.618033988749895</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="define-a-native-pm-function">
+<h3>Define a “native” <code class="docutils literal notranslate"><span class="pre">pm</span></code> function.<a class="headerlink" href="#define-a-native-pm-function" title="Permalink to this headline">¶</a></h3>
+<p>The definition of <code class="docutils literal notranslate"><span class="pre">pm</span></code> above is pretty elegant, but the implementation
+takes a lot of steps relative to what it’s accomplishing. Since we are
+likely to use <code class="docutils literal notranslate"><span class="pre">pm</span></code> more than once in the future, let’s write a
+primitive in Python and add it to the dictionary.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="k">import</span> <span class="n">SimpleFunctionWrapper</span>
+<span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">D</span>
+
+
+<span class="nd">@SimpleFunctionWrapper</span>
+<span class="k">def</span> <span class="nf">pm</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
+    <span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span>
+    <span class="k">return</span> <span class="n">m</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
+
+
+<span class="n">D</span><span class="p">[</span><span class="s1">&#39;pm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pm</span>
+</pre></div>
+</div>
+<p>The resulting trace is short enough to fit on a page.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;3 1 1 quadratic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                    <span class="o">.</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">1</span> <span class="n">quadratic</span>
+                                                  <span class="mi">3</span> <span class="o">.</span> <span class="mi">1</span> <span class="mi">1</span> <span class="n">quadratic</span>
+                                                <span class="mi">3</span> <span class="mi">1</span> <span class="o">.</span> <span class="mi">1</span> <span class="n">quadratic</span>
+                                              <span class="mi">3</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">.</span> <span class="n">quadratic</span>
+                                              <span class="mi">3</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">.</span> <span class="n">over</span> <span class="p">[[[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span><span class="p">]</span> <span class="n">dipd</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span><span class="p">]</span> <span class="n">dip</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                            <span class="mi">3</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">.</span> <span class="p">[[[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span><span class="p">]</span> <span class="n">dipd</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span><span class="p">]</span> <span class="n">dip</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+  <span class="mi">3</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="p">[[[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span><span class="p">]</span> <span class="n">dipd</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span><span class="p">]</span> <span class="o">.</span> <span class="n">dip</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                              <span class="mi">3</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">.</span> <span class="p">[[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span><span class="p">]</span> <span class="n">dipd</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                         <span class="mi">3</span> <span class="mi">1</span> <span class="mi">1</span> <span class="p">[[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span><span class="p">]</span> <span class="o">.</span> <span class="n">dipd</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                                  <span class="mi">3</span> <span class="o">.</span> <span class="p">[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                            <span class="mi">3</span> <span class="p">[</span><span class="n">neg</span><span class="p">]</span> <span class="o">.</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                                  <span class="mi">3</span> <span class="o">.</span> <span class="n">neg</span> <span class="mi">3</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                                 <span class="o">-</span><span class="mi">3</span> <span class="o">.</span> <span class="mi">3</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                               <span class="o">-</span><span class="mi">3</span> <span class="mi">3</span> <span class="o">.</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                               <span class="o">-</span><span class="mi">3</span> <span class="mi">3</span> <span class="o">.</span> <span class="n">dup</span> <span class="n">mul</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                             <span class="o">-</span><span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="o">.</span> <span class="n">mul</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                               <span class="o">-</span><span class="mi">3</span> <span class="mi">9</span> <span class="o">.</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                             <span class="o">-</span><span class="mi">3</span> <span class="mi">9</span> <span class="mi">4</span> <span class="o">.</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                           <span class="o">-</span><span class="mi">3</span> <span class="mi">9</span> <span class="mi">4</span> <span class="mi">1</span> <span class="o">.</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                         <span class="o">-</span><span class="mi">3</span> <span class="mi">9</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">.</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                           <span class="o">-</span><span class="mi">3</span> <span class="mi">9</span> <span class="mi">4</span> <span class="mi">1</span> <span class="o">.</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                             <span class="o">-</span><span class="mi">3</span> <span class="mi">9</span> <span class="mi">4</span> <span class="o">.</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                               <span class="o">-</span><span class="mi">3</span> <span class="mi">5</span> <span class="o">.</span> <span class="n">sqrt</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+                                <span class="o">-</span><span class="mi">3</span> <span class="mf">2.23606797749979</span> <span class="o">.</span> <span class="n">pm</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+              <span class="o">-</span><span class="mf">0.7639320225002102</span> <span class="o">-</span><span class="mf">5.23606797749979</span> <span class="o">.</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+            <span class="o">-</span><span class="mf">0.7639320225002102</span> <span class="o">-</span><span class="mf">5.23606797749979</span> <span class="mi">1</span> <span class="o">.</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+          <span class="o">-</span><span class="mf">0.7639320225002102</span> <span class="o">-</span><span class="mf">5.23606797749979</span> <span class="mi">1</span> <span class="mi">2</span> <span class="o">.</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+            <span class="o">-</span><span class="mf">0.7639320225002102</span> <span class="o">-</span><span class="mf">5.23606797749979</span> <span class="mi">2</span> <span class="o">.</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
+  <span class="o">-</span><span class="mf">0.7639320225002102</span> <span class="o">-</span><span class="mf">5.23606797749979</span> <span class="mi">2</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="n">app2</span>
+  <span class="o">-</span><span class="mf">0.7639320225002102</span> <span class="o">-</span><span class="mf">5.23606797749979</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="o">.</span> <span class="n">app2</span>
+                  <span class="p">[</span><span class="o">-</span><span class="mf">0.7639320225002102</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.23606797749979</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="n">infra</span> <span class="n">first</span>
+                                <span class="o">-</span><span class="mf">0.7639320225002102</span> <span class="o">.</span> <span class="mi">2</span> <span class="n">truediv</span> <span class="p">[]</span> <span class="n">swaack</span> <span class="n">first</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.23606797749979</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="n">infra</span> <span class="n">first</span>
+                              <span class="o">-</span><span class="mf">0.7639320225002102</span> <span class="mi">2</span> <span class="o">.</span> <span class="n">truediv</span> <span class="p">[]</span> <span class="n">swaack</span> <span class="n">first</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.23606797749979</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="n">infra</span> <span class="n">first</span>
+                                <span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="o">.</span> <span class="p">[]</span> <span class="n">swaack</span> <span class="n">first</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.23606797749979</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="n">infra</span> <span class="n">first</span>
+                             <span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="p">[]</span> <span class="o">.</span> <span class="n">swaack</span> <span class="n">first</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.23606797749979</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="n">infra</span> <span class="n">first</span>
+                              <span class="p">[</span><span class="o">-</span><span class="mf">0.3819660112501051</span><span class="p">]</span> <span class="o">.</span> <span class="n">first</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.23606797749979</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="n">infra</span> <span class="n">first</span>
+                                <span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="o">.</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.23606797749979</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="n">infra</span> <span class="n">first</span>
+            <span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.23606797749979</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="n">infra</span> <span class="n">first</span>
+<span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.23606797749979</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="n">truediv</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
+                                  <span class="o">-</span><span class="mf">5.23606797749979</span> <span class="o">.</span> <span class="mi">2</span> <span class="n">truediv</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.3819660112501051</span><span class="p">]</span> <span class="n">swaack</span> <span class="n">first</span>
+                                <span class="o">-</span><span class="mf">5.23606797749979</span> <span class="mi">2</span> <span class="o">.</span> <span class="n">truediv</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.3819660112501051</span><span class="p">]</span> <span class="n">swaack</span> <span class="n">first</span>
+                                 <span class="o">-</span><span class="mf">2.618033988749895</span> <span class="o">.</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.3819660112501051</span><span class="p">]</span> <span class="n">swaack</span> <span class="n">first</span>
+           <span class="o">-</span><span class="mf">2.618033988749895</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.3819660112501051</span><span class="p">]</span> <span class="o">.</span> <span class="n">swaack</span> <span class="n">first</span>
+           <span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="p">[</span><span class="o">-</span><span class="mf">2.618033988749895</span><span class="p">]</span> <span class="o">.</span> <span class="n">first</span>
+             <span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="o">-</span><span class="mf">2.618033988749895</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Quadratic formula</a><ul>
+<li><a class="reference internal" href="#write-a-program-with-variable-names">Write a program with variable names.</a><ul>
+<li><a class="reference internal" href="#check-it">Check it.</a></li>
+<li><a class="reference internal" href="#cleanup">Cleanup</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#derive-a-definition">Derive a definition.</a><ul>
+<li><a class="reference internal" href="#simplify">Simplify</a></li>
+<li><a class="reference internal" href="#define-a-native-pm-function">Define a “native” <code class="docutils literal notranslate"><span class="pre">pm</span></code> function.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Essays about Programming in Joy</a><ul>
+      <li>Previous: <a href="Newton-Raphson.html" title="previous chapter">Newton’s method</a></li>
+      <li>Next: <a href="NoUpdates.html" title="next chapter">No Updates</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notebooks/Quadratic.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+</a>
+<br />
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+    </div>
+
+  </body>
+</html>

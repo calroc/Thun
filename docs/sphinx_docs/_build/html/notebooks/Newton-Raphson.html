@@ -1,0 +1,251 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Newton’s method &#8212; Thun 0.1.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quadratic formula" href="Quadratic.html" />
+    <link rel="prev" title="Treating Trees" href="Trees.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="newton-s-method">
+<h1><a class="reference external" href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a><a class="headerlink" href="#newton-s-method" title="Permalink to this headline">¶</a></h1>
+<p>Newton-Raphson for finding the root of an equation.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+</pre></div>
+</div>
+<p>Cf. <a class="reference external" href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">“Why Functional Programming Matters” by John
+Hughes</a></p>
+<div class="section" id="finding-the-square-root-of-a-number">
+<h2>Finding the Square-Root of a Number<a class="headerlink" href="#finding-the-square-root-of-a-number" title="Permalink to this headline">¶</a></h2>
+<p>Let’s define a function that computes this equation:</p>
+<p><span class="math notranslate nohighlight">\(a_{i+1} = \frac{(a_i+\frac{n}{a_i})}{2}\)</span></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>     <span class="n">n</span> <span class="n">a</span> <span class="n">Q</span>
+<span class="o">---------------</span>
+   <span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">n</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+
+<span class="n">n</span> <span class="n">a</span> <span class="n">tuck</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="n">a</span> <span class="n">n</span> <span class="n">a</span>    <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="n">a</span> <span class="n">n</span><span class="o">/</span><span class="n">a</span>      <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="n">a</span><span class="o">+</span><span class="n">n</span><span class="o">/</span><span class="n">a</span>        <span class="mi">2</span> <span class="o">/</span>
+<span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">n</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>We want it to leave n but replace a, so we execute it with <code class="docutils literal notranslate"><span class="pre">unary</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Q</span> <span class="o">==</span> <span class="p">[</span><span class="n">tuck</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">unary</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Q == [tuck / + 2 /] unary&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="compute-the-error">
+<h2>Compute the Error<a class="headerlink" href="#compute-the-error" title="Permalink to this headline">¶</a></h2>
+<p>And a function to compute the error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">a</span> <span class="n">sqr</span> <span class="o">-</span> <span class="nb">abs</span>
+<span class="o">|</span><span class="n">n</span><span class="o">-</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span><span class="o">|</span>
+</pre></div>
+</div>
+<p>This should be <code class="docutils literal notranslate"><span class="pre">nullary</span></code> so as to leave both n and a on the stack
+below the error.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">err</span> <span class="o">==</span> <span class="p">[</span><span class="n">sqr</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">]</span> <span class="n">nullary</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;err == [sqr - abs] nullary&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="square-root">
+<h2><code class="docutils literal notranslate"><span class="pre">square-root</span></code><a class="headerlink" href="#square-root" title="Permalink to this headline">¶</a></h2>
+<p>Now we can define a recursive program that expects a number <code class="docutils literal notranslate"><span class="pre">n</span></code>, an
+initial estimate <code class="docutils literal notranslate"><span class="pre">a</span></code>, and an epsilon value <code class="docutils literal notranslate"><span class="pre">ε</span></code>, and that leaves on
+the stack the square root of <code class="docutils literal notranslate"><span class="pre">n</span></code> to within the precision of the
+epsilon value. (Later on we’ll refine it to generate the initial
+estimate and hard-code an epsilon value.)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>n a ε square-root
+-----------------
+      √n
+</pre></div>
+</div>
+<p>If we apply the two functions <code class="docutils literal notranslate"><span class="pre">Q</span></code> and <code class="docutils literal notranslate"><span class="pre">err</span></code> defined above we get the
+next approximation and the error on the stack below the epsilon.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">a</span> <span class="n">ε</span> <span class="p">[</span><span class="n">Q</span> <span class="n">err</span><span class="p">]</span> <span class="n">dip</span>
+<span class="n">n</span> <span class="n">a</span> <span class="n">Q</span> <span class="n">err</span> <span class="n">ε</span>
+<span class="n">n</span> <span class="n">a</span><span class="s1">&#39;  err ε</span>
+<span class="n">n</span> <span class="n">a</span><span class="s1">&#39; e    ε</span>
+</pre></div>
+</div>
+<p>Let’s define a recursive function <code class="docutils literal notranslate"><span class="pre">K</span></code> from here.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">a</span><span class="s1">&#39; e ε K</span>
+
+<span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
+</pre></div>
+</div>
+<div class="section" id="base-case">
+<h3>Base-case<a class="headerlink" href="#base-case" title="Permalink to this headline">¶</a></h3>
+<p>The predicate and the base case are obvious:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="o">&lt;</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="n">popd</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">a</span><span class="s1">&#39; e ε popop popd</span>
+<span class="n">n</span> <span class="n">a</span><span class="s1">&#39;           popd</span>
+  <span class="n">a</span><span class="s1">&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="recur">
+<h3>Recur<a class="headerlink" href="#recur" title="Permalink to this headline">¶</a></h3>
+<p>The recursive branch is pretty easy. Discard the error and recur.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="o">&lt;</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="n">popd</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span>   <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
+<span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="o">&lt;</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="n">popd</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">R1</span><span class="p">]</span> <span class="n">ifte</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">a</span><span class="s1">&#39; e ε               R0 [K] R1</span>
+<span class="n">n</span> <span class="n">a</span><span class="s1">&#39; e ε popd [Q err] dip [K] i</span>
+<span class="n">n</span> <span class="n">a</span><span class="s1">&#39;   ε      [Q err] dip [K] i</span>
+<span class="n">n</span> <span class="n">a</span><span class="s1">&#39; Q err ε              [K] i</span>
+<span class="n">n</span> <span class="n">a</span><span class="s1">&#39;&#39;</span>  <span class="n">e</span>   <span class="n">ε</span>               <span class="n">K</span>
+</pre></div>
+</div>
+<p>This fragment alone is pretty useful.  (<code class="docutils literal notranslate"><span class="pre">R1</span></code> is <code class="docutils literal notranslate"><span class="pre">i</span></code> so this is a <code class="docutils literal notranslate"><span class="pre">primrec</span></code> “primitive recursive” function.)</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;K == [&lt;] [popop popd] [popd [Q err] dip] primrec&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;25 10 0.001 dup K&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">5.000000232305737</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;25 10 0.000001 dup K&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">5.000000000000005</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="initial-approximation-and-epsilon">
+<h3>Initial Approximation and Epsilon<a class="headerlink" href="#initial-approximation-and-epsilon" title="Permalink to this headline">¶</a></h3>
+<p>So now all we need is a way to generate an initial approximation and an
+epsilon value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">square</span><span class="o">-</span><span class="n">root</span> <span class="o">==</span> <span class="n">dup</span> <span class="mi">3</span> <span class="o">/</span> <span class="mf">0.000001</span> <span class="n">dup</span> <span class="n">K</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;square-root == dup 3 / 0.000001 dup K&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;36 square-root&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">6.000000000000007</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;4895048365636 square-root&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">2212475.6192184356</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">2212475.6192184356</span> <span class="o">*</span> <span class="mf">2212475.6192184356</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">4895048365636.0</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Newton’s method</a><ul>
+<li><a class="reference internal" href="#finding-the-square-root-of-a-number">Finding the Square-Root of a Number</a></li>
+<li><a class="reference internal" href="#compute-the-error">Compute the Error</a></li>
+<li><a class="reference internal" href="#square-root"><code class="docutils literal notranslate"><span class="pre">square-root</span></code></a><ul>
+<li><a class="reference internal" href="#base-case">Base-case</a></li>
+<li><a class="reference internal" href="#recur">Recur</a></li>
+<li><a class="reference internal" href="#initial-approximation-and-epsilon">Initial Approximation and Epsilon</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Essays about Programming in Joy</a><ul>
+      <li>Previous: <a href="Trees.html" title="previous chapter">Treating Trees</a></li>
+      <li>Next: <a href="Quadratic.html" title="next chapter">Quadratic formula</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notebooks/Newton-Raphson.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+</a>
+<br />
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+    </div>
+
+  </body>
+</html>

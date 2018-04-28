@@ -1,0 +1,362 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Preamble &#8212; Thun 0.1.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>This notebook is about using the “zipper” with joy datastructures. See
+the <a class="reference external" href="https://en.wikipedia.org/wiki/Zipper_%28data_structure%29">Zipper wikipedia
+entry</a> or
+the original paper: <a class="reference external" href="https://www.st.cs.uni-saarland.de/edu/seminare/2005/advanced-fp/docs/huet-zipper.pdf">“FUNCTIONAL PEARL The Zipper” by Gérard
+Huet</a></p>
+<p>Given a datastructure on the stack we can navigate through it, modify
+it, and rebuild it using the “zipper” technique.</p>
+<div class="section" id="preamble">
+<h1>Preamble<a class="headerlink" href="#preamble" title="Permalink to this headline">¶</a></h1>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+</pre></div>
+</div>
+<div class="section" id="trees">
+<h2>Trees<a class="headerlink" href="#trees" title="Permalink to this headline">¶</a></h2>
+<p>In Joypy there aren’t any complex datastructures, just ints, floats,
+strings, Symbols (strings that are names of functions) and sequences
+(aka lists, aka quoted literals, aka aggregates, etc…), but we can
+build
+<a class="reference external" href="https://en.wikipedia.org/wiki/Tree_%28data_structure%29">trees</a> out
+of sequences.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 [2 [3 4 25 6] 7] 8]&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="zipper-in-joy">
+<h2>Zipper in Joy<a class="headerlink" href="#zipper-in-joy" title="Permalink to this headline">¶</a></h2>
+<p>Zippers work by keeping track of the current item, the already-seen
+items, and the yet-to-be seen items as you traverse a datastructure (the
+datastructure used to keep track of these items is the zipper.)</p>
+<p>In Joy we can do this with the following words:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">z</span><span class="o">-</span><span class="n">down</span> <span class="o">==</span> <span class="p">[]</span> <span class="n">swap</span> <span class="n">uncons</span> <span class="n">swap</span>
+<span class="n">z</span><span class="o">-</span><span class="n">up</span> <span class="o">==</span> <span class="n">swons</span> <span class="n">swap</span> <span class="n">shunt</span>
+<span class="n">z</span><span class="o">-</span><span class="n">right</span> <span class="o">==</span> <span class="p">[</span><span class="n">swons</span><span class="p">]</span> <span class="n">cons</span> <span class="n">dip</span> <span class="n">uncons</span> <span class="n">swap</span>
+<span class="n">z</span><span class="o">-</span><span class="n">left</span> <span class="o">==</span> <span class="n">swons</span> <span class="p">[</span><span class="n">uncons</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span> <span class="n">swap</span>
+</pre></div>
+</div>
+<p>Let’s use them to change 25 into 625. The first time a word is used I
+show the trace so you can see how it works. If we were going to use
+these a lot it would make sense to write Python versions for efficiency,
+but see below.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;z-down == [] swap uncons swap&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;z-up == swons swap shunt&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;z-right == [swons] cons dip uncons swap&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;z-left == swons [uncons swap] dip swap&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[1 [2 [3 4 25 6] 7] 8] z-down&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                          <span class="o">.</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="n">z</span><span class="o">-</span><span class="n">down</span>
+   <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="o">.</span> <span class="n">z</span><span class="o">-</span><span class="n">down</span>
+   <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="o">.</span> <span class="p">[]</span> <span class="n">swap</span> <span class="n">uncons</span> <span class="n">swap</span>
+<span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="p">[]</span> <span class="o">.</span> <span class="n">swap</span> <span class="n">uncons</span> <span class="n">swap</span>
+<span class="p">[]</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="o">.</span> <span class="n">uncons</span> <span class="n">swap</span>
+<span class="p">[]</span> <span class="mi">1</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="o">.</span> <span class="n">swap</span>
+<span class="p">[]</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="mi">1</span> <span class="o">.</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[] [[2 [3 4 25 6] 7] 8] 1 z-right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                  <span class="o">.</span> <span class="p">[]</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="mi">1</span> <span class="n">z</span><span class="o">-</span><span class="n">right</span>
+                               <span class="p">[]</span> <span class="o">.</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="mi">1</span> <span class="n">z</span><span class="o">-</span><span class="n">right</span>
+          <span class="p">[]</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="o">.</span> <span class="mi">1</span> <span class="n">z</span><span class="o">-</span><span class="n">right</span>
+        <span class="p">[]</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="mi">1</span> <span class="o">.</span> <span class="n">z</span><span class="o">-</span><span class="n">right</span>
+        <span class="p">[]</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="mi">1</span> <span class="o">.</span> <span class="p">[</span><span class="n">swons</span><span class="p">]</span> <span class="n">cons</span> <span class="n">dip</span> <span class="n">uncons</span> <span class="n">swap</span>
+<span class="p">[]</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="mi">1</span> <span class="p">[</span><span class="n">swons</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="n">dip</span> <span class="n">uncons</span> <span class="n">swap</span>
+<span class="p">[]</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">1</span> <span class="n">swons</span><span class="p">]</span> <span class="o">.</span> <span class="n">dip</span> <span class="n">uncons</span> <span class="n">swap</span>
+                               <span class="p">[]</span> <span class="o">.</span> <span class="mi">1</span> <span class="n">swons</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="n">uncons</span> <span class="n">swap</span>
+                             <span class="p">[]</span> <span class="mi">1</span> <span class="o">.</span> <span class="n">swons</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="n">uncons</span> <span class="n">swap</span>
+                             <span class="p">[]</span> <span class="mi">1</span> <span class="o">.</span> <span class="n">swap</span> <span class="n">cons</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="n">uncons</span> <span class="n">swap</span>
+                             <span class="mi">1</span> <span class="p">[]</span> <span class="o">.</span> <span class="n">cons</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="n">uncons</span> <span class="n">swap</span>
+                              <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">.</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="n">uncons</span> <span class="n">swap</span>
+         <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="o">.</span> <span class="n">uncons</span> <span class="n">swap</span>
+         <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">.</span> <span class="n">swap</span>
+         <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="o">.</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2 [3 4 25 6] 7] z-down&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [] [[3 4 25 6] 7] 2 z-right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [3 4 25 6] z-down&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [] [4 25 6] 3 z-right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [3] [25 6] 4 z-right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">25</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [4 3] [6] 25 sqr&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [4 3] [6] 625 z-up&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                              <span class="o">.</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span> <span class="n">z</span><span class="o">-</span><span class="n">up</span>
+                          <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span> <span class="n">z</span><span class="o">-</span><span class="n">up</span>
+                      <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span> <span class="n">z</span><span class="o">-</span><span class="n">up</span>
+                  <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span> <span class="n">z</span><span class="o">-</span><span class="n">up</span>
+              <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span> <span class="n">z</span><span class="o">-</span><span class="n">up</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span> <span class="n">z</span><span class="o">-</span><span class="n">up</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">.</span> <span class="mi">625</span> <span class="n">z</span><span class="o">-</span><span class="n">up</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span> <span class="o">.</span> <span class="n">z</span><span class="o">-</span><span class="n">up</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span> <span class="o">.</span> <span class="n">swons</span> <span class="n">swap</span> <span class="n">shunt</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span> <span class="o">.</span> <span class="n">swap</span> <span class="n">cons</span> <span class="n">swap</span> <span class="n">shunt</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="mi">625</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="n">swap</span> <span class="n">shunt</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="o">.</span> <span class="n">swap</span> <span class="n">shunt</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="o">.</span> <span class="n">shunt</span>
+  <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="o">.</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [3 4 625 6] z-up&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2 [3 4 625 6] 7] z-up&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dip-and-infra">
+<h2><code class="docutils literal notranslate"><span class="pre">dip</span></code> and <code class="docutils literal notranslate"><span class="pre">infra</span></code><a class="headerlink" href="#dip-and-infra" title="Permalink to this headline">¶</a></h2>
+<p>In Joy we have the <code class="docutils literal notranslate"><span class="pre">dip</span></code> and <code class="docutils literal notranslate"><span class="pre">infra</span></code> combinators which can “target”
+or “address” any particular item in a Joy tree structure.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[1 [2 [3 4 25 6] 7] 8] [[[[[[sqr] dipd] infra] dip] infra] dip] infra&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                                <span class="o">.</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="p">[[[[[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span>
+                                         <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="o">.</span> <span class="p">[[[[[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span>
+<span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="p">[[[[[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span>
+                                           <span class="mi">8</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">1</span> <span class="o">.</span> <span class="p">[[[[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span> <span class="p">[]</span> <span class="n">swaack</span>
+        <span class="mi">8</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">1</span> <span class="p">[[[[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="o">.</span> <span class="n">dip</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                             <span class="mi">8</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="o">.</span> <span class="p">[[[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                  <span class="mi">8</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="p">[[[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                 <span class="mi">7</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">2</span> <span class="o">.</span> <span class="p">[[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                            <span class="mi">7</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">2</span> <span class="p">[[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="o">.</span> <span class="n">dip</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                   <span class="mi">7</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="o">.</span> <span class="p">[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                      <span class="mi">7</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="p">[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                       <span class="mi">6</span> <span class="mi">25</span> <span class="mi">4</span> <span class="mi">3</span> <span class="o">.</span> <span class="p">[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                 <span class="mi">6</span> <span class="mi">25</span> <span class="mi">4</span> <span class="mi">3</span> <span class="p">[</span><span class="n">sqr</span><span class="p">]</span> <span class="o">.</span> <span class="n">dipd</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                           <span class="mi">6</span> <span class="mi">25</span> <span class="o">.</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                           <span class="mi">6</span> <span class="mi">25</span> <span class="o">.</span> <span class="n">dup</span> <span class="n">mul</span> <span class="mi">4</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                        <span class="mi">6</span> <span class="mi">25</span> <span class="mi">25</span> <span class="o">.</span> <span class="n">mul</span> <span class="mi">4</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                          <span class="mi">6</span> <span class="mi">625</span> <span class="o">.</span> <span class="mi">4</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                        <span class="mi">6</span> <span class="mi">625</span> <span class="mi">4</span> <span class="o">.</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                      <span class="mi">6</span> <span class="mi">625</span> <span class="mi">4</span> <span class="mi">3</span> <span class="o">.</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                  <span class="mi">6</span> <span class="mi">625</span> <span class="mi">4</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">.</span> <span class="n">swaack</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                  <span class="mi">7</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="o">.</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                                <span class="mi">7</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">2</span> <span class="o">.</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                            <span class="mi">7</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">.</span> <span class="n">swaack</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                            <span class="mi">8</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="o">.</span> <span class="mi">1</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                          <span class="mi">8</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">1</span> <span class="o">.</span> <span class="p">[]</span> <span class="n">swaack</span>
+                                       <span class="mi">8</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">1</span> <span class="p">[]</span> <span class="o">.</span> <span class="n">swaack</span>
+                                        <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>If you read the trace carefully you’ll see that about half of it is the
+<code class="docutils literal notranslate"><span class="pre">dip</span></code> and <code class="docutils literal notranslate"><span class="pre">infra</span></code> combinators de-quoting programs and “digging” into
+the subject datastructure. Instead of maintaining temporary results on
+the stack they are pushed into the pending expression (continuation).
+When <code class="docutils literal notranslate"><span class="pre">sqr</span></code> has run the rest of the pending expression rebuilds the
+datastructure.</p>
+</div>
+<div class="section" id="z">
+<h2><code class="docutils literal notranslate"><span class="pre">Z</span></code><a class="headerlink" href="#z" title="Permalink to this headline">¶</a></h2>
+<p>Imagine a function <code class="docutils literal notranslate"><span class="pre">Z</span></code> that accepts a sequence of <code class="docutils literal notranslate"><span class="pre">dip</span></code> and
+<code class="docutils literal notranslate"><span class="pre">infra</span></code> combinators, a quoted program <code class="docutils literal notranslate"><span class="pre">[Q]</span></code>, and a datastructure to
+work on. It would effectively execute the quoted program as if it had
+been embedded in a nested series of quoted programs, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="p">[</span><span class="n">dip</span> <span class="n">dip</span> <span class="n">infra</span> <span class="n">dip</span> <span class="n">infra</span> <span class="n">dip</span> <span class="n">infra</span><span class="p">]</span> <span class="n">Z</span>
+<span class="o">-------------------------------------------------------------</span>
+   <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="p">[[[[[[[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">Z</span></code> function isn’t hard to make.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Z == [[] cons cons] step i&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here it is in action in a simplified scenario.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;1 [2 3 4] Z&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                             <span class="o">.</span> <span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="n">Z</span>
+                           <span class="mi">1</span> <span class="o">.</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="n">Z</span>
+                   <span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="o">.</span> <span class="n">Z</span>
+                   <span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="o">.</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+    <span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span> <span class="n">i</span>
+          <span class="mi">1</span> <span class="mi">2</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="o">.</span> <span class="n">i</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+                         <span class="mi">1</span> <span class="mi">2</span> <span class="o">.</span> <span class="p">[]</span> <span class="n">cons</span> <span class="n">cons</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+                      <span class="mi">1</span> <span class="mi">2</span> <span class="p">[]</span> <span class="o">.</span> <span class="n">cons</span> <span class="n">cons</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+                       <span class="mi">1</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+                       <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+                 <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="o">.</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+  <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span> <span class="n">i</span>
+      <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="o">.</span> <span class="n">i</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+                     <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span> <span class="o">.</span> <span class="p">[]</span> <span class="n">cons</span> <span class="n">cons</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+                  <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span> <span class="p">[]</span> <span class="o">.</span> <span class="n">cons</span> <span class="n">cons</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+                   <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+                   <span class="p">[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+               <span class="p">[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">.</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="n">step</span> <span class="n">i</span>
+<span class="p">[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span> <span class="n">i</span>
+  <span class="p">[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="mi">4</span> <span class="p">[[]</span> <span class="n">cons</span> <span class="n">cons</span><span class="p">]</span> <span class="o">.</span> <span class="n">i</span> <span class="n">i</span>
+                 <span class="p">[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="mi">4</span> <span class="o">.</span> <span class="p">[]</span> <span class="n">cons</span> <span class="n">cons</span> <span class="n">i</span>
+              <span class="p">[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="mi">4</span> <span class="p">[]</span> <span class="o">.</span> <span class="n">cons</span> <span class="n">cons</span> <span class="n">i</span>
+               <span class="p">[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="n">i</span>
+               <span class="p">[[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="mi">4</span><span class="p">]</span> <span class="o">.</span> <span class="n">i</span>
+                             <span class="o">.</span> <span class="p">[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="mi">4</span>
+                   <span class="p">[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="o">.</span> <span class="mi">4</span>
+                 <span class="p">[[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">3</span><span class="p">]</span> <span class="mi">4</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>And here it is doing the main thing.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 [2 [3 4 25 6] 7] 8] [sqr] [dip dip infra dip infra dip infra] Z&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="addressing">
+<h2>Addressing<a class="headerlink" href="#addressing" title="Permalink to this headline">¶</a></h2>
+<p>Because we are only using two combinators we could replace the list with
+a string made from only two characters.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="s1">&#39;ddididi&#39;</span> <span class="n">Zstr</span>
+<span class="o">-------------------------------------------------------------</span>
+   <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="p">[[[[[[[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span>
+</pre></div>
+</div>
+<p>The string can be considered a name or address for an item in the
+subject datastructure.</p>
+</div>
+<div class="section" id="determining-the-right-path-for-an-item-in-a-tree">
+<h2>Determining the right “path” for an item in a tree.<a class="headerlink" href="#determining-the-right-path-for-an-item-in-a-tree" title="Permalink to this headline">¶</a></h2>
+<p>It’s easy to read off (in reverse) the right sequence of “d” and “i”
+from the subject datastructure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[ n [ n [ n n x ...
+i d i d i d d Bingo!
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Preamble</a><ul>
+<li><a class="reference internal" href="#trees">Trees</a></li>
+<li><a class="reference internal" href="#zipper-in-joy">Zipper in Joy</a></li>
+<li><a class="reference internal" href="#dip-and-infra"><code class="docutils literal notranslate"><span class="pre">dip</span></code> and <code class="docutils literal notranslate"><span class="pre">infra</span></code></a></li>
+<li><a class="reference internal" href="#z"><code class="docutils literal notranslate"><span class="pre">Z</span></code></a></li>
+<li><a class="reference internal" href="#addressing">Addressing</a></li>
+<li><a class="reference internal" href="#determining-the-right-path-for-an-item-in-a-tree">Determining the right “path” for an item in a tree.</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notebooks/Zipper.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+</a>
+<br />
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+    </div>
+
+  </body>
+</html>

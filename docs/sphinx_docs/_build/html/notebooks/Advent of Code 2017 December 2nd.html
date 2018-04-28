@@ -1,0 +1,436 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Advent of Code 2017 &#8212; Thun 0.1.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="advent-of-code-2017">
+<h1>Advent of Code 2017<a class="headerlink" href="#advent-of-code-2017" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="december-2nd">
+<h2>December 2nd<a class="headerlink" href="#december-2nd" title="Permalink to this headline">¶</a></h2>
+<p>For each row, determine the difference between the largest value and the
+smallest value; the checksum is the sum of all of these differences.</p>
+<p>For example, given the following spreadsheet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">5</span> <span class="mi">1</span> <span class="mi">9</span> <span class="mi">5</span>
+<span class="mi">7</span> <span class="mi">5</span> <span class="mi">3</span>
+<span class="mi">2</span> <span class="mi">4</span> <span class="mi">6</span> <span class="mi">8</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>The first row’s largest and smallest values are 9 and 1, and their
+difference is 8.</li>
+<li>The second row’s largest and smallest values are 7 and 3, and their
+difference is 4.</li>
+<li>The third row’s difference is 6.</li>
+</ul>
+<p>In this example, the spreadsheet’s checksum would be 8 + 4 + 6 = 18.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+</pre></div>
+</div>
+<p>I’ll assume the input is a Joy sequence of sequences of integers.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">5</span> <span class="mi">1</span> <span class="mi">9</span> <span class="mi">5</span><span class="p">]</span>
+ <span class="p">[</span><span class="mi">7</span> <span class="mi">5</span> <span class="mi">3</span><span class="p">]</span>
+ <span class="p">[</span><span class="mi">2</span> <span class="mi">4</span> <span class="mi">6</span> <span class="mi">8</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>So, obviously, the initial form will be a <code class="docutils literal notranslate"><span class="pre">step</span></code> function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AoC2017</span><span class="o">.</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">F</span> <span class="o">+</span><span class="p">]</span> <span class="n">step</span>
+</pre></div>
+</div>
+<p>This function <code class="docutils literal notranslate"><span class="pre">F</span></code> must get the <code class="docutils literal notranslate"><span class="pre">max</span></code> and <code class="docutils literal notranslate"><span class="pre">min</span></code> of a row of numbers
+and subtract. We can define a helper function <code class="docutils literal notranslate"><span class="pre">maxmin</span></code> which does
+this:</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;maxmin == [max] [min] cleave&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] maxmin&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Then <code class="docutils literal notranslate"><span class="pre">F</span></code> just does that then subtracts the min from the max:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">==</span> <span class="n">maxmin</span> <span class="o">-</span>
+</pre></div>
+</div>
+<p>So:</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;AoC2017.2 == [maxmin - +] step_zero&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+
+<span class="s1">[[5 1 9 5]</span>
+<span class="s1"> [7 5 3]</span>
+<span class="s1"> [2 4 6 8]] AoC2017.2</span>
+
+<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">18</span>
+</pre></div>
+</div>
+<p>…find the only two numbers in each row where one evenly divides the
+other - that is, where the result of the division operation is a whole
+number. They would like you to find those numbers on each line, divide
+them, and add up each line’s result.</p>
+<p>For example, given the following spreadsheet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">5</span> <span class="mi">9</span> <span class="mi">2</span> <span class="mi">8</span>
+<span class="mi">9</span> <span class="mi">4</span> <span class="mi">7</span> <span class="mi">3</span>
+<span class="mi">3</span> <span class="mi">8</span> <span class="mi">6</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>In the first row, the only two numbers that evenly divide are 8 and
+2; the result of this division is 4.</li>
+<li>In the second row, the two numbers are 9 and 3; the result is 3.</li>
+<li>In the third row, the result is 2.</li>
+</ul>
+<p>In this example, the sum of the results would be 4 + 3 + 2 = 9.</p>
+<p>What is the sum of each row’s result in your puzzle input?</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 9 2 8] sort reverse&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">9</span> <span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[9 8 5 2] uncons [swap [divmod] cons] dupdip&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">9</span> <span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="n">uncons</span> <span class="p">[</span><span class="n">swap</span> <span class="p">[</span><span class="nb">divmod</span><span class="p">]</span> <span class="n">cons</span> <span class="n">F</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">G</span>
+  <span class="p">[</span><span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span>            <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span>      <span class="n">F</span> <span class="p">[</span><span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="n">G</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[8 5 2] [9 divmod] [uncons swap] dip dup [i not] dip&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                      <span class="o">.</span> <span class="p">[</span><span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="p">[</span><span class="n">uncons</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span> <span class="n">dup</span> <span class="p">[</span><span class="n">i</span> <span class="ow">not</span><span class="p">]</span> <span class="n">dip</span>
+                              <span class="p">[</span><span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="p">[</span><span class="n">uncons</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span> <span class="n">dup</span> <span class="p">[</span><span class="n">i</span> <span class="ow">not</span><span class="p">]</span> <span class="n">dip</span>
+                   <span class="p">[</span><span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="n">uncons</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span> <span class="n">dup</span> <span class="p">[</span><span class="n">i</span> <span class="ow">not</span><span class="p">]</span> <span class="n">dip</span>
+     <span class="p">[</span><span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="p">[</span><span class="n">uncons</span> <span class="n">swap</span><span class="p">]</span> <span class="o">.</span> <span class="n">dip</span> <span class="n">dup</span> <span class="p">[</span><span class="n">i</span> <span class="ow">not</span><span class="p">]</span> <span class="n">dip</span>
+                              <span class="p">[</span><span class="mi">8</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="o">.</span> <span class="n">uncons</span> <span class="n">swap</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="n">dup</span> <span class="p">[</span><span class="n">i</span> <span class="ow">not</span><span class="p">]</span> <span class="n">dip</span>
+                              <span class="mi">8</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="o">.</span> <span class="n">swap</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="n">dup</span> <span class="p">[</span><span class="n">i</span> <span class="ow">not</span><span class="p">]</span> <span class="n">dip</span>
+                              <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">8</span> <span class="o">.</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="n">dup</span> <span class="p">[</span><span class="n">i</span> <span class="ow">not</span><span class="p">]</span> <span class="n">dip</span>
+                   <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">8</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="o">.</span> <span class="n">dup</span> <span class="p">[</span><span class="n">i</span> <span class="ow">not</span><span class="p">]</span> <span class="n">dip</span>
+        <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">8</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="n">i</span> <span class="ow">not</span><span class="p">]</span> <span class="n">dip</span>
+<span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">8</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="p">[</span><span class="n">i</span> <span class="ow">not</span><span class="p">]</span> <span class="o">.</span> <span class="n">dip</span>
+                   <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">8</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="o">.</span> <span class="n">i</span> <span class="ow">not</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span>
+                              <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">8</span> <span class="o">.</span> <span class="mi">9</span> <span class="nb">divmod</span> <span class="ow">not</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span>
+                            <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">8</span> <span class="mi">9</span> <span class="o">.</span> <span class="nb">divmod</span> <span class="ow">not</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span>
+                            <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">.</span> <span class="ow">not</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span>
+                        <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">1</span> <span class="kc">False</span> <span class="o">.</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span>
+             <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="mi">1</span> <span class="kc">False</span> <span class="p">[</span><span class="mi">9</span> <span class="nb">divmod</span><span class="p">]</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tricky">
+<h2>Tricky<a class="headerlink" href="#tricky" title="Permalink to this headline">¶</a></h2>
+<p>Let’s think.</p>
+<p>Given a <em>sorted</em> sequence (from highest to lowest) we want to * for
+head, tail in sequence * for term in tail: * check if the head % term
+== 0 * if so compute head / term and terminate loop * else continue</p>
+<div class="section" id="so-we-want-a-loop-i-think">
+<h3>So we want a <code class="docutils literal notranslate"><span class="pre">loop</span></code> I think<a class="headerlink" href="#so-we-want-a-loop-i-think" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="kc">True</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
+<span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">Q</span>    <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Q</span></code> should either leave the result and False, or the <code class="docutils literal notranslate"><span class="pre">rest</span></code> and
+True.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">Q</span>
+<span class="o">-----------------</span>
+    <span class="n">result</span> <span class="mi">0</span>
+
+   <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">Q</span>
+<span class="o">-----------------</span>
+    <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>This suggests that <code class="docutils literal notranslate"><span class="pre">Q</span></code> should start with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">uncons</span> <span class="n">dup</span> <span class="n">roll</span><span class="o">&lt;</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span>
+</pre></div>
+</div>
+<p>Now we just have to <code class="docutils literal notranslate"><span class="pre">pop</span></code> it if we don’t need it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">cons</span><span class="p">]</span> <span class="n">app2</span> <span class="n">popdd</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="n">primrec</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">a</span> <span class="n">P</span><span class="p">]</span> <span class="p">[</span><span class="n">a</span> <span class="n">T</span><span class="p">]</span>                 <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="n">primrec</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">w</span><span class="o">/</span> <span class="n">Q</span> <span class="o">==</span> <span class="p">[</span><span class="o">%</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">primrec</span>
+
+        <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">uncons</span>
+        <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">tuck</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">uncons</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">roll</span><span class="o">&gt;</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="n">b</span> <span class="n">Q</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="o">%</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">primrec</span>
+
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="n">b</span> <span class="n">T</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="n">b</span> <span class="o">/</span> <span class="n">roll</span><span class="o">&gt;</span> <span class="n">popop</span> <span class="mi">0</span>
+
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="n">b</span> <span class="n">F</span>                   <span class="n">Q</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="n">b</span> <span class="n">pop</span> <span class="n">swap</span> <span class="n">uncons</span> <span class="o">...</span> <span class="n">Q</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span>       <span class="n">swap</span> <span class="n">uncons</span> <span class="o">...</span> <span class="n">Q</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span>            <span class="n">uncons</span> <span class="o">...</span> <span class="n">Q</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="n">c</span> <span class="p">[</span><span class="n">d</span><span class="p">]</span>                   <span class="n">roll</span><span class="o">&gt;</span> <span class="n">Q</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="n">c</span> <span class="n">Q</span>
+
+<span class="n">Q</span> <span class="o">==</span> <span class="p">[</span><span class="o">%</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="o">/</span> <span class="n">roll</span><span class="o">&gt;</span> <span class="n">popop</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span> <span class="n">swap</span> <span class="n">uncons</span> <span class="n">roll</span><span class="o">&gt;</span><span class="p">]</span> <span class="n">primrec</span>
+
+<span class="n">uncons</span> <span class="n">tuck</span> <span class="n">uncons</span> <span class="n">roll</span><span class="o">&gt;</span> <span class="n">Q</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[8 5 3 2] 9 [swap] [% not] [cons] app2 popdd&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">8</span> <span class="mi">5</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">9</span> <span class="n">swap</span><span class="p">]</span> <span class="p">[</span><span class="mi">9</span> <span class="o">%</span> <span class="ow">not</span><span class="p">]</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">uncons</span>
+        <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">tuck</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">ifte</span>
+
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="p">[]</span> <span class="n">popop</span> <span class="mi">1</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">1</span>
+
+<span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">Q</span>
+
+
+   <span class="n">a</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">Q</span>
+<span class="o">---------------</span>
+   <span class="n">result</span> <span class="mi">0</span>
+
+   <span class="n">a</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">Q</span>
+<span class="o">---------------</span>
+       <span class="mi">1</span>
+
+
+<span class="n">w</span><span class="o">/</span> <span class="n">Q</span> <span class="o">==</span> <span class="p">[</span><span class="n">first</span> <span class="o">%</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">first</span> <span class="o">/</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">rest</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">1</span><span class="p">]]</span> <span class="p">[</span><span class="n">ifte</span><span class="p">]</span>
+
+
+
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">first</span> <span class="o">%</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">first</span> <span class="o">/</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">rest</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">1</span><span class="p">]]</span> <span class="p">[</span><span class="n">ifte</span><span class="p">]</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span>  <span class="n">first</span> <span class="o">%</span> <span class="ow">not</span>
+<span class="n">a</span> <span class="n">b</span> <span class="o">%</span> <span class="ow">not</span>
+<span class="n">a</span><span class="o">%</span><span class="n">b</span> <span class="ow">not</span>
+<span class="nb">bool</span><span class="p">(</span><span class="n">a</span><span class="o">%</span><span class="n">b</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">first</span> <span class="o">%</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">first</span> <span class="o">/</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">rest</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">1</span><span class="p">]]</span> <span class="p">[</span><span class="n">ifte</span><span class="p">]</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span>                <span class="n">first</span> <span class="o">/</span> <span class="mi">0</span>
+<span class="n">a</span> <span class="n">b</span> <span class="o">/</span> <span class="mi">0</span>
+<span class="n">a</span><span class="o">/</span><span class="n">b</span> <span class="mi">0</span>
+
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="n">first</span> <span class="o">%</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">first</span> <span class="o">/</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">rest</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">1</span><span class="p">]]</span>   <span class="p">[</span><span class="n">ifte</span><span class="p">]</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span>                            <span class="n">rest</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">ifte</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span>                                   <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">ifte</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span>                                   <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">ifte</span>
+
+<span class="n">a</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">ifte</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span>  <span class="ow">not</span>
+
+<span class="n">a</span> <span class="p">[]</span> <span class="n">popop</span> <span class="mi">1</span>
+<span class="mi">1</span>
+
+<span class="n">a</span> <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="n">Q</span>
+
+
+<span class="n">uncons</span> <span class="n">tuck</span> <span class="p">[</span><span class="n">first</span> <span class="o">%</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">first</span> <span class="o">/</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">rest</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">1</span><span class="p">]]</span> <span class="p">[</span><span class="n">ifte</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="i-finally-sat-down-with-a-piece-of-paper-and-blocked-it-out">
+<h3>I finally sat down with a piece of paper and blocked it out.<a class="headerlink" href="#i-finally-sat-down-with-a-piece-of-paper-and-blocked-it-out" title="Permalink to this headline">¶</a></h3>
+<p>First, I made a function <code class="docutils literal notranslate"><span class="pre">G</span></code> that expects a number and a sequence of
+candidates and return the result or zero:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">n</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">G</span>
+<span class="o">---------------</span>
+    <span class="n">result</span>
+
+   <span class="n">n</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">G</span>
+<span class="o">---------------</span>
+       <span class="mi">0</span>
+</pre></div>
+</div>
+<p>It’s a recursive function that conditionally executes the recursive part
+of its recursive branch</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Pg</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span> <span class="p">[</span><span class="n">Pi</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]]</span> <span class="p">[</span><span class="n">ifte</span><span class="p">]</span> <span class="n">genrec</span>
+</pre></div>
+</div>
+<p>The recursive branch is the else-part of the inner <code class="docutils literal notranslate"><span class="pre">ifte</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">G</span> <span class="o">==</span> <span class="p">[</span><span class="n">Pg</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span> <span class="p">[</span><span class="n">Pi</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]]</span>   <span class="p">[</span><span class="n">ifte</span><span class="p">]</span> <span class="n">genrec</span>
+  <span class="o">==</span> <span class="p">[</span><span class="n">Pg</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span> <span class="p">[</span><span class="n">Pi</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="n">ifte</span><span class="p">]</span> <span class="n">ifte</span>
+</pre></div>
+</div>
+<p>But this is in hindsight. Going forward I derived:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">G</span> <span class="o">==</span> <span class="p">[</span><span class="n">first</span> <span class="o">%</span> <span class="ow">not</span><span class="p">]</span>
+     <span class="p">[</span><span class="n">first</span> <span class="o">/</span><span class="p">]</span>
+     <span class="p">[</span><span class="n">rest</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">0</span><span class="p">]]</span>
+     <span class="p">[</span><span class="n">ifte</span><span class="p">]</span> <span class="n">genrec</span>
+</pre></div>
+</div>
+<p>The predicate detects if the <code class="docutils literal notranslate"><span class="pre">n</span></code> can be evenly divided by the
+<code class="docutils literal notranslate"><span class="pre">first</span></code> item in the list. If so, the then-part returns the result.
+Otherwise, we have:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="p">[</span><span class="n">m</span> <span class="o">...</span><span class="p">]</span> <span class="n">rest</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="n">ifte</span>
+<span class="n">n</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>        <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="n">ifte</span>
+</pre></div>
+</div>
+<p>This <code class="docutils literal notranslate"><span class="pre">ifte</span></code> guards against empty sequences and returns zero in that
+case, otherwise it executes <code class="docutils literal notranslate"><span class="pre">G</span></code>.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;G == [first % not] [first /] [rest [not] [popop 0]] [ifte] genrec&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we need a word that uses <code class="docutils literal notranslate"><span class="pre">G</span></code> on each (head, tail) pair of a
+sequence until it finds a (non-zero) result. It’s going to be designed
+to work on a stack that has some candidate <code class="docutils literal notranslate"><span class="pre">n</span></code>, a sequence of possible
+divisors, and a result that is zero to signal to continue (a non-zero
+value implies that it is the discovered result):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">n</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">p</span> <span class="n">find</span><span class="o">-</span><span class="n">result</span>
+<span class="o">---------------------------</span>
+          <span class="n">result</span>
+</pre></div>
+</div>
+<p>It applies <code class="docutils literal notranslate"><span class="pre">G</span></code> using <code class="docutils literal notranslate"><span class="pre">nullary</span></code> because if it fails with one
+candidate it needs the list to get the next one (the list is otherwise
+consumed by <code class="docutils literal notranslate"><span class="pre">G</span></code>.)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">find</span><span class="o">-</span><span class="n">result</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">roll</span><span class="o">&gt;</span> <span class="n">popop</span><span class="p">]</span> <span class="p">[</span><span class="n">roll</span><span class="o">&lt;</span> <span class="n">popop</span> <span class="n">uncons</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="n">nullary</span><span class="p">]</span> <span class="n">primrec</span>
+
+<span class="n">n</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">p</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">roll</span><span class="o">&gt;</span> <span class="n">popop</span><span class="p">]</span> <span class="p">[</span><span class="n">roll</span><span class="o">&lt;</span> <span class="n">popop</span> <span class="n">uncons</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="n">nullary</span><span class="p">]</span> <span class="n">primrec</span>
+</pre></div>
+</div>
+<p>The base-case is trivial, return the (non-zero) result. The recursive
+branch…</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">p</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">popop</span> <span class="n">uncons</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="n">nullary</span> <span class="n">find</span><span class="o">-</span><span class="n">result</span>
+<span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">p</span> <span class="n">n</span>       <span class="n">popop</span> <span class="n">uncons</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="n">nullary</span> <span class="n">find</span><span class="o">-</span><span class="n">result</span>
+<span class="p">[</span><span class="o">...</span><span class="p">]</span>                 <span class="n">uncons</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="n">nullary</span> <span class="n">find</span><span class="o">-</span><span class="n">result</span>
+<span class="n">m</span> <span class="p">[</span><span class="o">..</span><span class="p">]</span>                       <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="n">nullary</span> <span class="n">find</span><span class="o">-</span><span class="n">result</span>
+<span class="n">m</span> <span class="p">[</span><span class="o">..</span><span class="p">]</span> <span class="n">p</span>                                 <span class="n">find</span><span class="o">-</span><span class="n">result</span>
+</pre></div>
+</div>
+<p>The puzzle states that the input is well-formed, meaning that we can
+expect a result before the row sequence empties and so do not need to
+guard the <code class="docutils literal notranslate"><span class="pre">uncons</span></code>.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;find-result == [0 &gt;] [roll&gt; popop] [roll&lt; popop uncons [G] nullary] primrec&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[11 9 8 7 3 2] 0 tuck find-result&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">3.0</span>
+</pre></div>
+</div>
+<p>In order to get the thing started, we need to <code class="docutils literal notranslate"><span class="pre">sort</span></code> the list in
+descending order, then prime the <code class="docutils literal notranslate"><span class="pre">find-result</span></code> function with a dummy
+candidate value and zero (“continue”) flag.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;prep-row == sort reverse 0 tuck&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can define our program.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;AoC20017.2.extra == [prep-row find-result +] step_zero&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+
+<span class="s1">[[5 9 2 8]</span>
+<span class="s1"> [9 4 7 3]</span>
+<span class="s1"> [3 8 6 5]] AoC20017.2.extra</span>
+
+<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">9.0</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Advent of Code 2017</a><ul>
+<li><a class="reference internal" href="#december-2nd">December 2nd</a></li>
+<li><a class="reference internal" href="#tricky">Tricky</a><ul>
+<li><a class="reference internal" href="#so-we-want-a-loop-i-think">So we want a <code class="docutils literal notranslate"><span class="pre">loop</span></code> I think</a></li>
+<li><a class="reference internal" href="#i-finally-sat-down-with-a-piece-of-paper-and-blocked-it-out">I finally sat down with a piece of paper and blocked it out.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notebooks/Advent of Code 2017 December 2nd.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+</a>
+<br />
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+    </div>
+
+  </body>
+</html>
