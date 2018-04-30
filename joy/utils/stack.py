@@ -18,12 +18,13 @@
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
 '''
-When talking about Joy we use the terms "stack", "list", "sequence",
-"quote" and others to mean the same thing: a simple linear datatype that
+When talking about Joy we use the terms "stack", "quote", "sequence",
+"list", and others to mean the same thing: a simple linear datatype that
 permits certain operations such as iterating and pushing and popping
 values from (at least) one end.
 
-We use the  `cons list`_, a venerable two-tuple recursive sequence datastructure, where the
+There is no "Stack" Python class, instead we use the  `cons list`_, a 
+venerable two-tuple recursive sequence datastructure, where the
 empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the recursive
 form of a stack with one or more items on it::
 
@@ -51,32 +52,35 @@ incoming tuple and assigning values to the names.  (Note that Python
 syntax doesn't require parentheses around tuples used in expressions
 where they would be redundant.)
 
+Unfortunately, the Sphinx documentation generator, which is used to generate this
+web page, doesn't handle tuples in the function parameters.  And in Python 3, this
+syntax was removed entirely.  Instead you would have to write::
+
+  def dup(stack):
+    head, tail = stack
+    return head, (head, tail)
+
+
+We have two very simple functions, one to build up a stack from a Python
+iterable and another to iterate through a stack and yield its items
+one-by-one in order.  There are also two functions to generate string representations
+of stacks.  They only differ in that one prints the terms in stack from left-to-right while the other prints from right-to-left.  In both functions *internal stacks* are
+printed left-to-right.  These functions are written to support :doc:`../pretty`.
+
 .. _cons list: https://en.wikipedia.org/wiki/Cons#Lists
 
 '''
-
-##We have two very simple functions to build up a stack from a Python
-##iterable and also to iterate through a stack and yield its items
-##one-by-one in order, and two functions to generate string representations
-##of stacks::
-##
-##  list_to_stack()
-##
-##  iter_stack()
-##
-##  expression_to_string()  (prints left-to-right)
-##
-##  stack_to_string()  (prints right-to-left)
-##
-##
-##A word about the stack data structure.
-
 
 
 def list_to_stack(el, stack=()):
   '''Convert a Python list (or other sequence) to a Joy stack::
 
   [1, 2, 3] -> (1, (2, (3, ())))
+
+  :param list el: A Python list or other sequence (iterators and generators
+       won't work because ``reverse()`` is called on ``el``.)
+  :param stack stack: A stack, optional, defaults to the empty stack.
+  :rtype: stack
 
   '''
   for item in reversed(el):
@@ -85,7 +89,11 @@ def list_to_stack(el, stack=()):
 
 
 def iter_stack(stack):
-  '''Iterate through the items on the stack.'''
+  '''Iterate through the items on the stack.
+
+  :param stack stack: A stack.
+  :rtype: iterator
+  '''
   while stack:
     item, stack = stack
     yield item
@@ -98,6 +106,9 @@ def stack_to_string(stack):
   The items are written right-to-left::
 
     (top, (second, ...)) -> '... second top'
+
+  :param stack stack: A stack.
+  :rtype: str
   '''
   f = lambda stack: reversed(list(iter_stack(stack)))
   return _to_string(stack, f)
@@ -110,6 +121,9 @@ def expression_to_string(expression):
   The items are written left-to-right::
 
     (top, (second, ...)) -> 'top second ...'
+
+  :param stack expression: A stack.
+  :rtype: str
   '''
   return _to_string(expression, iter_stack)
 
@@ -132,7 +146,16 @@ def pushback(quote, expression):
   '''Concatinate quote onto expression.
 
   In joy [1 2] [3 4] would become [1 2 3 4].
+
+  :param stack quote: A stack.
+  :param stack expression: A stack.
+  :raises RuntimeError: if quote is larger than sys.getrecursionlimit().
+  :rtype: stack
   '''
+  # This is the fastest implementation, but will trigger
+  # RuntimeError: maximum recursion depth exceeded
+  # on quotes longer than sys.getrecursionlimit().
+  return (quote[0], pushback(quote[1], expression)) if quote else expression
 
   # Original implementation.
 
@@ -149,15 +172,17 @@ def pushback(quote, expression):
 ##    expression = item, expression
 ##  return expression
 
-  # This is the fastest, but will trigger
-  # RuntimeError: maximum recursion depth exceeded
-  # on quotes longer than sys.getrecursionlimit().
-  return (quote[0], pushback(quote[1], expression)) if quote else expression
 
 
 def pick(s, n):
   '''
-  Find the nth item on the stack. (Pick with zero is the same as "dup".)
+  Return the nth item on the stack.
+
+  :param stack s: A stack.
+  :param int n: An index into the stack.
+  :raises ValueError: if ``n`` is less than zero.
+  :raises IndexError: if ``n`` is equal to or greater than the length of ``s``.
+  :rtype: whatever
   '''
   if n < 0:
     raise ValueError

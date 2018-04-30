@@ -18,7 +18,24 @@
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
 '''
-Pretty printing support.
+Pretty printing support, e.g.::
+
+    Joy? 23 18 * 99 +
+           . 23 18 mul 99 add
+        23 . 18 mul 99 add
+     23 18 . mul 99 add
+       414 . 99 add
+    414 99 . add
+       513 . 
+
+    513 <-top
+
+    joy? 
+
+On each line the stack is printed with the top to the right, then a ``.`` to
+represent the current locus of processing, then the pending expression to the
+left.
+
 '''
 # (Kinda clunky and hacky.  This should be swapped out in favor of much
 # smarter stuff.)
@@ -29,29 +46,36 @@ from .stack import expression_to_string, stack_to_string
 
 class TracePrinter(object):
   '''
-  This is what does the formatting, e.g.::
-
-    Joy? 23 18 * 99 +
-           . 23 18 mul 99 add
-        23 . 18 mul 99 add
-     23 18 . mul 99 add
-       414 . 99 add
-    414 99 . add
-       513 . 
-
+  This is what does the formatting.  You instantiate it and pass the ``viewer()``
+  method to the :py:func:`joy.joy.joy` function, then print it to see the
+  trace.
   '''
 
   def __init__(self):
     self.history = []
 
   def viewer(self, stack, expression):
-    '''Pass this method as the viewer to joy() function.'''
+    '''
+    Record the current stack and expression in the TracePrinter's history.
+    Pass this method as the ``viewer`` argument to the :py:func:`joy.joy.joy` function.
+
+    :param stack quote: A stack.
+    :param stack expression: A stack.
+    '''
     self.history.append((stack, expression))
 
   def __str__(self):
     return '\n'.join(self.go())
 
   def go(self):
+    '''
+    Return a list of strings, one for each entry in the history, prefixed
+    with enough spaces to align all the interpreter dots.
+
+    This method is called internally by the ``__str__()`` method.
+
+    :rtype: list(str)
+    '''
     max_stack_length = 0
     lines = []
     for stack, expression in self.history:

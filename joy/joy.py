@@ -42,11 +42,11 @@ def joy(stack, expression, dictionary, viewer=None):
   or functions.  Literals are put onto the stack and functions are
   executed.
 
-
-  :param quote stack: The stack.
-  :param quote expression: The expression to evaluate.
-  :param dict dictionary: A `dict` mapping names to Joy functions.
+  :param stack stack: The stack.
+  :param stack expression: The expression to evaluate.
+  :param dict dictionary: A ``dict`` mapping names to Joy functions.
   :param function viewer: Optional viewer function.
+  :rtype: (stack, (), dictionary)
 
   '''
   while expression:
@@ -67,6 +67,13 @@ def joy(stack, expression, dictionary, viewer=None):
 def run(text, stack, dictionary, viewer=None):
   '''
   Return the stack resulting from running the Joy code text on the stack.
+
+  :param str text: Joy code.
+  :param stack stack: The stack.
+  :param dict dictionary: A ``dict`` mapping names to Joy functions.
+  :param function viewer: Optional viewer function.
+  :rtype: (stack, (), dictionary)
+
   '''
   expression = text_to_expression(text)
   return joy(stack, expression, dictionary, viewer)
@@ -77,6 +84,11 @@ def repl(stack=(), dictionary=None):
   Read-Evaluate-Print Loop
 
   Accept input and run it on the stack, loop.
+
+  :param stack stack: The stack.
+  :param dict dictionary: A ``dict`` mapping names to Joy functions.
+  :rtype: stack
+
   '''
   if dictionary is None:
     dictionary = {}

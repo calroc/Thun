@@ -51,7 +51,7 @@ def text_to_expression(text):
   Any unbalanced square brackets will raise a ParseError.
 
   :param str text: Text to convert.
-  :rtype: quote
+  :rtype: stack
   :raises ParseError: if the parse fails.
   '''
   return _parse(_tokenize(text))
