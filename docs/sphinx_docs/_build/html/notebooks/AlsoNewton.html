@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>within &#8212; Thun 0.1.1 documentation</title>
+    <title>A Generator for Approximations &#8212; Thun 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" src="../_static/documentation_options.js"></script>
@@ -30,25 +30,88 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="within">
-<h1><code class="docutils literal notranslate"><span class="pre">within</span></code><a class="headerlink" href="#within" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="a-generator-for-approximations">
+<h1>A Generator for Approximations<a class="headerlink" href="#a-generator-for-approximations" title="Permalink to this headline">¶</a></h1>
+<p>In <a class="reference internal" href="Generator Programs.html"><span class="doc">Using x to Generate Values</span></a> we derive a function <code class="docutils literal notranslate"><span class="pre">G</span></code> (called <code class="docutils literal notranslate"><span class="pre">make_generator</span></code> in the dictionary) that accepts an initial value and a quoted program and returns a new quoted program that, when driven by the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator (<a class="reference internal" href="../library.html#joy.library.x" title="joy.library.x"><code class="xref py py-func docutils literal notranslate"><span class="pre">joy.library.x()</span></code></a>), acts like a lazy stream.</p>
+<p>To make a generator that generates successive approximations let’s start by assuming an initial approximation and then derive the function that computes the next approximation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">F</span>
+<span class="o">---------</span>
+    <span class="n">a</span><span class="s1">&#39;</span>
+</pre></div>
+</div>
+<div class="section" id="a-function-to-compute-the-next-approximation">
+<h2>A Function to Compute the Next Approximation<a class="headerlink" href="#a-function-to-compute-the-next-approximation" title="Permalink to this headline">¶</a></h2>
+<p>Looking at the equation again:</p>
+<p><span class="math notranslate nohighlight">\(a_{i+1} = \frac{(a_i+\frac{n}{a_i})}{2}\)</span></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="n">n</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="n">a</span> <span class="n">n</span> <span class="n">a</span>    <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="n">a</span> <span class="n">n</span><span class="o">/</span><span class="n">a</span>      <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="n">a</span><span class="o">+</span><span class="n">n</span><span class="o">/</span><span class="n">a</span>        <span class="mi">2</span> <span class="o">/</span>
+<span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">n</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>The function we want has the argument <code class="docutils literal notranslate"><span class="pre">n</span></code> in it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">==</span> <span class="n">n</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="make-it-into-a-generator">
+<h2>Make it into a Generator<a class="headerlink" href="#make-it-into-a-generator" title="Permalink to this headline">¶</a></h2>
+<p>Our generator would be created by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="p">[</span><span class="n">dup</span> <span class="n">F</span><span class="p">]</span> <span class="n">make_generator</span>
+</pre></div>
+</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">n</span></code> as part of the function <code class="docutils literal notranslate"><span class="pre">F</span></code>, but <code class="docutils literal notranslate"><span class="pre">n</span></code> is the input to the <code class="docutils literal notranslate"><span class="pre">sqrt</span></code> function we’re writing.  If we let 1 be the initial approximation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="n">n</span> <span class="mi">1</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="mi">1</span> <span class="n">n</span><span class="o">/</span><span class="mi">1</span>   <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="mi">1</span> <span class="n">n</span>     <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="n">n</span><span class="o">+</span><span class="mi">1</span>       <span class="mi">2</span> <span class="o">/</span>
+<span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>The generator can be written as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="n">swap</span> <span class="p">[</span><span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">make_generator</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span> <span class="mi">1</span> <span class="n">swap</span>  <span class="p">[</span><span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">make_generator</span>
+<span class="mi">1</span> <span class="mi">23</span>       <span class="p">[</span><span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">make_generator</span>
+<span class="mi">1</span>       <span class="p">[</span><span class="mi">23</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span>      <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">make_generator</span>
+<span class="mi">1</span>   <span class="p">[</span><span class="n">dup</span> <span class="mi">23</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span>                    <span class="n">make_generator</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="p">[</span><span class="mi">1</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="mi">23</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a-generator-of-square-root-approximations">
+<h2>A Generator of Square Root Approximations<a class="headerlink" href="#a-generator-of-square-root-approximations" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gsra</span> <span class="o">==</span> <span class="mi">1</span> <span class="n">swap</span> <span class="p">[</span><span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">make_generator</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="finding-consecutive-approximations-within-a-tolerance">
+<h1>Finding Consecutive Approximations <code class="docutils literal notranslate"><span class="pre">within</span></code> a Tolerance<a class="headerlink" href="#finding-consecutive-approximations-within-a-tolerance" title="Permalink to this headline">¶</a></h1>
 <blockquote>
 <div>The remainder of a square root finder is a function <em>within</em>, which takes a tolerance and a list of approximations and looks down the list for two successive approximations that differ by no more than the given tolerance.</div></blockquote>
 <p>From <a class="reference external" href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">“Why Functional Programming Matters” by John
 Hughes</a></p>
 <p>(And note that by “list” he means a lazily-evaluated list.)</p>
-<p>Using a <a class="reference internal" href="Generator Programs.html"><span class="doc">generator</span></a> driven by <code class="docutils literal notranslate"><span class="pre">x</span></code> and assuming such for square root approximations (or whatever) <code class="docutils literal notranslate"><span class="pre">G</span></code>, and further assuming that the first term <code class="docutils literal notranslate"><span class="pre">a</span></code> has been generated already and epsilon <code class="docutils literal notranslate"><span class="pre">ε</span></code> is handy on the stack…</p>
+<p>Using the <em>output</em> <code class="docutils literal notranslate"><span class="pre">[a</span> <span class="pre">G]</span></code> of the above <a class="reference internal" href="Generator Programs.html"><span class="doc">generator</span></a> for square root approximations, and further assuming that the first term <code class="docutils literal notranslate"><span class="pre">a</span></code> has been generated already and epsilon <code class="docutils literal notranslate"><span class="pre">ε</span></code> is handy on the stack…</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">within</span>
-<span class="o">--------------------</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-</span> <span class="nb">abs</span> <span class="n">ε</span> <span class="o">&lt;=</span>
+<span class="o">----------------------</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-</span> <span class="nb">abs</span> <span class="n">ε</span> <span class="o">&lt;=</span>
       <span class="n">b</span>
-
-   <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">within</span>
-<span class="o">--------------------</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-</span> <span class="nb">abs</span> <span class="n">ε</span> <span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">within</span>
+<span class="o">----------------------</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-</span> <span class="nb">abs</span> <span class="n">ε</span> <span class="o">&gt;</span>
        <span class="o">.</span>
    <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">x</span> <span class="n">ε</span> <span class="o">...</span>
    <span class="n">b</span> <span class="p">[</span><span class="n">c</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="o">...</span>
        <span class="o">.</span>
-<span class="o">--------------------</span>
+<span class="o">----------------------</span>
    <span class="n">b</span> <span class="p">[</span><span class="n">c</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">within</span>
 </pre></div>
 </div>
@@ -85,7 +148,7 @@ Hughes</a></p>
 </div>
 <ol class="arabic simple">
 <li>Discard <code class="docutils literal notranslate"><span class="pre">a</span></code>.</li>
-<li>Use <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator to generate next term from G.</li>
+<li>Use <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator to generate next term from <code class="docutils literal notranslate"><span class="pre">G</span></code>.</li>
 <li>Run <code class="docutils literal notranslate"><span class="pre">within</span></code> with <code class="docutils literal notranslate"><span class="pre">i</span></code> (it is a <code class="docutils literal notranslate"><span class="pre">primrec</span></code> function.)</li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span>        <span class="n">ε</span> <span class="n">R0</span>           <span class="p">[</span><span class="n">within</span><span class="p">]</span> <span class="n">R1</span>
@@ -104,13 +167,27 @@ Hughes</a></p>
 </div>
 <div class="section" id="setting-up">
 <h2>Setting up<a class="headerlink" href="#setting-up" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">a</span> <span class="n">G</span><span class="p">]</span> <span class="n">x</span> <span class="n">ε</span>
-<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span>
+<p>The recursive function we have defined so far needs a slight preamble: <code class="docutils literal notranslate"><span class="pre">x</span></code> to prime the generator and the epsilon value to use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">a</span> <span class="n">G</span><span class="p">]</span> <span class="n">x</span> <span class="n">ε</span> <span class="o">...</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="o">...</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">within</span> <span class="o">==</span> <span class="n">x</span> <span class="n">ε</span> <span class="p">[[</span><span class="n">first</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">]</span> <span class="n">dip</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[</span><span class="n">roll</span><span class="o">&lt;</span> <span class="n">popop</span> <span class="n">first</span><span class="p">]</span> <span class="p">[[</span><span class="n">popd</span> <span class="n">x</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">primrec</span>
+</div>
+<div class="section" id="within">
+<h2><code class="docutils literal notranslate"><span class="pre">within</span></code><a class="headerlink" href="#within" title="Permalink to this headline">¶</a></h2>
+<p>Giving us the following definitions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_within_P</span> <span class="o">==</span> <span class="p">[</span><span class="n">first</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">]</span> <span class="n">dip</span> <span class="o">&lt;=</span>
+<span class="n">_within_B</span> <span class="o">==</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">popop</span> <span class="n">first</span>
+<span class="n">_within_R</span> <span class="o">==</span> <span class="p">[</span><span class="n">popd</span> <span class="n">x</span><span class="p">]</span> <span class="n">dip</span>
+<span class="n">within</span> <span class="o">==</span> <span class="n">x</span> <span class="n">ε</span> <span class="p">[</span><span class="n">_within_P</span><span class="p">]</span> <span class="p">[</span><span class="n">_within_B</span><span class="p">]</span> <span class="p">[</span><span class="n">_within_R</span><span class="p">]</span> <span class="n">primrec</span>
 </pre></div>
 </div>
+</div>
+</div>
+<div class="section" id="finding-square-roots">
+<h1>Finding Square Roots<a class="headerlink" href="#finding-square-roots" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sqrt</span> <span class="o">==</span> <span class="n">gsra</span> <span class="n">within</span>
+</pre></div>
 </div>
 </div>
 
@@ -122,13 +199,21 @@ Hughes</a></p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">within</span></code></a><ul>
+<li><a class="reference internal" href="#">A Generator for Approximations</a><ul>
+<li><a class="reference internal" href="#a-function-to-compute-the-next-approximation">A Function to Compute the Next Approximation</a></li>
+<li><a class="reference internal" href="#make-it-into-a-generator">Make it into a Generator</a></li>
+<li><a class="reference internal" href="#a-generator-of-square-root-approximations">A Generator of Square Root Approximations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#finding-consecutive-approximations-within-a-tolerance">Finding Consecutive Approximations <code class="docutils literal notranslate"><span class="pre">within</span></code> a Tolerance</a><ul>
 <li><a class="reference internal" href="#predicate">Predicate</a></li>
 <li><a class="reference internal" href="#base-case">Base-Case</a></li>
 <li><a class="reference internal" href="#recur">Recur</a></li>
 <li><a class="reference internal" href="#setting-up">Setting up</a></li>
+<li><a class="reference internal" href="#within"><code class="docutils literal notranslate"><span class="pre">within</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#finding-square-roots">Finding Square Roots</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>

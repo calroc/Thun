@@ -157,6 +157,13 @@
 <span class="s1">dudipd == dup dipd</span>
 <span class="s1">primrec == [i] genrec</span>
 <span class="s1">step_zero == 0 roll&gt; step</span>
+<span class="s1">direco == dip rest cons</span>
+<span class="s1">make_generator == [direco] cons [swap] swoncat cons</span>
+<span class="s1">gsra == 1 swap [over / + 2 /] cons [dup] swoncat make_generator</span>
+<span class="s1">_within_P == [first - abs] dip &lt;=</span>
+<span class="s1">_within_B == roll&lt; popop first</span>
+<span class="s1">_within_R == [popd x] dip</span>
+<span class="s1">within == x 0.000001 [_within_P] [_within_B] [_within_R] primrec</span>
 <span class="s1">&#39;&#39;&#39;</span>
 
 <span class="c1">##Zipper</span>

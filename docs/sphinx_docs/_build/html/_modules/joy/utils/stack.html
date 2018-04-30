@@ -51,12 +51,13 @@
 <span class="c1">#    along with Thun.  If not see &lt;http://www.gnu.org/licenses/&gt;.</span>
 <span class="c1">#</span>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">When talking about Joy we use the terms &quot;stack&quot;, &quot;list&quot;, &quot;sequence&quot;,</span>
-<span class="sd">&quot;quote&quot; and others to mean the same thing: a simple linear datatype that</span>
+<span class="sd">When talking about Joy we use the terms &quot;stack&quot;, &quot;quote&quot;, &quot;sequence&quot;,</span>
+<span class="sd">&quot;list&quot;, and others to mean the same thing: a simple linear datatype that</span>
 <span class="sd">permits certain operations such as iterating and pushing and popping</span>
 <span class="sd">values from (at least) one end.</span>
 
-<span class="sd">We use the  `cons list`_, a venerable two-tuple recursive sequence datastructure, where the</span>
+<span class="sd">There is no &quot;Stack&quot; Python class, instead we use the  `cons list`_, a </span>
+<span class="sd">venerable two-tuple recursive sequence datastructure, where the</span>
 <span class="sd">empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the recursive</span>
 <span class="sd">form of a stack with one or more items on it::</span>
 
@@ -84,32 +85,35 @@
 <span class="sd">syntax doesn&#39;t require parentheses around tuples used in expressions</span>
 <span class="sd">where they would be redundant.)</span>
 
+<span class="sd">Unfortunately, the Sphinx documentation generator, which is used to generate this</span>
+<span class="sd">web page, doesn&#39;t handle tuples in the function parameters.  And in Python 3, this</span>
+<span class="sd">syntax was removed entirely.  Instead you would have to write::</span>
+
+<span class="sd">  def dup(stack):</span>
+<span class="sd">    head, tail = stack</span>
+<span class="sd">    return head, (head, tail)</span>
+
+
+<span class="sd">We have two very simple functions, one to build up a stack from a Python</span>
+<span class="sd">iterable and another to iterate through a stack and yield its items</span>
+<span class="sd">one-by-one in order.  There are also two functions to generate string representations</span>
+<span class="sd">of stacks.  They only differ in that one prints the terms in stack from left-to-right while the other prints from right-to-left.  In both functions *internal stacks* are</span>
+<span class="sd">printed left-to-right.  These functions are written to support :doc:`../pretty`.</span>
+
 <span class="sd">.. _cons list: https://en.wikipedia.org/wiki/Cons#Lists</span>
 
 <span class="sd">&#39;&#39;&#39;</span>
-
-<span class="c1">##We have two very simple functions to build up a stack from a Python</span>
-<span class="c1">##iterable and also to iterate through a stack and yield its items</span>
-<span class="c1">##one-by-one in order, and two functions to generate string representations</span>
-<span class="c1">##of stacks::</span>
-<span class="c1">##</span>
-<span class="c1">##  list_to_stack()</span>
-<span class="c1">##</span>
-<span class="c1">##  iter_stack()</span>
-<span class="c1">##</span>
-<span class="c1">##  expression_to_string()  (prints left-to-right)</span>
-<span class="c1">##</span>
-<span class="c1">##  stack_to_string()  (prints right-to-left)</span>
-<span class="c1">##</span>
-<span class="c1">##</span>
-<span class="c1">##A word about the stack data structure.</span>
-
 
 
 <div class="viewcode-block" id="list_to_stack"><a class="viewcode-back" href="../../../stack.html#joy.utils.stack.list_to_stack">[docs]</a><span class="k">def</span> <span class="nf">list_to_stack</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">stack</span><span class="o">=</span><span class="p">()):</span>
   <span class="sd">&#39;&#39;&#39;Convert a Python list (or other sequence) to a Joy stack::</span>
 
 <span class="sd">  [1, 2, 3] -&gt; (1, (2, (3, ())))</span>
+
+<span class="sd">  :param list el: A Python list or other sequence (iterators and generators</span>
+<span class="sd">       won&#39;t work because ``reverse()`` is called on ``el``.)</span>
+<span class="sd">  :param stack stack: A stack, optional, defaults to the empty stack.</span>
+<span class="sd">  :rtype: stack</span>
 
 <span class="sd">  &#39;&#39;&#39;</span>
   <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">el</span><span class="p">):</span>
@@ -118,7 +122,11 @@
 
 
 <div class="viewcode-block" id="iter_stack"><a class="viewcode-back" href="../../../stack.html#joy.utils.stack.iter_stack">[docs]</a><span class="k">def</span> <span class="nf">iter_stack</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Iterate through the items on the stack.&#39;&#39;&#39;</span>
+  <span class="sd">&#39;&#39;&#39;Iterate through the items on the stack.</span>
+
+<span class="sd">  :param stack stack: A stack.</span>
+<span class="sd">  :rtype: iterator</span>
+<span class="sd">  &#39;&#39;&#39;</span>
   <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>
     <span class="n">item</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">stack</span>
     <span class="k">yield</span> <span class="n">item</span></div>
@@ -131,6 +139,9 @@
 <span class="sd">  The items are written right-to-left::</span>
 
 <span class="sd">    (top, (second, ...)) -&gt; &#39;... second top&#39;</span>
+
+<span class="sd">  :param stack stack: A stack.</span>
+<span class="sd">  :rtype: str</span>
 <span class="sd">  &#39;&#39;&#39;</span>
   <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">stack</span><span class="p">:</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">iter_stack</span><span class="p">(</span><span class="n">stack</span><span class="p">)))</span>
   <span class="k">return</span> <span class="n">_to_string</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
@@ -143,6 +154,9 @@
 <span class="sd">  The items are written left-to-right::</span>
 
 <span class="sd">    (top, (second, ...)) -&gt; &#39;top second ...&#39;</span>
+
+<span class="sd">  :param stack expression: A stack.</span>
+<span class="sd">  :rtype: str</span>
 <span class="sd">  &#39;&#39;&#39;</span>
   <span class="k">return</span> <span class="n">_to_string</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">iter_stack</span><span class="p">)</span></div>
 
@@ -165,7 +179,16 @@
   <span class="sd">&#39;&#39;&#39;Concatinate quote onto expression.</span>
 
 <span class="sd">  In joy [1 2] [3 4] would become [1 2 3 4].</span>
+
+<span class="sd">  :param stack quote: A stack.</span>
+<span class="sd">  :param stack expression: A stack.</span>
+<span class="sd">  :raises RuntimeError: if quote is larger than sys.getrecursionlimit().</span>
+<span class="sd">  :rtype: stack</span>
 <span class="sd">  &#39;&#39;&#39;</span>
+  <span class="c1"># This is the fastest implementation, but will trigger</span>
+  <span class="c1"># RuntimeError: maximum recursion depth exceeded</span>
+  <span class="c1"># on quotes longer than sys.getrecursionlimit().</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">quote</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pushback</span><span class="p">(</span><span class="n">quote</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">expression</span><span class="p">))</span> <span class="k">if</span> <span class="n">quote</span> <span class="k">else</span> <span class="n">expression</span></div>
 
   <span class="c1"># Original implementation.</span>
 
@@ -182,15 +205,17 @@
 <span class="c1">##    expression = item, expression</span>
 <span class="c1">##  return expression</span>
 
-  <span class="c1"># This is the fastest, but will trigger</span>
-  <span class="c1"># RuntimeError: maximum recursion depth exceeded</span>
-  <span class="c1"># on quotes longer than sys.getrecursionlimit().</span>
-  <span class="k">return</span> <span class="p">(</span><span class="n">quote</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pushback</span><span class="p">(</span><span class="n">quote</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">expression</span><span class="p">))</span> <span class="k">if</span> <span class="n">quote</span> <span class="k">else</span> <span class="n">expression</span></div>
 
 
 <div class="viewcode-block" id="pick"><a class="viewcode-back" href="../../../stack.html#joy.utils.stack.pick">[docs]</a><span class="k">def</span> <span class="nf">pick</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
   <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  Find the nth item on the stack. (Pick with zero is the same as &quot;dup&quot;.)</span>
+<span class="sd">  Return the nth item on the stack.</span>
+
+<span class="sd">  :param stack s: A stack.</span>
+<span class="sd">  :param int n: An index into the stack.</span>
+<span class="sd">  :raises ValueError: if ``n`` is less than zero.</span>
+<span class="sd">  :raises IndexError: if ``n`` is equal to or greater than the length of ``s``.</span>
+<span class="sd">  :rtype: whatever</span>
 <span class="sd">  &#39;&#39;&#39;</span>
   <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">ValueError</span>

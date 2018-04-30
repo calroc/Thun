@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Stack or Quote or Sequence or List…" href="stack.html" />
-    <link rel="prev" title="Thun 0.1.1 Documentation" href="index.html" />
+    <link rel="prev" title="Thun: Joy in Python" href="notebooks/Intro.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -51,12 +51,15 @@ executed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>stack</strong> (<em>quote</em>) – The stack.</li>
-<li><strong>expression</strong> (<em>quote</em>) – The expression to evaluate.</li>
-<li><strong>dictionary</strong> (<em>dict</em>) – A <cite>dict</cite> mapping names to Joy functions.</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stack</strong> (<em>stack</em>) – The stack.</li>
+<li><strong>expression</strong> (<em>stack</em>) – The expression to evaluate.</li>
+<li><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</li>
 <li><strong>viewer</strong> (<em>function</em>) – Optional viewer function.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(stack, (), dictionary)</p>
 </td>
 </tr>
 </tbody>
@@ -68,12 +71,44 @@ executed.</p>
 <code class="descclassname">joy.joy.</code><code class="descname">repl</code><span class="sig-paren">(</span><em>stack=()</em>, <em>dictionary=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/joy.html#repl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.joy.repl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read-Evaluate-Print Loop</p>
 <p>Accept input and run it on the stack, loop.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stack</strong> (<em>stack</em>) – The stack.</li>
+<li><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">stack</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="joy.joy.run">
 <code class="descclassname">joy.joy.</code><code class="descname">run</code><span class="sig-paren">(</span><em>text</em>, <em>stack</em>, <em>dictionary</em>, <em>viewer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/joy.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.joy.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the stack resulting from running the Joy code text on the stack.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<em>str</em>) – Joy code.</li>
+<li><strong>stack</strong> (<em>stack</em>) – The stack.</li>
+<li><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</li>
+<li><strong>viewer</strong> (<em>function</em>) – Optional viewer function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(stack, (), dictionary)</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -96,7 +131,7 @@ executed.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Thun 0.1.1 Documentation</a></li>
+      <li>Previous: <a href="notebooks/Intro.html" title="previous chapter">Thun: Joy in Python</a></li>
       <li>Next: <a href="stack.html" title="next chapter">Stack or Quote or Sequence or List…</a></li>
   </ul></li>
 </ul>

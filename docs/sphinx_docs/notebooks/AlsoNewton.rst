@@ -1,6 +1,80 @@
-***************
-``within``
-***************
+
+
+
+
+A Generator for Approximations
+==============================
+
+In :doc:`Generator Programs` we derive a function ``G`` (called ``make_generator`` in the dictionary) that accepts an initial value and a quoted program and returns a new quoted program that, when driven by the ``x`` combinator (:py:func:`joy.library.x`), acts like a lazy stream.
+
+To make a generator that generates successive approximations let's start by assuming an initial approximation and then derive the function that computes the next approximation::
+
+       a F
+    ---------
+        a'
+
+
+A Function to Compute the Next Approximation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Looking at the equation again:
+
+:math:`a_{i+1} = \frac{(a_i+\frac{n}{a_i})}{2}`
+
+::
+
+    a n over / + 2 /
+    a n a    / + 2 /
+    a n/a      + 2 /
+    a+n/a        2 /
+    (a+n/a)/2
+
+The function we want has the argument ``n`` in it::
+
+    F == n over / + 2 /
+
+
+Make it into a Generator
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Our generator would be created by::
+
+    a [dup F] make_generator
+
+With ``n`` as part of the function ``F``, but ``n`` is the input to the ``sqrt`` function we're writing.  If we let 1 be the initial approximation::
+
+    1 n 1 / + 2 /
+    1 n/1   + 2 /
+    1 n     + 2 /
+    n+1       2 /
+    (n+1)/2
+
+The generator can be written as::
+
+    1 swap [over / + 2 /] cons [dup] swoncat make_generator
+
+Example::
+
+    23 1 swap  [over / + 2 /] cons [dup] swoncat make_generator
+    1 23       [over / + 2 /] cons [dup] swoncat make_generator
+    1       [23 over / + 2 /]      [dup] swoncat make_generator
+    1   [dup 23 over / + 2 /]                    make_generator
+    .
+    .
+    .
+    [1 swap [dup 23 over / + 2 /] direco]
+
+
+A Generator of Square Root Approximations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    gsra == 1 swap [over / + 2 /] cons [dup] swoncat make_generator
+
+
+Finding Consecutive Approximations ``within`` a Tolerance
+=========================================================
 
     The remainder of a square root finder is a function *within*, which takes a tolerance and a list of approximations and looks down the list for two successive approximations that differ by no more than the given tolerance.
 
@@ -9,21 +83,23 @@ Hughes <https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf>`__
 
 (And note that by "list" he means a lazily-evaluated list.)
 
-Using a :doc:`generator <Generator Programs>` driven by ``x`` and assuming such for square root approximations (or whatever) ``G``, and further assuming that the first term ``a`` has been generated already and epsilon ``ε`` is handy on the stack...
+Using the *output* ``[a G]`` of the above :doc:`generator <Generator Programs>` for square root approximations, and further assuming that the first term ``a`` has been generated already and epsilon ``ε`` is handy on the stack...
 
 ::
 
        a [b G] ε within
-    -------------------- a b - abs ε <=
+    ---------------------- a b - abs ε <=
           b
 
+::
+
        a [b G] ε within
-    -------------------- a b - abs ε >
+    ---------------------- a b - abs ε >
            .
        [b G] x ε ...
        b [c G] ε ...
            .
-    --------------------
+    ----------------------
        b [c G] ε within
 
 
@@ -60,6 +136,7 @@ Base-Case
 
    B == roll< popop first
 
+
 Recur
 ^^^^^^^^^^^^^
 
@@ -69,7 +146,7 @@ Recur
 
 
 1. Discard ``a``.
-2. Use ``x`` combinator to generate next term from G.
+2. Use ``x`` combinator to generate next term from ``G``.
 3. Run ``within`` with ``i`` (it is a ``primrec`` function.)
 
 ::
@@ -87,38 +164,32 @@ Recur
 
     R0 == [popd x] dip
 
+
 Setting up
 ^^^^^^^^^^
 
+The recursive function we have defined so far needs a slight preamble: ``x`` to prime the generator and the epsilon value to use::
+
+    [a G] x ε ...
+    a [b G] ε ...
+
+
+``within``
+^^^^^^^^^^
+
+Giving us the following definitions::
+
+    _within_P == [first - abs] dip <=
+    _within_B == roll< popop first
+    _within_R == [popd x] dip
+    within == x ε [_within_P] [_within_B] [_within_R] primrec
+
+
+Finding Square Roots
+====================
+
 ::
 
-    [a G] x ε
-    a [b G] ε
-
-::
-
-    within == x ε [[first - abs] dip <=] [roll< popop first] [[popd x] dip] primrec
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    sqrt == gsra within
 
 

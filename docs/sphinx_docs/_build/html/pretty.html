@@ -36,11 +36,7 @@
 <h1>Tracing Joy Execution<a class="headerlink" href="#tracing-joy-execution" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-joy.utils.pretty_print">
 <span id="joy-utils-pretty-print"></span><h2><code class="docutils literal notranslate"><span class="pre">joy.utils.pretty_print</span></code><a class="headerlink" href="#module-joy.utils.pretty_print" title="Permalink to this headline">¶</a></h2>
-<p>Pretty printing support.</p>
-<dl class="class">
-<dt id="joy.utils.pretty_print.TracePrinter">
-<em class="property">class </em><code class="descclassname">joy.utils.pretty_print.</code><code class="descname">TracePrinter</code><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is what does the formatting, e.g.:</p>
+<p>Pretty printing support, e.g.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Joy? 23 18 * 99 +
        . 23 18 mul 99 add
     23 . 18 mul 99 add
@@ -48,12 +44,54 @@
    414 . 99 add
 414 99 . add
    513 . 
+
+513 &lt;-top
+
+joy? 
 </pre></div>
 </div>
+<p>On each line the stack is printed with the top to the right, then a <code class="docutils literal notranslate"><span class="pre">.</span></code> to
+represent the current locus of processing, then the pending expression to the
+left.</p>
+<dl class="class">
+<dt id="joy.utils.pretty_print.TracePrinter">
+<em class="property">class </em><code class="descclassname">joy.utils.pretty_print.</code><code class="descname">TracePrinter</code><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is what does the formatting.  You instantiate it and pass the <code class="docutils literal notranslate"><span class="pre">viewer()</span></code>
+method to the <a class="reference internal" href="joy.html#joy.joy.joy" title="joy.joy.joy"><code class="xref py py-func docutils literal notranslate"><span class="pre">joy.joy.joy()</span></code></a> function, then print it to see the
+trace.</p>
+<dl class="method">
+<dt id="joy.utils.pretty_print.TracePrinter.go">
+<code class="descname">go</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter.go"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter.go" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of strings, one for each entry in the history, prefixed
+with enough spaces to align all the interpreter dots.</p>
+<p>This method is called internally by the <code class="docutils literal notranslate"><span class="pre">__str__()</span></code> method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list(str)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="joy.utils.pretty_print.TracePrinter.viewer">
 <code class="descname">viewer</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter.viewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter.viewer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pass this method as the viewer to joy() function.</p>
+<dd><p>Record the current stack and expression in the TracePrinter’s history.
+Pass this method as the <code class="docutils literal notranslate"><span class="pre">viewer</span></code> argument to the <a class="reference internal" href="joy.html#joy.joy.joy" title="joy.joy.joy"><code class="xref py py-func docutils literal notranslate"><span class="pre">joy.joy.joy()</span></code></a> function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>quote</strong> (<em>stack</em>) – A stack.</li>
+<li><strong>expression</strong> (<em>stack</em>) – A stack.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
