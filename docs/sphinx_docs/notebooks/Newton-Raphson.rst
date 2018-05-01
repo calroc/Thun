@@ -1,6 +1,6 @@
-
+*********************************************************************
 `Newton's method <https://en.wikipedia.org/wiki/Newton%27s_method>`__
-=====================================================================
+*********************************************************************
 
 Newton-Raphson for finding the root of an equation.
 
@@ -11,193 +11,194 @@ Newton-Raphson for finding the root of an equation.
 Cf. `"Why Functional Programming Matters" by John
 Hughes <https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf>`__
 
-Finding the Square-Root of a Number
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Let's define a function that computes this equation:
+A Generator for Approximations
+==============================
+
+In :doc:`Generator Programs` we derive a function (called ``make_generator`` in the dictionary) that accepts an initial value and a quoted program and returns a new quoted program that, when driven by the ``x`` combinator (:py:func:`joy.library.x`), acts like a lazy stream.
+
+To make a generator that generates successive approximations let's start by assuming an initial approximation and then derive the function that computes the next approximation::
+
+       a F
+    ---------
+        a'
+
+
+A Function to Compute the Next Approximation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Looking at the equation again:
 
 :math:`a_{i+1} = \frac{(a_i+\frac{n}{a_i})}{2}`
 
 ::
 
-         n a Q
-    ---------------
-       (a+n/a)/2
-
-    n a tuck / + 2 /
+    a n over / + 2 /
     a n a    / + 2 /
     a n/a      + 2 /
     a+n/a        2 /
     (a+n/a)/2
 
-We want it to leave n but replace a, so we execute it with ``unary``:
+The function we want has the argument ``n`` in it::
+
+    F == n over / + 2 /
+
+
+Make it into a Generator
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Our generator would be created by::
+
+    a [dup F] make_generator
+
+With ``n`` as part of the function ``F``, but ``n`` is the input to the ``sqrt`` function we're writing.  If we let 1 be the initial approximation::
+
+    1 n 1 / + 2 /
+    1 n/1   + 2 /
+    1 n     + 2 /
+    n+1       2 /
+    (n+1)/2
+
+The generator can be written as::
+
+    1 swap [over / + 2 /] cons [dup] swoncat make_generator
+
+Example::
+
+    23 1 swap  [over / + 2 /] cons [dup] swoncat make_generator
+    1 23       [over / + 2 /] cons [dup] swoncat make_generator
+    1       [23 over / + 2 /]      [dup] swoncat make_generator
+    1   [dup 23 over / + 2 /]                    make_generator
+    .
+    .
+    .
+    [1 swap [dup 23 over / + 2 /] direco]
+
+
+A Generator of Square Root Approximations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
-    Q == [tuck / + 2 /] unary
+    gsra == 1 swap [over / + 2 /] cons [dup] swoncat make_generator
 
-.. code:: ipython2
 
-    define('Q == [tuck / + 2 /] unary')
+Finding Consecutive Approximations ``within`` a Tolerance
+=========================================================
 
-Compute the Error
-^^^^^^^^^^^^^^^^^
+    The remainder of a square root finder is a function *within*, which takes a tolerance and a list of approximations and looks down the list for two successive approximations that differ by no more than the given tolerance.
 
-And a function to compute the error:
+From `"Why Functional Programming Matters" by John
+Hughes <https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf>`__
 
-::
+(And note that by "list" he means a lazily-evaluated list.)
 
-    n a sqr - abs
-    |n-a**2|
-
-This should be ``nullary`` so as to leave both n and a on the stack
-below the error.
+Using the *output* ``[a G]`` of the above :doc:`generator <Generator Programs>` for square root approximations, and further assuming that the first term ``a`` has been generated already and epsilon ``ε`` is handy on the stack...
 
 ::
 
-    err == [sqr - abs] nullary
-
-.. code:: ipython2
-
-    define('err == [sqr - abs] nullary')
-
-``square-root``
-^^^^^^^^^^^^^^^
-
-Now we can define a recursive program that expects a number ``n``, an
-initial estimate ``a``, and an epsilon value ``ε``, and that leaves on
-the stack the square root of ``n`` to within the precision of the
-epsilon value. (Later on we'll refine it to generate the initial
-estimate and hard-code an epsilon value.)
+       a [b G] ε within
+    ---------------------- a b - abs ε <=
+          b
 
 ::
 
-    n a ε square-root
-    -----------------
-          √n
+       a [b G] ε within
+    ---------------------- a b - abs ε >
+           .
+       [b G] x ε ...
+       b [c G] ε ...
+           .
+    ----------------------
+       b [c G] ε within
 
-If we apply the two functions ``Q`` and ``err`` defined above we get the
-next approximation and the error on the stack below the epsilon.
 
-::
 
-    n a ε [Q err] dip
-    n a Q err ε 
-    n a'  err ε 
-    n a' e    ε
-
-Let's define a recursive function ``K`` from here.
+Predicate
+^^^^^^^^^^^^^
 
 ::
 
-    n a' e ε K
+    a [b G]             ε [first - abs] dip <=
+    a [b G] first - abs ε                   <=
+    a b           - abs ε                   <=
+    a-b             abs ε                   <=
+    abs(a-b)            ε                   <=
+    (abs(a-b)<=ε)
 
-    K == [P] [E] [R0] [R1] genrec
-
-Base-case
-~~~~~~~~~
-
-The predicate and the base case are obvious:
-
-::
-
-    K == [<] [popop popd] [R0] [R1] genrec
 
 ::
 
-    n a' e ε popop popd
-    n a'           popd
-      a'
+    P == [first - abs] dip <=
+
+
+Base-Case
+^^^^^^^^^^^^^
+
+::
+
+    a [b G] ε roll< popop first
+      [b G] ε a     popop first
+      [b G]               first
+       b
+
+::
+
+   B == roll< popop first
+
 
 Recur
-~~~~~~~~~~
-
-The recursive branch is pretty easy. Discard the error and recur.
+^^^^^^^^^^^^^
 
 ::
 
-    K == [<] [popop popd] [R0]   [R1] genrec
-    K == [<] [popop popd] [R0 [K] R1] ifte
+    a [b G] ε R0 [within] R1
+
+
+1. Discard ``a``.
+2. Use ``x`` combinator to generate next term from ``G``.
+3. Run ``within`` with ``i`` (it is a ``primrec`` function.)
 
 ::
 
-    n a' e ε               R0 [K] R1
-    n a' e ε popd [Q err] dip [K] i
-    n a'   ε      [Q err] dip [K] i
-    n a' Q err ε              [K] i
-    n a''  e   ε               K
+    a [b G]        ε R0           [within] R1
+    a [b G]        ε [popd x] dip [within] i
+    a [b G] popd x ε              [within] i
+      [b G]      x ε              [within] i
+    b [c G]        ε              [within] i
+    b [c G]        ε               within
 
-This fragment alone is pretty useful.  (``R1`` is ``i`` so this is a ``primrec`` "primitive recursive" function.)
-
-.. code:: ipython2
-
-    define('K == [<] [popop popd] [popd [Q err] dip] primrec')
-
-.. code:: ipython2
-
-    J('25 10 0.001 dup K')
-
-
-.. parsed-literal::
-
-    5.000000232305737
-
-
-.. code:: ipython2
-
-    J('25 10 0.000001 dup K')
-
-
-.. parsed-literal::
-
-    5.000000000000005
-
-Initial Approximation and Epsilon
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-So now all we need is a way to generate an initial approximation and an
-epsilon value:
+    b [c G] ε within
 
 ::
 
-    square-root == dup 3 / 0.000001 dup K
-
-.. code:: ipython2
-
-    define('square-root == dup 3 / 0.000001 dup K')
-
-Examples
-~~~~~~~~~~
-
-.. code:: ipython2
-
-    J('36 square-root')
+    R0 == [popd x] dip
 
 
-.. parsed-literal::
+Setting up
+^^^^^^^^^^
 
-    6.000000000000007
+The recursive function we have defined so far needs a slight preamble: ``x`` to prime the generator and the epsilon value to use::
 
-
-.. code:: ipython2
-
-    J('4895048365636 square-root')
-
-
-.. parsed-literal::
-
-    2212475.6192184356
+    [a G] x ε ...
+    a [b G] ε ...
 
 
-.. code:: ipython2
+``within``
+^^^^^^^^^^
 
-    2212475.6192184356 * 2212475.6192184356
+Giving us the following definitions::
+
+    _within_P == [first - abs] dip <=
+    _within_B == roll< popop first
+    _within_R == [popd x] dip
+    within == x ε [_within_P] [_within_B] [_within_R] primrec
 
 
+Finding Square Roots
+====================
 
+::
 
-.. parsed-literal::
-
-    4895048365636.0
-
+    sqrt == gsra within
 

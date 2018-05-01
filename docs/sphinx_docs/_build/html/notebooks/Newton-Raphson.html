@@ -40,145 +40,164 @@
 </div>
 <p>Cf. <a class="reference external" href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">“Why Functional Programming Matters” by John
 Hughes</a></p>
-<div class="section" id="finding-the-square-root-of-a-number">
-<h2>Finding the Square-Root of a Number<a class="headerlink" href="#finding-the-square-root-of-a-number" title="Permalink to this headline">¶</a></h2>
-<p>Let’s define a function that computes this equation:</p>
+<div class="section" id="a-generator-for-approximations">
+<h2>A Generator for Approximations<a class="headerlink" href="#a-generator-for-approximations" title="Permalink to this headline">¶</a></h2>
+<p>In <a class="reference internal" href="Generator Programs.html"><span class="doc">Using x to Generate Values</span></a> we derive a function (called <code class="docutils literal notranslate"><span class="pre">make_generator</span></code> in the dictionary) that accepts an initial value and a quoted program and returns a new quoted program that, when driven by the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator (<a class="reference internal" href="../library.html#joy.library.x" title="joy.library.x"><code class="xref py py-func docutils literal notranslate"><span class="pre">joy.library.x()</span></code></a>), acts like a lazy stream.</p>
+<p>To make a generator that generates successive approximations let’s start by assuming an initial approximation and then derive the function that computes the next approximation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">F</span>
+<span class="o">---------</span>
+    <span class="n">a</span><span class="s1">&#39;</span>
+</pre></div>
+</div>
+<div class="section" id="a-function-to-compute-the-next-approximation">
+<h3>A Function to Compute the Next Approximation<a class="headerlink" href="#a-function-to-compute-the-next-approximation" title="Permalink to this headline">¶</a></h3>
+<p>Looking at the equation again:</p>
 <p><span class="math notranslate nohighlight">\(a_{i+1} = \frac{(a_i+\frac{n}{a_i})}{2}\)</span></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>     <span class="n">n</span> <span class="n">a</span> <span class="n">Q</span>
-<span class="o">---------------</span>
-   <span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">n</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
-
-<span class="n">n</span> <span class="n">a</span> <span class="n">tuck</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="n">n</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
 <span class="n">a</span> <span class="n">n</span> <span class="n">a</span>    <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
 <span class="n">a</span> <span class="n">n</span><span class="o">/</span><span class="n">a</span>      <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
 <span class="n">a</span><span class="o">+</span><span class="n">n</span><span class="o">/</span><span class="n">a</span>        <span class="mi">2</span> <span class="o">/</span>
 <span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">n</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
 </pre></div>
 </div>
-<p>We want it to leave n but replace a, so we execute it with <code class="docutils literal notranslate"><span class="pre">unary</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Q</span> <span class="o">==</span> <span class="p">[</span><span class="n">tuck</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">unary</span>
-</pre></div>
-</div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Q == [tuck / + 2 /] unary&#39;</span><span class="p">)</span>
+<p>The function we want has the argument <code class="docutils literal notranslate"><span class="pre">n</span></code> in it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">==</span> <span class="n">n</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="compute-the-error">
-<h2>Compute the Error<a class="headerlink" href="#compute-the-error" title="Permalink to this headline">¶</a></h2>
-<p>And a function to compute the error:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">a</span> <span class="n">sqr</span> <span class="o">-</span> <span class="nb">abs</span>
-<span class="o">|</span><span class="n">n</span><span class="o">-</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span><span class="o">|</span>
+<div class="section" id="make-it-into-a-generator">
+<h3>Make it into a Generator<a class="headerlink" href="#make-it-into-a-generator" title="Permalink to this headline">¶</a></h3>
+<p>Our generator would be created by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="p">[</span><span class="n">dup</span> <span class="n">F</span><span class="p">]</span> <span class="n">make_generator</span>
 </pre></div>
 </div>
-<p>This should be <code class="docutils literal notranslate"><span class="pre">nullary</span></code> so as to leave both n and a on the stack
-below the error.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">err</span> <span class="o">==</span> <span class="p">[</span><span class="n">sqr</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">]</span> <span class="n">nullary</span>
+<p>With <code class="docutils literal notranslate"><span class="pre">n</span></code> as part of the function <code class="docutils literal notranslate"><span class="pre">F</span></code>, but <code class="docutils literal notranslate"><span class="pre">n</span></code> is the input to the <code class="docutils literal notranslate"><span class="pre">sqrt</span></code> function we’re writing.  If we let 1 be the initial approximation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="n">n</span> <span class="mi">1</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="mi">1</span> <span class="n">n</span><span class="o">/</span><span class="mi">1</span>   <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="mi">1</span> <span class="n">n</span>     <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span>
+<span class="n">n</span><span class="o">+</span><span class="mi">1</span>       <span class="mi">2</span> <span class="o">/</span>
+<span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;err == [sqr - abs] nullary&#39;</span><span class="p">)</span>
+<p>The generator can be written as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="n">swap</span> <span class="p">[</span><span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">make_generator</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span> <span class="mi">1</span> <span class="n">swap</span>  <span class="p">[</span><span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">make_generator</span>
+<span class="mi">1</span> <span class="mi">23</span>       <span class="p">[</span><span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">make_generator</span>
+<span class="mi">1</span>       <span class="p">[</span><span class="mi">23</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span>      <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">make_generator</span>
+<span class="mi">1</span>   <span class="p">[</span><span class="n">dup</span> <span class="mi">23</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span>                    <span class="n">make_generator</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="p">[</span><span class="mi">1</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="mi">23</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="square-root">
-<h2><code class="docutils literal notranslate"><span class="pre">square-root</span></code><a class="headerlink" href="#square-root" title="Permalink to this headline">¶</a></h2>
-<p>Now we can define a recursive program that expects a number <code class="docutils literal notranslate"><span class="pre">n</span></code>, an
-initial estimate <code class="docutils literal notranslate"><span class="pre">a</span></code>, and an epsilon value <code class="docutils literal notranslate"><span class="pre">ε</span></code>, and that leaves on
-the stack the square root of <code class="docutils literal notranslate"><span class="pre">n</span></code> to within the precision of the
-epsilon value. (Later on we’ll refine it to generate the initial
-estimate and hard-code an epsilon value.)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>n a ε square-root
------------------
-      √n
+<div class="section" id="a-generator-of-square-root-approximations">
+<h3>A Generator of Square Root Approximations<a class="headerlink" href="#a-generator-of-square-root-approximations" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gsra</span> <span class="o">==</span> <span class="mi">1</span> <span class="n">swap</span> <span class="p">[</span><span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">make_generator</span>
 </pre></div>
 </div>
-<p>If we apply the two functions <code class="docutils literal notranslate"><span class="pre">Q</span></code> and <code class="docutils literal notranslate"><span class="pre">err</span></code> defined above we get the
-next approximation and the error on the stack below the epsilon.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">a</span> <span class="n">ε</span> <span class="p">[</span><span class="n">Q</span> <span class="n">err</span><span class="p">]</span> <span class="n">dip</span>
-<span class="n">n</span> <span class="n">a</span> <span class="n">Q</span> <span class="n">err</span> <span class="n">ε</span>
-<span class="n">n</span> <span class="n">a</span><span class="s1">&#39;  err ε</span>
-<span class="n">n</span> <span class="n">a</span><span class="s1">&#39; e    ε</span>
+</div>
+</div>
+<div class="section" id="finding-consecutive-approximations-within-a-tolerance">
+<h2>Finding Consecutive Approximations <code class="docutils literal notranslate"><span class="pre">within</span></code> a Tolerance<a class="headerlink" href="#finding-consecutive-approximations-within-a-tolerance" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>The remainder of a square root finder is a function <em>within</em>, which takes a tolerance and a list of approximations and looks down the list for two successive approximations that differ by no more than the given tolerance.</div></blockquote>
+<p>From <a class="reference external" href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">“Why Functional Programming Matters” by John
+Hughes</a></p>
+<p>(And note that by “list” he means a lazily-evaluated list.)</p>
+<p>Using the <em>output</em> <code class="docutils literal notranslate"><span class="pre">[a</span> <span class="pre">G]</span></code> of the above <a class="reference internal" href="Generator Programs.html"><span class="doc">generator</span></a> for square root approximations, and further assuming that the first term <code class="docutils literal notranslate"><span class="pre">a</span></code> has been generated already and epsilon <code class="docutils literal notranslate"><span class="pre">ε</span></code> is handy on the stack…</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">within</span>
+<span class="o">----------------------</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-</span> <span class="nb">abs</span> <span class="n">ε</span> <span class="o">&lt;=</span>
+      <span class="n">b</span>
 </pre></div>
 </div>
-<p>Let’s define a recursive function <code class="docutils literal notranslate"><span class="pre">K</span></code> from here.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">a</span><span class="s1">&#39; e ε K</span>
-
-<span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">within</span>
+<span class="o">----------------------</span> <span class="n">a</span> <span class="n">b</span> <span class="o">-</span> <span class="nb">abs</span> <span class="n">ε</span> <span class="o">&gt;</span>
+       <span class="o">.</span>
+   <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">x</span> <span class="n">ε</span> <span class="o">...</span>
+   <span class="n">b</span> <span class="p">[</span><span class="n">c</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="o">...</span>
+       <span class="o">.</span>
+<span class="o">----------------------</span>
+   <span class="n">b</span> <span class="p">[</span><span class="n">c</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">within</span>
 </pre></div>
+</div>
+<div class="section" id="predicate">
+<h3>Predicate<a class="headerlink" href="#predicate" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span>             <span class="n">ε</span> <span class="p">[</span><span class="n">first</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">]</span> <span class="n">dip</span> <span class="o">&lt;=</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">first</span> <span class="o">-</span> <span class="nb">abs</span> <span class="n">ε</span>                   <span class="o">&lt;=</span>
+<span class="n">a</span> <span class="n">b</span>           <span class="o">-</span> <span class="nb">abs</span> <span class="n">ε</span>                   <span class="o">&lt;=</span>
+<span class="n">a</span><span class="o">-</span><span class="n">b</span>             <span class="nb">abs</span> <span class="n">ε</span>                   <span class="o">&lt;=</span>
+<span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span>            <span class="n">ε</span>                   <span class="o">&lt;=</span>
+<span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">ε</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">P</span> <span class="o">==</span> <span class="p">[</span><span class="n">first</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">]</span> <span class="n">dip</span> <span class="o">&lt;=</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="base-case">
-<h3>Base-case<a class="headerlink" href="#base-case" title="Permalink to this headline">¶</a></h3>
-<p>The predicate and the base case are obvious:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="o">&lt;</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="n">popd</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
+<h3>Base-Case<a class="headerlink" href="#base-case" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">popop</span> <span class="n">first</span>
+  <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">a</span>     <span class="n">popop</span> <span class="n">first</span>
+  <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span>               <span class="n">first</span>
+   <span class="n">b</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">a</span><span class="s1">&#39; e ε popop popd</span>
-<span class="n">n</span> <span class="n">a</span><span class="s1">&#39;           popd</span>
-  <span class="n">a</span><span class="s1">&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">B</span> <span class="o">==</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">popop</span> <span class="n">first</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="recur">
 <h3>Recur<a class="headerlink" href="#recur" title="Permalink to this headline">¶</a></h3>
-<p>The recursive branch is pretty easy. Discard the error and recur.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="o">&lt;</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="n">popd</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span>   <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
-<span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="o">&lt;</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span> <span class="n">popd</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">R1</span><span class="p">]</span> <span class="n">ifte</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">R0</span> <span class="p">[</span><span class="n">within</span><span class="p">]</span> <span class="n">R1</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">a</span><span class="s1">&#39; e ε               R0 [K] R1</span>
-<span class="n">n</span> <span class="n">a</span><span class="s1">&#39; e ε popd [Q err] dip [K] i</span>
-<span class="n">n</span> <span class="n">a</span><span class="s1">&#39;   ε      [Q err] dip [K] i</span>
-<span class="n">n</span> <span class="n">a</span><span class="s1">&#39; Q err ε              [K] i</span>
-<span class="n">n</span> <span class="n">a</span><span class="s1">&#39;&#39;</span>  <span class="n">e</span>   <span class="n">ε</span>               <span class="n">K</span>
+<ol class="arabic simple">
+<li>Discard <code class="docutils literal notranslate"><span class="pre">a</span></code>.</li>
+<li>Use <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator to generate next term from <code class="docutils literal notranslate"><span class="pre">G</span></code>.</li>
+<li>Run <code class="docutils literal notranslate"><span class="pre">within</span></code> with <code class="docutils literal notranslate"><span class="pre">i</span></code> (it is a <code class="docutils literal notranslate"><span class="pre">primrec</span></code> function.)</li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span>        <span class="n">ε</span> <span class="n">R0</span>           <span class="p">[</span><span class="n">within</span><span class="p">]</span> <span class="n">R1</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span>        <span class="n">ε</span> <span class="p">[</span><span class="n">popd</span> <span class="n">x</span><span class="p">]</span> <span class="n">dip</span> <span class="p">[</span><span class="n">within</span><span class="p">]</span> <span class="n">i</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">popd</span> <span class="n">x</span> <span class="n">ε</span>              <span class="p">[</span><span class="n">within</span><span class="p">]</span> <span class="n">i</span>
+  <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span>      <span class="n">x</span> <span class="n">ε</span>              <span class="p">[</span><span class="n">within</span><span class="p">]</span> <span class="n">i</span>
+<span class="n">b</span> <span class="p">[</span><span class="n">c</span> <span class="n">G</span><span class="p">]</span>        <span class="n">ε</span>              <span class="p">[</span><span class="n">within</span><span class="p">]</span> <span class="n">i</span>
+<span class="n">b</span> <span class="p">[</span><span class="n">c</span> <span class="n">G</span><span class="p">]</span>        <span class="n">ε</span>               <span class="n">within</span>
+
+<span class="n">b</span> <span class="p">[</span><span class="n">c</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">within</span>
 </pre></div>
 </div>
-<p>This fragment alone is pretty useful.  (<code class="docutils literal notranslate"><span class="pre">R1</span></code> is <code class="docutils literal notranslate"><span class="pre">i</span></code> so this is a <code class="docutils literal notranslate"><span class="pre">primrec</span></code> “primitive recursive” function.)</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;K == [&lt;] [popop popd] [popd [Q err] dip] primrec&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;25 10 0.001 dup K&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">5.000000232305737</span>
-</pre></div>
-</div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;25 10 0.000001 dup K&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">5.000000000000005</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R0</span> <span class="o">==</span> <span class="p">[</span><span class="n">popd</span> <span class="n">x</span><span class="p">]</span> <span class="n">dip</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="initial-approximation-and-epsilon">
-<h3>Initial Approximation and Epsilon<a class="headerlink" href="#initial-approximation-and-epsilon" title="Permalink to this headline">¶</a></h3>
-<p>So now all we need is a way to generate an initial approximation and an
-epsilon value:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">square</span><span class="o">-</span><span class="n">root</span> <span class="o">==</span> <span class="n">dup</span> <span class="mi">3</span> <span class="o">/</span> <span class="mf">0.000001</span> <span class="n">dup</span> <span class="n">K</span>
-</pre></div>
-</div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;square-root == dup 3 / 0.000001 dup K&#39;</span><span class="p">)</span>
+<div class="section" id="setting-up">
+<h3>Setting up<a class="headerlink" href="#setting-up" title="Permalink to this headline">¶</a></h3>
+<p>The recursive function we have defined so far needs a slight preamble: <code class="docutils literal notranslate"><span class="pre">x</span></code> to prime the generator and the epsilon value to use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">a</span> <span class="n">G</span><span class="p">]</span> <span class="n">x</span> <span class="n">ε</span> <span class="o">...</span>
+<span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="o">...</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="examples">
-<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;36 square-root&#39;</span><span class="p">)</span>
+<div class="section" id="within">
+<h3><code class="docutils literal notranslate"><span class="pre">within</span></code><a class="headerlink" href="#within" title="Permalink to this headline">¶</a></h3>
+<p>Giving us the following definitions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_within_P</span> <span class="o">==</span> <span class="p">[</span><span class="n">first</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">]</span> <span class="n">dip</span> <span class="o">&lt;=</span>
+<span class="n">_within_B</span> <span class="o">==</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">popop</span> <span class="n">first</span>
+<span class="n">_within_R</span> <span class="o">==</span> <span class="p">[</span><span class="n">popd</span> <span class="n">x</span><span class="p">]</span> <span class="n">dip</span>
+<span class="n">within</span> <span class="o">==</span> <span class="n">x</span> <span class="n">ε</span> <span class="p">[</span><span class="n">_within_P</span><span class="p">]</span> <span class="p">[</span><span class="n">_within_B</span><span class="p">]</span> <span class="p">[</span><span class="n">_within_R</span><span class="p">]</span> <span class="n">primrec</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">6.000000000000007</span>
-</pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;4895048365636 square-root&#39;</span><span class="p">)</span>
-</pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">2212475.6192184356</span>
+<div class="section" id="finding-square-roots">
+<h2>Finding Square Roots<a class="headerlink" href="#finding-square-roots" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sqrt</span> <span class="o">==</span> <span class="n">gsra</span> <span class="n">within</span>
 </pre></div>
-</div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">2212475.6192184356</span> <span class="o">*</span> <span class="mf">2212475.6192184356</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">4895048365636.0</span>
-</pre></div>
-</div>
 </div>
 </div>
 </div>
@@ -192,15 +211,21 @@ epsilon value:</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Newton’s method</a><ul>
-<li><a class="reference internal" href="#finding-the-square-root-of-a-number">Finding the Square-Root of a Number</a></li>
-<li><a class="reference internal" href="#compute-the-error">Compute the Error</a></li>
-<li><a class="reference internal" href="#square-root"><code class="docutils literal notranslate"><span class="pre">square-root</span></code></a><ul>
-<li><a class="reference internal" href="#base-case">Base-case</a></li>
-<li><a class="reference internal" href="#recur">Recur</a></li>
-<li><a class="reference internal" href="#initial-approximation-and-epsilon">Initial Approximation and Epsilon</a></li>
-<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#a-generator-for-approximations">A Generator for Approximations</a><ul>
+<li><a class="reference internal" href="#a-function-to-compute-the-next-approximation">A Function to Compute the Next Approximation</a></li>
+<li><a class="reference internal" href="#make-it-into-a-generator">Make it into a Generator</a></li>
+<li><a class="reference internal" href="#a-generator-of-square-root-approximations">A Generator of Square Root Approximations</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#finding-consecutive-approximations-within-a-tolerance">Finding Consecutive Approximations <code class="docutils literal notranslate"><span class="pre">within</span></code> a Tolerance</a><ul>
+<li><a class="reference internal" href="#predicate">Predicate</a></li>
+<li><a class="reference internal" href="#base-case">Base-Case</a></li>
+<li><a class="reference internal" href="#recur">Recur</a></li>
+<li><a class="reference internal" href="#setting-up">Setting up</a></li>
+<li><a class="reference internal" href="#within"><code class="docutils literal notranslate"><span class="pre">within</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#finding-square-roots">Finding Square Roots</a></li>
 </ul>
 </li>
 </ul>
