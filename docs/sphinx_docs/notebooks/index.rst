@@ -9,6 +9,7 @@ These essays are adapted from Jupyter notebooks.  I hope to have those hosted so
    :maxdepth: 2
 
    Developing
+   Replacing
    Trees
    Newton-Raphson
    Quadratic

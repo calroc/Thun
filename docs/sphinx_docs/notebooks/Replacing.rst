@@ -99,7 +99,7 @@ and re-evaluate the expression.
     D['size'] = size
 
 
-A Shorter Evaluation
+A shorter trace
 ~~~~~~~~~~~~~~~~~~~~
 
 You can see that ``size`` and ``sum`` now execute in a single step.

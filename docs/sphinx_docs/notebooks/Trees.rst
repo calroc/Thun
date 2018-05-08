@@ -1210,43 +1210,144 @@ TODO: BTree-delete
 
 ::
 
-       tree key [E] BTree-delete
-    ---------------------------- key in tree
+       tree key [Er] BTree-delete
+    -------------------------------- key in tree
            tree
 
-       tree key [E] BTree-delete
-    ---------------------------- key not in tree
-             tree key E
+       tree key [Er] BTree-delete
+    -------------------------------- key not in tree
+             tree key Er
 
-So:
+So::
 
-::
-
-    BTree-delete == [pop not] [] [R0] [R1] genrec
-
-And:
+    BTree-Delete == [pop not] swap [R0] [R1] genrec
 
 ::
 
-    [n_key n_value left right] key R0              [BTree-get] R1
-    [n_key n_value left right] key [dup first] dip [BTree-get] R1
-    [n_key n_value left right] n_key key           [BTree-get] R1
-    [n_key n_value left right] n_key key           [BTree-get] roll> [T>] [E] [T<] cmp
-    [n_key n_value left right] [BTree-get] n_key key                 [T>] [E] [T<] cmp
+                 [Er] BTree-delete
+    ------------------------------------
+       [pop not] [Er] [R0] [R1] genrec
 
-    BTree-delete == [pop not] swap [[dup first] dip] [roll> [T>] [E] [T<] cmp] genrec
+
+Now we get to figure out the recursive case::
+
+    D == [pop not] [Er] [R0] [R1] genrec
+
+    [node_key node_value left right] key R0                  [D] R1
+    [node_key node_value left right] key over first swap dup [D] R1
+    [node_key node_value left right] node_key key key        [D] R1
 
 ::
 
-    [n_key n_value left right] [BTree-get] T>
-    [n_key n_value left right] [BTree-get] E
-    [n_key n_value left right] [BTree-get] T<
+    [node_key node_value left right] node_key key key [D] R1
+    [node_key node_value left right] node_key key key [D] cons roll> [T>] [E] [T<] cmp
+    [node_key node_value left right] node_key key [key D]      roll> [T>] [E] [T<] cmp
+    [node_key node_value left right] [key D] node_key key            [T>] [E] [T<] cmp
+
+Now this:;
+
+    [node_key node_value left right] [key D] node_key key [T>] [E] [T<] cmp
+
+Becomes one of these three:;
+
+    [node_key node_value left right] [key D] T>
+    [node_key node_value left right] [key D] E
+    [node_key node_value left right] [key D] T<
+
 
 ::
 
-    [n_key n_value left right] [BTree-get] 
-    [n_key n_value left right] [BTree-get] E
-    [n_key n_value left right] [BTree-get] T<
+       [node_key node_value left right] [key D] T>
+    -------------------------------------------------
+       [node_key node_value left key D right]
+
+
+    right left node_value node_key [key D] dipd
+
+    [node_key node_value left right] [key D] [dipd] cons infra
+
+::
+
+    T> == [dipd] cons infra
+    T< == [dipdd] cons infra
+
+
+::
+
+    [node_key node_value left right] [key D] E
+
+::
+
+
+    def delete(node, key):
+      '''
+      Return a tree with the value (and key) removed or raise KeyError if
+      not found.
+      '''
+      if not node:
+        raise KeyError, key
+
+      node_key, (value, (lower, (higher, _))) = node
+
+      if key < node_key:
+        return node_key, (value, (delete(lower, key), (higher, ())))
+
+      if key > node_key:
+        return node_key, (value, (lower, (delete(higher, key), ())))
+
+      # So, key == node_key, delete this node itself.
+
+      # If we only have one non-empty child node return it.  If both child
+      # nodes are empty return an empty node (one of the children.)
+      if not lower:
+        return higher
+      if not higher:
+        return lower
+
+      # If both child nodes are non-empty, we find the highest node in our
+      # lower sub-tree, take its key and value to replace (delete) our own,
+      # then get rid of it by recursively calling delete() on our lower
+      # sub-node with our new key.
+      # (We could also find the lowest node in our higher sub-tree and take
+      # its key and value and delete it. I only implemented one of these
+      # two symmetrical options. Over a lot of deletions this might make
+      # the tree more unbalanced.  Oh well.)
+      node = lower
+      while node[1][1][1][0]:
+        node = node[1][1][1][0]
+      key, value = node[0], node[1][0]
+
+      return key, (value, (delete(lower, key), (higher, ())))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Tree with node and list of trees.
 =================================

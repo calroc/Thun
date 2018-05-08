@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Newton’s method" href="Newton-Raphson.html" />
-    <link rel="prev" title="Developing a Program in Joy" href="Developing.html" />
+    <link rel="prev" title="Replacing Functions in the Dictionary" href="Replacing.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -967,37 +967,102 @@ because there’s no value to discard. Now we have to derive the branches:</p>
 </div>
 <div class="section" id="todo-btree-delete">
 <h2>TODO: BTree-delete<a class="headerlink" href="#todo-btree-delete" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">tree</span> <span class="n">key</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="n">BTree</span><span class="o">-</span><span class="n">delete</span>
-<span class="o">----------------------------</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">tree</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">tree</span> <span class="n">key</span> <span class="p">[</span><span class="n">Er</span><span class="p">]</span> <span class="n">BTree</span><span class="o">-</span><span class="n">delete</span>
+<span class="o">--------------------------------</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">tree</span>
        <span class="n">tree</span>
 
-   <span class="n">tree</span> <span class="n">key</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="n">BTree</span><span class="o">-</span><span class="n">delete</span>
-<span class="o">----------------------------</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tree</span>
-         <span class="n">tree</span> <span class="n">key</span> <span class="n">E</span>
+   <span class="n">tree</span> <span class="n">key</span> <span class="p">[</span><span class="n">Er</span><span class="p">]</span> <span class="n">BTree</span><span class="o">-</span><span class="n">delete</span>
+<span class="o">--------------------------------</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tree</span>
+         <span class="n">tree</span> <span class="n">key</span> <span class="n">Er</span>
 </pre></div>
 </div>
 <p>So:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BTree</span><span class="o">-</span><span class="n">delete</span> <span class="o">==</span> <span class="p">[</span><span class="n">pop</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BTree</span><span class="o">-</span><span class="n">Delete</span> <span class="o">==</span> <span class="p">[</span><span class="n">pop</span> <span class="ow">not</span><span class="p">]</span> <span class="n">swap</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<p>And:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">key</span> <span class="n">R0</span>              <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span> <span class="n">R1</span>
-<span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">key</span> <span class="p">[</span><span class="n">dup</span> <span class="n">first</span><span class="p">]</span> <span class="n">dip</span> <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span> <span class="n">R1</span>
-<span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">n_key</span> <span class="n">key</span>           <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span> <span class="n">R1</span>
-<span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">n_key</span> <span class="n">key</span>           <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span> <span class="n">roll</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="nb">cmp</span>
-<span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span> <span class="n">n_key</span> <span class="n">key</span>                 <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="nb">cmp</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>             <span class="p">[</span><span class="n">Er</span><span class="p">]</span> <span class="n">BTree</span><span class="o">-</span><span class="n">delete</span>
+<span class="o">------------------------------------</span>
+   <span class="p">[</span><span class="n">pop</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">Er</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
+</pre></div>
+</div>
+<p>Now we get to figure out the recursive case:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">==</span> <span class="p">[</span><span class="n">pop</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">Er</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
 
-<span class="n">BTree</span><span class="o">-</span><span class="n">delete</span> <span class="o">==</span> <span class="p">[</span><span class="n">pop</span> <span class="ow">not</span><span class="p">]</span> <span class="n">swap</span> <span class="p">[[</span><span class="n">dup</span> <span class="n">first</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="p">[</span><span class="n">roll</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="nb">cmp</span><span class="p">]</span> <span class="n">genrec</span>
+<span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">key</span> <span class="n">R0</span>                  <span class="p">[</span><span class="n">D</span><span class="p">]</span> <span class="n">R1</span>
+<span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">key</span> <span class="n">over</span> <span class="n">first</span> <span class="n">swap</span> <span class="n">dup</span> <span class="p">[</span><span class="n">D</span><span class="p">]</span> <span class="n">R1</span>
+<span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">node_key</span> <span class="n">key</span> <span class="n">key</span>        <span class="p">[</span><span class="n">D</span><span class="p">]</span> <span class="n">R1</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span> <span class="n">E</span>
-<span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span> <span class="n">T</span><span class="o">&lt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">node_key</span> <span class="n">key</span> <span class="n">key</span> <span class="p">[</span><span class="n">D</span><span class="p">]</span> <span class="n">R1</span>
+<span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">node_key</span> <span class="n">key</span> <span class="n">key</span> <span class="p">[</span><span class="n">D</span><span class="p">]</span> <span class="n">cons</span> <span class="n">roll</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="nb">cmp</span>
+<span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">node_key</span> <span class="n">key</span> <span class="p">[</span><span class="n">key</span> <span class="n">D</span><span class="p">]</span>      <span class="n">roll</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="nb">cmp</span>
+<span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">key</span> <span class="n">D</span><span class="p">]</span> <span class="n">node_key</span> <span class="n">key</span>            <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="nb">cmp</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span>
-<span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span> <span class="n">E</span>
-<span class="p">[</span><span class="n">n_key</span> <span class="n">n_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">BTree</span><span class="o">-</span><span class="n">get</span><span class="p">]</span> <span class="n">T</span><span class="o">&lt;</span>
+<p>Now this:;</p>
+<blockquote>
+<div>[node_key node_value left right] [key D] node_key key [T&gt;] [E] [T&lt;] cmp</div></blockquote>
+<p>Becomes one of these three:;</p>
+<blockquote>
+<div>[node_key node_value left right] [key D] T&gt;
+[node_key node_value left right] [key D] E
+[node_key node_value left right] [key D] T&lt;</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">key</span> <span class="n">D</span><span class="p">]</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="o">-------------------------------------------------</span>
+   <span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">key</span> <span class="n">D</span> <span class="n">right</span><span class="p">]</span>
+
+
+<span class="n">right</span> <span class="n">left</span> <span class="n">node_value</span> <span class="n">node_key</span> <span class="p">[</span><span class="n">key</span> <span class="n">D</span><span class="p">]</span> <span class="n">dipd</span>
+
+<span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">key</span> <span class="n">D</span><span class="p">]</span> <span class="p">[</span><span class="n">dipd</span><span class="p">]</span> <span class="n">cons</span> <span class="n">infra</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">T</span><span class="o">&gt;</span> <span class="o">==</span> <span class="p">[</span><span class="n">dipd</span><span class="p">]</span> <span class="n">cons</span> <span class="n">infra</span>
+<span class="n">T</span><span class="o">&lt;</span> <span class="o">==</span> <span class="p">[</span><span class="n">dipdd</span><span class="p">]</span> <span class="n">cons</span> <span class="n">infra</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">node_key</span> <span class="n">node_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">key</span> <span class="n">D</span><span class="p">]</span> <span class="n">E</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Return a tree with the value (and key) removed or raise KeyError if</span>
+<span class="sd">  not found.</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="n">key</span>
+
+  <span class="n">node_key</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="p">(</span><span class="n">higher</span><span class="p">,</span> <span class="n">_</span><span class="p">)))</span> <span class="o">=</span> <span class="n">node</span>
+
+  <span class="k">if</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="n">node_key</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">node_key</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">delete</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="p">(</span><span class="n">higher</span><span class="p">,</span> <span class="p">())))</span>
+
+  <span class="k">if</span> <span class="n">key</span> <span class="o">&gt;</span> <span class="n">node_key</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">node_key</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="p">(</span><span class="n">delete</span><span class="p">(</span><span class="n">higher</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="p">())))</span>
+
+  <span class="c1"># So, key == node_key, delete this node itself.</span>
+
+  <span class="c1"># If we only have one non-empty child node return it.  If both child</span>
+  <span class="c1"># nodes are empty return an empty node (one of the children.)</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">lower</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">higher</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">higher</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">lower</span>
+
+  <span class="c1"># If both child nodes are non-empty, we find the highest node in our</span>
+  <span class="c1"># lower sub-tree, take its key and value to replace (delete) our own,</span>
+  <span class="c1"># then get rid of it by recursively calling delete() on our lower</span>
+  <span class="c1"># sub-node with our new key.</span>
+  <span class="c1"># (We could also find the lowest node in our higher sub-tree and take</span>
+  <span class="c1"># its key and value and delete it. I only implemented one of these</span>
+  <span class="c1"># two symmetrical options. Over a lot of deletions this might make</span>
+  <span class="c1"># the tree more unbalanced.  Oh well.)</span>
+  <span class="n">node</span> <span class="o">=</span> <span class="n">lower</span>
+  <span class="k">while</span> <span class="n">node</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">node</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+  <span class="k">return</span> <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">delete</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="p">(</span><span class="n">higher</span><span class="p">,</span> <span class="p">())))</span>
 </pre></div>
 </div>
 </div>
@@ -1507,7 +1572,7 @@ because lookup happens at evaluation, not parsing. E.g.:</p>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="index.html">Essays about Programming in Joy</a><ul>
-      <li>Previous: <a href="Developing.html" title="previous chapter">Developing a Program in Joy</a></li>
+      <li>Previous: <a href="Replacing.html" title="previous chapter">Replacing Functions in the Dictionary</a></li>
       <li>Next: <a href="Newton-Raphson.html" title="next chapter">Newton’s method</a></li>
   </ul></li>
   </ul></li>
