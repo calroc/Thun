@@ -1142,6 +1142,43 @@ def ifte(stack, expression, dictionary):
 
 @inscribe
 @FunctionWrapper
+def cond(stack, expression, dictionary):
+  '''
+  like a case statement; works by rewriting into a chain of ifte.
+
+  [..[[Bi] Ti]..[D]] -> ...
+
+
+        [[[B0] T0] [[B1] T1] [D]] cond
+  -----------------------------------------
+     [B0] [T0] [[B1] [T1] [D] ifte] ifte
+
+  '''
+  conditions, stack = stack
+  if conditions:
+    expression = _cond(conditions, expression)
+    try:
+      # Attempt to preload the args to first ifte.
+      (P, (T, (E, expression))) = expression
+    except ValueError:
+      # If, for any reason, the argument to cond should happen to contain
+      # only the default clause then this optimization will fail.
+      pass
+    else:
+      stack = (E, (T, (P, stack)))
+  return stack, expression, dictionary
+
+
+def _cond(conditions, expression):
+  (clause, rest) = conditions
+  if not rest:  # clause is [D]
+    return clause
+  P, T = clause
+  return (P, (T, (_cond(rest, ()), (S_ifte, expression))))
+
+
+@inscribe
+@FunctionWrapper
 def dip(stack, expression, dictionary):
   '''
   The dip combinator expects a quoted program on the stack and below it
@@ -1358,6 +1395,30 @@ def loop(stack, expression, dictionary):
   if flag:
     expression = pushback(quote, (quote, (S_loop, expression)))
   return stack, expression, dictionary
+
+
+@inscribe
+@FunctionWrapper
+def cmp_(stack, expression, dictionary):
+    '''
+    cmp takes two values and three quoted programs on the stack and runs
+    one of the three depending on the results of comparing the two values:
+
+           a b [G] [E] [L] cmp
+        ------------------------- a > b
+                G
+
+           a b [G] [E] [L] cmp
+        ------------------------- a = b
+                    E
+
+           a b [G] [E] [L] cmp
+        ------------------------- a < b
+                        L
+    '''
+    L, (E, (G, (b, (a, stack)))) = stack
+    expression = pushback(G if a > b else L if a < b else E, expression)
+    return stack, expression, dictionary
 
 
 #def nullary(S, expression, dictionary):
