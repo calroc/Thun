@@ -1,0 +1,1761 @@
+
+Examples (and some documentation) for the Words in the Library
+==============================================================
+
+.. code:: ipython2
+
+    from notebook_preamble import J, V
+
+Stack Chatter
+=============
+
+This is what I like to call the functions that just rearrange things on
+the stack. (One thing I want to mention is that during a hypothetical
+compilation phase these "stack chatter" words effectively disappear,
+because we can map the logical stack locations to registers that remain
+static for the duration of the computation. This remains to be done but
+it's "off the shelf" technology.)
+
+``clear``
+~~~~~~~~~
+
+.. code:: ipython2
+
+    J('1 2 3 clear')
+
+
+.. parsed-literal::
+
+    
+
+
+``dup`` ``dupd``
+~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('1 2 3 dup')
+
+
+.. parsed-literal::
+
+    1 2 3 3
+
+
+.. code:: ipython2
+
+    J('1 2 3 dupd')
+
+
+.. parsed-literal::
+
+    1 2 2 3
+
+
+``enstacken`` ``disenstacken`` ``stack`` ``unstack``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(I may have these paired up wrong. I.e. ``disenstacken`` should be
+``unstack`` and vice versa.)
+
+.. code:: ipython2
+
+    J('1 2 3 enstacken') # Replace the stack with a quote of itself.
+
+
+.. parsed-literal::
+
+    [3 2 1]
+
+
+.. code:: ipython2
+
+    J('4 5 6 [3 2 1] disenstacken')  # Unpack a list onto the stack.
+
+
+.. parsed-literal::
+
+    4 5 6 3 2 1
+
+
+.. code:: ipython2
+
+    J('1 2 3 stack')  # Get the stack on the stack.
+
+
+.. parsed-literal::
+
+    1 2 3 [3 2 1]
+
+
+.. code:: ipython2
+
+    J('1 2 3 [4 5 6] unstack')  # Replace the stack with the list on top.
+                                # The items appear reversed but they are not,
+                                # 4 is on the top of both the list and the stack.
+
+
+.. parsed-literal::
+
+    6 5 4
+
+
+``pop`` ``popd`` ``popop``
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('1 2 3 pop')
+
+
+.. parsed-literal::
+
+    1 2
+
+
+.. code:: ipython2
+
+    J('1 2 3 popd')
+
+
+.. parsed-literal::
+
+    1 3
+
+
+.. code:: ipython2
+
+    J('1 2 3 popop')
+
+
+.. parsed-literal::
+
+    1
+
+
+``roll<`` ``rolldown`` ``roll>`` ``rollup``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The "down" and "up" refer to the movement of two of the top three items
+(displacing the third.)
+
+.. code:: ipython2
+
+    J('1 2 3 roll<')
+
+
+.. parsed-literal::
+
+    2 3 1
+
+
+.. code:: ipython2
+
+    J('1 2 3 roll>')
+
+
+.. parsed-literal::
+
+    3 1 2
+
+
+``swap``
+~~~~~~~~
+
+.. code:: ipython2
+
+    J('1 2 3 swap')
+
+
+.. parsed-literal::
+
+    1 3 2
+
+
+``tuck`` ``over``
+~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('1 2 3 tuck')
+
+
+.. parsed-literal::
+
+    1 3 2 3
+
+
+.. code:: ipython2
+
+    J('1 2 3 over')
+
+
+.. parsed-literal::
+
+    1 2 3 2
+
+
+``unit`` ``quoted`` ``unquoted``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('1 2 3 unit')
+
+
+.. parsed-literal::
+
+    1 2 [3]
+
+
+.. code:: ipython2
+
+    J('1 2 3 quoted')
+
+
+.. parsed-literal::
+
+    1 [2] 3
+
+
+.. code:: ipython2
+
+    J('1 [2] 3 unquoted')
+
+
+.. parsed-literal::
+
+    1 2 3
+
+
+.. code:: ipython2
+
+    V('1 [dup] 3 unquoted')  # Unquoting evaluates.  Be aware.
+
+
+.. parsed-literal::
+
+                  . 1 [dup] 3 unquoted
+                1 . [dup] 3 unquoted
+          1 [dup] . 3 unquoted
+        1 [dup] 3 . unquoted
+        1 [dup] 3 . [i] dip
+    1 [dup] 3 [i] . dip
+          1 [dup] . i 3
+                1 . dup 3
+              1 1 . 3
+            1 1 3 . 
+
+
+List words
+==========
+
+``concat`` ``swoncat`` ``shunt``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('[1 2 3] [4 5 6] concat')
+
+
+.. parsed-literal::
+
+    [1 2 3 4 5 6]
+
+
+.. code:: ipython2
+
+    J('[1 2 3] [4 5 6] swoncat')
+
+
+.. parsed-literal::
+
+    [4 5 6 1 2 3]
+
+
+.. code:: ipython2
+
+    J('[1 2 3] [4 5 6] shunt')
+
+
+.. parsed-literal::
+
+    [6 5 4 1 2 3]
+
+
+``cons`` ``swons`` ``uncons``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('1 [2 3] cons')
+
+
+.. parsed-literal::
+
+    [1 2 3]
+
+
+.. code:: ipython2
+
+    J('[2 3] 1 swons')
+
+
+.. parsed-literal::
+
+    [1 2 3]
+
+
+.. code:: ipython2
+
+    J('[1 2 3] uncons')
+
+
+.. parsed-literal::
+
+    1 [2 3]
+
+
+``first`` ``second`` ``third`` ``rest``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('[1 2 3 4] first')
+
+
+.. parsed-literal::
+
+    1
+
+
+.. code:: ipython2
+
+    J('[1 2 3 4] second')
+
+
+.. parsed-literal::
+
+    2
+
+
+.. code:: ipython2
+
+    J('[1 2 3 4] third')
+
+
+.. parsed-literal::
+
+    3
+
+
+.. code:: ipython2
+
+    J('[1 2 3 4] rest')
+
+
+.. parsed-literal::
+
+    [2 3 4]
+
+
+``flatten``
+~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('[[1] [2 [3] 4] [5 6]] flatten')
+
+
+.. parsed-literal::
+
+    [1 2 [3] 4 5 6]
+
+
+``getitem`` ``at`` ``of`` ``drop`` ``take``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``at`` and ``getitem`` are the same function. ``of == swap at``
+
+.. code:: ipython2
+
+    J('[10 11 12 13 14] 2 getitem')
+
+
+.. parsed-literal::
+
+    12
+
+
+.. code:: ipython2
+
+    J('[1 2 3 4] 0 at')
+
+
+.. parsed-literal::
+
+    1
+
+
+.. code:: ipython2
+
+    J('2 [1 2 3 4] of')
+
+
+.. parsed-literal::
+
+    3
+
+
+.. code:: ipython2
+
+    J('[1 2 3 4] 2 drop')
+
+
+.. parsed-literal::
+
+    [3 4]
+
+
+.. code:: ipython2
+
+    J('[1 2 3 4] 2 take')  # reverses the order
+
+
+.. parsed-literal::
+
+    [2 1]
+
+
+``reverse`` could be defines as ``reverse == dup size take``
+
+``remove``
+~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('[1 2 3 1 4] 1 remove')
+
+
+.. parsed-literal::
+
+    [2 3 1 4]
+
+
+``reverse``
+~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('[1 2 3 4] reverse')
+
+
+.. parsed-literal::
+
+    [4 3 2 1]
+
+
+``size``
+~~~~~~~~
+
+.. code:: ipython2
+
+    J('[1 1 1 1] size')
+
+
+.. parsed-literal::
+
+    4
+
+
+``swaack``
+~~~~~~~~~~
+
+"Swap stack" swap the list on the top of the stack for the stack, and
+put the old stack on top of the new one. Think of it as a context
+switch. Niether of the lists/stacks change their order.
+
+.. code:: ipython2
+
+    J('1 2 3 [4 5 6] swaack')
+
+
+.. parsed-literal::
+
+    6 5 4 [3 2 1]
+
+
+``choice`` ``select``
+~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('23 9 1 choice')
+
+
+.. parsed-literal::
+
+    9
+
+
+.. code:: ipython2
+
+    J('23 9 0 choice')
+
+
+.. parsed-literal::
+
+    23
+
+
+.. code:: ipython2
+
+    J('[23 9 7] 1 select')  # select is basically getitem, should retire it?
+
+
+.. parsed-literal::
+
+    9
+
+
+.. code:: ipython2
+
+    J('[23 9 7] 0 select')
+
+
+.. parsed-literal::
+
+    23
+
+
+``zip``
+~~~~~~~
+
+.. code:: ipython2
+
+    J('[1 2 3] [6 5 4] zip')
+
+
+.. parsed-literal::
+
+    [[6 1] [5 2] [4 3]]
+
+
+.. code:: ipython2
+
+    J('[1 2 3] [6 5 4] zip [sum] map')
+
+
+.. parsed-literal::
+
+    [7 7 7]
+
+
+Math words
+==========
+
+``+`` ``add``
+~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('23 9 +')
+
+
+.. parsed-literal::
+
+    32
+
+
+``-`` ``sub``
+~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('23 9 -')
+
+
+.. parsed-literal::
+
+    14
+
+
+``*`` ``mul``
+~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('23 9 *')
+
+
+.. parsed-literal::
+
+    207
+
+
+``/`` ``div`` ``floordiv`` ``truediv``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('23 9 /')
+
+
+.. parsed-literal::
+
+    2.5555555555555554
+
+
+.. code:: ipython2
+
+    J('23 -9 truediv')
+
+
+.. parsed-literal::
+
+    -2.5555555555555554
+
+
+.. code:: ipython2
+
+    J('23 9 div')
+
+
+.. parsed-literal::
+
+    2
+
+
+.. code:: ipython2
+
+    J('23 9 floordiv')
+
+
+.. parsed-literal::
+
+    2
+
+
+.. code:: ipython2
+
+    J('23 -9 div')
+
+
+.. parsed-literal::
+
+    -3
+
+
+.. code:: ipython2
+
+    J('23 -9 floordiv')
+
+
+.. parsed-literal::
+
+    -3
+
+
+``%`` ``mod`` ``modulus`` ``rem`` ``remainder``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('23 9 %')
+
+
+.. parsed-literal::
+
+    5
+
+
+``neg``
+~~~~~~~
+
+.. code:: ipython2
+
+    J('23 neg -5 neg')
+
+
+.. parsed-literal::
+
+    -23 5
+
+
+pow
+~~~
+
+.. code:: ipython2
+
+    J('2 10 pow')
+
+
+.. parsed-literal::
+
+    1024
+
+
+``sqr`` ``sqrt``
+~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('23 sqr')
+
+
+.. parsed-literal::
+
+    529
+
+
+.. code:: ipython2
+
+    J('23 sqrt')
+
+
+.. parsed-literal::
+
+    4.795831523312719
+
+
+``++`` ``succ`` ``--`` ``pred``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('1 ++')
+
+
+.. parsed-literal::
+
+    2
+
+
+.. code:: ipython2
+
+    J('1 --')
+
+
+.. parsed-literal::
+
+    0
+
+
+``<<`` ``lshift`` ``>>`` ``rshift``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('8 1 <<')
+
+
+.. parsed-literal::
+
+    16
+
+
+.. code:: ipython2
+
+    J('8 1 >>')
+
+
+.. parsed-literal::
+
+    4
+
+
+``average``
+~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('[1 2 3 5] average')
+
+
+.. parsed-literal::
+
+    2.75
+
+
+``range`` ``range_to_zero`` ``down_to_zero``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('5 range')
+
+
+.. parsed-literal::
+
+    [4 3 2 1 0]
+
+
+.. code:: ipython2
+
+    J('5 range_to_zero')
+
+
+.. parsed-literal::
+
+    [0 1 2 3 4 5]
+
+
+.. code:: ipython2
+
+    J('5 down_to_zero')
+
+
+.. parsed-literal::
+
+    5 4 3 2 1 0
+
+
+``product``
+~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('[1 2 3 5] product')
+
+
+.. parsed-literal::
+
+    30
+
+
+``sum``
+~~~~~~~
+
+.. code:: ipython2
+
+    J('[1 2 3 5] sum')
+
+
+.. parsed-literal::
+
+    11
+
+
+``min``
+~~~~~~~
+
+.. code:: ipython2
+
+    J('[1 2 3 5] min')
+
+
+.. parsed-literal::
+
+    1
+
+
+``gcd``
+~~~~~~~
+
+.. code:: ipython2
+
+    J('45 30 gcd')
+
+
+.. parsed-literal::
+
+    15
+
+
+``least_fraction``
+~~~~~~~~~~~~~~~~~~
+
+If we represent fractions as a quoted pair of integers [q d] this word
+reduces them to their ... least common factors or whatever.
+
+.. code:: ipython2
+
+    J('[45 30] least_fraction')
+
+
+.. parsed-literal::
+
+    [3 2]
+
+
+.. code:: ipython2
+
+    J('[23 12] least_fraction')
+
+
+.. parsed-literal::
+
+    [23 12]
+
+
+Logic and Comparison
+====================
+
+``?`` ``truthy``
+~~~~~~~~~~~~~~~~
+
+Get the Boolean value of the item on the top of the stack.
+
+.. code:: ipython2
+
+    J('23 truthy')
+
+
+.. parsed-literal::
+
+    True
+
+
+.. code:: ipython2
+
+    J('[] truthy')  # Python semantics.
+
+
+.. parsed-literal::
+
+    False
+
+
+.. code:: ipython2
+
+    J('0 truthy')
+
+
+.. parsed-literal::
+
+    False
+
+
+::
+
+    ? == dup truthy
+
+.. code:: ipython2
+
+    V('23 ?')
+
+
+.. parsed-literal::
+
+            . 23 ?
+         23 . ?
+         23 . dup truthy
+      23 23 . truthy
+    23 True . 
+
+
+.. code:: ipython2
+
+    J('[] ?')
+
+
+.. parsed-literal::
+
+    [] False
+
+
+.. code:: ipython2
+
+    J('0 ?')
+
+
+.. parsed-literal::
+
+    0 False
+
+
+``&`` ``and``
+~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('23 9 &')
+
+
+.. parsed-literal::
+
+    1
+
+
+``!=`` ``<>`` ``ne``
+~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('23 9 !=')
+
+
+.. parsed-literal::
+
+    True
+
+
+| The usual suspects: - ``<`` ``lt`` - ``<=`` ``le``
+| - ``=`` ``eq`` - ``>`` ``gt`` - ``>=`` ``ge`` - ``not`` - ``or``
+
+``^`` ``xor``
+~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('1 1 ^')
+
+
+.. parsed-literal::
+
+    0
+
+
+.. code:: ipython2
+
+    J('1 0 ^')
+
+
+.. parsed-literal::
+
+    1
+
+
+Miscellaneous
+=============
+
+``help``
+~~~~~~~~
+
+.. code:: ipython2
+
+    J('[help] help')
+
+
+.. parsed-literal::
+
+    Accepts a quoted symbol on the top of the stack and prints its docs.
+    
+
+
+``parse``
+~~~~~~~~~
+
+.. code:: ipython2
+
+    J('[parse] help')
+
+
+.. parsed-literal::
+
+    Parse the string on the stack to a Joy expression.
+    
+
+
+.. code:: ipython2
+
+    J('1 "2 [3] dup" parse')
+
+
+.. parsed-literal::
+
+    1 [2 [3] dup]
+
+
+``run``
+~~~~~~~
+
+Evaluate a quoted Joy sequence.
+
+.. code:: ipython2
+
+    J('[1 2 dup + +] run')
+
+
+.. parsed-literal::
+
+    [5]
+
+
+Combinators
+===========
+
+``app1`` ``app2`` ``app3``
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('[app1] help')
+
+
+.. parsed-literal::
+
+    Given a quoted program on TOS and anything as the second stack item run
+    the program and replace the two args with the first result of the
+    program.
+    
+                ... x [Q] . app1
+       -----------------------------------
+          ... [x ...] [Q] . infra first
+    
+
+
+.. code:: ipython2
+
+    J('10 4 [sqr *] app1')
+
+
+.. parsed-literal::
+
+    10 160
+
+
+.. code:: ipython2
+
+    J('10 3 4 [sqr *] app2')
+
+
+.. parsed-literal::
+
+    10 90 160
+
+
+.. code:: ipython2
+
+    J('[app2] help')
+
+
+.. parsed-literal::
+
+    Like app1 with two items.
+    
+           ... y x [Q] . app2
+    -----------------------------------
+       ... [y ...] [Q] . infra first
+           [x ...] [Q]   infra first
+    
+
+
+.. code:: ipython2
+
+    J('10 2 3 4 [sqr *] app3')
+
+
+.. parsed-literal::
+
+    10 40 90 160
+
+
+``anamorphism``
+~~~~~~~~~~~~~~~
+
+Given an initial value, a predicate function ``[P]``, and a generator
+function ``[G]``, the ``anamorphism`` combinator creates a sequence.
+
+::
+
+       n [P] [G] anamorphism
+    ---------------------------
+              [...]
+
+Example, ``range``:
+
+::
+
+    range == [0 <=] [1 - dup] anamorphism
+
+.. code:: ipython2
+
+    J('3 [0 <=] [1 - dup] anamorphism')
+
+
+.. parsed-literal::
+
+    [2 1 0]
+
+
+``branch``
+~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('3 4 1 [+] [*] branch')
+
+
+.. parsed-literal::
+
+    12
+
+
+.. code:: ipython2
+
+    J('3 4 0 [+] [*] branch')
+
+
+.. parsed-literal::
+
+    7
+
+
+``cleave``
+~~~~~~~~~~
+
+::
+
+    ... x [P] [Q] cleave
+
+From the original Joy docs: "The cleave combinator expects two
+quotations, and below that an item ``x`` It first executes ``[P]``, with
+``x`` on top, and saves the top result element. Then it executes
+``[Q]``, again with ``x``, and saves the top result. Finally it restores
+the stack to what it was below ``x`` and pushes the two results P(X) and
+Q(X)."
+
+Note that ``P`` and ``Q`` can use items from the stack freely, since the
+stack (below ``x``) is restored. ``cleave`` is a kind of *parallel*
+primitive, and it would make sense to create a version that uses, e.g.
+Python threads or something, to actually run ``P`` and ``Q``
+concurrently. The current implementation of ``cleave`` is a definition
+in terms of ``app2``:
+
+::
+
+    cleave == [i] app2 [popd] dip
+
+.. code:: ipython2
+
+    J('10 2 [+] [-] cleave')
+
+
+.. parsed-literal::
+
+    10 12 8
+
+
+``dip`` ``dipd`` ``dipdd``
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('1 2 3 4 5 [+] dip')
+
+
+.. parsed-literal::
+
+    1 2 7 5
+
+
+.. code:: ipython2
+
+    J('1 2 3 4 5 [+] dipd')
+
+
+.. parsed-literal::
+
+    1 5 4 5
+
+
+.. code:: ipython2
+
+    J('1 2 3 4 5 [+] dipdd')
+
+
+.. parsed-literal::
+
+    3 3 4 5
+
+
+``dupdip``
+~~~~~~~~~~
+
+Expects a quoted program ``[Q]`` on the stack and some item under it,
+``dup`` the item and ``dip`` the quoted program under it.
+
+::
+
+    n [Q] dupdip == n Q n
+
+.. code:: ipython2
+
+    V('23 [++] dupdip *')  # N(N + 1)
+
+
+.. parsed-literal::
+
+            . 23 [++] dupdip *
+         23 . [++] dupdip *
+    23 [++] . dupdip *
+         23 . ++ 23 *
+         24 . 23 *
+      24 23 . *
+        552 . 
+
+
+``genrec`` ``primrec``
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('[genrec] help')
+
+
+.. parsed-literal::
+
+    General Recursion Combinator.
+    
+                            [if] [then] [rec1] [rec2] genrec
+      ---------------------------------------------------------------------
+         [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte
+    
+    From "Recursion Theory and Joy" (j05cmp.html) by Manfred von Thun:
+    "The genrec combinator takes four program parameters in addition to
+    whatever data parameters it needs. Fourth from the top is an if-part,
+    followed by a then-part. If the if-part yields true, then the then-part
+    is executed and the combinator terminates. The other two parameters are
+    the rec1-part and the rec2-part. If the if-part yields false, the
+    rec1-part is executed. Following that the four program parameters and
+    the combinator are again pushed onto the stack bundled up in a quoted
+    form. Then the rec2-part is executed, where it will find the bundled
+    form. Typically it will then execute the bundled form, either with i or
+    with app2, or some other combinator."
+    
+    The way to design one of these is to fix your base case [then] and the
+    test [if], and then treat rec1 and rec2 as an else-part "sandwiching"
+    a quotation of the whole function.
+    
+    For example, given a (general recursive) function 'F':
+    
+        F == [I] [T] [R1] [R2] genrec
+    
+    If the [I] if-part fails you must derive R1 and R2 from:
+    
+        ... R1 [F] R2
+    
+    Just set the stack arguments in front, and figure out what R1 and R2
+    have to do to apply the quoted [F] in the proper way.  In effect, the
+    genrec combinator turns into an ifte combinator with a quoted copy of
+    the original definition in the else-part:
+    
+        F == [I] [T] [R1]   [R2] genrec
+          == [I] [T] [R1 [F] R2] ifte
+    
+    (Primitive recursive functions are those where R2 == i.
+    
+        P == [I] [T] [R] primrec
+          == [I] [T] [R [P] i] ifte
+          == [I] [T] [R P] ifte
+    )
+    
+
+
+.. code:: ipython2
+
+    J('3 [1 <=] [] [dup --] [i *] genrec')
+
+
+.. parsed-literal::
+
+    6
+
+
+``i``
+~~~~~
+
+.. code:: ipython2
+
+    V('1 2 3 [+ +] i')
+
+
+.. parsed-literal::
+
+                . 1 2 3 [+ +] i
+              1 . 2 3 [+ +] i
+            1 2 . 3 [+ +] i
+          1 2 3 . [+ +] i
+    1 2 3 [+ +] . i
+          1 2 3 . + +
+            1 5 . +
+              6 . 
+
+
+``ifte``
+~~~~~~~~
+
+::
+
+    [predicate] [then] [else] ifte
+
+.. code:: ipython2
+
+    J('1 2 [1] [+] [*] ifte')
+
+
+.. parsed-literal::
+
+    3
+
+
+.. code:: ipython2
+
+    J('1 2 [0] [+] [*] ifte')
+
+
+.. parsed-literal::
+
+    2
+
+
+``infra``
+~~~~~~~~~
+
+.. code:: ipython2
+
+    V('1 2 3 [4 5 6] [* +] infra')
+
+
+.. parsed-literal::
+
+                        . 1 2 3 [4 5 6] [* +] infra
+                      1 . 2 3 [4 5 6] [* +] infra
+                    1 2 . 3 [4 5 6] [* +] infra
+                  1 2 3 . [4 5 6] [* +] infra
+          1 2 3 [4 5 6] . [* +] infra
+    1 2 3 [4 5 6] [* +] . infra
+                  6 5 4 . * + [3 2 1] swaack
+                   6 20 . + [3 2 1] swaack
+                     26 . [3 2 1] swaack
+             26 [3 2 1] . swaack
+             1 2 3 [26] . 
+
+
+``loop``
+~~~~~~~~
+
+.. code:: ipython2
+
+    J('[loop] help')
+
+
+.. parsed-literal::
+
+    Basic loop combinator.
+    
+       ... True [Q] loop
+    -----------------------
+         ... Q [Q] loop
+    
+       ... False [Q] loop
+    ------------------------
+              ...
+    
+
+
+.. code:: ipython2
+
+    V('3 dup [1 - dup] loop')
+
+
+.. parsed-literal::
+
+                  . 3 dup [1 - dup] loop
+                3 . dup [1 - dup] loop
+              3 3 . [1 - dup] loop
+    3 3 [1 - dup] . loop
+                3 . 1 - dup [1 - dup] loop
+              3 1 . - dup [1 - dup] loop
+                2 . dup [1 - dup] loop
+              2 2 . [1 - dup] loop
+    2 2 [1 - dup] . loop
+                2 . 1 - dup [1 - dup] loop
+              2 1 . - dup [1 - dup] loop
+                1 . dup [1 - dup] loop
+              1 1 . [1 - dup] loop
+    1 1 [1 - dup] . loop
+                1 . 1 - dup [1 - dup] loop
+              1 1 . - dup [1 - dup] loop
+                0 . dup [1 - dup] loop
+              0 0 . [1 - dup] loop
+    0 0 [1 - dup] . loop
+                0 . 
+
+
+``map`` ``pam``
+~~~~~~~~~~~~~~~
+
+.. code:: ipython2
+
+    J('10 [1 2 3] [*] map')
+
+
+.. parsed-literal::
+
+    10 [10 20 30]
+
+
+.. code:: ipython2
+
+    J('10 5 [[*][/][+][-]] pam')
+
+
+.. parsed-literal::
+
+    10 5 [50 2.0 15 5]
+
+
+``nullary`` ``unary`` ``binary`` ``ternary``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Run a quoted program enforcing
+`arity <https://en.wikipedia.org/wiki/Arity>`__.
+
+.. code:: ipython2
+
+    J('1 2 3 4 5 [+] nullary')
+
+
+.. parsed-literal::
+
+    1 2 3 4 5 9
+
+
+.. code:: ipython2
+
+    J('1 2 3 4 5 [+] unary')
+
+
+.. parsed-literal::
+
+    1 2 3 4 9
+
+
+.. code:: ipython2
+
+    J('1 2 3 4 5 [+] binary')  # + has arity 2 so this is technically pointless...
+
+
+.. parsed-literal::
+
+    1 2 3 9
+
+
+.. code:: ipython2
+
+    J('1 2 3 4 5 [+] ternary')
+
+
+.. parsed-literal::
+
+    1 2 9
+
+
+``step``
+~~~~~~~~
+
+.. code:: ipython2
+
+    J('[step] help')
+
+
+.. parsed-literal::
+
+    Run a quoted program on each item in a sequence.
+    
+            ... [] [Q] . step
+         -----------------------
+                   ... .
+    
+    
+           ... [a] [Q] . step
+        ------------------------
+                 ... a . Q
+    
+    
+       ... [a b c] [Q] . step
+    ----------------------------------------
+                 ... a . Q [b c] [Q] step
+    
+    The step combinator executes the quotation on each member of the list
+    on top of the stack.
+    
+
+
+.. code:: ipython2
+
+    V('0 [1 2 3] [+] step')
+
+
+.. parsed-literal::
+
+                  . 0 [1 2 3] [+] step
+                0 . [1 2 3] [+] step
+        0 [1 2 3] . [+] step
+    0 [1 2 3] [+] . step
+          0 1 [+] . i [2 3] [+] step
+              0 1 . + [2 3] [+] step
+                1 . [2 3] [+] step
+          1 [2 3] . [+] step
+      1 [2 3] [+] . step
+          1 2 [+] . i [3] [+] step
+              1 2 . + [3] [+] step
+                3 . [3] [+] step
+            3 [3] . [+] step
+        3 [3] [+] . step
+          3 3 [+] . i
+              3 3 . +
+                6 . 
+
+
+``times``
+~~~~~~~~~
+
+.. code:: ipython2
+
+    V('3 2 1 2 [+] times')
+
+
+.. parsed-literal::
+
+                . 3 2 1 2 [+] times
+              3 . 2 1 2 [+] times
+            3 2 . 1 2 [+] times
+          3 2 1 . 2 [+] times
+        3 2 1 2 . [+] times
+    3 2 1 2 [+] . times
+          3 2 1 . + 1 [+] times
+            3 3 . 1 [+] times
+          3 3 1 . [+] times
+      3 3 1 [+] . times
+            3 3 . +
+              6 . 
+
+
+``b``
+~~~~~
+
+.. code:: ipython2
+
+    J('[b] help')
+
+
+.. parsed-literal::
+
+    b == [i] dip i
+    
+    ... [P] [Q] b == ... [P] i [Q] i
+    ... [P] [Q] b == ... P Q
+    
+
+
+.. code:: ipython2
+
+    V('1 2 [3] [4] b')
+
+
+.. parsed-literal::
+
+                . 1 2 [3] [4] b
+              1 . 2 [3] [4] b
+            1 2 . [3] [4] b
+        1 2 [3] . [4] b
+    1 2 [3] [4] . b
+            1 2 . 3 4
+          1 2 3 . 4
+        1 2 3 4 . 
+
+
+``while``
+~~~~~~~~~
+
+::
+
+    [predicate] [body] while
+
+.. code:: ipython2
+
+    J('3 [0 >] [dup --] while')
+
+
+.. parsed-literal::
+
+    3 2 1 0
+
+
+``x``
+~~~~~
+
+.. code:: ipython2
+
+    J('[x] help')
+
+
+.. parsed-literal::
+
+    x == dup i
+    
+    ... [Q] x = ... [Q] dup i
+    ... [Q] x = ... [Q] [Q] i
+    ... [Q] x = ... [Q]  Q
+    
+
+
+.. code:: ipython2
+
+    V('1 [2] [i 3] x')  # Kind of a pointless example.
+
+
+.. parsed-literal::
+
+                . 1 [2] [i 3] x
+              1 . [2] [i 3] x
+          1 [2] . [i 3] x
+    1 [2] [i 3] . x
+    1 [2] [i 3] . i 3
+          1 [2] . i 3 3
+              1 . 2 3 3
+            1 2 . 3 3
+          1 2 3 . 3
+        1 2 3 3 . 
+
+
+``void``
+========
+
+Implements `**Laws of Form**
+*arithmetic* <https://en.wikipedia.org/wiki/Laws_of_Form#The_primary_arithmetic_.28Chapter_4.29>`__
+over quote-only datastructures (that is, datastructures that consist
+soley of containers, without strings or numbers or anything else.)
+
+.. code:: ipython2
+
+    J('[] void')
+
+
+.. parsed-literal::
+
+    False
+
+
+.. code:: ipython2
+
+    J('[[]] void')
+
+
+.. parsed-literal::
+
+    True
+
+
+.. code:: ipython2
+
+    J('[[][[]]] void')
+
+
+.. parsed-literal::
+
+    True
+
+
+.. code:: ipython2
+
+    J('[[[]][[][]]] void')
+
+
+.. parsed-literal::
+
+    False
+
