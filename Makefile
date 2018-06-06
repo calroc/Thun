@@ -1,7 +1,7 @@
 # My make-fu style is old and tired.  I just want to have a few helper commands.
 
 TESTDIR = ./test00
-VERSION = 0.1.1
+VERSION = 0.2.0
 
 .PHONY: clean sdist test docs
 

@@ -1,10 +1,9 @@
 
-# Treating Trees II
-Let's consider a tree structure, similar to one described ["Why functional programming matters" by John Hughes](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf), that consists of a node value followed by a sequence of zero or more child trees.  (The asterisk is meant to indicate the [Kleene star](https://en.wikipedia.org/wiki/Kleene_star).)
+# Treating Trees II: `treestep`
+Let's consider a tree structure, similar to one described ["Why functional programming matters" by John Hughes](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf), that consists of a node value followed by zero or more child trees.  (The asterisk is meant to indicate the [Kleene star](https://en.wikipedia.org/wiki/Kleene_star).)
 
     tree = [] | [node tree*]
 
-## `treestep`
 In the spirit of `step` we are going to define a combinator `treestep` which expects a tree and three additional items: a base-case function `[B]`, and two quoted programs `[N]` and `[C]`.
 
     tree [B] [N] [C] treestep
@@ -436,38 +435,6 @@ DefinitionWrapper.add_definitions('''
     Tree-get == [P [T>] [E] [T<] cmp] treegrind
 
 ''', D)
-```
-
-
-```python
-from joy.library import FunctionWrapper
-from joy.utils.stack import pushback
-
-
-@FunctionWrapper
-def cmp_(stack, expression, dictionary):
-    '''
-    cmp takes two values and three quoted programs on the stack and runs
-    one of the three depending on the results of comparing the two values:
-
-           a b [G] [E] [L] cmp
-        ------------------------- a > b
-                G
-
-           a b [G] [E] [L] cmp
-        ------------------------- a = b
-                    E
-
-           a b [G] [E] [L] cmp
-        ------------------------- a < b
-                        L
-    '''
-    L, (E, (G, (b, (a, stack)))) = stack
-    expression = pushback(G if a > b else L if a < b else E, expression)
-    return stack, expression, dictionary
-
-
-D['cmp'] = cmp_
 ```
 
 

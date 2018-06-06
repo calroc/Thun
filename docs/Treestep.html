@@ -11775,7 +11775,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Treating-Trees-II">Treating Trees II<a class="anchor-link" href="#Treating-Trees-II">&#182;</a></h1><p>Let's consider a tree structure, similar to one described <a href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">"Why functional programming matters" by John Hughes</a>, that consists of a node value followed by a sequence of zero or more child trees.  (The asterisk is meant to indicate the <a href="https://en.wikipedia.org/wiki/Kleene_star">Kleene star</a>.)</p>
+<h1 id="Treating-Trees-II:-treestep">Treating Trees II: <code>treestep</code><a class="anchor-link" href="#Treating-Trees-II:-treestep">&#182;</a></h1><p>Let's consider a tree structure, similar to one described <a href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">"Why functional programming matters" by John Hughes</a>, that consists of a node value followed by zero or more child trees.  (The asterisk is meant to indicate the <a href="https://en.wikipedia.org/wiki/Kleene_star">Kleene star</a>.)</p>
 
 <pre><code>tree = [] | [node tree*]</code></pre>
 
@@ -11786,7 +11786,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="treestep"><code>treestep</code><a class="anchor-link" href="#treestep">&#182;</a></h2><p>In the spirit of <code>step</code> we are going to define a combinator <code>treestep</code> which expects a tree and three additional items: a base-case function <code>[B]</code>, and two quoted programs <code>[N]</code> and <code>[C]</code>.</p>
+<p>In the spirit of <code>step</code> we are going to define a combinator <code>treestep</code> which expects a tree and three additional items: a base-case function <code>[B]</code>, and two quoted programs <code>[N]</code> and <code>[C]</code>.</p>
 
 <pre><code>tree [B] [N] [C] treestep</code></pre>
 
@@ -12929,46 +12929,6 @@ Tree-get == [P [T&gt;] [E] [T&lt;] cmp] treegrind
 <div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">FunctionWrapper</span>
-<span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">pushback</span>
-
-
-<span class="nd">@FunctionWrapper</span>
-<span class="k">def</span> <span class="nf">cmp_</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    cmp takes two values and three quoted programs on the stack and runs</span>
-<span class="sd">    one of the three depending on the results of comparing the two values:</span>
-
-<span class="sd">           a b [G] [E] [L] cmp</span>
-<span class="sd">        ------------------------- a &gt; b</span>
-<span class="sd">                G</span>
-
-<span class="sd">           a b [G] [E] [L] cmp</span>
-<span class="sd">        ------------------------- a = b</span>
-<span class="sd">                    E</span>
-
-<span class="sd">           a b [G] [E] [L] cmp</span>
-<span class="sd">        ------------------------- a &lt; b</span>
-<span class="sd">                        L</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">L</span><span class="p">,</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">stack</span><span class="p">))))</span> <span class="o">=</span> <span class="n">stack</span>
-    <span class="n">expression</span> <span class="o">=</span> <span class="n">pushback</span><span class="p">(</span><span class="n">G</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">L</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">E</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span>
-
-
-<span class="n">D</span><span class="p">[</span><span class="s1">&#39;cmp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmp_</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
-<div class="inner_cell">
-    <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
 
 <span class="s1">[[3 13] [[2 12] [] []] [[9 19] [[5 15] [[4 14] [] []] [[8 18] [[6 16] [] [[7 17] [] []]] []]] []]]</span>
@@ -13003,7 +12963,7 @@ Tree-get == [P [T&gt;] [E] [T&lt;] cmp] treegrind
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>

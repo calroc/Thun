@@ -234,7 +234,7 @@ J('["k" "old_value" "left" "right"] "new_value" "k" ["Tree-add"] Ee')
     ['k' 'new_value' 'left' 'right']
 
 
-#### Now we can define `Tree-add`
+### Now we can define `Tree-add`
     Tree-add == [popop not] [[pop] dipd Tree-new] [] [[P >] [T] [E] ifte] genrec
 
 Putting it all together:
@@ -254,7 +254,7 @@ Putting it all together:
 define('Tree-add == [popop not] [[pop] dipd Tree-new] [] [[P >] [T] [E] ifte] genrec')
 ```
 
-#### Examples
+### Examples
 
 
 ```python
@@ -426,7 +426,7 @@ Let's look at it *in situ*:
 
     [key value left right] R0 [Tree-iter] R1
 
-### Processing the current node.
+#### Processing the current node.
 
 `R0` is almost certainly going to use `dup` to make a copy of the node and then `dip` on some function to process the copy with it:
 
@@ -441,7 +441,7 @@ For example, if we're getting all the keys `F` would be `first`:
     [key value left right]  first  [key value left right] [Tree-iter] R1
     key                            [key value left right] [Tree-iter] R1
 
-### Recur
+#### Recur
 Now `R1` needs to apply `[Tree-iter]` to `left` and `right`.  If we drop the key and value from the node using `rest` twice we are left with an interesting situation:
 
     key [key value left right] [Tree-iter] R1
@@ -484,7 +484,7 @@ Working backward:
     [not] [pop] [F]       [dupdip rest rest] cons [step] genrec
     [F] [not] [pop] roll< [dupdip rest rest] cons [step] genrec
 
-## `Tree-iter`
+### `Tree-iter`
 
     Tree-iter == [not] [pop] roll< [dupdip rest rest] cons [step] genrec
 
@@ -493,7 +493,7 @@ Working backward:
 define('Tree-iter == [not] [pop] roll< [dupdip rest rest] cons [step] genrec')
 ```
 
-#### Examples
+### Examples
 
 
 ```python
@@ -568,7 +568,7 @@ To define `R0` and `R1` it helps to look at them as they will appear when they r
 
     [key value left right] R0 [BTree-iter-order] R1
 
-#### Process the left child.
+### Process the left child.
 Staring at this for a bit suggests `dup third` to start:
 
     [key value left right] R0        [Tree-iter-order] R1
@@ -582,7 +582,7 @@ Now maybe:
     [key value left right] [left Tree-iter-order]       dip [Tree-iter-order]
     left Tree-iter-order [key value left right]             [Tree-iter-order]
 
-#### Process the current node.
+### Process the current node.
 So far, so good.  Now we need to process the current node's values:
 
     left Tree-iter-order [key value left right] [Tree-iter-order] [[F] dupdip] dip
@@ -594,7 +594,7 @@ If `F` needs items from the stack below the left stuff it should have `cons`'d t
     left Tree-iter-order [key value left right] first [key value left right] [Tree-iter-order]
     left Tree-iter-order key [key value left right] [Tree-iter-order]
 
-#### Process the right child.
+### Process the right child.
 First ditch the rest of the node and get the right child:
 
     left Tree-iter-order key [key value left right] [Tree-iter-order] [rest rest rest first] dip
@@ -605,7 +605,7 @@ Then, of course, we just need `i` to run `Tree-iter-order` on the right side:
     left Tree-iter-order key right [Tree-iter-order] i
     left Tree-iter-order key right Tree-iter-order
 
-#### Defining `Tree-iter-order`
+### Defining `Tree-iter-order`
 The result is a little awkward:
 
     R1 == [cons dip] dupdip [[F] dupdip] dip [rest rest rest first] dip i
@@ -673,7 +673,7 @@ Let's pass the buck to the caller by making the base case a given, you have to d
     ---------------------------- key not in tree
              [] key E
 
-#### The base case `[]`
+### The base case `[]`
 As before, the stopping predicate just has to detect the empty list:
 
     Tree-get == [pop not] [E] [R0] [R1] genrec
@@ -691,7 +691,7 @@ The anonymous specialized recursive function that will do the real work.
 
     [pop not] [E] [R0] [R1] genrec
 
-#### Node case `[key value left right]`
+### Node case `[key value left right]`
 Now we need to figure out `R0` and `R1`: 
 
     [key value left right] key R0 [BTree-get] R1
@@ -700,7 +700,7 @@ We want to compare the search key with the key in the node, and if they are the 
 
     [key value left right] key [BTree-get] P [T>] [E] [T<] cmp
 
-#### Predicate:
+#### Predicate
 
     P == over [get-node-key] nullary
     get-node-key == pop popop first
@@ -821,7 +821,7 @@ J('''
     'not found'
 
 
-# Tree-delete
+## Tree-delete
 
 Now let's write a function that can return a tree datastructure with a key, value pair deleted:
 

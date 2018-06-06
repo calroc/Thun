@@ -10,7 +10,8 @@ These essays are adapted from Jupyter notebooks.  I hope to have those hosted so
 
    Developing
    Replacing
-   Trees
+   Ordered_Binary_Trees
+   Treestep
    Newton-Raphson
    Quadratic
    NoUpdates

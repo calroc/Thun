@@ -12286,7 +12286,7 @@ key new_value [              left right]                                     con
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Now-we-can-define-Tree-add">Now we can define <code>Tree-add</code><a class="anchor-link" href="#Now-we-can-define-Tree-add">&#182;</a></h4>
+<h3 id="Now-we-can-define-Tree-add">Now we can define <code>Tree-add</code><a class="anchor-link" href="#Now-we-can-define-Tree-add">&#182;</a></h3>
 <pre><code>Tree-add == [popop not] [[pop] dipd Tree-new] [] [[P &gt;] [T] [E] ifte] genrec
 
 </code></pre>
@@ -12322,7 +12322,7 @@ Tree-add == [popop not] [[pop] dipd Tree-new] [] [R] genrec</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Examples">Examples<a class="anchor-link" href="#Examples">&#182;</a></h4>
+<h3 id="Examples">Examples<a class="anchor-link" href="#Examples">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12820,7 +12820,7 @@ Tree-add == [popop not] [[pop] dipd Tree-new] [] [R] genrec</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Processing-the-current-node.">Processing the current node.<a class="anchor-link" href="#Processing-the-current-node.">&#182;</a></h3><p><code>R0</code> is almost certainly going to use <code>dup</code> to make a copy of the node and then <code>dip</code> on some function to process the copy with it:</p>
+<h4 id="Processing-the-current-node.">Processing the current node.<a class="anchor-link" href="#Processing-the-current-node.">&#182;</a></h4><p><code>R0</code> is almost certainly going to use <code>dup</code> to make a copy of the node and then <code>dip</code> on some function to process the copy with it:</p>
 
 <pre><code>[key value left right] [F] dupdip                 [Tree-iter] R1
 [key value left right]  F  [key value left right] [Tree-iter] R1
@@ -12841,7 +12841,7 @@ key                            [key value left right] [Tree-iter] R1</code></pre
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Recur">Recur<a class="anchor-link" href="#Recur">&#182;</a></h3><p>Now <code>R1</code> needs to apply <code>[Tree-iter]</code> to <code>left</code> and <code>right</code>.  If we drop the key and value from the node using <code>rest</code> twice we are left with an interesting situation:</p>
+<h4 id="Recur">Recur<a class="anchor-link" href="#Recur">&#182;</a></h4><p>Now <code>R1</code> needs to apply <code>[Tree-iter]</code> to <code>left</code> and <code>right</code>.  If we drop the key and value from the node using <code>rest</code> twice we are left with an interesting situation:</p>
 
 <pre><code>key [key value left right] [Tree-iter] R1
 key [key value left right] [Tree-iter] [rest rest] dip
@@ -12907,7 +12907,7 @@ key left-keys right-keys
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Tree-iter"><code>Tree-iter</code><a class="anchor-link" href="#Tree-iter">&#182;</a></h2>
+<h3 id="Tree-iter"><code>Tree-iter</code><a class="anchor-link" href="#Tree-iter">&#182;</a></h3>
 <pre><code>Tree-iter == [not] [pop] roll&lt; [dupdip rest rest] cons [step] genrec</code></pre>
 
 </div>
@@ -12930,7 +12930,7 @@ key left-keys right-keys
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Examples">Examples<a class="anchor-link" href="#Examples">&#182;</a></h4>
+<h3 id="Examples">Examples<a class="anchor-link" href="#Examples">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13192,7 +13192,7 @@ key left-keys right-keys
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Process-the-left-child.">Process the left child.<a class="anchor-link" href="#Process-the-left-child.">&#182;</a></h4><p>Staring at this for a bit suggests <code>dup third</code> to start:</p>
+<h3 id="Process-the-left-child.">Process the left child.<a class="anchor-link" href="#Process-the-left-child.">&#182;</a></h3><p>Staring at this for a bit suggests <code>dup third</code> to start:</p>
 
 <pre><code>[key value left right] R0        [Tree-iter-order] R1
 [key value left right] dup third [Tree-iter-order] R1
@@ -13219,7 +13219,7 @@ left Tree-iter-order [key value left right]             [Tree-iter-order]</code>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Process-the-current-node.">Process the current node.<a class="anchor-link" href="#Process-the-current-node.">&#182;</a></h4><p>So far, so good.  Now we need to process the current node's values:</p>
+<h3 id="Process-the-current-node.">Process the current node.<a class="anchor-link" href="#Process-the-current-node.">&#182;</a></h3><p>So far, so good.  Now we need to process the current node's values:</p>
 
 <pre><code>left Tree-iter-order [key value left right] [Tree-iter-order] [[F] dupdip] dip
 left Tree-iter-order [key value left right] [F] dupdip [Tree-iter-order]
@@ -13238,7 +13238,7 @@ left Tree-iter-order key [key value left right] [Tree-iter-order]</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Process-the-right-child.">Process the right child.<a class="anchor-link" href="#Process-the-right-child.">&#182;</a></h4><p>First ditch the rest of the node and get the right child:</p>
+<h3 id="Process-the-right-child.">Process the right child.<a class="anchor-link" href="#Process-the-right-child.">&#182;</a></h3><p>First ditch the rest of the node and get the right child:</p>
 
 <pre><code>left Tree-iter-order key [key value left right] [Tree-iter-order] [rest rest rest first] dip
 left Tree-iter-order key right [Tree-iter-order]
@@ -13256,7 +13256,7 @@ left Tree-iter-order key right Tree-iter-order</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Defining-Tree-iter-order">Defining <code>Tree-iter-order</code><a class="anchor-link" href="#Defining-Tree-iter-order">&#182;</a></h4><p>The result is a little awkward:</p>
+<h3 id="Defining-Tree-iter-order">Defining <code>Tree-iter-order</code><a class="anchor-link" href="#Defining-Tree-iter-order">&#182;</a></h3><p>The result is a little awkward:</p>
 
 <pre><code>R1 == [cons dip] dupdip [[F] dupdip] dip [rest rest rest first] dip i
 
@@ -13372,7 +13372,7 @@ Tree-iter-order == [not] [pop] [dup third] [proc_left proc_current proc_right] g
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="The-base-case-[]">The base case <code>[]</code><a class="anchor-link" href="#The-base-case-[]">&#182;</a></h4><p>As before, the stopping predicate just has to detect the empty list:</p>
+<h3 id="The-base-case-[]">The base case <code>[]</code><a class="anchor-link" href="#The-base-case-[]">&#182;</a></h3><p>As before, the stopping predicate just has to detect the empty list:</p>
 
 <pre><code>Tree-get == [pop not] [E] [R0] [R1] genrec
 
@@ -13399,7 +13399,7 @@ tree key [pop not] [E] [R0] [R1] genrec
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Node-case-[key-value-left-right]">Node case <code>[key value left right]</code><a class="anchor-link" href="#Node-case-[key-value-left-right]">&#182;</a></h4><p>Now we need to figure out <code>R0</code> and <code>R1</code>:</p>
+<h3 id="Node-case-[key-value-left-right]">Node case <code>[key value left right]</code><a class="anchor-link" href="#Node-case-[key-value-left-right]">&#182;</a></h3><p>Now we need to figure out <code>R0</code> and <code>R1</code>:</p>
 
 <pre><code>[key value left right] key R0 [BTree-get] R1
 
@@ -13415,7 +13415,7 @@ tree key [pop not] [E] [R0] [R1] genrec
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Predicate:">Predicate:<a class="anchor-link" href="#Predicate:">&#182;</a></h4>
+<h4 id="Predicate">Predicate<a class="anchor-link" href="#Predicate">&#182;</a></h4>
 <pre><code>P == over [get-node-key] nullary
 get-node-key == pop popop first
 
@@ -13670,7 +13670,7 @@ Tree-get == [pop not] swap [] [P [T&gt;] [E] [T&lt;] cmp] genrec</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Tree-delete">Tree-delete<a class="anchor-link" href="#Tree-delete">&#182;</a></h1><p>Now let's write a function that can return a tree datastructure with a key, value pair deleted:</p>
+<h2 id="Tree-delete">Tree-delete<a class="anchor-link" href="#Tree-delete">&#182;</a></h2><p>Now let's write a function that can return a tree datastructure with a key, value pair deleted:</p>
 
 <pre><code>   tree key Tree-delete
 ---------------------------

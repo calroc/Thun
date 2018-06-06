@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Function Reference &#8212; Thun 0.1.1 documentation</title>
+    <title>Function Reference &#8212; Thun 0.2.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" src="_static/documentation_options.js"></script>
@@ -194,9 +194,45 @@ Boolean value (so empty string, zero, etc. are counted as false, etc.)</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="joy.library.cmp_">
+<code class="descclassname">joy.library.</code><code class="descname">cmp_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#cmp_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.cmp_" title="Permalink to this definition">¶</a></dt>
+<dd><p>cmp takes two values and three quoted programs on the stack and runs
+one of the three depending on the results of comparing the two values:</p>
+<blockquote>
+<div><blockquote>
+<div>a b [G] [E] [L] cmp</div></blockquote>
+<dl class="docutils">
+<dt>————————- a &gt; b</dt>
+<dd><blockquote class="first">
+<div>G</div></blockquote>
+<p class="last">a b [G] [E] [L] cmp</p>
+</dd>
+<dt>————————- a = b</dt>
+<dd><blockquote class="first">
+<div>E</div></blockquote>
+<p class="last">a b [G] [E] [L] cmp</p>
+</dd>
+<dt>————————- a &lt; b</dt>
+<dd>L</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
 <dt id="joy.library.concat">
 <code class="descclassname">joy.library.</code><code class="descname">concat</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#concat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.concat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatinate the two lists on the top of the stack.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.cond">
+<code class="descclassname">joy.library.</code><code class="descname">cond</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#cond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.cond" title="Permalink to this definition">¶</a></dt>
+<dd><p>like a case statement; works by rewriting into a chain of ifte.</p>
+<p>[..[[Bi] Ti]..[D]] -&gt; …</p>
+<blockquote>
+<div>[[[B0] T0] [[B1] T1] [D]] cond</div></blockquote>
+<blockquote>
+<div>[B0] [T0] [[B1] [T1] [D] ifte] ifte</div></blockquote>
 </dd></dl>
 
 <dl class="function">
