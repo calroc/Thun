@@ -11799,10 +11799,16 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Consider the <code>x</code> combinator:</p>
 
-<pre><code>x == dup i
+<pre><code>x == dup i</code></pre>
 
-</code></pre>
-<p>We can apply it to a quoted program consisting of some value <code>a</code> and a function <code>B</code>:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can apply it to a quoted program consisting of some value <code>a</code> and some function <code>B</code>:</p>
 
 <pre><code>[a B] x
 [a B] a B</code></pre>
@@ -11844,7 +11850,7 @@ b [B]        cons
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Putting it together, this is the definition of <code>B</code>:</p>
+<p>Altogether, this is the definition of <code>B</code>:</p>
 
 <pre><code>B == swap [C] dip rest cons</code></pre>
 
@@ -11855,7 +11861,7 @@ b [B]        cons
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can create a quoted program that generates the Natural numbers (0, 1, 2, ...) by using <code>0</code> for <code>a</code> and <code>[dup ++]</code> for <code>[C]</code>:</p>
+<p>We can make a generator for the Natural numbers (0, 1, 2, ...) by using <code>0</code> for <code>a</code> and <code>[dup ++]</code> for <code>[C]</code>:</p>
 
 <pre><code>[0 swap [dup ++] dip rest cons]
 
@@ -11951,7 +11957,7 @@ b [B]        cons
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="direco"><code>direco</code><a class="anchor-link" href="#direco">&#182;</a></h3>
+<h2 id="direco"><code>direco</code><a class="anchor-link" href="#direco">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12015,7 +12021,7 @@ b [B]        cons
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Making-Generators">Making Generators<a class="anchor-link" href="#Making-Generators">&#182;</a></h1><p>We want to define a function that accepts <code>a</code> and <code>[C]</code> and builds our quoted program:</p>
+<h2 id="Making-Generators">Making Generators<a class="anchor-link" href="#Making-Generators">&#182;</a></h2><p>We want to define a function that accepts <code>a</code> and <code>[C]</code> and builds our quoted program:</p>
 
 <pre><code>         a [C] G
 -------------------------
@@ -12212,7 +12218,7 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Generating-Multiples-of-Three-and-Five">Generating Multiples of Three and Five<a class="anchor-link" href="#Generating-Multiples-of-Three-and-Five">&#182;</a></h1><p>Look at the treatment of the Project Euler Problem One in <a href="./Developing a Program.ipynb">Developing a Program.ipynb</a> and you'll see that we might be interested in generating an endless cycle of:</p>
+<h2 id="Generating-Multiples-of-Three-and-Five">Generating Multiples of Three and Five<a class="anchor-link" href="#Generating-Multiples-of-Three-and-Five">&#182;</a></h2><p>Look at the treatment of the Project Euler Problem One in <a href="./Developing a Program.ipynb">Developing a Program.ipynb</a> and you'll see that we might be interested in generating an endless cycle of:</p>
 
 <pre><code>3 2 1 3 1 2 3
 
@@ -12570,7 +12576,7 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Project-Euler-Problem-One">Project Euler Problem One<a class="anchor-link" href="#Project-Euler-Problem-One">&#182;</a></h1>
+<h2 id="Project-Euler-Problem-One">Project Euler Problem One<a class="anchor-link" href="#Project-Euler-Problem-One">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12631,7 +12637,7 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="A-generator-for-the-Fibonacci-Sequence.">A generator for the Fibonacci Sequence.<a class="anchor-link" href="#A-generator-for-the-Fibonacci-Sequence.">&#182;</a></h1><p>Consider:</p>
+<h2 id="A-generator-for-the-Fibonacci-Sequence.">A generator for the Fibonacci Sequence.<a class="anchor-link" href="#A-generator-for-the-Fibonacci-Sequence.">&#182;</a></h2><p>Consider:</p>
 
 <pre><code>[b a F] x
 [b a F] b a F</code></pre>
@@ -12818,7 +12824,7 @@ fib_gen == [1 1 F]</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Project-Euler-Problem-Two">Project Euler Problem Two<a class="anchor-link" href="#Project-Euler-Problem-Two">&#182;</a></h3>
+<h2 id="Project-Euler-Problem-Two">Project Euler Problem Two<a class="anchor-link" href="#Project-Euler-Problem-Two">&#182;</a></h2>
 <pre><code>By considering the terms in the Fibonacci sequence whose values do not exceed four million,
 find the sum of the even-valued terms.
 
@@ -13115,7 +13121,7 @@ o + e = o
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="How-to-compile-these?">How to compile these?<a class="anchor-link" href="#How-to-compile-these?">&#182;</a></h1><p>You would probably start with a special version of <code>G</code>, and perhaps modifications to the default <code>x</code>?</p>
+<h2 id="How-to-compile-these?">How to compile these?<a class="anchor-link" href="#How-to-compile-these?">&#182;</a></h2><p>You would probably start with a special version of <code>G</code>, and perhaps modifications to the default <code>x</code>?</p>
 
 </div>
 </div>
@@ -13124,7 +13130,7 @@ o + e = o
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="An-Interesting-Variation">An Interesting Variation<a class="anchor-link" href="#An-Interesting-Variation">&#182;</a></h1>
+<h2 id="An-Interesting-Variation">An Interesting Variation<a class="anchor-link" href="#An-Interesting-Variation">&#182;</a></h2>
 </div>
 </div>
 </div>

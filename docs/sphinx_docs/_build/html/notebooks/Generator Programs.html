@@ -16,6 +16,8 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Newton’s method" href="Newton-Raphson.html" />
+    <link rel="prev" title="Treating Trees II: treestep" href="Treestep.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -36,33 +38,39 @@
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
 </pre></div>
 </div>
-<p>Consider the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">==</span> <span class="pre">dup</span> <span class="pre">i</span></code>:</p>
+<p>Consider the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">==</span> <span class="n">dup</span> <span class="n">i</span>
+</pre></div>
+</div>
+<p>We can apply it to a quoted program consisting of some value <code class="docutils literal notranslate"><span class="pre">a</span></code> and
+some function <code class="docutils literal notranslate"><span class="pre">B</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">a</span> <span class="n">B</span><span class="p">]</span> <span class="n">x</span>
 <span class="p">[</span><span class="n">a</span> <span class="n">B</span><span class="p">]</span> <span class="n">a</span> <span class="n">B</span>
 </pre></div>
 </div>
-<p>Let <code class="docutils literal notranslate"><span class="pre">B</span></code> <code class="docutils literal notranslate"><span class="pre">swap</span></code> the <code class="docutils literal notranslate"><span class="pre">a</span></code> with the quote and run some function
-<code class="docutils literal notranslate"><span class="pre">[C]</span></code> on it.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">a</span> <span class="n">B</span><span class="p">]</span> <span class="n">a</span> <span class="n">B</span>
+<p>Let <code class="docutils literal notranslate"><span class="pre">B</span></code> function <code class="docutils literal notranslate"><span class="pre">swap</span></code> the <code class="docutils literal notranslate"><span class="pre">a</span></code> with the quote and run some
+function <code class="docutils literal notranslate"><span class="pre">C</span></code> on it to generate a new value <code class="docutils literal notranslate"><span class="pre">b</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">B</span> <span class="o">==</span> <span class="n">swap</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">dip</span>
+
+<span class="p">[</span><span class="n">a</span> <span class="n">B</span><span class="p">]</span> <span class="n">a</span> <span class="n">B</span>
 <span class="p">[</span><span class="n">a</span> <span class="n">B</span><span class="p">]</span> <span class="n">a</span> <span class="n">swap</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">dip</span>
 <span class="n">a</span> <span class="p">[</span><span class="n">a</span> <span class="n">B</span><span class="p">]</span>      <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">dip</span>
 <span class="n">a</span> <span class="n">C</span> <span class="p">[</span><span class="n">a</span> <span class="n">B</span><span class="p">]</span>
+<span class="n">b</span> <span class="p">[</span><span class="n">a</span> <span class="n">B</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Now discard the quoted <code class="docutils literal notranslate"><span class="pre">a</span></code> with <code class="docutils literal notranslate"><span class="pre">rest</span></code> and <code class="docutils literal notranslate"><span class="pre">cons</span></code> the result of
-<code class="docutils literal notranslate"><span class="pre">C</span></code> on <code class="docutils literal notranslate"><span class="pre">a</span></code> whatever that is:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">aC</span> <span class="p">[</span><span class="n">a</span> <span class="n">B</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
-<span class="n">aC</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="n">cons</span>
-<span class="p">[</span><span class="n">aC</span> <span class="n">B</span><span class="p">]</span>
+<p>Now discard the quoted <code class="docutils literal notranslate"><span class="pre">a</span></code> with <code class="docutils literal notranslate"><span class="pre">rest</span></code> then <code class="docutils literal notranslate"><span class="pre">cons</span></code> <code class="docutils literal notranslate"><span class="pre">b</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="p">[</span><span class="n">a</span> <span class="n">B</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
+<span class="n">b</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span>        <span class="n">cons</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">B</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Altogether, this is the definition of <code class="docutils literal notranslate"><span class="pre">B</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">B</span> <span class="o">==</span> <span class="n">swap</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span>
 </pre></div>
 </div>
-<p>We can create a quoted program that generates the Natural numbers
-(integers 0, 1, 2, …) by using <code class="docutils literal notranslate"><span class="pre">0</span></code> for <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">[dup</span> <span class="pre">++]</span></code> for
-<code class="docutils literal notranslate"><span class="pre">[C]</span></code>:</p>
+<p>We can make a generator for the Natural numbers (0, 1, 2, …) by using
+<code class="docutils literal notranslate"><span class="pre">0</span></code> for <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">[dup</span> <span class="pre">++]</span></code> for <code class="docutils literal notranslate"><span class="pre">[C]</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -116,15 +124,13 @@
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="generating-generators">
-<h1>Generating Generators<a class="headerlink" href="#generating-generators" title="Permalink to this headline">¶</a></h1>
-<p>We want to go from:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">G</span>
-</pre></div>
-</div>
-<p>to:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">a</span> <span class="n">swap</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
+<div class="section" id="making-generators">
+<h2>Making Generators<a class="headerlink" href="#making-generators" title="Permalink to this headline">¶</a></h2>
+<p>We want to define a function that accepts <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">[C]</span></code> and builds
+our quoted program:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="n">a</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">G</span>
+<span class="o">-------------------------</span>
+   <span class="p">[</span><span class="n">a</span> <span class="n">swap</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Working in reverse:</p>
@@ -140,107 +146,45 @@
 <span class="n">G</span> <span class="o">==</span> <span class="p">[</span><span class="n">direco</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">cons</span>
 </pre></div>
 </div>
-<p>We can try it out:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">G</span>
-</pre></div>
-</div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;G == [direco] cons [swap] swoncat cons&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 [dup ++] G&#39;</span><span class="p">)</span>
+<p>Let’s try it out:</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 [dup ++] G&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                           <span class="o">.</span> <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">G</span>
-                         <span class="mi">0</span> <span class="o">.</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">G</span>
-                <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="n">G</span>
-                <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="n">direco</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">cons</span>
-       <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="p">[</span><span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">cons</span>
-       <span class="mi">0</span> <span class="p">[[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">cons</span>
-<span class="mi">0</span> <span class="p">[[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="o">.</span> <span class="n">swoncat</span> <span class="n">cons</span>
-<span class="mi">0</span> <span class="p">[[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="o">.</span> <span class="n">swap</span> <span class="n">concat</span> <span class="n">cons</span>
-<span class="mi">0</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="p">[[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="n">concat</span> <span class="n">cons</span>
-  <span class="mi">0</span> <span class="p">[</span><span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span>
-  <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 [dup ++] G x&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 [dup ++] G x x x pop&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                    <span class="o">.</span> <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">G</span> <span class="n">x</span>
-                                  <span class="mi">0</span> <span class="o">.</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">G</span> <span class="n">x</span>
-                         <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="n">G</span> <span class="n">x</span>
-                         <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="n">direco</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">cons</span> <span class="n">x</span>
-                <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="p">[</span><span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">cons</span> <span class="n">x</span>
-                <span class="mi">0</span> <span class="p">[[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">cons</span> <span class="n">x</span>
-         <span class="mi">0</span> <span class="p">[[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="o">.</span> <span class="n">swoncat</span> <span class="n">cons</span> <span class="n">x</span>
-         <span class="mi">0</span> <span class="p">[[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="o">.</span> <span class="n">swap</span> <span class="n">concat</span> <span class="n">cons</span> <span class="n">x</span>
-         <span class="mi">0</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="p">[[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="n">concat</span> <span class="n">cons</span> <span class="n">x</span>
-           <span class="mi">0</span> <span class="p">[</span><span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="n">x</span>
-           <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="n">x</span>
-           <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span>
-         <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="mi">0</span> <span class="o">.</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span>
-         <span class="mi">0</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span>
-<span class="mi">0</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="n">direco</span>
-<span class="mi">0</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span>
-                                  <span class="mi">0</span> <span class="o">.</span> <span class="n">dup</span> <span class="o">++</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
-                                <span class="mi">0</span> <span class="mi">0</span> <span class="o">.</span> <span class="o">++</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
-                                <span class="mi">0</span> <span class="mi">1</span> <span class="o">.</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
-       <span class="mi">0</span> <span class="mi">1</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="n">rest</span> <span class="n">cons</span>
-         <span class="mi">0</span> <span class="mi">1</span> <span class="p">[</span><span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span>
-         <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span>
 </pre></div>
 </div>
 <div class="section" id="powers-of-2">
-<h2>Powers of 2<a class="headerlink" href="#powers-of-2" title="Permalink to this headline">¶</a></h2>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 [dup 1 &lt;&lt;] G x x x x x x x x x&#39;</span><span class="p">)</span>
+<h3>Powers of 2<a class="headerlink" href="#powers-of-2" title="Permalink to this headline">¶</a></h3>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 [dup 1 &lt;&lt;] G x x x x x x x x x pop&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">8</span> <span class="mi">16</span> <span class="mi">32</span> <span class="mi">64</span> <span class="mi">128</span> <span class="mi">256</span> <span class="p">[</span><span class="mi">512</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">8</span> <span class="mi">16</span> <span class="mi">32</span> <span class="mi">64</span> <span class="mi">128</span> <span class="mi">256</span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="n-x-times">
-<h1><code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">[x]</span> <span class="pre">times</span></code><a class="headerlink" href="#n-x-times" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="x-times">
+<h3><code class="docutils literal notranslate"><span class="pre">[x]</span> <span class="pre">times</span></code><a class="headerlink" href="#x-times" title="Permalink to this headline">¶</a></h3>
 <p>If we have one of these quoted programs we can drive it using <code class="docutils literal notranslate"><span class="pre">times</span></code>
 with the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator.</p>
-<p>Let’s define a word <code class="docutils literal notranslate"><span class="pre">n_range</span></code> that takes a starting integer and a
-count and leaves that many consecutive integers on the stack. For
-example:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 [dup ++] G 5 [x] times pop&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 [dup ++] G 5 [x] times&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span> <span class="mi">24</span> <span class="mi">25</span> <span class="mi">26</span> <span class="mi">27</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span> <span class="mi">24</span> <span class="mi">25</span> <span class="mi">26</span> <span class="mi">27</span> <span class="p">[</span><span class="mi">28</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>We can use <code class="docutils literal notranslate"><span class="pre">dip</span></code> to untangle <code class="docutils literal notranslate"><span class="pre">[dup</span> <span class="pre">++]</span> <span class="pre">G</span></code> from the arguments.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 5 [[dup ++] G] dip [x] times pop&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span> <span class="mi">24</span> <span class="mi">25</span> <span class="mi">26</span> <span class="mi">27</span>
-</pre></div>
-</div>
-<p>Now that the givens (arguments) are on the left we have the definition
-we’re looking for:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;n_range == [[dup ++] G] dip [x] times pop&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;450 10 n_range&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">450</span> <span class="mi">451</span> <span class="mi">452</span> <span class="mi">453</span> <span class="mi">454</span> <span class="mi">455</span> <span class="mi">456</span> <span class="mi">457</span> <span class="mi">458</span> <span class="mi">459</span>
-</pre></div>
-</div>
-<p>This is better just using the <code class="docutils literal notranslate"><span class="pre">times</span></code> combinator though…</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;450 9 [dup ++] times&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">450</span> <span class="mi">451</span> <span class="mi">452</span> <span class="mi">453</span> <span class="mi">454</span> <span class="mi">455</span> <span class="mi">456</span> <span class="mi">457</span> <span class="mi">458</span> <span class="mi">459</span>
-</pre></div>
 </div>
 </div>
 <div class="section" id="generating-multiples-of-three-and-five">
-<h1>Generating Multiples of Three and Five<a class="headerlink" href="#generating-multiples-of-three-and-five" title="Permalink to this headline">¶</a></h1>
+<h2>Generating Multiples of Three and Five<a class="headerlink" href="#generating-multiples-of-three-and-five" title="Permalink to this headline">¶</a></h2>
 <p>Look at the treatment of the Project Euler Problem One in <a class="reference external" href="./Developing%20a%20Program.ipynb">Developing a
 Program.ipynb</a> and you’ll see that
 we might be interested in generating an endless cycle of:</p>
@@ -281,12 +225,6 @@ int right two bits.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">14811</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1] direco] x&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="p">[</span><span class="mi">3702</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
-</pre></div>
-</div>
 <p>…we get a generator that works for seven cycles before it reaches
 zero:</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1] direco] 7 [x] times&#39;</span><span class="p">)</span>
@@ -296,10 +234,16 @@ zero:</p>
 </pre></div>
 </div>
 <div class="section" id="reset-at-zero">
-<h2>Reset at Zero<a class="headerlink" href="#reset-at-zero" title="Permalink to this headline">¶</a></h2>
+<h3>Reset at Zero<a class="headerlink" href="#reset-at-zero" title="Permalink to this headline">¶</a></h3>
 <p>We need a function that checks if the int has reached zero and resets it
 if so.</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.1.check == dup [pop 14811] [] branch&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;14811 [PE1.1.check PE1.1] G&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">14811</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mf">1.</span><span class="n">check</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] direco] 21 [x] times&#39;</span><span class="p">)</span>
@@ -308,9 +252,13 @@ if so.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mf">1.</span><span class="n">check</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
+<p>(It would be more efficient to reset the int every seven cycles but
+that’s a little beyond the scope of this article. This solution does
+extra work, but not much, and we’re not using it “in production” as they
+say.)</p>
 </div>
 <div class="section" id="run-466-times">
-<h2>Run 466 times<a class="headerlink" href="#run-466-times" title="Permalink to this headline">¶</a></h2>
+<h3>Run 466 times<a class="headerlink" href="#run-466-times" title="Permalink to this headline">¶</a></h3>
 <p>In the PE1 problem we are asked to sum all the multiples of three and
 five less than 1000. It’s worked out that we need to use all seven
 numbers sixty-six times and then four more.</p>
@@ -321,13 +269,13 @@ numbers sixty-six times and then four more.</p>
 </pre></div>
 </div>
 <p>If we drive our generator 466 times and sum the stack we get 999.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] dip rest cons] 466 [x] times&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">57</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mf">1.</span><span class="n">check</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">57</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mf">1.</span><span class="n">check</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] dip rest cons] 466 [x] times pop enstacken sum&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times pop enstacken sum&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">999</span>
@@ -336,18 +284,11 @@ numbers sixty-six times and then four more.</p>
 </div>
 </div>
 <div class="section" id="project-euler-problem-one">
-<h1>Project Euler Problem One<a class="headerlink" href="#project-euler-problem-one" title="Permalink to this headline">¶</a></h1>
+<h2>Project Euler Problem One<a class="headerlink" href="#project-euler-problem-one" title="Permalink to this headline">¶</a></h2>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.2 == + dup [+] dip&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now we can add <code class="docutils literal notranslate"><span class="pre">PE1.2</span></code> to the quoted program given to <code class="docutils literal notranslate"><span class="pre">times</span></code>.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 [0 swap [PE1.1.check PE1.1] direco] 466 [x [PE1.2] dip] times popop&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">233168</span>
-</pre></div>
-</div>
-<p>Or using <code class="docutils literal notranslate"><span class="pre">G</span></code> we can write:</p>
+<p>Now we can add <code class="docutils literal notranslate"><span class="pre">PE1.2</span></code> to the quoted program given to <code class="docutils literal notranslate"><span class="pre">G</span></code>.</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 0 [PE1.1.check PE1.1] G 466 [x [PE1.2] dip] times popop&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -356,7 +297,7 @@ numbers sixty-six times and then four more.</p>
 </div>
 </div>
 <div class="section" id="a-generator-for-the-fibonacci-sequence">
-<h1>A generator for the Fibonacci Sequence.<a class="headerlink" href="#a-generator-for-the-fibonacci-sequence" title="Permalink to this headline">¶</a></h1>
+<h2>A generator for the Fibonacci Sequence.<a class="headerlink" href="#a-generator-for-the-fibonacci-sequence" title="Permalink to this headline">¶</a></h2>
 <p>Consider:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">b</span> <span class="n">a</span> <span class="n">F</span><span class="p">]</span> <span class="n">x</span>
 <span class="p">[</span><span class="n">b</span> <span class="n">a</span> <span class="n">F</span><span class="p">]</span> <span class="n">b</span> <span class="n">a</span> <span class="n">F</span>
@@ -394,21 +335,23 @@ numbers sixty-six times and then four more.</p>
 <span class="p">[</span><span class="n">b</span> <span class="n">b</span><span class="o">+</span><span class="n">a</span> <span class="n">b</span> <span class="n">F</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>And lastly:</p>
+<p>But we can just use <code class="docutils literal notranslate"><span class="pre">cons</span></code> to carry <code class="docutils literal notranslate"><span class="pre">b+a</span></code> into the quote:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">b</span> <span class="n">a</span> <span class="n">F</span><span class="p">]</span> <span class="n">b</span><span class="o">+</span><span class="n">a</span> <span class="p">[</span><span class="n">popdd</span> <span class="n">over</span><span class="p">]</span> <span class="n">cons</span> <span class="n">infra</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">a</span> <span class="n">F</span><span class="p">]</span> <span class="p">[</span><span class="n">b</span><span class="o">+</span><span class="n">a</span> <span class="n">popdd</span> <span class="n">over</span><span class="p">]</span>      <span class="n">infra</span>
+<span class="p">[</span><span class="n">b</span> <span class="n">b</span><span class="o">+</span><span class="n">a</span> <span class="n">b</span> <span class="n">F</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Lastly:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">b</span> <span class="n">b</span><span class="o">+</span><span class="n">a</span> <span class="n">b</span> <span class="n">F</span><span class="p">]</span> <span class="n">uncons</span>
 <span class="n">b</span> <span class="p">[</span><span class="n">b</span><span class="o">+</span><span class="n">a</span> <span class="n">b</span> <span class="n">F</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Done.</p>
 <p>Putting it all together:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">==</span> <span class="o">+</span> <span class="n">swons</span> <span class="p">[</span><span class="n">popdd</span> <span class="n">over</span><span class="p">]</span> <span class="n">infra</span> <span class="n">uncons</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">==</span> <span class="o">+</span> <span class="p">[</span><span class="n">popdd</span> <span class="n">over</span><span class="p">]</span> <span class="n">cons</span> <span class="n">infra</span> <span class="n">uncons</span>
+<span class="n">fib_gen</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="n">F</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>And:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fib_gen</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="n">F</span><span class="p">]</span>
-</pre></div>
-</div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;fib == + swons [popdd over] infra uncons&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;fib == + [popdd over] cons infra uncons&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;fib_gen == [1 1 fib]&#39;</span><span class="p">)</span>
@@ -420,9 +363,11 @@ numbers sixty-six times and then four more.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">5</span> <span class="mi">8</span> <span class="mi">13</span> <span class="mi">21</span> <span class="mi">34</span> <span class="mi">55</span> <span class="mi">89</span> <span class="p">[</span><span class="mi">144</span> <span class="mi">89</span> <span class="n">fib</span><span class="p">]</span>
 </pre></div>
 </div>
+</div>
 <div class="section" id="project-euler-problem-two">
 <h2>Project Euler Problem Two<a class="headerlink" href="#project-euler-problem-two" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">By</span> <span class="n">considering</span> <span class="n">the</span> <span class="n">terms</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">Fibonacci</span> <span class="n">sequence</span> <span class="n">whose</span> <span class="n">values</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">exceed</span> <span class="n">four</span> <span class="n">million</span><span class="p">,</span> <span class="n">find</span> <span class="n">the</span> <span class="nb">sum</span> <span class="n">of</span> <span class="n">the</span> <span class="n">even</span><span class="o">-</span><span class="n">valued</span> <span class="n">terms</span><span class="o">.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">By</span> <span class="n">considering</span> <span class="n">the</span> <span class="n">terms</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">Fibonacci</span> <span class="n">sequence</span> <span class="n">whose</span> <span class="n">values</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">exceed</span> <span class="n">four</span> <span class="n">million</span><span class="p">,</span>
+<span class="n">find</span> <span class="n">the</span> <span class="nb">sum</span> <span class="n">of</span> <span class="n">the</span> <span class="n">even</span><span class="o">-</span><span class="n">valued</span> <span class="n">terms</span><span class="o">.</span>
 </pre></div>
 </div>
 <p>Now that we have a generator for the Fibonacci sequence, we need a
@@ -459,9 +404,8 @@ and sums the even ones.</p>
 <span class="n">PE2</span> <span class="o">==</span> <span class="mi">0</span> <span class="n">fib_gen</span> <span class="n">x</span> <span class="p">[</span><span class="n">pop</span> <span class="o">&gt;</span><span class="mi">4</span><span class="n">M</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span><span class="p">]</span> <span class="p">[[</span><span class="n">PE2</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">dip</span> <span class="n">x</span><span class="p">]</span> <span class="n">primrec</span>
 </pre></div>
 </div>
-</div>
 <div class="section" id="even-valued-fibonacci-terms">
-<h2>Even-valued Fibonacci Terms<a class="headerlink" href="#even-valued-fibonacci-terms" title="Permalink to this headline">¶</a></h2>
+<h3>Even-valued Fibonacci Terms<a class="headerlink" href="#even-valued-fibonacci-terms" title="Permalink to this headline">¶</a></h3>
 <p>Using <code class="docutils literal notranslate"><span class="pre">o</span></code> for odd and <code class="docutils literal notranslate"><span class="pre">e</span></code> for even:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">o</span> <span class="o">+</span> <span class="n">o</span> <span class="o">=</span> <span class="n">e</span>
 <span class="n">e</span> <span class="o">+</span> <span class="n">e</span> <span class="o">=</span> <span class="n">e</span>
@@ -507,9 +451,44 @@ and sums the even ones.</p>
 </div>
 </div>
 <div class="section" id="how-to-compile-these">
-<h1>How to compile these?<a class="headerlink" href="#how-to-compile-these" title="Permalink to this headline">¶</a></h1>
+<h2>How to compile these?<a class="headerlink" href="#how-to-compile-these" title="Permalink to this headline">¶</a></h2>
 <p>You would probably start with a special version of <code class="docutils literal notranslate"><span class="pre">G</span></code>, and perhaps
 modifications to the default <code class="docutils literal notranslate"><span class="pre">x</span></code>?</p>
+</div>
+<div class="section" id="an-interesting-variation">
+<h2>An Interesting Variation<a class="headerlink" href="#an-interesting-variation" title="Permalink to this headline">¶</a></h2>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;codireco == cons dip rest cons&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[0 [dup ++] codireco] x&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                 <span class="o">.</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="n">x</span>
+           <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span> <span class="n">x</span>
+           <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span> <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span>
+         <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="mi">0</span> <span class="o">.</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span>
+<span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="n">codireco</span>
+<span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span>
+<span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="p">[</span><span class="mi">0</span> <span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span>
+                                 <span class="o">.</span> <span class="mi">0</span> <span class="n">dup</span> <span class="o">++</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
+                               <span class="mi">0</span> <span class="o">.</span> <span class="n">dup</span> <span class="o">++</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
+                             <span class="mi">0</span> <span class="mi">0</span> <span class="o">.</span> <span class="o">++</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
+                             <span class="mi">0</span> <span class="mi">1</span> <span class="o">.</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
+       <span class="mi">0</span> <span class="mi">1</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span> <span class="n">rest</span> <span class="n">cons</span>
+         <span class="mi">0</span> <span class="mi">1</span> <span class="p">[[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span>
+         <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;G == [codireco] cons cons&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;230 [dup ++] G 5 [x] times pop&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">230</span> <span class="mi">231</span> <span class="mi">232</span> <span class="mi">233</span> <span class="mi">234</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -522,30 +501,35 @@ modifications to the default <code class="docutils literal notranslate"><span cl
   <ul>
 <li><a class="reference internal" href="#">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a><ul>
 <li><a class="reference internal" href="#direco"><code class="docutils literal notranslate"><span class="pre">direco</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#generating-generators">Generating Generators</a><ul>
+<li><a class="reference internal" href="#making-generators">Making Generators</a><ul>
 <li><a class="reference internal" href="#powers-of-2">Powers of 2</a></li>
+<li><a class="reference internal" href="#x-times"><code class="docutils literal notranslate"><span class="pre">[x]</span> <span class="pre">times</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#n-x-times"><code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">[x]</span> <span class="pre">times</span></code></a></li>
 <li><a class="reference internal" href="#generating-multiples-of-three-and-five">Generating Multiples of Three and Five</a><ul>
 <li><a class="reference internal" href="#reset-at-zero">Reset at Zero</a></li>
 <li><a class="reference internal" href="#run-466-times">Run 466 times</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#project-euler-problem-one">Project Euler Problem One</a></li>
-<li><a class="reference internal" href="#a-generator-for-the-fibonacci-sequence">A generator for the Fibonacci Sequence.</a><ul>
-<li><a class="reference internal" href="#project-euler-problem-two">Project Euler Problem Two</a></li>
+<li><a class="reference internal" href="#a-generator-for-the-fibonacci-sequence">A generator for the Fibonacci Sequence.</a></li>
+<li><a class="reference internal" href="#project-euler-problem-two">Project Euler Problem Two</a><ul>
 <li><a class="reference internal" href="#even-valued-fibonacci-terms">Even-valued Fibonacci Terms</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#how-to-compile-these">How to compile these?</a></li>
+<li><a class="reference internal" href="#an-interesting-variation">An Interesting Variation</a></li>
+</ul>
+</li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Essays about Programming in Joy</a><ul>
+      <li>Previous: <a href="Treestep.html" title="previous chapter">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
+      <li>Next: <a href="Newton-Raphson.html" title="next chapter">Newton’s method</a></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>

@@ -1144,14 +1144,17 @@ def ifte(stack, expression, dictionary):
 @FunctionWrapper
 def cond(stack, expression, dictionary):
   '''
-  like a case statement; works by rewriting into a chain of ifte.
+  This combinator works like a case statement.  It expects a single quote
+  on the stack that must contain zero or more condition quotes and a 
+  default quote.  Each condition clause should contain a quoted predicate
+  followed by the function expression to run if that predicate returns
+  true.  If no predicates return true the default function runs.
 
-  [..[[Bi] Ti]..[D]] -> ...
+  It works by rewriting into a chain of nested `ifte` expressions, e.g.::
 
-
-        [[[B0] T0] [[B1] T1] [D]] cond
-  -----------------------------------------
-     [B0] [T0] [[B1] [T1] [D] ifte] ifte
+            [[[B0] T0] [[B1] T1] [D]] cond
+      -----------------------------------------
+         [B0] [T0] [[B1] [T1] [D] ifte] ifte
 
   '''
   conditions, stack = stack
@@ -1400,9 +1403,10 @@ def loop(stack, expression, dictionary):
 @inscribe
 @FunctionWrapper
 def cmp_(stack, expression, dictionary):
-    '''
-    cmp takes two values and three quoted programs on the stack and runs
-    one of the three depending on the results of comparing the two values:
+  '''
+  cmp takes two values and three quoted programs on the stack and runs
+  one of the three depending on the results of comparing the two values:
+  ::
 
            a b [G] [E] [L] cmp
         ------------------------- a > b
@@ -1415,10 +1419,10 @@ def cmp_(stack, expression, dictionary):
            a b [G] [E] [L] cmp
         ------------------------- a < b
                         L
-    '''
-    L, (E, (G, (b, (a, stack)))) = stack
-    expression = pushback(G if a > b else L if a < b else E, expression)
-    return stack, expression, dictionary
+  '''
+  L, (E, (G, (b, (a, stack)))) = stack
+  expression = pushback(G if a > b else L if a < b else E, expression)
+  return stack, expression, dictionary
 
 
 #def nullary(S, expression, dictionary):

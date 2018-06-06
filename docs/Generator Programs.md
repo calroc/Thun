@@ -12,7 +12,7 @@ Consider the `x` combinator:
 
     x == dup i
 
-We can apply it to a quoted program consisting of some value `a` and a function `B`:
+We can apply it to a quoted program consisting of some value `a` and some function `B`:
 
     [a B] x
     [a B] a B
@@ -33,11 +33,11 @@ Now discard the quoted `a` with `rest` then `cons` `b`:
     b [B]        cons
     [b B]
 
-Putting it together, this is the definition of `B`:
+Altogether, this is the definition of `B`:
 
     B == swap [C] dip rest cons
 
-We can create a quoted program that generates the Natural numbers (0, 1, 2, ...) by using `0` for `a` and `[dup ++]` for `[C]`:
+We can make a generator for the Natural numbers (0, 1, 2, ...) by using `0` for `a` and `[dup ++]` for `[C]`:
 
     [0 swap [dup ++] dip rest cons]
 
@@ -72,7 +72,7 @@ J('[0 swap [dup ++] dip rest cons] x x x x x pop')
     0 1 2 3 4
 
 
-### `direco`
+## `direco`
 
 
 ```python
@@ -99,7 +99,7 @@ V('[0 swap [dup ++] direco] x')
              0 [1 swap [dup ++] direco] . 
 
 
-# Making Generators
+## Making Generators
 We want to define a function that accepts `a` and `[C]` and builds our quoted program:
 
              a [C] G
@@ -163,7 +163,7 @@ J('23 [dup ++] G 5 [x] times')
     23 24 25 26 27 [28 swap [dup ++] direco]
 
 
-# Generating Multiples of Three and Five
+## Generating Multiples of Three and Five
 Look at the treatment of the Project Euler Problem One in [Developing a Program.ipynb](./Developing a Program.ipynb) and you'll see that we might be interested in generating an endless cycle of:
 
     3 2 1 3 1 2 3
@@ -273,7 +273,7 @@ J('[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times pop enstacken sum')
     999
 
 
-# Project Euler Problem One
+## Project Euler Problem One
 
 
 ```python
@@ -290,7 +290,7 @@ J('0 0 0 [PE1.1.check PE1.1] G 466 [x [PE1.2] dip] times popop')
     233168
 
 
-# A generator for the Fibonacci Sequence.
+## A generator for the Fibonacci Sequence.
 Consider:
 
     [b a F] x
@@ -362,7 +362,7 @@ J('fib_gen 10 [x] times')
     1 2 3 5 8 13 21 34 55 89 [144 89 fib]
 
 
-### Project Euler Problem Two
+## Project Euler Problem Two
     By considering the terms in the Fibonacci sequence whose values do not exceed four million,
     find the sum of the even-valued terms.
 
@@ -463,10 +463,10 @@ J('0 [1 0 fib] PE2.2 [pop >4M] [popop] [[PE2.1] dip PE2.2] primrec')
     4613732
 
 
-# How to compile these?
+## How to compile these?
 You would probably start with a special version of `G`, and perhaps modifications to the default `x`?
 
-# An Interesting Variation
+## An Interesting Variation
 
 
 ```python

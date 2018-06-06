@@ -1177,14 +1177,17 @@
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">cond</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
   <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  like a case statement; works by rewriting into a chain of ifte.</span>
+<span class="sd">  This combinator works like a case statement.  It expects a single quote</span>
+<span class="sd">  on the stack that must contain zero or more condition quotes and a </span>
+<span class="sd">  default quote.  Each condition clause should contain a quoted predicate</span>
+<span class="sd">  followed by the function expression to run if that predicate returns</span>
+<span class="sd">  true.  If no predicates return true the default function runs.</span>
 
-<span class="sd">  [..[[Bi] Ti]..[D]] -&gt; ...</span>
+<span class="sd">  It works by rewriting into a chain of nested `ifte` expressions, e.g.::</span>
 
-
-<span class="sd">        [[[B0] T0] [[B1] T1] [D]] cond</span>
-<span class="sd">  -----------------------------------------</span>
-<span class="sd">     [B0] [T0] [[B1] [T1] [D] ifte] ifte</span>
+<span class="sd">            [[[B0] T0] [[B1] T1] [D]] cond</span>
+<span class="sd">      -----------------------------------------</span>
+<span class="sd">         [B0] [T0] [[B1] [T1] [D] ifte] ifte</span>
 
 <span class="sd">  &#39;&#39;&#39;</span>
   <span class="n">conditions</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">stack</span>
@@ -1433,9 +1436,10 @@
 <div class="viewcode-block" id="cmp_"><a class="viewcode-back" href="../../library.html#joy.library.cmp_">[docs]</a><span class="nd">@inscribe</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">cmp_</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    cmp takes two values and three quoted programs on the stack and runs</span>
-<span class="sd">    one of the three depending on the results of comparing the two values:</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  cmp takes two values and three quoted programs on the stack and runs</span>
+<span class="sd">  one of the three depending on the results of comparing the two values:</span>
+<span class="sd">  ::</span>
 
 <span class="sd">           a b [G] [E] [L] cmp</span>
 <span class="sd">        ------------------------- a &gt; b</span>
@@ -1448,10 +1452,10 @@
 <span class="sd">           a b [G] [E] [L] cmp</span>
 <span class="sd">        ------------------------- a &lt; b</span>
 <span class="sd">                        L</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">L</span><span class="p">,</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">stack</span><span class="p">))))</span> <span class="o">=</span> <span class="n">stack</span>
-    <span class="n">expression</span> <span class="o">=</span> <span class="n">pushback</span><span class="p">(</span><span class="n">G</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">L</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">E</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="n">L</span><span class="p">,</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">stack</span><span class="p">))))</span> <span class="o">=</span> <span class="n">stack</span>
+  <span class="n">expression</span> <span class="o">=</span> <span class="n">pushback</span><span class="p">(</span><span class="n">G</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">L</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">E</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
 
 
 <span class="c1">#def nullary(S, expression, dictionary):</span>

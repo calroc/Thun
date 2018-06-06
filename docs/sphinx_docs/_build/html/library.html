@@ -198,24 +198,19 @@ Boolean value (so empty string, zero, etc. are counted as false, etc.)</p>
 <code class="descclassname">joy.library.</code><code class="descname">cmp_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#cmp_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.cmp_" title="Permalink to this definition">¶</a></dt>
 <dd><p>cmp takes two values and three quoted programs on the stack and runs
 one of the three depending on the results of comparing the two values:</p>
-<blockquote>
-<div><blockquote>
-<div>a b [G] [E] [L] cmp</div></blockquote>
-<dl class="docutils">
-<dt>————————- a &gt; b</dt>
-<dd><blockquote class="first">
-<div>G</div></blockquote>
-<p class="last">a b [G] [E] [L] cmp</p>
-</dd>
-<dt>————————- a = b</dt>
-<dd><blockquote class="first">
-<div>E</div></blockquote>
-<p class="last">a b [G] [E] [L] cmp</p>
-</dd>
-<dt>————————- a &lt; b</dt>
-<dd>L</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">L</span><span class="p">]</span> <span class="nb">cmp</span>
+<span class="o">-------------------------</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span>
+        <span class="n">G</span>
+
+   <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">L</span><span class="p">]</span> <span class="nb">cmp</span>
+<span class="o">-------------------------</span> <span class="n">a</span> <span class="o">=</span> <span class="n">b</span>
+            <span class="n">E</span>
+
+   <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">L</span><span class="p">]</span> <span class="nb">cmp</span>
+<span class="o">-------------------------</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
+                <span class="n">L</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -227,12 +222,17 @@ one of the three depending on the results of comparing the two values:</p>
 <dl class="function">
 <dt id="joy.library.cond">
 <code class="descclassname">joy.library.</code><code class="descname">cond</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#cond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.cond" title="Permalink to this definition">¶</a></dt>
-<dd><p>like a case statement; works by rewriting into a chain of ifte.</p>
-<p>[..[[Bi] Ti]..[D]] -&gt; …</p>
-<blockquote>
-<div>[[[B0] T0] [[B1] T1] [D]] cond</div></blockquote>
-<blockquote>
-<div>[B0] [T0] [[B1] [T1] [D] ifte] ifte</div></blockquote>
+<dd><p>This combinator works like a case statement.  It expects a single quote
+on the stack that must contain zero or more condition quotes and a 
+default quote.  Each condition clause should contain a quoted predicate
+followed by the function expression to run if that predicate returns
+true.  If no predicates return true the default function runs.</p>
+<p>It works by rewriting into a chain of nested <cite>ifte</cite> expressions, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="p">[[[</span><span class="n">B0</span><span class="p">]</span> <span class="n">T0</span><span class="p">]</span> <span class="p">[[</span><span class="n">B1</span><span class="p">]</span> <span class="n">T1</span><span class="p">]</span> <span class="p">[</span><span class="n">D</span><span class="p">]]</span> <span class="n">cond</span>
+<span class="o">-----------------------------------------</span>
+   <span class="p">[</span><span class="n">B0</span><span class="p">]</span> <span class="p">[</span><span class="n">T0</span><span class="p">]</span> <span class="p">[[</span><span class="n">B1</span><span class="p">]</span> <span class="p">[</span><span class="n">T1</span><span class="p">]</span> <span class="p">[</span><span class="n">D</span><span class="p">]</span> <span class="n">ifte</span><span class="p">]</span> <span class="n">ifte</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">

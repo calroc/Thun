@@ -14,8 +14,8 @@ Consider the ``x`` combinator:
 
     x == dup i
 
-We can apply it to a quoted program consisting of some value ``a`` and a
-function ``B``:
+We can apply it to a quoted program consisting of some value ``a`` and
+some function ``B``:
 
 ::
 
@@ -43,14 +43,14 @@ Now discard the quoted ``a`` with ``rest`` then ``cons`` ``b``:
     b [B]        cons
     [b B]
 
-Putting it together, this is the definition of ``B``:
+Altogether, this is the definition of ``B``:
 
 ::
 
     B == swap [C] dip rest cons
 
-We can create a quoted program that generates the Natural numbers (0, 1,
-2, ...) by using ``0`` for ``a`` and ``[dup ++]`` for ``[C]``:
+We can make a generator for the Natural numbers (0, 1, 2, ...) by using
+``0`` for ``a`` and ``[dup ++]`` for ``[C]``:
 
 ::
 
@@ -93,7 +93,7 @@ After one application of ``x`` the quoted program contains ``1`` and
 
 
 ``direco``
-~~~~~~~~~~
+----------
 
 .. code:: ipython2
 
@@ -122,7 +122,7 @@ After one application of ``x`` the quoted program contains ``1`` and
 
 
 Making Generators
-=================
+-----------------
 
 We want to define a function that accepts ``a`` and ``[C]`` and builds
 our quoted program:
@@ -206,7 +206,7 @@ with the ``x`` combinator.
 
 
 Generating Multiples of Three and Five
-======================================
+--------------------------------------
 
 Look at the treatment of the Project Euler Problem One in `Developing a
 Program.ipynb <./Developing%20a%20Program.ipynb>`__ and you'll see that
@@ -351,7 +351,7 @@ If we drive our generator 466 times and sum the stack we get 999.
 
 
 Project Euler Problem One
-=========================
+-------------------------
 
 .. code:: ipython2
 
@@ -370,7 +370,7 @@ Now we can add ``PE1.2`` to the quoted program given to ``G``.
 
 
 A generator for the Fibonacci Sequence.
-=======================================
+---------------------------------------
 
 Consider:
 
@@ -466,7 +466,7 @@ Putting it all together:
 
 
 Project Euler Problem Two
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 ::
 
@@ -589,13 +589,13 @@ Replace ``x`` with our new driver function ``PE2.2`` and start our
 
 
 How to compile these?
-=====================
+---------------------
 
 You would probably start with a special version of ``G``, and perhaps
 modifications to the default ``x``?
 
 An Interesting Variation
-========================
+------------------------
 
 .. code:: ipython2
 
