@@ -645,7 +645,14 @@ def reverse(S):
 @inscribe
 @SimpleFunctionWrapper
 def concat(S):
-  '''Concatinate the two lists on the top of the stack.'''
+  '''Concatinate the two lists on the top of the stack.
+  ::
+
+       [a b c] [d e f] concat
+    ----------------------------
+           [a b c d e f]
+
+'''
   (tos, (second, stack)) = S
   for term in reversed(list(iter_stack(second))):
     tos = term, tos
@@ -658,7 +665,11 @@ def shunt(stack):
   '''Like concat but reverses the top list into the second.
   ::
 
-    shunt == [swons] step
+    shunt == [swons] step == reverse swap concat
+
+       [a b c] [d e f] shunt
+    ---------------------------
+         [f e d a b c] 
 
   '''
   (tos, (second, stack)) = stack
