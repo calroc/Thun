@@ -1,5 +1,5 @@
 
-# Treating Trees I
+# Treating Trees I: Ordered Binary Trees
 
 Although any expression in Joy can be considered to describe a [tree](https://en.wikipedia.org/wiki/Tree_structure) with the quotes as compound nodes and the non-quote values as leaf nodes, in this page I want to talk about [ordered binary trees](https://en.wikipedia.org/wiki/Binary_search_tree) and how to make and use them.
 
@@ -63,6 +63,9 @@ define('Tree-new == swap [[] []] cons cons')
 ```python
 J('"v" "k" Tree-new')
 ```
+
+    ['k' 'v' [] []]
+
 
 (As an implementation detail, the `[[] []]` literal used in the definition of `Tree-new` will be reused to supply the *constant* tail for *all* new nodes produced by it.  This is one of those cases where you get amortized storage "for free" by using [persistent datastructures](https://en.wikipedia.org/wiki/Persistent_data_structure).  Because the tail, which is `((), ((), ()))` in Python, is immutable and embedded in the definition body for `Tree-new`, all new nodes can reuse it as their own tail without fear that some other code somewhere will change it.)
 
@@ -302,7 +305,7 @@ J('[] [[23 "b"] [88 "a"] [44 "c"]] [i Tree-add] step')
 
 
 ## Interlude: `cmp` combinator
-Instead of mucking about with nested `ifte` combinators let's just go whole hog and define `cmp` which takes two values and three quoted programs on the stack and runs one of the three depending on the results of comparing the two values:
+Instead of mucking about with nested `ifte` combinators let's use `cmp` which takes two values and three quoted programs on the stack and runs one of the three depending on the results of comparing the two values:
 
        a b [G] [E] [L] cmp
     ------------------------- a > b
@@ -315,39 +318,6 @@ Instead of mucking about with nested `ifte` combinators let's just go whole hog 
        a b [G] [E] [L] cmp
     ------------------------- a < b
                     L
-
-
-```python
-from joy.library import FunctionWrapper
-from joy.utils.stack import pushback
-from notebook_preamble import D
-
-
-@FunctionWrapper
-def cmp_(stack, expression, dictionary):
-    '''
-    cmp takes two values and three quoted programs on the stack and runs
-    one of the three depending on the results of comparing the two values:
-
-           a b [G] [E] [L] cmp
-        ------------------------- a > b
-                G
-
-           a b [G] [E] [L] cmp
-        ------------------------- a = b
-                    E
-
-           a b [G] [E] [L] cmp
-        ------------------------- a < b
-                        L
-    '''
-    L, (E, (G, (b, (a, stack)))) = stack
-    expression = pushback(G if a > b else L if a < b else E, expression)
-    return stack, expression, dictionary
-
-
-D['cmp'] = cmp_
-```
 
 
 ```python
@@ -681,7 +651,7 @@ J('[3 9 5 2 8 6 7 8 4] to_set Tree-iter-order')
     2 3 4 5 6 7 8 9
 
 
-Parameterizing the `[F]` function is left as an exercise for the reader (for now.)
+Parameterizing the `[F]` function is left as an exercise for the reader.
 
 ## Getting values by key
 Let's derive a function that accepts a tree and a key and returns the value associated with that key.
@@ -937,51 +907,6 @@ We have found the node in the tree where `key` equals `node_key`.  We need to re
 
 We have to handle three cases, so let's use `cond`.
 
-
-```python
-from joy.library import FunctionWrapper, S_ifte
-
-
-@FunctionWrapper
-def cond(stack, expression, dictionary):
-  '''
-  like a case statement; works by rewriting into a chain of ifte.
-
-  [..[[Bi] Ti]..[D]] -> ...
-
-
-        [[[B0] T0] [[B1] T1] [D]] cond
-  -----------------------------------------
-     [B0] [T0] [[B1] [T1] [D] ifte] ifte
-
-  '''
-  conditions, stack = stack
-  if conditions:
-    expression = _cond(conditions, expression)
-    try:
-      # Attempt to preload the args to first ifte.
-      (P, (T, (E, expression))) = expression
-    except ValueError:
-      # If, for any reason, the argument to cond should happen to contain
-      # only the default clause then this optimization will fail.
-      pass
-    else:
-      stack = (E, (T, (P, stack)))
-  return stack, expression, dictionary
-
-
-def _cond(conditions, expression):
-  (clause, rest) = conditions
-  if not rest:  # clause is [D]
-    return clause
-  P, T = clause
-  return (P, (T, (_cond(rest, ()), (S_ifte, expression))))
-
-
-
-D['cond'] = cond
-```
-
 #### One or more child nodes are `[]`
 The first two cases are symmetrical: if we only have one non-empty child node return it.  If both child nodes are empty return an empty node.
 
@@ -1127,7 +1052,7 @@ Substituting:
         [[E′] cons infra]
     ] cond
 
-Minor rearrangement:
+Minor rearrangement, move `dup` into `W`:
 
     W == dup [fourth] [fourth] while uncons uncons pop over
     E′ == roll> popop rest [W] dip cons dipd swap
@@ -1141,9 +1066,9 @@ Minor rearrangement:
 
     W.rightmost == [fourth] [fourth] while
     W.unpack == uncons uncons pop
+    W == dup W.rightmost W.unpack over
     E.clear_stuff == roll> popop rest
     E.delete == cons dipd
-    W == dup W.rightmost W.unpack over
     E.0 == E.clear_stuff [W] dip E.delete swap
     E == [
         [[pop third not] pop fourth]
@@ -1174,7 +1099,8 @@ T> == [dipd] cons infra
 T< == [dipdd] cons infra
 R0 == over first swap dup
 R1 == cons roll> [T>] [E] [T<] cmp
-Tree-Delete == [pop not] [pop] [R0] [R1] genrec''', D)
+Tree-Delete == [pop not] [pop] [R0] [R1] genrec
+''', D)
 ```
 
 

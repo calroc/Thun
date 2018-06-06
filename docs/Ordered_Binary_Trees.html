@@ -11775,7 +11775,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Treating-Trees-I">Treating Trees I<a class="anchor-link" href="#Treating-Trees-I">&#182;</a></h1><p>Although any expression in Joy can be considered to describe a <a href="https://en.wikipedia.org/wiki/Tree_structure">tree</a> with the quotes as compound nodes and the non-quote values as leaf nodes, in this page I want to talk about <a href="https://en.wikipedia.org/wiki/Binary_search_tree">ordered binary trees</a> and how to make and use them.</p>
+<h1 id="Treating-Trees-I:-Ordered-Binary-Trees">Treating Trees I: Ordered Binary Trees<a class="anchor-link" href="#Treating-Trees-I:-Ordered-Binary-Trees">&#182;</a></h1><p>Although any expression in Joy can be considered to describe a <a href="https://en.wikipedia.org/wiki/Tree_structure">tree</a> with the quotes as compound nodes and the non-quote values as leaf nodes, in this page I want to talk about <a href="https://en.wikipedia.org/wiki/Binary_search_tree">ordered binary trees</a> and how to make and use them.</p>
 <p>The basic structure, in a <a href="https://en.wikipedia.org/wiki/Algebraic_data_type">crude type notation</a>, is:</p>
 
 <pre><code>Tree :: [] | [key value Tree Tree]
@@ -11883,6 +11883,24 @@ key      [value [] []]      cons
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;k&#39; &#39;v&#39; [] []]
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -12498,7 +12516,7 @@ Tree-add == [popop not] [[pop] dipd Tree-new] [] [R] genrec</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Interlude:-cmp-combinator">Interlude: <code>cmp</code> combinator<a class="anchor-link" href="#Interlude:-cmp-combinator">&#182;</a></h2><p>Instead of mucking about with nested <code>ifte</code> combinators let's just go whole hog and define <code>cmp</code> which takes two values and three quoted programs on the stack and runs one of the three depending on the results of comparing the two values:</p>
+<h2 id="Interlude:-cmp-combinator">Interlude: <code>cmp</code> combinator<a class="anchor-link" href="#Interlude:-cmp-combinator">&#182;</a></h2><p>Instead of mucking about with nested <code>ifte</code> combinators let's use <code>cmp</code> which takes two values and three quoted programs on the stack and runs one of the three depending on the results of comparing the two values:</p>
 
 <pre><code>   a b [G] [E] [L] cmp
 ------------------------- a &gt; b
@@ -12518,47 +12536,6 @@ Tree-add == [popop not] [[pop] dipd Tree-new] [] [R] genrec</code></pre>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[20]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">FunctionWrapper</span>
-<span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">pushback</span>
-<span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span>
-
-
-<span class="nd">@FunctionWrapper</span>
-<span class="k">def</span> <span class="nf">cmp_</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    cmp takes two values and three quoted programs on the stack and runs</span>
-<span class="sd">    one of the three depending on the results of comparing the two values:</span>
-
-<span class="sd">           a b [G] [E] [L] cmp</span>
-<span class="sd">        ------------------------- a &gt; b</span>
-<span class="sd">                G</span>
-
-<span class="sd">           a b [G] [E] [L] cmp</span>
-<span class="sd">        ------------------------- a = b</span>
-<span class="sd">                    E</span>
-
-<span class="sd">           a b [G] [E] [L] cmp</span>
-<span class="sd">        ------------------------- a &lt; b</span>
-<span class="sd">                        L</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">L</span><span class="p">,</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">stack</span><span class="p">))))</span> <span class="o">=</span> <span class="n">stack</span>
-    <span class="n">expression</span> <span class="o">=</span> <span class="n">pushback</span><span class="p">(</span><span class="n">G</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">L</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">E</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span>
-
-
-<span class="n">D</span><span class="p">[</span><span class="s1">&#39;cmp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmp_</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;1 0 [&#39;G&#39;] [&#39;E&#39;] [&#39;L&#39;] cmp&quot;</span><span class="p">)</span>
@@ -12589,7 +12566,7 @@ Tree-add == [popop not] [[pop] dipd Tree-new] [] [R] genrec</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;1 1 [&#39;G&#39;] [&#39;E&#39;] [&#39;L&#39;] cmp&quot;</span><span class="p">)</span>
@@ -12620,7 +12597,7 @@ Tree-add == [popop not] [[pop] dipd Tree-new] [] [R] genrec</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;0 1 [&#39;G&#39;] [&#39;E&#39;] [&#39;L&#39;] cmp&quot;</span><span class="p">)</span>
@@ -12706,7 +12683,7 @@ Tree-add == [popop not] [[pop] dipd Tree-new] [] [R] genrec</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;P == over [popop popop first] nullary&#39;</span><span class="p">)</span>
@@ -12755,7 +12732,7 @@ Tree-add == [popop not] [[pop] dipd Tree-new] [] [R] genrec</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Tree-add == [popop not] [[pop] dipd Tree-new] [] [P [T] [Ee] [Te] cmp] genrec&#39;</span><span class="p">)</span>
@@ -12768,7 +12745,7 @@ Tree-add == [popop not] [[pop] dipd Tree-new] [] [R] genrec</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] 23 &quot;b&quot; Tree-add 88 &quot;a&quot; Tree-add 44 &quot;c&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Still works.</span>
@@ -12938,7 +12915,7 @@ key left-keys right-keys
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Tree-iter == [not] [pop] roll&lt; [dupdip rest rest] cons [step] genrec&#39;</span><span class="p">)</span>
@@ -12959,7 +12936,7 @@ key left-keys right-keys
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [foo] Tree-iter&#39;</span><span class="p">)</span>  <span class="c1">#  It doesn&#39;t matter what F is as it won&#39;t be used.</span>
@@ -12990,7 +12967,7 @@ key left-keys right-keys
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;b&#39; 23 [&#39;a&#39; 88 [] []] [&#39;c&#39; 44 [] []]] [first] Tree-iter&quot;</span><span class="p">)</span>
@@ -13021,7 +12998,7 @@ key left-keys right-keys
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;b&#39; 23 [&#39;a&#39; 88 [] []] [&#39;c&#39; 44 [] []]] [second] Tree-iter&quot;</span><span class="p">)</span>
@@ -13061,7 +13038,7 @@ key left-keys right-keys
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [3 9 5 2 8 6 7 8 4] [0 swap Tree-add] step&#39;</span><span class="p">)</span>
@@ -13092,7 +13069,7 @@ key left-keys right-keys
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;to_set == [] swap [0 swap Tree-add] step&#39;</span><span class="p">)</span>
@@ -13105,7 +13082,7 @@ key left-keys right-keys
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 9 5 2 8 6 7 8 4] to_set&#39;</span><span class="p">)</span>
@@ -13145,7 +13122,7 @@ key left-keys right-keys
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;unique == [to_set [first] Tree-iter] cons run&#39;</span><span class="p">)</span>
@@ -13158,7 +13135,7 @@ key left-keys right-keys
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 9 3 5 2 9 8 8 8 6 2 7 8 4 3] unique&#39;</span><span class="p">)</span>  <span class="c1"># Filter duplicate items.</span>
@@ -13302,7 +13279,7 @@ Tree-iter-order == [not] [pop] [dup third] [proc_left proc_current proc_right] g
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#define(&#39;Tree-iter-order == [not] [pop] [dup third] [[cons dip] dupdip [[first] dupdip] dip [rest rest rest first] dip i] genrec&#39;)</span>
@@ -13328,7 +13305,7 @@ Tree-iter-order == [not] [pop] [dup third] [proc_left proc_current proc_right] g
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 9 5 2 8 6 7 8 4] to_set Tree-iter-order&#39;</span><span class="p">)</span>
@@ -13361,7 +13338,7 @@ Tree-iter-order == [not] [pop] [dup third] [proc_left proc_current proc_right] g
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Parameterizing the <code>[F]</code> function is left as an exercise for the reader (for now.)</p>
+<p>Parameterizing the <code>[F]</code> function is left as an exercise for the reader.</p>
 
 </div>
 </div>
@@ -13528,7 +13505,7 @@ Tree-get == [pop not] swap [] [P [T&gt;] [E] [T&lt;] cmp] genrec</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># I don&#39;t want to deal with name conflicts with the above so I&#39;m inlining everything here.</span>
@@ -13555,7 +13532,7 @@ Tree-get == [pop not] swap [] [P [T&gt;] [E] [T&lt;] cmp] genrec</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;gary&quot; 23 [] []] &quot;mike&quot; [popd &quot; not in tree&quot; +] Tree-get&#39;</span><span class="p">)</span>
@@ -13586,7 +13563,7 @@ Tree-get == [pop not] swap [] [P [T&gt;] [E] [T&lt;] cmp] genrec</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;gary&quot; 23 [] []] &quot;gary&quot; [popop &quot;err&quot;] Tree-get&#39;</span><span class="p">)</span>
@@ -13617,7 +13594,7 @@ Tree-get == [pop not] swap [] [P [T&gt;] [E] [T&lt;] cmp] genrec</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
@@ -13654,7 +13631,7 @@ Tree-get == [pop not] swap [] [P [T&gt;] [E] [T&lt;] cmp] genrec</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[52]:</div>
+<div class="prompt input_prompt">In&nbsp;[41]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
@@ -13847,59 +13824,6 @@ T&lt; == [dipdd] cons infra</code></pre>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[42]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">FunctionWrapper</span><span class="p">,</span> <span class="n">S_ifte</span>
-
-
-<span class="nd">@FunctionWrapper</span>
-<span class="k">def</span> <span class="nf">cond</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  like a case statement; works by rewriting into a chain of ifte.</span>
-
-<span class="sd">  [..[[Bi] Ti]..[D]] -&gt; ...</span>
-
-
-<span class="sd">        [[[B0] T0] [[B1] T1] [D]] cond</span>
-<span class="sd">  -----------------------------------------</span>
-<span class="sd">     [B0] [T0] [[B1] [T1] [D] ifte] ifte</span>
-
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="n">conditions</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">stack</span>
-  <span class="k">if</span> <span class="n">conditions</span><span class="p">:</span>
-    <span class="n">expression</span> <span class="o">=</span> <span class="n">_cond</span><span class="p">(</span><span class="n">conditions</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-      <span class="c1"># Attempt to preload the args to first ifte.</span>
-      <span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">expression</span><span class="p">)))</span> <span class="o">=</span> <span class="n">expression</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-      <span class="c1"># If, for any reason, the argument to cond should happen to contain</span>
-      <span class="c1"># only the default clause then this optimization will fail.</span>
-      <span class="k">pass</span>
-    <span class="k">else</span><span class="p">:</span>
-      <span class="n">stack</span> <span class="o">=</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span>
-  <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span>
-
-
-<span class="k">def</span> <span class="nf">_cond</span><span class="p">(</span><span class="n">conditions</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
-  <span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span> <span class="o">=</span> <span class="n">conditions</span>
-  <span class="k">if</span> <span class="ow">not</span> <span class="n">rest</span><span class="p">:</span>  <span class="c1"># clause is [D]</span>
-    <span class="k">return</span> <span class="n">clause</span>
-  <span class="n">P</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">clause</span>
-  <span class="k">return</span> <span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="n">_cond</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="p">()),</span> <span class="p">(</span><span class="n">S_ifte</span><span class="p">,</span> <span class="n">expression</span><span class="p">))))</span>
-
-
-
-<span class="n">D</span><span class="p">[</span><span class="s1">&#39;cond&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cond</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -14198,7 +14122,7 @@ E == [
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Minor rearrangement:</p>
+<p>Minor rearrangement, move <code>dup</code> into <code>W</code>:</p>
 
 <pre><code>W == dup [fourth] [fourth] while uncons uncons pop over
 E′ == roll&gt; popop rest [W] dip cons dipd swap
@@ -14218,9 +14142,9 @@ E == [
 <h3 id="Refactoring">Refactoring<a class="anchor-link" href="#Refactoring">&#182;</a></h3>
 <pre><code>W.rightmost == [fourth] [fourth] while
 W.unpack == uncons uncons pop
+W == dup W.rightmost W.unpack over
 E.clear_stuff == roll&gt; popop rest
 E.delete == cons dipd
-W == dup W.rightmost W.unpack over
 E.0 == E.clear_stuff [W] dip E.delete swap
 E == [
     [[pop third not] pop fourth]
@@ -14241,7 +14165,7 @@ BTree-Delete == [pop not] swap [R0] [R1] genrec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
@@ -14258,7 +14182,8 @@ BTree-Delete == [pop not] swap [R0] [R1] genrec
 <span class="s1">T&lt; == [dipdd] cons infra</span>
 <span class="s1">R0 == over first swap dup</span>
 <span class="s1">R1 == cons roll&gt; [T&gt;] [E] [T&lt;] cmp</span>
-<span class="s1">Tree-Delete == [pop not] [pop] [R0] [R1] genrec&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+<span class="s1">Tree-Delete == [pop not] [pop] [R0] [R1] genrec</span>
+<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -14268,7 +14193,7 @@ BTree-Delete == [pop not] swap [R0] [R1] genrec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;c&#39; Tree-Delete &quot;</span><span class="p">)</span>
@@ -14299,7 +14224,7 @@ BTree-Delete == [pop not] swap [R0] [R1] genrec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;b&#39; Tree-Delete &quot;</span><span class="p">)</span>
@@ -14330,7 +14255,7 @@ BTree-Delete == [pop not] swap [R0] [R1] genrec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;a&#39; Tree-Delete &quot;</span><span class="p">)</span>
@@ -14361,7 +14286,7 @@ BTree-Delete == [pop not] swap [R0] [R1] genrec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="prompt input_prompt">In&nbsp;[46]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;der&#39; Tree-Delete &quot;</span><span class="p">)</span>
@@ -14392,7 +14317,7 @@ BTree-Delete == [pop not] swap [R0] [R1] genrec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [4 2 3 1 6 7 5 ] [0 swap Tree-add] step&#39;</span><span class="p">)</span>
@@ -14423,7 +14348,7 @@ BTree-Delete == [pop not] swap [R0] [R1] genrec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[4 0 [2 0 [1 0 [] []] [3 0 [] []]] [6 0 [5 0 [] []] [7 0 [] []]]] 3 Tree-Delete &quot;</span><span class="p">)</span>
@@ -14454,7 +14379,7 @@ BTree-Delete == [pop not] swap [R0] [R1] genrec
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[4 0 [2 0 [1 0 [] []] [3 0 [] []]] [6 0 [5 0 [] []] [7 0 [] []]]] 4 Tree-Delete &quot;</span><span class="p">)</span>

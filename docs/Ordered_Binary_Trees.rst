@@ -1,6 +1,6 @@
 
-Treating Trees I
-================
+Treating Trees I: Ordered Binary Trees
+======================================
 
 Although any expression in Joy can be considered to describe a
 `tree <https://en.wikipedia.org/wiki/Tree_structure>`__ with the quotes
@@ -95,6 +95,12 @@ Definition:
 .. code:: ipython2
 
     J('"v" "k" Tree-new')
+
+
+.. parsed-literal::
+
+    ['k' 'v' [] []]
+
 
 (As an implementation detail, the ``[[] []]`` literal used in the
 definition of ``Tree-new`` will be reused to supply the *constant* tail
@@ -420,10 +426,10 @@ Examples
 Interlude: ``cmp`` combinator
 -----------------------------
 
-Instead of mucking about with nested ``ifte`` combinators let's just go
-whole hog and define ``cmp`` which takes two values and three quoted
-programs on the stack and runs one of the three depending on the results
-of comparing the two values:
+Instead of mucking about with nested ``ifte`` combinators let's use
+``cmp`` which takes two values and three quoted programs on the stack
+and runs one of the three depending on the results of comparing the two
+values:
 
 ::
 
@@ -438,38 +444,6 @@ of comparing the two values:
        a b [G] [E] [L] cmp
     ------------------------- a < b
                     L
-
-.. code:: ipython2
-
-    from joy.library import FunctionWrapper
-    from joy.utils.stack import pushback
-    from notebook_preamble import D
-    
-    
-    @FunctionWrapper
-    def cmp_(stack, expression, dictionary):
-        '''
-        cmp takes two values and three quoted programs on the stack and runs
-        one of the three depending on the results of comparing the two values:
-    
-               a b [G] [E] [L] cmp
-            ------------------------- a > b
-                    G
-    
-               a b [G] [E] [L] cmp
-            ------------------------- a = b
-                        E
-    
-               a b [G] [E] [L] cmp
-            ------------------------- a < b
-                            L
-        '''
-        L, (E, (G, (b, (a, stack)))) = stack
-        expression = pushback(G if a > b else L if a < b else E, expression)
-        return stack, expression, dictionary
-    
-    
-    D['cmp'] = cmp_
 
 .. code:: ipython2
 
@@ -930,7 +904,7 @@ Now we can sort sequences.
 
 
 Parameterizing the ``[F]`` function is left as an exercise for the
-reader (for now.)
+reader.
 
 Getting values by key
 ---------------------
@@ -1291,50 +1265,6 @@ need to replace the current node with something
 
 We have to handle three cases, so let's use ``cond``.
 
-.. code:: ipython2
-
-    from joy.library import FunctionWrapper, S_ifte
-    
-    
-    @FunctionWrapper
-    def cond(stack, expression, dictionary):
-      '''
-      like a case statement; works by rewriting into a chain of ifte.
-    
-      [..[[Bi] Ti]..[D]] -> ...
-    
-    
-            [[[B0] T0] [[B1] T1] [D]] cond
-      -----------------------------------------
-         [B0] [T0] [[B1] [T1] [D] ifte] ifte
-    
-      '''
-      conditions, stack = stack
-      if conditions:
-        expression = _cond(conditions, expression)
-        try:
-          # Attempt to preload the args to first ifte.
-          (P, (T, (E, expression))) = expression
-        except ValueError:
-          # If, for any reason, the argument to cond should happen to contain
-          # only the default clause then this optimization will fail.
-          pass
-        else:
-          stack = (E, (T, (P, stack)))
-      return stack, expression, dictionary
-    
-    
-    def _cond(conditions, expression):
-      (clause, rest) = conditions
-      if not rest:  # clause is [D]
-        return clause
-      P, T = clause
-      return (P, (T, (_cond(rest, ()), (S_ifte, expression))))
-    
-    
-    
-    D['cond'] = cond
-
 One or more child nodes are ``[]``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1534,7 +1464,7 @@ Substituting:
         [[E′] cons infra]
     ] cond
 
-Minor rearrangement:
+Minor rearrangement, move ``dup`` into ``W``:
 
 ::
 
@@ -1553,9 +1483,9 @@ Refactoring
 
     W.rightmost == [fourth] [fourth] while
     W.unpack == uncons uncons pop
+    W == dup W.rightmost W.unpack over
     E.clear_stuff == roll> popop rest
     E.delete == cons dipd
-    W == dup W.rightmost W.unpack over
     E.0 == E.clear_stuff [W] dip E.delete swap
     E == [
         [[pop third not] pop fourth]
@@ -1587,7 +1517,8 @@ program.
     T< == [dipdd] cons infra
     R0 == over first swap dup
     R1 == cons roll> [T>] [E] [T<] cmp
-    Tree-Delete == [pop not] [pop] [R0] [R1] genrec''', D)
+    Tree-Delete == [pop not] [pop] [R0] [R1] genrec
+    ''', D)
 
 .. code:: ipython2
 
