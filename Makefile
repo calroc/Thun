@@ -24,9 +24,5 @@ test: sdist
 
 
 docs:
-	cd ./docs && python -m nbconvert --to html *.ipynb
-	cd ./docs && python -m nbconvert --to markdown *.ipynb
-	cd ./docs && python -m nbconvert --to rst *.ipynb
+	cd ./docs && make
 
-
-%.md : %.ipynb ; 

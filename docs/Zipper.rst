@@ -1,4 +1,7 @@
 
+Traversing Datastructures with Zippers
+======================================
+
 This notebook is about using the "zipper" with joy datastructures. See
 the `Zipper wikipedia
 entry <https://en.wikipedia.org/wiki/Zipper_%28data_structure%29>`__ or
