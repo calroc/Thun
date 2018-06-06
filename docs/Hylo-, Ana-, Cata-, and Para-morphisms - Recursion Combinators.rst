@@ -1571,8 +1571,8 @@ Our story so far...
 -  A predicate ``P :: A -> Bool`` to detect the base case
 -  A base case value ``c :: B``
 
-Hylo- Ana-, Cata-
-~~~~~~~~~~~~~~~~~
+Hylo-, Ana-, Cata-
+~~~~~~~~~~~~~~~~~~
 
 ::
 
@@ -1706,7 +1706,7 @@ one item instead of two (the b is instead the duplicate of a.)
 ~
 
 And, last but not least, if you can combine as you go, starting with c,
-and the combiner needs to work on the current item this is the form:
+and the combiner needs to work on the current item, this is the form:
 
 ::
 

@@ -11920,10 +11920,10 @@ key left-keys right-keys
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span><span class="p">,</span> <span class="n">DefinitionWrapper</span>
 </pre></div>
 
 </div>
@@ -13008,7 +13008,7 @@ E == pop swap roll&lt; rest rest cons cons
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">FunctionWrapper</span>
@@ -13018,12 +13018,81 @@ E == pop swap roll&lt; rest rest cons cons
 
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">cmp_</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    cmp takes two values and three quoted programs on the stack and runs</span>
+<span class="sd">    one of the three depending on the results of comparing the two values:</span>
+
+<span class="sd">           a b [G] [E] [L] cmp</span>
+<span class="sd">        ------------------------- a &gt; b</span>
+<span class="sd">                G</span>
+
+<span class="sd">           a b [G] [E] [L] cmp</span>
+<span class="sd">        ------------------------- a = b</span>
+<span class="sd">                    E</span>
+
+<span class="sd">           a b [G] [E] [L] cmp</span>
+<span class="sd">        ------------------------- a &lt; b</span>
+<span class="sd">                        L</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">L</span><span class="p">,</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">stack</span><span class="p">))))</span> <span class="o">=</span> <span class="n">stack</span>
     <span class="n">expression</span> <span class="o">=</span> <span class="n">pushback</span><span class="p">(</span><span class="n">G</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">L</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">E</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span>
 
 
 <span class="n">D</span><span class="p">[</span><span class="s1">&#39;cmp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmp_</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">FunctionWrapper</span><span class="p">,</span> <span class="n">S_ifte</span>
+
+
+<span class="nd">@FunctionWrapper</span>
+<span class="k">def</span> <span class="nf">cond</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  like a case statement; works by rewriting into a chain of ifte.</span>
+
+<span class="sd">  [..[[Bi] Ti]..[D]] -&gt; ...</span>
+
+
+<span class="sd">        [[[B0] T0] [[B1] T1] [D]] cond</span>
+<span class="sd">  -----------------------------------------</span>
+<span class="sd">     [B0] [T0] [[B1] [T1] [D] ifte] ifte</span>
+
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="n">conditions</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">stack</span>
+  <span class="k">if</span> <span class="n">conditions</span><span class="p">:</span>
+    <span class="n">expression</span> <span class="o">=</span> <span class="n">_cond</span><span class="p">(</span><span class="n">conditions</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="c1"># Attempt to preload the args to first ifte.</span>
+      <span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">expression</span><span class="p">)))</span> <span class="o">=</span> <span class="n">expression</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+      <span class="c1"># If, for any reason, the argument to cond should happen to contain</span>
+      <span class="c1"># only the default clause then this optimization will fail.</span>
+      <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">stack</span> <span class="o">=</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span>
+  <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span>
+
+
+<span class="k">def</span> <span class="nf">_cond</span><span class="p">(</span><span class="n">conditions</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
+  <span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span> <span class="o">=</span> <span class="n">conditions</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">rest</span><span class="p">:</span>  <span class="c1"># clause is [D]</span>
+    <span class="k">return</span> <span class="n">clause</span>
+  <span class="n">P</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">clause</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="n">_cond</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="p">()),</span> <span class="p">(</span><span class="n">S_ifte</span><span class="p">,</span> <span class="n">expression</span><span class="p">))))</span>
+
+
+
+<span class="n">D</span><span class="p">[</span><span class="s1">&#39;cond&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cond</span>
 </pre></div>
 
 </div>
@@ -13726,15 +13795,15 @@ BTree-get == [pop not] swap [] [P [T&gt;] [E] [T&lt;] cmp] genrec</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="TODO:-BTree-delete">TODO: BTree-delete<a class="anchor-link" href="#TODO:-BTree-delete">&#182;</a></h1><p>Then, once we have add, get, and delete we can see about abstracting them.</p>
+<h1 id="BTree-delete">BTree-delete<a class="anchor-link" href="#BTree-delete">&#182;</a></h1><p>Now let's write a function that can return a tree datastructure with a key, value pair deleted:</p>
 
-<pre><code>   tree key [E] BTree-delete
----------------------------- key in tree
+<pre><code>   tree key BTree-delete
+---------------------------
        tree
 
-   tree key [E] BTree-delete
----------------------------- key not in tree
-         tree key E</code></pre>
+
+</code></pre>
+<p>If the key is not in tree it just returns the tree unchanged.</p>
 
 </div>
 </div>
@@ -13745,18 +13814,7 @@ BTree-get == [pop not] swap [] [P [T&gt;] [E] [T&lt;] cmp] genrec</code></pre>
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>So:</p>
 
-<pre><code>BTree-delete == [pop not] [] [R0] [R1] genrec
-
-</code></pre>
-<p>And:</p>
-
-<pre><code>[n_key n_value left right] key R0              [BTree-get] R1
-[n_key n_value left right] key [dup first] dip [BTree-get] R1
-[n_key n_value left right] n_key key           [BTree-get] R1
-[n_key n_value left right] n_key key           [BTree-get] roll&gt; [T&gt;] [E] [T&lt;] cmp
-[n_key n_value left right] [BTree-get] n_key key                 [T&gt;] [E] [T&lt;] cmp
-
-BTree-delete == [pop not] swap [[dup first] dip] [roll&gt; [T&gt;] [E] [T&lt;] cmp] genrec</code></pre>
+<pre><code>BTree-Delete == [pop not] swap [R0] [R1] genrec</code></pre>
 
 </div>
 </div>
@@ -13766,9 +13824,9 @@ BTree-delete == [pop not] swap [[dup first] dip] [roll&gt; [T&gt;] [E] [T&lt;] c
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 
-<pre><code>[n_key n_value left right] [BTree-get] T&gt;
-[n_key n_value left right] [BTree-get] E
-[n_key n_value left right] [BTree-get] T&lt;</code></pre>
+<pre><code>             [Er] BTree-delete
+-------------------------------------
+   [pop not] [Er] [R0] [R1] genrec</code></pre>
 
 </div>
 </div>
@@ -13781,6 +13839,633 @@ BTree-delete == [pop not] swap [[dup first] dip] [roll&gt; [T&gt;] [E] [T&lt;] c
 <pre><code>[n_key n_value left right] [BTree-get] 
 [n_key n_value left right] [BTree-get] E
 [n_key n_value left right] [BTree-get] T&lt;</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we get to figure out the recursive case:</p>
+
+<pre><code>w/ D == [pop not] [Er] [R0] [R1] genrec
+
+[node_key node_value left right] key R0                  [D] R1
+[node_key node_value left right] key over first swap dup [D] R1
+[node_key node_value left right] node_key key key        [D] R1
+
+</code></pre>
+<p>And then:</p>
+
+<pre><code>[node_key node_value left right] node_key key key [D] R1
+[node_key node_value left right] node_key key key [D] cons roll&gt; [T&gt;] [E] [T&lt;] cmp
+[node_key node_value left right] node_key key [key D]      roll&gt; [T&gt;] [E] [T&lt;] cmp
+[node_key node_value left right] [key D] node_key key            [T&gt;] [E] [T&lt;] cmp</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now this:;</p>
+
+<pre><code>[node_key node_value left right] [key D] node_key key [T&gt;] [E] [T&lt;] cmp
+
+</code></pre>
+<p>Becomes one of these three:;</p>
+
+<pre><code>[node_key node_value left right] [key D] T&gt;
+[node_key node_value left right] [key D] E
+[node_key node_value left right] [key D] T&lt;</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Greater-than-case-and-less-than-case">Greater than case and less than case<a class="anchor-link" href="#Greater-than-case-and-less-than-case">&#182;</a></h3>
+<pre><code>   [node_key node_value left right] [key D] T&gt;
+-------------------------------------------------
+   [node_key node_value left key D right]</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>First:</p>
+
+<pre><code>right left       node_value node_key [key D] dipd
+right left key D node_value node_key
+right left'      node_value node_key</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Ergo:</p>
+
+<pre><code>[node_key node_value left right] [key D] [dipd] cons infra</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So:</p>
+
+<pre><code>T&gt; == [dipd] cons infra
+T&lt; == [dipdd] cons infra</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="The-else-case">The else case<a class="anchor-link" href="#The-else-case">&#182;</a></h3>
+<pre><code>[node_key node_value left right] [key D] E
+
+</code></pre>
+<p>We have to handle three cases, so let's use <code>cond</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The first two cases are symmetrical, if we only have one non-empty child node return it.</p>
+
+<pre><code>E == [
+    [[pop third not] pop fourth]
+    [[pop fourth not] pop third]
+    [default]
+] cond</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>(If both child nodes are empty return an empty node.)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The initial structure of the default function:</p>
+
+<pre><code>default == [E'] cons infra
+
+[node_key node_value left right] [key D] default
+[node_key node_value left right] [key D] [E'] cons infra
+[node_key node_value left right] [[key D] E']      infra
+
+right left node_value node_key [key D] E'</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If both child nodes are non-empty, we find the highest node in our lower sub-tree, take its key and value to replace (delete) our own, then get rid of it by recursively calling delete() on our lower sub-node with our new key.</p>
+<p>(We could also find the lowest node in our higher sub-tree and take its key and value and delete it. I only implemented one of these two symmetrical options. Over a lot of deletions this might make the tree more unbalanced.  Oh well.)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>First things first, we no longer need this node's key and value:</p>
+
+<pre><code>right left node_value node_key [key D] roll&gt; popop E''
+right left [key D] node_value node_key       popop E''
+right left [key D]                                 E''</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Then we have to we find the highest (right-most) node in our lower (left) sub-tree:</p>
+
+<pre><code>right left [key D] E''</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Ditch the key:</p>
+
+<pre><code>right left [key D] rest E'''
+right left     [D]      E'''</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Find the right-most node:</p>
+
+<pre><code>right left        [D] [dup W] dip E''''
+right left dup  W [D]             E''''
+right left left W [D]             E''''</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Consider:</p>
+
+<pre><code>left W</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We know left is not empty:</p>
+
+<pre><code>[L_key L_value L_left L_right] W</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We want to keep extracting the right node as long as it is not empty:</p>
+
+<pre><code>left [P] [B] while W'</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The predicate:</p>
+
+<pre><code>[L_key L_value L_left L_right] P
+[L_key L_value L_left L_right] fourth
+                      L_right
+
+</code></pre>
+<p>(This has a bug, can run on <code>[]</code> so must be guarded:</p>
+
+<pre><code>if_not_empty == [] swap [] ifte
+?fourth == [fourth] if_not_empty
+W.rightmost == [?fourth] [fourth] while</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The body is also <code>fourth</code>:</p>
+
+<pre><code>left [fourth] [fourth] while W'
+rightest                     W'</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We know rightest is not empty:</p>
+
+<pre><code>[R_key R_value R_left R_right] W'
+[R_key R_value R_left R_right] uncons uncons pop
+R_key [R_value R_left R_right]        uncons pop
+R_key R_value [R_left R_right]               pop
+R_key R_value</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So:</p>
+
+<pre><code>W == [fourth] [fourth] while uncons uncons pop</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And:</p>
+
+<pre><code>right left left W        [D] E''''
+right left R_key R_value [D] E''''</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Final stretch.  We want to end up with something like:</p>
+
+<pre><code>right left [R_key D] i R_value R_key
+right left  R_key D    R_value R_key
+right left'            R_value R_key</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If we adjust our definition of <code>W</code> to include <code>over</code> at the end:</p>
+
+<pre><code>W == [fourth] [fourth] while uncons uncons pop over</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>That will give us:</p>
+
+<pre><code>right left R_key R_value R_key [D] E''''
+
+right left         R_key R_value R_key [D] cons dipdd E'''''
+right left         R_key R_value [R_key D]      dipdd E'''''
+right left R_key D R_key R_value                      E'''''
+right left'        R_key R_value                      E'''''
+right left'        R_key R_value                      swap
+right left' R_value R_key</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So:</p>
+
+<pre><code>E' == roll&gt; popop E''
+
+E'' == rest E'''
+
+E''' == [dup W] dip E''''
+
+E'''' == cons dipdd swap</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Substituting:</p>
+
+<pre><code>W == [fourth] [fourth] while uncons uncons pop over
+E' == roll&gt; popop rest [dup W] dip cons dipdd swap
+E == [
+    [[pop third not] pop fourth]
+    [[pop fourth not] pop third]
+    [[E'] cons infra]
+] cond</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Minor rearrangement:</p>
+
+<pre><code>W == dup [fourth] [fourth] while uncons uncons pop over
+E' == roll&gt; popop rest [W] dip cons dipdd swap
+E == [
+    [[pop third not] pop fourth]
+    [[pop fourth not] pop third]
+    [[E'] cons infra]
+] cond</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Refactoring">Refactoring<a class="anchor-link" href="#Refactoring">&#182;</a></h3>
+<pre><code>W.rightmost == [fourth] [fourth] while
+W.unpack == uncons uncons pop
+E.clear_stuff == roll&gt; popop rest
+E.delete == cons dipdd
+W == dup W.rightmost W.unpack over
+E.0 == E.clear_stuff [W] dip E.delete swap
+E == [
+    [[pop third not] pop fourth]
+    [[pop fourth not] pop third]
+    [[E.0] cons infra]
+] cond
+T&gt; == [dipd] cons infra
+T&lt; == [dipdd] cons infra
+R0 == over first swap dup
+R1 == cons roll&gt; [T&gt;] [E] [T&lt;] cmp
+BTree-Delete == [pop not] swap [R0] [R1] genrec
+
+</code></pre>
+<p>By the standards of the code I've written so far, this is a <em>huge</em> Joy program.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">first_two == uncons uncons pop</span>
+<span class="s1">fourth == rest rest rest first</span>
+<span class="s1">?fourth == [] [fourth] [] ifte</span>
+<span class="s1">W.rightmost == [?fourth] [fourth] while</span>
+<span class="s1">E.clear_stuff == roll&gt; popop rest</span>
+<span class="s1">E.delete == cons dipdd</span>
+<span class="s1">W == dup W.rightmost first_two over</span>
+<span class="s1">E.0 == E.clear_stuff [W] dip E.delete swap</span>
+<span class="s1">E == [[[pop third not] pop fourth] [[pop fourth not] pop third] [[E.0] cons infra]] cond</span>
+<span class="s1">T&gt; == [dipd] cons infra</span>
+<span class="s1">T&lt; == [dipdd] cons infra</span>
+<span class="s1">R0 == over first swap dup</span>
+<span class="s1">R1 == cons roll&gt; [T&gt;] [E] [T&lt;] cmp</span>
+<span class="s1">BTree-Delete == [pop not] swap [R0] [R1] genrec&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;c&#39; [&#39;Er&#39;] BTree-Delete &quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] []]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;b&#39; [&#39;Er&#39;] BTree-Delete &quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;a&#39; 23 [] [&#39;c&#39; 44 [] []]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;a&#39; [&#39;Er&#39;] BTree-Delete &quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;der&#39; [&#39;Er&#39;] BTree-Delete &quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] &#39;Er&#39; &#39;der&#39; []]]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;der&#39; [pop] BTree-Delete &quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>One bug, I forgot to put <code>not</code> in the first two clauses of the <code>cond</code>.</p>
+<p>The behavior of the <code>[Er]</code> function should maybe be different: either just silently fail, or maybe implement some sort of function that can grab the pending expression up to a sentinel value or something, allowing for a kind of "except"-ish control-flow?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Then, once we have add, get, and delete we can see about abstracting them.</p>
 
 </div>
 </div>

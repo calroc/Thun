@@ -149,7 +149,7 @@ Ergo:
 
 .. code:: ipython2
 
-    from notebook_preamble import J, V, define
+    from notebook_preamble import D, J, V, define, DefinitionWrapper
 
 .. code:: ipython2
 
@@ -774,12 +774,72 @@ to understand:
     
     @FunctionWrapper
     def cmp_(stack, expression, dictionary):
+        '''
+        cmp takes two values and three quoted programs on the stack and runs
+        one of the three depending on the results of comparing the two values:
+    
+               a b [G] [E] [L] cmp
+            ------------------------- a > b
+                    G
+    
+               a b [G] [E] [L] cmp
+            ------------------------- a = b
+                        E
+    
+               a b [G] [E] [L] cmp
+            ------------------------- a < b
+                            L
+        '''
         L, (E, (G, (b, (a, stack)))) = stack
         expression = pushback(G if a > b else L if a < b else E, expression)
         return stack, expression, dictionary
     
     
     D['cmp'] = cmp_
+
+.. code:: ipython2
+
+    from joy.library import FunctionWrapper, S_ifte
+    
+    
+    @FunctionWrapper
+    def cond(stack, expression, dictionary):
+      '''
+      like a case statement; works by rewriting into a chain of ifte.
+    
+      [..[[Bi] Ti]..[D]] -> ...
+    
+    
+            [[[B0] T0] [[B1] T1] [D]] cond
+      -----------------------------------------
+         [B0] [T0] [[B1] [T1] [D] ifte] ifte
+    
+      '''
+      conditions, stack = stack
+      if conditions:
+        expression = _cond(conditions, expression)
+        try:
+          # Attempt to preload the args to first ifte.
+          (P, (T, (E, expression))) = expression
+        except ValueError:
+          # If, for any reason, the argument to cond should happen to contain
+          # only the default clause then this optimization will fail.
+          pass
+        else:
+          stack = (E, (T, (P, stack)))
+      return stack, expression, dictionary
+    
+    
+    def _cond(conditions, expression):
+      (clause, rest) = conditions
+      if not rest:  # clause is [D]
+        return clause
+      P, T = clause
+      return (P, (T, (_cond(rest, ()), (S_ifte, expression))))
+    
+    
+    
+    D['cond'] = cond
 
 .. code:: ipython2
 
@@ -1207,51 +1267,406 @@ So:
     2
 
 
-TODO: BTree-delete
-==================
+BTree-delete
+============
 
-Then, once we have add, get, and delete we can see about abstracting
-them.
+Now let's write a function that can return a tree datastructure with a
+key, value pair deleted:
 
 ::
 
-       tree key [E] BTree-delete
-    ---------------------------- key in tree
+       tree key BTree-delete
+    ---------------------------
            tree
 
-       tree key [E] BTree-delete
-    ---------------------------- key not in tree
-             tree key E
+If the key is not in tree it just returns the tree unchanged.
 
 So:
 
 ::
 
-    BTree-delete == [pop not] [] [R0] [R1] genrec
-
-And:
+    BTree-Delete == [pop not] swap [R0] [R1] genrec
 
 ::
 
-    [n_key n_value left right] key R0              [BTree-get] R1
-    [n_key n_value left right] key [dup first] dip [BTree-get] R1
-    [n_key n_value left right] n_key key           [BTree-get] R1
-    [n_key n_value left right] n_key key           [BTree-get] roll> [T>] [E] [T<] cmp
-    [n_key n_value left right] [BTree-get] n_key key                 [T>] [E] [T<] cmp
-
-    BTree-delete == [pop not] swap [[dup first] dip] [roll> [T>] [E] [T<] cmp] genrec
-
-::
-
-    [n_key n_value left right] [BTree-get] T>
-    [n_key n_value left right] [BTree-get] E
-    [n_key n_value left right] [BTree-get] T<
+                 [Er] BTree-delete
+    -------------------------------------
+       [pop not] [Er] [R0] [R1] genrec
 
 ::
 
     [n_key n_value left right] [BTree-get] 
     [n_key n_value left right] [BTree-get] E
     [n_key n_value left right] [BTree-get] T<
+
+Now we get to figure out the recursive case:
+
+::
+
+    w/ D == [pop not] [Er] [R0] [R1] genrec
+
+    [node_key node_value left right] key R0                  [D] R1
+    [node_key node_value left right] key over first swap dup [D] R1
+    [node_key node_value left right] node_key key key        [D] R1
+
+And then:
+
+::
+
+    [node_key node_value left right] node_key key key [D] R1
+    [node_key node_value left right] node_key key key [D] cons roll> [T>] [E] [T<] cmp
+    [node_key node_value left right] node_key key [key D]      roll> [T>] [E] [T<] cmp
+    [node_key node_value left right] [key D] node_key key            [T>] [E] [T<] cmp
+
+Now this:;
+
+::
+
+    [node_key node_value left right] [key D] node_key key [T>] [E] [T<] cmp
+
+Becomes one of these three:;
+
+::
+
+    [node_key node_value left right] [key D] T>
+    [node_key node_value left right] [key D] E
+    [node_key node_value left right] [key D] T<
+
+Greater than case and less than case
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+       [node_key node_value left right] [key D] T>
+    -------------------------------------------------
+       [node_key node_value left key D right]
+
+First:
+
+::
+
+    right left       node_value node_key [key D] dipd
+    right left key D node_value node_key
+    right left'      node_value node_key
+
+Ergo:
+
+::
+
+    [node_key node_value left right] [key D] [dipd] cons infra
+
+So:
+
+::
+
+    T> == [dipd] cons infra
+    T< == [dipdd] cons infra
+
+The else case
+~~~~~~~~~~~~~
+
+::
+
+    [node_key node_value left right] [key D] E
+
+We have to handle three cases, so let's use ``cond``.
+
+The first two cases are symmetrical, if we only have one non-empty child
+node return it.
+
+::
+
+    E == [
+        [[pop third not] pop fourth]
+        [[pop fourth not] pop third]
+        [default]
+    ] cond
+
+(If both child nodes are empty return an empty node.)
+
+The initial structure of the default function:
+
+::
+
+    default == [E'] cons infra
+
+    [node_key node_value left right] [key D] default
+    [node_key node_value left right] [key D] [E'] cons infra
+    [node_key node_value left right] [[key D] E']      infra
+
+    right left node_value node_key [key D] E'
+
+If both child nodes are non-empty, we find the highest node in our lower
+sub-tree, take its key and value to replace (delete) our own, then get
+rid of it by recursively calling delete() on our lower sub-node with our
+new key.
+
+(We could also find the lowest node in our higher sub-tree and take its
+key and value and delete it. I only implemented one of these two
+symmetrical options. Over a lot of deletions this might make the tree
+more unbalanced. Oh well.)
+
+First things first, we no longer need this node's key and value:
+
+::
+
+    right left node_value node_key [key D] roll> popop E''
+    right left [key D] node_value node_key       popop E''
+    right left [key D]                                 E''
+
+Then we have to we find the highest (right-most) node in our lower
+(left) sub-tree:
+
+::
+
+    right left [key D] E''
+
+Ditch the key:
+
+::
+
+    right left [key D] rest E'''
+    right left     [D]      E'''
+
+Find the right-most node:
+
+::
+
+    right left        [D] [dup W] dip E''''
+    right left dup  W [D]             E''''
+    right left left W [D]             E''''
+
+Consider:
+
+::
+
+    left W
+
+We know left is not empty:
+
+::
+
+    [L_key L_value L_left L_right] W
+
+We want to keep extracting the right node as long as it is not empty:
+
+::
+
+    left [P] [B] while W'
+
+The predicate:
+
+::
+
+    [L_key L_value L_left L_right] P
+    [L_key L_value L_left L_right] fourth
+                          L_right
+                          
+
+(This has a bug, can run on ``[]`` so must be guarded:
+
+::
+
+    if_not_empty == [] swap [] ifte
+    ?fourth == [fourth] if_not_empty
+    W.rightmost == [?fourth] [fourth] while
+
+The body is also ``fourth``:
+
+::
+
+    left [fourth] [fourth] while W'
+    rightest                     W'
+
+We know rightest is not empty:
+
+::
+
+    [R_key R_value R_left R_right] W'
+    [R_key R_value R_left R_right] uncons uncons pop
+    R_key [R_value R_left R_right]        uncons pop
+    R_key R_value [R_left R_right]               pop
+    R_key R_value
+
+So:
+
+::
+
+    W == [fourth] [fourth] while uncons uncons pop
+
+And:
+
+::
+
+    right left left W        [D] E''''
+    right left R_key R_value [D] E''''
+
+Final stretch. We want to end up with something like:
+
+::
+
+    right left [R_key D] i R_value R_key
+    right left  R_key D    R_value R_key
+    right left'            R_value R_key
+
+If we adjust our definition of ``W`` to include ``over`` at the end:
+
+::
+
+    W == [fourth] [fourth] while uncons uncons pop over
+
+That will give us:
+
+::
+
+    right left R_key R_value R_key [D] E''''
+
+    right left         R_key R_value R_key [D] cons dipdd E'''''
+    right left         R_key R_value [R_key D]      dipdd E'''''
+    right left R_key D R_key R_value                      E'''''
+    right left'        R_key R_value                      E'''''
+    right left'        R_key R_value                      swap
+    right left' R_value R_key
+
+So:
+
+::
+
+    E' == roll> popop E''
+
+    E'' == rest E'''
+
+    E''' == [dup W] dip E''''
+
+    E'''' == cons dipdd swap
+
+Substituting:
+
+::
+
+    W == [fourth] [fourth] while uncons uncons pop over
+    E' == roll> popop rest [dup W] dip cons dipdd swap
+    E == [
+        [[pop third not] pop fourth]
+        [[pop fourth not] pop third]
+        [[E'] cons infra]
+    ] cond
+
+Minor rearrangement:
+
+::
+
+    W == dup [fourth] [fourth] while uncons uncons pop over
+    E' == roll> popop rest [W] dip cons dipdd swap
+    E == [
+        [[pop third not] pop fourth]
+        [[pop fourth not] pop third]
+        [[E'] cons infra]
+    ] cond
+
+Refactoring
+~~~~~~~~~~~
+
+::
+
+    W.rightmost == [fourth] [fourth] while
+    W.unpack == uncons uncons pop
+    E.clear_stuff == roll> popop rest
+    E.delete == cons dipdd
+    W == dup W.rightmost W.unpack over
+    E.0 == E.clear_stuff [W] dip E.delete swap
+    E == [
+        [[pop third not] pop fourth]
+        [[pop fourth not] pop third]
+        [[E.0] cons infra]
+    ] cond
+    T> == [dipd] cons infra
+    T< == [dipdd] cons infra
+    R0 == over first swap dup
+    R1 == cons roll> [T>] [E] [T<] cmp
+    BTree-Delete == [pop not] swap [R0] [R1] genrec
+
+By the standards of the code I've written so far, this is a *huge* Joy
+program.
+
+.. code:: ipython2
+
+    DefinitionWrapper.add_definitions('''
+    first_two == uncons uncons pop
+    fourth == rest rest rest first
+    ?fourth == [] [fourth] [] ifte
+    W.rightmost == [?fourth] [fourth] while
+    E.clear_stuff == roll> popop rest
+    E.delete == cons dipdd
+    W == dup W.rightmost first_two over
+    E.0 == E.clear_stuff [W] dip E.delete swap
+    E == [[[pop third not] pop fourth] [[pop fourth not] pop third] [[E.0] cons infra]] cond
+    T> == [dipd] cons infra
+    T< == [dipdd] cons infra
+    R0 == over first swap dup
+    R1 == cons roll> [T>] [E] [T<] cmp
+    BTree-Delete == [pop not] swap [R0] [R1] genrec''', D)
+
+.. code:: ipython2
+
+    J("['a' 23 [] ['b' 88 [] ['c' 44 [] []]]] 'c' ['Er'] BTree-Delete ")
+
+
+.. parsed-literal::
+
+    ['a' 23 [] ['b' 88 [] []]]
+
+
+.. code:: ipython2
+
+    J("['a' 23 [] ['b' 88 [] ['c' 44 [] []]]] 'b' ['Er'] BTree-Delete ")
+
+
+.. parsed-literal::
+
+    ['a' 23 [] ['c' 44 [] []]]
+
+
+.. code:: ipython2
+
+    J("['a' 23 [] ['b' 88 [] ['c' 44 [] []]]] 'a' ['Er'] BTree-Delete ")
+
+
+.. parsed-literal::
+
+    ['b' 88 [] ['c' 44 [] []]]
+
+
+.. code:: ipython2
+
+    J("['a' 23 [] ['b' 88 [] ['c' 44 [] []]]] 'der' ['Er'] BTree-Delete ")
+
+
+.. parsed-literal::
+
+    ['a' 23 [] ['b' 88 [] ['c' 44 [] 'Er' 'der' []]]]
+
+
+.. code:: ipython2
+
+    J("['a' 23 [] ['b' 88 [] ['c' 44 [] []]]] 'der' [pop] BTree-Delete ")
+
+
+.. parsed-literal::
+
+    ['a' 23 [] ['b' 88 [] ['c' 44 [] []]]]
+
+
+One bug, I forgot to put ``not`` in the first two clauses of the
+``cond``.
+
+The behavior of the ``[Er]`` function should maybe be different: either
+just silently fail, or maybe implement some sort of function that can
+grab the pending expression up to a sentinel value or something,
+allowing for a kind of "except"-ish control-flow?
+
+Then, once we have add, get, and delete we can see about abstracting
+them.
 
 Tree with node and list of trees.
 =================================

@@ -22,12 +22,11 @@ it's "off the shelf" technology.)
 .. code:: ipython2
 
     J('1 2 3 clear')
-    J('1 2 3 clear')
 
 
 .. parsed-literal::
 
-    ...
+    
 
 
 ``dup`` ``dupd``

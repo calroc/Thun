@@ -13729,7 +13729,7 @@ tails == [] [not] [rest swons] [rest] paramorphism</code></pre>
 <li>A predicate <code>P :: A -&gt; Bool</code> to detect the base case</li>
 <li>A base case value <code>c :: B</code></li>
 </ul>
-<h3 id="Hylo--Ana-,-Cata-">Hylo- Ana-, Cata-<a class="anchor-link" href="#Hylo--Ana-,-Cata-">&#182;</a></h3>
+<h3 id="Hylo-,-Ana-,-Cata-">Hylo-, Ana-, Cata-<a class="anchor-link" href="#Hylo-,-Ana-,-Cata-">&#182;</a></h3>
 <pre><code>w/ G :: A -&gt; (A, B)
 
 H == [P   ] [pop c ] [G          ] [dip F    ] genrec
@@ -13854,7 +13854,7 @@ H == c swap [P] [pop]   [  [F] dupdip G] [i]     genrec
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4">4<a class="anchor-link" href="#4">&#182;</a></h3><p>And, last but not least, if you can combine as you go, starting with c, and the combiner needs to work on the current item this is the form:</p>
+<h3 id="4">4<a class="anchor-link" href="#4">&#182;</a></h3><p>And, last but not least, if you can combine as you go, starting with c, and the combiner needs to work on the current item, this is the form:</p>
 
 <pre><code>W == c swap [P] [pop] [[F] dupdip G] primrec
 

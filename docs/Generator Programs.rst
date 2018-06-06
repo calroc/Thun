@@ -8,41 +8,49 @@ Cf. jp-reprod.html
 
     from notebook_preamble import J, V, define
 
-Consider the ``x`` combinator ``x == dup i``:
+Consider the ``x`` combinator:
+
+::
+
+    x == dup i
+
+We can apply it to a quoted program consisting of some value ``a`` and a
+function ``B``:
 
 ::
 
     [a B] x
     [a B] a B
 
-Let ``B`` ``swap`` the ``a`` with the quote and run some function
-``[C]`` on it.
+Let ``B`` function ``swap`` the ``a`` with the quote and run some
+function ``C`` on it to generate a new value ``b``:
 
 ::
+
+    B == swap [C] dip
 
     [a B] a B
     [a B] a swap [C] dip
     a [a B]      [C] dip
     a C [a B]
+    b [a B]
 
-Now discard the quoted ``a`` with ``rest`` and ``cons`` the result of
-``C`` on ``a`` whatever that is:
+Now discard the quoted ``a`` with ``rest`` then ``cons`` ``b``:
 
 ::
 
-    aC [a B] rest cons
-    aC [B] cons
-    [aC B]
+    b [a B] rest cons
+    b [B]        cons
+    [b B]
 
-Altogether, this is the definition of ``B``:
+Putting it together, this is the definition of ``B``:
 
 ::
 
     B == swap [C] dip rest cons
 
-We can create a quoted program that generates the Natural numbers
-(integers 0, 1, 2, ...) by using ``0`` for ``a`` and ``[dup ++]`` for
-``[C]``:
+We can create a quoted program that generates the Natural numbers (0, 1,
+2, ...) by using ``0`` for ``a`` and ``[dup ++]`` for ``[C]``:
 
 ::
 
@@ -113,20 +121,17 @@ After one application of ``x`` the quoted program contains ``1`` and
              0 [1 swap [dup ++] direco] . 
 
 
-Generating Generators
-=====================
+Making Generators
+=================
 
-We want to go from:
-
-::
-
-    a [C] G
-
-to:
+We want to define a function that accepts ``a`` and ``[C]`` and builds
+our quoted program:
 
 ::
 
-    [a swap [C] direco]
+             a [C] G
+    -------------------------
+       [a swap [C] direco]
 
 Working in reverse:
 
@@ -145,65 +150,30 @@ Reading from the bottom up:
     G == [direco] cons [swap] swap concat cons
     G == [direco] cons [swap] swoncat cons
 
-We can try it out:
-
-::
-
-    0 [dup ++] G
-
 .. code:: ipython2
 
     define('G == [direco] cons [swap] swoncat cons')
 
+Let's try it out:
+
 .. code:: ipython2
 
-    V('0 [dup ++] G')
+    J('0 [dup ++] G')
 
 
 .. parsed-literal::
 
-                               . 0 [dup ++] G
-                             0 . [dup ++] G
-                    0 [dup ++] . G
-                    0 [dup ++] . [direco] cons [swap] swoncat cons
-           0 [dup ++] [direco] . cons [swap] swoncat cons
-           0 [[dup ++] direco] . [swap] swoncat cons
-    0 [[dup ++] direco] [swap] . swoncat cons
-    0 [[dup ++] direco] [swap] . swap concat cons
-    0 [swap] [[dup ++] direco] . concat cons
-      0 [swap [dup ++] direco] . cons
-      [0 swap [dup ++] direco] . 
+    [0 swap [dup ++] direco]
 
 
 .. code:: ipython2
 
-    V('0 [dup ++] G x')
+    J('0 [dup ++] G x x x pop')
 
 
 .. parsed-literal::
 
-                                        . 0 [dup ++] G x
-                                      0 . [dup ++] G x
-                             0 [dup ++] . G x
-                             0 [dup ++] . [direco] cons [swap] swoncat cons x
-                    0 [dup ++] [direco] . cons [swap] swoncat cons x
-                    0 [[dup ++] direco] . [swap] swoncat cons x
-             0 [[dup ++] direco] [swap] . swoncat cons x
-             0 [[dup ++] direco] [swap] . swap concat cons x
-             0 [swap] [[dup ++] direco] . concat cons x
-               0 [swap [dup ++] direco] . cons x
-               [0 swap [dup ++] direco] . x
-               [0 swap [dup ++] direco] . 0 swap [dup ++] direco
-             [0 swap [dup ++] direco] 0 . swap [dup ++] direco
-             0 [0 swap [dup ++] direco] . [dup ++] direco
-    0 [0 swap [dup ++] direco] [dup ++] . direco
-    0 [0 swap [dup ++] direco] [dup ++] . dip rest cons
-                                      0 . dup ++ [0 swap [dup ++] direco] rest cons
-                                    0 0 . ++ [0 swap [dup ++] direco] rest cons
-                                    0 1 . [0 swap [dup ++] direco] rest cons
-           0 1 [0 swap [dup ++] direco] . rest cons
-             0 1 [swap [dup ++] direco] . cons
-             0 [1 swap [dup ++] direco] . 
+    0 1 2
 
 
 Powers of 2
@@ -211,73 +181,28 @@ Powers of 2
 
 .. code:: ipython2
 
-    J('1 [dup 1 <<] G x x x x x x x x x')
+    J('1 [dup 1 <<] G x x x x x x x x x pop')
 
 
 .. parsed-literal::
 
-    1 2 4 8 16 32 64 128 256 [512 swap [dup 1 <<] direco]
+    1 2 4 8 16 32 64 128 256
 
 
-``n [x] times``
-===============
+``[x] times``
+~~~~~~~~~~~~~
 
 If we have one of these quoted programs we can drive it using ``times``
 with the ``x`` combinator.
 
-Let's define a word ``n_range`` that takes a starting integer and a
-count and leaves that many consecutive integers on the stack. For
-example:
-
 .. code:: ipython2
 
-    J('23 [dup ++] G 5 [x] times pop')
+    J('23 [dup ++] G 5 [x] times')
 
 
 .. parsed-literal::
 
-    23 24 25 26 27
-
-
-We can use ``dip`` to untangle ``[dup ++] G`` from the arguments.
-
-.. code:: ipython2
-
-    J('23 5 [[dup ++] G] dip [x] times pop')
-
-
-.. parsed-literal::
-
-    23 24 25 26 27
-
-
-Now that the givens (arguments) are on the left we have the definition
-we're looking for:
-
-.. code:: ipython2
-
-    define('n_range == [[dup ++] G] dip [x] times pop')
-
-.. code:: ipython2
-
-    J('450 10 n_range')
-
-
-.. parsed-literal::
-
-    450 451 452 453 454 455 456 457 458 459
-
-
-This is better just using the ``times`` combinator though...
-
-.. code:: ipython2
-
-    J('450 9 [dup ++] times')
-
-
-.. parsed-literal::
-
-    450 451 452 453 454 455 456 457 458 459
+    23 24 25 26 27 [28 swap [dup ++] direco]
 
 
 Generating Multiples of Three and Five
@@ -338,16 +263,6 @@ If we plug ``14811`` and ``[PE1.1]`` into our generator form...
     [14811 swap [PE1.1] direco]
 
 
-.. code:: ipython2
-
-    J('[14811 swap [PE1.1] direco] x')
-
-
-.. parsed-literal::
-
-    3 [3702 swap [PE1.1] direco]
-
-
 ...we get a generator that works for seven cycles before it reaches
 zero:
 
@@ -373,6 +288,16 @@ if so.
 
 .. code:: ipython2
 
+    J('14811 [PE1.1.check PE1.1] G')
+
+
+.. parsed-literal::
+
+    [14811 swap [PE1.1.check PE1.1] direco]
+
+
+.. code:: ipython2
+
     J('[14811 swap [PE1.1.check PE1.1] direco] 21 [x] times')
 
 
@@ -380,6 +305,11 @@ if so.
 
     3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 [0 swap [PE1.1.check PE1.1] direco]
 
+
+(It would be more efficient to reset the int every seven cycles but
+that's a little beyond the scope of this article. This solution does
+extra work, but not much, and we're not using it "in production" as they
+say.)
 
 Run 466 times
 ~~~~~~~~~~~~~
@@ -402,17 +332,17 @@ If we drive our generator 466 times and sum the stack we get 999.
 
 .. code:: ipython2
 
-    J('[14811 swap [PE1.1.check PE1.1] dip rest cons] 466 [x] times')
+    J('[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times')
 
 
 .. parsed-literal::
 
-    3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 [57 swap [PE1.1.check PE1.1] dip rest cons]
+    3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 [57 swap [PE1.1.check PE1.1] direco]
 
 
 .. code:: ipython2
 
-    J('[14811 swap [PE1.1.check PE1.1] dip rest cons] 466 [x] times pop enstacken sum')
+    J('[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times pop enstacken sum')
 
 
 .. parsed-literal::
@@ -427,19 +357,7 @@ Project Euler Problem One
 
     define('PE1.2 == + dup [+] dip')
 
-Now we can add ``PE1.2`` to the quoted program given to ``times``.
-
-.. code:: ipython2
-
-    J('0 0 [0 swap [PE1.1.check PE1.1] direco] 466 [x [PE1.2] dip] times popop')
-
-
-.. parsed-literal::
-
-    233168
-
-
-Or using ``G`` we can write:
+Now we can add ``PE1.2`` to the quoted program given to ``G``.
 
 .. code:: ipython2
 
@@ -507,30 +425,31 @@ And therefore:
     [b+a b a F] [popdd over] infra
     [b b+a b F]
 
-And lastly:
+But we can just use ``cons`` to carry ``b+a`` into the quote:
+
+::
+
+    [b a F] b+a [popdd over] cons infra
+    [b a F] [b+a popdd over]      infra
+    [b b+a b F]
+
+Lastly:
 
 ::
 
     [b b+a b F] uncons
     b [b+a b F]
 
-Done.
-
 Putting it all together:
 
 ::
 
-    F == + swons [popdd over] infra uncons
-
-And:
-
-::
-
+    F == + [popdd over] cons infra uncons
     fib_gen == [1 1 F]
 
 .. code:: ipython2
 
-    define('fib == + swons [popdd over] infra uncons')
+    define('fib == + [popdd over] cons infra uncons')
 
 .. code:: ipython2
 
@@ -551,7 +470,8 @@ Project Euler Problem Two
 
 ::
 
-    By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.
+    By considering the terms in the Fibonacci sequence whose values do not exceed four million,
+    find the sum of the even-valued terms.
 
 Now that we have a generator for the Fibonacci sequence, we need a
 function that adds a term in the sequence to a sum if it is even, and
@@ -673,3 +593,47 @@ How to compile these?
 
 You would probably start with a special version of ``G``, and perhaps
 modifications to the default ``x``?
+
+An Interesting Variation
+========================
+
+.. code:: ipython2
+
+    define('codireco == cons dip rest cons')
+
+.. code:: ipython2
+
+    V('[0 [dup ++] codireco] x')
+
+
+.. parsed-literal::
+
+                                     . [0 [dup ++] codireco] x
+               [0 [dup ++] codireco] . x
+               [0 [dup ++] codireco] . 0 [dup ++] codireco
+             [0 [dup ++] codireco] 0 . [dup ++] codireco
+    [0 [dup ++] codireco] 0 [dup ++] . codireco
+    [0 [dup ++] codireco] 0 [dup ++] . cons dip rest cons
+    [0 [dup ++] codireco] [0 dup ++] . dip rest cons
+                                     . 0 dup ++ [0 [dup ++] codireco] rest cons
+                                   0 . dup ++ [0 [dup ++] codireco] rest cons
+                                 0 0 . ++ [0 [dup ++] codireco] rest cons
+                                 0 1 . [0 [dup ++] codireco] rest cons
+           0 1 [0 [dup ++] codireco] . rest cons
+             0 1 [[dup ++] codireco] . cons
+             0 [1 [dup ++] codireco] . 
+
+
+.. code:: ipython2
+
+    define('G == [codireco] cons cons')
+
+.. code:: ipython2
+
+    J('230 [dup ++] G 5 [x] times pop')
+
+
+.. parsed-literal::
+
+    230 231 232 233 234
+

@@ -12447,7 +12447,7 @@ div#notebook {
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">floor</span><span class="p">,</span> <span class="n">lambdify</span><span class="p">,</span> <span class="n">solve</span><span class="p">,</span> <span class="n">symbols</span>
 <span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">init_printing</span>
-<span class="n">init_printing</span><span class="p">()</span>
+<span class="n">init_printing</span><span class="p">()</span> 
 </pre></div>
 
 </div>
@@ -12600,7 +12600,7 @@ $$4 k \left(k + 1\right) + 2$$
 <div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="n">time</span> <span class="n">rank_of</span><span class="p">(</span><span class="mi">23000000000000</span><span class="p">)</span>  <span class="c1"># Compare runtime with rank_and_offset()!</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="k">time</span> rank_of(23000000000000)  # Compare runtime with rank_and_offset()!
 </pre></div>
 
 </div>
@@ -12645,7 +12645,7 @@ $$2397916$$
 <div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="n">time</span> <span class="n">rank_and_offset</span><span class="p">(</span><span class="mi">23000000000000</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="k">time</span> rank_and_offset(23000000000000)
 </pre></div>
 
 </div>
@@ -12911,7 +12911,7 @@ $$\lfloor{\frac{1}{2} \sqrt{y - 1} - \frac{1}{2}}\rfloor + 1$$
 <div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="n">time</span> <span class="nb">int</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="mi">23000000000000</span><span class="p">))</span>  <span class="c1"># The clear winner.</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="k">time</span> int(F(23000000000000))  # The clear winner.
 </pre></div>
 
 </div>
@@ -12981,7 +12981,7 @@ $$2397916$$
 <div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="n">time</span> <span class="n">mrank_of</span><span class="p">(</span><span class="mi">23000000000000</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="k">time</span> mrank_of(23000000000000)
 </pre></div>
 
 </div>
@@ -13227,7 +13227,7 @@ $$4572225$$
 <div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="n">time</span> <span class="n">aoc20173</span><span class="p">(</span><span class="mi">23000000000000000000000000</span><span class="p">)</span>  <span class="c1"># Fast for large values.</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="o">%</span><span class="k">time</span> aoc20173(23000000000000000000000000)  # Fast for large values.
 </pre></div>
 
 </div>

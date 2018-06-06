@@ -1432,7 +1432,7 @@ Our story so far...
 - A base case value `c :: B`
 
 
-### Hylo- Ana-, Cata-
+### Hylo-, Ana-, Cata-
 
     w/ G :: A -> (A, B)
 
@@ -1526,7 +1526,7 @@ If the combiner and the generator both need to work on the current value then `d
     ...          c  a'' F a' F a F
 
 ### 4
-And, last but not least, if you can combine as you go, starting with c, and the combiner needs to work on the current item this is the form:
+And, last but not least, if you can combine as you go, starting with c, and the combiner needs to work on the current item, this is the form:
 
     W == c swap [P] [pop] [[F] dupdip G] primrec
 
