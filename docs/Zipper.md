@@ -1,9 +1,8 @@
 
 This notebook is about using the "zipper" with joy datastructures.  See the [Zipper wikipedia entry](https://en.wikipedia.org/wiki/Zipper_%28data_structure%29) or the original paper: ["FUNCTIONAL PEARL The Zipper" by Gérard Huet](https://www.st.cs.uni-saarland.de/edu/seminare/2005/advanced-fp/docs/huet-zipper.pdf)
 
-Given a datastructure on the stack we can navigate through it, modify it, and rebuild it using the "zipper" technique.
 
-### Preamble
+Given a datastructure on the stack we can navigate through it, modify it, and rebuild it using the "zipper" technique.
 
 
 ```python

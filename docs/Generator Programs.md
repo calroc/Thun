@@ -164,7 +164,7 @@ J('23 [dup ++] G 5 [x] times')
 
 
 ## Generating Multiples of Three and Five
-Look at the treatment of the Project Euler Problem One in [Developing a Program.ipynb](./Developing a Program.ipynb) and you'll see that we might be interested in generating an endless cycle of:
+Look at the treatment of the Project Euler Problem One in the "Developing a Program" notebook and you'll see that we might be interested in generating an endless cycle of:
 
     3 2 1 3 1 2 3
 

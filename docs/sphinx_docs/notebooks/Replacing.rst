@@ -1,15 +1,13 @@
-*************************************
-Replacing Functions in the Dictionary
-*************************************
 
+Replacing Functions in the Dictionary
+=====================================
 
 .. code:: ipython2
 
     from notebook_preamble import D, J, V
 
-
 A long trace
-~~~~~~~~~~~~
+------------
 
 .. code:: ipython2
 
@@ -62,8 +60,8 @@ A long trace
                                  20.5 . 
 
 
-Replacing ``size`` with a Python Version
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Replacing ``size`` with a Python version
+----------------------------------------
 
 Both ``sum`` and ``size`` each convert a sequence to a single value.
 
@@ -71,10 +69,10 @@ Both ``sum`` and ``size`` each convert a sequence to a single value.
 
      sum == 0 swap [+] step
     size == 0 swap [pop ++] step
-    
 
-An efficient ``sum`` function is already in the library.  But for ``size`` we can use
-a "compiled" version hand-written in Python to speed up evaluation and make the trace more readable.
+An efficient ``sum`` function is already in the library. But for
+``size`` we can use a “compiled” version hand-written in Python to speed
+up evaluation and make the trace more readable.
 
 .. code:: ipython2
 
@@ -98,11 +96,10 @@ and re-evaluate the expression.
 
     D['size'] = size
 
-
 A shorter trace
-~~~~~~~~~~~~~~~~~~~~
+---------------
 
-You can see that ``size`` and ``sum`` now execute in a single step.
+You can see that ``size`` now executes in a single step.
 
 .. code:: ipython2
 

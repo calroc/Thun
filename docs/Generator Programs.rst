@@ -208,9 +208,9 @@ with the ``x`` combinator.
 Generating Multiples of Three and Five
 --------------------------------------
 
-Look at the treatment of the Project Euler Problem One in `Developing a
-Program.ipynb <./Developing%20a%20Program.ipynb>`__ and you'll see that
-we might be interested in generating an endless cycle of:
+Look at the treatment of the Project Euler Problem One in the
+"Developing a Program" notebook and you'll see that we might be
+interested in generating an endless cycle of:
 
 ::
 

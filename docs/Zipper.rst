@@ -8,9 +8,6 @@ Huet <https://www.st.cs.uni-saarland.de/edu/seminare/2005/advanced-fp/docs/huet-
 Given a datastructure on the stack we can navigate through it, modify
 it, and rebuild it using the "zipper" technique.
 
-Preamble
-~~~~~~~~
-
 .. code:: ipython2
 
     from notebook_preamble import J, V, define
