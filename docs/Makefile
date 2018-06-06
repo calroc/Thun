@@ -1,18 +1,24 @@
-#docs      := $(wildcard *.ipynb)
-#docs_html := $(patsubst %.ipynb,%.html,$(docs))
+docs      = $(wildcard *.ipynb)
+docs_html = $(patsubst %.ipynb,%.html,$(docs))
+docs_md   = $(patsubst %.ipynb,%.md,$(docs))
+docs_rst  = $(patsubst %.ipynb,%.rst,$(docs))
 
-.PHONY: poop
+.PHONY: clean sdist test docs
 
 
-poop: *.ipynb
-	make "$(patsubst %.ipynb,%.html,$<)"
+all: $(docs_html) $(docs_md) $(docs_rst)
 
-%.html : %.ipynb
+
+clean:
+	$(RM) -v $(docs_html) $(docs_md) $(docs_rst)
+
+
+$(docs_html): %.html : %.ipynb
 	python -m nbconvert --to html $<
 
-%.md : %.ipynb
+$(docs_md): %.md : %.ipynb
 	python -m nbconvert --to markdown $<
 
-%.rst : %.ipynb
+$(docs_rst): %.rst : %.ipynb
 	python -m nbconvert --to rst $<
 
