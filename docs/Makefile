@@ -22,3 +22,7 @@ $(docs_md): %.md : %.ipynb
 $(docs_rst): %.rst : %.ipynb
 	python -m nbconvert --to rst $<
 
+move_us = Generator_Programs.rst Ordered_Binary_Trees.rst Quadratic.rst Replacing.rst Treestep.rst Zipper.rst
+
+mov: $(move_us)
+	cp -v $? ./sphinx_docs/notebooks/
