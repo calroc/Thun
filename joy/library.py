@@ -124,6 +124,9 @@ while == swap [nullary] cons dup dipd concat loop
 dudipd == dup dipd
 primrec == [i] genrec
 step_zero == 0 roll> step
+codireco == cons dip rest cons
+make_generator == [codireco] ccons
+ccons == cons cons
 '''
 
 ##Zipper

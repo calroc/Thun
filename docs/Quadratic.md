@@ -14,10 +14,14 @@ Cf. [jp-quadratic.html](http://www.kevinalbrecht.com/code/joy-mirror/jp-quadrati
 
 $\frac{-b  \pm \sqrt{b^2 - 4ac}}{2a}$
 
-# Write a straightforward program with variable names.
+## Write a straightforward program with variable names.
+
     b neg b sqr 4 a c * * - sqrt [+] [-] cleave a 2 * [truediv] cons app2
 
+We use `cleave` to compute the sum and difference and then `app2` to finish computing both roots using a quoted program `[2a truediv]` built with `cons`.
+
 ### Check it.
+Evaluating by hand:
 
      b neg b sqr 4 a c * * - sqrt [+] [-] cleave a 2 * [truediv] cons app2
     -b     b sqr 4 a c * * - sqrt [+] [-] cleave a 2 * [truediv] cons app2
@@ -30,12 +34,15 @@ $\frac{-b  \pm \sqrt{b^2 - 4ac}}{2a}$
     -b -b+sqrt(b^2-4ac)    -b-sqrt(b^2-4ac)    2a    [truediv] cons app2
     -b -b+sqrt(b^2-4ac)    -b-sqrt(b^2-4ac)    [2a truediv]         app2
     -b -b+sqrt(b^2-4ac)/2a -b-sqrt(b^2-4ac)/2a
-### Codicil
+
+(Eventually we’ll be able to use e.g. Sympy versions of the Joy commands to do this sort of thing symbolically. This is part of what is meant by a “categorical” language.)
+
+### Cleanup
     -b -b+sqrt(b^2-4ac)/2a -b-sqrt(b^2-4ac)/2a                          roll< pop
        -b+sqrt(b^2-4ac)/2a -b-sqrt(b^2-4ac)/2a -b                             pop
        -b+sqrt(b^2-4ac)/2a -b-sqrt(b^2-4ac)/2a
 
-# Derive a definition.
+## Derive a definition.
 
     b neg b           sqr 4 a c        * * - sqrt [+] [-] cleave a       2 * [truediv] cons app2 roll< pop
     b    [neg] dupdip sqr 4 a c        * * - sqrt [+] [-] cleave a       2 * [truediv] cons app2 roll< pop
@@ -56,13 +63,10 @@ J('3 1 1 quadratic')
     -0.3819660112501051 -2.618033988749895
 
 
-### Simplify
+## Simplify
 We can define a `pm` plus-or-minus function:
 
-
-```python
-define('pm == [+] [-] cleave popdd')
-```
+    pm == [+] [-] cleave popdd
 
 Then `quadratic` becomes:
 
@@ -80,22 +84,14 @@ J('3 1 1 quadratic')
 
 
 ### Define a "native" `pm` function.
-The definition of `pm` above is pretty elegant, but the implementation takes a lot of steps relative to what it's accomplishing.  Since we are likely to use `pm` more than once in the future, let's write a primitive in Python and add it to the dictionary.
+The definition of `pm` above is pretty elegant, but the implementation takes a lot of steps relative to what it's accomplishing.  Since we are likely to use `pm` more than once in the future, let's write a primitive in Python and add it to the dictionary.  (This has been done already.)
 
 
 ```python
-from joy.library import SimpleFunctionWrapper
-from notebook_preamble import D
-
-
-@SimpleFunctionWrapper
 def pm(stack):
     a, (b, stack) = stack
     p, m, = b + a, b - a
     return m, (p, stack)
-
-
-D['pm'] = pm
 ```
 
 The resulting trace is short enough to fit on a page.

@@ -11775,7 +11775,9 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Newton's-method"><a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton's method</a><a class="anchor-link" href="#Newton's-method">&#182;</a></h1>
+<h1 id="Newton's-method"><a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton's method</a><a class="anchor-link" href="#Newton's-method">&#182;</a></h1><p>Let's use the Newton-Raphson method for finding the root of an equation to write a function that can compute the square root of a number.</p>
+<p>Cf. <a href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">"Why Functional Programming Matters" by John Hughes</a></p>
+
 </div>
 </div>
 </div>
@@ -11796,7 +11798,11 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Cf. <a href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">"Why Functional Programming Matters" by John Hughes</a></p>
+<h2 id="A-Generator-for-Approximations">A Generator for Approximations<a class="anchor-link" href="#A-Generator-for-Approximations">&#182;</a></h2><p>To make a generator that generates successive approximations let’s start by assuming an initial approximation and then derive the function that computes the next approximation:</p>
+
+<pre><code>   a F
+---------
+    a'</code></pre>
 
 </div>
 </div>
@@ -11805,6 +11811,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="A-Function-to-Compute-the-Next-Approximation">A Function to Compute the Next Approximation<a class="anchor-link" href="#A-Function-to-Compute-the-Next-Approximation">&#182;</a></h3><p>This is the equation for computing the next approximate value of the square root:</p>
 <p>$a_{i+1} = \frac{(a_i+\frac{n}{a_i})}{2}$</p>
 
 </div>
@@ -11814,22 +11821,45 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's define a function that computes the above equation:</p>
 
-<pre><code>     n a Q
----------------
-   (a+n/a)/2
-
-n a tuck / + 2 /
+<pre><code>a n over / + 2 /
 a n a    / + 2 /
 a n/a      + 2 /
 a+n/a        2 /
 (a+n/a)/2
 
 </code></pre>
-<p>We want it to leave n but replace a, so we execute it with <code>unary</code>:</p>
+<p>The function we want has the argument <code>n</code> in it:</p>
 
-<pre><code>Q == [tuck / + 2 /] unary</code></pre>
+<pre><code>F == n over / + 2 /</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Make-it-into-a-Generator">Make it into a Generator<a class="anchor-link" href="#Make-it-into-a-Generator">&#182;</a></h3><p>Our generator would be created by:</p>
+
+<pre><code>a [dup F] make_generator
+
+</code></pre>
+<p>With n as part of the function F, but n is the input to the sqrt function we’re writing. If we let 1 be the initial approximation:</p>
+
+<pre><code>1 n 1 / + 2 /
+1 n/1   + 2 /
+1 n     + 2 /
+n+1       2 /
+(n+1)/2
+
+</code></pre>
+<p>The generator can be written as:</p>
+
+<pre><code>23 1 swap  [over / + 2 /] cons [dup] swoncat make_generator
+1 23       [over / + 2 /] cons [dup] swoncat make_generator
+1       [23 over / + 2 /]      [dup] swoncat make_generator
+1   [dup 23 over / + 2 /]                    make_generator</code></pre>
 
 </div>
 </div>
@@ -11839,111 +11869,35 @@ a+n/a        2 /
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Q == [tuck / + 2 /] unary&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;codireco == cons dip rest cons&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;make_generator == [codireco] ccons&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;ccons == cons cons&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>And a function to compute the error:</p>
-
-<pre><code>n a sqr - abs
-|n-a**2|
-
-</code></pre>
-<p>This should be <code>nullary</code> so as to leave both n and a on the stack below the error.</p>
-
-<pre><code>err == [sqr - abs] nullary</code></pre>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;err == [sqr - abs] nullary&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;gsra == 1 swap [over / + 2 /] cons [dup] swoncat make_generator&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we can define a recursive program that expects a number <code>n</code>, an initial estimate <code>a</code>, and an epsilon value <code>ε</code>, and that leaves on the stack the square root of <code>n</code> to within the precision of the epsilon value.  (Later on we'll refine it to generate the initial estimate and hard-code an epsilon value.)</p>
-
-<pre><code>n a ε square-root
------------------
-      √n
-
-
-</code></pre>
-<p>If we apply the two functions <code>Q</code> and <code>err</code> defined above we get the next approximation and the error on the stack below the epsilon.</p>
-
-<pre><code>n a ε [Q err] dip
-n a Q err ε 
-n a'  err ε 
-n a' e    ε
-
-</code></pre>
-<p>Let's define the recursive function from here.  Start with <code>ifte</code>; the predicate and the base case behavior are obvious:</p>
-
-<pre><code>n a' e ε [&lt;] [popop popd] [J] ifte
-
-</code></pre>
-<p>Base-case</p>
-
-<pre><code>n a' e ε popop popd
-n a'           popd
-  a'
-
-</code></pre>
-<p>The recursive branch is pretty easy.  Discard the error and recur.</p>
-
-<pre><code>w/ K == [&lt;] [popop popd] [J] ifte
-
-n a' e ε J
-n a' e ε popd [Q err] dip [K] i
-n a'   ε      [Q err] dip [K] i
-n a' Q err ε              [K] i
-n a''  e   ε               K
-
-</code></pre>
-<p>This fragment alone is pretty useful.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;K == [&lt;] [popop popd] [popd [Q err] dip] primrec&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;25 10 0.001 dup K&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 gsra&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11960,38 +11914,7 @@ n a''  e   ε               K
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>5.000000232305737
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;25 10 0.000001 dup K&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>5.000000000000005
+<pre>[1 [dup 23 over / + 2 /] codireco]
 </pre>
 </div>
 </div>
@@ -12004,9 +11927,101 @@ n a''  e   ε               K
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>So now all we need is a way to generate an initial approximation and an epsilon value:</p>
+<p>Let's drive the generator a few time (with the <code>x</code> combinator) and square the approximation to see how well it works...</p>
 
-<pre><code>square-root == dup 3 / 0.000001 dup K</code></pre>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 gsra 6 [x popd] times first sqr&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>23.0000000001585
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Finding-Consecutive-Approximations-within-a-Tolerance">Finding Consecutive Approximations within a Tolerance<a class="anchor-link" href="#Finding-Consecutive-Approximations-within-a-Tolerance">&#182;</a></h2><blockquote><p>The remainder of a square root finder is a function <em>within</em>, which takes a tolerance and a list of approximations and looks down the list for two successive approximations that differ by no more than the given tolerance.</p>
+</blockquote>
+<p>From <a href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">"Why Functional Programming Matters" by John Hughes</a></p>
+<p>(And note that by “list” he means a lazily-evaluated list.)</p>
+<p>Using the <em>output</em> <code>[a G]</code> of the above generator for square root approximations, and further assuming that the first term a has been generated already and epsilon ε is handy on the stack...</p>
+
+<pre><code>   a [b G] ε within
+---------------------- a b - abs ε &lt;=
+      b
+
+
+   a [b G] ε within
+---------------------- a b - abs ε &gt;
+   b [c G] ε within</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Predicate">Predicate<a class="anchor-link" href="#Predicate">&#182;</a></h3>
+<pre><code>a [b G]             ε [first - abs] dip &lt;=
+a [b G] first - abs ε                   &lt;=
+a b           - abs ε                   &lt;=
+a-b             abs ε                   &lt;=
+abs(a-b)            ε                   &lt;=
+(abs(a-b)&lt;=ε)</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_P == [first - abs] dip &lt;=&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Base-Case">Base-Case<a class="anchor-link" href="#Base-Case">&#182;</a></h3>
+<pre><code>a [b G] ε roll&lt; popop first
+  [b G] ε a     popop first
+  [b G]               first
+   b</code></pre>
 
 </div>
 </div>
@@ -12016,72 +12031,76 @@ n a''  e   ε               K
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;square-root == dup 3 / 0.000001 dup K&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_B == roll&lt; popop first&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Recur">Recur<a class="anchor-link" href="#Recur">&#182;</a></h3>
+<pre><code>a [b G] ε R0 [within] R1
+
+</code></pre>
+<ol>
+<li>Discard a.</li>
+<li>Use x combinator to generate next term from G.</li>
+<li>Run within with <code>i</code> (it is a <code>primrec</code> function.)</li>
+</ol>
+<p>Pretty straightforward:</p>
+
+<pre><code>a [b G]        ε R0           [within] R1
+a [b G]        ε [popd x] dip [within] i
+a [b G] popd x ε              [within] i
+  [b G]      x ε              [within] i
+b [c G]        ε              [within] i
+b [c G]        ε               within
+
+b [c G] ε within</code></pre>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;36 square-root&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_R == [popd x] dip&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>6.000000000000007
-</pre>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Setting-up">Setting up<a class="anchor-link" href="#Setting-up">&#182;</a></h3><p>The recursive function we have defined so far needs a slight preamble: <code>x</code> to prime the generator and the epsilon value to use:</p>
+
+<pre><code>[a G] x ε ...
+a [b G] ε ...</code></pre>
 
 </div>
 </div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;4895048365636 square-root&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;within == x 0.000000001 [_within_P] [_within_B] [_within_R] primrec&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;sqrt == gsra within&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>2212475.6192184356
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -12091,7 +12110,7 @@ n a''  e   ε               K
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="mf">2212475.6192184356</span> <span class="o">*</span> <span class="mf">2212475.6192184356</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 sqrt&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12104,13 +12123,44 @@ n a''  e   ε               K
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[10]:</div>
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>4.795831523312719
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="mf">4.795831523312719</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[11]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>4895048365636.0</pre>
+<pre>22.999999999999996</pre>
 </div>
 
 </div>

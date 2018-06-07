@@ -34,18 +34,25 @@
             
   <div class="section" id="quadratic-formula">
 <h1><a class="reference external" href="https://en.wikipedia.org/wiki/Quadratic_formula">Quadratic formula</a><a class="headerlink" href="#quadratic-formula" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Quadratic_formula">The Quadratic formula</a></p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+</pre></div>
+</div>
+<p>Cf.
+<a class="reference external" href="http://www.kevinalbrecht.com/code/joy-mirror/jp-quadratic.html">jp-quadratic.html</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">b</span>  <span class="o">+/-</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span>
+<span class="o">-----------------------------</span>
+           <span class="mi">2</span> <span class="o">*</span> <span class="n">a</span>
+</pre></div>
+</div>
 <p><span class="math notranslate nohighlight">\(\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}\)</span></p>
-<p>In
-<a class="reference external" href="http://www.kevinalbrecht.com/code/joy-mirror/jp-quadratic.html">jp-quadratic.html</a>
-a Joy function for the Quadratic formula is derived (along with one of my favorite combinators <code class="docutils literal notranslate"><span class="pre">[i]</span> <span class="pre">map</span></code>,
-which I like to call <code class="docutils literal notranslate"><span class="pre">pam</span></code>) starting with a version written in Scheme.  Here we investigate a different approach.</p>
-<div class="section" id="write-a-program-with-variable-names">
-<h2>Write a program with variable names.<a class="headerlink" href="#write-a-program-with-variable-names" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="write-a-straightforward-program-with-variable-names">
+<h2>Write a straightforward program with variable names.<a class="headerlink" href="#write-a-straightforward-program-with-variable-names" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="n">neg</span> <span class="n">b</span> <span class="n">sqr</span> <span class="mi">4</span> <span class="n">a</span> <span class="n">c</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">a</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span>
 </pre></div>
 </div>
-<p>We use <code class="docutils literal notranslate"><span class="pre">cleave</span></code> to compute the sum and difference (“plus-or-minus”) and then <code class="docutils literal notranslate"><span class="pre">app2</span></code> to finish computing both roots using a quoted program <code class="docutils literal notranslate"><span class="pre">[2a</span> <span class="pre">truediv]</span></code> built with <code class="docutils literal notranslate"><span class="pre">cons</span></code>.</p>
+<p>We use <code class="docutils literal notranslate"><span class="pre">cleave</span></code> to compute the sum and difference and then <code class="docutils literal notranslate"><span class="pre">app2</span></code> to
+finish computing both roots using a quoted program <code class="docutils literal notranslate"><span class="pre">[2a</span> <span class="pre">truediv]</span></code>
+built with <code class="docutils literal notranslate"><span class="pre">cons</span></code>.</p>
 <div class="section" id="check-it">
 <h3>Check it.<a class="headerlink" href="#check-it" title="Permalink to this headline">¶</a></h3>
 <p>Evaluating by hand:</p>
@@ -62,12 +69,14 @@ which I like to call <code class="docutils literal notranslate"><span class="pre
 <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span>
 </pre></div>
 </div>
-<p>(Eventually we’ll be able to use e.g. Sympy versions of the Joy commands to do this sort of thing symbolically.  This is part of what is meant by a “categorical” language.)</p>
+<p>(Eventually we’ll be able to use e.g. Sympy versions of the Joy commands
+to do this sort of thing symbolically. This is part of what is meant by
+a “categorical” language.)</p>
 </div>
 <div class="section" id="cleanup">
 <h3>Cleanup<a class="headerlink" href="#cleanup" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span>    <span class="n">roll</span><span class="o">&lt;</span> <span class="n">pop</span>
-   <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span>       <span class="n">pop</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span>                          <span class="n">roll</span><span class="o">&lt;</span> <span class="n">pop</span>
+   <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span>                             <span class="n">pop</span>
    <span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span> <span class="o">-</span><span class="n">b</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="o">^</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span><span class="n">ac</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="n">a</span>
 </pre></div>
 </div>
@@ -82,9 +91,6 @@ which I like to call <code class="docutils literal notranslate"><span class="pre
 <span class="n">b</span> <span class="n">a</span> <span class="n">c</span> <span class="n">over</span> <span class="p">[[[</span><span class="n">neg</span><span class="p">]</span> <span class="n">dupdip</span> <span class="n">sqr</span> <span class="mi">4</span><span class="p">]</span> <span class="n">dipd</span> <span class="o">*</span> <span class="o">*</span> <span class="o">-</span> <span class="n">sqrt</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span><span class="p">]</span> <span class="n">dip</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="n">truediv</span><span class="p">]</span> <span class="n">cons</span> <span class="n">app2</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">pop</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
-</pre></div>
-</div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt [+] [-] cleave] dip 2 * [truediv] cons app2 roll&lt; pop&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -94,10 +100,11 @@ which I like to call <code class="docutils literal notranslate"><span class="pre
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="o">-</span><span class="mf">2.618033988749895</span>
 </pre></div>
 </div>
+</div>
 <div class="section" id="simplify">
-<h3>Simplify<a class="headerlink" href="#simplify" title="Permalink to this headline">¶</a></h3>
+<h2>Simplify<a class="headerlink" href="#simplify" title="Permalink to this headline">¶</a></h2>
 <p>We can define a <code class="docutils literal notranslate"><span class="pre">pm</span></code> plus-or-minus function:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;pm == [+] [-] cleave popdd&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pm</span> <span class="o">==</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">cleave</span> <span class="n">popdd</span>
 </pre></div>
 </div>
 <p>Then <code class="docutils literal notranslate"><span class="pre">quadratic</span></code> becomes:</p>
@@ -110,25 +117,17 @@ which I like to call <code class="docutils literal notranslate"><span class="pre
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="o">-</span><span class="mf">2.618033988749895</span>
 </pre></div>
 </div>
-</div>
 <div class="section" id="define-a-native-pm-function">
 <h3>Define a “native” <code class="docutils literal notranslate"><span class="pre">pm</span></code> function.<a class="headerlink" href="#define-a-native-pm-function" title="Permalink to this headline">¶</a></h3>
 <p>The definition of <code class="docutils literal notranslate"><span class="pre">pm</span></code> above is pretty elegant, but the implementation
 takes a lot of steps relative to what it’s accomplishing. Since we are
 likely to use <code class="docutils literal notranslate"><span class="pre">pm</span></code> more than once in the future, let’s write a
-primitive in Python and add it to the dictionary.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="k">import</span> <span class="n">SimpleFunctionWrapper</span>
-<span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">D</span>
-
-
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">pm</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
+primitive in Python and add it to the dictionary. (This has been done
+already.)</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pm</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
     <span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
     <span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span>
     <span class="k">return</span> <span class="n">m</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
-
-
-<span class="n">D</span><span class="p">[</span><span class="s1">&#39;pm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pm</span>
 </pre></div>
 </div>
 <p>The resulting trace is short enough to fit on a page.</p>
@@ -195,13 +194,13 @@ primitive in Python and add it to the dictionary.</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Quadratic formula</a><ul>
-<li><a class="reference internal" href="#write-a-program-with-variable-names">Write a program with variable names.</a><ul>
+<li><a class="reference internal" href="#write-a-straightforward-program-with-variable-names">Write a straightforward program with variable names.</a><ul>
 <li><a class="reference internal" href="#check-it">Check it.</a></li>
 <li><a class="reference internal" href="#cleanup">Cleanup</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#derive-a-definition">Derive a definition.</a><ul>
-<li><a class="reference internal" href="#simplify">Simplify</a></li>
+<li><a class="reference internal" href="#derive-a-definition">Derive a definition.</a></li>
+<li><a class="reference internal" href="#simplify">Simplify</a><ul>
 <li><a class="reference internal" href="#define-a-native-pm-function">Define a “native” <code class="docutils literal notranslate"><span class="pre">pm</span></code> function.</a></li>
 </ul>
 </li>

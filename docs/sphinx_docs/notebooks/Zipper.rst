@@ -1,4 +1,7 @@
 
+Traversing Datastructures with Zippers
+======================================
+
 This notebook is about using the "zipper" with joy datastructures. See
 the `Zipper wikipedia
 entry <https://en.wikipedia.org/wiki/Zipper_%28data_structure%29>`__ or
@@ -7,9 +10,6 @@ Huet <https://www.st.cs.uni-saarland.de/edu/seminare/2005/advanced-fp/docs/huet-
 
 Given a datastructure on the stack we can navigate through it, modify
 it, and rebuild it using the "zipper" technique.
-
-Preamble
-~~~~~~~~
 
 .. code:: ipython2
 

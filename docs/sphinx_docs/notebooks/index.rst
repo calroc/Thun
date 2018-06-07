@@ -12,9 +12,10 @@ These essays are adapted from Jupyter notebooks.  I hope to have those hosted so
    Replacing
    Ordered_Binary_Trees
    Treestep
-   Generator Programs
+   Generator_Programs
    Newton-Raphson
    Quadratic
+   Zipper
    NoUpdates
    Categorical
 
