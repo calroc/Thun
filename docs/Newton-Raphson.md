@@ -56,13 +56,6 @@ The generator can be written as:
 
 
 ```python
-define('codireco == cons dip rest cons')
-define('make_generator == [codireco] ccons')
-define('ccons == cons cons')
-```
-
-
-```python
 define('gsra == 1 swap [over / + 2 /] cons [dup] swoncat make_generator')
 ```
 
@@ -86,10 +79,10 @@ J('23 gsra 6 [x popd] times first sqr')
 
 ## Finding Consecutive Approximations within a Tolerance
 
+From ["Why Functional Programming Matters" by John Hughes](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf):
+
 
 > The remainder of a square root finder is a function _within_, which takes a tolerance and a list of approximations and looks down the list for two successive approximations that differ by no more than the given tolerance.
-
-From ["Why Functional Programming Matters" by John Hughes](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf)
 
 (And note that by “list” he means a lazily-evaluated list.)
 
@@ -137,8 +130,8 @@ define('_within_B == roll< popop first')
     a [b G] ε R0 [within] R1
 
 1. Discard a.
-2. Use x combinator to generate next term from G.
-3. Run within with `i` (it is a `primrec` function.)
+2. Use `x` combinator to generate next term from `G`.
+3. Run `within` with `i` (it is a `primrec` function.)
 
 Pretty straightforward:
 
@@ -169,6 +162,16 @@ define('within == x 0.000000001 [_within_P] [_within_B] [_within_R] primrec')
 define('sqrt == gsra within')
 ```
 
+Try it out...
+
+
+```python
+J('36 sqrt')
+```
+
+    6.0
+
+
 
 ```python
 J('23 sqrt')
@@ -176,6 +179,8 @@ J('23 sqrt')
 
     4.795831523312719
 
+
+Check it.
 
 
 ```python
@@ -186,5 +191,19 @@ J('23 sqrt')
 
 
     22.999999999999996
+
+
+
+
+```python
+from math import sqrt
+
+sqrt(23)
+```
+
+
+
+
+    4.795831523312719
 
 

@@ -78,12 +78,6 @@ The generator can be written as:
 
 .. code:: ipython2
 
-    define('codireco == cons dip rest cons')
-    define('make_generator == [codireco] ccons')
-    define('ccons == cons cons')
-
-.. code:: ipython2
-
     define('gsra == 1 swap [over / + 2 /] cons [dup] swoncat make_generator')
 
 .. code:: ipython2
@@ -112,13 +106,13 @@ square the approximation to see how well it works...
 Finding Consecutive Approximations within a Tolerance
 -----------------------------------------------------
 
+From `"Why Functional Programming Matters" by John
+Hughes <https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf>`__:
+
     The remainder of a square root finder is a function *within*, which
     takes a tolerance and a list of approximations and looks down the
     list for two successive approximations that differ by no more than
     the given tolerance.
-
-From `"Why Functional Programming Matters" by John
-Hughes <https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf>`__
 
 (And note that by “list” he means a lazily-evaluated list.)
 
@@ -175,8 +169,8 @@ Recur
     a [b G] ε R0 [within] R1
 
 1. Discard a.
-2. Use x combinator to generate next term from G.
-3. Run within with ``i`` (it is a ``primrec`` function.)
+2. Use ``x`` combinator to generate next term from ``G``.
+3. Run ``within`` with ``i`` (it is a ``primrec`` function.)
 
 Pretty straightforward:
 
@@ -211,6 +205,18 @@ The recursive function we have defined so far needs a slight preamble:
     define('within == x 0.000000001 [_within_P] [_within_B] [_within_R] primrec')
     define('sqrt == gsra within')
 
+Try it out...
+
+.. code:: ipython2
+
+    J('36 sqrt')
+
+
+.. parsed-literal::
+
+    6.0
+
+
 .. code:: ipython2
 
     J('23 sqrt')
@@ -220,6 +226,8 @@ The recursive function we have defined so far needs a slight preamble:
 
     4.795831523312719
 
+
+Check it.
 
 .. code:: ipython2
 
@@ -231,5 +239,20 @@ The recursive function we have defined so far needs a slight preamble:
 .. parsed-literal::
 
     22.999999999999996
+
+
+
+.. code:: ipython2
+
+    from math import sqrt
+    
+    sqrt(23)
+
+
+
+
+.. parsed-literal::
+
+    4.795831523312719
 
 

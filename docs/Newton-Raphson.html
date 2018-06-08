@@ -11869,21 +11869,6 @@ n+1       2 /
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;codireco == cons dip rest cons&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;make_generator == [codireco] ccons&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;ccons == cons cons&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
-<div class="inner_cell">
-    <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;gsra == 1 swap [over / + 2 /] cons [dup] swoncat make_generator&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -11894,7 +11879,7 @@ n+1       2 /
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 gsra&#39;</span><span class="p">)</span>
@@ -11934,7 +11919,7 @@ n+1       2 /
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 gsra 6 [x popd] times first sqr&#39;</span><span class="p">)</span>
@@ -11967,9 +11952,9 @@ n+1       2 /
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Finding-Consecutive-Approximations-within-a-Tolerance">Finding Consecutive Approximations within a Tolerance<a class="anchor-link" href="#Finding-Consecutive-Approximations-within-a-Tolerance">&#182;</a></h2><blockquote><p>The remainder of a square root finder is a function <em>within</em>, which takes a tolerance and a list of approximations and looks down the list for two successive approximations that differ by no more than the given tolerance.</p>
+<h2 id="Finding-Consecutive-Approximations-within-a-Tolerance">Finding Consecutive Approximations within a Tolerance<a class="anchor-link" href="#Finding-Consecutive-Approximations-within-a-Tolerance">&#182;</a></h2><p>From <a href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">"Why Functional Programming Matters" by John Hughes</a>:</p>
+<blockquote><p>The remainder of a square root finder is a function <em>within</em>, which takes a tolerance and a list of approximations and looks down the list for two successive approximations that differ by no more than the given tolerance.</p>
 </blockquote>
-<p>From <a href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">"Why Functional Programming Matters" by John Hughes</a></p>
 <p>(And note that by “list” he means a lazily-evaluated list.)</p>
 <p>Using the <em>output</em> <code>[a G]</code> of the above generator for square root approximations, and further assuming that the first term a has been generated already and epsilon ε is handy on the stack...</p>
 
@@ -12002,7 +11987,7 @@ abs(a-b)            ε                   &lt;=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_P == [first - abs] dip &lt;=&#39;</span><span class="p">)</span>
@@ -12028,7 +12013,7 @@ abs(a-b)            ε                   &lt;=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_B == roll&lt; popop first&#39;</span><span class="p">)</span>
@@ -12049,8 +12034,8 @@ abs(a-b)            ε                   &lt;=
 </code></pre>
 <ol>
 <li>Discard a.</li>
-<li>Use x combinator to generate next term from G.</li>
-<li>Run within with <code>i</code> (it is a <code>primrec</code> function.)</li>
+<li>Use <code>x</code> combinator to generate next term from <code>G</code>.</li>
+<li>Run <code>within</code> with <code>i</code> (it is a <code>primrec</code> function.)</li>
 </ol>
 <p>Pretty straightforward:</p>
 
@@ -12068,7 +12053,7 @@ b [c G] ε within</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_R == [popd x] dip&#39;</span><span class="p">)</span>
@@ -12093,7 +12078,7 @@ a [b G] ε ...</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;within == x 0.000000001 [_within_P] [_within_B] [_within_R] primrec&#39;</span><span class="p">)</span>
@@ -12101,6 +12086,46 @@ a [b G] ε ...</code></pre>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Try it out...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;36 sqrt&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>6.0
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -12136,6 +12161,15 @@ a [b G] ε ...</code></pre>
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Check it.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
@@ -12161,6 +12195,41 @@ a [b G] ε ...</code></pre>
 
 <div class="output_text output_subarea output_execute_result">
 <pre>22.999999999999996</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+
+<span class="n">sqrt</span><span class="p">(</span><span class="mi">23</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[12]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>4.795831523312719</pre>
 </div>
 
 </div>
