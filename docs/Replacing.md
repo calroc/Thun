@@ -1,5 +1,6 @@
 
 # Replacing Functions in the Dictionary
+For now, there is no way to define new functions from within the Joy language.  All functions (and the interpreter) all accept and return a dictionary parameter (in addition to the stack and expression) so that we can implement e.g. a function that adds new functions to the dictionary.  However, there's no function that does that.  Adding a new function to the dictionary is a meta-interpreter action, you have to do it in Python, not Joy.
 
 
 ```python
