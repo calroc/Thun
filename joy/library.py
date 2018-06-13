@@ -103,9 +103,9 @@ disenstacken == ? [uncons ?] loop pop
 ? == dup truthy
 dinfrirst == dip infra first
 nullary == [stack] dinfrirst
-unary == [stack [pop] dip] dinfrirst
-binary == [stack [popop] dip] dinfrirst
-ternary == [stack [popop pop] dip] dinfrirst
+unary == nullary popd
+binary == nullary [popop] dip
+ternary == unary [popop] dip
 pam == [i] map
 run == [] swap infra
 sqr == dup mul
