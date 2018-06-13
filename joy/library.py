@@ -28,7 +28,7 @@ from functools import wraps
 import operator, math
 
 from .parser import text_to_expression, Symbol
-from .utils.stack import list_to_stack, iter_stack, pick, pushback
+from .utils.stack import list_to_stack, iter_stack, pick, concat
 from .utils.brutal_hackery import rename_code_object
 
 
@@ -647,7 +647,7 @@ def reverse(S):
 
 @inscribe
 @SimpleFunctionWrapper
-def concat(S):
+def concat_(S):
   '''Concatinate the two lists on the top of the stack.
   ::
 
@@ -657,9 +657,7 @@ def concat(S):
 
 '''
   (tos, (second, stack)) = S
-  for term in reversed(list(iter_stack(second))):
-    tos = term, tos
-  return tos, stack
+  return concat(second, tos), stack
 
 
 @inscribe
@@ -930,7 +928,7 @@ def i(stack, expression, dictionary):
 
   '''
   quote, stack = stack
-  return stack, pushback(quote, expression), dictionary
+  return stack, concat(quote, expression), dictionary
 
 
 @inscribe
@@ -947,7 +945,7 @@ def x(stack, expression, dictionary):
 
   '''
   quote, _ = stack
-  return stack, pushback(quote, expression), dictionary
+  return stack, concat(quote, expression), dictionary
 
 
 @inscribe
@@ -963,7 +961,7 @@ def b(stack, expression, dictionary):
 
   '''
   q, (p, (stack)) = stack
-  return stack, pushback(p, pushback(q, expression)), dictionary
+  return stack, concat(p, concat(q, expression)), dictionary
 
 
 @inscribe
@@ -982,7 +980,7 @@ def dupdip(stack, expression, dictionary):
   '''
   F, stack = stack
   a = stack[0]
-  return stack, pushback(F, (a,  expression)), dictionary
+  return stack, concat(F, (a,  expression)), dictionary
 
 
 @inscribe
@@ -999,7 +997,7 @@ def infra(stack, expression, dictionary):
 
   '''
   (quote, (aggregate, stack)) = stack
-  return aggregate, pushback(quote, (stack, (S_swaack, expression))), dictionary
+  return aggregate, concat(quote, (stack, (S_swaack, expression))), dictionary
 
 
 @inscribe
@@ -1059,7 +1057,7 @@ def genrec(stack, expression, dictionary):
   (rec2, (rec1, stack)) = stack
   (then, (if_, _)) = stack
   F = (if_, (then, (rec1, (rec2, (S_genrec, ())))))
-  else_ = pushback(rec1, (F, rec2))
+  else_ = concat(rec1, (F, rec2))
   return (else_, stack), (S_ifte, expression), dictionary
 
 
@@ -1123,7 +1121,7 @@ def branch(stack, expression, dictionary):
 
   '''
   (then, (else_, (flag, stack))) = stack
-  return stack, pushback(then if flag else else_, expression), dictionary
+  return stack, concat(then if flag else else_, expression), dictionary
 
 
 @inscribe
@@ -1210,7 +1208,7 @@ def dip(stack, expression, dictionary):
   '''
   (quote, (x, stack)) = stack
   expression = (x, expression)
-  return stack, pushback(quote, expression), dictionary
+  return stack, concat(quote, expression), dictionary
 
 
 @inscribe
@@ -1227,7 +1225,7 @@ def dipd(S, expression, dictionary):
   '''
   (quote, (x, (y, stack))) = S
   expression = (y, (x, expression))
-  return stack, pushback(quote, expression), dictionary
+  return stack, concat(quote, expression), dictionary
 
 
 @inscribe
@@ -1244,7 +1242,7 @@ def dipdd(S, expression, dictionary):
   '''
   (quote, (x, (y, (z, stack)))) = S
   expression = (z, (y, (x, expression)))
-  return stack, pushback(quote, expression), dictionary
+  return stack, concat(quote, expression), dictionary
 
 
 @inscribe
@@ -1372,7 +1370,7 @@ def times(stack, expression, dictionary):
   n -= 1
   if n:
     expression = n, (quote, (S_times, expression))
-  expression = pushback(quote, expression)
+  expression = concat(quote, expression)
   return stack, expression, dictionary
 
 
@@ -1410,7 +1408,7 @@ def loop(stack, expression, dictionary):
   '''
   quote, (flag, stack) = stack
   if flag:
-    expression = pushback(quote, (quote, (S_loop, expression)))
+    expression = concat(quote, (quote, (S_loop, expression)))
   return stack, expression, dictionary
 
 
@@ -1435,7 +1433,7 @@ def cmp_(stack, expression, dictionary):
                         L
   '''
   L, (E, (G, (b, (a, stack)))) = stack
-  expression = pushback(G if a > b else L if a < b else E, expression)
+  expression = concat(G if a > b else L if a < b else E, expression)
   return stack, expression, dictionary
 
 
