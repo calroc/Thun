@@ -11,3 +11,9 @@ Function Reference
    :members:
 
 
+Auto-generated Functions
+---------------------------
+
+.. automodule:: joy.utils.generated_library
+   :members:
+

@@ -1172,11 +1172,11 @@ def unify(u, v, s=None):
         if v >= u:
             s[v] = u
             return s
-        raise ValueError('Cannot unify %r and %r.' % (u, v))
+        raise TypeError('Cannot unify %r and %r.' % (u, v))
 
     if isinstance(u, tuple) and isinstance(v, tuple):
         if len(u) != len(v) != 2:
-            raise ValueError(repr((u, v)))
+            raise TypeError(repr((u, v)))
         for uu, vv in zip(u, v):
             s = unify(uu, vv, s)
             if s == False: # (instead of a substitution dict.)
@@ -1185,13 +1185,13 @@ def unify(u, v, s=None):
  
     if isinstance(v, tuple):
         if not stacky(u):
-            raise ValueError('Cannot unify %r and %r.' % (u, v))
+            raise TypeError('Cannot unify %r and %r.' % (u, v))
         s[u] = v
         return s
 
     if isinstance(u, tuple):
         if not stacky(v):
-            raise ValueError('Cannot unify %r and %r.' % (v, u))
+            raise TypeError('Cannot unify %r and %r.' % (v, u))
         s[v] = u
         return s
 
@@ -1796,8 +1796,89 @@ C(cons, unstack)
 
 
 
-## Sets of Stack Effects
+## Multiple Stack Effects
 ...
+
+
+```python
+class IntJoyType(NumberJoyType): prefix = 'i'
+
+
+F = map(FloatJoyType, _R)
+I = map(IntJoyType, _R)
+```
+
+
+```python
+muls = [
+     ((I[2], (I[1], S[0])), (I[3], S[0])),
+     ((F[2], (I[1], S[0])), (F[3], S[0])),
+     ((I[2], (F[1], S[0])), (F[3], S[0])),
+     ((F[2], (F[1], S[0])), (F[3], S[0])),
+]
+```
+
+
+```python
+for f in muls:
+    print doc_from_stack_effect(*f)
+```
+
+    (i1 i2 -- i3)
+    (i1 f2 -- f3)
+    (f1 i2 -- f3)
+    (f1 f2 -- f3)
+
+
+
+```python
+for f in muls:
+    try:
+        e = C(dup, f)
+    except TypeError:
+        continue
+    print doc_from_stack_effect(*dup), doc_from_stack_effect(*f), doc_from_stack_effect(*e)
+```
+
+    (a1 -- a1 a1) (i1 i2 -- i3) (i0 -- i1)
+    (a1 -- a1 a1) (f1 f2 -- f3) (f0 -- f1)
+
+
+
+```python
+from itertools import product
+
+
+def meta_compose(F, G):
+    for f, g in product(F, G):
+        try:
+            yield C(f, g)
+        except TypeError:
+            pass
+
+
+def MC(F, G):
+    return sorted(set(meta_compose(F, G)))
+```
+
+
+```python
+for f in MC([dup], muls):
+    print doc_from_stack_effect(*f)
+```
+
+    (f0 -- f1)
+    (i0 -- i1)
+
+
+
+```python
+for f in MC([dup], [mul]):
+    print doc_from_stack_effect(*f)
+```
+
+    (n0 -- n1)
+
 
 ## `concat`
 
@@ -1834,28 +1915,577 @@ As opposed to just:
 
     (1 [.0.] [.1.] -- [.2.])
 
+### Brzo...'s Derivitives of Regular Expressions
+
+We can invent a new type of type variable, a "sequence type" (I think this is what they mean in the literature by that term...) or "Kleene Star" type.  I'm going to represent it as a type letter and the asterix, so a sequence of zero or more `AnyJoyType` variables would be:
+
+    A*
+
+The `A*` works by splitting the universe into two alternate histories:
+
+    A* -> 0 | A A*
+
+The Kleene star variable disappears in one universe, and in the other it turns into an `AnyJoyType` variable followed by itself again.  We have to return all universes (represented by their substitution dicts, the "unifiers") that don't lead to type conflicts.
+
+Consider unifying two stacks (the lowercase letters are any type variables of the kinds we have defined so far):
+
+    [a A* b .0.] U [c d .1.]
+                              w/ {c: a}
+    [  A* b .0.] U [  d .1.]
+
+Now we have to split universes to unify `A*`.  In the first universe it disappears:
+
+    [b .0.] U [d .1.]
+                       w/ {d: b, .1.: .0.} 
+         [] U []
+
+While in the second it spawns an `A`, which we will label `e`:
+
+    [e A* b .0.] U [d .1.]
+                            w/ {d: e}
+    [  A* b .0.] U [  .1.]
+                            w/ {.1.: A* b .0.}
+    [  A* b .0.] U [  .1.]
+
+Giving us two unifiers:
+
+    {c: a,  d: b,  .1.:      .0.}
+    {c: a,  d: e,  .1.: A* b .0.}
+
+
+```python
+class KleeneStar(object):
+
+    kind = AnyJoyType
+
+    def __init__(self, number):
+        self.number = number
+        self.count = 0
+        self.prefix = repr(self)
+
+    def __repr__(self):
+        return '%s%i*' % (self.kind.prefix, self.number)
+
+    def another(self):
+        self.count += 1
+        return self.kind(10000 * self.number + self.count)
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, self.__class__)
+            and other.number == self.number
+        )
+
+    def __ge__(self, other):
+        return self.kind >= other.kind
+
+    def __add__(self, other):
+        return self.__class__(self.number + other)
+    __radd__ = __add__
     
-Which works but can lose information.  Consider `cons concat`, this is how much information we *could* retain:
+    def __hash__(self):
+        return hash(repr(self))
 
-    (1 [.0.] [.1.] -- [1 .0. .1.]) uncons uncons
-
-    (1 [.0.] [.1.] -- 1 [.0. .1.])        uncons
-                                                    So far so good...
-    (1 [2 .2.] [.1.] -- 1 2 [.2. .1.])
-
-
-
-
-    (1 [.0.] [.1.] -- 1 [.0. .1.]) ([a1 .10.] -- a1 [.10.])
-                                                             w/ { [a1 .10.] : [  .0.   .1.] }
-                                                           -or-
-                                                             w/ { [  .0.   .1.] : [a1 .10.    ] }
+class AnyStarJoyType(KleeneStar): kind = AnyJoyType
+class NumberStarJoyType(KleeneStar): kind = NumberJoyType
+#class FloatStarJoyType(KleeneStar): kind = FloatJoyType
+#class IntStarJoyType(KleeneStar): kind = IntJoyType
+class StackStarJoyType(KleeneStar): kind = StackJoyType
 
 
+As = map(AnyStarJoyType, _R)
+Ns = map(NumberStarJoyType, _R)
+Ss = map(StackStarJoyType, _R)
+```
+
+#### `unify()` version 4
+Can now return multiple results...
+
+
+```python
+def unify(u, v, s=None):
+    if s is None:
+        s = {}
+    elif s:
+        u = update(s, u)
+        v = update(s, v)
+
+    if u == v:
+        return s,
+
+    if isinstance(u, AnyJoyType) and isinstance(v, AnyJoyType):
+        if u >= v:
+            s[u] = v
+            return s,
+        if v >= u:
+            s[v] = u
+            return s,
+        raise TypeError('Cannot unify %r and %r.' % (u, v))
+
+    if isinstance(u, tuple) and isinstance(v, tuple):
+        if len(u) != len(v) != 2:
+            raise TypeError(repr((u, v)))
+            
+        a, b = v
+        if isinstance(a, KleeneStar):
+            # Two universes, in one the Kleene star disappears and unification
+            # continues without it...
+            s0 = unify(u, b)
+            
+            # In the other it spawns a new variable.
+            s1 = unify(u, (a.another(), v))
+            
+            t = s0 + s1
+            for sn in t:
+                sn.update(s)
+            return t
+
+        a, b = u
+        if isinstance(a, KleeneStar):
+            s0 = unify(v, b)
+            s1 = unify(v, (a.another(), u))
+            t = s0 + s1
+            for sn in t:
+                sn.update(s)
+            return t
+
+        ses = unify(u[0], v[0])
+        results = ()
+        for sn in ses:
+            results += unify(u[1], v[1], sn)
+        return results
+ 
+    if isinstance(v, tuple):
+        if not stacky(u):
+            raise TypeError('Cannot unify %r and %r.' % (u, v))
+        s[u] = v
+        return s,
+
+    if isinstance(u, tuple):
+        if not stacky(v):
+            raise TypeError('Cannot unify %r and %r.' % (v, u))
+        s[v] = u
+        return s,
+
+    return ()
+
+
+def stacky(thing):
+    return thing.__class__ in {AnyJoyType, StackJoyType}
+```
+
+
+```python
+a = (As[1], S[1])
+a
+```
 
 
 
 
+    (a1*, s1)
+
+
+
+
+```python
+b = (A[1], S[2])
+b
+```
+
+
+
+
+    (a1, s2)
+
+
+
+
+```python
+for result in unify(b, a):
+    print result, '->', update(result, a), update(result, b)
+```
+
+    {s1: (a1, s2)} -> (a1*, (a1, s2)) (a1, s2)
+    {a1: a10001, s2: (a1*, s1)} -> (a1*, s1) (a10001, (a1*, s1))
+
+
+
+```python
+for result in unify(a, b):
+    print result, '->', update(result, a), update(result, b)
+```
+
+    {s1: (a1, s2)} -> (a1*, (a1, s2)) (a1, s2)
+    {a1: a10002, s2: (a1*, s1)} -> (a1*, s1) (a10002, (a1*, s1))
+
+
+
+    (a1*, s1)       [a1*]       (a1, s2)        [a1]
+
+    (a1*, (a1, s2)) [a1* a1]    (a1, s2)        [a1]
+
+    (a1*, s1)       [a1*]       (a2, (a1*, s1)) [a2 a1*]
+
+
+```python
+sum_ = ((Ns[1], S[1]), S[0]), (N[0], S[0])
+
+print doc_from_stack_effect(*sum_)
+```
+
+    ([n1* .1.] -- n0)
+
+
+
+```python
+f = (N[1], (N[2], (N[3], S[1]))), S[0]
+
+print doc_from_stack_effect(S[0], f)
+```
+
+    (-- [n1 n2 n3 .1.])
+
+
+
+```python
+for result in unify(sum_[0], f):
+    print result, '->', update(result, sum_[1])
+```
+
+    {s1: (n1, (n2, (n3, s1)))} -> (n0, s0)
+    {n1: n10001, s1: (n2, (n3, s1))} -> (n0, s0)
+    {n1: n10001, s1: (n3, s1), n2: n10002} -> (n0, s0)
+    {n1: n10001, s1: (n1*, s1), n3: n10003, n2: n10002} -> (n0, s0)
+
+
+#### `compose()` version 3
+This function has to be modified to use the new datastructures and it is no longer recursive, instead recursion happens as part of unification.
+
+
+```python
+def compose(f, g):
+
+    (f_in, f_out), (g_in, g_out) = f, g
+
+    if not g_in:
+        yield f_in, stack_concat(g_out, f_out)
+
+    elif not f_out:
+        yield stack_concat(f_in, g_in), g_out
+
+    else: # Unify and update.
+
+        s = unify(g_in, f_out)
+
+        if not s:
+            raise TypeError('Cannot unify %r and %r.' % (fo, gi))
+
+        for result in s:
+            yield update(result, (f_in, g_out))
+
+```
+
+
+```python
+def meta_compose(F, G):
+    for f, g in product(F, G):
+        try:
+            for result in C(f, g):
+                yield result
+        except TypeError:
+            pass
+
+
+def C(f, g):
+    f, g = relabel(f, g)
+    for fg in compose(f, g):
+        yield delabel(fg)
+```
+
+
+```python
+for f in MC([dup], muls):
+    print doc_from_stack_effect(*f)
+```
+
+    (a0 -- f0)
+    (a0 -- i0)
+
+
+
+```python
+
+
+for f in MC([dup], [sum_]):
+    print doc_from_stack_effect(*f)
+```
+
+    ([n0* .0.] -- [n0* .0.] n0)
+
+
+
+```python
+
+
+for f in MC([cons], [sum_]):
+    print doc_from_stack_effect(*f)
+```
+
+    (a0 [.0.] -- n0)
+    (n0 [n0* .0.] -- n1)
+
+
+
+```python
+sum_ = (((N[1], (Ns[1], S[1])), S[0]), (N[0], S[0]))
+print doc_from_stack_effect(*cons),
+print doc_from_stack_effect(*sum_),
+
+for f in MC([cons], [sum_]):
+    print doc_from_stack_effect(*f)
+```
+
+    (a1 [.1.] -- [a1 .1.]) ([n1 n1* .1.] -- n0) (n0 [n0* .0.] -- n1)
+
+
+
+```python
+a = (A[4], (As[1], (A[3], S[1])))
+a
+```
+
+
+
+
+    (a4, (a1*, (a3, s1)))
+
+
+
+
+```python
+b = (A[1], (A[2], S[2]))
+b
+```
+
+
+
+
+    (a1, (a2, s2))
+
+
+
+
+```python
+for result in unify(b, a):
+    print result
+```
+
+    {a1: a4, s2: s1, a2: a3}
+    {a1: a4, s2: (a1*, (a3, s1)), a2: a10003}
+
+
+
+```python
+for result in unify(a, b):
+    print result
+```
+
+    {s2: s1, a2: a3, a4: a1}
+    {s2: (a1*, (a3, s1)), a2: a10004, a4: a1}
+
+
+### represent `concat`
+
+    ([.0.] [.1.] -- [A*(.0.) .1.])
+
+Meaning that `A*` on the right-hand side should all the crap from `.0.`.
+
+    ([      .0.] [.1.] -- [      A* .1.])
+    ([a     .0.] [.1.] -- [a     A* .1.])
+    ([a b   .0.] [.1.] -- [a b   A* .1.])
+    ([a b c .0.] [.1.] -- [a b c A* .1.])
+
+    
+
+or...
+
+    ([       .0.] [.1.] -- [       .1.])
+    ([a      .0.] [.1.] -- [a      .1.])
+    ([a b    .0.] [.1.] -- [a b    .1.])
+    ([a b  c .0.] [.1.] -- [a b  c .1.])
+    ([a A* c .0.] [.1.] -- [a A* c .1.])
+
+    
+
+    (a, (b, S0)) . S1 = (a, (b, (A*, S1)))
+
+
+```python
+class Astar(object):
+    def __repr__(self):
+        return 'A*'
+
+
+def concat(s0, s1):
+    a = []
+    while isinstance(s0, tuple):
+        term, s0 = s0
+        a.append(term)
+    assert isinstance(s0, StackJoyType), repr(s0)
+    s1 = Astar(), s1
+    for term in reversed(a):
+        s1 = term, s1
+    return s1
+```
+
+
+```python
+a, b = (A[1], S[0]), (A[2], S[1])
+```
+
+
+```python
+concat(a, b)
+```
+
+
+
+
+    (a1, (A*, (a2, s1)))
+
+
+
+## Joy in the Logical Paradigm
+For this to work the type label classes have to be modified to let `T >= t` succeed, where e.g. `T` is `IntJoyType` and `t` is `int`
+
+
+```python
+F = reduce(C, (pop, swap, roll_down, rest, rest, cons, cons))
+
+print doc_from_stack_effect(*F)
+```
+
+
+    ---------------------------------------------------------------------------
+
+    ValueError                                Traceback (most recent call last)
+
+    <ipython-input-113-4b4cb6ff86e5> in <module>()
+          1 F = reduce(C, (pop, swap, roll_down, rest, rest, cons, cons))
+          2 
+    ----> 3 print doc_from_stack_effect(*F)
+    
+
+    <ipython-input-101-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-100-4237a6bb159d> in compose(f, g)
+          1 def compose(f, g):
+          2 
+    ----> 3     (f_in, f_out), (g_in, g_out) = f, g
+          4 
+          5     if not g_in:
+
+
+    <ipython-input-101-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-100-4237a6bb159d> in compose(f, g)
+          1 def compose(f, g):
+          2 
+    ----> 3     (f_in, f_out), (g_in, g_out) = f, g
+          4 
+          5     if not g_in:
+
+
+    <ipython-input-101-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-100-4237a6bb159d> in compose(f, g)
+          1 def compose(f, g):
+          2 
+    ----> 3     (f_in, f_out), (g_in, g_out) = f, g
+          4 
+          5     if not g_in:
+
+
+    <ipython-input-101-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-100-4237a6bb159d> in compose(f, g)
+          1 def compose(f, g):
+          2 
+    ----> 3     (f_in, f_out), (g_in, g_out) = f, g
+          4 
+          5     if not g_in:
+
+
+    <ipython-input-101-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-100-4237a6bb159d> in compose(f, g)
+          1 def compose(f, g):
+          2 
+    ----> 3     (f_in, f_out), (g_in, g_out) = f, g
+          4 
+          5     if not g_in:
+
+
+    ValueError: need more than 1 value to unpack
+
+
+
+```python
+from joy.parser import text_to_expression
+```
+
+
+```python
+s = text_to_expression('[3 4 ...] 2 1')
+s
+```
+
+
+```python
+L = unify(F[1], s)
+L
+```
+
+
+```python
+F[1]
+```
+
+
+```python
+F[1][0]
+```
+
+
+```python
+s[0]
+```
 
 ## Typing Combinators
 

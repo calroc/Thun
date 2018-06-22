@@ -58,11 +58,14 @@
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">getdoc</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">getmembers</span><span class="p">,</span> <span class="n">isfunction</span>
 <span class="kn">import</span> <span class="nn">operator</span><span class="o">,</span> <span class="nn">math</span>
 
 <span class="kn">from</span> <span class="nn">.parser</span> <span class="k">import</span> <span class="n">text_to_expression</span><span class="p">,</span> <span class="n">Symbol</span>
 <span class="kn">from</span> <span class="nn">.utils.stack</span> <span class="k">import</span> <span class="n">list_to_stack</span><span class="p">,</span> <span class="n">iter_stack</span><span class="p">,</span> <span class="n">pick</span><span class="p">,</span> <span class="n">concat</span>
 <span class="kn">from</span> <span class="nn">.utils.brutal_hackery</span> <span class="k">import</span> <span class="n">rename_code_object</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">generated_library</span> <span class="k">as</span> <span class="n">genlib</span>
 
 
 <span class="n">_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
@@ -121,12 +124,8 @@
 
 
 <span class="n">definitions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
-<span class="s1">second == rest first</span>
-<span class="s1">third == rest rest first</span>
 <span class="s1">of == swap at</span>
 <span class="s1">product == 1 swap [*] step</span>
-<span class="s1">swons == swap cons</span>
-<span class="s1">swoncat == swap concat</span>
 <span class="s1">flatten == [] swap [concat] step</span>
 <span class="s1">unit == [] cons</span>
 <span class="s1">quoted == [unit] dip</span>
@@ -161,6 +160,10 @@
 <span class="s1">make_generator == [codireco] ccons</span>
 <span class="s1">ccons == cons cons</span>
 <span class="s1">&#39;&#39;&#39;</span>
+<span class="c1">##second == rest first</span>
+<span class="c1">##third == rest rest first</span>
+<span class="c1">##swons == swap cons</span>
+<span class="c1">##swoncat == swap concat</span>
 
 <span class="c1">##Zipper</span>
 <span class="c1">##z-down == [] swap uncons swap</span>
@@ -291,6 +294,11 @@
 <span class="c1">#</span>
 
 
+<span class="c1"># Load the auto-generated primitives into the dictionary.</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">primitive</span> <span class="ow">in</span> <span class="n">getmembers</span><span class="p">(</span><span class="n">genlib</span><span class="p">,</span> <span class="n">isfunction</span><span class="p">):</span>
+  <span class="n">inscribe</span><span class="p">(</span><span class="n">SimpleFunctionWrapper</span><span class="p">(</span><span class="n">primitive</span><span class="p">))</span>
+
+
 <div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../library.html#joy.library.parse">[docs]</a><span class="nd">@inscribe</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
@@ -300,30 +308,30 @@
   <span class="k">return</span> <span class="n">expression</span><span class="p">,</span> <span class="n">stack</span></div>
 
 
-<div class="viewcode-block" id="first"><a class="viewcode-back" href="../../library.html#joy.library.first">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">first</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  ::</span>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def first(stack):</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  ::</span>
+<span class="c1">##</span>
+<span class="c1">##    first == uncons pop</span>
+<span class="c1">##</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  ((head, tail), stack) = stack</span>
+<span class="c1">##  return head, stack</span>
 
-<span class="sd">    first == uncons pop</span>
 
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="p">((</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">),</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
-  <span class="k">return</span> <span class="n">head</span><span class="p">,</span> <span class="n">stack</span></div>
-
-
-<div class="viewcode-block" id="rest"><a class="viewcode-back" href="../../library.html#joy.library.rest">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">rest</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  ::</span>
-
-<span class="sd">    rest == uncons popd</span>
-
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="p">((</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">),</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
-  <span class="k">return</span> <span class="n">tail</span><span class="p">,</span> <span class="n">stack</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def rest(stack):</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  ::</span>
+<span class="c1">##</span>
+<span class="c1">##    rest == uncons popd</span>
+<span class="c1">##</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  ((head, tail), stack) = stack</span>
+<span class="c1">##  return tail, stack</span>
 
 
 <div class="viewcode-block" id="getitem"><a class="viewcode-back" href="../../library.html#joy.library.getitem">[docs]</a><span class="nd">@inscribe</span>
@@ -512,28 +520,28 @@
   <span class="k">return</span> <span class="n">list_to_stack</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">iter_stack</span><span class="p">(</span><span class="n">tos</span><span class="p">))),</span> <span class="n">stack</span></div>
 
 
-<div class="viewcode-block" id="cons"><a class="viewcode-back" href="../../library.html#joy.library.cons">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">cons</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  The cons operator expects a list on top of the stack and the potential</span>
-<span class="sd">  member below. The effect is to add the potential member into the</span>
-<span class="sd">  aggregate.</span>
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
-  <span class="k">return</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">tos</span><span class="p">),</span> <span class="n">stack</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def cons(S):</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  The cons operator expects a list on top of the stack and the potential</span>
+<span class="c1">##  member below. The effect is to add the potential member into the</span>
+<span class="c1">##  aggregate.</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  (tos, (second, stack)) = S</span>
+<span class="c1">##  return (second, tos), stack</span>
 
 
-<div class="viewcode-block" id="uncons"><a class="viewcode-back" href="../../library.html#joy.library.uncons">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">uncons</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  Inverse of cons, removes an item from the top of the list on the stack</span>
-<span class="sd">  and places it under the remaining list.</span>
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">S</span>
-  <span class="n">item</span><span class="p">,</span> <span class="n">tos</span> <span class="o">=</span> <span class="n">tos</span>
-  <span class="k">return</span> <span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def uncons(S):</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  Inverse of cons, removes an item from the top of the list on the stack</span>
+<span class="c1">##  and places it under the remaining list.</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  (tos, stack) = S</span>
+<span class="c1">##  item, tos = tos</span>
+<span class="c1">##  return tos, (item, stack)</span>
 
 
 <div class="viewcode-block" id="clear"><a class="viewcode-back" href="../../library.html#joy.library.clear">[docs]</a><span class="nd">@inscribe</span>
@@ -549,52 +557,52 @@
   <span class="k">return</span> <span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="dup"><a class="viewcode-back" href="../../library.html#joy.library.dup">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">dup</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Duplicate the top item on the stack.&#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">S</span>
-  <span class="k">return</span> <span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def dup(S):</span>
+<span class="c1">##  &#39;&#39;&#39;Duplicate the top item on the stack.&#39;&#39;&#39;</span>
+<span class="c1">##  (tos, stack) = S</span>
+<span class="c1">##  return tos, (tos, stack)</span>
 
 
-<div class="viewcode-block" id="over"><a class="viewcode-back" href="../../library.html#joy.library.over">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">over</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  Copy the second item down on the stack to the top of the stack.</span>
-<span class="sd">  ::</span>
-
-<span class="sd">       a b over</span>
-<span class="sd">    --------------</span>
-<span class="sd">        a b a</span>
-
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="n">second</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-  <span class="k">return</span> <span class="n">second</span><span class="p">,</span> <span class="n">S</span></div>
-
-
-<div class="viewcode-block" id="tuck"><a class="viewcode-back" href="../../library.html#joy.library.tuck">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">tuck</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  Copy the item at TOS under the second item of the stack.</span>
-<span class="sd">  ::</span>
-
-<span class="sd">       a b tuck</span>
-<span class="sd">    --------------</span>
-<span class="sd">        b a b</span>
-
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
-  <span class="k">return</span> <span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def over(S):</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  Copy the second item down on the stack to the top of the stack.</span>
+<span class="c1">##  ::</span>
+<span class="c1">##</span>
+<span class="c1">##       a b over</span>
+<span class="c1">##    --------------</span>
+<span class="c1">##        a b a</span>
+<span class="c1">##</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  second = S[1][0]</span>
+<span class="c1">##  return second, S</span>
 
 
-<div class="viewcode-block" id="swap"><a class="viewcode-back" href="../../library.html#joy.library.swap">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Swap the top two items on stack.&#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
-  <span class="k">return</span> <span class="n">second</span><span class="p">,</span> <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def tuck(S):</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  Copy the item at TOS under the second item of the stack.</span>
+<span class="c1">##  ::</span>
+<span class="c1">##</span>
+<span class="c1">##       a b tuck</span>
+<span class="c1">##    --------------</span>
+<span class="c1">##        b a b</span>
+<span class="c1">##</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  (tos, (second, stack)) = S</span>
+<span class="c1">##  return tos, (second, (tos, stack))</span>
+
+
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def swap(S):</span>
+<span class="c1">##  &#39;&#39;&#39;Swap the top two items on stack.&#39;&#39;&#39;</span>
+<span class="c1">##  (tos, (second, stack)) = S</span>
+<span class="c1">##  return second, (tos, stack)</span>
 
 
 <div class="viewcode-block" id="swaack"><a class="viewcode-back" href="../../library.html#joy.library.swaack">[docs]</a><span class="nd">@inscribe</span>
@@ -605,14 +613,14 @@
   <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">old_stack</span></div>
 
 
-<div class="viewcode-block" id="stack_"><a class="viewcode-back" href="../../library.html#joy.library.stack_">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">stack_</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  The stack operator pushes onto the stack a list containing all the</span>
-<span class="sd">  elements of the stack.</span>
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">stack</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def stack_(stack):</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  The stack operator pushes onto the stack a list containing all the</span>
+<span class="c1">##  elements of the stack.</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  return stack, stack</span>
 
 
 <div class="viewcode-block" id="unstack"><a class="viewcode-back" href="../../library.html#joy.library.unstack">[docs]</a><span class="nd">@inscribe</span>
@@ -625,42 +633,42 @@
   <span class="k">return</span> <span class="n">stack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="pop"><a class="viewcode-back" href="../../library.html#joy.library.pop">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Pop and discard the top item from the stack.&#39;&#39;&#39;</span>
-  <span class="k">return</span> <span class="n">stack</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def pop(stack):</span>
+<span class="c1">##  &#39;&#39;&#39;Pop and discard the top item from the stack.&#39;&#39;&#39;</span>
+<span class="c1">##  return stack[1]</span>
 
 
-<div class="viewcode-block" id="popd"><a class="viewcode-back" href="../../library.html#joy.library.popd">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">popd</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Pop and discard the second item from the stack.&#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
-  <span class="k">return</span> <span class="n">tos</span><span class="p">,</span> <span class="n">stack</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def popd(stack):</span>
+<span class="c1">##  &#39;&#39;&#39;Pop and discard the second item from the stack.&#39;&#39;&#39;</span>
+<span class="c1">##  (tos, (_, stack)) = stack</span>
+<span class="c1">##  return tos, stack</span>
 
 
-<div class="viewcode-block" id="popdd"><a class="viewcode-back" href="../../library.html#joy.library.popdd">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">popdd</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Pop and discard the third item from the stack.&#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">stack</span>
-  <span class="k">return</span> <span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def popdd(stack):</span>
+<span class="c1">##  &#39;&#39;&#39;Pop and discard the third item from the stack.&#39;&#39;&#39;</span>
+<span class="c1">##  (tos, (second, (_, stack))) = stack</span>
+<span class="c1">##  return tos, (second, stack)</span>
 
 
-<div class="viewcode-block" id="popop"><a class="viewcode-back" href="../../library.html#joy.library.popop">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">popop</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Pop and discard the first and second items from the stack.&#39;&#39;&#39;</span>
-  <span class="k">return</span> <span class="n">stack</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def popop(stack):</span>
+<span class="c1">##  &#39;&#39;&#39;Pop and discard the first and second items from the stack.&#39;&#39;&#39;</span>
+<span class="c1">##  return stack[1][1]</span>
 
 
-<div class="viewcode-block" id="dupd"><a class="viewcode-back" href="../../library.html#joy.library.dupd">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">dupd</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Duplicate the second item on the stack.&#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
-  <span class="k">return</span> <span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def dupd(S):</span>
+<span class="c1">##  &#39;&#39;&#39;Duplicate the second item on the stack.&#39;&#39;&#39;</span>
+<span class="c1">##  (tos, (second, stack)) = S</span>
+<span class="c1">##  return tos, (second, (second, stack))</span>
 
 
 <div class="viewcode-block" id="reverse"><a class="viewcode-back" href="../../library.html#joy.library.reverse">[docs]</a><span class="nd">@inscribe</span>
@@ -793,34 +801,34 @@
   <span class="k">return</span> <span class="n">r</span></div>
 
 
-<div class="viewcode-block" id="rollup"><a class="viewcode-back" href="../../library.html#joy.library.rollup">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">rollup</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  ::</span>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def rollup(S):</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  ::</span>
+<span class="c1">##</span>
+<span class="c1">##       a b c</span>
+<span class="c1">##    -----------</span>
+<span class="c1">##       b c a</span>
+<span class="c1">##</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  (a, (b, (c, stack))) = S</span>
+<span class="c1">##  return b, (c, (a, stack))</span>
 
-<span class="sd">       a b c</span>
-<span class="sd">    -----------</span>
-<span class="sd">       b c a</span>
 
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">S</span>
-  <span class="k">return</span> <span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="rolldown"><a class="viewcode-back" href="../../library.html#joy.library.rolldown">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">rolldown</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  ::</span>
-
-<span class="sd">       a b c</span>
-<span class="sd">    -----------</span>
-<span class="sd">       c a b</span>
-
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">S</span>
-  <span class="k">return</span> <span class="n">c</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def rolldown(S):</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  ::</span>
+<span class="c1">##</span>
+<span class="c1">##       a b c</span>
+<span class="c1">##    -----------</span>
+<span class="c1">##       c a b</span>
+<span class="c1">##</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  (a, (b, (c, stack))) = S</span>
+<span class="c1">##  return c, (a, (b, stack))</span>
 
 
 <span class="c1">#def execute(S):</span>

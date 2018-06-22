@@ -241,14 +241,6 @@ true.  If no predicates return true the default function runs.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="joy.library.cons">
-<code class="descclassname">joy.library.</code><code class="descname">cons</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#cons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.cons" title="Permalink to this definition">¶</a></dt>
-<dd><p>The cons operator expects a list on top of the stack and the potential
-member below. The effect is to add the potential member into the
-aggregate.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="joy.library.dip">
 <code class="descclassname">joy.library.</code><code class="descname">dip</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dip" title="Permalink to this definition">¶</a></dt>
 <dd><p>The dip combinator expects a quoted program on the stack and below it
@@ -306,18 +298,6 @@ n items removed off the top.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="joy.library.dup">
-<code class="descclassname">joy.library.</code><code class="descname">dup</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Duplicate the top item on the stack.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.dupd">
-<code class="descclassname">joy.library.</code><code class="descname">dupd</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dupd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dupd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Duplicate the second item on the stack.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="joy.library.dupdip">
 <code class="descclassname">joy.library.</code><code class="descname">dupdip</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dupdip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dupdip" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">dupdip</span> <span class="o">==</span> <span class="n">dup</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">dip</span>
@@ -326,14 +306,6 @@ n items removed off the top.</p>
 <span class="o">...</span> <span class="n">a</span> <span class="n">dup</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">dip</span>
 <span class="o">...</span> <span class="n">a</span> <span class="n">a</span>   <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">dip</span>
 <span class="o">...</span> <span class="n">a</span> <span class="n">F</span> <span class="n">a</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.first">
-<code class="descclassname">joy.library.</code><code class="descname">first</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.first" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">first</span> <span class="o">==</span> <span class="n">uncons</span> <span class="n">pop</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -510,17 +482,6 @@ new list with the results (in place of the program and original list.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="joy.library.over">
-<code class="descclassname">joy.library.</code><code class="descname">over</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#over"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.over" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy the second item down on the stack to the top of the stack.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="n">over</span>
-<span class="o">--------------</span>
-    <span class="n">a</span> <span class="n">b</span> <span class="n">a</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
 <dt id="joy.library.parse">
 <code class="descclassname">joy.library.</code><code class="descname">parse</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.parse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse the string on the stack to a Joy expression.</p>
@@ -535,30 +496,6 @@ new list with the results (in place of the program and original list.</p>
    <span class="n">a</span><span class="o">+</span><span class="n">b</span> <span class="n">a</span><span class="o">-</span><span class="n">b</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.pop">
-<code class="descclassname">joy.library.</code><code class="descname">pop</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.pop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pop and discard the top item from the stack.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.popd">
-<code class="descclassname">joy.library.</code><code class="descname">popd</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#popd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.popd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pop and discard the second item from the stack.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.popdd">
-<code class="descclassname">joy.library.</code><code class="descname">popdd</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#popdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.popdd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pop and discard the third item from the stack.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.popop">
-<code class="descclassname">joy.library.</code><code class="descname">popop</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#popop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.popop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pop and discard the first and second items from the stack.</p>
 </dd></dl>
 
 <dl class="function">
@@ -580,38 +517,10 @@ from the the quote.  The item is only removed once.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="joy.library.rest">
-<code class="descclassname">joy.library.</code><code class="descname">rest</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#rest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.rest" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rest</span> <span class="o">==</span> <span class="n">uncons</span> <span class="n">popd</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
 <dt id="joy.library.reverse">
 <code class="descclassname">joy.library.</code><code class="descname">reverse</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.reverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reverse the list on the top of the stack.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reverse</span> <span class="o">==</span> <span class="p">[]</span> <span class="n">swap</span> <span class="n">shunt</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.rolldown">
-<code class="descclassname">joy.library.</code><code class="descname">rolldown</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#rolldown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.rolldown" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="n">c</span>
-<span class="o">-----------</span>
-   <span class="n">c</span> <span class="n">a</span> <span class="n">b</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.rollup">
-<code class="descclassname">joy.library.</code><code class="descname">rollup</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#rollup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.rollup" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="n">c</span>
-<span class="o">-----------</span>
-   <span class="n">b</span> <span class="n">c</span> <span class="n">a</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -668,13 +577,6 @@ Negative numbers return complex roots.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="joy.library.stack_">
-<code class="descclassname">joy.library.</code><code class="descname">stack_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#stack_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.stack_" title="Permalink to this definition">¶</a></dt>
-<dd><p>The stack operator pushes onto the stack a list containing all the
-elements of the stack.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="joy.library.step">
 <code class="descclassname">joy.library.</code><code class="descname">step</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a quoted program on each item in a sequence.</p>
@@ -717,12 +619,6 @@ on top of the stack.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="joy.library.swap">
-<code class="descclassname">joy.library.</code><code class="descname">swap</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#swap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.swap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Swap the top two items on stack.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="joy.library.take">
 <code class="descclassname">joy.library.</code><code class="descname">take</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#take"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.take" title="Permalink to this definition">¶</a></dt>
 <dd><p>Expects an integer and a quote on the stack and returns the quote with
@@ -754,24 +650,6 @@ use reverse if needed.)</p>
          <span class="o">...</span> <span class="o">.</span> <span class="n">Q</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">times</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.tuck">
-<code class="descclassname">joy.library.</code><code class="descname">tuck</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#tuck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.tuck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy the item at TOS under the second item of the stack.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="n">tuck</span>
-<span class="o">--------------</span>
-    <span class="n">b</span> <span class="n">a</span> <span class="n">b</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.uncons">
-<code class="descclassname">joy.library.</code><code class="descname">uncons</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#uncons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.uncons" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inverse of cons, removes an item from the top of the list on the stack
-and places it under the remaining list.</p>
 </dd></dl>
 
 <dl class="function">
@@ -825,6 +703,241 @@ from each list.  The smallest list sets the length of the result list.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-joy.utils.generated_library">
+<span id="auto-generated-functions"></span><h2>Auto-generated Functions<a class="headerlink" href="#module-joy.utils.generated_library" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="joy.utils.generated_library.ccons">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">ccons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#ccons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.ccons" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="n">a0</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="n">a0</span> <span class="o">...</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.cons">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">cons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#cons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.cons" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.dup">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">dup</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#dup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.dup" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.dupd">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">dupd</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#dupd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.dupd" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.dupdd">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">dupdd</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#dupdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.dupdd" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a3</span> <span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.first">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">first</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.first" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.first_two">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">first_two</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#first_two"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.first_two" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="n">a0</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.fourth">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">fourth</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#fourth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.fourth" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="n">a3</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.over">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">over</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#over"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.over" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span> <span class="n">a2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.pop">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">pop</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.pop" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="o">--</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.popd">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">popd</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#popd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.popd" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.popdd">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">popdd</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#popdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.popdd" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.popop">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">popop</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#popop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.popop" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.popopd">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">popopd</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#popopd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.popopd" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.popopdd">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">popopdd</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#popopdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.popopdd" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a4</span> <span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.rest">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">rest</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#rest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.rest" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.rolldown">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">rolldown</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#rolldown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.rolldown" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a3</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.rollup">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">rollup</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#rollup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.rollup" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a3</span> <span class="n">a1</span> <span class="n">a2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.rrest">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">rrest</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#rrest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.rrest" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.second">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">second</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#second"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.second" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.stack">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">stack</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.stack" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="o">--</span> <span class="o">...</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.stuncons">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">stuncons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#stuncons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.stuncons" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="n">a0</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a0</span> <span class="n">a0</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.stununcons">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">stununcons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#stununcons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.stununcons" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="n">a1</span> <span class="n">a0</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a1</span> <span class="n">a0</span> <span class="n">a0</span> <span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.swap">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">swap</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#swap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.swap" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.swons">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">swons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#swons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.swons" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="n">a0</span> <span class="o">--</span> <span class="p">[</span><span class="n">a0</span> <span class="o">...</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.third">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">third</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#third"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.third" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="n">a2</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="n">a2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.tuck">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">tuck</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#tuck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.tuck" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.uncons">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">uncons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#uncons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.uncons" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.unswons">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">unswons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#unswons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.unswons" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="n">a0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -837,6 +950,7 @@ from each list.  The smallest list sets the length of the result list.</p>
   <ul>
 <li><a class="reference internal" href="#">Function Reference</a><ul>
 <li><a class="reference internal" href="#module-joy.library"><code class="docutils literal notranslate"><span class="pre">joy.library</span></code></a></li>
+<li><a class="reference internal" href="#module-joy.utils.generated_library">Auto-generated Functions</a></li>
 </ul>
 </li>
 </ul>

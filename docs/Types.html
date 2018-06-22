@@ -14042,11 +14042,11 @@ i0 &gt;= f0 -&gt; False
         <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;=</span> <span class="n">u</span><span class="p">:</span>
             <span class="n">s</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
             <span class="k">return</span> <span class="n">s</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="nb">repr</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="nb">repr</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">uu</span><span class="p">,</span> <span class="n">vv</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">uu</span><span class="p">,</span> <span class="n">vv</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span> <span class="c1"># (instead of a substitution dict.)</span>
@@ -14055,13 +14055,13 @@ i0 &gt;= f0 -&gt; False
  
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">stacky</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
         <span class="n">s</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
         <span class="k">return</span> <span class="n">s</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">stacky</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span>
         <span class="n">s</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
         <span class="k">return</span> <span class="n">s</span>
 
@@ -15379,10 +15379,207 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Sets-of-Stack-Effects">Sets of Stack Effects<a class="anchor-link" href="#Sets-of-Stack-Effects">&#182;</a></h2><p>...</p>
+<h2 id="Multiple-Stack-Effects">Multiple Stack Effects<a class="anchor-link" href="#Multiple-Stack-Effects">&#182;</a></h2><p>...</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[82]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">class</span> <span class="nc">IntJoyType</span><span class="p">(</span><span class="n">NumberJoyType</span><span class="p">):</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;i&#39;</span>
+
+
+<span class="n">F</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">FloatJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">)</span>
+<span class="n">I</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">IntJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[83]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">muls</span> <span class="o">=</span> <span class="p">[</span>
+     <span class="p">((</span><span class="n">I</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">(</span><span class="n">I</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="p">(</span><span class="n">I</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+     <span class="p">((</span><span class="n">F</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">(</span><span class="n">I</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+     <span class="p">((</span><span class="n">I</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+     <span class="p">((</span><span class="n">F</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+<span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[84]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">muls</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(i1 i2 -- i3)
+(i1 f2 -- f3)
+(f1 i2 -- f3)
+(f1 f2 -- f3)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[85]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">muls</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">C</span><span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">dup</span><span class="p">),</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">),</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(a1 -- a1 a1) (i1 i2 -- i3) (i0 -- i1)
+(a1 -- a1 a1) (f1 f2 -- f3) (f0 -- f1)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[86]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+
+
+<span class="k">def</span> <span class="nf">meta_compose</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">MC</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">meta_compose</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">)))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[87]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">dup</span><span class="p">],</span> <span class="n">muls</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(f0 -- f1)
+(i0 -- i1)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[88]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">dup</span><span class="p">],</span> <span class="p">[</span><span class="n">mul</span><span class="p">]):</span>
+    <span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(n0 -- n1)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -15400,7 +15597,7 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[82]:</div>
+<div class="prompt input_prompt">In&nbsp;[89]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">concat</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">((</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]),)</span>
@@ -15429,7 +15626,7 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[83]:</div>
+<div class="prompt input_prompt">In&nbsp;[90]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">concat</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">],)</span>
@@ -15460,24 +15657,1115 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Which works but can lose information.  Consider <code>cons concat</code>, this is how much information we <em>could</em> retain:</p>
+<h3 id="Brzo...'s-Derivitives-of-Regular-Expressions">Brzo...'s Derivitives of Regular Expressions<a class="anchor-link" href="#Brzo...'s-Derivitives-of-Regular-Expressions">&#182;</a></h3><p>We can invent a new type of type variable, a "sequence type" (I think this is what they mean in the literature by that term...) or "Kleene Star" type.  I'm going to represent it as a type letter and the asterix, so a sequence of zero or more <code>AnyJoyType</code> variables would be:</p>
 
-<pre><code>(1 [.0.] [.1.] -- [1 .0. .1.]) uncons uncons
-
-(1 [.0.] [.1.] -- 1 [.0. .1.])        uncons
-                                                So far so good...
-(1 [2 .2.] [.1.] -- 1 2 [.2. .1.])
-
-
-
-
-(1 [.0.] [.1.] -- 1 [.0. .1.]) ([a1 .10.] -- a1 [.10.])
-                                                         w/ { [a1 .10.] : [  .0.   .1.] }
-                                                       -or-
-                                                         w/ { [  .0.   .1.] : [a1 .10.    ] }</code></pre>
+<pre><code>A*</code></pre>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>A*</code> works by splitting the universe into two alternate histories:</p>
+
+<pre><code>A* -&gt; 0 | A A*
+
+</code></pre>
+<p>The Kleene star variable disappears in one universe, and in the other it turns into an <code>AnyJoyType</code> variable followed by itself again.  We have to return all universes (represented by their substitution dicts, the "unifiers") that don't lead to type conflicts.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Consider unifying two stacks (the lowercase letters are any type variables of the kinds we have defined so far):</p>
+
+<pre><code>[a A* b .0.] U [c d .1.]
+                          w/ {c: a}
+[  A* b .0.] U [  d .1.]</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we have to split universes to unify <code>A*</code>.  In the first universe it disappears:</p>
+
+<pre><code>[b .0.] U [d .1.]
+                   w/ {d: b, .1.: .0.} 
+     [] U []</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>While in the second it spawns an <code>A</code>, which we will label <code>e</code>:</p>
+
+<pre><code>[e A* b .0.] U [d .1.]
+                        w/ {d: e}
+[  A* b .0.] U [  .1.]
+                        w/ {.1.: A* b .0.}
+[  A* b .0.] U [  .1.]</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Giving us two unifiers:</p>
+
+<pre><code>{c: a,  d: b,  .1.:      .0.}
+{c: a,  d: e,  .1.: A* b .0.}</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[91]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">class</span> <span class="nc">KleeneStar</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">kind</span> <span class="o">=</span> <span class="n">AnyJoyType</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s%i</span><span class="s1">*&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">another</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">(</span><span class="mi">10000</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">number</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">kind</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">+</span> <span class="n">other</span><span class="p">)</span>
+    <span class="fm">__radd__</span> <span class="o">=</span> <span class="fm">__add__</span>
+    
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">AnyStarJoyType</span><span class="p">(</span><span class="n">KleeneStar</span><span class="p">):</span> <span class="n">kind</span> <span class="o">=</span> <span class="n">AnyJoyType</span>
+<span class="k">class</span> <span class="nc">NumberStarJoyType</span><span class="p">(</span><span class="n">KleeneStar</span><span class="p">):</span> <span class="n">kind</span> <span class="o">=</span> <span class="n">NumberJoyType</span>
+<span class="c1">#class FloatStarJoyType(KleeneStar): kind = FloatJoyType</span>
+<span class="c1">#class IntStarJoyType(KleeneStar): kind = IntJoyType</span>
+<span class="k">class</span> <span class="nc">StackStarJoyType</span><span class="p">(</span><span class="n">KleeneStar</span><span class="p">):</span> <span class="n">kind</span> <span class="o">=</span> <span class="n">StackJoyType</span>
+
+
+<span class="n">As</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">AnyStarJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">)</span>
+<span class="n">Ns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">NumberStarJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">)</span>
+<span class="n">Ss</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">StackStarJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="unify()-version-4"><code>unify()</code> version 4<a class="anchor-link" href="#unify()-version-4">&#182;</a></h4><p>Can now return multiple results...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[92]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">unify</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">elif</span> <span class="n">s</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">u</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">,</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">AnyJoyType</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">AnyJoyType</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">u</span> <span class="o">&gt;=</span> <span class="n">v</span><span class="p">:</span>
+            <span class="n">s</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="k">return</span> <span class="n">s</span><span class="p">,</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;=</span> <span class="n">u</span><span class="p">:</span>
+            <span class="n">s</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
+            <span class="k">return</span> <span class="n">s</span><span class="p">,</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="nb">repr</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)))</span>
+            
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">KleeneStar</span><span class="p">):</span>
+            <span class="c1"># Two universes, in one the Kleene star disappears and unification</span>
+            <span class="c1"># continues without it...</span>
+            <span class="n">s0</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            
+            <span class="c1"># In the other it spawns a new variable.</span>
+            <span class="n">s1</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">another</span><span class="p">(),</span> <span class="n">v</span><span class="p">))</span>
+            
+            <span class="n">t</span> <span class="o">=</span> <span class="n">s0</span> <span class="o">+</span> <span class="n">s1</span>
+            <span class="k">for</span> <span class="n">sn</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+                <span class="n">sn</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">t</span>
+
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">KleeneStar</span><span class="p">):</span>
+            <span class="n">s0</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="n">s1</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">another</span><span class="p">(),</span> <span class="n">u</span><span class="p">))</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">s0</span> <span class="o">+</span> <span class="n">s1</span>
+            <span class="k">for</span> <span class="n">sn</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+                <span class="n">sn</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">t</span>
+
+        <span class="n">ses</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="k">for</span> <span class="n">sn</span> <span class="ow">in</span> <span class="n">ses</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">+=</span> <span class="n">unify</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span>
+ 
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">stacky</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+        <span class="n">s</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">,</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">stacky</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span>
+        <span class="n">s</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">,</span>
+
+    <span class="k">return</span> <span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">stacky</span><span class="p">(</span><span class="n">thing</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">thing</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">in</span> <span class="p">{</span><span class="n">AnyJoyType</span><span class="p">,</span> <span class="n">StackJoyType</span><span class="p">}</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[93]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">As</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">a</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[93]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(a1*, s1)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[94]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">b</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[94]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(a1, s2)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[95]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">unify</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">result</span><span class="p">,</span> <span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="n">update</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="n">update</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{s1: (a1, s2)} -&gt; (a1*, (a1, s2)) (a1, s2)
+{a1: a10001, s2: (a1*, s1)} -&gt; (a1*, s1) (a10001, (a1*, s1))
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[96]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">unify</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">result</span><span class="p">,</span> <span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="n">update</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="n">update</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{s1: (a1, s2)} -&gt; (a1*, (a1, s2)) (a1, s2)
+{a1: a10002, s2: (a1*, s1)} -&gt; (a1*, s1) (a10002, (a1*, s1))
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+<pre><code>(a1*, s1)       [a1*]       (a1, s2)        [a1]
+
+(a1*, (a1, s2)) [a1* a1]    (a1, s2)        [a1]
+
+(a1*, s1)       [a1*]       (a2, (a1*, s1)) [a2 a1*]</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[97]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">sum_</span> <span class="o">=</span> <span class="p">((</span><span class="n">Ns</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">sum_</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>([n1* .1.] -- n0)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[98]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]))),</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(-- [n1 n2 n3 .1.])
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[99]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">unify</span><span class="p">(</span><span class="n">sum_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">f</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">result</span><span class="p">,</span> <span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="n">update</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">sum_</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{s1: (n1, (n2, (n3, s1)))} -&gt; (n0, s0)
+{n1: n10001, s1: (n2, (n3, s1))} -&gt; (n0, s0)
+{n1: n10001, s1: (n3, s1), n2: n10002} -&gt; (n0, s0)
+{n1: n10001, s1: (n1*, s1), n3: n10003, n2: n10002} -&gt; (n0, s0)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="compose()-version-3"><code>compose()</code> version 3<a class="anchor-link" href="#compose()-version-3">&#182;</a></h4><p>This function has to be modified to use the new datastructures and it is no longer recursive, instead recursion happens as part of unification.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[100]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+
+    <span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">),</span> <span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">g_out</span><span class="p">)</span> <span class="o">=</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">g_in</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">f_in</span><span class="p">,</span> <span class="n">stack_concat</span><span class="p">(</span><span class="n">g_out</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">f_out</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">stack_concat</span><span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">g_in</span><span class="p">),</span> <span class="n">g_out</span>
+
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># Unify and update.</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="n">gi</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">update</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">g_out</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[101]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">meta_compose</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">result</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">relabel</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">fg</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">delabel</span><span class="p">(</span><span class="n">fg</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[102]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">dup</span><span class="p">],</span> <span class="n">muls</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(a0 -- f0)
+(a0 -- i0)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[103]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">dup</span><span class="p">],</span> <span class="p">[</span><span class="n">sum_</span><span class="p">]):</span>
+    <span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>([n0* .0.] -- [n0* .0.] n0)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[104]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">cons</span><span class="p">],</span> <span class="p">[</span><span class="n">sum_</span><span class="p">]):</span>
+    <span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(a0 [.0.] -- n0)
+(n0 [n0* .0.] -- n1)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[105]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">sum_</span> <span class="o">=</span> <span class="p">(((</span><span class="n">N</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">Ns</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">cons</span><span class="p">),</span>
+<span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">sum_</span><span class="p">),</span>
+
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">cons</span><span class="p">],</span> <span class="p">[</span><span class="n">sum_</span><span class="p">]):</span>
+    <span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(a1 [.1.] -- [a1 .1.]) ([n1 n1* .1.] -- n0) (n0 [n0* .0.] -- n1)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[106]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="p">(</span><span class="n">As</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+<span class="n">a</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[106]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(a4, (a1*, (a3, s1)))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[107]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+<span class="n">b</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[107]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(a1, (a2, s2))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[108]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">unify</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">result</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{a1: a4, s2: s1, a2: a3}
+{a1: a4, s2: (a1*, (a3, s1)), a2: a10003}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[109]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">unify</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">result</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{s2: s1, a2: a3, a4: a1}
+{s2: (a1*, (a3, s1)), a2: a10004, a4: a1}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="represent-concat">represent <code>concat</code><a class="anchor-link" href="#represent-concat">&#182;</a></h3>
+<pre><code>([.0.] [.1.] -- [A*(.0.) .1.])
+
+</code></pre>
+<p>Meaning that <code>A*</code> on the right-hand side should all the crap from <code>.0.</code>.</p>
+
+<pre><code>([      .0.] [.1.] -- [      A* .1.])
+([a     .0.] [.1.] -- [a     A* .1.])
+([a b   .0.] [.1.] -- [a b   A* .1.])
+([a b c .0.] [.1.] -- [a b c A* .1.])</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>or...</p>
+
+<pre><code>([       .0.] [.1.] -- [       .1.])
+([a      .0.] [.1.] -- [a      .1.])
+([a b    .0.] [.1.] -- [a b    .1.])
+([a b  c .0.] [.1.] -- [a b  c .1.])
+([a A* c .0.] [.1.] -- [a A* c .1.])</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+<pre><code>(a, (b, S0)) . S1 = (a, (b, (A*, S1)))</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[110]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">class</span> <span class="nc">Astar</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;A*&#39;</span>
+
+
+<span class="k">def</span> <span class="nf">concat</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">term</span><span class="p">,</span> <span class="n">s0</span> <span class="o">=</span> <span class="n">s0</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">StackJoyType</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">s0</span><span class="p">)</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">Astar</span><span class="p">(),</span> <span class="n">s1</span>
+    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+        <span class="n">s1</span> <span class="o">=</span> <span class="n">term</span><span class="p">,</span> <span class="n">s1</span>
+    <span class="k">return</span> <span class="n">s1</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[111]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[112]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">concat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[112]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(a1, (A*, (a2, s1)))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Joy-in-the-Logical-Paradigm">Joy in the Logical Paradigm<a class="anchor-link" href="#Joy-in-the-Logical-Paradigm">&#182;</a></h2><p>For this to work the type label classes have to be modified to let <code>T &gt;= t</code> succeed, where e.g. <code>T</code> is <code>IntJoyType</code> and <code>t</code> is <code>int</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[113]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">F</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">roll_down</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">cons</span><span class="p">,</span> <span class="n">cons</span><span class="p">))</span>
+
+<span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">F</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-113-4b4cb6ff86e5&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> F <span class="ansi-blue-fg">=</span> reduce<span class="ansi-blue-fg">(</span>C<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>pop<span class="ansi-blue-fg">,</span> swap<span class="ansi-blue-fg">,</span> roll_down<span class="ansi-blue-fg">,</span> rest<span class="ansi-blue-fg">,</span> rest<span class="ansi-blue-fg">,</span> cons<span class="ansi-blue-fg">,</span> cons<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> 
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">print</span> doc_from_stack_effect<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>F<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-101-ddee30dbb1a6&gt;</span> in <span class="ansi-cyan-fg">C</span><span class="ansi-blue-fg">(f, g)</span>
+<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-green-fg">def</span> C<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     11</span>     f<span class="ansi-blue-fg">,</span> g <span class="ansi-blue-fg">=</span> relabel<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 12</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">for</span> fg <span class="ansi-green-fg">in</span> compose<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     13</span>         <span class="ansi-green-fg">yield</span> delabel<span class="ansi-blue-fg">(</span>fg<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-100-4237a6bb159d&gt;</span> in <span class="ansi-cyan-fg">compose</span><span class="ansi-blue-fg">(f, g)</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">def</span> compose<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> 
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg">     </span><span class="ansi-blue-fg">(</span>f_in<span class="ansi-blue-fg">,</span> f_out<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>g_in<span class="ansi-blue-fg">,</span> g_out<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">=</span> f<span class="ansi-blue-fg">,</span> g
+<span class="ansi-green-intense-fg ansi-bold">      4</span> 
+<span class="ansi-green-intense-fg ansi-bold">      5</span>     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> g_in<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-101-ddee30dbb1a6&gt;</span> in <span class="ansi-cyan-fg">C</span><span class="ansi-blue-fg">(f, g)</span>
+<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-green-fg">def</span> C<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     11</span>     f<span class="ansi-blue-fg">,</span> g <span class="ansi-blue-fg">=</span> relabel<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 12</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">for</span> fg <span class="ansi-green-fg">in</span> compose<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     13</span>         <span class="ansi-green-fg">yield</span> delabel<span class="ansi-blue-fg">(</span>fg<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-100-4237a6bb159d&gt;</span> in <span class="ansi-cyan-fg">compose</span><span class="ansi-blue-fg">(f, g)</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">def</span> compose<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> 
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg">     </span><span class="ansi-blue-fg">(</span>f_in<span class="ansi-blue-fg">,</span> f_out<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>g_in<span class="ansi-blue-fg">,</span> g_out<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">=</span> f<span class="ansi-blue-fg">,</span> g
+<span class="ansi-green-intense-fg ansi-bold">      4</span> 
+<span class="ansi-green-intense-fg ansi-bold">      5</span>     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> g_in<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-101-ddee30dbb1a6&gt;</span> in <span class="ansi-cyan-fg">C</span><span class="ansi-blue-fg">(f, g)</span>
+<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-green-fg">def</span> C<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     11</span>     f<span class="ansi-blue-fg">,</span> g <span class="ansi-blue-fg">=</span> relabel<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 12</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">for</span> fg <span class="ansi-green-fg">in</span> compose<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     13</span>         <span class="ansi-green-fg">yield</span> delabel<span class="ansi-blue-fg">(</span>fg<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-100-4237a6bb159d&gt;</span> in <span class="ansi-cyan-fg">compose</span><span class="ansi-blue-fg">(f, g)</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">def</span> compose<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> 
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg">     </span><span class="ansi-blue-fg">(</span>f_in<span class="ansi-blue-fg">,</span> f_out<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>g_in<span class="ansi-blue-fg">,</span> g_out<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">=</span> f<span class="ansi-blue-fg">,</span> g
+<span class="ansi-green-intense-fg ansi-bold">      4</span> 
+<span class="ansi-green-intense-fg ansi-bold">      5</span>     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> g_in<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-101-ddee30dbb1a6&gt;</span> in <span class="ansi-cyan-fg">C</span><span class="ansi-blue-fg">(f, g)</span>
+<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-green-fg">def</span> C<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     11</span>     f<span class="ansi-blue-fg">,</span> g <span class="ansi-blue-fg">=</span> relabel<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 12</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">for</span> fg <span class="ansi-green-fg">in</span> compose<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     13</span>         <span class="ansi-green-fg">yield</span> delabel<span class="ansi-blue-fg">(</span>fg<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-100-4237a6bb159d&gt;</span> in <span class="ansi-cyan-fg">compose</span><span class="ansi-blue-fg">(f, g)</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">def</span> compose<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> 
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg">     </span><span class="ansi-blue-fg">(</span>f_in<span class="ansi-blue-fg">,</span> f_out<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>g_in<span class="ansi-blue-fg">,</span> g_out<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">=</span> f<span class="ansi-blue-fg">,</span> g
+<span class="ansi-green-intense-fg ansi-bold">      4</span> 
+<span class="ansi-green-intense-fg ansi-bold">      5</span>     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> g_in<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-101-ddee30dbb1a6&gt;</span> in <span class="ansi-cyan-fg">C</span><span class="ansi-blue-fg">(f, g)</span>
+<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-green-fg">def</span> C<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     11</span>     f<span class="ansi-blue-fg">,</span> g <span class="ansi-blue-fg">=</span> relabel<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 12</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">for</span> fg <span class="ansi-green-fg">in</span> compose<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     13</span>         <span class="ansi-green-fg">yield</span> delabel<span class="ansi-blue-fg">(</span>fg<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-100-4237a6bb159d&gt;</span> in <span class="ansi-cyan-fg">compose</span><span class="ansi-blue-fg">(f, g)</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">def</span> compose<span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> g<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> 
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg">     </span><span class="ansi-blue-fg">(</span>f_in<span class="ansi-blue-fg">,</span> f_out<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>g_in<span class="ansi-blue-fg">,</span> g_out<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">=</span> f<span class="ansi-blue-fg">,</span> g
+<span class="ansi-green-intense-fg ansi-bold">      4</span> 
+<span class="ansi-green-intense-fg ansi-bold">      5</span>     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> g_in<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">ValueError</span>: need more than 1 value to unpack</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.parser</span> <span class="kn">import</span> <span class="n">text_to_expression</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[3 4 ...] 2 1&#39;</span><span class="p">)</span>
+<span class="n">s</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="p">)</span>
+<span class="n">L</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
