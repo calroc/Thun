@@ -13,6 +13,10 @@ clean:
 sdist:
 	python ./setup.py sdist
 
+joy/utils/generated_library.py: joy/utils/types.py
+	python -c 'import joy.utils.types ; joy.utils.types.generate_library_code()' > $@
+
+
 # In order to support testing the code as installed
 # create a virtualenv and install the source dist zip there.
 test: sdist

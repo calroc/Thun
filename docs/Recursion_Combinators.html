@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>Quadratic</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Recursion_Combinators</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11776,7 +11776,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">DefinitionWrapper</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
 </pre></div>
 
 </div>
@@ -11788,99 +11788,26 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Quadratic-formula"><a href="https://en.wikipedia.org/wiki/Quadratic_formula">Quadratic formula</a><a class="anchor-link" href="#Quadratic-formula">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Cf. <a href="http://www.kevinalbrecht.com/code/joy-mirror/jp-quadratic.html">jp-quadratic.html</a></p>
+<h1 id="Recursive-Combinators">Recursive Combinators<a class="anchor-link" href="#Recursive-Combinators">&#182;</a></h1><p>This article describes the <code>genrec</code> combinator, how to use it, and several generic specializations.</p>
 
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
+<pre><code>                      [if] [then] [rec1] [rec2] genrec
+---------------------------------------------------------------------
+   [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte
 
-<pre><code>   -b ± sqrt(b^2 - 4 * a * c)
---------------------------------
-            2 * a</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>$\frac{-b  \pm \sqrt{b^2 - 4ac}}{2a}$</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Write-a-straightforward-program-with-variable-names.">Write a straightforward program with variable names.<a class="anchor-link" href="#Write-a-straightforward-program-with-variable-names.">&#182;</a></h2><p>This math translates to Joy code in a straightforward manner.  We are going to use named variables to keep track of the arguments, then write a definition without them.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="-b"><code>-b</code><a class="anchor-link" href="#-b">&#182;</a></h3>
-<pre><code>b neg</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="sqrt(b^2---4-*-a-*-c)"><code>sqrt(b^2 - 4 * a * c)</code><a class="anchor-link" href="#sqrt(b^2---4-*-a-*-c)">&#182;</a></h3>
-<pre><code>b sqr 4 a c * * - sqrt</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="/2a"><code>/2a</code><a class="anchor-link" href="#/2a">&#182;</a></h3>
-<pre><code>a 2 * /</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="&#177;"><code>&#177;</code><a class="anchor-link" href="#&#177;">&#182;</a></h3><p>There is a function <code>pm</code> that accepts two values on the stack and replaces them with their sum and difference.</p>
-
-<pre><code>pm == [+] [-] cleave popdd</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Putting-Them-Together">Putting Them Together<a class="anchor-link" href="#Putting-Them-Together">&#182;</a></h3>
-<pre><code>b neg b sqr 4 a c * * - sqrt pm a 2 * [/] cons app2
 
 </code></pre>
-<p>We use <code>app2</code> to compute both roots by using a quoted program <code>[2a /]</code> built with <code>cons</code>.</p>
+<p>From "Recursion Theory and Joy" (j05cmp.html) by Manfred von Thun:</p>
+<blockquote><p>"The genrec combinator takes four program parameters in addition to
+whatever data parameters it needs. Fourth from the top is an if-part,
+followed by a then-part. If the if-part yields true, then the then-part
+is executed and the combinator terminates. The other two parameters are
+the rec1-part and the rec2-part. If the if-part yields false, the
+rec1-part is executed. Following that the four program parameters and
+the combinator are again pushed onto the stack bundled up in a quoted
+form. Then the rec2-part is executed, where it will find the bundled
+form. Typically it will then execute the bundled form, either with i or
+with app2, or some other combinator."</p>
+</blockquote>
 
 </div>
 </div>
@@ -11889,16 +11816,52 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Derive-a-definition.">Derive a definition.<a class="anchor-link" href="#Derive-a-definition.">&#182;</a></h2><p>Working backwards we use <code>dip</code> and <code>dipd</code> to extract the code from the variables:</p>
+<h2 id="Designing-Recursive-Functions">Designing Recursive Functions<a class="anchor-link" href="#Designing-Recursive-Functions">&#182;</a></h2><p>The way to design one of these is to fix your base case and 
+test and then treat <code>R1</code> and <code>R2</code> as an else-part "sandwiching"
+a quotation of the whole function.</p>
+<p>For example, given a (general recursive) function <code>F</code>:</p>
 
-<pre><code>b             neg  b      sqr 4 a c   * * - sqrt pm a    2 * [/] cons app2
-b            [neg] dupdip sqr 4 a c   * * - sqrt pm a    2 * [/] cons app2
-b a c       [[neg] dupdip sqr 4] dipd * * - sqrt pm a    2 * [/] cons app2
-b a c a    [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
-b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
+<pre><code>F == [I] [T] [R1]   [R2] genrec
+  == [I] [T] [R1 [F] R2] ifte
 
 </code></pre>
-<p>The three arguments are to the left, so we can "chop off" everything to the right and say it's the definition of the <code>quadratic</code> function:</p>
+<p>If the <code>[I]</code> predicate is false you must derive <code>R1</code> and <code>R2</code> from:</p>
+
+<pre><code>... R1 [F] R2
+
+</code></pre>
+<p>Set the stack arguments in front and figure out what <code>R1</code> and <code>R2</code>
+have to do to apply the quoted <code>[F]</code> in the proper way.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Primitive-Recursive-Functions">Primitive Recursive Functions<a class="anchor-link" href="#Primitive-Recursive-Functions">&#182;</a></h2><p>Primitive recursive functions are those where <code>R2 == i</code>.</p>
+
+<pre><code>P == [I] [T] [R] primrec
+  == [I] [T] [R [P] i] ifte
+  == [I] [T] [R P] ifte</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Hylomorphism"><a href="https://en.wikipedia.org/wiki/Hylomorphism_%28computer_science%29">Hylomorphism</a><a class="anchor-link" href="#Hylomorphism">&#182;</a></h2><p>A <a href="https://en.wikipedia.org/wiki/Hylomorphism_%28computer_science%29">hylomorphism</a> is a recursive function <code>H :: A -&gt; C</code> that converts a value of type <code>A</code> into a value of type <code>C</code> by means of:</p>
+<ul>
+<li>A generator <code>G :: A -&gt; (B, A)</code></li>
+<li>A combiner <code>F :: (B, C) -&gt; C</code></li>
+<li>A predicate <code>P :: A -&gt; Bool</code> to detect the base case</li>
+<li>A base case value <code>c :: C</code></li>
+<li>Recursive calls (zero or more); it has a "call stack in the form of a cons list".</li>
+</ul>
+<p>It may be helpful to see this function implemented in imperative Python code.</p>
 
 </div>
 </div>
@@ -11908,7 +11871,18 @@ b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">hylomorphism</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return a hylomorphism function H.&#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">H</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">P</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">c</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">b</span><span class="p">,</span> <span class="n">aa</span> <span class="o">=</span> <span class="n">G</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">H</span><span class="p">(</span><span class="n">aa</span><span class="p">))</span>  <span class="c1"># b is stored in the stack frame during recursive call to H().</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">return</span> <span class="n">H</span>
 </pre></div>
 
 </div>
@@ -11920,7 +11894,86 @@ b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's try it out:</p>
+<p>Cf. <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.125">"Bananas, Lenses, &amp; Barbed Wire"</a></p>
+<p>Note that during evaluation of <code>H()</code> the intermediate <code>b</code> values are stored in the Python call stack.  This is what is meant by "call stack in the form of a cons list".</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Hylomorphism-in-Joy">Hylomorphism in Joy<a class="anchor-link" href="#Hylomorphism-in-Joy">&#182;</a></h2><p>We can define a combinator <code>hylomorphism</code> that will make a hylomorphism combinator <code>H</code> from constituent parts.</p>
+
+<pre><code>H == [P] c [G] [F] hylomorphism
+
+</code></pre>
+<p>The function <code>H</code> is recursive, so we start with <code>ifte</code> and set the else-part to
+some function <code>J</code> that will contain a quoted copy of <code>H</code>.  (The then-part just
+discards the leftover <code>a</code> and replaces it with the base case value <code>c</code>.)</p>
+
+<pre><code>H == [P] [pop c] [J] ifte
+
+</code></pre>
+<p>The else-part <code>J</code> gets just the argument <code>a</code> on the stack.</p>
+
+<pre><code>a J
+a G              The first thing to do is use the generator G
+aa b             which produces b and a new aa
+aa b [H] dip     we recur with H on the new aa
+aa H b F         and run F on the result.
+
+</code></pre>
+<p>This gives us a definition for <code>J</code>.</p>
+
+<pre><code>J == G [H] dip F
+
+</code></pre>
+<p>Plug it in and convert to genrec.</p>
+
+<pre><code>H == [P] [pop c] [G [H] dip F] ifte
+H == [P] [pop c] [G]   [dip F] genrec
+
+</code></pre>
+<p>This is the form of a hylomorphism in Joy, which nicely illustrates that
+it is a simple specialization of the general recursion combinator.</p>
+
+<pre><code>H == [P] c [G] [F] hylomorphism == [P] [pop c] [G] [dip F] genrec</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Derivation-of-hylomorphism-combinator">Derivation of <code>hylomorphism</code> combinator<a class="anchor-link" href="#Derivation-of-hylomorphism-combinator">&#182;</a></h2><p>Now we just need to derive a definition that builds the <code>genrec</code> arguments
+out of the pieces given to the <code>hylomorphism</code> combinator.</p>
+
+<pre><code>   [P]      c  [G]     [F] hylomorphism
+------------------------------------------
+   [P] [pop c] [G] [dip F] genrec
+
+</code></pre>
+<p>Working in reverse:</p>
+<ul>
+<li>Use <code>swoncat</code> twice to decouple <code>[c]</code> and <code>[F]</code>.</li>
+<li>Use <code>unit</code> to dequote <code>c</code>.</li>
+<li>Use <code>dipd</code> to untangle <code>[unit [pop] swoncat]</code> from the givens.</li>
+</ul>
+<p>So:</p>
+
+<pre><code>H == [P] [pop c]              [G]                  [dip F] genrec
+     [P] [c]    [pop] swoncat [G]        [F] [dip] swoncat genrec
+     [P] c unit [pop] swoncat [G]        [F] [dip] swoncat genrec
+     [P] c [G] [F] [unit [pop] swoncat] dipd [dip] swoncat genrec
+
+</code></pre>
+<p>At this point all of the arguments (givens) to the hylomorphism are to the left so we have
+a definition for <code>hylomorphism</code>:</p>
+
+<pre><code>hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec</code></pre>
 
 </div>
 </div>
@@ -11930,7 +11983,58 @@ b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 1 1 quadratic&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Example:-Finding-Triangular-Numbers">Example: Finding <a href="https://en.wikipedia.org/wiki/Triangular_number">Triangular Numbers</a><a class="anchor-link" href="#Example:-Finding-Triangular-Numbers">&#182;</a></h3><p>Let's write a function that, given a positive integer, returns the sum of all positive integers less than that one.  (In this case the types <code>A</code>, <code>B</code> and <code>C</code> are all <code>int</code>.)</p>
+<p>To sum a range of integers from 0 to <em>n</em> - 1:</p>
+<ul>
+<li><code>[P]</code> is <code>[1 &lt;=]</code></li>
+<li><code>c</code> is <code>0</code></li>
+<li><code>[G]</code> is <code>[-- dup]</code></li>
+<li><code>[F]</code> is <code>[+]</code></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;triangular_number == [1 &lt;=] 0 [-- dup] [+] hylomorphism&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's try it:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 triangular_number&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11947,7 +12051,38 @@ b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>-0.3819660112501051 -2.618033988749895
+<pre>10
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 1 2 3 4 5 6] [triangular_number] map&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[0 0 1 3 6 10 15]
 </pre>
 </div>
 </div>
@@ -11960,17 +12095,194 @@ b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>If you look at the Joy evaluation trace you can see that the first few lines are the <code>dip</code> and <code>dipd</code> combinators building the main program by incorporating the values on the stack.  Then that program runs and you get the results.  This is pretty typical of Joy code.</p>
+<h2 id="Four-Specializations">Four Specializations<a class="anchor-link" href="#Four-Specializations">&#182;</a></h2><p>There are at least four kinds of recursive combinator, depending on two choices.  The first choice is whether the combiner function <code>F</code> should be evaluated during the recursion or pushed into the pending expression to be "collapsed" at the end.  The second choice is whether the combiner needs to operate on the current value of the datastructure or the generator's output, in other words, whether <code>F</code> or <code>G</code> should run first in the recursive branch.</p>
+
+<pre><code>H1 ==        [P] [pop c] [G             ] [dip F] genrec
+H2 == c swap [P] [pop]   [G [F]    dip  ] [i]     genrec
+H3 ==        [P] [pop c] [  [G] dupdip  ] [dip F] genrec
+H4 == c swap [P] [pop]   [  [F] dupdip G] [i]     genrec
+
+</code></pre>
+<p>The working of the generator function <code>G</code> differs slightly for each.  Consider the recursive branches:</p>
+
+<pre><code>... a G [H1] dip F                w/ a G == a′ b
+
+... c a G [F] dip H2                 a G == b  a′
+
+... a [G] dupdip [H3] dip F          a G == a′
+
+... c a [F] dupdip G H4              a G == a′
+
+</code></pre>
+<p>The following four sections illustrate how these work, omitting the predicate evaluation.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="H1"><code>H1</code><a class="anchor-link" href="#H1">&#182;</a></h3>
+<pre><code>H1 == [P] [pop c] [G] [dip F] genrec
+
+</code></pre>
+<p>Iterate n times.</p>
+
+<pre><code>... a  G [H1] dip F
+... a′ b [H1] dip F
+... a′ H1 b F
+... a′ G [H1] dip F b F
+... a″ b′ [H1] dip F b F
+... a″ H1 b′ F b F
+... a″ G [H1] dip F b′ F b F
+... a‴ b″ [H1] dip F b′ F b F
+... a‴ H1 b″ F b′ F b F
+... a‴ pop c b″ F b′ F b F
+... c b″ F b′ F b F
+... d      b′ F b F
+... d′          b F
+... d″
+
+</code></pre>
+<p>This form builds up a pending expression (continuation) that contains the intermediate results along with the pending combiner functions.  When the base case is reached the last term is replaced by the identity value <code>c</code> and the continuation "collapses" into the final result using the combiner <code>F</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="H2"><code>H2</code><a class="anchor-link" href="#H2">&#182;</a></h3><p>When you can start with the identity value <code>c</code> on the stack and the combiner <code>F</code> can operate as you go using the intermediate results immediately rather than queuing them up, use this form.  An important difference is that the generator function must return its results in the reverse order.</p>
+
+<pre><code>H2 == c swap [P] [pop] [G [F] dip] primrec
+
+... c a G  [F] dip H2
+... c b a′ [F] dip H2
+... c b F a′ H2
+... d     a′ H2
+... d a′ G  [F] dip H2
+... d b′ a″ [F] dip H2
+... d b′ F a″ H2
+... d′     a″ H2
+... d′ a″ G  [F] dip H2
+... d′ b″ a‴ [F] dip H2
+... d′ b″ F a‴ H2
+... d″      a‴ H2
+... d″ a‴ pop
+... d″</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="H3"><code>H3</code><a class="anchor-link" href="#H3">&#182;</a></h3><p>If you examine the traces above you'll see that the combiner <code>F</code> only gets to operate on the results of <code>G</code>, it never "sees" the first value <code>a</code>.  If the combiner and the generator both need to work on the current value then <code>dup</code> must be used, and the generator must produce one item instead of two (the b is instead the duplicate of a.)</p>
+
+<pre><code>H3 == [P] [pop c] [[G] dupdip] [dip F] genrec
+
+... a [G] dupdip [H3] dip F
+... a  G  a      [H3] dip F
+... a′    a      [H3] dip F
+... a′ H3 a               F
+... a′ [G] dupdip [H3] dip F a F
+... a′  G  a′     [H3] dip F a F
+... a″     a′     [H3] dip F a F
+... a″ H3  a′              F a F
+... a″ [G] dupdip [H3] dip F a′ F a F
+... a″  G    a″   [H3] dip F a′ F a F
+... a‴       a″   [H3] dip F a′ F a F
+... a‴ H3    a″            F a′ F a F
+... a‴ pop c a″ F a′ F a F
+...        c a″ F a′ F a F
+...        d      a′ F a F
+...        d′          a F
+...        d″</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="H4"><code>H4</code><a class="anchor-link" href="#H4">&#182;</a></h3><p>And, last but not least, if you can combine as you go, starting with <code>c</code>, and the combiner <code>F</code> needs to work on the current item, this is the form:</p>
+
+<pre><code>H4 == c swap [P] [pop] [[F] dupdip G] primrec
+
+... c  a  [F] dupdip G H4
+... c  a   F  a      G H4
+... d         a      G H4
+... d  a′              H4
+... d  a′ [F] dupdip G H4
+... d  a′  F  a′     G H4
+... d′        a′     G H4
+... d′ a″              H4
+... d′ a″ [F] dupdip G H4
+... d′ a″  F  a″     G H4
+... d″        a″     G H4
+... d″ a‴              H4
+... d″ a‴ pop
+... d″</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Anamorphism">Anamorphism<a class="anchor-link" href="#Anamorphism">&#182;</a></h2><p>An anamorphism can be defined as a hylomorphism that uses <code>[]</code> for <code>c</code> and
+<code>swons</code> for <code>F</code>.  An anamorphic function builds a list of values.</p>
+
+<pre><code>A == [P] [] [G] [swons] hylomorphism</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="range-et.-al."><code>range</code> et. al.<a class="anchor-link" href="#range-et.-al.">&#182;</a></h3><p>An example of an anamorphism is the <code>range</code> function which generates the list of integers from 0 to <em>n</em> - 1 given <em>n</em>.</p>
+<p>Each of the above variations can be used to make four slightly different <code>range</code> functions.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="range-with-H1"><code>range</code> with <code>H1</code><a class="anchor-link" href="#range-with-H1">&#182;</a></h4>
+<pre><code>H1 == [P]    [pop c]  [G]      [dip F]     genrec
+   == [0 &lt;=] [pop []] [-- dup] [dip swons] genrec</code></pre>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;-5 1 4 quadratic&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;range == [0 &lt;=] [] [-- dup] [swons] hylomorphism&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 range&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11987,51 +12299,7 @@ b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>                                                   . -5 1 4 quadratic
-                                                -5 . 1 4 quadratic
-                                              -5 1 . 4 quadratic
-                                            -5 1 4 . quadratic
-                                            -5 1 4 . over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
-                                          -5 1 4 1 . [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
--5 1 4 1 [[[neg] dupdip sqr 4] dipd * * - sqrt pm] . dip 2 * [/] cons app2
-                                            -5 1 4 . [[neg] dupdip sqr 4] dipd * * - sqrt pm 1 2 * [/] cons app2
-                       -5 1 4 [[neg] dupdip sqr 4] . dipd * * - sqrt pm 1 2 * [/] cons app2
-                                                -5 . [neg] dupdip sqr 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
-                                          -5 [neg] . dupdip sqr 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
-                                                -5 . neg -5 sqr 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
-                                                 5 . -5 sqr 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
-                                              5 -5 . sqr 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
-                                              5 -5 . dup mul 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
-                                           5 -5 -5 . mul 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
-                                              5 25 . 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
-                                            5 25 4 . 1 4 * * - sqrt pm 1 2 * [/] cons app2
-                                          5 25 4 1 . 4 * * - sqrt pm 1 2 * [/] cons app2
-                                        5 25 4 1 4 . * * - sqrt pm 1 2 * [/] cons app2
-                                          5 25 4 4 . * - sqrt pm 1 2 * [/] cons app2
-                                           5 25 16 . - sqrt pm 1 2 * [/] cons app2
-                                               5 9 . sqrt pm 1 2 * [/] cons app2
-                                             5 3.0 . pm 1 2 * [/] cons app2
-                                           8.0 2.0 . 1 2 * [/] cons app2
-                                         8.0 2.0 1 . 2 * [/] cons app2
-                                       8.0 2.0 1 2 . * [/] cons app2
-                                         8.0 2.0 2 . [/] cons app2
-                                     8.0 2.0 2 [/] . cons app2
-                                     8.0 2.0 [2 /] . app2
-                                       [8.0] [2 /] . infra first [2.0] [2 /] infra first
-                                               8.0 . 2 / [] swaack first [2.0] [2 /] infra first
-                                             8.0 2 . / [] swaack first [2.0] [2 /] infra first
-                                               4.0 . [] swaack first [2.0] [2 /] infra first
-                                            4.0 [] . swaack first [2.0] [2 /] infra first
-                                             [4.0] . first [2.0] [2 /] infra first
-                                               4.0 . [2.0] [2 /] infra first
-                                         4.0 [2.0] . [2 /] infra first
-                                   4.0 [2.0] [2 /] . infra first
-                                               2.0 . 2 / [4.0] swaack first
-                                             2.0 2 . / [4.0] swaack first
-                                               1.0 . [4.0] swaack first
-                                         1.0 [4.0] . swaack first
-                                         4.0 [1.0] . first
-                                           4.0 1.0 . 
+<pre>[4 3 2 1 0]
 </pre>
 </div>
 </div>
@@ -12039,6 +12307,545 @@ b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="range-with-H2"><code>range</code> with <code>H2</code><a class="anchor-link" href="#range-with-H2">&#182;</a></h4>
+<pre><code>H2 == c  swap [P]    [pop] [G      [F]     dip] primrec
+   == [] swap [0 &lt;=] [pop] [-- dup [swons] dip] primrec</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;range_reverse == [] swap [0 &lt;=] [pop] [-- dup [swons] dip] primrec&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 range_reverse&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[0 1 2 3 4]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="range-with-H3"><code>range</code> with <code>H3</code><a class="anchor-link" href="#range-with-H3">&#182;</a></h4>
+<pre><code>H3 == [P]    [pop c]  [[G]  dupdip] [dip F]     genrec
+   == [0 &lt;=] [pop []] [[--] dupdip] [dip swons] genrec</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;ranger == [0 &lt;=] [pop []] [[--] dupdip] [dip swons] genrec&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 ranger&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[5 4 3 2 1]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="range-with-H4"><code>range</code> with <code>H4</code><a class="anchor-link" href="#range-with-H4">&#182;</a></h4>
+<pre><code>H4 == c  swap [P]    [pop] [[F]     dupdip G ] primrec
+   == [] swap [0 &lt;=] [pop] [[swons] dupdip --] primrec</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;ranger_reverse == [] swap [0 &lt;=] [pop] [[swons] dupdip --] primrec&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 ranger_reverse&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1 2 3 4 5]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Hopefully this illustrates the workings of the variations.  For more insight you can run the cells using the <code>V()</code> function instead of the <code>J()</code> function to get a trace of the Joy evaluation.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Catamorphism">Catamorphism<a class="anchor-link" href="#Catamorphism">&#182;</a></h2><p>A catamorphism can be defined as a hylomorphism that uses <code>[uncons swap]</code> for <code>[G]</code>
+and <code>[[] =]</code> (or just <code>[not]</code>) for the predicate <code>[P]</code>.  A catamorphic function tears down a list term-by-term and makes some new value.</p>
+
+<pre><code>C == [not] c [uncons swap] [F] hylomorphism</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;swuncons == uncons swap&#39;</span><span class="p">)</span>  <span class="c1"># Awkward name.</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>An example of a catamorphism is the sum function.</p>
+
+<pre><code>sum == [not] 0 [swuncons] [+] hylomorphism</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;sum == [not] 0 [swuncons] [+] hylomorphism&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 4 3 2 1] sum&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>15
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="The-step-combinator">The <code>step</code> combinator<a class="anchor-link" href="#The-step-combinator">&#182;</a></h3><p>The <code>step</code> combinator will usually be better to use than <code>catamorphism</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[step] help&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Run a quoted program on each item in a sequence.
+::
+
+        ... [] [Q] . step
+     -----------------------
+               ... .
+
+
+       ... [a] [Q] . step
+    ------------------------
+             ... a . Q
+
+
+     ... [a b c] [Q] . step
+  ----------------------------------------
+               ... a . Q [b c] [Q] step
+
+The step combinator executes the quotation on each member of the list
+on top of the stack.
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;sum == 0 swap [+] step&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 4 3 2 1] sum&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>15
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Example:-Factorial-Function">Example: Factorial Function<a class="anchor-link" href="#Example:-Factorial-Function">&#182;</a></h2><p>For the Factorial function:</p>
+
+<pre><code>H4 == c swap [P] [pop] [[F] dupdip G] primrec
+
+</code></pre>
+<p>With:</p>
+
+<pre><code>c == 1
+F == *
+G == --
+P == 1 &lt;=</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;factorial == 1 swap [1 &lt;=] [pop] [[*] dupdip --] primrec&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 factorial&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>120
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Example:-tails">Example: <code>tails</code><a class="anchor-link" href="#Example:-tails">&#182;</a></h2><p>An example of a paramorphism for lists given in the <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.125">"Bananas..." paper</a> is <code>tails</code> which returns the list of "tails" of a list.</p>
+
+<pre><code>    [1 2 3] tails
+--------------------
+   [[] [3] [2 3]]</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can build as we go, and we want <code>F</code> to run after <code>G</code>, so we use pattern <code>H2</code>:</p>
+
+<pre><code>H2 == c swap [P] [pop] [G [F] dip] primrec</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We would use:</p>
+
+<pre><code>c == []
+F == swons
+G == rest dup
+P == not</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;tails == [] swap [not] [pop] [rest dup [swons] dip] primrec&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] tails&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[] [3] [2 3]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Conclusion:-Patterns-of-Recursion">Conclusion: Patterns of Recursion<a class="anchor-link" href="#Conclusion:-Patterns-of-Recursion">&#182;</a></h2><p>Our story so far...</p>
+<h3 id="Hylo-,-Ana-,-Cata-">Hylo-, Ana-, Cata-<a class="anchor-link" href="#Hylo-,-Ana-,-Cata-">&#182;</a></h3>
+<pre><code>H == [P  ] [pop c ] [G          ] [dip F        ] genrec
+A == [P  ] [pop []] [G          ] [dip swap cons] genrec
+C == [not] [pop c ] [uncons swap] [dip F        ] genrec
+
+</code></pre>
+<h3 id="Para-,-?-,-?-">Para-, ?-, ?-<a class="anchor-link" href="#Para-,-?-,-?-">&#182;</a></h3>
+<pre><code>P == c  swap [P  ] [pop] [[F        ] dupdip G          ] primrec
+? == [] swap [P  ] [pop] [[swap cons] dupdip G          ] primrec
+? == c  swap [not] [pop] [[F        ] dupdip uncons swap] primrec</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Appendix:-Fun-with-Symbols">Appendix: Fun with Symbols<a class="anchor-link" href="#Appendix:-Fun-with-Symbols">&#182;</a></h2>
+<pre><code>|[ (c, F), (G, P) ]| == (|c, F|) • [(G, P)]
+
+</code></pre>
+<p><a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.125">"Bananas, Lenses, &amp; Barbed Wire"</a></p>
+
+<pre><code>(|...|)  [(...)]  [&lt;...&gt;]
+
+</code></pre>
+<p>I think they are having slightly too much fun with the symbols.  However, "Too much is always better than not enough."</p>
+
+</div>
+</div>
 </div>
     </div>
   </div>

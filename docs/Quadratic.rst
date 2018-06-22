@@ -1,104 +1,92 @@
 
-`Quadratic formula <https://en.wikipedia.org/wiki/Quadratic_formula>`__
-=======================================================================
-
 .. code:: ipython2
 
     from notebook_preamble import J, V, define
+
+`Quadratic formula <https://en.wikipedia.org/wiki/Quadratic_formula>`__
+=======================================================================
 
 Cf.
 `jp-quadratic.html <http://www.kevinalbrecht.com/code/joy-mirror/jp-quadratic.html>`__
 
 ::
 
-             -b  +/- sqrt(b^2 - 4 * a * c)
-             -----------------------------
-                        2 * a
+       -b ± sqrt(b^2 - 4 * a * c)
+    --------------------------------
+                2 * a
 
 :math:`\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}`
 
 Write a straightforward program with variable names.
 ----------------------------------------------------
 
-::
+This math translates to Joy code in a straightforward manner. We are
+going to use named variables to keep track of the arguments, then write
+a definition without them.
 
-    b neg b sqr 4 a c * * - sqrt [+] [-] cleave a 2 * [truediv] cons app2
-
-We use ``cleave`` to compute the sum and difference and then ``app2`` to
-finish computing both roots using a quoted program ``[2a truediv]``
-built with ``cons``.
-
-Check it.
-~~~~~~~~~
-
-Evaluating by hand:
+``-b``
+~~~~~~
 
 ::
 
-     b neg b sqr 4 a c * * - sqrt [+] [-] cleave a 2 * [truediv] cons app2
-    -b     b sqr 4 a c * * - sqrt [+] [-] cleave a 2 * [truediv] cons app2
-    -b     b^2   4 a c * * - sqrt [+] [-] cleave a 2 * [truediv] cons app2
-    -b     b^2 4ac         - sqrt [+] [-] cleave a 2 * [truediv] cons app2
-    -b     b^2-4ac           sqrt [+] [-] cleave a 2 * [truediv] cons app2
-    -b sqrt(b^2-4ac)              [+] [-] cleave a 2 * [truediv] cons app2
+    b neg
 
-    -b -b+sqrt(b^2-4ac)    -b-sqrt(b^2-4ac)    a 2 * [truediv] cons app2
-    -b -b+sqrt(b^2-4ac)    -b-sqrt(b^2-4ac)    2a    [truediv] cons app2
-    -b -b+sqrt(b^2-4ac)    -b-sqrt(b^2-4ac)    [2a truediv]         app2
-    -b -b+sqrt(b^2-4ac)/2a -b-sqrt(b^2-4ac)/2a
+``sqrt(b^2 - 4 * a * c)``
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-(Eventually we’ll be able to use e.g. Sympy versions of the Joy commands
-to do this sort of thing symbolically. This is part of what is meant by
-a “categorical” language.)
+::
 
-Cleanup
+    b sqr 4 a c * * - sqrt
+
+``/2a``
 ~~~~~~~
 
 ::
 
-    -b -b+sqrt(b^2-4ac)/2a -b-sqrt(b^2-4ac)/2a                          roll< pop
-       -b+sqrt(b^2-4ac)/2a -b-sqrt(b^2-4ac)/2a -b                             pop
-       -b+sqrt(b^2-4ac)/2a -b-sqrt(b^2-4ac)/2a
+    a 2 * /
 
-Derive a definition.
---------------------
+``±``
+~~~~~
 
-::
-
-    b neg b           sqr 4 a c        * * - sqrt [+] [-] cleave a       2 * [truediv] cons app2 roll< pop
-    b    [neg] dupdip sqr 4 a c        * * - sqrt [+] [-] cleave a       2 * [truediv] cons app2 roll< pop
-    b a c    [[neg] dupdip sqr 4] dipd * * - sqrt [+] [-] cleave a       2 * [truediv] cons app2 roll< pop
-    b a c a    [[[neg] dupdip sqr 4] dipd * * - sqrt [+] [-] cleave] dip 2 * [truediv] cons app2 roll< pop
-    b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt [+] [-] cleave] dip 2 * [truediv] cons app2 roll< pop
-
-.. code:: ipython2
-
-    define('quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt [+] [-] cleave] dip 2 * [truediv] cons app2 roll< pop')
-
-.. code:: ipython2
-
-    J('3 1 1 quadratic')
-
-
-.. parsed-literal::
-
-    -0.3819660112501051 -2.618033988749895
-
-
-Simplify
---------
-
-We can define a ``pm`` plus-or-minus function:
+There is a function ``pm`` that accepts two values on the stack and
+replaces them with their sum and difference.
 
 ::
 
     pm == [+] [-] cleave popdd
 
-Then ``quadratic`` becomes:
+Putting Them Together
+~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    b neg b sqr 4 a c * * - sqrt pm a 2 * [/] cons app2
+
+We use ``app2`` to compute both roots by using a quoted program
+``[2a /]`` built with ``cons``.
+
+Derive a definition.
+--------------------
+
+Working backwards we use ``dip`` and ``dipd`` to extract the code from
+the variables:
+
+::
+
+    b             neg  b      sqr 4 a c   * * - sqrt pm a    2 * [/] cons app2
+    b            [neg] dupdip sqr 4 a c   * * - sqrt pm a    2 * [/] cons app2
+    b a c       [[neg] dupdip sqr 4] dipd * * - sqrt pm a    2 * [/] cons app2
+    b a c a    [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
+    b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
+
+The three arguments are to the left, so we can "chop off" everything to
+the right and say it's the definition of the ``quadratic`` function:
 
 .. code:: ipython2
 
-    define('quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [truediv] cons app2')
+    define('quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2')
+
+Let's try it out:
 
 .. code:: ipython2
 
@@ -110,74 +98,61 @@ Then ``quadratic`` becomes:
     -0.3819660112501051 -2.618033988749895
 
 
-Define a "native" ``pm`` function.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The definition of ``pm`` above is pretty elegant, but the implementation
-takes a lot of steps relative to what it's accomplishing. Since we are
-likely to use ``pm`` more than once in the future, let's write a
-primitive in Python and add it to the dictionary. (This has been done
-already.)
+If you look at the Joy evaluation trace you can see that the first few
+lines are the ``dip`` and ``dipd`` combinators building the main program
+by incorporating the values on the stack. Then that program runs and you
+get the results. This is pretty typical of Joy code.
 
 .. code:: ipython2
 
-    def pm(stack):
-        a, (b, stack) = stack
-        p, m, = b + a, b - a
-        return m, (p, stack)
-
-The resulting trace is short enough to fit on a page.
-
-.. code:: ipython2
-
-    V('3 1 1 quadratic')
+    V('-5 1 4 quadratic')
 
 
 .. parsed-literal::
 
-                                                        . 3 1 1 quadratic
-                                                      3 . 1 1 quadratic
-                                                    3 1 . 1 quadratic
-                                                  3 1 1 . quadratic
-                                                  3 1 1 . over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [truediv] cons app2
-                                                3 1 1 1 . [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [truediv] cons app2
-      3 1 1 1 [[[neg] dupdip sqr 4] dipd * * - sqrt pm] . dip 2 * [truediv] cons app2
-                                                  3 1 1 . [[neg] dupdip sqr 4] dipd * * - sqrt pm 1 2 * [truediv] cons app2
-                             3 1 1 [[neg] dupdip sqr 4] . dipd * * - sqrt pm 1 2 * [truediv] cons app2
-                                                      3 . [neg] dupdip sqr 4 1 1 * * - sqrt pm 1 2 * [truediv] cons app2
-                                                3 [neg] . dupdip sqr 4 1 1 * * - sqrt pm 1 2 * [truediv] cons app2
-                                                      3 . neg 3 sqr 4 1 1 * * - sqrt pm 1 2 * [truediv] cons app2
-                                                     -3 . 3 sqr 4 1 1 * * - sqrt pm 1 2 * [truediv] cons app2
-                                                   -3 3 . sqr 4 1 1 * * - sqrt pm 1 2 * [truediv] cons app2
-                                                   -3 3 . dup mul 4 1 1 * * - sqrt pm 1 2 * [truediv] cons app2
-                                                 -3 3 3 . mul 4 1 1 * * - sqrt pm 1 2 * [truediv] cons app2
-                                                   -3 9 . 4 1 1 * * - sqrt pm 1 2 * [truediv] cons app2
-                                                 -3 9 4 . 1 1 * * - sqrt pm 1 2 * [truediv] cons app2
-                                               -3 9 4 1 . 1 * * - sqrt pm 1 2 * [truediv] cons app2
-                                             -3 9 4 1 1 . * * - sqrt pm 1 2 * [truediv] cons app2
-                                               -3 9 4 1 . * - sqrt pm 1 2 * [truediv] cons app2
-                                                 -3 9 4 . - sqrt pm 1 2 * [truediv] cons app2
-                                                   -3 5 . sqrt pm 1 2 * [truediv] cons app2
-                                    -3 2.23606797749979 . pm 1 2 * [truediv] cons app2
-                  -0.7639320225002102 -5.23606797749979 . 1 2 * [truediv] cons app2
-                -0.7639320225002102 -5.23606797749979 1 . 2 * [truediv] cons app2
-              -0.7639320225002102 -5.23606797749979 1 2 . * [truediv] cons app2
-                -0.7639320225002102 -5.23606797749979 2 . [truediv] cons app2
-      -0.7639320225002102 -5.23606797749979 2 [truediv] . cons app2
-      -0.7639320225002102 -5.23606797749979 [2 truediv] . app2
-                      [-0.7639320225002102] [2 truediv] . infra first [-5.23606797749979] [2 truediv] infra first
-                                    -0.7639320225002102 . 2 truediv [] swaack first [-5.23606797749979] [2 truediv] infra first
-                                  -0.7639320225002102 2 . truediv [] swaack first [-5.23606797749979] [2 truediv] infra first
-                                    -0.3819660112501051 . [] swaack first [-5.23606797749979] [2 truediv] infra first
-                                 -0.3819660112501051 [] . swaack first [-5.23606797749979] [2 truediv] infra first
-                                  [-0.3819660112501051] . first [-5.23606797749979] [2 truediv] infra first
-                                    -0.3819660112501051 . [-5.23606797749979] [2 truediv] infra first
-                -0.3819660112501051 [-5.23606797749979] . [2 truediv] infra first
-    -0.3819660112501051 [-5.23606797749979] [2 truediv] . infra first
-                                      -5.23606797749979 . 2 truediv [-0.3819660112501051] swaack first
-                                    -5.23606797749979 2 . truediv [-0.3819660112501051] swaack first
-                                     -2.618033988749895 . [-0.3819660112501051] swaack first
-               -2.618033988749895 [-0.3819660112501051] . swaack first
-               -0.3819660112501051 [-2.618033988749895] . first
-                 -0.3819660112501051 -2.618033988749895 . 
+                                                       . -5 1 4 quadratic
+                                                    -5 . 1 4 quadratic
+                                                  -5 1 . 4 quadratic
+                                                -5 1 4 . quadratic
+                                                -5 1 4 . over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
+                                              -5 1 4 1 . [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
+    -5 1 4 1 [[[neg] dupdip sqr 4] dipd * * - sqrt pm] . dip 2 * [/] cons app2
+                                                -5 1 4 . [[neg] dupdip sqr 4] dipd * * - sqrt pm 1 2 * [/] cons app2
+                           -5 1 4 [[neg] dupdip sqr 4] . dipd * * - sqrt pm 1 2 * [/] cons app2
+                                                    -5 . [neg] dupdip sqr 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
+                                              -5 [neg] . dupdip sqr 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
+                                                    -5 . neg -5 sqr 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
+                                                     5 . -5 sqr 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
+                                                  5 -5 . sqr 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
+                                                  5 -5 . dup mul 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
+                                               5 -5 -5 . mul 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
+                                                  5 25 . 4 1 4 * * - sqrt pm 1 2 * [/] cons app2
+                                                5 25 4 . 1 4 * * - sqrt pm 1 2 * [/] cons app2
+                                              5 25 4 1 . 4 * * - sqrt pm 1 2 * [/] cons app2
+                                            5 25 4 1 4 . * * - sqrt pm 1 2 * [/] cons app2
+                                              5 25 4 4 . * - sqrt pm 1 2 * [/] cons app2
+                                               5 25 16 . - sqrt pm 1 2 * [/] cons app2
+                                                   5 9 . sqrt pm 1 2 * [/] cons app2
+                                                 5 3.0 . pm 1 2 * [/] cons app2
+                                               8.0 2.0 . 1 2 * [/] cons app2
+                                             8.0 2.0 1 . 2 * [/] cons app2
+                                           8.0 2.0 1 2 . * [/] cons app2
+                                             8.0 2.0 2 . [/] cons app2
+                                         8.0 2.0 2 [/] . cons app2
+                                         8.0 2.0 [2 /] . app2
+                                           [8.0] [2 /] . infra first [2.0] [2 /] infra first
+                                                   8.0 . 2 / [] swaack first [2.0] [2 /] infra first
+                                                 8.0 2 . / [] swaack first [2.0] [2 /] infra first
+                                                   4.0 . [] swaack first [2.0] [2 /] infra first
+                                                4.0 [] . swaack first [2.0] [2 /] infra first
+                                                 [4.0] . first [2.0] [2 /] infra first
+                                                   4.0 . [2.0] [2 /] infra first
+                                             4.0 [2.0] . [2 /] infra first
+                                       4.0 [2.0] [2 /] . infra first
+                                                   2.0 . 2 / [4.0] swaack first
+                                                 2.0 2 . / [4.0] swaack first
+                                                   1.0 . [4.0] swaack first
+                                             1.0 [4.0] . swaack first
+                                             4.0 [1.0] . first
+                                               4.0 1.0 . 
 

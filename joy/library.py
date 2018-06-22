@@ -25,11 +25,14 @@ function.
 '''
 from inspect import getdoc
 from functools import wraps
+from inspect import getmembers, isfunction
 import operator, math
 
 from .parser import text_to_expression, Symbol
 from .utils.stack import list_to_stack, iter_stack, pick, concat
 from .utils.brutal_hackery import rename_code_object
+
+from .utils import generated_library as genlib
 
 
 _dictionary = {}
@@ -88,12 +91,8 @@ def add_aliases(D, A):
 
 
 definitions = ('''\
-second == rest first
-third == rest rest first
 of == swap at
 product == 1 swap [*] step
-swons == swap cons
-swoncat == swap concat
 flatten == [] swap [concat] step
 unit == [] cons
 quoted == [unit] dip
@@ -128,6 +127,10 @@ codireco == cons dip rest cons
 make_generator == [codireco] ccons
 ccons == cons cons
 '''
+##second == rest first
+##third == rest rest first
+##swons == swap cons
+##swoncat == swap concat
 
 ##Zipper
 ##z-down == [] swap uncons swap
@@ -258,6 +261,11 @@ def _text_to_defs(text):
 #
 
 
+# Load the auto-generated primitives into the dictionary.
+for name, primitive in getmembers(genlib, isfunction):
+  inscribe(SimpleFunctionWrapper(primitive))
+
+
 @inscribe
 @SimpleFunctionWrapper
 def parse(stack):
@@ -267,30 +275,30 @@ def parse(stack):
   return expression, stack
 
 
-@inscribe
-@SimpleFunctionWrapper
-def first(stack):
-  '''
-  ::
+##@inscribe
+##@SimpleFunctionWrapper
+##def first(stack):
+##  '''
+##  ::
+##
+##    first == uncons pop
+##
+##  '''
+##  ((head, tail), stack) = stack
+##  return head, stack
 
-    first == uncons pop
 
-  '''
-  ((head, tail), stack) = stack
-  return head, stack
-
-
-@inscribe
-@SimpleFunctionWrapper
-def rest(stack):
-  '''
-  ::
-
-    rest == uncons popd
-
-  '''
-  ((head, tail), stack) = stack
-  return tail, stack
+##@inscribe
+##@SimpleFunctionWrapper
+##def rest(stack):
+##  '''
+##  ::
+##
+##    rest == uncons popd
+##
+##  '''
+##  ((head, tail), stack) = stack
+##  return tail, stack
 
 
 @inscribe
@@ -479,28 +487,28 @@ def sort_(S):
   return list_to_stack(sorted(iter_stack(tos))), stack
 
 
-@inscribe
-@SimpleFunctionWrapper
-def cons(S):
-  '''
-  The cons operator expects a list on top of the stack and the potential
-  member below. The effect is to add the potential member into the
-  aggregate.
-  '''
-  (tos, (second, stack)) = S
-  return (second, tos), stack
+##@inscribe
+##@SimpleFunctionWrapper
+##def cons(S):
+##  '''
+##  The cons operator expects a list on top of the stack and the potential
+##  member below. The effect is to add the potential member into the
+##  aggregate.
+##  '''
+##  (tos, (second, stack)) = S
+##  return (second, tos), stack
 
 
-@inscribe
-@SimpleFunctionWrapper
-def uncons(S):
-  '''
-  Inverse of cons, removes an item from the top of the list on the stack
-  and places it under the remaining list.
-  '''
-  (tos, stack) = S
-  item, tos = tos
-  return tos, (item, stack)
+##@inscribe
+##@SimpleFunctionWrapper
+##def uncons(S):
+##  '''
+##  Inverse of cons, removes an item from the top of the list on the stack
+##  and places it under the remaining list.
+##  '''
+##  (tos, stack) = S
+##  item, tos = tos
+##  return tos, (item, stack)
 
 
 @inscribe
@@ -516,52 +524,52 @@ def clear(stack):
   return ()
 
 
-@inscribe
-@SimpleFunctionWrapper
-def dup(S):
-  '''Duplicate the top item on the stack.'''
-  (tos, stack) = S
-  return tos, (tos, stack)
+##@inscribe
+##@SimpleFunctionWrapper
+##def dup(S):
+##  '''Duplicate the top item on the stack.'''
+##  (tos, stack) = S
+##  return tos, (tos, stack)
 
 
-@inscribe
-@SimpleFunctionWrapper
-def over(S):
-  '''
-  Copy the second item down on the stack to the top of the stack.
-  ::
-
-       a b over
-    --------------
-        a b a
-
-  '''
-  second = S[1][0]
-  return second, S
-
-
-@inscribe
-@SimpleFunctionWrapper
-def tuck(S):
-  '''
-  Copy the item at TOS under the second item of the stack.
-  ::
-
-       a b tuck
-    --------------
-        b a b
-
-  '''
-  (tos, (second, stack)) = S
-  return tos, (second, (tos, stack))
+##@inscribe
+##@SimpleFunctionWrapper
+##def over(S):
+##  '''
+##  Copy the second item down on the stack to the top of the stack.
+##  ::
+##
+##       a b over
+##    --------------
+##        a b a
+##
+##  '''
+##  second = S[1][0]
+##  return second, S
 
 
-@inscribe
-@SimpleFunctionWrapper
-def swap(S):
-  '''Swap the top two items on stack.'''
-  (tos, (second, stack)) = S
-  return second, (tos, stack)
+##@inscribe
+##@SimpleFunctionWrapper
+##def tuck(S):
+##  '''
+##  Copy the item at TOS under the second item of the stack.
+##  ::
+##
+##       a b tuck
+##    --------------
+##        b a b
+##
+##  '''
+##  (tos, (second, stack)) = S
+##  return tos, (second, (tos, stack))
+
+
+##@inscribe
+##@SimpleFunctionWrapper
+##def swap(S):
+##  '''Swap the top two items on stack.'''
+##  (tos, (second, stack)) = S
+##  return second, (tos, stack)
 
 
 @inscribe
@@ -572,14 +580,14 @@ def swaack(stack):
   return stack, old_stack
 
 
-@inscribe
-@SimpleFunctionWrapper
-def stack_(stack):
-  '''
-  The stack operator pushes onto the stack a list containing all the
-  elements of the stack.
-  '''
-  return stack, stack
+##@inscribe
+##@SimpleFunctionWrapper
+##def stack_(stack):
+##  '''
+##  The stack operator pushes onto the stack a list containing all the
+##  elements of the stack.
+##  '''
+##  return stack, stack
 
 
 @inscribe
@@ -592,42 +600,42 @@ def unstack(stack):
   return stack[0]
 
 
-@inscribe
-@SimpleFunctionWrapper
-def pop(stack):
-  '''Pop and discard the top item from the stack.'''
-  return stack[1]
+##@inscribe
+##@SimpleFunctionWrapper
+##def pop(stack):
+##  '''Pop and discard the top item from the stack.'''
+##  return stack[1]
 
 
-@inscribe
-@SimpleFunctionWrapper
-def popd(stack):
-  '''Pop and discard the second item from the stack.'''
-  (tos, (_, stack)) = stack
-  return tos, stack
+##@inscribe
+##@SimpleFunctionWrapper
+##def popd(stack):
+##  '''Pop and discard the second item from the stack.'''
+##  (tos, (_, stack)) = stack
+##  return tos, stack
 
 
-@inscribe
-@SimpleFunctionWrapper
-def popdd(stack):
-  '''Pop and discard the third item from the stack.'''
-  (tos, (second, (_, stack))) = stack
-  return tos, (second, stack)
+##@inscribe
+##@SimpleFunctionWrapper
+##def popdd(stack):
+##  '''Pop and discard the third item from the stack.'''
+##  (tos, (second, (_, stack))) = stack
+##  return tos, (second, stack)
 
 
-@inscribe
-@SimpleFunctionWrapper
-def popop(stack):
-  '''Pop and discard the first and second items from the stack.'''
-  return stack[1][1]
+##@inscribe
+##@SimpleFunctionWrapper
+##def popop(stack):
+##  '''Pop and discard the first and second items from the stack.'''
+##  return stack[1][1]
 
 
-@inscribe
-@SimpleFunctionWrapper
-def dupd(S):
-  '''Duplicate the second item on the stack.'''
-  (tos, (second, stack)) = S
-  return tos, (second, (second, stack))
+##@inscribe
+##@SimpleFunctionWrapper
+##def dupd(S):
+##  '''Duplicate the second item on the stack.'''
+##  (tos, (second, stack)) = S
+##  return tos, (second, (second, stack))
 
 
 @inscribe
@@ -760,34 +768,34 @@ def sqrt(a):
   return r
 
 
-@inscribe
-@SimpleFunctionWrapper
-def rollup(S):
-  '''
-  ::
+##@inscribe
+##@SimpleFunctionWrapper
+##def rollup(S):
+##  '''
+##  ::
+##
+##       a b c
+##    -----------
+##       b c a
+##
+##  '''
+##  (a, (b, (c, stack))) = S
+##  return b, (c, (a, stack))
 
-       a b c
-    -----------
-       b c a
 
-  '''
-  (a, (b, (c, stack))) = S
-  return b, (c, (a, stack))
-
-
-@inscribe
-@SimpleFunctionWrapper
-def rolldown(S):
-  '''
-  ::
-
-       a b c
-    -----------
-       c a b
-
-  '''
-  (a, (b, (c, stack))) = S
-  return c, (a, (b, stack))
+##@inscribe
+##@SimpleFunctionWrapper
+##def rolldown(S):
+##  '''
+##  ::
+##
+##       a b c
+##    -----------
+##       c a b
+##
+##  '''
+##  (a, (b, (c, stack))) = S
+##  return c, (a, (b, stack))
 
 
 #def execute(S):

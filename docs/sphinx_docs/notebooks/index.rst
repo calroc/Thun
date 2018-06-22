@@ -9,13 +9,15 @@ These essays are adapted from Jupyter notebooks.  I hope to have those hosted so
    :maxdepth: 2
 
    Developing
+   Quadratic
    Replacing
+   Recursion_Combinators
    Ordered_Binary_Trees
    Treestep
    Generator_Programs
    Newton-Raphson
-   Quadratic
    Zipper
+   Types
    NoUpdates
    Categorical
 
