@@ -34,7 +34,12 @@ class NumberJoyType(AnyJoyType): prefix = 'n'
 class FloatJoyType(NumberJoyType): prefix = 'f'
 class IntJoyType(FloatJoyType): prefix = 'i'
 
-class StackJoyType(AnyJoyType): prefix = 's'
+class StackJoyType(AnyJoyType):
+    prefix = 's'
+    def __nonzero__(self):
+        # Imitate () at the end of cons list.
+        return False
+
 
 _R = range(10)
 A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = map(AnyJoyType, _R)
@@ -69,8 +74,12 @@ def delabel(f, seen=None, c=None):
         pass
 
     if not isinstance(f, tuple):
-        seen[f] = f.__class__(c[f.prefix])
-        c[f.prefix] += 1
+        try:
+            seen[f] = f.__class__(c[f.prefix])
+        except TypeError:  # FunctionJoyTypes break this.
+            seen[f] = f
+        else:
+            c[f.prefix] += 1
         return seen[f]
 
     return tuple(delabel(inner, seen, c) for inner in f)
@@ -97,7 +106,7 @@ def unify(u, v, s=None):
         if v >= u:
             s[v] = u
             return s
-        raise ValueError('Cannot unify %r and %r.' % (u, v))
+        raise TypeError('Cannot unify %r and %r.' % (u, v))
 
     if isinstance(u, tuple) and isinstance(v, tuple):
         if len(u) != len(v) != 2:
@@ -110,13 +119,13 @@ def unify(u, v, s=None):
 
     if isinstance(v, tuple):
         if not stacky(u):
-            raise ValueError('Cannot unify %r and %r.' % (u, v))
+            raise TypeError('Cannot unify %r and %r.' % (u, v))
         s[u] = v
         return s
 
     if isinstance(u, tuple):
         if not stacky(v):
-            raise ValueError('Cannot unify %r and %r.' % (v, u))
+            raise TypeError('Cannot unify %r and %r.' % (v, u))
         s[v] = u
         return s
 

@@ -2,8 +2,12 @@
 Type Inference
 ==============
 
-Pöial's Rules
--------------
+Cf. `"Type Inference in Stack-Based Programming
+Languages" <http://prl.ccs.neu.edu/blog/2017/03/10/type-inference-in-stack-based-programming-languages/>`__
+by Rob Kleffner, 2017-03-10.
+
+Part I: Pöial's Rules
+---------------------
 
 `"Typing Tools for Typeless Stack Languages" by Jaanus
 Pöial <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.212.6026>`__
@@ -47,8 +51,9 @@ Third Rule
 
 The third rule is actually two rules. These two rules deal with
 composing functions when the second one will consume one of items the
-first one produces. The two types must be *unified* or a type conflict
-declared.
+first one produces. The two types must be
+`*unified* <https://en.wikipedia.org/wiki/Robinson's_unification_algorithm>`__
+or a type conflict declared.
 
 ::
 
@@ -60,9 +65,6 @@ declared.
        (a -- b t[i])∘(c u[j] -- d)   u <= t (u is subtype of t)
     -------------------------------
        (a -- b     )∘(c      -- d)   t[i] == u[k] == u[j]
-
-Examples
---------
 
 Let's work through some examples by hand to develop an intuition for the
 algorithm.
@@ -387,8 +389,8 @@ following Python code:
         (_, (d, (c, ((a, (b, S0)), stack)))) = stack
         return (d, (c, S0)), stack
 
-Implementation
---------------
+Part II: Implementation
+-----------------------
 
 Representing Stack Effect Comments in Python
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -618,11 +620,11 @@ Let's try it out.
 
 
 
-List Functions
-~~~~~~~~~~~~~~
+Stack Functions
+~~~~~~~~~~~~~~~
 
 Here's that trick to represent functions like ``rest`` and ``cons`` that
-manipulate lists. We use a cons-list of tuples and give the tails their
+manipulate stacks. We use a cons-list of tuples and give the tails their
 own numbers. Then everything above already works.
 
 .. code:: ipython2
@@ -683,6 +685,7 @@ Compare with the stack effect comment and you can see it works fine:
 ::
 
     ([4 5 ...] 2 3 1 -- [3 2 ...])
+      3 4  5   1 2 0     2 1  5
 
 Dealing with ``cons`` and ``uncons``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -719,7 +722,7 @@ deal with this recursively:
     def unify(u, v, s=None):
         if s is None:
             s = {}
-        else:
+        elif s:
             u = update(s, u)
             v = update(s, v)
     
@@ -758,8 +761,8 @@ deal with this recursively:
 
 
 
-Compiling
----------
+Part III: Compiling Stack Functions
+-----------------------------------
 
 Now consider the Python function we would like to derive:
 
@@ -1094,8 +1097,8 @@ from their stack effect comments:
     
 
 
-Types and Subtypes of Arguments
--------------------------------
+Part IV: Types and Subtypes of Arguments
+----------------------------------------
 
 So far we have dealt with types of functions, those dealing with simple
 stack manipulation. Let's extend our machinery to deal with types of
@@ -1396,7 +1399,7 @@ of how many labels of each domain it has "seen".
     def unify(u, v, s=None):
         if s is None:
             s = {}
-        else:
+        elif s:
             u = update(s, u)
             v = update(s, v)
     
@@ -1410,11 +1413,11 @@ of how many labels of each domain it has "seen".
             if v >= u:
                 s[v] = u
                 return s
-            raise ValueError('Cannot unify %r and %r.' % (u, v))
+            raise TypeError('Cannot unify %r and %r.' % (u, v))
     
         if isinstance(u, tuple) and isinstance(v, tuple):
             if len(u) != len(v) != 2:
-                raise ValueError(repr((u, v)))
+                raise TypeError(repr((u, v)))
             for uu, vv in zip(u, v):
                 s = unify(uu, vv, s)
                 if s == False: # (instead of a substitution dict.)
@@ -1423,13 +1426,13 @@ of how many labels of each domain it has "seen".
      
         if isinstance(v, tuple):
             if not stacky(u):
-                raise ValueError('Cannot unify %r and %r.' % (u, v))
+                raise TypeError('Cannot unify %r and %r.' % (u, v))
             s[u] = v
             return s
     
         if isinstance(u, tuple):
             if not stacky(v):
-                raise ValueError('Cannot unify %r and %r.' % (v, u))
+                raise TypeError('Cannot unify %r and %r.' % (v, u))
             s[v] = u
             return s
     
@@ -1719,8 +1722,8 @@ comments. We can write a function to check that:
     uncons = ([a1 .1.] -- a1 [.1.])
 
 
-Functions that use the Stack
-----------------------------
+Part V: Functions that use the Stack
+------------------------------------
 
 Consider the ``stack`` function which grabs the whole stack, quotes it,
 and puts it on itself:
@@ -1803,32 +1806,17 @@ It works.
 
 This function has to be modified to use the new datastructures and it is
 no longer recursive, instead recursion happens as part of unification.
+Further, the first and second of Pöial's rules are now handled
+automatically by the unification algorithm.
 
 .. code:: ipython2
 
     def compose(f, g):
-    
         (f_in, f_out), (g_in, g_out) = f, g
-    
-        if not g_in:
-            fg_in, fg_out = f_in, stack_concat(g_out, f_out)
-    
-        elif not f_out:
-            fg_in, fg_out = stack_concat(f_in, g_in), g_out
-    
-        else: # Unify and update.
-    
-            s = unify(g_in, f_out)
-    
-            if s == False:  # s can also be the empty dict, which is ok.
-                raise TypeError('Cannot unify %r and %r.' % (fo, gi))
-    
-            fg_in, fg_out = update(s, (f_in, g_out))
-    
-        return fg_in, fg_out
-    
-    
-    stack_concat = lambda q, e: (q[0], stack_concat(q[1], e)) if q else e
+        s = unify(g_in, f_out)
+        if s == False:  # s can also be the empty dict, which is ok.
+            raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
+        return update(s, (f_in, g_out))
 
 I don't want to rewrite all the defs myself, so I'll write a little
 conversion function instead. This is programmer's laziness.
@@ -2100,13 +2088,844 @@ comments are now already in the form needed for the Python code:
 
 
 
-Sets of Stack Effects
----------------------
+Part VI: Multiple Stack Effects
+-------------------------------
 
 ...
 
+.. code:: ipython2
+
+    class IntJoyType(NumberJoyType): prefix = 'i'
+    
+    
+    F = map(FloatJoyType, _R)
+    I = map(IntJoyType, _R)
+
+.. code:: ipython2
+
+    muls = [
+         ((I[2], (I[1], S[0])), (I[3], S[0])),
+         ((F[2], (I[1], S[0])), (F[3], S[0])),
+         ((I[2], (F[1], S[0])), (F[3], S[0])),
+         ((F[2], (F[1], S[0])), (F[3], S[0])),
+    ]
+
+.. code:: ipython2
+
+    for f in muls:
+        print doc_from_stack_effect(*f)
+
+
+.. parsed-literal::
+
+    (i1 i2 -- i3)
+    (i1 f2 -- f3)
+    (f1 i2 -- f3)
+    (f1 f2 -- f3)
+
+
+.. code:: ipython2
+
+    for f in muls:
+        try:
+            e = C(dup, f)
+        except TypeError:
+            continue
+        print doc_from_stack_effect(*dup), doc_from_stack_effect(*f), doc_from_stack_effect(*e)
+
+
+.. parsed-literal::
+
+    (a1 -- a1 a1) (i1 i2 -- i3) (i0 -- i1)
+    (a1 -- a1 a1) (f1 f2 -- f3) (f0 -- f1)
+
+
+.. code:: ipython2
+
+    from itertools import product
+    
+    
+    def meta_compose(F, G):
+        for f, g in product(F, G):
+            try:
+                yield C(f, g)
+            except TypeError:
+                pass
+    
+    
+    def MC(F, G):
+        return sorted(set(meta_compose(F, G)))
+
+.. code:: ipython2
+
+    for f in MC([dup], muls):
+        print doc_from_stack_effect(*f)
+
+
+.. parsed-literal::
+
+    (f0 -- f1)
+    (i0 -- i1)
+
+
+.. code:: ipython2
+
+    for f in MC([dup], [mul]):
+        print doc_from_stack_effect(*f)
+
+
+.. parsed-literal::
+
+    (n0 -- n1)
+
+
+Representing an Unbounded Sequence of Types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We can borrow a trick from `Brzozowski's Derivatives of Regular
+Expressions <https://en.wikipedia.org/wiki/Brzozowski_derivative>`__ to
+invent a new type of type variable, a "sequence type" (I think this is
+what they mean in the literature by that term...) or "`Kleene
+Star <https://en.wikipedia.org/wiki/Kleene_star>`__" type. I'm going to
+represent it as a type letter and the asterix, so a sequence of zero or
+more ``AnyJoyType`` variables would be:
+
+::
+
+    A*
+
+The ``A*`` works by splitting the universe into two alternate histories:
+
+::
+
+    A* -> 0 | A A*
+
+The Kleene star variable disappears in one universe, and in the other it
+turns into an ``AnyJoyType`` variable followed by itself again. We have
+to return all universes (represented by their substitution dicts, the
+"unifiers") that don't lead to type conflicts.
+
+Consider unifying two stacks (the lowercase letters are any type
+variables of the kinds we have defined so far):
+
+::
+
+    [a A* b .0.] U [c d .1.]
+                              w/ {c: a}
+    [  A* b .0.] U [  d .1.]
+
+Now we have to split universes to unify ``A*``. In the first universe it
+disappears:
+
+::
+
+    [b .0.] U [d .1.]
+                       w/ {d: b, .1.: .0.} 
+         [] U []
+
+While in the second it spawns an ``A``, which we will label ``e``:
+
+::
+
+    [e A* b .0.] U [d .1.]
+                            w/ {d: e}
+    [  A* b .0.] U [  .1.]
+                            w/ {.1.: A* b .0.}
+    [  A* b .0.] U [  .1.]
+
+Giving us two unifiers:
+
+::
+
+    {c: a,  d: b,  .1.:      .0.}
+    {c: a,  d: e,  .1.: A* b .0.}
+
+.. code:: ipython2
+
+    class KleeneStar(object):
+    
+        kind = AnyJoyType
+    
+        def __init__(self, number):
+            self.number = number
+            self.count = 0
+            self.prefix = repr(self)
+    
+        def __repr__(self):
+            return '%s%i*' % (self.kind.prefix, self.number)
+    
+        def another(self):
+            self.count += 1
+            return self.kind(10000 * self.number + self.count)
+    
+        def __eq__(self, other):
+            return (
+                isinstance(other, self.__class__)
+                and other.number == self.number
+            )
+    
+        def __ge__(self, other):
+            return self.kind >= other.kind
+    
+        def __add__(self, other):
+            return self.__class__(self.number + other)
+        __radd__ = __add__
+        
+        def __hash__(self):
+            return hash(repr(self))
+    
+    class AnyStarJoyType(KleeneStar): kind = AnyJoyType
+    class NumberStarJoyType(KleeneStar): kind = NumberJoyType
+    #class FloatStarJoyType(KleeneStar): kind = FloatJoyType
+    #class IntStarJoyType(KleeneStar): kind = IntJoyType
+    class StackStarJoyType(KleeneStar): kind = StackJoyType
+    
+    
+    As = map(AnyStarJoyType, _R)
+    Ns = map(NumberStarJoyType, _R)
+    Ss = map(StackStarJoyType, _R)
+
+``unify()`` version 4
+^^^^^^^^^^^^^^^^^^^^^
+
+Can now return multiple results...
+
+.. code:: ipython2
+
+    def unify(u, v, s=None):
+        if s is None:
+            s = {}
+        elif s:
+            u = update(s, u)
+            v = update(s, v)
+    
+        if u == v:
+            return s,
+    
+        if isinstance(u, AnyJoyType) and isinstance(v, AnyJoyType):
+            if u >= v:
+                s[u] = v
+                return s,
+            if v >= u:
+                s[v] = u
+                return s,
+            raise TypeError('Cannot unify %r and %r.' % (u, v))
+    
+        if isinstance(u, tuple) and isinstance(v, tuple):
+            if len(u) != len(v) != 2:
+                raise TypeError(repr((u, v)))
+                
+            a, b = v
+            if isinstance(a, KleeneStar):
+                # Two universes, in one the Kleene star disappears and unification
+                # continues without it...
+                s0 = unify(u, b)
+                
+                # In the other it spawns a new variable.
+                s1 = unify(u, (a.another(), v))
+                
+                t = s0 + s1
+                for sn in t:
+                    sn.update(s)
+                return t
+    
+            a, b = u
+            if isinstance(a, KleeneStar):
+                s0 = unify(v, b)
+                s1 = unify(v, (a.another(), u))
+                t = s0 + s1
+                for sn in t:
+                    sn.update(s)
+                return t
+    
+            ses = unify(u[0], v[0], s)
+            results = ()
+            for sn in ses:
+                results += unify(u[1], v[1], sn)
+            return results
+     
+        if isinstance(v, tuple):
+            if not stacky(u):
+                raise TypeError('Cannot unify %r and %r.' % (u, v))
+            s[u] = v
+            return s,
+    
+        if isinstance(u, tuple):
+            if not stacky(v):
+                raise TypeError('Cannot unify %r and %r.' % (v, u))
+            s[v] = u
+            return s,
+    
+        return ()
+    
+    
+    def stacky(thing):
+        return thing.__class__ in {AnyJoyType, StackJoyType}
+
+.. code:: ipython2
+
+    a = (As[1], S[1])
+    a
+
+
+
+
+.. parsed-literal::
+
+    (a1*, s1)
+
+
+
+.. code:: ipython2
+
+    b = (A[1], S[2])
+    b
+
+
+
+
+.. parsed-literal::
+
+    (a1, s2)
+
+
+
+.. code:: ipython2
+
+    for result in unify(b, a):
+        print result, '->', update(result, a), update(result, b)
+
+
+.. parsed-literal::
+
+    {s1: (a1, s2)} -> (a1*, (a1, s2)) (a1, s2)
+    {a1: a10001, s2: (a1*, s1)} -> (a1*, s1) (a10001, (a1*, s1))
+
+
+.. code:: ipython2
+
+    for result in unify(a, b):
+        print result, '->', update(result, a), update(result, b)
+
+
+.. parsed-literal::
+
+    {s1: (a1, s2)} -> (a1*, (a1, s2)) (a1, s2)
+    {a1: a10002, s2: (a1*, s1)} -> (a1*, s1) (a10002, (a1*, s1))
+
+
+::
+
+    (a1*, s1)       [a1*]       (a1, s2)        [a1]
+
+    (a1*, (a1, s2)) [a1* a1]    (a1, s2)        [a1]
+
+    (a1*, s1)       [a1*]       (a2, (a1*, s1)) [a2 a1*]
+
+.. code:: ipython2
+
+    sum_ = ((Ns[1], S[1]), S[0]), (N[0], S[0])
+    
+    print doc_from_stack_effect(*sum_)
+
+
+.. parsed-literal::
+
+    ([n1* .1.] -- n0)
+
+
+.. code:: ipython2
+
+    f = (N[1], (N[2], (N[3], S[1]))), S[0]
+    
+    print doc_from_stack_effect(S[0], f)
+
+
+.. parsed-literal::
+
+    (-- [n1 n2 n3 .1.])
+
+
+.. code:: ipython2
+
+    for result in unify(sum_[0], f):
+        print result, '->', update(result, sum_[1])
+
+
+.. parsed-literal::
+
+    {s1: (n1, (n2, (n3, s1)))} -> (n0, s0)
+    {n1: n10001, s1: (n2, (n3, s1))} -> (n0, s0)
+    {n1: n10001, s1: (n3, s1), n2: n10002} -> (n0, s0)
+    {n1: n10001, s1: (n1*, s1), n3: n10003, n2: n10002} -> (n0, s0)
+
+
+``compose()`` version 3
+^^^^^^^^^^^^^^^^^^^^^^^
+
+This function has to be modified to yield multiple results.
+
+.. code:: ipython2
+
+    def compose(f, g):
+        (f_in, f_out), (g_in, g_out) = f, g
+        s = unify(g_in, f_out)
+        if not s:
+            raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
+        for result in s:
+            yield update(result, (f_in, g_out))
+
+
+.. code:: ipython2
+
+    def meta_compose(F, G):
+        for f, g in product(F, G):
+            try:
+                for result in C(f, g):
+                    yield result
+            except TypeError:
+                pass
+    
+    
+    def C(f, g):
+        f, g = relabel(f, g)
+        for fg in compose(f, g):
+            yield delabel(fg)
+
+.. code:: ipython2
+
+    for f in MC([dup], muls):
+        print doc_from_stack_effect(*f)
+
+
+.. parsed-literal::
+
+    (f0 -- f1)
+    (i0 -- i1)
+
+
+.. code:: ipython2
+
+    
+    
+    for f in MC([dup], [sum_]):
+        print doc_from_stack_effect(*f)
+
+
+.. parsed-literal::
+
+    ([n0* .0.] -- [n0* .0.] n0)
+
+
+.. code:: ipython2
+
+    
+    
+    for f in MC([cons], [sum_]):
+        print doc_from_stack_effect(*f)
+
+
+.. parsed-literal::
+
+    (a0 [.0.] -- n0)
+    (n0 [n0* .0.] -- n1)
+
+
+.. code:: ipython2
+
+    sum_ = (((N[1], (Ns[1], S[1])), S[0]), (N[0], S[0]))
+    print doc_from_stack_effect(*cons),
+    print doc_from_stack_effect(*sum_),
+    
+    for f in MC([cons], [sum_]):
+        print doc_from_stack_effect(*f)
+
+
+.. parsed-literal::
+
+    (a1 [.1.] -- [a1 .1.]) ([n1 n1* .1.] -- n0) (n0 [n0* .0.] -- n1)
+
+
+.. code:: ipython2
+
+    a = (A[4], (As[1], (A[3], S[1])))
+    a
+
+
+
+
+.. parsed-literal::
+
+    (a4, (a1*, (a3, s1)))
+
+
+
+.. code:: ipython2
+
+    b = (A[1], (A[2], S[2]))
+    b
+
+
+
+
+.. parsed-literal::
+
+    (a1, (a2, s2))
+
+
+
+.. code:: ipython2
+
+    for result in unify(b, a):
+        print result
+
+
+.. parsed-literal::
+
+    {a1: a4, s2: s1, a2: a3}
+    {a1: a4, s2: (a1*, (a3, s1)), a2: a10003}
+
+
+.. code:: ipython2
+
+    for result in unify(a, b):
+        print result
+
+
+.. parsed-literal::
+
+    {s2: s1, a2: a3, a4: a1}
+    {s2: (a1*, (a3, s1)), a2: a10004, a4: a1}
+
+
+Part VII: Typing Combinators
+----------------------------
+
+TBD
+
+This is an open subject.
+
+The obvious thing is that you now need two pairs of tuples to describe
+the combinators' effects, a stack effect comment and an expression
+effect comment:
+
+::
+
+    dip (a [F] --)--(-- F a)
+
+One thing that might help is...
+
+Consider the type of:
+
+::
+
+    [cons] dip
+
+Obviously it would be:
+
+::
+
+    (a1 [..1] a2 -- [a1 ..1] a2)
+
+``dip`` itself could have:
+
+::
+
+    (a1 [..1] -- ... then what?
+
+.. code:: ipython2
+
+    class SymbolJoyType(AnyJoyType): prefix = 'F'
+    
+    W = map(SymbolJoyType, _R)
+    
+    k = S[0], ((W[1], S[2]), S[0])
+    Symbol('cons')
+    print doc_from_stack_effect(*k)
+
+
+
+.. parsed-literal::
+
+    (-- [F1 .2.])
+
+
+.. code:: ipython2
+
+    dip_a = ((W[1], S[2]), (A[1], S[0]))
+
+.. code:: ipython2
+
+    d = relabel(S[0], dip_a)
+    print doc_from_stack_effect(*d)
+
+
+.. parsed-literal::
+
+    (-- a1001 [F1001 .1002.])
+
+
+.. code:: ipython2
+
+    s = list(unify(d[1], k[1]))[0]
+    s
+
+
+
+
+.. parsed-literal::
+
+    {s0: (a1001, s1000), s1002: s2, F1001: F1}
+
+
+
+.. code:: ipython2
+
+    j = update(s, k)
+
+.. code:: ipython2
+
+    print doc_from_stack_effect(*j)
+
+
+.. parsed-literal::
+
+    (a1001 -- a1001 [F1 .2.])
+
+
+.. code:: ipython2
+
+    j
+
+
+
+
+.. parsed-literal::
+
+    ((a1001, s1000), ((F1, s2), (a1001, s1000)))
+
+
+
+.. code:: ipython2
+
+    cons
+
+
+
+
+.. parsed-literal::
+
+    ((s1, (a1, s23)), ((a1, s1), s23))
+
+
+
+.. code:: ipython2
+
+    for f in MC([k], [dup]):
+        print doc_from_stack_effect(*f)
+
+
+.. parsed-literal::
+
+    (-- [F0 .1.] [F0 .1.])
+
+
+.. code:: ipython2
+
+    l = S[0], ((cons, S[2]), (A[1], S[0]))
+
+.. code:: ipython2
+
+    print doc_from_stack_effect(*l)
+
+
+.. parsed-literal::
+
+    (-- a1 [[[[.1.] a1 .23.] [a1 .1.] .23.] .2.])
+
+
+.. code:: ipython2
+
+    
+    def dip_t(F):
+        (quote, (a1, sec)) = F[1]
+        G = F[0], sec
+        P = S[3], (a1, S[3])
+        a = [P]
+        while isinstance(quote, tuple):
+            term, quote = quote
+            a.append(term)
+        a.append(G)
+        return a[::-1]
+    
+    
+    
+
+
+.. code:: ipython2
+
+    from joy.utils.stack import iter_stack
+
+.. code:: ipython2
+
+    a, b, c = dip_t(l)
+
+.. code:: ipython2
+
+    a
+
+
+
+
+.. parsed-literal::
+
+    (s0, s0)
+
+
+
+.. code:: ipython2
+
+    b
+
+
+
+
+.. parsed-literal::
+
+    ((s1, (a1, s23)), ((a1, s1), s23))
+
+
+
+.. code:: ipython2
+
+    c
+
+
+
+
+.. parsed-literal::
+
+    (s3, (a1, s3))
+
+
+
+.. code:: ipython2
+
+    MC([a], [b])
+
+
+
+
+.. parsed-literal::
+
+    [((s0, (a0, s1)), ((a0, s0), s1))]
+
+
+
+.. code:: ipython2
+
+    kjs = MC(MC([a], [b]), [c])
+    kjs
+
+
+
+
+.. parsed-literal::
+
+    [((s0, (a0, s1)), (a1, ((a0, s0), s1)))]
+
+
+
+.. code:: ipython2
+
+    print doc_from_stack_effect(*kjs[0])
+
+
+.. parsed-literal::
+
+    (a0 [.0.] -- [a0 .0.] a1)
+
+
+::
+
+    (a0 [.0.] -- [a0 .0.] a1)
+
+       a0 [.0.] a1 [cons] dip
+    ----------------------------
+       [a0 .0.] a1
+
+.. code:: ipython2
+
+    stack_concat = lambda q, e: (q[0], stack_concat(q[1], e)) if q else e
+
+.. code:: ipython2
+
+    class SymbolJoyType(AnyJoyType):
+        prefix = 'F'
+    
+        def __init__(self, name, sec, number):
+            self.name = name
+            self.stack_effects = sec
+            self.number = number
+    
+    class CombinatorJoyType(SymbolJoyType): prefix = 'C'
+    
+    def dip_t(stack, expression):
+        (quote, (a1, stack)) = stack
+        expression = stack_concat(quote, (a1, expression))
+        return stack, expression
+    
+    CONS = SymbolJoyType('cons', [cons], 23)
+    DIP = CombinatorJoyType('dip', [dip_t], 44)
+    
+    
+    def kav(F, e):
+        #i, stack = F
+        if not e:
+            return [(F, e)]
+        n, e = e
+        if isinstance(n, SymbolJoyType):
+            Fs = []
+            for sec in n.stack_effects:
+                Fs.extend(MC([F], sec))
+            return [kav(Fn, e) for Fn in Fs]
+        if isinstance(n, CombinatorJoyType):
+            res = []
+            for f in n.stack_effects:
+                s, e = f(F[1], e)
+                new_F = F[0], s
+                res.extend(kav(new_F, e))
+            return res
+        lit = S[0], (n, S[0])
+        return [kav(Fn, e) for Fn in MC([F], [lit])]
+
+
+compare, and be amazed:
+
+.. code:: ipython2
+
+    def dip_t(stack, expression):
+        (quote, (a1, stack)) = stack
+        expression = stack_concat(quote, (a1, expression))
+        return stack, expression
+
+.. code:: ipython2
+
+    def dip(stack, expression, dictionary):
+        (quote, (x, stack)) = stack
+        expression = (x, expression)
+        return stack, concat(quote, expression), dictionary
+
+And that brings us to current Work-In-Progress. I'm pretty hopeful that
+the mixed-mode inferencer/interpreter ``kav()`` function along with the
+ability to specify multiple implementations for the combinators will
+permit modelling of the stack effects of e.g. ``ifte``. If I can keep up
+the pace I should be able to verify that conjecture by the end of June.
+
+The rest of this stuff is junk and/or unfinished material.
+
 ``concat``
-----------
+~~~~~~~~~~
 
 How to deal with ``concat``?
 
@@ -2150,57 +2969,208 @@ As opposed to just:
 
     (1 [.0.] [.1.] -- [.2.])
 
-Which works but can lose information. Consider ``cons concat``, this is
-how much information we *could* retain:
+represent ``concat``
+~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-    (1 [.0.] [.1.] -- [1 .0. .1.]) uncons uncons
+    ([.0.] [.1.] -- [A*(.0.) .1.])
 
-    (1 [.0.] [.1.] -- 1 [.0. .1.])        uncons
-                                                    So far so good...
-    (1 [2 .2.] [.1.] -- 1 2 [.2. .1.])
-
-
-
-
-    (1 [.0.] [.1.] -- 1 [.0. .1.]) ([a1 .10.] -- a1 [.10.])
-                                                             w/ { [a1 .10.] : [  .0.   .1.] }
-                                                           -or-
-                                                             w/ { [  .0.   .1.] : [a1 .10.    ] }
-
-Typing Combinators
-------------------
-
-TBD
-
-This is an open subject.
-
-The obvious thing is that you now need two pairs of tuples to describe
-the combinators' effects, a stack effect comment and an expression
-effect comment:
+Meaning that ``A*`` on the right-hand side should all the crap from
+``.0.``.
 
 ::
 
-    dip (a [F] --)--(-- F a)
+    ([      .0.] [.1.] -- [      A* .1.])
+    ([a     .0.] [.1.] -- [a     A* .1.])
+    ([a b   .0.] [.1.] -- [a b   A* .1.])
+    ([a b c .0.] [.1.] -- [a b c A* .1.])
 
-One thing that might help is...
-
-Abstract Interpretation
------------------------
-
-Something else...
------------------
+or...
 
 ::
 
-    [4 5 ...] 2 1 0 pop∘swap∘roll<∘rest∘rest∘cons∘cons
-    [4 5 ...] 2 1       swap∘roll<∘rest∘rest∘cons∘cons
-    [4 5 ...] 1 2            roll<∘rest∘rest∘cons∘cons
-    1 2 [4 5 ...]                  rest∘rest∘cons∘cons
-    1 2   [5 ...]                       rest∘cons∘cons
-    1 2     [...]                            cons∘cons
-    1     [2 ...]                                 cons
-        [1 2 ...]
+    ([       .0.] [.1.] -- [       .1.])
+    ([a      .0.] [.1.] -- [a      .1.])
+    ([a b    .0.] [.1.] -- [a b    .1.])
+    ([a b  c .0.] [.1.] -- [a b  c .1.])
+    ([a A* c .0.] [.1.] -- [a A* c .1.])
 
-Eh?
+::
+
+    (a, (b, S0)) . S1 = (a, (b, (A*, S1)))
+
+.. code:: ipython2
+
+    class Astar(object):
+        def __repr__(self):
+            return 'A*'
+    
+    
+    def concat(s0, s1):
+        a = []
+        while isinstance(s0, tuple):
+            term, s0 = s0
+            a.append(term)
+        assert isinstance(s0, StackJoyType), repr(s0)
+        s1 = Astar(), s1
+        for term in reversed(a):
+            s1 = term, s1
+        return s1
+
+.. code:: ipython2
+
+    a, b = (A[1], S[0]), (A[2], S[1])
+
+.. code:: ipython2
+
+    concat(a, b)
+
+
+
+
+.. parsed-literal::
+
+    (a1, (A*, (a2, s1)))
+
+
+
+Appendix: Joy in the Logical Paradigm
+-------------------------------------
+
+For this to work the type label classes have to be modified to let
+``T >= t`` succeed, where e.g. ``T`` is ``IntJoyType`` and ``t`` is
+``int``
+
+.. code:: ipython2
+
+    F = reduce(C, (pop, swap, roll_down, rest, rest, cons, cons))
+    
+    print doc_from_stack_effect(*F)
+
+
+::
+
+
+    ---------------------------------------------------------------------------
+
+    ValueError                                Traceback (most recent call last)
+
+    <ipython-input-137-4b4cb6ff86e5> in <module>()
+          1 F = reduce(C, (pop, swap, roll_down, rest, rest, cons, cons))
+          2 
+    ----> 3 print doc_from_stack_effect(*F)
+    
+
+    <ipython-input-99-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-98-5eb7ac5ad2c2> in compose(f, g)
+          1 def compose(f, g):
+    ----> 2     (f_in, f_out), (g_in, g_out) = f, g
+          3     s = unify(g_in, f_out)
+          4     if not s:
+          5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
+
+
+    <ipython-input-99-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-98-5eb7ac5ad2c2> in compose(f, g)
+          1 def compose(f, g):
+    ----> 2     (f_in, f_out), (g_in, g_out) = f, g
+          3     s = unify(g_in, f_out)
+          4     if not s:
+          5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
+
+
+    <ipython-input-99-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-98-5eb7ac5ad2c2> in compose(f, g)
+          1 def compose(f, g):
+    ----> 2     (f_in, f_out), (g_in, g_out) = f, g
+          3     s = unify(g_in, f_out)
+          4     if not s:
+          5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
+
+
+    <ipython-input-99-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-98-5eb7ac5ad2c2> in compose(f, g)
+          1 def compose(f, g):
+    ----> 2     (f_in, f_out), (g_in, g_out) = f, g
+          3     s = unify(g_in, f_out)
+          4     if not s:
+          5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
+
+
+    <ipython-input-99-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-98-5eb7ac5ad2c2> in compose(f, g)
+          1 def compose(f, g):
+    ----> 2     (f_in, f_out), (g_in, g_out) = f, g
+          3     s = unify(g_in, f_out)
+          4     if not s:
+          5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
+
+
+    ValueError: need more than 1 value to unpack
+
+
+.. code:: ipython2
+
+    from joy.parser import text_to_expression
+
+.. code:: ipython2
+
+    s = text_to_expression('[3 4 ...] 2 1')
+    s
+
+.. code:: ipython2
+
+    L = unify(F[1], s)
+    L
+
+.. code:: ipython2
+
+    F[1]
+
+.. code:: ipython2
+
+    F[1][0]
+
+.. code:: ipython2
+
+    s[0]
+
+`Abstract Interpretation <https://en.wikipedia.org/wiki/Abstract_interpretation>`__
+-----------------------------------------------------------------------------------
+
+I *think* this might be sorta what I'm doing above with the ``kav()``
+function... In any event "mixed-mode" interpreters that include values
+and type variables and can track constraints, etc. will be, uh,
+super-useful. And Abstract Interpretation should be a rich source of
+ideas.
