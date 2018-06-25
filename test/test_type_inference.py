@@ -5,7 +5,7 @@ from joy.utils.polytypes import *
 from joy.utils.stack import list_to_stack as __
 
 
-kv = lambda e: kav(__(e))
+infr = lambda e: infer(__(e))
 
 
 globals().update(SYMBOLS)
@@ -21,24 +21,24 @@ class TestKleeneStar(unittest.TestCase):
       ]
     # A function that puts a single number on the stack.
     f = s0, (n0, s0)
-    self.assertEqual(kv(expression), [f])
+    self.assertEqual(infr(expression), [f])
 
   def test_BS(self):
     expression = pop, swap, rolldown, rest, rest, cons, cons
     # ([a3 a4 ...0] a2 a1 a0 -- [a1 a2 ...0])
     f = (a0, (a1, (a2, ((a3, (a4, s0)), s1)))), ((a1, (a2, s0)), s1)
-    self.assertEqual(kv(expression), [f])
+    self.assertEqual(infr(expression), [f])
 
   def test_enter(self):
     expression = a1, (cons, s0), dip  # a1 [cons] dip
     # (a0 [...0] -- [a0 ...0] a1)
     f = ((s0, (a0, s1)), (a1, ((a0, s0), s1)))
-    self.assertEqual(kv(expression), [f])
+    self.assertEqual(infr(expression), [f])
 
   def test_2(self):
     # [cons] i == cons
     expression = (cons, s0), i
-    self.assertEqual(kv(expression), kv([cons]))
+    self.assertEqual(infr(expression), infr([cons]))
 
 
 ##
@@ -48,7 +48,7 @@ class TestKleeneStar(unittest.TestCase):
 
 ##    print doc_from_stack_effect(*f)
 ##    print 
-##    for sec in kav(e):
+##    for sec in infer(e):
 ##      print sec, doc_from_stack_effect(*sec)
 ##        self.assertRaises(KeyError, lambda: {}[23])
 ##    def test_leave(self):
@@ -64,7 +64,7 @@ class TestKleeneStar(unittest.TestCase):
 ##
 ##e = (DIP, ())
 ##
-##h = kav(e, l[0])
+##h = infer(e, l[0])
 ##
 ##for z in h:
 ##  print doc_from_stack_effect(*z)
@@ -76,7 +76,7 @@ class TestKleeneStar(unittest.TestCase):
 ##
 ##expression = (a1, (a3, ((CONS, s0), (DIPD, ()))))
 ##
-##for sec in kav(expression):
+##for sec in infer(expression):
 ##  print doc_from_stack_effect(*sec)
 ##
 

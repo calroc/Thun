@@ -122,7 +122,7 @@ def unify(u, v, s=None):
     if isinstance(u, tuple) and isinstance(v, tuple):
         if len(u) != len(v) != 2:
             raise JoyTypeError(repr((u, v)))
-            
+
         a, b = v
         if isinstance(a, KleeneStar):
             if isinstance(b, KleeneStar):
@@ -217,14 +217,14 @@ flatten = lambda g: list(chain.from_iterable(g))
 ID = S[0], S[0]  # Identity function.
 
 
-def kav(e, F=ID):
+def infer(e, F=ID):
     if not e:
         return [F]
 
     n, e = e
 
     if isinstance(n, SymbolJoyType):
-        res = flatten(kav(e, Fn) for Fn in MC([F], n.stack_effects))
+        res = flatten(infer(e, Fn) for Fn in MC([F], n.stack_effects))
 
     elif isinstance(n, CombinatorJoyType):
         res = []
@@ -232,10 +232,10 @@ def kav(e, F=ID):
             fi, fo = F
             new_fo, ee, _ = combinator(fo, e, {})
             new_F = fi, new_fo
-            res.extend(kav(ee, new_F))
+            res.extend(infer(ee, new_F))
     else:
         lit = s9, (n, s9)
-        res = flatten(kav(e, Fn) for Fn in MC([F], [lit]))
+        res = flatten(infer(e, Fn) for Fn in MC([F], [lit]))
 
     return res
 
