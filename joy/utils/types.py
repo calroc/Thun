@@ -47,6 +47,9 @@ N = n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = map(NumberJoyType, _R)
 S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = map(StackJoyType, _R)
 
 
+class JoyTypeError(Exception): pass
+
+
 def update(s, term):
     if not isinstance(term, tuple):
         return s.get(term, term)
@@ -106,7 +109,7 @@ def unify(u, v, s=None):
         if v >= u:
             s[v] = u
             return s
-        raise TypeError('Cannot unify %r and %r.' % (u, v))
+        raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
 
     if isinstance(u, tuple) and isinstance(v, tuple):
         if len(u) != len(v) != 2:
@@ -119,13 +122,13 @@ def unify(u, v, s=None):
 
     if isinstance(v, tuple):
         if not stacky(u):
-            raise TypeError('Cannot unify %r and %r.' % (u, v))
+            raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
         s[u] = v
         return s
 
     if isinstance(u, tuple):
         if not stacky(v):
-            raise TypeError('Cannot unify %r and %r.' % (v, u))
+            raise JoyTypeError('Cannot unify %r and %r.' % (v, u))
         s[v] = u
         return s
 
@@ -146,7 +149,7 @@ def compose(f, g):
     else:
         s = unify(g_in, f_out)
         if s == False:  # s can also be the empty dict, which is ok.
-            raise TypeError('Cannot unify %r and %r.' % (fo, gi))
+            raise JoyTypeError('Cannot unify %r and %r.' % (fo, gi))
         fg_in, fg_out = update(s, (f_in, g_out))
 
     return fg_in, fg_out
