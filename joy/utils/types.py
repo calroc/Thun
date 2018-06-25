@@ -264,6 +264,7 @@ def defs():
     tuck = __(a2, a1), __(a1, a2, a1)
     over = __(a2, a1), __(a2, a1, a2)
     stack = s0, (s0, s0)
+    swaack = (s1, s0), (s0, s1)
     stuncons = C(stack, uncons)
     stununcons = C(stack, uncons, uncons)
     first_two = C(uncons, uncons, pop)

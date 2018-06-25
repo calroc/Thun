@@ -13,6 +13,7 @@ from itertools import chain, product
 import sys
 sys.path.append('/home/sforman/Desktop/Joypy-hg')
 import joy.library
+from joy.utils.stack import concat as CONCAT
 from joy.utils.types import (
   AnyJoyType, A,
   C,
@@ -101,6 +102,9 @@ class FunctionJoyType(AnyJoyType):
         return self
     __radd__ = __add__
 
+    def __repr__(self):
+        return self.name
+
 
 class SymbolJoyType(FunctionJoyType): prefix = 'F'
 class CombinatorJoyType(FunctionJoyType): prefix = 'C'
@@ -182,11 +186,8 @@ def _lil_uni(u, v, s):
 
 def compose(f, g):
     (f_in, f_out), (g_in, g_out) = f, g
-    s = unify(g_in, f_out)
-    if not s:
-        raise JoyTypeError('Cannot unify %r and %r.' % (fo, gi))
-    for result in s:
-        yield update(result, (f_in, g_out))
+    for s in unify(g_in, f_out):
+        yield update(s, (f_in, g_out))
 
 
 def C(f, g):
@@ -198,8 +199,7 @@ def C(f, g):
 def meta_compose(F, G):
     for f, g in product(F, G):
         try:
-            for result in C(f, g):
-                yield result
+            for result in C(f, g): yield result
         except JoyTypeError:
             pass
 
@@ -231,6 +231,7 @@ def infer(e, F=ID):
         for combinator in n.stack_effects:
             fi, fo = F
             new_fo, ee, _ = combinator(fo, e, {})
+            ee = update(FUNCTIONS, ee)  # Fix Symbols.
             new_F = fi, new_fo
             res.extend(infer(ee, new_F))
     else:
@@ -260,21 +261,18 @@ mul = [
 ]
 
 
-SYMBOLS = {
+FUNCTIONS = {
     name: SymbolJoyType(name, [DEFS[name]], i)
     for i, name in enumerate('''
         ccons cons divmod_ dup dupd first
         mul over pm pop popd popdd popop
         pred rest rolldown rollup rrest
         second sqrt succ swap swons third
-        tuck uncons
+        tuck uncons stack swaack
         '''.strip().split())
     }
-
-SYMBOLS['sum'] = SymbolJoyType('sum', [(((Ns[1], s1), s0), (n0, s0))], 100)
-
-
-COMBINATORS = {
+FUNCTIONS['sum'] = SymbolJoyType('sum', [(((Ns[1], s1), s0), (n0, s0))], 100)
+FUNCTIONS.update({
     combo.__name__: CombinatorJoyType(combo.__name__, [combo], i)
     for i, combo in enumerate((
         joy.library.i,
@@ -284,5 +282,21 @@ COMBINATORS = {
         joy.library.dupdip,
         joy.library.b,
         joy.library.x,
+        joy.library.infra,
         ))
-    }
+    })
+
+def branch_true(stack, expression, dictionary):
+  (then, (else_, (flag, stack))) = stack
+  return stack, CONCAT(then, expression), dictionary
+
+def branch_false(stack, expression, dictionary):
+  (then, (else_, (flag, stack))) = stack
+  return stack, CONCAT(else_, expression), dictionary
+
+FUNCTIONS['branch'] = CombinatorJoyType('branch', [branch_true, branch_false], 100)
+
+
+
+
+
