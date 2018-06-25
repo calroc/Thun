@@ -56,6 +56,7 @@ class KleeneStar(object):
     kind = AnyJoyType
 
     def __init__(self, number):
+        assert number
         self.number = number
         self.count = 0
         self.prefix = repr(self)
@@ -129,8 +130,10 @@ def unify(u, v, s=None):
 
         a, b = v
         if isinstance(a, KleeneStar):
-            if isinstance(b, KleeneStar):
-                return _lil_uni(a, b, s)
+            c, d = u
+            if isinstance(c, KleeneStar):
+                s = _lil_uni(a, c, s)  # Attempt to unify the two K-stars.
+                return unify(d, b, s[0])
 
             # Two universes, in one the Kleene star disappears and unification
             # continues without it...
@@ -247,7 +250,7 @@ s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = S
 f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = F = map(FloatJoyType, _R)
 i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = I = map(IntJoyType, _R)
 
-
+_R = range(1, 11)
 As = map(AnyStarJoyType, _R)
 Ns = map(NumberStarJoyType, _R)
 Ss = map(StackStarJoyType, _R)
