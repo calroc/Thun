@@ -11775,7 +11775,11 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Type-Inference">Type Inference<a class="anchor-link" href="#Type-Inference">&#182;</a></h1><p>Cf. <a href="http://prl.ccs.neu.edu/blog/2017/03/10/type-inference-in-stack-based-programming-languages/">"Type Inference in Stack-Based Programming Languages"</a> by Rob Kleffner, 2017-03-10.</p>
+<h1 id="Type-Inference">Type Inference<a class="anchor-link" href="#Type-Inference">&#182;</a></h1><p>This notebook presents a simple type inferencer for Joy code.  It can infer the stack effect of most Joy expressions.  It built largely by means of existing ideas and research (some of it may be original but I'm not able to say, as I don't fully understand the all of the source material in the depth required to make that call.)  A great overview of the existing knowledge is a talk <a href="http://prl.ccs.neu.edu/blog/2017/03/10/type-inference-in-stack-based-programming-languages/">"Type Inference in Stack-Based Programming Languages"</a> given by Rob Kleffner on or about 2017-03-10 as part of a course on the history of programming languages.</p>
+<p>The notebook starts with a simple inferencer based on the work of Jaanus Pöial which we then progressively elaborate to cover more Joy semantics.  Along the way we write a simple "compiler" that emits Python code for what I like to call Yin functions.</p>
+<p>Yin functions are those that only rearrange values in stacks, as opposed to Yang functions that actually work on the values themselves.  It's interesting to note that a Joy with <em>only</em> stacks (no other kinds of values) can be made and is Turing-complete, therefore all Yang functions are actually Yin functions, and all computation can be performed by manipulations of structures of containers, which is a restatement of the Laws of Form.  (Also, this implies that every program can be put into a form such that it can be computed in a single step, although that step may be enormous or unending.)</p>
+<p>Although I haven't completed it yet, a Joy based on Laws of Form provides the foundation for a provably correct computing system "down to the metal".  This is my original and still primary motivation for developing Joy.  (I want a proven-correct Operating System for a swarm of trash-collecting recycler robots.  To trust it I have to implementment it myself from first principles, and I'm not smart enough to truly grok the existing literature and software, so I had to go look for and find LoF and Joy.  Now that I have the mental tools to build my robot OS I can get down to it.</p>
+<p>Anyhow, here's type inference...</p>
 
 </div>
 </div>
@@ -12953,7 +12957,7 @@ cons ( 1 [...] -- [1 ...] )</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Part-III:-Compiling-Stack-Functions">Part III: Compiling Stack Functions<a class="anchor-link" href="#Part-III:-Compiling-Stack-Functions">&#182;</a></h2><p>Now consider the Python function we would like to derive:</p>
+<h2 id="Part-III:-Compiling-Yin-Functions">Part III: Compiling Yin Functions<a class="anchor-link" href="#Part-III:-Compiling-Yin-Functions">&#182;</a></h2><p>Now consider the Python function we would like to derive:</p>
 
 </div>
 </div>
@@ -14409,7 +14413,7 @@ uncons = ([a1 .1.] -- a1 [.1.])
 <div class="prompt input_prompt">In&nbsp;[57]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># e.g. [popop] dip</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># e.g. [popop] dipd</span>
 <span class="n">neato</span><span class="p">(</span><span class="n">popdd</span><span class="p">,</span> <span class="n">roll_down</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
 </pre></div>
 
@@ -14578,6 +14582,15 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>(Eventually I should come back around to this becuase it's not tooo difficult to exend this code to be able to compile e.g. <code>n3 = mul(n1, n2)</code> for <code>mul</code> and insert it in the right place with the right variable names.  It requires a little more support from the library functions, in that we need to know to call <code>mul()</code> the Python function for <code>mul</code> the Joy function, but since <em>most</em> of the math functions (at least) are already wrappers it should be straightforward.)</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -15627,7 +15640,7 @@ uncons = ([a1 .1.] -- a1 [.1.])
                         w/ {d: e}
 [  A* b .0.] U [  .1.]
                         w/ {.1.: A* b .0.}
-[  A* b .0.] U [  .1.]</code></pre>
+[  A* b .0.] U [  A* b .0.]</code></pre>
 
 </div>
 </div>
@@ -16362,22 +16375,16 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Part-VII:-Typing-Combinators">Part VII: Typing Combinators<a class="anchor-link" href="#Part-VII:-Typing-Combinators">&#182;</a></h2><p>TBD</p>
-<p>This is an open subject.</p>
-<p>The obvious thing is that you now need two pairs of tuples to describe the combinators' effects,  a stack effect comment and an expression effect comment:</p>
+<h2 id="Part-VII:-Typing-Combinators">Part VII: Typing Combinators<a class="anchor-link" href="#Part-VII:-Typing-Combinators">&#182;</a></h2><p>In order to compute the stack effect of combinators you kinda have to have the quoted programs they expect available.  In the most general case, the <code>i</code> combinator, you can't say anything about it's stack effect other than it expects one quote:</p>
 
-<pre><code>dip (a [F] --)--(-- F a)
+<pre><code>i (... [.1.] -- ... .1.)
 
 </code></pre>
-<p>One thing that might help is...</p>
+<p>Or</p>
 
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
+<pre><code>i (... [A* .1.] -- ... A*)
+
+</code></pre>
 <p>Consider the type of:</p>
 
 <pre><code>[cons] dip
@@ -16390,7 +16397,20 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </code></pre>
 <p><code>dip</code> itself could have:</p>
 
-<pre><code>(a1 [..1] -- ... then what?</code></pre>
+<pre><code>(a1 [..1] -- ... then what?
+
+
+</code></pre>
+<p>Without any information about the contents of the quote we can't say much about the result.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I think there's a way forward.  If we convert our list of terms we are composing into a stack structure we can use it as a <em>Joy expression</em>, then we can treat the <em>output half</em> of a function's stack effect comment as a Joy interpreter stack, and just execute combinators directly.  We can hybridize the compostition function with an interpreter to evaluate combinators, compose non-combinator functions, and put type variables on the stack.  For combinators like <code>branch</code> that can have more than one stack effect we have to "split universes" again and return both.  (Note: bug! If one branch doesn't type check the currect code ignores it, so you can think things are okay but have a type error waiting in the faled branch, I think... D'oh! FIXME!!!)</p>
 
 </div>
 </div>
@@ -16398,567 +16418,6 @@ uncons = ([a1 .1.] -- a1 [.1.])
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[108]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">class</span> <span class="nc">SymbolJoyType</span><span class="p">(</span><span class="n">AnyJoyType</span><span class="p">):</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span>
-
-<span class="n">W</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">SymbolJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">)</span>
-
-<span class="n">k</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">((</span><span class="n">W</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;cons&#39;</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">k</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(-- [F1 .2.])
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[109]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">dip_a</span> <span class="o">=</span> <span class="p">((</span><span class="n">W</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[110]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">relabel</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dip_a</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">d</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(-- a1001 [F1001 .1002.])
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[111]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">unify</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">s</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[111]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>{s0: (a1001, s1000), s1002: s2, F1001: F1}</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[112]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[113]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">j</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(a1001 -- a1001 [F1 .2.])
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[114]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">j</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[114]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>((a1001, s1000), ((F1, s2), (a1001, s1000)))</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[115]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">cons</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[115]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>((s1, (a1, s23)), ((a1, s1), s23))</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[116]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">k</span><span class="p">],</span> <span class="p">[</span><span class="n">dup</span><span class="p">]):</span>
-    <span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(-- [F0 .1.] [F0 .1.])
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[117]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">l</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">((</span><span class="n">cons</span><span class="p">,</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[118]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">l</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(-- a1 [[[[.1.] a1 .23.] [a1 .1.] .23.] .2.])
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[119]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">dip_t</span><span class="p">(</span><span class="n">F</span><span class="p">):</span>
-    <span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">sec</span><span class="p">))</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">G</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sec</span>
-    <span class="n">P</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">S</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span>
-    <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-        <span class="n">term</span><span class="p">,</span> <span class="n">quote</span> <span class="o">=</span> <span class="n">quote</span>
-        <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">a</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[120]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">iter_stack</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[121]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">dip_t</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[122]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[122]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(s0, s0)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[123]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">b</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[123]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>((s1, (a1, s23)), ((a1, s1), s23))</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[124]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">c</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[124]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(s3, (a1, s3))</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[125]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">MC</span><span class="p">([</span><span class="n">a</span><span class="p">],</span> <span class="p">[</span><span class="n">b</span><span class="p">])</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[125]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[((s0, (a0, s1)), ((a0, s0), s1))]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[126]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">kjs</span> <span class="o">=</span> <span class="n">MC</span><span class="p">(</span><span class="n">MC</span><span class="p">([</span><span class="n">a</span><span class="p">],</span> <span class="p">[</span><span class="n">b</span><span class="p">]),</span> <span class="p">[</span><span class="n">c</span><span class="p">])</span>
-<span class="n">kjs</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[126]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[((s0, (a0, s1)), (a1, ((a0, s0), s1)))]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[127]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">kjs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(a0 [.0.] -- [a0 .0.] a1)
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-
-<pre><code>(a0 [.0.] -- [a0 .0.] a1)
-
-   a0 [.0.] a1 [cons] dip
-----------------------------
-   [a0 .0.] a1</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[128]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">stack_concat</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">q</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">stack_concat</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span> <span class="k">if</span> <span class="n">q</span> <span class="k">else</span> <span class="n">e</span>
@@ -16971,7 +16430,7 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[129]:</div>
+<div class="prompt input_prompt">In&nbsp;[109]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">class</span> <span class="nc">SymbolJoyType</span><span class="p">(</span><span class="n">AnyJoyType</span><span class="p">):</span>
@@ -17030,7 +16489,7 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[130]:</div>
+<div class="prompt input_prompt">In&nbsp;[110]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">dip_t</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
@@ -17046,7 +16505,7 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[131]:</div>
+<div class="prompt input_prompt">In&nbsp;[111]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">dip</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
@@ -17082,194 +16541,6 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="concat"><code>concat</code><a class="anchor-link" href="#concat">&#182;</a></h3><p>How to deal with <code>concat</code>?</p>
-
-<pre><code>concat ([.0.] [.1.] -- [.0. .1.])
-
-</code></pre>
-<p>We would like to represent this in Python somehow...</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[132]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">concat</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">((</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]),)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>But this is actually <code>cons</code> with the first argument restricted to be a stack:</p>
-
-<pre><code>([.0.] [.1.] -- [[.0.] .1.])
-
-</code></pre>
-<p>What we have implemented so far would actually only permit:</p>
-
-<pre><code>([.0.] [.1.] -- [.2.])</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[133]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">concat</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">],)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Which works but can lose information.  Consider <code>cons concat</code>, this is how much information we <em>could</em> retain:</p>
-
-<pre><code>(1 [.0.] [.1.] -- [1 .0. .1.])
-
-</code></pre>
-<p>As opposed to just:</p>
-
-<pre><code>(1 [.0.] [.1.] -- [.2.])</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="represent-concat">represent <code>concat</code><a class="anchor-link" href="#represent-concat">&#182;</a></h3>
-<pre><code>([.0.] [.1.] -- [A*(.0.) .1.])
-
-</code></pre>
-<p>Meaning that <code>A*</code> on the right-hand side should all the crap from <code>.0.</code>.</p>
-
-<pre><code>([      .0.] [.1.] -- [      A* .1.])
-([a     .0.] [.1.] -- [a     A* .1.])
-([a b   .0.] [.1.] -- [a b   A* .1.])
-([a b c .0.] [.1.] -- [a b c A* .1.])</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>or...</p>
-
-<pre><code>([       .0.] [.1.] -- [       .1.])
-([a      .0.] [.1.] -- [a      .1.])
-([a b    .0.] [.1.] -- [a b    .1.])
-([a b  c .0.] [.1.] -- [a b  c .1.])
-([a A* c .0.] [.1.] -- [a A* c .1.])</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-
-<pre><code>(a, (b, S0)) . S1 = (a, (b, (A*, S1)))</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[134]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">class</span> <span class="nc">Astar</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;A*&#39;</span>
-
-
-<span class="k">def</span> <span class="nf">concat</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">):</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-        <span class="n">term</span><span class="p">,</span> <span class="n">s0</span> <span class="o">=</span> <span class="n">s0</span>
-        <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">StackJoyType</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">s0</span><span class="p">)</span>
-    <span class="n">s1</span> <span class="o">=</span> <span class="n">Astar</span><span class="p">(),</span> <span class="n">s1</span>
-    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
-        <span class="n">s1</span> <span class="o">=</span> <span class="n">term</span><span class="p">,</span> <span class="n">s1</span>
-    <span class="k">return</span> <span class="n">s1</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[135]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[136]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">concat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[136]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(a1, (A*, (a2, s1)))</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Appendix:-Joy-in-the-Logical-Paradigm">Appendix: Joy in the Logical Paradigm<a class="anchor-link" href="#Appendix:-Joy-in-the-Logical-Paradigm">&#182;</a></h2><p>For this to work the type label classes have to be modified to let <code>T &gt;= t</code> succeed, where e.g. <code>T</code> is <code>IntJoyType</code> and <code>t</code> is <code>int</code></p>
 
 </div>
@@ -17277,7 +16548,7 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[137]:</div>
+<div class="prompt input_prompt">In&nbsp;[112]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">F</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">roll_down</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">cons</span><span class="p">,</span> <span class="n">cons</span><span class="p">))</span>
@@ -17302,7 +16573,7 @@ uncons = ([a1 .1.] -- a1 [.1.])
 <pre>
 <span class="ansi-red-fg">---------------------------------------------------------------------------</span>
 <span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-137-4b4cb6ff86e5&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">&lt;ipython-input-112-4b4cb6ff86e5&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
 <span class="ansi-green-intense-fg ansi-bold">      1</span> F <span class="ansi-blue-fg">=</span> reduce<span class="ansi-blue-fg">(</span>C<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>pop<span class="ansi-blue-fg">,</span> swap<span class="ansi-blue-fg">,</span> roll_down<span class="ansi-blue-fg">,</span> rest<span class="ansi-blue-fg">,</span> rest<span class="ansi-blue-fg">,</span> cons<span class="ansi-blue-fg">,</span> cons<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
 <span class="ansi-green-intense-fg ansi-bold">      2</span> 
 <span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">print</span> doc_from_stack_effect<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>F<span class="ansi-blue-fg">)</span>
@@ -17469,6 +16740,475 @@ uncons = ([a1 .1.] -- a1 [.1.])
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Junk">Junk<a class="anchor-link" href="#Junk">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">class</span> <span class="nc">SymbolJoyType</span><span class="p">(</span><span class="n">AnyJoyType</span><span class="p">):</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span>
+
+<span class="n">W</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">SymbolJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">)</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">((</span><span class="n">W</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;cons&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">k</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">dip_a</span> <span class="o">=</span> <span class="p">((</span><span class="n">W</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">relabel</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dip_a</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">unify</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">s</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">j</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">j</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">cons</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">k</span><span class="p">],</span> <span class="p">[</span><span class="n">dup</span><span class="p">]):</span>
+    <span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">l</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">((</span><span class="n">cons</span><span class="p">,</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">l</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">dip_t</span><span class="p">(</span><span class="n">F</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">sec</span><span class="p">))</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sec</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">S</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span>
+    <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">term</span><span class="p">,</span> <span class="n">quote</span> <span class="o">=</span> <span class="n">quote</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">iter_stack</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">dip_t</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">b</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">c</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">MC</span><span class="p">([</span><span class="n">a</span><span class="p">],</span> <span class="p">[</span><span class="n">b</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">kjs</span> <span class="o">=</span> <span class="n">MC</span><span class="p">(</span><span class="n">MC</span><span class="p">([</span><span class="n">a</span><span class="p">],</span> <span class="p">[</span><span class="n">b</span><span class="p">]),</span> <span class="p">[</span><span class="n">c</span><span class="p">])</span>
+<span class="n">kjs</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">kjs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+<pre><code>(a0 [.0.] -- [a0 .0.] a1)
+
+   a0 [.0.] a1 [cons] dip
+----------------------------
+   [a0 .0.] a1</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="concat"><code>concat</code><a class="anchor-link" href="#concat">&#182;</a></h3><p>How to deal with <code>concat</code>?</p>
+
+<pre><code>concat ([.0.] [.1.] -- [.0. .1.])
+
+</code></pre>
+<p>We would like to represent this in Python somehow...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">concat</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">((</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]),)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>But this is actually <code>cons</code> with the first argument restricted to be a stack:</p>
+
+<pre><code>([.0.] [.1.] -- [[.0.] .1.])
+
+</code></pre>
+<p>What we have implemented so far would actually only permit:</p>
+
+<pre><code>([.0.] [.1.] -- [.2.])</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">concat</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">],)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Which works but can lose information.  Consider <code>cons concat</code>, this is how much information we <em>could</em> retain:</p>
+
+<pre><code>(1 [.0.] [.1.] -- [1 .0. .1.])
+
+</code></pre>
+<p>As opposed to just:</p>
+
+<pre><code>(1 [.0.] [.1.] -- [.2.])</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="represent-concat">represent <code>concat</code><a class="anchor-link" href="#represent-concat">&#182;</a></h3>
+<pre><code>([.0.] [.1.] -- [A*(.0.) .1.])
+
+</code></pre>
+<p>Meaning that <code>A*</code> on the right-hand side should all the crap from <code>.0.</code>.</p>
+
+<pre><code>([      .0.] [.1.] -- [      A* .1.])
+([a     .0.] [.1.] -- [a     A* .1.])
+([a b   .0.] [.1.] -- [a b   A* .1.])
+([a b c .0.] [.1.] -- [a b c A* .1.])</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>or...</p>
+
+<pre><code>([       .0.] [.1.] -- [       .1.])
+([a      .0.] [.1.] -- [a      .1.])
+([a b    .0.] [.1.] -- [a b    .1.])
+([a b  c .0.] [.1.] -- [a b  c .1.])
+([a A* c .0.] [.1.] -- [a A* c .1.])</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+<pre><code>(a, (b, S0)) . S1 = (a, (b, (A*, S1)))</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">class</span> <span class="nc">Astar</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;A*&#39;</span>
+
+
+<span class="k">def</span> <span class="nf">concat</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">term</span><span class="p">,</span> <span class="n">s0</span> <span class="o">=</span> <span class="n">s0</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">StackJoyType</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">s0</span><span class="p">)</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">Astar</span><span class="p">(),</span> <span class="n">s1</span>
+    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+        <span class="n">s1</span> <span class="o">=</span> <span class="n">term</span><span class="p">,</span> <span class="n">s1</span>
+    <span class="k">return</span> <span class="n">s1</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">concat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
 </div>
     </div>
   </div>

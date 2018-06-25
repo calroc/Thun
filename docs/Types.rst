@@ -2,9 +2,43 @@
 Type Inference
 ==============
 
-Cf. `"Type Inference in Stack-Based Programming
+This notebook presents a simple type inferencer for Joy code. It can
+infer the stack effect of most Joy expressions. It built largely by
+means of existing ideas and research (some of it may be original but I'm
+not able to say, as I don't fully understand the all of the source
+material in the depth required to make that call.) A great overview of
+the existing knowledge is a talk `"Type Inference in Stack-Based
+Programming
 Languages" <http://prl.ccs.neu.edu/blog/2017/03/10/type-inference-in-stack-based-programming-languages/>`__
-by Rob Kleffner, 2017-03-10.
+given by Rob Kleffner on or about 2017-03-10 as part of a course on the
+history of programming languages.
+
+The notebook starts with a simple inferencer based on the work of Jaanus
+Pöial which we then progressively elaborate to cover more Joy semantics.
+Along the way we write a simple "compiler" that emits Python code for
+what I like to call Yin functions.
+
+Yin functions are those that only rearrange values in stacks, as opposed
+to Yang functions that actually work on the values themselves. It's
+interesting to note that a Joy with *only* stacks (no other kinds of
+values) can be made and is Turing-complete, therefore all Yang functions
+are actually Yin functions, and all computation can be performed by
+manipulations of structures of containers, which is a restatement of the
+Laws of Form. (Also, this implies that every program can be put into a
+form such that it can be computed in a single step, although that step
+may be enormous or unending.)
+
+Although I haven't completed it yet, a Joy based on Laws of Form
+provides the foundation for a provably correct computing system "down to
+the metal". This is my original and still primary motivation for
+developing Joy. (I want a proven-correct Operating System for a swarm of
+trash-collecting recycler robots. To trust it I have to implementment it
+myself from first principles, and I'm not smart enough to truly grok the
+existing literature and software, so I had to go look for and find LoF
+and Joy. Now that I have the mental tools to build my robot OS I can get
+down to it.
+
+Anyhow, here's type inference...
 
 Part I: Pöial's Rules
 ---------------------
@@ -761,8 +795,8 @@ deal with this recursively:
 
 
 
-Part III: Compiling Stack Functions
------------------------------------
+Part III: Compiling Yin Functions
+---------------------------------
 
 Now consider the Python function we would like to derive:
 
@@ -1605,7 +1639,7 @@ also get the effect of combinators in some limited cases.
 
 .. code:: ipython2
 
-    # e.g. [popop] dip
+    # e.g. [popop] dipd
     neato(popdd, roll_down, pop)
 
 
@@ -1675,6 +1709,14 @@ such. Note that this is *not* a ``sqr`` function implementation:
         (n0, stack) = stack
         return (n1, stack)
 
+
+(Eventually I should come back around to this becuase it's not tooo
+difficult to exend this code to be able to compile e.g.
+``n3 = mul(n1, n2)`` for ``mul`` and insert it in the right place with
+the right variable names. It requires a little more support from the
+library functions, in that we need to know to call ``mul()`` the Python
+function for ``mul`` the Joy function, but since *most* of the math
+functions (at least) are already wrappers it should be straightforward.)
 
 ``compilable()``
 ^^^^^^^^^^^^^^^^
@@ -2231,7 +2273,7 @@ While in the second it spawns an ``A``, which we will label ``e``:
                             w/ {d: e}
     [  A* b .0.] U [  .1.]
                             w/ {.1.: A* b .0.}
-    [  A* b .0.] U [  .1.]
+    [  A* b .0.] U [  A* b .0.]
 
 Giving us two unifiers:
 
@@ -2601,19 +2643,20 @@ This function has to be modified to yield multiple results.
 Part VII: Typing Combinators
 ----------------------------
 
-TBD
-
-This is an open subject.
-
-The obvious thing is that you now need two pairs of tuples to describe
-the combinators' effects, a stack effect comment and an expression
-effect comment:
+In order to compute the stack effect of combinators you kinda have to
+have the quoted programs they expect available. In the most general
+case, the ``i`` combinator, you can't say anything about it's stack
+effect other than it expects one quote:
 
 ::
 
-    dip (a [F] --)--(-- F a)
+    i (... [.1.] -- ... .1.)
 
-One thing that might help is...
+Or
+
+::
+
+    i (... [A* .1.] -- ... A*)
 
 Consider the type of:
 
@@ -2633,226 +2676,20 @@ Obviously it would be:
 
     (a1 [..1] -- ... then what?
 
-.. code:: ipython2
-
-    class SymbolJoyType(AnyJoyType): prefix = 'F'
-    
-    W = map(SymbolJoyType, _R)
-    
-    k = S[0], ((W[1], S[2]), S[0])
-    Symbol('cons')
-    print doc_from_stack_effect(*k)
-
-
-
-.. parsed-literal::
-
-    (-- [F1 .2.])
-
-
-.. code:: ipython2
-
-    dip_a = ((W[1], S[2]), (A[1], S[0]))
-
-.. code:: ipython2
-
-    d = relabel(S[0], dip_a)
-    print doc_from_stack_effect(*d)
-
-
-.. parsed-literal::
-
-    (-- a1001 [F1001 .1002.])
-
-
-.. code:: ipython2
-
-    s = list(unify(d[1], k[1]))[0]
-    s
-
-
-
-
-.. parsed-literal::
-
-    {s0: (a1001, s1000), s1002: s2, F1001: F1}
-
-
-
-.. code:: ipython2
-
-    j = update(s, k)
-
-.. code:: ipython2
-
-    print doc_from_stack_effect(*j)
-
-
-.. parsed-literal::
-
-    (a1001 -- a1001 [F1 .2.])
-
-
-.. code:: ipython2
-
-    j
-
-
-
-
-.. parsed-literal::
-
-    ((a1001, s1000), ((F1, s2), (a1001, s1000)))
-
-
-
-.. code:: ipython2
-
-    cons
-
-
-
-
-.. parsed-literal::
-
-    ((s1, (a1, s23)), ((a1, s1), s23))
-
-
-
-.. code:: ipython2
-
-    for f in MC([k], [dup]):
-        print doc_from_stack_effect(*f)
-
-
-.. parsed-literal::
-
-    (-- [F0 .1.] [F0 .1.])
-
-
-.. code:: ipython2
-
-    l = S[0], ((cons, S[2]), (A[1], S[0]))
-
-.. code:: ipython2
-
-    print doc_from_stack_effect(*l)
-
-
-.. parsed-literal::
-
-    (-- a1 [[[[.1.] a1 .23.] [a1 .1.] .23.] .2.])
-
-
-.. code:: ipython2
-
-    
-    def dip_t(F):
-        (quote, (a1, sec)) = F[1]
-        G = F[0], sec
-        P = S[3], (a1, S[3])
-        a = [P]
-        while isinstance(quote, tuple):
-            term, quote = quote
-            a.append(term)
-        a.append(G)
-        return a[::-1]
-    
-    
-    
-
-
-.. code:: ipython2
-
-    from joy.utils.stack import iter_stack
-
-.. code:: ipython2
-
-    a, b, c = dip_t(l)
-
-.. code:: ipython2
-
-    a
-
-
-
-
-.. parsed-literal::
-
-    (s0, s0)
-
-
-
-.. code:: ipython2
-
-    b
-
-
-
-
-.. parsed-literal::
-
-    ((s1, (a1, s23)), ((a1, s1), s23))
-
-
-
-.. code:: ipython2
-
-    c
-
-
-
-
-.. parsed-literal::
-
-    (s3, (a1, s3))
-
-
-
-.. code:: ipython2
-
-    MC([a], [b])
-
-
-
-
-.. parsed-literal::
-
-    [((s0, (a0, s1)), ((a0, s0), s1))]
-
-
-
-.. code:: ipython2
-
-    kjs = MC(MC([a], [b]), [c])
-    kjs
-
-
-
-
-.. parsed-literal::
-
-    [((s0, (a0, s1)), (a1, ((a0, s0), s1)))]
-
-
-
-.. code:: ipython2
-
-    print doc_from_stack_effect(*kjs[0])
-
-
-.. parsed-literal::
-
-    (a0 [.0.] -- [a0 .0.] a1)
-
-
-::
-
-    (a0 [.0.] -- [a0 .0.] a1)
-
-       a0 [.0.] a1 [cons] dip
-    ----------------------------
-       [a0 .0.] a1
+Without any information about the contents of the quote we can't say
+much about the result.
+
+I think there's a way forward. If we convert our list of terms we are
+composing into a stack structure we can use it as a *Joy expression*,
+then we can treat the *output half* of a function's stack effect comment
+as a Joy interpreter stack, and just execute combinators directly. We
+can hybridize the compostition function with an interpreter to evaluate
+combinators, compose non-combinator functions, and put type variables on
+the stack. For combinators like ``branch`` that can have more than one
+stack effect we have to "split universes" again and return both. (Note:
+bug! If one branch doesn't type check the currect code ignores it, so
+you can think things are okay but have a type error waiting in the faled
+branch, I think... D'oh! FIXME!!!)
 
 .. code:: ipython2
 
@@ -2924,117 +2761,6 @@ the pace I should be able to verify that conjecture by the end of June.
 
 The rest of this stuff is junk and/or unfinished material.
 
-``concat``
-~~~~~~~~~~
-
-How to deal with ``concat``?
-
-::
-
-    concat ([.0.] [.1.] -- [.0. .1.])
-
-We would like to represent this in Python somehow...
-
-.. code:: ipython2
-
-    concat = (S[0], S[1]), ((S[0], S[1]),)
-
-But this is actually ``cons`` with the first argument restricted to be a
-stack:
-
-::
-
-    ([.0.] [.1.] -- [[.0.] .1.])
-
-What we have implemented so far would actually only permit:
-
-::
-
-    ([.0.] [.1.] -- [.2.])
-
-.. code:: ipython2
-
-    concat = (S[0], S[1]), (S[2],)
-
-Which works but can lose information. Consider ``cons concat``, this is
-how much information we *could* retain:
-
-::
-
-    (1 [.0.] [.1.] -- [1 .0. .1.])
-
-As opposed to just:
-
-::
-
-    (1 [.0.] [.1.] -- [.2.])
-
-represent ``concat``
-~~~~~~~~~~~~~~~~~~~~
-
-::
-
-    ([.0.] [.1.] -- [A*(.0.) .1.])
-
-Meaning that ``A*`` on the right-hand side should all the crap from
-``.0.``.
-
-::
-
-    ([      .0.] [.1.] -- [      A* .1.])
-    ([a     .0.] [.1.] -- [a     A* .1.])
-    ([a b   .0.] [.1.] -- [a b   A* .1.])
-    ([a b c .0.] [.1.] -- [a b c A* .1.])
-
-or...
-
-::
-
-    ([       .0.] [.1.] -- [       .1.])
-    ([a      .0.] [.1.] -- [a      .1.])
-    ([a b    .0.] [.1.] -- [a b    .1.])
-    ([a b  c .0.] [.1.] -- [a b  c .1.])
-    ([a A* c .0.] [.1.] -- [a A* c .1.])
-
-::
-
-    (a, (b, S0)) . S1 = (a, (b, (A*, S1)))
-
-.. code:: ipython2
-
-    class Astar(object):
-        def __repr__(self):
-            return 'A*'
-    
-    
-    def concat(s0, s1):
-        a = []
-        while isinstance(s0, tuple):
-            term, s0 = s0
-            a.append(term)
-        assert isinstance(s0, StackJoyType), repr(s0)
-        s1 = Astar(), s1
-        for term in reversed(a):
-            s1 = term, s1
-        return s1
-
-.. code:: ipython2
-
-    a, b = (A[1], S[0]), (A[2], S[1])
-
-.. code:: ipython2
-
-    concat(a, b)
-
-
-
-
-.. parsed-literal::
-
-    (a1, (A*, (a2, s1)))
-
-
-
 Appendix: Joy in the Logical Paradigm
 -------------------------------------
 
@@ -3056,7 +2782,7 @@ For this to work the type label classes have to be modified to let
 
     ValueError                                Traceback (most recent call last)
 
-    <ipython-input-137-4b4cb6ff86e5> in <module>()
+    <ipython-input-112-4b4cb6ff86e5> in <module>()
           1 F = reduce(C, (pop, swap, roll_down, rest, rest, cons, cons))
           2 
     ----> 3 print doc_from_stack_effect(*F)
@@ -3174,3 +2900,221 @@ function... In any event "mixed-mode" interpreters that include values
 and type variables and can track constraints, etc. will be, uh,
 super-useful. And Abstract Interpretation should be a rich source of
 ideas.
+
+Junk
+----
+
+.. code:: ipython2
+
+    class SymbolJoyType(AnyJoyType): prefix = 'F'
+    
+    W = map(SymbolJoyType, _R)
+    
+    k = S[0], ((W[1], S[2]), S[0])
+    Symbol('cons')
+    print doc_from_stack_effect(*k)
+
+
+.. code:: ipython2
+
+    dip_a = ((W[1], S[2]), (A[1], S[0]))
+
+.. code:: ipython2
+
+    d = relabel(S[0], dip_a)
+    print doc_from_stack_effect(*d)
+
+.. code:: ipython2
+
+    s = list(unify(d[1], k[1]))[0]
+    s
+
+.. code:: ipython2
+
+    j = update(s, k)
+
+.. code:: ipython2
+
+    print doc_from_stack_effect(*j)
+
+.. code:: ipython2
+
+    j
+
+.. code:: ipython2
+
+    cons
+
+.. code:: ipython2
+
+    for f in MC([k], [dup]):
+        print doc_from_stack_effect(*f)
+
+.. code:: ipython2
+
+    l = S[0], ((cons, S[2]), (A[1], S[0]))
+
+.. code:: ipython2
+
+    print doc_from_stack_effect(*l)
+
+.. code:: ipython2
+
+    
+    def dip_t(F):
+        (quote, (a1, sec)) = F[1]
+        G = F[0], sec
+        P = S[3], (a1, S[3])
+        a = [P]
+        while isinstance(quote, tuple):
+            term, quote = quote
+            a.append(term)
+        a.append(G)
+        return a[::-1]
+    
+    
+    
+
+
+.. code:: ipython2
+
+    from joy.utils.stack import iter_stack
+
+.. code:: ipython2
+
+    a, b, c = dip_t(l)
+
+.. code:: ipython2
+
+    a
+
+.. code:: ipython2
+
+    b
+
+.. code:: ipython2
+
+    c
+
+.. code:: ipython2
+
+    MC([a], [b])
+
+.. code:: ipython2
+
+    kjs = MC(MC([a], [b]), [c])
+    kjs
+
+.. code:: ipython2
+
+    print doc_from_stack_effect(*kjs[0])
+
+::
+
+    (a0 [.0.] -- [a0 .0.] a1)
+
+       a0 [.0.] a1 [cons] dip
+    ----------------------------
+       [a0 .0.] a1
+
+``concat``
+~~~~~~~~~~
+
+How to deal with ``concat``?
+
+::
+
+    concat ([.0.] [.1.] -- [.0. .1.])
+
+We would like to represent this in Python somehow...
+
+.. code:: ipython2
+
+    concat = (S[0], S[1]), ((S[0], S[1]),)
+
+But this is actually ``cons`` with the first argument restricted to be a
+stack:
+
+::
+
+    ([.0.] [.1.] -- [[.0.] .1.])
+
+What we have implemented so far would actually only permit:
+
+::
+
+    ([.0.] [.1.] -- [.2.])
+
+.. code:: ipython2
+
+    concat = (S[0], S[1]), (S[2],)
+
+Which works but can lose information. Consider ``cons concat``, this is
+how much information we *could* retain:
+
+::
+
+    (1 [.0.] [.1.] -- [1 .0. .1.])
+
+As opposed to just:
+
+::
+
+    (1 [.0.] [.1.] -- [.2.])
+
+represent ``concat``
+~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    ([.0.] [.1.] -- [A*(.0.) .1.])
+
+Meaning that ``A*`` on the right-hand side should all the crap from
+``.0.``.
+
+::
+
+    ([      .0.] [.1.] -- [      A* .1.])
+    ([a     .0.] [.1.] -- [a     A* .1.])
+    ([a b   .0.] [.1.] -- [a b   A* .1.])
+    ([a b c .0.] [.1.] -- [a b c A* .1.])
+
+or...
+
+::
+
+    ([       .0.] [.1.] -- [       .1.])
+    ([a      .0.] [.1.] -- [a      .1.])
+    ([a b    .0.] [.1.] -- [a b    .1.])
+    ([a b  c .0.] [.1.] -- [a b  c .1.])
+    ([a A* c .0.] [.1.] -- [a A* c .1.])
+
+::
+
+    (a, (b, S0)) . S1 = (a, (b, (A*, S1)))
+
+.. code:: ipython2
+
+    class Astar(object):
+        def __repr__(self):
+            return 'A*'
+    
+    
+    def concat(s0, s1):
+        a = []
+        while isinstance(s0, tuple):
+            term, s0 = s0
+            a.append(term)
+        assert isinstance(s0, StackJoyType), repr(s0)
+        s1 = Astar(), s1
+        for term in reversed(a):
+            s1 = term, s1
+        return s1
+
+.. code:: ipython2
+
+    a, b = (A[1], S[0]), (A[2], S[1])
+
+.. code:: ipython2
+
+    concat(a, b)
