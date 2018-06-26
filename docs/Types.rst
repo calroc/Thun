@@ -211,7 +211,7 @@ The simplest way to "compile" this function would be something like:
 .. code:: ipython2
 
     def poswrd(s, e, d):
-        return roll_down(*swap(*pop(s, e, d)))
+        return rolldown(*swap(*pop(s, e, d)))
 
 However, internally this function would still be allocating tuples
 (stack cells) and doing other unnecesssary work.
@@ -1045,9 +1045,9 @@ from their stack effect comments:
 
     def defs():
     
-        roll_down = (1, 2, 3), (2, 3, 1)
+        rolldown = (1, 2, 3), (2, 3, 1)
     
-        roll_up = (1, 2, 3), (3, 1, 2)
+        rollup = (1, 2, 3), (3, 1, 2)
     
         pop = (1,), ()
     
@@ -1094,13 +1094,13 @@ from their stack effect comments:
         return (a1, stack)
     
     
-    def roll_down(stack):
+    def rolldown(stack):
         """(1 2 3 -- 2 3 1)"""
         (a2, (a1, (a0, stack))) = stack
         return (a0, (a2, (a1, stack)))
     
     
-    def roll_up(stack):
+    def rollup(stack):
         """(1 2 3 -- 3 1 2)"""
         (a2, (a1, (a0, stack))) = stack
         return (a1, (a0, (a2, stack)))
@@ -1482,9 +1482,9 @@ Rewrite the stack effect comments:
 
     def defs():
     
-        roll_down = (A[1], A[2], A[3]), (A[2], A[3], A[1])
+        rolldown = (A[1], A[2], A[3]), (A[2], A[3], A[1])
     
-        roll_up = (A[1], A[2], A[3]), (A[3], A[1], A[2])
+        rollup = (A[1], A[2], A[3]), (A[3], A[1], A[2])
     
         pop = (A[1],), ()
     
@@ -1559,8 +1559,8 @@ Rewrite the stack effect comments:
     popop = (a2 a1 --)
     pred = (n1 -- n2)
     rest = ([a1 .1.] -- [.1.])
-    roll_down = (a1 a2 a3 -- a2 a3 a1)
-    roll_up = (a1 a2 a3 -- a3 a1 a2)
+    rolldown = (a1 a2 a3 -- a2 a3 a1)
+    rollup = (a1 a2 a3 -- a3 a1 a2)
     rrest = ([a0 a1 .0.] -- [.0.])
     second = ([a0 a1 .0.] -- a1)
     sqrt = (n0 -- n1)
@@ -1596,7 +1596,7 @@ Revisit the ``F`` function, works fine.
 
 .. code:: ipython2
 
-    F = reduce(C, (pop, swap, roll_down, rest, rest, cons, cons))
+    F = reduce(C, (pop, swap, rolldown, rest, rest, cons, cons))
     F
 
 
@@ -1629,7 +1629,7 @@ also get the effect of combinators in some limited cases.
 .. code:: ipython2
 
     # e.g. [swap] dip
-    neato(roll_up, swap, roll_down)
+    neato(rollup, swap, rolldown)
 
 
 .. parsed-literal::
@@ -1640,7 +1640,7 @@ also get the effect of combinators in some limited cases.
 .. code:: ipython2
 
     # e.g. [popop] dipd
-    neato(popdd, roll_down, pop)
+    neato(popdd, rolldown, pop)
 
 
 .. parsed-literal::
@@ -1651,7 +1651,7 @@ also get the effect of combinators in some limited cases.
 .. code:: ipython2
 
     # Reverse the order of the top three items.
-    neato(roll_up, swap)
+    neato(rollup, swap)
 
 
 .. parsed-literal::
@@ -1753,8 +1753,8 @@ comments. We can write a function to check that:
     popdd = (a3 a2 a1 -- a2 a1)
     popop = (a2 a1 --)
     rest = ([a1 .1.] -- [.1.])
-    roll_down = (a1 a2 a3 -- a2 a3 a1)
-    roll_up = (a1 a2 a3 -- a3 a1 a2)
+    rolldown = (a1 a2 a3 -- a2 a3 a1)
+    rollup = (a1 a2 a3 -- a3 a1 a2)
     rrest = ([a0 a1 .0.] -- [.0.])
     second = ([a0 a1 .0.] -- a1)
     swap = (a1 a2 -- a2 a1)
@@ -1873,12 +1873,9 @@ conversion function instead. This is programmer's laziness.
         name: (sequence_to_stack(i), sequence_to_stack(o))
         for name, (i, o) in DEFS.iteritems()
     }
-    
+    NEW_DEFS['stack'] = S[0], (S[0], S[0])
+    NEW_DEFS['swaack'] = (S[1], S[0]), (S[0], S[1])
     globals().update(NEW_DEFS)
-
-.. code:: ipython2
-
-    stack = S[0], (S[0], S[0])
 
 .. code:: ipython2
 
@@ -1984,12 +1981,14 @@ Clunky junk, but it will suffice for now.
     popop = (a2 a1 --)
     pred = (n1 -- n2)
     rest = ([a1 .1.] -- [.1.])
-    roll_down = (a1 a2 a3 -- a2 a3 a1)
-    roll_up = (a1 a2 a3 -- a3 a1 a2)
+    rolldown = (a1 a2 a3 -- a2 a3 a1)
+    rollup = (a1 a2 a3 -- a3 a1 a2)
     rrest = ([a0 a1 .0.] -- [.0.])
     second = ([a0 a1 .0.] -- a1)
     sqrt = (n0 -- n1)
+    stack = (... -- ... [...])
     succ = (n1 -- n2)
+    swaack = ([.1.] -- [.0.])
     swap = (a1 a2 -- a2 a1)
     swons = ([.0.] a0 -- [a0 .0.])
     third = ([a0 a1 a2 .0.] -- a2)
@@ -2686,14 +2685,159 @@ as a Joy interpreter stack, and just execute combinators directly. We
 can hybridize the compostition function with an interpreter to evaluate
 combinators, compose non-combinator functions, and put type variables on
 the stack. For combinators like ``branch`` that can have more than one
-stack effect we have to "split universes" again and return both. (Note:
-bug! If one branch doesn't type check the currect code ignores it, so
-you can think things are okay but have a type error waiting in the faled
-branch, I think... D'oh! FIXME!!!)
+stack effect we have to "split universes" again and return both.
 
 .. code:: ipython2
 
-    stack_concat = lambda q, e: (q[0], stack_concat(q[1], e)) if q else e
+    class FunctionJoyType(AnyJoyType):
+    
+        def __init__(self, name, sec, number):
+            self.name = name
+            self.stack_effects = sec
+            self.number = number
+    
+        def __add__(self, other):
+            return self
+        __radd__ = __add__
+    
+        def __repr__(self):
+            return self.name
+    
+    
+    class SymbolJoyType(FunctionJoyType): prefix = 'F'
+    class CombinatorJoyType(FunctionJoyType): prefix = 'C'
+    
+    
+
+
+.. code:: ipython2
+
+    def flatten(g):
+        return list(chain.from_iterable(g))
+    
+    
+    ID = S[0], S[0]  # Identity function.
+    
+    
+    def infer(e, F=ID):
+        if not e:
+            return [F]
+    
+        n, e = e
+    
+        if isinstance(n, SymbolJoyType):
+            res = flatten(infer(e, Fn) for Fn in MC([F], n.stack_effects))
+    
+        elif isinstance(n, CombinatorJoyType):
+            res = []
+            for combinator in n.stack_effects:
+                fi, fo = F
+                new_fo, ee, _ = combinator(fo, e, {})
+                ee = update(FUNCTIONS, ee)  # Fix Symbols.
+                new_F = fi, new_fo
+                res.extend(infer(ee, new_F))
+        else:
+            lit = s9, (n, s9)
+            res = flatten(infer(e, Fn) for Fn in MC([F], [lit]))
+    
+        return res
+    
+
+
+.. code:: ipython2
+
+    f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = F = map(FloatJoyType, _R)
+    i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = I = map(IntJoyType, _R)
+    n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = N
+    s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = S
+
+.. code:: ipython2
+
+    import joy.library
+    
+    FNs = '''ccons cons divmod_ dup dupd first
+             over pm pop popd popdd popop pred
+             rest rolldown rollup rrest second
+             sqrt stack succ swaack swap swons
+             third tuck uncons'''
+    
+    FUNCTIONS = {
+        name: SymbolJoyType(name, [NEW_DEFS[name]], i)
+        for i, name in enumerate(FNs.strip().split())
+        }
+    FUNCTIONS['sum'] = SymbolJoyType('sum', [(((Ns[1], s1), s0), (n0, s0))], 100)
+    FUNCTIONS['mul'] = SymbolJoyType('mul', [
+         ((i2, (i1, s0)), (i3, s0)),
+         ((f2, (i1, s0)), (f3, s0)),
+         ((i2, (f1, s0)), (f3, s0)),
+         ((f2, (f1, s0)), (f3, s0)),
+    ], 101)
+    FUNCTIONS.update({
+        combo.__name__: CombinatorJoyType(combo.__name__, [combo], i)
+        for i, combo in enumerate((
+            joy.library.i,
+            joy.library.dip,
+            joy.library.dipd,
+            joy.library.dipdd,
+            joy.library.dupdip,
+            joy.library.b,
+            joy.library.x,
+            joy.library.infra,
+            ))
+        })
+    
+    def branch_true(stack, expression, dictionary):
+        (then, (else_, (flag, stack))) = stack
+        return stack, CONCAT(then, expression), dictionary
+    
+    def branch_false(stack, expression, dictionary):
+        (then, (else_, (flag, stack))) = stack
+        return stack, CONCAT(else_, expression), dictionary
+    
+    FUNCTIONS['branch'] = CombinatorJoyType('branch', [branch_true, branch_false], 100)
+
+.. code:: ipython2
+
+    globals().update(FUNCTIONS)
+
+.. code:: ipython2
+
+    from itertools import chain
+    from joy.utils.stack import list_to_stack as l2s
+
+.. code:: ipython2
+
+    expression = l2s([n1, n2, (mul, s2), (stack, s3), dip, infra, first])
+
+.. code:: ipython2
+
+    expression
+
+
+
+
+.. parsed-literal::
+
+    (n1, (n2, ((mul, s2), ((stack, s3), (dip, (infra, (first, ())))))))
+
+
+
+.. code:: ipython2
+
+    expression = l2s([n1, n2, mul])
+
+.. code:: ipython2
+
+    infer(expression)
+
+
+
+
+.. parsed-literal::
+
+    []
+
+
 
 .. code:: ipython2
 
@@ -2770,7 +2914,7 @@ For this to work the type label classes have to be modified to let
 
 .. code:: ipython2
 
-    F = reduce(C, (pop, swap, roll_down, rest, rest, cons, cons))
+    F = reduce(C, (pop, swap, rolldown, rest, rest, cons, cons))
     
     print doc_from_stack_effect(*F)
 
@@ -2780,22 +2924,22 @@ For this to work the type label classes have to be modified to let
 
     ---------------------------------------------------------------------------
 
-    ValueError                                Traceback (most recent call last)
+    TypeError                                 Traceback (most recent call last)
 
-    <ipython-input-112-4b4cb6ff86e5> in <module>()
-          1 F = reduce(C, (pop, swap, roll_down, rest, rest, cons, cons))
+    <ipython-input-119-7fde90b4e88f> in <module>()
+          1 F = reduce(C, (pop, swap, rolldown, rest, rest, cons, cons))
           2 
     ----> 3 print doc_from_stack_effect(*F)
     
 
-    <ipython-input-99-ddee30dbb1a6> in C(f, g)
+    <ipython-input-98-ddee30dbb1a6> in C(f, g)
          10 def C(f, g):
          11     f, g = relabel(f, g)
     ---> 12     for fg in compose(f, g):
          13         yield delabel(fg)
 
 
-    <ipython-input-98-5eb7ac5ad2c2> in compose(f, g)
+    <ipython-input-97-5eb7ac5ad2c2> in compose(f, g)
           1 def compose(f, g):
     ----> 2     (f_in, f_out), (g_in, g_out) = f, g
           3     s = unify(g_in, f_out)
@@ -2803,14 +2947,14 @@ For this to work the type label classes have to be modified to let
           5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
 
 
-    <ipython-input-99-ddee30dbb1a6> in C(f, g)
+    <ipython-input-98-ddee30dbb1a6> in C(f, g)
          10 def C(f, g):
          11     f, g = relabel(f, g)
     ---> 12     for fg in compose(f, g):
          13         yield delabel(fg)
 
 
-    <ipython-input-98-5eb7ac5ad2c2> in compose(f, g)
+    <ipython-input-97-5eb7ac5ad2c2> in compose(f, g)
           1 def compose(f, g):
     ----> 2     (f_in, f_out), (g_in, g_out) = f, g
           3     s = unify(g_in, f_out)
@@ -2818,14 +2962,14 @@ For this to work the type label classes have to be modified to let
           5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
 
 
-    <ipython-input-99-ddee30dbb1a6> in C(f, g)
+    <ipython-input-98-ddee30dbb1a6> in C(f, g)
          10 def C(f, g):
          11     f, g = relabel(f, g)
     ---> 12     for fg in compose(f, g):
          13         yield delabel(fg)
 
 
-    <ipython-input-98-5eb7ac5ad2c2> in compose(f, g)
+    <ipython-input-97-5eb7ac5ad2c2> in compose(f, g)
           1 def compose(f, g):
     ----> 2     (f_in, f_out), (g_in, g_out) = f, g
           3     s = unify(g_in, f_out)
@@ -2833,14 +2977,14 @@ For this to work the type label classes have to be modified to let
           5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
 
 
-    <ipython-input-99-ddee30dbb1a6> in C(f, g)
+    <ipython-input-98-ddee30dbb1a6> in C(f, g)
          10 def C(f, g):
          11     f, g = relabel(f, g)
     ---> 12     for fg in compose(f, g):
          13         yield delabel(fg)
 
 
-    <ipython-input-98-5eb7ac5ad2c2> in compose(f, g)
+    <ipython-input-97-5eb7ac5ad2c2> in compose(f, g)
           1 def compose(f, g):
     ----> 2     (f_in, f_out), (g_in, g_out) = f, g
           3     s = unify(g_in, f_out)
@@ -2848,14 +2992,14 @@ For this to work the type label classes have to be modified to let
           5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
 
 
-    <ipython-input-99-ddee30dbb1a6> in C(f, g)
+    <ipython-input-98-ddee30dbb1a6> in C(f, g)
          10 def C(f, g):
          11     f, g = relabel(f, g)
     ---> 12     for fg in compose(f, g):
          13         yield delabel(fg)
 
 
-    <ipython-input-98-5eb7ac5ad2c2> in compose(f, g)
+    <ipython-input-97-5eb7ac5ad2c2> in compose(f, g)
           1 def compose(f, g):
     ----> 2     (f_in, f_out), (g_in, g_out) = f, g
           3     s = unify(g_in, f_out)
@@ -2863,7 +3007,22 @@ For this to work the type label classes have to be modified to let
           5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
 
 
-    ValueError: need more than 1 value to unpack
+    <ipython-input-98-ddee30dbb1a6> in C(f, g)
+         10 def C(f, g):
+         11     f, g = relabel(f, g)
+    ---> 12     for fg in compose(f, g):
+         13         yield delabel(fg)
+
+
+    <ipython-input-97-5eb7ac5ad2c2> in compose(f, g)
+          1 def compose(f, g):
+    ----> 2     (f_in, f_out), (g_in, g_out) = f, g
+          3     s = unify(g_in, f_out)
+          4     if not s:
+          5         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
+
+
+    TypeError: 'SymbolJoyType' object is not iterable
 
 
 .. code:: ipython2

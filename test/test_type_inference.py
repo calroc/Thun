@@ -18,7 +18,7 @@ class TestMixin(object):
     self.assert_(a >= b)
     self.assert_(b >= a)
     # Check type variables match expected pattern.
-    self._compare_structures(a, b)
+    self._compare_structures(b, a)
 
   def _compare_structures(self, a, b, seen=None):
     # Sometimes we change ONLY the "number" attr of our type vars.
@@ -33,12 +33,12 @@ class TestMixin(object):
         self._compare_structures(aa, bb, seen)
     else:
       if a in seen:
-        self.assertIs(b, seen[a])
+        self.assertEqual(b, seen[a])
       seen[a] = b
 
 
 class TestCombinators(TestMixin, unittest.TestCase):
-    
+
 #  def setUp(self):
 #  def tearDown(self):
 
@@ -76,9 +76,19 @@ class TestCombinators(TestMixin, unittest.TestCase):
       (mul, s2),
       infra
       ]
-    f = (s0, ((n0, (n1, s1)), s2))
-    # (-- [n0 n1 ...1]) Two numbers in a stack.
-    self.assertEqualTypeStructure(infr(expression), [f])
+    f = [
+      (s1, ((f1, (n1, s2)), s3)),  # (-- [f1 n1 ...2])
+      (s1, ((i1, (n1, s2)), s3)),  # (-- [i1 n1 ...2])
+      ]
+    self.assertEqualTypeStructure(infr(expression), f)
+
+  def test_nullary(self):
+    expression = n1, n2, (mul, s2), (stack, s3), dip, infra, first
+    f = [
+      (s1, (f1, (n1, (n2, s2)))),  # (-- n2 n1 f1)
+      (s1, (i1, (n1, (n2, s2)))),  # (-- n2 n1 i1)
+      ]
+    self.assertEqualTypeStructure(infr(expression), f)
 
   def test_x(self):
     expression = (a1, (swap, ((dup, s2), (dip, s0)))), x
@@ -129,6 +139,17 @@ class TestYin(TestMixin, unittest.TestCase):
     f = (s0, ((a0, s0), (a1, s1)))  # (-- a1 [a0 ...0])
     self.assertEqualTypeStructure(infr(expression), [f])
   
+  def test_z_down(self):
+    expression = s2, swap, uncons, swap
+    f = (((a1, s1), s2), (a1, (s1, (s3, s2))))
+    # ([a1 ...1] -- [...3] [...1] a1)
+    self.assertEqualTypeStructure(infr(expression), [f])
+
+  def test_z_right(self):
+    expression = a1, a2, (swons, s3), cons, dip, uncons, swap
+    f = ((s1, s2), (a1, (s3, ((a2, s1), s2))))
+    # ([...1] -- [a2 ...1] [...3] a1)
+    self.assertEqualTypeStructure(infr(expression), [f])
 
 ##  def test_(self):
 ##    expression = pop, swap, rolldown, rest, rest, cons, cons

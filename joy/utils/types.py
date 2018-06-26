@@ -186,7 +186,7 @@ def _f(term, switch):
     while term and isinstance(term, tuple):
         item, term = term
         a.append(item)
-    assert isinstance(term, StackJoyType), repr(term)
+    assert isinstance(term, (tuple, StackJoyType)), repr(term)
     a = [_to_str(i, term, switch) for i in a]
     return a
 
@@ -206,10 +206,11 @@ def _to_str(term, stack, switch):
     while term and isinstance(term, tuple):
         item, term = term
         a.append(_to_str(item, stack, switch))
-    assert isinstance(term, StackJoyType), repr(term)
+    assert isinstance(term, (tuple, StackJoyType)), repr(term)
     if term == stack:
         switch[0] = True
-        end = '...'
+        end = '' if term == () else '...'
+        #end = '...'
     else:
         end = '...%i' % term.number
     a.append(end)

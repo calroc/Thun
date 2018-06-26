@@ -2,7 +2,7 @@
 
 Multiple Stack Effects
 
-By adjusting the machinery in types.py to handles lists of stackeffect comments
+By adjusting the machinery in types.py to handles lists of stack effect comments
 we can capture more information about the type signatures of some functions,
 and we can introduce a kind of Kleene Star or sequence type that can stand for
 an unbounded sequence of other types.
@@ -13,6 +13,7 @@ from itertools import chain, product
 import sys
 sys.path.append('/home/sforman/Desktop/Joypy-hg')
 import joy.library
+from joy.parser import Symbol
 from joy.utils.stack import concat as CONCAT
 from joy.utils.types import (
   AnyJoyType, A,
@@ -125,12 +126,11 @@ def unify(u, v, s=None):
         return _lil_uni(u, v, s)
 
     if isinstance(u, tuple) and isinstance(v, tuple):
-        if len(u) != len(v) != 2:
-            raise JoyTypeError(repr((u, v)))
+        if len(u) != 2 or len(v) != 2:
+            raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
 
-        a, b = v
+        (a, b), (c, d) = v, u
         if isinstance(a, KleeneStar):
-            c, d = u
             if isinstance(c, KleeneStar):
                 s = _lil_uni(a, c, s)  # Attempt to unify the two K-stars.
                 return unify(d, b, s[0])
@@ -147,20 +147,13 @@ def unify(u, v, s=None):
                 sn.update(s)
             return t
 
-        a, b = u
-        if isinstance(a, KleeneStar):
-            s0 = unify(v, b)
-            s1 = unify(v, (a.another(), u))
-            t = s0 + s1
+        if isinstance(c, KleeneStar):
+            t = unify(v, d) + unify(v, (c.another(), u))
             for sn in t:
-                sn.update(s)
+              sn.update(s)
             return t
 
-        ses = unify(u[0], v[0], s)
-        results = ()
-        for sn in ses:
-            results += unify(u[1], v[1], sn)
-        return results
+        return tuple(flatten(unify(d, b, sn) for sn in unify(c, a, s)))
  
     if isinstance(v, tuple):
         if not stacky(u):
@@ -174,7 +167,7 @@ def unify(u, v, s=None):
         s[v] = u
         return s,
 
-    return ()
+    return _lil_uni(u, v, s)
 
 
 def _lil_uni(u, v, s):
@@ -214,7 +207,8 @@ def MC(F, G):
     return res
 
 
-flatten = lambda g: list(chain.from_iterable(g))
+def flatten(g):
+  return list(chain.from_iterable(g))
 
 
 ID = S[0], S[0]  # Identity function.
@@ -256,25 +250,23 @@ Ns = map(NumberStarJoyType, _R)
 Ss = map(StackStarJoyType, _R)
 
 
-mul = [
-     ((i2, (i1, s0)), (i3, s0)),
-     ((f2, (i1, s0)), (f3, s0)),
-     ((i2, (f1, s0)), (f3, s0)),
-     ((f2, (f1, s0)), (f3, s0)),
-]
-
-
 FUNCTIONS = {
     name: SymbolJoyType(name, [DEFS[name]], i)
     for i, name in enumerate('''
         ccons cons divmod_ dup dupd first
-        mul over pm pop popd popdd popop
-        pred rest rolldown rollup rrest
-        second sqrt succ swap swons third
-        tuck uncons stack swaack
+        over pm pop popd popdd popop pred
+        rest rolldown rollup rrest second
+        sqrt stack succ swaack swap swons
+        third tuck uncons
         '''.strip().split())
     }
 FUNCTIONS['sum'] = SymbolJoyType('sum', [(((Ns[1], s1), s0), (n0, s0))], 100)
+FUNCTIONS['mul'] = SymbolJoyType('mul', [
+     ((i2, (i1, s0)), (i3, s0)),
+     ((f2, (i1, s0)), (f3, s0)),
+     ((i2, (f1, s0)), (f3, s0)),
+     ((f2, (f1, s0)), (f3, s0)),
+], 101)
 FUNCTIONS.update({
     combo.__name__: CombinatorJoyType(combo.__name__, [combo], i)
     for i, combo in enumerate((
@@ -300,6 +292,52 @@ def branch_false(stack, expression, dictionary):
 FUNCTIONS['branch'] = CombinatorJoyType('branch', [branch_true, branch_false], 100)
 
 
+globals().update(FUNCTIONS)
+
+def _ge(self, other):
+    return (issubclass(other.__class__, self.__class__)
+            or hasattr(self, 'accept')
+            and isinstance(other, self.accept))
+
+AnyJoyType.__ge__ = _ge
+AnyJoyType.accept = tuple, int, float, long, str, unicode, bool, Symbol
+StackJoyType.accept = tuple
 
 
+if __name__ == '__main__':
 
+  from joy.parser import text_to_expression
+  from joy.utils.stack import list_to_stack as l2s
+
+
+  F = infer(l2s((pop, pop, pop)))
+  for f in F:
+      print doc_from_stack_effect(*f)
+  s = text_to_expression('0 1 2')
+  L = unify(s, F[0][0])
+  print L
+
+  print
+
+  F = infer(l2s((pop, swap, rolldown, rest, rest, cons, cons)))
+  for f in F:
+      print doc_from_stack_effect(*f)
+  s = text_to_expression('0 1 2 [3 4]')
+  L = unify(s, F[0][0])
+  print L
+  print
+
+  g = update(L[0], F[0])
+  print doc_from_stack_effect(*g)
+  print g
+
+
+  print '- - - - - -'
+  s = text_to_expression('[3 4]')
+  L = unify(s, F[0][1])
+  print L
+  print
+
+  g = update(L[0], F[0])
+  print doc_from_stack_effect(*g)
+  print g
