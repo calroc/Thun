@@ -1,0 +1,567 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Treating Trees II: treestep &#8212; Thun 0.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Using x to Generate Values" href="Generator_Programs.html" />
+    <link rel="prev" title="Treating Trees I: Ordered Binary Trees" href="Ordered_Binary_Trees.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="treating-trees-ii-treestep">
+<h1>Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code><a class="headerlink" href="#treating-trees-ii-treestep" title="Permalink to this headline">¶</a></h1>
+<p>Let’s consider a tree structure, similar to one described <a class="reference external" href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">“Why
+functional programming matters” by John
+Hughes</a>,
+that consists of a node value followed by zero or more child trees. (The
+asterisk is meant to indicate the <a class="reference external" href="https://en.wikipedia.org/wiki/Kleene_star">Kleene
+star</a>.)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tree</span> <span class="o">=</span> <span class="p">[]</span> <span class="o">|</span> <span class="p">[</span><span class="n">node</span> <span class="n">tree</span><span class="o">*</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In the spirit of <code class="docutils literal notranslate"><span class="pre">step</span></code> we are going to define a combinator
+<code class="docutils literal notranslate"><span class="pre">treestep</span></code> which expects a tree and three additional items: a
+base-case function <code class="docutils literal notranslate"><span class="pre">[B]</span></code>, and two quoted programs <code class="docutils literal notranslate"><span class="pre">[N]</span></code> and <code class="docutils literal notranslate"><span class="pre">[C]</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tree</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">treestep</span>
+</pre></div>
+</div>
+<p>If the current tree node is empty then just execute <code class="docutils literal notranslate"><span class="pre">B</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[]</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">treestep</span>
+<span class="o">---------------------------</span>
+   <span class="p">[]</span>  <span class="n">B</span>
+</pre></div>
+</div>
+<p>Otherwise, evaluate <code class="docutils literal notranslate"><span class="pre">N</span></code> on the node value, <code class="docutils literal notranslate"><span class="pre">map</span></code> the whole function
+(abbreviated here as <code class="docutils literal notranslate"><span class="pre">K</span></code>) over the child trees recursively, and then
+combine the result with <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">node</span> <span class="n">tree</span><span class="o">*</span><span class="p">]</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">treestep</span>
+<span class="o">---------------------------------------</span> <span class="n">w</span><span class="o">/</span> <span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">treestep</span>
+       <span class="n">node</span> <span class="n">N</span> <span class="p">[</span><span class="n">tree</span><span class="o">*</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">C</span>
+</pre></div>
+</div>
+<p>(Later on we’ll experiment with making <code class="docutils literal notranslate"><span class="pre">map</span></code> part of <code class="docutils literal notranslate"><span class="pre">C</span></code> so you can
+use other combinators.)</p>
+<div class="section" id="derive-the-recursive-function">
+<h2>Derive the recursive function.<a class="headerlink" href="#derive-the-recursive-function" title="Permalink to this headline">¶</a></h2>
+<p>We can begin to derive it by finding the <code class="docutils literal notranslate"><span class="pre">ifte</span></code> stage that <code class="docutils literal notranslate"><span class="pre">genrec</span></code>
+will produce.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span><span class="p">]</span>   <span class="p">[</span><span class="n">R1</span><span class="p">]</span> <span class="n">genrec</span>
+  <span class="o">==</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">R0</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">R1</span><span class="p">]</span> <span class="n">ifte</span>
+</pre></div>
+</div>
+<p>So we just have to derive <code class="docutils literal notranslate"><span class="pre">J</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span> <span class="o">==</span> <span class="n">R0</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">R1</span>
+</pre></div>
+</div>
+<p>The behavior of <code class="docutils literal notranslate"><span class="pre">J</span></code> is to accept a (non-empty) tree node and arrive at
+the desired outcome.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>       <span class="p">[</span><span class="n">node</span> <span class="n">tree</span><span class="o">*</span><span class="p">]</span> <span class="n">J</span>
+<span class="o">------------------------------</span>
+   <span class="n">node</span> <span class="n">N</span> <span class="p">[</span><span class="n">tree</span><span class="o">*</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">C</span>
+</pre></div>
+</div>
+<p>So <code class="docutils literal notranslate"><span class="pre">J</span></code> will have some form like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span> <span class="o">==</span> <span class="o">...</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">...</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="o">...</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Let’s dive in. First, unquote the node and <code class="docutils literal notranslate"><span class="pre">dip</span></code> <code class="docutils literal notranslate"><span class="pre">N</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">node</span> <span class="n">tree</span><span class="o">*</span><span class="p">]</span> <span class="n">uncons</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">dip</span>
+<span class="n">node</span> <span class="p">[</span><span class="n">tree</span><span class="o">*</span><span class="p">]</span>        <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">dip</span>
+<span class="n">node</span> <span class="n">N</span> <span class="p">[</span><span class="n">tree</span><span class="o">*</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Next, <code class="docutils literal notranslate"><span class="pre">map</span></code> <code class="docutils literal notranslate"><span class="pre">K</span></code> over the child trees and combine with <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">node</span> <span class="n">N</span> <span class="p">[</span><span class="n">tree</span><span class="o">*</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">C</span>
+<span class="n">node</span> <span class="n">N</span> <span class="p">[</span><span class="n">tree</span><span class="o">*</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">C</span>
+<span class="n">node</span> <span class="n">N</span> <span class="p">[</span><span class="n">K</span><span class="o">.</span><span class="n">tree</span><span class="o">*</span><span class="p">]</span>       <span class="n">C</span>
+</pre></div>
+</div>
+<p>So:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span> <span class="o">==</span> <span class="n">uncons</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">dip</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">C</span>
+</pre></div>
+</div>
+<p>Plug it in and convert to <code class="docutils literal notranslate"><span class="pre">genrec</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">==</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">J</span>                       <span class="p">]</span> <span class="n">ifte</span>
+  <span class="o">==</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">uncons</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">dip</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">C</span><span class="p">]</span> <span class="n">ifte</span>
+  <span class="o">==</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">uncons</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span>   <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span> <span class="n">genrec</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="extract-the-givens-to-parameterize-the-program">
+<h2>Extract the givens to parameterize the program.<a class="headerlink" href="#extract-the-givens-to-parameterize-the-program" title="Permalink to this headline">¶</a></h2>
+<p>Working backwards:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span>          <span class="p">[</span><span class="n">uncons</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span>                  <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span> <span class="n">genrec</span>
+<span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="n">swap</span>     <span class="p">[</span><span class="n">uncons</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span>                  <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span> <span class="n">genrec</span>
+<span class="p">[</span><span class="n">B</span><span class="p">]</span>                <span class="p">[</span><span class="n">uncons</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="p">[[</span><span class="ow">not</span><span class="p">]</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span> <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span> <span class="n">genrec</span>
+                                    <span class="o">^^^^^^^^^^^^^^^^</span>
+<span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[[</span><span class="n">N</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span>      <span class="p">[</span><span class="n">uncons</span><span class="p">]</span> <span class="n">swoncat</span> <span class="p">[[</span><span class="ow">not</span><span class="p">]</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span> <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span> <span class="n">genrec</span>
+<span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="p">[</span><span class="n">dip</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">uncons</span><span class="p">]</span> <span class="n">swoncat</span> <span class="p">[[</span><span class="ow">not</span><span class="p">]</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span> <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span> <span class="n">genrec</span>
+        <span class="o">^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
+</pre></div>
+</div>
+<p>Extract a couple of auxiliary definitions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TS</span><span class="o">.</span><span class="mi">0</span> <span class="o">==</span> <span class="p">[[</span><span class="ow">not</span><span class="p">]</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span>
+<span class="n">TS</span><span class="o">.</span><span class="mi">1</span> <span class="o">==</span> <span class="p">[</span><span class="n">dip</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">uncons</span><span class="p">]</span> <span class="n">swoncat</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">TS</span><span class="o">.</span><span class="mi">1</span> <span class="n">TS</span><span class="o">.</span><span class="mi">0</span> <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span>                         <span class="n">genrec</span>
+<span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span>           <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span>         <span class="p">[</span><span class="n">TS</span><span class="o">.</span><span class="mi">1</span> <span class="n">TS</span><span class="o">.</span><span class="mi">0</span><span class="p">]</span> <span class="n">dip</span> <span class="n">genrec</span>
+<span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span>         <span class="p">[</span><span class="nb">map</span><span class="p">]</span> <span class="n">swoncat</span> <span class="p">[</span><span class="n">TS</span><span class="o">.</span><span class="mi">1</span> <span class="n">TS</span><span class="o">.</span><span class="mi">0</span><span class="p">]</span> <span class="n">dip</span> <span class="n">genrec</span>
+</pre></div>
+</div>
+<p>The givens are all to the left so we have our definition.</p>
+<div class="section" id="alternate-extract-the-givens-to-parameterize-the-program">
+<h3>(alternate) Extract the givens to parameterize the program.<a class="headerlink" href="#alternate-extract-the-givens-to-parameterize-the-program" title="Permalink to this headline">¶</a></h3>
+<p>Working backwards:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span>           <span class="p">[</span><span class="n">uncons</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span>            <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span> <span class="n">genrec</span>
+<span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span>       <span class="p">[</span><span class="n">dip</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">uncons</span><span class="p">]</span> <span class="n">swoncat</span> <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span> <span class="n">genrec</span>
+<span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="n">roll</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">dip</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">uncons</span><span class="p">]</span> <span class="n">swoncat</span> <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span> <span class="n">genrec</span>
+        <span class="o">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="define-treestep">
+<h2>Define <code class="docutils literal notranslate"><span class="pre">treestep</span></code><a class="headerlink" href="#define-treestep" title="Permalink to this headline">¶</a></h2>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span><span class="p">,</span> <span class="n">DefinitionWrapper</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+
+<span class="s1">    _treestep_0 == [[not] swap] dip</span>
+<span class="s1">    _treestep_1 == [dip] cons [uncons] swoncat</span>
+<span class="s1">    treegrind == [_treestep_1 _treestep_0] dip genrec</span>
+<span class="s1">    treestep == [map] swoncat treegrind</span>
+
+<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Consider trees, the nodes of which are integers. We can find the sum of
+all nodes in a tree with this function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sumtree</span> <span class="o">==</span> <span class="p">[</span><span class="n">pop</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[</span><span class="nb">sum</span> <span class="o">+</span><span class="p">]</span> <span class="n">treestep</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;sumtree == [pop 0] [] [sum +] treestep&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Running this function on an empty tree value gives zero:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[]</span> <span class="p">[</span><span class="n">pop</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[</span><span class="nb">sum</span> <span class="o">+</span><span class="p">]</span> <span class="n">treestep</span>
+<span class="o">------------------------------------</span>
+           <span class="mi">0</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] sumtree&#39;</span><span class="p">)</span>  <span class="c1"># Empty tree.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>
+</pre></div>
+</div>
+<p>Running it on a non-empty node:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">n</span> <span class="n">tree</span><span class="o">*</span><span class="p">]</span>  <span class="p">[</span><span class="n">pop</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[</span><span class="nb">sum</span> <span class="o">+</span><span class="p">]</span> <span class="n">treestep</span>
+<span class="n">n</span> <span class="p">[</span><span class="n">tree</span><span class="o">*</span><span class="p">]</span> <span class="p">[[</span><span class="n">pop</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[</span><span class="nb">sum</span> <span class="o">+</span><span class="p">]</span> <span class="n">treestep</span><span class="p">]</span> <span class="nb">map</span> <span class="nb">sum</span> <span class="o">+</span>
+<span class="n">n</span> <span class="p">[</span> <span class="o">...</span> <span class="p">]</span>                                   <span class="nb">sum</span> <span class="o">+</span>
+<span class="n">n</span> <span class="n">m</span>                                             <span class="o">+</span>
+<span class="n">n</span><span class="o">+</span><span class="n">m</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23] sumtree&#39;</span><span class="p">)</span>  <span class="c1"># No child trees.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 []] sumtree&#39;</span><span class="p">)</span>  <span class="c1"># Child tree, empty.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [4]] [3]] sumtree&#39;</span><span class="p">)</span>  <span class="c1"># Non-empty child trees.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">32</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] sumtree&#39;</span><span class="p">)</span>  <span class="c1"># Etc...</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">49</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] [pop 0] [] [cons sum] treestep&#39;</span><span class="p">)</span>  <span class="c1"># Alternate &quot;spelling&quot;.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">49</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] [] [pop 23] [cons] treestep&#39;</span><span class="p">)</span>  <span class="c1"># Replace each node.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">23</span> <span class="p">[</span><span class="mi">23</span> <span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="p">[</span><span class="mi">23</span><span class="p">]]</span> <span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="p">[</span><span class="mi">23</span> <span class="p">[]]]</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] [] [pop 1] [cons] treestep&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[]]]</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] [] [pop 1] [cons] treestep sumtree&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] [pop 0] [pop 1] [sum +] treestep&#39;</span><span class="p">)</span>  <span class="c1"># Combine replace and sum into one function.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[4 [3 [] [7]]] [pop 0] [pop 1] [sum +] treestep&#39;</span><span class="p">)</span>  <span class="c1"># Combine replace and sum into one function.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="redefining-the-ordered-binary-tree-in-terms-of-treestep">
+<h2>Redefining the Ordered Binary Tree in terms of <code class="docutils literal notranslate"><span class="pre">treestep</span></code>.<a class="headerlink" href="#redefining-the-ordered-binary-tree-in-terms-of-treestep" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Tree</span> <span class="o">=</span> <span class="p">[]</span> <span class="o">|</span> <span class="p">[[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>What kind of functions can we write for this with our <code class="docutils literal notranslate"><span class="pre">treestep</span></code>?</p>
+<p>The pattern for processing a non-empty node is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">node</span> <span class="n">N</span> <span class="p">[</span><span class="n">tree</span><span class="o">*</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">C</span>
+</pre></div>
+</div>
+<p>Plugging in our BTree structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">N</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">C</span>
+</pre></div>
+</div>
+<div class="section" id="traversal">
+<h3>Traversal<a class="headerlink" href="#traversal" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">first</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">i</span>
+<span class="n">key</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>       <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">i</span>
+<span class="n">key</span>               <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">i</span>
+<span class="n">key</span>               <span class="p">[</span><span class="n">lkey</span> <span class="n">rkey</span> <span class="p">]</span>         <span class="n">i</span>
+<span class="n">key</span>                <span class="n">lkey</span> <span class="n">rkey</span>
+</pre></div>
+</div>
+<p>This doesn’t quite work:</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[3 0] [[2 0] [][]] [[9 0] [[5 0] [[4 0] [][]] [[8 0] [[6 0] [] [[7 0] [][]]][]]][]]] [&quot;B&quot;] [first] [i] treestep&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="s1">&#39;B&#39;</span> <span class="s1">&#39;B&#39;</span>
+</pre></div>
+</div>
+<p>Doesn’t work because <code class="docutils literal notranslate"><span class="pre">map</span></code> extracts the <code class="docutils literal notranslate"><span class="pre">first</span></code> item of whatever its
+mapped function produces. We have to return a list, rather than
+depositing our results directly on the stack.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">N</span>     <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">C</span>
+
+<span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">first</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">flatten</span> <span class="n">cons</span>
+<span class="n">key</span>               <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="nb">map</span> <span class="n">flatten</span> <span class="n">cons</span>
+<span class="n">key</span>               <span class="p">[[</span><span class="n">lk</span><span class="p">]</span> <span class="p">[</span><span class="n">rk</span><span class="p">]</span> <span class="p">]</span>         <span class="n">flatten</span> <span class="n">cons</span>
+<span class="n">key</span>               <span class="p">[</span> <span class="n">lk</span>   <span class="n">rk</span>  <span class="p">]</span>                 <span class="n">cons</span>
+                  <span class="p">[</span><span class="n">key</span>  <span class="n">lk</span>   <span class="n">rk</span>  <span class="p">]</span>
+</pre></div>
+</div>
+<p>So:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[]</span> <span class="p">[</span><span class="n">first</span><span class="p">]</span> <span class="p">[</span><span class="n">flatten</span> <span class="n">cons</span><span class="p">]</span> <span class="n">treestep</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [first] [flatten cons] treestep&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">9</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">8</span> <span class="mi">6</span> <span class="mi">7</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>There we go.</p>
+</div>
+<div class="section" id="in-order-traversal">
+<h3>In-order traversal<a class="headerlink" href="#in-order-traversal" title="Permalink to this headline">¶</a></h3>
+<p>From here:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="p">[[</span><span class="n">lk</span><span class="p">]</span> <span class="p">[</span><span class="n">rk</span><span class="p">]]</span> <span class="n">C</span>
+<span class="n">key</span> <span class="p">[[</span><span class="n">lk</span><span class="p">]</span> <span class="p">[</span><span class="n">rk</span><span class="p">]]</span> <span class="n">i</span>
+<span class="n">key</span>  <span class="p">[</span><span class="n">lk</span><span class="p">]</span> <span class="p">[</span><span class="n">rk</span><span class="p">]</span> <span class="n">roll</span><span class="o">&lt;</span>
+<span class="p">[</span><span class="n">lk</span><span class="p">]</span> <span class="p">[</span><span class="n">rk</span><span class="p">]</span> <span class="n">key</span> <span class="n">swons</span> <span class="n">concat</span>
+<span class="p">[</span><span class="n">lk</span><span class="p">]</span> <span class="p">[</span><span class="n">key</span> <span class="n">rk</span><span class="p">]</span>       <span class="n">concat</span>
+<span class="p">[</span><span class="n">lk</span>   <span class="n">key</span> <span class="n">rk</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>So:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[]</span> <span class="p">[</span><span class="n">i</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">swons</span> <span class="n">concat</span><span class="p">]</span> <span class="p">[</span><span class="n">first</span><span class="p">]</span> <span class="n">treestep</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [uncons pop] [i roll&lt; swons concat] treestep&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">9</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="with-treegrind">
+<h2>With <code class="docutils literal notranslate"><span class="pre">treegrind</span></code>?<a class="headerlink" href="#with-treegrind" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">treegrind</span></code> function doesn’t include the <code class="docutils literal notranslate"><span class="pre">map</span></code> combinator, so
+the <code class="docutils literal notranslate"><span class="pre">[C]</span></code> function must arrange to use some combinator on the quoted
+recursive copy <code class="docutils literal notranslate"><span class="pre">[K]</span></code>. With this function, the pattern for processing a
+non-empty node is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">node</span> <span class="n">N</span> <span class="p">[</span><span class="n">tree</span><span class="o">*</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">C</span>
+</pre></div>
+</div>
+<p>Plugging in our BTree structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">N</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">C</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[&quot;key&quot; &quot;value&quot;] [&quot;left&quot;] [&quot;right&quot;] ] [&quot;B&quot;] [&quot;N&quot;] [&quot;C&quot;] treegrind&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;key&#39;</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]]</span> <span class="p">[[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">]</span> <span class="p">[</span><span class="n">uncons</span> <span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span> <span class="n">genrec</span><span class="p">]</span> <span class="s1">&#39;C&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="treegrind-with-step">
+<h2><code class="docutils literal notranslate"><span class="pre">treegrind</span></code> with <code class="docutils literal notranslate"><span class="pre">step</span></code><a class="headerlink" href="#treegrind-with-step" title="Permalink to this headline">¶</a></h2>
+<p>Iteration through the nodes</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [pop] [&quot;N&quot;] [step] treegrind&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">9</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">8</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">6</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">7</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span>
+</pre></div>
+</div>
+<p>Sum the nodes’ keys.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 [[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [pop] [first +] [step] treegrind&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">44</span>
+</pre></div>
+</div>
+<p>Rebuild the tree using <code class="docutils literal notranslate"><span class="pre">map</span></code> (imitating <code class="docutils literal notranslate"><span class="pre">treestep</span></code>.)</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [[100 +] infra] [map cons] treegrind&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">103</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[[</span><span class="mi">102</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[[</span><span class="mi">109</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[[</span><span class="mi">105</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[[</span><span class="mi">104</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[[</span><span class="mi">108</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[[</span><span class="mi">106</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[[</span><span class="mi">107</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[]]]</span> <span class="p">[]]]</span> <span class="p">[]]]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="do-we-have-the-flexibility-to-reimplement-tree-get">
+<h2>Do we have the flexibility to reimplement <code class="docutils literal notranslate"><span class="pre">Tree-get</span></code>?<a class="headerlink" href="#do-we-have-the-flexibility-to-reimplement-tree-get" title="Permalink to this headline">¶</a></h2>
+<p>I think we do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">treegrind</span>
+</pre></div>
+</div>
+<p>We’ll start by saying that the base-case (the key is not in the tree) is
+user defined, and the per-node function is just the query key literal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">query_key</span><span class="p">]</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span> <span class="n">treegrind</span>
+</pre></div>
+</div>
+<p>This means we just have to define <code class="docutils literal notranslate"><span class="pre">C</span></code> from:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">query_key</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">C</span>
+</pre></div>
+</div>
+<p>Let’s try <code class="docutils literal notranslate"><span class="pre">cmp</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">==</span> <span class="n">P</span> <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="nb">cmp</span>
+
+<span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">query_key</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">P</span> <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="nb">cmp</span>
+</pre></div>
+</div>
+<div class="section" id="the-predicate-p">
+<h3>The predicate <code class="docutils literal notranslate"><span class="pre">P</span></code><a class="headerlink" href="#the-predicate-p" title="Permalink to this headline">¶</a></h3>
+<p>Seems pretty easy (we must preserve the value in case the keys are
+equal):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">query_key</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">P</span>
+<span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">query_key</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">roll</span><span class="o">&lt;</span>
+<span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">query_key</span>       <span class="p">[</span><span class="n">roll</span><span class="o">&lt;</span> <span class="n">uncons</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span>
+
+<span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">uncons</span> <span class="n">swap</span> <span class="n">query_key</span>
+<span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span>       <span class="n">uncons</span> <span class="n">swap</span> <span class="n">query_key</span>
+<span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">key</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>              <span class="n">swap</span> <span class="n">query_key</span>
+<span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="n">key</span>                   <span class="n">query_key</span>
+
+<span class="n">P</span> <span class="o">==</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="p">[</span><span class="n">roll</span><span class="o">&lt;</span> <span class="n">uncons</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span>
+</pre></div>
+</div>
+<p>(Possibly with a swap at the end? Or just swap <code class="docutils literal notranslate"><span class="pre">T&lt;</span></code> and <code class="docutils literal notranslate"><span class="pre">T&gt;</span></code>.)</p>
+<p>So now:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="n">key</span> <span class="n">query_key</span> <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="nb">cmp</span>
+</pre></div>
+</div>
+<p>Becomes one of these three:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="n">E</span>
+<span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="n">T</span><span class="o">&lt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="e">
+<h3><code class="docutils literal notranslate"><span class="pre">E</span></code><a class="headerlink" href="#e" title="Permalink to this headline">¶</a></h3>
+<p>Easy.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">E</span> <span class="o">==</span> <span class="n">roll</span><span class="o">&gt;</span> <span class="n">popop</span> <span class="n">first</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="t-and-t">
+<h3><code class="docutils literal notranslate"><span class="pre">T&lt;</span></code> and <code class="docutils literal notranslate"><span class="pre">T&gt;</span></code><a class="headerlink" href="#t-and-t" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">T</span><span class="o">&lt;</span> <span class="o">==</span> <span class="n">pop</span> <span class="p">[</span><span class="n">first</span><span class="p">]</span> <span class="n">dip</span> <span class="n">i</span>
+<span class="n">T</span><span class="o">&gt;</span> <span class="o">==</span> <span class="n">pop</span> <span class="p">[</span><span class="n">second</span><span class="p">]</span> <span class="n">dip</span> <span class="n">i</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="putting-it-together">
+<h2>Putting it together<a class="headerlink" href="#putting-it-together" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">T</span><span class="o">&gt;</span> <span class="o">==</span> <span class="n">pop</span> <span class="p">[</span><span class="n">first</span><span class="p">]</span> <span class="n">dip</span> <span class="n">i</span>
+<span class="n">T</span><span class="o">&lt;</span> <span class="o">==</span> <span class="n">pop</span> <span class="p">[</span><span class="n">second</span><span class="p">]</span> <span class="n">dip</span> <span class="n">i</span>
+<span class="n">E</span> <span class="o">==</span> <span class="n">roll</span><span class="o">&gt;</span> <span class="n">popop</span> <span class="n">first</span>
+<span class="n">P</span> <span class="o">==</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="p">[</span><span class="n">roll</span><span class="o">&lt;</span> <span class="n">uncons</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span>
+
+<span class="n">Tree</span><span class="o">-</span><span class="n">get</span> <span class="o">==</span> <span class="p">[</span><span class="n">P</span> <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="nb">cmp</span><span class="p">]</span> <span class="n">treegrind</span>
+</pre></div>
+</div>
+<p>To me, that seems simpler than the <code class="docutils literal notranslate"><span class="pre">genrec</span></code> version.</p>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+
+<span class="s1">    T&gt; == pop [first] dip i</span>
+<span class="s1">    T&lt; == pop [second] dip i</span>
+<span class="s1">    E == roll&gt; popop first</span>
+<span class="s1">    P == roll&lt; [roll&lt; uncons swap] dip</span>
+
+<span class="s1">    Tree-get == [P [T&gt;] [E] [T&lt;] cmp] treegrind</span>
+
+<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+
+<span class="s1">[[3 13] [[2 12] [] []] [[9 19] [[5 15] [[4 14] [] []] [[8 18] [[6 16] [] [[7 17] [] []]] []]] []]]</span>
+
+<span class="s1">[] [5] Tree-get</span>
+
+<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">15</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+
+<span class="s1">[[3 13] [[2 12] [] []] [[9 19] [[5 15] [[4 14] [] []] [[8 18] [[6 16] [] [[7 17] [] []]] []]] []]]</span>
+
+<span class="s1">[pop &quot;nope&quot;] [25] Tree-get</span>
+
+<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;nope&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a><ul>
+<li><a class="reference internal" href="#derive-the-recursive-function">Derive the recursive function.</a></li>
+<li><a class="reference internal" href="#extract-the-givens-to-parameterize-the-program">Extract the givens to parameterize the program.</a><ul>
+<li><a class="reference internal" href="#alternate-extract-the-givens-to-parameterize-the-program">(alternate) Extract the givens to parameterize the program.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#define-treestep">Define <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#redefining-the-ordered-binary-tree-in-terms-of-treestep">Redefining the Ordered Binary Tree in terms of <code class="docutils literal notranslate"><span class="pre">treestep</span></code>.</a><ul>
+<li><a class="reference internal" href="#traversal">Traversal</a></li>
+<li><a class="reference internal" href="#in-order-traversal">In-order traversal</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#with-treegrind">With <code class="docutils literal notranslate"><span class="pre">treegrind</span></code>?</a></li>
+<li><a class="reference internal" href="#treegrind-with-step"><code class="docutils literal notranslate"><span class="pre">treegrind</span></code> with <code class="docutils literal notranslate"><span class="pre">step</span></code></a></li>
+<li><a class="reference internal" href="#do-we-have-the-flexibility-to-reimplement-tree-get">Do we have the flexibility to reimplement <code class="docutils literal notranslate"><span class="pre">Tree-get</span></code>?</a><ul>
+<li><a class="reference internal" href="#the-predicate-p">The predicate <code class="docutils literal notranslate"><span class="pre">P</span></code></a></li>
+<li><a class="reference internal" href="#e"><code class="docutils literal notranslate"><span class="pre">E</span></code></a></li>
+<li><a class="reference internal" href="#t-and-t"><code class="docutils literal notranslate"><span class="pre">T&lt;</span></code> and <code class="docutils literal notranslate"><span class="pre">T&gt;</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#putting-it-together">Putting it together</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Essays about Programming in Joy</a><ul>
+      <li>Previous: <a href="Ordered_Binary_Trees.html" title="previous chapter">Treating Trees I: Ordered Binary Trees</a></li>
+      <li>Next: <a href="Generator_Programs.html" title="next chapter">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notebooks/Treestep.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+</a>
+<br />
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+    </div>
+
+  </body>
+</html>
