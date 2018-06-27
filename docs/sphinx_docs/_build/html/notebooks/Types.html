@@ -35,38 +35,18 @@
   <div class="section" id="type-inference">
 <h1>Type Inference<a class="headerlink" href="#type-inference" title="Permalink to this headline">¶</a></h1>
 <p>This notebook presents a simple type inferencer for Joy code. It can
-infer the stack effect of most Joy expressions. It built largely by
-means of existing ideas and research (some of it may be original but I’m
-not able to say, as I don’t fully understand the all of the source
-material in the depth required to make that call.) A great overview of
-the existing knowledge is a talk <a class="reference external" href="http://prl.ccs.neu.edu/blog/2017/03/10/type-inference-in-stack-based-programming-languages/">“Type Inference in Stack-Based
-Programming
+infer the stack effect of most Joy expressions. It’s built largely by
+means of existing ideas and research. (A great overview of the existing
+knowledge is a talk <a class="reference external" href="http://prl.ccs.neu.edu/blog/2017/03/10/type-inference-in-stack-based-programming-languages/">“Type Inference in Stack-Based Programming
 Languages”</a>
 given by Rob Kleffner on or about 2017-03-10 as part of a course on the
-history of programming languages.</p>
+history of programming languages.)</p>
 <p>The notebook starts with a simple inferencer based on the work of Jaanus
 Pöial which we then progressively elaborate to cover more Joy semantics.
 Along the way we write a simple “compiler” that emits Python code for
-what I like to call Yin functions.</p>
-<p>Yin functions are those that only rearrange values in stacks, as opposed
-to Yang functions that actually work on the values themselves. It’s
-interesting to note that a Joy with <em>only</em> stacks (no other kinds of
-values) can be made and is Turing-complete, therefore all Yang functions
-are actually Yin functions, and all computation can be performed by
-manipulations of structures of containers, which is a restatement of the
-Laws of Form. (Also, this implies that every program can be put into a
-form such that it can be computed in a single step, although that step
-may be enormous or unending.)</p>
-<p>Although I haven’t completed it yet, a Joy based on Laws of Form
-provides the foundation for a provably correct computing system “down to
-the metal”. This is my original and still primary motivation for
-developing Joy. (I want a proven-correct Operating System for a swarm of
-trash-collecting recycler robots. To trust it I have to implementment it
-myself from first principles, and I’m not smart enough to truly grok the
-existing literature and software, so I had to go look for and find LoF
-and Joy. Now that I have the mental tools to build my robot OS I can get
-down to it.</p>
-<p>Anyhow, here’s type inference…</p>
+what I like to call Yin functions. (Yin functions are those that only
+rearrange values in stacks, as opposed to Yang functions that actually
+work on the values themselves.)</p>
 <div class="section" id="part-i-poial-s-rules">
 <h2>Part I: Pöial’s Rules<a class="headerlink" href="#part-i-poial-s-rules" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.212.6026">“Typing Tools for Typeless Stack Languages” by Jaanus
@@ -222,8 +202,8 @@ function only rearranges the stack and doesn’t do any actual processing
 on the stack items themselves all the information needed to implement it
 is in the stack effect comment.</p>
 </div>
-<div class="section" id="functions-on-lists">
-<h3>Functions on Lists<a class="headerlink" href="#functions-on-lists" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="functions-on-stacks">
+<h3>Functions on Stacks<a class="headerlink" href="#functions-on-stacks" title="Permalink to this headline">¶</a></h3>
 <p>These are slightly tricky.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rest</span> <span class="p">(</span> <span class="p">[</span><span class="mi">1</span> <span class="o">...</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="p">)</span>
 
@@ -426,18 +406,12 @@ integers or tuples of type descriptors:</p>
     <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">s</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">if</span> <span class="n">u</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">s</span>
-
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">s</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-        <span class="k">return</span> <span class="n">s</span>
-
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">s</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
-        <span class="k">return</span> <span class="n">s</span>
 
-    <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">s</span>
 </pre></div>
 </div>
 </div>
@@ -592,9 +566,6 @@ work:</p>
     <span class="nb">print</span> <span class="n">e</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Cannot</span> <span class="n">unify</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">1001</span><span class="p">,</span> <span class="mi">1002</span><span class="p">)</span><span class="o">.</span>
-</pre></div>
-</div>
 <div class="section" id="unify-version-2">
 <h4><code class="docutils literal notranslate"><span class="pre">unify()</span></code> version 2<a class="headerlink" href="#unify-version-2" title="Permalink to this headline">¶</a></h4>
 <p>The problem is that the <code class="docutils literal notranslate"><span class="pre">unify()</span></code> function as written doesn’t handle
@@ -607,27 +578,24 @@ deal with this recursively:</p>
         <span class="n">u</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">u</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">s</span>
-
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">s</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-        <span class="k">return</span> <span class="n">s</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">s</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
-        <span class="k">return</span> <span class="n">s</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="nb">repr</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)))</span>
-        <span class="k">for</span> <span class="n">uu</span><span class="p">,</span> <span class="n">vv</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">uu</span><span class="p">,</span> <span class="n">vv</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span> <span class="c1"># (instead of a substitution dict.)</span>
-                <span class="k">break</span>
-        <span class="k">return</span> <span class="n">s</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
 
-    <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># Not a type error, caller passed in a bad value.</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="nb">repr</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)))</span>  <span class="c1"># FIXME this message sucks.</span>
+
+        <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">=</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">!=</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">s</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="n">uncons</span><span class="p">)</span>
@@ -1122,7 +1090,7 @@ of how many labels of each domain it has “seen”.</p>
         <span class="k">pass</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-        <span class="n">seen</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">prefix</span><span class="p">])</span>
+        <span class="n">seen</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">prefix</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">c</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">prefix</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">seen</span><span class="p">[</span><span class="n">f</span><span class="p">]</span>
 
@@ -1132,7 +1100,7 @@ of how many labels of each domain it has “seen”.</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">delabel</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(((</span><span class="n">a0</span><span class="p">,),</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a0</span><span class="p">)),</span> <span class="p">((</span><span class="n">n0</span><span class="p">,</span> <span class="n">n1</span><span class="p">),</span> <span class="p">(</span><span class="n">n2</span><span class="p">,)))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(((</span><span class="n">a1</span><span class="p">,),</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a1</span><span class="p">)),</span> <span class="p">((</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">),</span> <span class="p">(</span><span class="n">n3</span><span class="p">,)))</span>
 </pre></div>
 </div>
 </div>
@@ -1246,7 +1214,7 @@ of how many labels of each domain it has “seen”.</p>
     <span class="nb">print</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect_comment</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a0</span> <span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 <span class="n">cons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 <span class="n">divmod_</span> <span class="o">=</span> <span class="p">(</span><span class="n">n2</span> <span class="n">n1</span> <span class="o">--</span> <span class="n">n4</span> <span class="n">n3</span><span class="p">)</span>
 <span class="n">dup</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span>
@@ -1263,13 +1231,13 @@ of how many labels of each domain it has “seen”.</p>
 <span class="n">rest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 <span class="n">rolldown</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a3</span> <span class="n">a1</span><span class="p">)</span>
 <span class="n">rollup</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a3</span> <span class="n">a1</span> <span class="n">a2</span><span class="p">)</span>
-<span class="n">rrest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
-<span class="n">second</span> <span class="o">=</span> <span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
-<span class="n">sqrt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n0</span> <span class="o">--</span> <span class="n">n1</span><span class="p">)</span>
+<span class="n">rrest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
+<span class="n">second</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a2</span><span class="p">)</span>
+<span class="n">sqrt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
 <span class="n">succ</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
 <span class="n">swap</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
-<span class="n">swons</span> <span class="o">=</span> <span class="p">([</span><span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="n">a0</span> <span class="o">--</span> <span class="p">[</span><span class="n">a0</span> <span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
-<span class="n">third</span> <span class="o">=</span> <span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a2</span><span class="p">)</span>
+<span class="n">swons</span> <span class="o">=</span> <span class="p">([</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
+<span class="n">third</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a3</span><span class="p">)</span>
 <span class="n">tuck</span> <span class="o">=</span> <span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
 <span class="n">uncons</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 </pre></div>
@@ -1283,7 +1251,7 @@ of how many labels of each domain it has “seen”.</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="n">mul</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">n0</span><span class="p">,),</span> <span class="p">(</span><span class="n">n1</span><span class="p">,))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">n1</span><span class="p">,),</span> <span class="p">(</span><span class="n">n2</span><span class="p">,))</span>
 </pre></div>
 </div>
 <p>Revisit the <code class="docutils literal notranslate"><span class="pre">F</span></code> function, works fine.</p>
@@ -1291,13 +1259,13 @@ of how many labels of each domain it has “seen”.</p>
 <span class="n">F</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(((</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s0</span><span class="p">)),</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a4</span><span class="p">),</span> <span class="p">((</span><span class="n">a3</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">s0</span><span class="p">)),))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a4</span><span class="p">,</span> <span class="n">a5</span><span class="p">),</span> <span class="p">((</span><span class="n">a4</span><span class="p">,</span> <span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),))</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">F</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="n">a2</span> <span class="n">a3</span> <span class="n">a4</span> <span class="o">--</span> <span class="p">[</span><span class="n">a3</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="n">a3</span> <span class="n">a4</span> <span class="n">a5</span> <span class="o">--</span> <span class="p">[</span><span class="n">a4</span> <span class="n">a3</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Some otherwise inefficient functions are no longer to be feared. We can
@@ -1310,21 +1278,21 @@ also get the effect of combinators in some limited cases.</p>
 <span class="n">neato</span><span class="p">(</span><span class="n">rollup</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">rolldown</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a0</span> <span class="n">a1</span> <span class="n">a2</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a0</span> <span class="n">a2</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span> <span class="n">a3</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># e.g. [popop] dipd</span>
 <span class="n">neato</span><span class="p">(</span><span class="n">popdd</span><span class="p">,</span> <span class="n">rolldown</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a0</span> <span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a3</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="n">a4</span> <span class="o">--</span> <span class="n">a3</span> <span class="n">a4</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reverse the order of the top three items.</span>
 <span class="n">neato</span><span class="p">(</span><span class="n">rollup</span><span class="p">,</span> <span class="n">swap</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a0</span> <span class="n">a1</span> <span class="n">a2</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span> <span class="n">a0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1351,9 +1319,9 @@ the <code class="docutils literal notranslate"><span class="pre">compile_()</spa
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">F</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;([a0 a1 .0.] a2 a3 a4 -- [a3 a2 .0.])&quot;&quot;&quot;</span>
-    <span class="p">(</span><span class="n">a4</span><span class="p">,</span> <span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="p">((</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s0</span><span class="p">)),</span> <span class="n">stack</span><span class="p">))))</span> <span class="o">=</span> <span class="n">stack</span>
-    <span class="k">return</span> <span class="p">((</span><span class="n">a3</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">s0</span><span class="p">)),</span> <span class="n">stack</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;([a1 a2 .1.] a3 a4 a5 -- [a4 a3 .1.])&quot;&quot;&quot;</span>
+    <span class="p">(</span><span class="n">a5</span><span class="p">,</span> <span class="p">(</span><span class="n">a4</span><span class="p">,</span> <span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="n">stack</span><span class="p">))))</span> <span class="o">=</span> <span class="n">stack</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">a4</span><span class="p">,</span> <span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="n">stack</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>But it cannot magically create new functions that involve e.g. math and
@@ -1362,9 +1330,9 @@ such. Note that this is <em>not</em> a <code class="docutils literal notranslate
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sqr</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;(n0 -- n1)&quot;&quot;&quot;</span>
-    <span class="p">(</span><span class="n">n0</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;(n1 -- n2)&quot;&quot;&quot;</span>
+    <span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>(Eventually I should come back around to this becuase it’s not tooo
@@ -1392,7 +1360,7 @@ comments. We can write a function to check that:</p>
         <span class="nb">print</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect_comment</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a0</span> <span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 <span class="n">cons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 <span class="n">dup</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span>
 <span class="n">dupd</span> <span class="o">=</span> <span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
@@ -1405,11 +1373,11 @@ comments. We can write a function to check that:</p>
 <span class="n">rest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 <span class="n">rolldown</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a3</span> <span class="n">a1</span><span class="p">)</span>
 <span class="n">rollup</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a3</span> <span class="n">a1</span> <span class="n">a2</span><span class="p">)</span>
-<span class="n">rrest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
-<span class="n">second</span> <span class="o">=</span> <span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
+<span class="n">rrest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
+<span class="n">second</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a2</span><span class="p">)</span>
 <span class="n">swap</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
-<span class="n">swons</span> <span class="o">=</span> <span class="p">([</span><span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="n">a0</span> <span class="o">--</span> <span class="p">[</span><span class="n">a0</span> <span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
-<span class="n">third</span> <span class="o">=</span> <span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a2</span><span class="p">)</span>
+<span class="n">swons</span> <span class="o">=</span> <span class="p">([</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
+<span class="n">third</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a3</span><span class="p">)</span>
 <span class="n">tuck</span> <span class="o">=</span> <span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
 <span class="n">uncons</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 </pre></div>
@@ -1482,7 +1450,13 @@ sequence and <code class="docutils literal notranslate"><span class="pre">unify(
 <p>This function has to be modified to use the new datastructures and it is
 no longer recursive, instead recursion happens as part of unification.
 Further, the first and second of Pöial’s rules are now handled
-automatically by the unification algorithm.</p>
+automatically by the unification algorithm. (One easy way to see this is
+that now an empty stack effect comment is represented by a
+<code class="docutils literal notranslate"><span class="pre">StackJoyType</span></code> instance which is not “falsey” and so neither of the
+first two rules’ <code class="docutils literal notranslate"><span class="pre">if</span></code> clauses will ever be <code class="docutils literal notranslate"><span class="pre">True</span></code>. Later on I change
+the “truthiness” of <code class="docutils literal notranslate"><span class="pre">StackJoyType</span></code> to false to let e.g.
+<code class="docutils literal notranslate"><span class="pre">joy.utils.stack.concat</span></code> work with our stack effect comment cons-list
+tuples.)</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
     <span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">),</span> <span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">g_out</span><span class="p">)</span> <span class="o">=</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
@@ -1509,13 +1483,13 @@ conversion function instead. This is programmer’s laziness.</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">uncons</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">a0</span><span class="p">,</span> <span class="n">s0</span><span class="p">),</span> <span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">s0</span><span class="p">))))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">),</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">))))</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">(</span><span class="n">C</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">uncons</span><span class="p">),</span> <span class="n">uncons</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reduce</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">uncons</span><span class="p">,</span> <span class="n">uncons</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s0</span><span class="p">)),</span> <span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s0</span><span class="p">))))))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">s1</span><span class="p">))))))</span>
 </pre></div>
 </div>
 <p>The display function should be changed too.</p>
@@ -1575,7 +1549,7 @@ conversion function instead. This is programmer’s laziness.</p>
     <span class="nb">print</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect_comment</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a0</span> <span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ccons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 <span class="n">cons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 <span class="n">divmod_</span> <span class="o">=</span> <span class="p">(</span><span class="n">n2</span> <span class="n">n1</span> <span class="o">--</span> <span class="n">n4</span> <span class="n">n3</span><span class="p">)</span>
 <span class="n">dup</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span>
@@ -1592,38 +1566,38 @@ conversion function instead. This is programmer’s laziness.</p>
 <span class="n">rest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 <span class="n">rolldown</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a3</span> <span class="n">a1</span><span class="p">)</span>
 <span class="n">rollup</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a3</span> <span class="n">a1</span> <span class="n">a2</span><span class="p">)</span>
-<span class="n">rrest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
-<span class="n">second</span> <span class="o">=</span> <span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
-<span class="n">sqrt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n0</span> <span class="o">--</span> <span class="n">n1</span><span class="p">)</span>
+<span class="n">rrest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
+<span class="n">second</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a2</span><span class="p">)</span>
+<span class="n">sqrt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
 <span class="n">stack</span> <span class="o">=</span> <span class="p">(</span><span class="o">...</span> <span class="o">--</span> <span class="o">...</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
 <span class="n">succ</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
 <span class="n">swaack</span> <span class="o">=</span> <span class="p">([</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
 <span class="n">swap</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
-<span class="n">swons</span> <span class="o">=</span> <span class="p">([</span><span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="n">a0</span> <span class="o">--</span> <span class="p">[</span><span class="n">a0</span> <span class="o">.</span><span class="mf">0.</span><span class="p">])</span>
-<span class="n">third</span> <span class="o">=</span> <span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="n">a2</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a2</span><span class="p">)</span>
+<span class="n">swons</span> <span class="o">=</span> <span class="p">([</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
+<span class="n">third</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a3</span><span class="p">)</span>
 <span class="n">tuck</span> <span class="o">=</span> <span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span>
 <span class="n">uncons</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="p">;</span> <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack</span><span class="p">)</span>
 <span class="nb">print</span> <span class="p">;</span> <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">C</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">uncons</span><span class="p">))</span>
-<span class="nb">print</span> <span class="p">;</span> <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">C</span><span class="p">(</span><span class="n">C</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">uncons</span><span class="p">),</span> <span class="n">uncons</span><span class="p">))</span>
-<span class="nb">print</span> <span class="p">;</span> <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">C</span><span class="p">(</span><span class="n">C</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">uncons</span><span class="p">),</span> <span class="n">cons</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">;</span> <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">reduce</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">uncons</span><span class="p">,</span> <span class="n">uncons</span><span class="p">)))</span>
+<span class="nb">print</span> <span class="p">;</span> <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">reduce</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">uncons</span><span class="p">,</span> <span class="n">cons</span><span class="p">)))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="o">--</span> <span class="o">...</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
 
-<span class="p">(</span><span class="o">...</span> <span class="n">a0</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a0</span> <span class="n">a0</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
+<span class="p">(</span><span class="o">...</span> <span class="n">a1</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a1</span> <span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
 
-<span class="p">(</span><span class="o">...</span> <span class="n">a1</span> <span class="n">a0</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a1</span> <span class="n">a0</span> <span class="n">a0</span> <span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
+<span class="p">(</span><span class="o">...</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a2</span> <span class="n">a1</span> <span class="n">a1</span> <span class="n">a2</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
 
-<span class="p">(</span><span class="o">...</span> <span class="n">a0</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a0</span> <span class="p">[</span><span class="n">a0</span> <span class="o">...</span><span class="p">])</span>
+<span class="p">(</span><span class="o">...</span> <span class="n">a1</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a1</span> <span class="p">[</span><span class="n">a1</span> <span class="o">...</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">C</span><span class="p">(</span><span class="n">ccons</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="n">a1</span> <span class="n">a0</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="o">...</span> <span class="p">[</span><span class="n">a1</span> <span class="n">a0</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="p">[[</span><span class="n">a1</span> <span class="n">a0</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">...</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="n">a2</span> <span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="o">...</span> <span class="p">[</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="p">[[</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">...</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Q</span> <span class="o">=</span> <span class="n">C</span><span class="p">(</span><span class="n">ccons</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
@@ -1631,7 +1605,7 @@ conversion function instead. This is programmer’s laziness.</p>
 <span class="n">Q</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">s0</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">))),</span> <span class="p">(((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">s0</span><span class="p">)),</span> <span class="n">s1</span><span class="p">),</span> <span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">s0</span><span class="p">)),</span> <span class="n">s1</span><span class="p">)))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">s2</span><span class="p">))),</span> <span class="p">(((</span><span class="n">a2</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="n">s2</span><span class="p">),</span> <span class="p">((</span><span class="n">a2</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="n">s2</span><span class="p">)))</span>
 </pre></div>
 </div>
 <div class="section" id="compile-version-3">
@@ -1652,9 +1626,9 @@ comments are now already in the form needed for the Python code:</p>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Q</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;(... a1 a0 [.0.] -- ... [a1 a0 .0.] [[a1 a0 .0.] ...])&quot;&quot;&quot;</span>
-    <span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)))</span> <span class="o">=</span> <span class="n">stack</span>
-    <span class="k">return</span> <span class="p">(((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">s0</span><span class="p">)),</span> <span class="n">s1</span><span class="p">),</span> <span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">s0</span><span class="p">)),</span> <span class="n">s1</span><span class="p">))</span>
+    <span class="sd">&quot;&quot;&quot;(... a2 a1 [.1.] -- ... [a2 a1 .1.] [[a2 a1 .1.] ...])&quot;&quot;&quot;</span>
+    <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">s2</span><span class="p">)))</span> <span class="o">=</span> <span class="n">stack</span>
+    <span class="k">return</span> <span class="p">(((</span><span class="n">a2</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="n">s2</span><span class="p">),</span> <span class="p">((</span><span class="n">a2</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="n">s2</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unstack</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1676,19 +1650,19 @@ comments are now already in the form needed for the Python code:</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">C</span><span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="n">unstack</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a0</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">C</span><span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="n">enstacken</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a0</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[[</span><span class="n">a0</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[[</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">.</span><span class="mf">2.</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="n">unstack</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">s0</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">s0</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)),</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1730,8 +1704,8 @@ comments are now already in the form needed for the Python code:</p>
     <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">dup</span><span class="p">),</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">),</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span> <span class="p">(</span><span class="n">i1</span> <span class="n">i2</span> <span class="o">--</span> <span class="n">i3</span><span class="p">)</span> <span class="p">(</span><span class="n">i0</span> <span class="o">--</span> <span class="n">i1</span><span class="p">)</span>
-<span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span> <span class="p">(</span><span class="n">f1</span> <span class="n">f2</span> <span class="o">--</span> <span class="n">f3</span><span class="p">)</span> <span class="p">(</span><span class="n">f0</span> <span class="o">--</span> <span class="n">f1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span> <span class="p">(</span><span class="n">i1</span> <span class="n">i2</span> <span class="o">--</span> <span class="n">i3</span><span class="p">)</span> <span class="p">(</span><span class="n">i1</span> <span class="o">--</span> <span class="n">i2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span> <span class="p">(</span><span class="n">f1</span> <span class="n">f2</span> <span class="o">--</span> <span class="n">f3</span><span class="p">)</span> <span class="p">(</span><span class="n">f1</span> <span class="o">--</span> <span class="n">f2</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">product</span>
@@ -1749,19 +1723,19 @@ comments are now already in the form needed for the Python code:</p>
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">meta_compose</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">)))</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">dup</span><span class="p">],</span> <span class="n">muls</span><span class="p">):</span>
-    <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">f0</span> <span class="o">--</span> <span class="n">f1</span><span class="p">)</span>
-<span class="p">(</span><span class="n">i0</span> <span class="o">--</span> <span class="n">i1</span><span class="p">)</span>
-</pre></div>
-</div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">dup</span><span class="p">],</span> <span class="p">[</span><span class="n">mul</span><span class="p">]):</span>
     <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">n0</span> <span class="o">--</span> <span class="n">n1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">dup</span><span class="p">],</span> <span class="n">muls</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">f1</span> <span class="o">--</span> <span class="n">f2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">i1</span> <span class="o">--</span> <span class="n">i2</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="representing-an-unbounded-sequence-of-types">
@@ -2024,23 +1998,23 @@ disappears:</p>
     <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">f0</span> <span class="o">--</span> <span class="n">f1</span><span class="p">)</span>
-<span class="p">(</span><span class="n">i0</span> <span class="o">--</span> <span class="n">i1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">f1</span> <span class="o">--</span> <span class="n">f2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">i1</span> <span class="o">--</span> <span class="n">i2</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">dup</span><span class="p">],</span> <span class="p">[</span><span class="n">sum_</span><span class="p">]):</span>
     <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">n0</span><span class="o">*</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">n0</span><span class="o">*</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="n">n0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">n1</span><span class="o">*</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">n1</span><span class="o">*</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="n">n1</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">cons</span><span class="p">],</span> <span class="p">[</span><span class="n">sum_</span><span class="p">]):</span>
     <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a0</span> <span class="p">[</span><span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="n">n0</span><span class="p">)</span>
-<span class="p">(</span><span class="n">n0</span> <span class="p">[</span><span class="n">n0</span><span class="o">*</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="n">n1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">n1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">n1</span> <span class="p">[</span><span class="n">n1</span><span class="o">*</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sum_</span> <span class="o">=</span> <span class="p">(((</span><span class="n">N</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">Ns</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
@@ -2051,7 +2025,7 @@ disappears:</p>
     <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span> <span class="p">([</span><span class="n">n1</span> <span class="n">n1</span><span class="o">*</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">n0</span><span class="p">)</span> <span class="p">(</span><span class="n">n0</span> <span class="p">[</span><span class="n">n0</span><span class="o">*</span> <span class="o">.</span><span class="mf">0.</span><span class="p">]</span> <span class="o">--</span> <span class="n">n1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="p">[</span><span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span> <span class="p">([</span><span class="n">n1</span> <span class="n">n1</span><span class="o">*</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">n0</span><span class="p">)</span> <span class="p">(</span><span class="n">n1</span> <span class="p">[</span><span class="n">n1</span><span class="o">*</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="p">(</span><span class="n">As</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
@@ -2241,70 +2215,77 @@ stack effect we have to “split universes” again and return both.</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span> <span class="o">=</span> <span class="n">l2s</span><span class="p">([</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">mul</span><span class="p">])</span>
 </pre></div>
 </div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">())))</span>
+</pre></div>
+</div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">infer</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[(</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">s1</span><span class="p">))]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SymbolJoyType</span><span class="p">(</span><span class="n">AnyJoyType</span><span class="p">):</span>
-    <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sec</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stack_effects</span> <span class="o">=</span> <span class="n">sec</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">number</span>
-
-<span class="k">class</span> <span class="nc">CombinatorJoyType</span><span class="p">(</span><span class="n">SymbolJoyType</span><span class="p">):</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;C&#39;</span>
-
-<span class="k">def</span> <span class="nf">dip_t</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
-    <span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
-    <span class="n">expression</span> <span class="o">=</span> <span class="n">stack_concat</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">expression</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span>
-
-<span class="n">CONS</span> <span class="o">=</span> <span class="n">SymbolJoyType</span><span class="p">(</span><span class="s1">&#39;cons&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">cons</span><span class="p">],</span> <span class="mi">23</span><span class="p">)</span>
-<span class="n">DIP</span> <span class="o">=</span> <span class="n">CombinatorJoyType</span><span class="p">(</span><span class="s1">&#39;dip&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">dip_t</span><span class="p">],</span> <span class="mi">44</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">kav</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
-    <span class="c1">#i, stack = F</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="n">F</span><span class="p">,</span> <span class="n">e</span><span class="p">)]</span>
-    <span class="n">n</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">e</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">SymbolJoyType</span><span class="p">):</span>
-        <span class="n">Fs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">sec</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">stack_effects</span><span class="p">:</span>
-            <span class="n">Fs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">MC</span><span class="p">([</span><span class="n">F</span><span class="p">],</span> <span class="n">sec</span><span class="p">))</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">kav</span><span class="p">(</span><span class="n">Fn</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">Fn</span> <span class="ow">in</span> <span class="n">Fs</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">CombinatorJoyType</span><span class="p">):</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">stack_effects</span><span class="p">:</span>
-            <span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">e</span><span class="p">)</span>
-            <span class="n">new_F</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span>
-            <span class="n">res</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">kav</span><span class="p">(</span><span class="n">new_F</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">res</span>
-    <span class="n">lit</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">kav</span><span class="p">(</span><span class="n">Fn</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">Fn</span> <span class="ow">in</span> <span class="n">MC</span><span class="p">([</span><span class="n">F</span><span class="p">],</span> <span class="p">[</span><span class="n">lit</span><span class="p">])]</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">infer</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>compare, and be amazed:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dip_t</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
-    <span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
-    <span class="n">expression</span> <span class="o">=</span> <span class="n">stack_concat</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">expression</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[(</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">s1</span><span class="p">))]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dip</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-    <span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
-    <span class="n">expression</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="n">expression</span><span class="p">),</span> <span class="n">dictionary</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">stack_effect_comment</span> <span class="ow">in</span> <span class="n">infer</span><span class="p">(</span><span class="n">expression</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect_comment</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">--</span> <span class="n">f1</span><span class="p">)</span>
+<span class="p">(</span><span class="o">--</span> <span class="n">i1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">())))</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">infer</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[(</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)),</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">s1</span><span class="p">))]</span>
 </pre></div>
 </div>
 <p>And that brings us to current Work-In-Progress. I’m pretty hopeful that
-the mixed-mode inferencer/interpreter <code class="docutils literal notranslate"><span class="pre">kav()</span></code> function along with the
-ability to specify multiple implementations for the combinators will
+the mixed-mode inferencer/interpreter <code class="docutils literal notranslate"><span class="pre">infer()</span></code> function along with
+the ability to specify multiple implementations for the combinators will
 permit modelling of the stack effects of e.g. <code class="docutils literal notranslate"><span class="pre">ifte</span></code>. If I can keep up
 the pace I should be able to verify that conjecture by the end of June.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>(for now…)</p>
+<p>Work remains to be done:</p>
+<ul class="simple">
+<li>the rest of the library has to be covered</li>
+<li>figure out how to deal with <code class="docutils literal notranslate"><span class="pre">loop</span></code> and <code class="docutils literal notranslate"><span class="pre">genrec</span></code>, etc..</li>
+<li>extend the types to check values (see the appendix)</li>
+<li>other kinds of “higher order” type variables, OR, AND, etc..</li>
+<li>maybe rewrite in Prolog for great good?</li>
+<li>definitions</li>
+<li>don’t permit composition of functions that don’t compose</li>
+<li>auto-compile compilable functions</li>
+<li>Compiling more than just the Yin functions.</li>
+<li>getting better visibility (than Python debugger.)</li>
+<li>DOOOOCS!!!! Lots of docs!</li>
+<li>docstrings all around</li>
+<li>improve this notebook (it kinda falls apart at the end narratively. I
+went off and just started writing code to see if it would work. It
+does, but now I have to come back and describe here what I did.</li>
+</ul>
+<p>I’m starting to realize that, with the inferencer/checker/compiler
+coming along, and with the UI ready to be rewritten in Joy, I’m close to
+a time when my ephasis is going to have to shift from crunchy code stuff
+to squishy human stuff. I’m going to have to put normal people in front
+of this and see if, in fact, they <em>can</em> learn the basics of programming
+with it.</p>
 <p>The rest of this stuff is junk and/or unfinished material.</p>
 </div>
 <div class="section" id="appendix-joy-in-the-logical-paradigm">
@@ -2312,132 +2293,102 @@ the pace I should be able to verify that conjecture by the end of June.</p>
 <p>For this to work the type label classes have to be modified to let
 <code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">&gt;=</span> <span class="pre">t</span></code> succeed, where e.g. <code class="docutils literal notranslate"><span class="pre">T</span></code> is <code class="docutils literal notranslate"><span class="pre">IntJoyType</span></code> and <code class="docutils literal notranslate"><span class="pre">t</span></code> is
 <code class="docutils literal notranslate"><span class="pre">int</span></code></p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">rolldown</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">cons</span><span class="p">,</span> <span class="n">cons</span><span class="p">))</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_ge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">issubclass</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;accept&#39;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">))</span>
 
-<span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">F</span><span class="p">)</span>
+<span class="n">AnyJoyType</span><span class="o">.</span><span class="fm">__ge__</span> <span class="o">=</span> <span class="n">_ge</span>
+<span class="n">AnyJoyType</span><span class="o">.</span><span class="n">accept</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">long</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Symbol</span>
+<span class="n">StackJoyType</span><span class="o">.</span><span class="n">accept</span> <span class="o">=</span> <span class="nb">tuple</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---------------------------------------------------------------------------</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">=</span> <span class="n">infer</span><span class="p">(</span><span class="n">l2s</span><span class="p">((</span><span class="n">pop</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">rolldown</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">cons</span><span class="p">,</span> <span class="n">cons</span><span class="p">)))</span>
 
-<span class="ne">TypeError</span>                                 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">119</span><span class="o">-</span><span class="mi">7</span><span class="n">fde90b4e88f</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
-      <span class="mi">1</span> <span class="n">F</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">rolldown</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">cons</span><span class="p">,</span> <span class="n">cons</span><span class="p">))</span>
-      <span class="mi">2</span>
-<span class="o">----&gt;</span> <span class="mi">3</span> <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">F</span><span class="p">)</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">98</span><span class="o">-</span><span class="n">ddee30dbb1a6</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-     <span class="mi">10</span> <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">11</span>     <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">relabel</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-<span class="o">---&gt;</span> <span class="mi">12</span>     <span class="k">for</span> <span class="n">fg</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">13</span>         <span class="k">yield</span> <span class="n">delabel</span><span class="p">(</span><span class="n">fg</span><span class="p">)</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">97</span><span class="o">-</span><span class="mi">5</span><span class="n">eb7ac5ad2c2</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-      <span class="mi">1</span> <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-<span class="o">----&gt;</span> <span class="mi">2</span>     <span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">),</span> <span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">g_out</span><span class="p">)</span> <span class="o">=</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span>
-      <span class="mi">3</span>     <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
-      <span class="mi">4</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
-      <span class="mi">5</span>         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f_out</span><span class="p">,</span> <span class="n">g_in</span><span class="p">))</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">98</span><span class="o">-</span><span class="n">ddee30dbb1a6</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-     <span class="mi">10</span> <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">11</span>     <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">relabel</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-<span class="o">---&gt;</span> <span class="mi">12</span>     <span class="k">for</span> <span class="n">fg</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">13</span>         <span class="k">yield</span> <span class="n">delabel</span><span class="p">(</span><span class="n">fg</span><span class="p">)</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">97</span><span class="o">-</span><span class="mi">5</span><span class="n">eb7ac5ad2c2</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-      <span class="mi">1</span> <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-<span class="o">----&gt;</span> <span class="mi">2</span>     <span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">),</span> <span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">g_out</span><span class="p">)</span> <span class="o">=</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span>
-      <span class="mi">3</span>     <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
-      <span class="mi">4</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
-      <span class="mi">5</span>         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f_out</span><span class="p">,</span> <span class="n">g_in</span><span class="p">))</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">98</span><span class="o">-</span><span class="n">ddee30dbb1a6</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-     <span class="mi">10</span> <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">11</span>     <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">relabel</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-<span class="o">---&gt;</span> <span class="mi">12</span>     <span class="k">for</span> <span class="n">fg</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">13</span>         <span class="k">yield</span> <span class="n">delabel</span><span class="p">(</span><span class="n">fg</span><span class="p">)</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">97</span><span class="o">-</span><span class="mi">5</span><span class="n">eb7ac5ad2c2</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-      <span class="mi">1</span> <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-<span class="o">----&gt;</span> <span class="mi">2</span>     <span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">),</span> <span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">g_out</span><span class="p">)</span> <span class="o">=</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span>
-      <span class="mi">3</span>     <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
-      <span class="mi">4</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
-      <span class="mi">5</span>         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f_out</span><span class="p">,</span> <span class="n">g_in</span><span class="p">))</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">98</span><span class="o">-</span><span class="n">ddee30dbb1a6</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-     <span class="mi">10</span> <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">11</span>     <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">relabel</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-<span class="o">---&gt;</span> <span class="mi">12</span>     <span class="k">for</span> <span class="n">fg</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">13</span>         <span class="k">yield</span> <span class="n">delabel</span><span class="p">(</span><span class="n">fg</span><span class="p">)</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">97</span><span class="o">-</span><span class="mi">5</span><span class="n">eb7ac5ad2c2</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-      <span class="mi">1</span> <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-<span class="o">----&gt;</span> <span class="mi">2</span>     <span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">),</span> <span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">g_out</span><span class="p">)</span> <span class="o">=</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span>
-      <span class="mi">3</span>     <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
-      <span class="mi">4</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
-      <span class="mi">5</span>         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f_out</span><span class="p">,</span> <span class="n">g_in</span><span class="p">))</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">98</span><span class="o">-</span><span class="n">ddee30dbb1a6</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-     <span class="mi">10</span> <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">11</span>     <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">relabel</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-<span class="o">---&gt;</span> <span class="mi">12</span>     <span class="k">for</span> <span class="n">fg</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">13</span>         <span class="k">yield</span> <span class="n">delabel</span><span class="p">(</span><span class="n">fg</span><span class="p">)</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">97</span><span class="o">-</span><span class="mi">5</span><span class="n">eb7ac5ad2c2</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-      <span class="mi">1</span> <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-<span class="o">----&gt;</span> <span class="mi">2</span>     <span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">),</span> <span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">g_out</span><span class="p">)</span> <span class="o">=</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span>
-      <span class="mi">3</span>     <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
-      <span class="mi">4</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
-      <span class="mi">5</span>         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f_out</span><span class="p">,</span> <span class="n">g_in</span><span class="p">))</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">98</span><span class="o">-</span><span class="n">ddee30dbb1a6</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-     <span class="mi">10</span> <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">11</span>     <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">relabel</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-<span class="o">---&gt;</span> <span class="mi">12</span>     <span class="k">for</span> <span class="n">fg</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-     <span class="mi">13</span>         <span class="k">yield</span> <span class="n">delabel</span><span class="p">(</span><span class="n">fg</span><span class="p">)</span>
-
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">97</span><span class="o">-</span><span class="mi">5</span><span class="n">eb7ac5ad2c2</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-      <span class="mi">1</span> <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
-<span class="o">----&gt;</span> <span class="mi">2</span>     <span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">),</span> <span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">g_out</span><span class="p">)</span> <span class="o">=</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span>
-      <span class="mi">3</span>     <span class="n">s</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">g_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
-      <span class="mi">4</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
-      <span class="mi">5</span>         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Cannot unify </span><span class="si">%r</span><span class="s1"> and </span><span class="si">%r</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f_out</span><span class="p">,</span> <span class="n">g_in</span><span class="p">))</span>
-
-
-<span class="ne">TypeError</span><span class="p">:</span> <span class="s1">&#39;SymbolJoyType&#39;</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">iterable</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">F</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a4</span> <span class="n">a5</span> <span class="o">.</span><span class="mf">1.</span><span class="p">]</span> <span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a2</span> <span class="n">a3</span> <span class="o">.</span><span class="mf">1.</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joy.parser</span> <span class="k">import</span> <span class="n">text_to_expression</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[3 4 ...] 2 1&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">=</span> <span class="n">infer</span><span class="p">(</span><span class="n">l2s</span><span class="p">((</span><span class="n">pop</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">pop</span><span class="p">)))</span>
+
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">F</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;0 1 2&#39;</span><span class="p">)</span>
 <span class="n">s</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">())))</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">s1</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">L</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;0 1 2 [3 4]&#39;</span><span class="p">)</span>
+<span class="n">s</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">())),</span> <span class="p">()))))</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">s1</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">L</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="p">)</span>
+<span class="n">L</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---------------------------------------------------------------------------</span>
+
+<span class="ne">IndexError</span>                                <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">133</span><span class="o">-</span><span class="mi">58</span><span class="n">a8e44e9cba</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="ne">IndexError</span><span class="p">:</span> <span class="nb">list</span> <span class="n">index</span> <span class="n">out</span> <span class="n">of</span> <span class="nb">range</span>
+</pre></div>
+</div>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">23</span>
 </pre></div>
 </div>
 </div>
@@ -2637,7 +2588,7 @@ how much information we <em>could</em> retain:</p>
 <li><a class="reference internal" href="#pop-swap"><code class="docutils literal notranslate"><span class="pre">pop</span> <span class="pre">swap</span></code></a></li>
 <li><a class="reference internal" href="#popswap-roll"><code class="docutils literal notranslate"><span class="pre">pop∘swap</span> <span class="pre">roll&lt;</span></code></a></li>
 <li><a class="reference internal" href="#compiling-popswaproll">Compiling <code class="docutils literal notranslate"><span class="pre">pop∘swap∘roll&lt;</span></code></a></li>
-<li><a class="reference internal" href="#functions-on-lists">Functions on Lists</a></li>
+<li><a class="reference internal" href="#functions-on-stacks">Functions on Stacks</a></li>
 <li><a class="reference internal" href="#popswaproll-rest"><code class="docutils literal notranslate"><span class="pre">pop∘swap∘roll&lt;</span> <span class="pre">rest</span></code></a></li>
 <li><a class="reference internal" href="#popswaproll-rest-rest"><code class="docutils literal notranslate"><span class="pre">pop∘swap∘roll&lt;∘rest</span> <span class="pre">rest</span></code></a></li>
 <li><a class="reference internal" href="#popswaproll-restrest-cons"><code class="docutils literal notranslate"><span class="pre">pop∘swap∘roll&lt;∘rest∘rest</span> <span class="pre">cons</span></code></a></li>
@@ -2702,6 +2653,7 @@ how much information we <em>could</em> retain:</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#part-vii-typing-combinators">Part VII: Typing Combinators</a></li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
 <li><a class="reference internal" href="#appendix-joy-in-the-logical-paradigm">Appendix: Joy in the Logical Paradigm</a></li>
 <li><a class="reference internal" href="#abstract-interpretation">Abstract Interpretation</a></li>
 <li><a class="reference internal" href="#junk">Junk</a><ul>
