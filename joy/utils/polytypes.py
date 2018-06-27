@@ -242,17 +242,13 @@ def infer(e, F=ID):
         fi, fo = n.enter_guard(F)
         res = []
         for combinator in n.stack_effects:
-            print fo
-            print e
             new_fo, ee, _ = combinator(fo, e, {})
-            print new_fo
-            print ee
             ee = update(FUNCTIONS, ee)  # Fix Symbols.
             new_F = fi, new_fo
             res.extend(infer(ee, new_F))
     else:
-        lit = s9, (n, s9)
-        res = flatten(infer(e, Fn) for Fn in MC([F], [lit]))
+        fi, fo = F
+        res = infer(e, (fi, (n, fo)))
 
     return res
 
