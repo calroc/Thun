@@ -10,8 +10,6 @@ an unbounded sequence of other types.
 '''
 from itertools import chain, product
 
-import sys
-sys.path.append('/home/sforman/Desktop/Joypy-hg')
 import joy.library
 from joy.parser import Symbol
 from joy.utils.stack import concat as CONCAT
@@ -109,7 +107,24 @@ class FunctionJoyType(AnyJoyType):
 
 
 class SymbolJoyType(FunctionJoyType): prefix = 'F'
-class CombinatorJoyType(FunctionJoyType): prefix = 'C'
+
+
+class CombinatorJoyType(FunctionJoyType):
+
+    prefix = 'C'
+
+    def __init__(self, name, sec, number, expect=None):
+        super(CombinatorJoyType, self).__init__(name, sec, number)
+        self.expect = expect
+
+    def enter_guard(self, f):
+        if self.expect is None:
+            return f
+        g = self.expect, self.expect
+        new_f = list(C(f, g))
+        assert len(new_f) == 1, repr(new_f)
+        return new_f[0]
+
 
 
 def unify(u, v, s=None):
@@ -224,10 +239,14 @@ def infer(e, F=ID):
         res = flatten(infer(e, Fn) for Fn in MC([F], n.stack_effects))
 
     elif isinstance(n, CombinatorJoyType):
+        fi, fo = n.enter_guard(F)
         res = []
         for combinator in n.stack_effects:
-            fi, fo = F
+            print fo
+            print e
             new_fo, ee, _ = combinator(fo, e, {})
+            print new_fo
+            print ee
             ee = update(FUNCTIONS, ee)  # Fix Symbols.
             new_F = fi, new_fo
             res.extend(infer(ee, new_F))
@@ -294,6 +313,10 @@ FUNCTIONS['branch'] = CombinatorJoyType('branch', [branch_true, branch_false], 1
 
 globals().update(FUNCTIONS)
 
+
+dip.expect = s8, (a8, s7)
+
+
 def _ge(self, other):
     return (issubclass(other.__class__, self.__class__)
             or hasattr(self, 'accept')
@@ -304,40 +327,41 @@ AnyJoyType.accept = tuple, int, float, long, str, unicode, bool, Symbol
 StackJoyType.accept = tuple
 
 
-if __name__ == '__main__':
-
-  from joy.parser import text_to_expression
-  from joy.utils.stack import list_to_stack as l2s
-
-
-  F = infer(l2s((pop, pop, pop)))
-  for f in F:
-      print doc_from_stack_effect(*f)
-  s = text_to_expression('0 1 2')
-  L = unify(s, F[0][0])
-  print L
-
-  print
-
-  F = infer(l2s((pop, swap, rolldown, rest, rest, cons, cons)))
-  for f in F:
-      print doc_from_stack_effect(*f)
-  s = text_to_expression('0 1 2 [3 4]')
-  L = unify(s, F[0][0])
-  print L
-  print
-
-  g = update(L[0], F[0])
-  print doc_from_stack_effect(*g)
-  print g
-
-
-  print '- - - - - -'
-  s = text_to_expression('[3 4]')
-  L = unify(s, F[0][1])
-  print L
-  print
-
-  g = update(L[0], F[0])
-  print doc_from_stack_effect(*g)
-  print g
+##if __name__ == '__main__':
+##
+##  from joy.parser import text_to_expression
+##  from joy.utils.stack import list_to_stack as l2s
+##
+##
+##  F = infer(l2s((pop, pop, pop)))
+##  for f in F:
+##      print doc_from_stack_effect(*f)
+##  s = text_to_expression('0 1 2')
+##  L = unify(s, F[0][0])
+##  print L
+##
+##  print
+##
+##  F = infer(l2s((pop, swap, rolldown, rest, rest, cons, cons)))
+##  for f in F:
+##      print doc_from_stack_effect(*f)
+##  s = text_to_expression('0 1 2 [3 4]')
+##  L = unify(s, F[0][0])
+##  print L
+##  print
+##
+##  g = update(L[0], F[0])
+##  print doc_from_stack_effect(*g)
+##  print g
+##
+##
+##  print '- - - - - -'
+##  s = text_to_expression('[3 4]')
+##  L = unify(s, F[0][1])
+##  print L
+##  print
+##
+##  g = update(L[0], F[0])
+##  print doc_from_stack_effect(*g)
+##  print g
+##
