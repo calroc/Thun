@@ -5,55 +5,55 @@ def _Tree_add_Ee(stack):
   """
   ::
 
-    ([a3 a4 ...0] a2 a1 a0 -- [a1 a2 ...0])
+    ([a4 a5 ...1] a3 a2 a1 -- [a2 a3 ...1])
 
   """
-  (a0, (a1, (a2, ((a3, (a4, s0)), s1)))) = stack
-  return ((a1, (a2, s0)), s1)
+  (a1, (a2, (a3, ((a4, (a5, s1)), s2)))) = stack
+  return ((a2, (a3, s1)), s2)
 
 
 def _Tree_delete_R0(stack):
   """
   ::
 
-    ([a1 ...0] a0 -- [a1 ...0] a1 a0 a0)
+    ([a2 ...1] a1 -- [a2 ...1] a2 a1 a1)
 
   """
-  (a0, ((a1, s0), s1)) = stack
-  return (a0, (a0, (a1, ((a1, s0), s1))))
+  (a1, ((a2, s1), s2)) = stack
+  return (a1, (a1, (a2, ((a2, s1), s2))))
 
 
 def _Tree_delete_clear_stuff(stack):
   """
   ::
 
-    (a2 a1 [a0 ...0] -- [...0])
+    (a3 a2 [a1 ...1] -- [...1])
 
   """
-  ((a0, s0), (a1, (a2, s1))) = stack
-  return (s0, s1)
+  ((a1, s1), (a2, (a3, s2))) = stack
+  return (s1, s2)
 
 
 def _Tree_get_E(stack):
   """
   ::
 
-    ([a2 a3 ...0] a1 a0 -- a3)
+    ([a3 a4 ...1] a2 a1 -- a4)
 
   """
-  (a0, (a1, ((a2, (a3, s0)), s1))) = stack
-  return (a3, s1)
+  (a1, (a2, ((a3, (a4, s1)), s2))) = stack
+  return (a4, s2)
 
 
 def ccons(stack):
   """
   ::
 
-    (a1 a0 [...0] -- [a1 a0 ...0])
+    (a2 a1 [...1] -- [a2 a1 ...1])
 
   """
-  (s0, (a0, (a1, s1))) = stack
-  return ((a1, (a0, s0)), s1)
+  (s1, (a1, (a2, s2))) = stack
+  return ((a2, (a1, s1)), s2)
 
 
 def cons(stack):
@@ -115,22 +115,22 @@ def first_two(stack):
   """
   ::
 
-    ([a0 a1 ...0] -- a0 a1)
+    ([a1 a2 ...1] -- a1 a2)
 
   """
-  ((a0, (a1, s0)), s1) = stack
-  return (a1, (a0, s1))
+  ((a1, (a2, s1)), s2) = stack
+  return (a2, (a1, s2))
 
 
 def fourth(stack):
   """
   ::
 
-    ([a0 a1 a2 a3 ...0] -- a3)
+    ([a1 a2 a3 a4 ...1] -- a4)
 
   """
-  ((a0, (a1, (a2, (a3, s0)))), s1) = stack
-  return (a3, s1)
+  ((a1, (a2, (a3, (a4, s1)))), s2) = stack
+  return (a4, s2)
 
 
 def over(stack):
@@ -247,22 +247,22 @@ def rrest(stack):
   """
   ::
 
-    ([a0 a1 ...0] -- [...0])
+    ([a1 a2 ...1] -- [...1])
 
   """
-  ((a0, (a1, s0)), s1) = stack
-  return (s0, s1)
+  ((a1, (a2, s1)), s2) = stack
+  return (s1, s2)
 
 
 def second(stack):
   """
   ::
 
-    ([a0 a1 ...0] -- a1)
+    ([a1 a2 ...1] -- a2)
 
   """
-  ((a0, (a1, s0)), s1) = stack
-  return (a1, s1)
+  ((a1, (a2, s1)), s2) = stack
+  return (a2, s2)
 
 
 def stack(stack):
@@ -280,22 +280,33 @@ def stuncons(stack):
   """
   ::
 
-    (... a0 -- ... a0 a0 [...])
+    (... a1 -- ... a1 a1 [...])
 
   """
-  (a0, s0) = stack
-  return (s0, (a0, (a0, s0)))
+  (a1, s1) = stack
+  return (s1, (a1, (a1, s1)))
 
 
 def stununcons(stack):
   """
   ::
 
-    (... a1 a0 -- ... a1 a0 a0 a1 [...])
+    (... a2 a1 -- ... a2 a1 a1 a2 [...])
 
   """
-  (a0, (a1, s0)) = stack
-  return (s0, (a1, (a0, (a0, (a1, s0)))))
+  (a1, (a2, s1)) = stack
+  return (s1, (a2, (a1, (a1, (a2, s1)))))
+
+
+def swaack(stack):
+  """
+  ::
+
+    ([...1] -- [...0])
+
+  """
+  (s1, s0) = stack
+  return (s0, s1)
 
 
 def swap(stack):
@@ -313,22 +324,22 @@ def swons(stack):
   """
   ::
 
-    ([...0] a0 -- [a0 ...0])
+    ([...1] a1 -- [a1 ...1])
 
   """
-  (a0, (s0, s1)) = stack
-  return ((a0, s0), s1)
+  (a1, (s1, s2)) = stack
+  return ((a1, s1), s2)
 
 
 def third(stack):
   """
   ::
 
-    ([a0 a1 a2 ...0] -- a2)
+    ([a1 a2 a3 ...1] -- a3)
 
   """
-  ((a0, (a1, (a2, s0))), s1) = stack
-  return (a2, s1)
+  ((a1, (a2, (a3, s1))), s2) = stack
+  return (a3, s2)
 
 
 def tuck(stack):
@@ -353,13 +364,24 @@ def uncons(stack):
   return (s0, (a1, s23))
 
 
+def unit(stack):
+  """
+  ::
+
+    (a1 -- [a1 ])
+
+  """
+  (a1, s23) = stack
+  return ((a1, ()), s23)
+
+
 def unswons(stack):
   """
   ::
 
-    ([a0 ...0] -- [...0] a0)
+    ([a1 ...1] -- [...1] a1)
 
   """
-  ((a0, s0), s1) = stack
-  return (a0, (s0, s1))
+  ((a1, s1), s2) = stack
+  return (a1, (s1, s2))
 

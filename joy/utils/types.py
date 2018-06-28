@@ -30,6 +30,7 @@ class AnyJoyType(object):
         return hash(repr(self))
 
 
+class BooleanJoyType(AnyJoyType): prefix = 'b'
 class NumberJoyType(AnyJoyType): prefix = 'n'
 class FloatJoyType(NumberJoyType): prefix = 'f'
 class IntJoyType(FloatJoyType): prefix = 'i'
@@ -39,12 +40,6 @@ class StackJoyType(AnyJoyType):
     def __nonzero__(self):
         # Imitate () at the end of cons list.
         return False
-
-
-_R = range(10)
-A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = map(AnyJoyType, _R)
-N = n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = map(NumberJoyType, _R)
-S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = map(StackJoyType, _R)
 
 
 class JoyTypeError(Exception): pass
@@ -212,7 +207,7 @@ def _to_str(term, stack, switch):
         end = '' if term == () else '...'
         #end = '...'
     else:
-        end = '...%i' % term.number
+        end = '' if term == () else '...%i' % term.number
     a.append(end)
     return '[%s]' % ' '.join(a)
 
@@ -238,42 +233,61 @@ def __(*seq):
     return stack
 
 
+_R = range(10)
+A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = map(AnyJoyType, _R)
+B = b0, b1, b2, b3, b4, b5, b6, b7, b8, b9 = map(BooleanJoyType, _R)
+N = n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = map(NumberJoyType, _R)
+S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = map(StackJoyType, _R)
+F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = F = map(FloatJoyType, _R)
+I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = I = map(IntJoyType, _R)
+
+
 def defs():
-    rolldown = __(a1, a2, a3), __(a2, a3, a1)
-    rollup = __(a1, a2, a3), __(a3, a1, a2)
-    pop = __(a1), __()
-    popop = __(a2, a1,), __()
-    popd = __(a2, a1,), __(a1)
-    popdd = __(a3, a2, a1,), __(a2, a1,)
-    popopd = __(a3, a2, a1,), __(a1)
-    popopdd = __(a4, a3, a2, a1,), __(a2, a1)
-    swap = __(a1, a2), __(a2, a1)
-    rest = __((a1, s0),), __(s0,)
-    rrest = C(rest, rest)
     cons = __(a1, s0), __((a1, s0),)
     ccons = C(cons, cons)
-    uncons = __((a1, s0),), __(a1, s0)
-    unswons = C(uncons, swap)
-    swons = C(swap, cons)
     dup = __(a1,), __(a1, a1)
     dupd = __(a2, a1), __(a2, a2, a1)
     dupdd = __(a3, a2, a1), __(a3, a3, a2, a1)
     first = __((a1, s1),), __(a1,)
-    second = C(rest, first)
-    third = C(rest, second)
-    fourth = C(rest, third)
-    tuck = __(a2, a1), __(a1, a2, a1)
     over = __(a2, a1), __(a2, a1, a2)
+    pop = __(a1), __()
+    popd = __(a2, a1,), __(a1)
+    popdd = __(a3, a2, a1,), __(a2, a1,)
+    popop = __(a2, a1,), __()
+    popopd = __(a3, a2, a1,), __(a1)
+    popopdd = __(a4, a3, a2, a1,), __(a2, a1)
+    rest = __((a1, s0),), __(s0,)
+    rolldown = __(a1, a2, a3), __(a2, a3, a1)
+    rollup = __(a1, a2, a3), __(a3, a1, a2)
+    rrest = C(rest, rest)
+    second = C(rest, first)
     stack = s0, (s0, s0)
     swaack = (s1, s0), (s0, s1)
+    swap = __(a1, a2), __(a2, a1)
+    swons = C(swap, cons)
+    third = C(rest, second)
+    tuck = __(a2, a1), __(a1, a2, a1)
+    uncons = __((a1, s0),), __(a1, s0)
+    unswons = C(uncons, swap)
     stuncons = C(stack, uncons)
     stununcons = C(stack, uncons, uncons)
-    first_two = C(uncons, uncons, pop)
+    unit = __(a1), __((a1, ()))
 
-    mul = __(n1, n2), __(n3,)
+    eq = ge = gt = le = lt = ne = __(n1, n2), __(b1)
+
+    and_ = __(b1, b2), __(b3)
+    bool_ = not_ = __(a1), __(b1)
+
+    
+
+    add = div = floordiv = modulus = mul = pow_ = sub = truediv = \
+          lshift = rshift = __(n1, n2), __(n3,)
     sqrt = C(dup, mul)
-    succ = pred = __(n1,), __(n2,)
+    succ = pred = neg = __(n1,), __(n2,)
     divmod_ = pm = __(n2, n1), __(n4, n3)
+
+    first_two = C(uncons, uncons, pop)
+    fourth = C(rest, third)
 
     _Tree_add_Ee = C(pop, swap, rolldown, rrest, ccons)
     _Tree_get_E = C(popop, second)

@@ -256,8 +256,6 @@ def infer(e, F=ID):
 a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = A
 n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = N
 s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = S
-f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = F = map(FloatJoyType, _R)
-i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = I = map(IntJoyType, _R)
 
 _R = range(1, 11)
 As = map(AnyStarJoyType, _R)

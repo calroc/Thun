@@ -94,7 +94,6 @@ definitions = ('''\
 of == swap at
 product == 1 swap [*] step
 flatten == [] swap [concat] step
-unit == [] cons
 quoted == [unit] dip
 unquoted == [i] dip
 enstacken == stack [clear] dip
@@ -120,13 +119,14 @@ range_to_zero == unit [down_to_zero] infra
 anamorphism == [pop []] swap [dip swons] genrec
 range == [0 <=] [1 - dup] anamorphism
 while == swap [nullary] cons dup dipd concat loop
-dudipd == dup dipd
+dupdipd == dup dipd
 primrec == [i] genrec
 step_zero == 0 roll> step
 codireco == cons dip rest cons
 make_generator == [codireco] ccons
-ccons == cons cons
 '''
+##ccons == cons cons
+##unit == [] cons
 ##second == rest first
 ##third == rest rest first
 ##swons == swap cons
@@ -572,12 +572,12 @@ def clear(stack):
 ##  return second, (tos, stack)
 
 
-@inscribe
-@SimpleFunctionWrapper
-def swaack(stack):
-  '''swap stack'''
-  old_stack, stack = stack
-  return stack, old_stack
+##@inscribe
+##@SimpleFunctionWrapper
+##def swaack(stack):
+##  '''swap stack'''
+##  old_stack, stack = stack
+##  return stack, old_stack
 
 
 ##@inscribe
