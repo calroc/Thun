@@ -90,10 +90,26 @@ class TestCombinators(TestMixin, unittest.TestCase):
   def test_nullary(self):
     expression = n1, n2, (mul, s2), (stack, s3), dip, infra, first
     f = [
-      (s1, (f1, (n1, (n2, s2)))),  # (-- n2 n1 f1)
-      (s1, (i1, (n1, (n2, s2)))),  # (-- n2 n1 i1)
+      (s1, (f1, (f2, (f3, s1)))),  # (-- f3 f2 f1)
+      (s1, (f1, (f2, (i1, s1)))),  # (-- i1 f2 f1)
+      (s1, (f1, (i1, (f2, s1)))),  # (-- f2 i1 f1)
+      (s1, (i1, (i2, (i3, s1)))),  # (-- i3 i2 i1)
       ]
     self.assertEqualTypeStructure(infr(expression), f)
+
+    expression = n1, n2, (mul, s2), nullary
+    self.assertEqualTypeStructure(infr(expression), f)
+
+  def test_nullary_too(self):
+    expression = (stack, s3), dip, infra, first
+    f = ((s1, (a1, s2)), (a1, (a1, s2)))  # (a1 [...1] -- a1 a1)
+    self.assertEqualTypeStructure(infr(expression), [f])
+
+    expression = nullary,
+    f = ((s1, (a1, s2)), (a1, (a1, s2)))  # (a1 [...1] -- a1 a1)
+    # Something's not quite right here...
+    e = infr(expression)
+    self.assertEqualTypeStructure(infr(expression), [f])
 
   def test_x(self):
     expression = (a1, (swap, ((dup, s2), (dip, s0)))), x
@@ -168,4 +184,4 @@ class TestYin(TestMixin, unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main() #defaultTest='TestCombinators.test_nullary_too')

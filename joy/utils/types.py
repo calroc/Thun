@@ -238,8 +238,8 @@ A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = map(AnyJoyType, _R)
 B = b0, b1, b2, b3, b4, b5, b6, b7, b8, b9 = map(BooleanJoyType, _R)
 N = n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = map(NumberJoyType, _R)
 S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = map(StackJoyType, _R)
-F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = F = map(FloatJoyType, _R)
-I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = I = map(IntJoyType, _R)
+F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = map(FloatJoyType, _R)
+I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = map(IntJoyType, _R)
 
 
 def defs():
@@ -277,8 +277,6 @@ def defs():
 
     and_ = __(b1, b2), __(b3)
     bool_ = not_ = __(a1), __(b1)
-
-    
 
     add = div = floordiv = modulus = mul = pow_ = sub = truediv = \
           lshift = rshift = __(n1, n2), __(n3,)
