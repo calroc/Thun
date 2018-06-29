@@ -189,7 +189,7 @@
   <span class="c1"># RuntimeError: maximum recursion depth exceeded</span>
   <span class="c1"># on quotes longer than sys.getrecursionlimit().</span>
 
-<span class="c1">##  return (quote[0], concat(quote[1], expression)) if quote else expression</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">quote</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">concat</span><span class="p">(</span><span class="n">quote</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">expression</span><span class="p">))</span> <span class="k">if</span> <span class="n">quote</span> <span class="k">else</span> <span class="n">expression</span></div>
 
   <span class="c1"># Original implementation.</span>
 
@@ -198,13 +198,13 @@
   <span class="c1"># In-lining is slightly faster (and won&#39;t break the</span>
   <span class="c1"># recursion limit on long quotes.)</span>
 
-  <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
-  <span class="k">while</span> <span class="n">quote</span><span class="p">:</span>
-    <span class="n">item</span><span class="p">,</span> <span class="n">quote</span> <span class="o">=</span> <span class="n">quote</span>
-    <span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-  <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>
-    <span class="n">expression</span> <span class="o">=</span> <span class="n">item</span><span class="p">,</span> <span class="n">expression</span>
-  <span class="k">return</span> <span class="n">expression</span></div>
+<span class="c1">##  temp = []</span>
+<span class="c1">##  while quote:</span>
+<span class="c1">##    item, quote = quote</span>
+<span class="c1">##    temp.append(item)</span>
+<span class="c1">##  for item in reversed(temp):</span>
+<span class="c1">##    expression = item, expression</span>
+<span class="c1">##  return expression</span>
 
 
 

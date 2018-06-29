@@ -98,6 +98,7 @@ The following is specific information for this dialect of Joy.
    pretty
    library
    lib
+   types
    notebooks/index
 
 

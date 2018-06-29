@@ -1,6 +1,6 @@
 
-Type Inference
-==============
+The Blissful Elegance of Typing Joy
+===================================
 
 This notebook presents a simple type inferencer for Joy code. It can
 infer the stack effect of most Joy expressions. It's built largely by
@@ -476,6 +476,8 @@ integers or tuples of type descriptors:
             s[u] = v
         elif isinstance(v, int):
             s[v] = u
+        else:
+            s = False
     
         return s
 
@@ -709,6 +711,12 @@ work:
     except Exception, e:
         print e
 
+
+.. parsed-literal::
+
+    Cannot unify (1, 2) and (1001, 1002).
+
+
 ``unify()`` version 2
 ^^^^^^^^^^^^^^^^^^^^^
 
@@ -741,6 +749,8 @@ deal with this recursively:
             s = unify(a, c, s)
             if s != False:
                 s = unify(b, d, s)
+        else:
+            s = False
     
         return s
 
@@ -1674,8 +1684,8 @@ such. Note that this is *not* a ``sqr`` function implementation:
 
 (Eventually I should come back around to this becuase it's not tooo
 difficult to exend this code to be able to compile e.g.
-``n3 = mul(n1, n2)`` for ``mul`` and insert it in the right place with
-the right variable names. It requires a little more support from the
+``n2 = mul(n1, n1)`` for ``mul`` with the right variable names and
+insert it in the right place. It requires a little more support from the
 library functions, in that we need to know to call ``mul()`` the Python
 function for ``mul`` the Joy function, but since *most* of the math
 functions (at least) are already wrappers it should be straightforward.)
@@ -2612,7 +2622,7 @@ Part VII: Typing Combinators
 
 In order to compute the stack effect of combinators you kinda have to
 have the quoted programs they expect available. In the most general
-case, the ``i`` combinator, you can't say anything about it's stack
+case, the ``i`` combinator, you can't say anything about its stack
 effect other than it expects one quote:
 
 ::
@@ -2646,14 +2656,24 @@ Obviously it would be:
 Without any information about the contents of the quote we can't say
 much about the result.
 
-I think there's a way forward. If we convert our list of terms we are
-composing into a stack structure we can use it as a *Joy expression*,
+Hybrid Inferencer/Interpreter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I think there's a way forward. If we convert our list (of terms we are
+composing) into a stack structure we can use it as a *Joy expression*,
 then we can treat the *output half* of a function's stack effect comment
 as a Joy interpreter stack, and just execute combinators directly. We
 can hybridize the compostition function with an interpreter to evaluate
 combinators, compose non-combinator functions, and put type variables on
 the stack. For combinators like ``branch`` that can have more than one
 stack effect we have to "split universes" again and return both.
+
+Joy Types for Functions
+^^^^^^^^^^^^^^^^^^^^^^^
+
+We need a type variable for Joy functions that can go in our expressions
+and be used by the hybrid inferencer/interpreter. They have to store a
+name and a list of stack effects.
 
 .. code:: ipython2
 
@@ -2670,217 +2690,212 @@ stack effect we have to "split universes" again and return both.
     
         def __repr__(self):
             return self.name
-    
-    
-    class SymbolJoyType(FunctionJoyType): prefix = 'F'
-    class CombinatorJoyType(FunctionJoyType): prefix = 'C'
-    
-    
 
+Specialized for Simple Functions and Combinators
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For non-combinator functions the stack effects list contains stack
+effect comments (represented by pairs of cons-lists as described above.)
 
 .. code:: ipython2
 
-    def flatten(g):
-        return list(chain.from_iterable(g))
+    class SymbolJoyType(FunctionJoyType):
+        prefix = 'F'
+
+For combinators the list contains Python functions.
+
+.. code:: ipython2
+
+    class CombinatorJoyType(FunctionJoyType):
     
+        prefix = 'C'
     
+        def __init__(self, name, sec, number, expect=None):
+            super(CombinatorJoyType, self).__init__(name, sec, number)
+            self.expect = expect
+    
+        def enter_guard(self, f):
+            if self.expect is None:
+                return f
+            g = self.expect, self.expect
+            new_f = list(compose(f, g, ()))
+            assert len(new_f) == 1, repr(new_f)
+            return new_f[0][1]
+
+For simple combinators that have only one effect (like ``dip``) you only
+need one function and it can be the combinator itself.
+
+.. code:: ipython2
+
+    import joy.library
+    
+    dip = CombinatorJoyType('dip', [joy.library.dip], 23)
+
+For combinators that can have more than one effect (like ``branch``) you
+have to write functions that each implement the action of one of the
+effects.
+
+.. code:: ipython2
+
+    def branch_true(stack, expression, dictionary):
+        (then, (else_, (flag, stack))) = stack
+        return stack, concat(then, expression), dictionary
+    
+    def branch_false(stack, expression, dictionary):
+        (then, (else_, (flag, stack))) = stack
+        return stack, concat(else_, expression), dictionary
+    
+    branch = CombinatorJoyType('branch', [branch_true, branch_false], 100)
+
+You can also provide an optional stack effect, input-side only, that
+will then be used as an identity function (that accepts and returns
+stacks that match the "guard" stack effect) which will be used to guard
+against type mismatches going into the evaluation of the combinator.
+
+``infer()``
+^^^^^^^^^^^
+
+With those in place, we can define a function that accepts a sequence of
+Joy type variables, including ones representing functions (not just
+values), and attempts to grind out all the possible stack effects of
+that expression.
+
+One tricky thing is that type variables *in the expression* have to be
+updated along with the stack effects after doing unification or we risk
+losing useful information. This was a straightforward, if awkward,
+modification to the call structure of ``meta_compose()`` et. al.
+
+.. code:: ipython2
+
     ID = S[0], S[0]  # Identity function.
     
     
-    def infer(e, F=ID):
+    def infer(*expression):
+        return sorted(set(_infer(list_to_stack(expression))))
+    
+    
+    def _infer(e, F=ID):
+        _log_it(e, F)
         if not e:
             return [F]
     
         n, e = e
     
         if isinstance(n, SymbolJoyType):
-            res = flatten(infer(e, Fn) for Fn in MC([F], n.stack_effects))
+            eFG = meta_compose([F], n.stack_effects, e)
+            res = flatten(_infer(e, Fn) for e, Fn in eFG)
     
         elif isinstance(n, CombinatorJoyType):
-            res = []
-            for combinator in n.stack_effects:
-                fi, fo = F
-                new_fo, ee, _ = combinator(fo, e, {})
-                ee = update(FUNCTIONS, ee)  # Fix Symbols.
-                new_F = fi, new_fo
-                res.extend(infer(ee, new_F))
+            fi, fo = n.enter_guard(F)
+            res = flatten(_interpret(f, fi, fo, e) for f in n.stack_effects)
+    
+        elif isinstance(n, Symbol):
+            assert n not in FUNCTIONS, repr(n)
+            func = joy.library._dictionary[n]
+            res = _interpret(func, F[0], F[1], e)
+    
         else:
-            lit = s9, (n, s9)
-            res = flatten(infer(e, Fn) for Fn in MC([F], [lit]))
+            fi, fo = F
+            res = _infer(e, (fi, (n, fo)))
     
         return res
     
+    
+    def _interpret(f, fi, fo, e):
+        new_fo, ee, _ = f(fo, e, {})
+        ee = update(FUNCTIONS, ee)  # Fix Symbols.
+        new_F = fi, new_fo
+        return _infer(ee, new_F)
+    
+    
+    def _log_it(e, F):
+        _log.info(
+            u'%3i %s ∘ %s',
+            len(inspect_stack()),
+            doc_from_stack_effect(*F),
+            expression_to_string(e),
+            )
 
+Work in Progress
+^^^^^^^^^^^^^^^^
+
+And that brings us to current Work-In-Progress. The mixed-mode
+inferencer/interpreter ``infer()`` function seems to work well. There
+are details I should document, and the rest of the code in the
+"polytypes" module (FIXME link to its docs here!) should be explained...
+There is cruft to convert the definitions in ``DEFS`` to the new
+``SymbolJoyType`` objects, and some combinators. Here is an example of
+output from the current code :
 
 .. code:: ipython2
 
-    f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = F = map(FloatJoyType, _R)
-    i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = I = map(IntJoyType, _R)
-    n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = N
-    s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = S
-
-.. code:: ipython2
-
-    import joy.library
+    1/0  # (Don't try to run this cell!  It's not going to work.  This is "read only" code heh..)
     
-    FNs = '''ccons cons divmod_ dup dupd first
-             over pm pop popd popdd popop pred
-             rest rolldown rollup rrest second
-             sqrt stack succ swaack swap swons
-             third tuck uncons'''
+    logging.basicConfig(format='%(message)s', stream=sys.stdout, level=logging.INFO)
     
-    FUNCTIONS = {
-        name: SymbolJoyType(name, [NEW_DEFS[name]], i)
-        for i, name in enumerate(FNs.strip().split())
-        }
-    FUNCTIONS['sum'] = SymbolJoyType('sum', [(((Ns[1], s1), s0), (n0, s0))], 100)
-    FUNCTIONS['mul'] = SymbolJoyType('mul', [
-         ((i2, (i1, s0)), (i3, s0)),
-         ((f2, (i1, s0)), (f3, s0)),
-         ((i2, (f1, s0)), (f3, s0)),
-         ((f2, (f1, s0)), (f3, s0)),
-    ], 101)
-    FUNCTIONS.update({
-        combo.__name__: CombinatorJoyType(combo.__name__, [combo], i)
-        for i, combo in enumerate((
-            joy.library.i,
-            joy.library.dip,
-            joy.library.dipd,
-            joy.library.dipdd,
-            joy.library.dupdip,
-            joy.library.b,
-            joy.library.x,
-            joy.library.infra,
-            ))
-        })
-    
-    def branch_true(stack, expression, dictionary):
-        (then, (else_, (flag, stack))) = stack
-        return stack, CONCAT(then, expression), dictionary
-    
-    def branch_false(stack, expression, dictionary):
-        (then, (else_, (flag, stack))) = stack
-        return stack, CONCAT(else_, expression), dictionary
-    
-    FUNCTIONS['branch'] = CombinatorJoyType('branch', [branch_true, branch_false], 100)
-
-.. code:: ipython2
-
     globals().update(FUNCTIONS)
-
-.. code:: ipython2
-
-    from itertools import chain
-    from joy.utils.stack import list_to_stack as l2s
-
-.. code:: ipython2
-
-    expression = l2s([n1, n2, (mul, s2), (stack, s3), dip, infra, first])
-
-.. code:: ipython2
-
-    expression
-
-
-
-
-.. parsed-literal::
-
-    (n1, (n2, ((mul, s2), ((stack, s3), (dip, (infra, (first, ())))))))
-
-
-
-.. code:: ipython2
-
-    expression = l2s([n1, n2, mul])
-
-.. code:: ipython2
-
-    expression
-
-
-
-
-.. parsed-literal::
-
-    (n1, (n2, (mul, ())))
-
-
-
-.. code:: ipython2
-
-    infer(expression)
-
-
-
-
-.. parsed-literal::
-
-    [(s1, (f1, s1)), (s1, (i1, s1))]
-
-
-
-.. code:: ipython2
-
-    infer(expression)
-
-
-
-
-.. parsed-literal::
-
-    [(s1, (f1, s1)), (s1, (i1, s1))]
-
-
-
-.. code:: ipython2
-
-    for stack_effect_comment in infer(expression):
-        print doc_from_stack_effect(*stack_effect_comment)
-
-
-.. parsed-literal::
-
-    (-- f1)
-    (-- i1)
-
-
-.. code:: ipython2
-
-    expression
-
-
-
-
-.. parsed-literal::
-
-    (n1, (n2, (mul, ())))
-
-
-
-.. code:: ipython2
-
-    infer(expression)
-
-
-
-
-.. parsed-literal::
-
-    [(s1, (f1, s1)), (s1, (i1, s1))]
-
-
-
-And that brings us to current Work-In-Progress. I'm pretty hopeful that
-the mixed-mode inferencer/interpreter ``infer()`` function along with
-the ability to specify multiple implementations for the combinators will
-permit modelling of the stack effects of e.g. ``ifte``. If I can keep up
-the pace I should be able to verify that conjecture by the end of June.
+    
+    h = infer((pred, s2), (mul, s3), (div, s4), (nullary, (bool, s5)), dipd, branch)
+    
+    print '-' * 40
+    
+    for fi, fo in h:
+        print doc_from_stack_effect(fi, fo)
+
+The numbers at the start of the lines are the current depth of the
+Python call stack. They're followed by the current computed stack effect
+(initialized to ``ID``) then the pending expression (the inference of
+the stack effect of which is the whole object of the current example.)
+
+In this example we are implementing (and inferring) ``ifte`` as
+``[nullary bool] dipd branch`` which shows off a lot of the current
+implementation in action.
+
+::
+
+      7 (--) ∘ [pred] [mul] [div] [nullary bool] dipd branch
+      8 (-- [pred ...2]) ∘ [mul] [div] [nullary bool] dipd branch
+      9 (-- [pred ...2] [mul ...3]) ∘ [div] [nullary bool] dipd branch
+     10 (-- [pred ...2] [mul ...3] [div ...4]) ∘ [nullary bool] dipd branch
+     11 (-- [pred ...2] [mul ...3] [div ...4] [nullary bool ...5]) ∘ dipd branch
+     15 (-- [pred ...5]) ∘ nullary bool [mul] [div] branch
+     19 (-- [pred ...2]) ∘ [stack] dinfrirst bool [mul] [div] branch
+     20 (-- [pred ...2] [stack ]) ∘ dinfrirst bool [mul] [div] branch
+     22 (-- [pred ...2] [stack ]) ∘ dip infra first bool [mul] [div] branch
+     26 (--) ∘ stack [pred] infra first bool [mul] [div] branch
+     29 (... -- ... [...]) ∘ [pred] infra first bool [mul] [div] branch
+     30 (... -- ... [...] [pred ...1]) ∘ infra first bool [mul] [div] branch
+     34 (--) ∘ pred s1 swaack first bool [mul] [div] branch
+     37 (n1 -- n2) ∘ [n1] swaack first bool [mul] [div] branch
+     38 (... n1 -- ... n2 [n1 ...]) ∘ swaack first bool [mul] [div] branch
+     41 (... n1 -- ... n1 [n2 ...]) ∘ first bool [mul] [div] branch
+     44 (n1 -- n1 n2) ∘ bool [mul] [div] branch
+     47 (n1 -- n1 b1) ∘ [mul] [div] branch
+     48 (n1 -- n1 b1 [mul ...1]) ∘ [div] branch
+     49 (n1 -- n1 b1 [mul ...1] [div ...2]) ∘ branch
+     53 (n1 -- n1) ∘ div
+     56 (f2 f1 -- f3) ∘ 
+     56 (i1 f1 -- f2) ∘ 
+     56 (f1 i1 -- f2) ∘ 
+     56 (i2 i1 -- f1) ∘ 
+     53 (n1 -- n1) ∘ mul
+     56 (f2 f1 -- f3) ∘ 
+     56 (i1 f1 -- f2) ∘ 
+     56 (f1 i1 -- f2) ∘ 
+     56 (i2 i1 -- i3) ∘ 
+    ----------------------------------------
+    (f2 f1 -- f3)
+    (i1 f1 -- f2)
+    (f1 i1 -- f2)
+    (i2 i1 -- f1)
+    (i2 i1 -- i3)
 
 Conclusion
 ----------
 
-(for now...)
+We built a simple type inferencer, and a kind of crude "compiler" for a
+subset of Joy functions. Then we built a more powerful inferencer that
+actually does some evaluation and explores branching code paths
 
 Work remains to be done:
 
@@ -2900,21 +2915,18 @@ Work remains to be done:
    went off and just started writing code to see if it would work. It
    does, but now I have to come back and describe here what I did.
 
-I'm starting to realize that, with the inferencer/checker/compiler
-coming along, and with the UI ready to be rewritten in Joy, I'm close to
-a time when my ephasis is going to have to shift from crunchy code stuff
-to squishy human stuff. I'm going to have to put normal people in front
-of this and see if, in fact, they *can* learn the basics of programming
-with it.
-
-The rest of this stuff is junk and/or unfinished material.
-
 Appendix: Joy in the Logical Paradigm
 -------------------------------------
 
-For this to work the type label classes have to be modified to let
-``T >= t`` succeed, where e.g. ``T`` is ``IntJoyType`` and ``t`` is
-``int``
+For *type checking* to work the type label classes have to be modified
+to let ``T >= t`` succeed, where e.g. ``T`` is ``IntJoyType`` and ``t``
+is ``int``. If you do that you can take advantage of the *logical
+relational* nature of the stack effect comments to "compute in reverse"
+as it were. There's a working demo of this at the end of the
+``polytypes`` module. But if you're interested in all that you should
+just use Prolog!
+
+Anyhow, type *checking* is a few easy steps away.
 
 .. code:: ipython2
 
@@ -2926,383 +2938,3 @@ For this to work the type label classes have to be modified to let
     AnyJoyType.__ge__ = _ge
     AnyJoyType.accept = tuple, int, float, long, str, unicode, bool, Symbol
     StackJoyType.accept = tuple
-
-.. code:: ipython2
-
-    F = infer(l2s((pop, swap, rolldown, rest, rest, cons, cons)))
-    
-    for f in F:
-        print doc_from_stack_effect(*f)
-
-
-.. parsed-literal::
-
-    ([a4 a5 .1.] a3 a2 a1 -- [a2 a3 .1.])
-
-
-.. code:: ipython2
-
-    from joy.parser import text_to_expression
-
-.. code:: ipython2
-
-    F = infer(l2s((pop, pop, pop)))
-    
-    for f in F:
-        print doc_from_stack_effect(*f)
-
-
-.. parsed-literal::
-
-    (a3 a2 a1 --)
-
-
-.. code:: ipython2
-
-    s = text_to_expression('0 1 2')
-    s
-
-
-
-
-.. parsed-literal::
-
-    (0, (1, (2, ())))
-
-
-
-.. code:: ipython2
-
-    F[0][0]
-
-
-
-
-.. parsed-literal::
-
-    (a1, (a2, (a3, s1)))
-
-
-
-.. code:: ipython2
-
-    L = unify(s, F[0][0])
-    L
-
-
-
-
-.. parsed-literal::
-
-    ()
-
-
-
-.. code:: ipython2
-
-    s = text_to_expression('0 1 2 [3 4]')
-    s
-
-
-
-
-.. parsed-literal::
-
-    (0, (1, (2, ((3, (4, ())), ()))))
-
-
-
-.. code:: ipython2
-
-    F[0][0]
-
-
-
-
-.. parsed-literal::
-
-    (a1, (a2, (a3, s1)))
-
-
-
-.. code:: ipython2
-
-    L = unify(s, F[0][0])
-    L
-
-
-
-
-.. parsed-literal::
-
-    ()
-
-
-
-.. code:: ipython2
-
-    L = unify(F[0][0], s)
-    L
-
-
-
-
-.. parsed-literal::
-
-    ()
-
-
-
-.. code:: ipython2
-
-    F[1][0]
-
-
-::
-
-
-    ---------------------------------------------------------------------------
-
-    IndexError                                Traceback (most recent call last)
-
-    <ipython-input-133-58a8e44e9cba> in <module>()
-    ----> 1 F[1][0]
-    
-
-    IndexError: list index out of range
-
-
-.. code:: ipython2
-
-    s[0]
-
-.. code:: ipython2
-
-    A[1] >= 23
-
-`Abstract Interpretation <https://en.wikipedia.org/wiki/Abstract_interpretation>`__
------------------------------------------------------------------------------------
-
-I *think* this might be sorta what I'm doing above with the ``kav()``
-function... In any event "mixed-mode" interpreters that include values
-and type variables and can track constraints, etc. will be, uh,
-super-useful. And Abstract Interpretation should be a rich source of
-ideas.
-
-Junk
-----
-
-.. code:: ipython2
-
-    class SymbolJoyType(AnyJoyType): prefix = 'F'
-    
-    W = map(SymbolJoyType, _R)
-    
-    k = S[0], ((W[1], S[2]), S[0])
-    Symbol('cons')
-    print doc_from_stack_effect(*k)
-
-
-.. code:: ipython2
-
-    dip_a = ((W[1], S[2]), (A[1], S[0]))
-
-.. code:: ipython2
-
-    d = relabel(S[0], dip_a)
-    print doc_from_stack_effect(*d)
-
-.. code:: ipython2
-
-    s = list(unify(d[1], k[1]))[0]
-    s
-
-.. code:: ipython2
-
-    j = update(s, k)
-
-.. code:: ipython2
-
-    print doc_from_stack_effect(*j)
-
-.. code:: ipython2
-
-    j
-
-.. code:: ipython2
-
-    cons
-
-.. code:: ipython2
-
-    for f in MC([k], [dup]):
-        print doc_from_stack_effect(*f)
-
-.. code:: ipython2
-
-    l = S[0], ((cons, S[2]), (A[1], S[0]))
-
-.. code:: ipython2
-
-    print doc_from_stack_effect(*l)
-
-.. code:: ipython2
-
-    
-    def dip_t(F):
-        (quote, (a1, sec)) = F[1]
-        G = F[0], sec
-        P = S[3], (a1, S[3])
-        a = [P]
-        while isinstance(quote, tuple):
-            term, quote = quote
-            a.append(term)
-        a.append(G)
-        return a[::-1]
-    
-    
-    
-
-
-.. code:: ipython2
-
-    from joy.utils.stack import iter_stack
-
-.. code:: ipython2
-
-    a, b, c = dip_t(l)
-
-.. code:: ipython2
-
-    a
-
-.. code:: ipython2
-
-    b
-
-.. code:: ipython2
-
-    c
-
-.. code:: ipython2
-
-    MC([a], [b])
-
-.. code:: ipython2
-
-    kjs = MC(MC([a], [b]), [c])
-    kjs
-
-.. code:: ipython2
-
-    print doc_from_stack_effect(*kjs[0])
-
-::
-
-    (a0 [.0.] -- [a0 .0.] a1)
-
-       a0 [.0.] a1 [cons] dip
-    ----------------------------
-       [a0 .0.] a1
-
-``concat``
-~~~~~~~~~~
-
-How to deal with ``concat``?
-
-::
-
-    concat ([.0.] [.1.] -- [.0. .1.])
-
-We would like to represent this in Python somehow...
-
-.. code:: ipython2
-
-    concat = (S[0], S[1]), ((S[0], S[1]),)
-
-But this is actually ``cons`` with the first argument restricted to be a
-stack:
-
-::
-
-    ([.0.] [.1.] -- [[.0.] .1.])
-
-What we have implemented so far would actually only permit:
-
-::
-
-    ([.0.] [.1.] -- [.2.])
-
-.. code:: ipython2
-
-    concat = (S[0], S[1]), (S[2],)
-
-Which works but can lose information. Consider ``cons concat``, this is
-how much information we *could* retain:
-
-::
-
-    (1 [.0.] [.1.] -- [1 .0. .1.])
-
-As opposed to just:
-
-::
-
-    (1 [.0.] [.1.] -- [.2.])
-
-represent ``concat``
-~~~~~~~~~~~~~~~~~~~~
-
-::
-
-    ([.0.] [.1.] -- [A*(.0.) .1.])
-
-Meaning that ``A*`` on the right-hand side should all the crap from
-``.0.``.
-
-::
-
-    ([      .0.] [.1.] -- [      A* .1.])
-    ([a     .0.] [.1.] -- [a     A* .1.])
-    ([a b   .0.] [.1.] -- [a b   A* .1.])
-    ([a b c .0.] [.1.] -- [a b c A* .1.])
-
-or...
-
-::
-
-    ([       .0.] [.1.] -- [       .1.])
-    ([a      .0.] [.1.] -- [a      .1.])
-    ([a b    .0.] [.1.] -- [a b    .1.])
-    ([a b  c .0.] [.1.] -- [a b  c .1.])
-    ([a A* c .0.] [.1.] -- [a A* c .1.])
-
-::
-
-    (a, (b, S0)) . S1 = (a, (b, (A*, S1)))
-
-.. code:: ipython2
-
-    class Astar(object):
-        def __repr__(self):
-            return 'A*'
-    
-    
-    def concat(s0, s1):
-        a = []
-        while isinstance(s0, tuple):
-            term, s0 = s0
-            a.append(term)
-        assert isinstance(s0, StackJoyType), repr(s0)
-        s1 = Astar(), s1
-        for term in reversed(a):
-            s1 = term, s1
-        return s1
-
-.. code:: ipython2
-
-    a, b = (A[1], S[0]), (A[2], S[1])
-
-.. code:: ipython2
-
-    concat(a, b)

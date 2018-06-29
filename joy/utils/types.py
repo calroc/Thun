@@ -1,8 +1,12 @@
 from collections import Counter
 from itertools import imap
+from joy.utils.stack import concat
 
 
 class AnyJoyType(object):
+    '''
+    Joy type variable.  Represents any Joy value.
+    '''
 
     prefix = 'a'
 
@@ -46,12 +50,18 @@ class JoyTypeError(Exception): pass
 
 
 def update(s, term):
+    '''
+    Apply substitution dict to term, returning new term.
+    '''
     if not isinstance(term, tuple):
         return s.get(term, term)
     return tuple(update(s, inner) for inner in term)
 
 
 def relabel(left, right):
+    '''
+    Re-number type variables to avoid collisions between stack effects.
+    '''
     return left, _1000(right)
 
 
@@ -62,6 +72,9 @@ def _1000(right):
 
 
 def delabel(f, seen=None, c=None):
+    '''
+    Fix up type variable numbers after relabel().
+    '''
     if seen is None:
         assert c is None
         seen, c = {}, Counter()
@@ -83,88 +96,79 @@ def delabel(f, seen=None, c=None):
     return tuple(delabel(inner, seen, c) for inner in f)
 
 
-def stack_concat(q, e):
-  return (q[0], stack_concat(q[1], e)) if q else e
-
-
 def unify(u, v, s=None):
+    '''
+    Return a substitution dict representing a unifier for u and v.
+    '''
     if s is None:
         s = {}
     elif s:
         u = update(s, u)
         v = update(s, v)
 
-    if u == v:
-        return s
-
     if isinstance(u, AnyJoyType) and isinstance(v, AnyJoyType):
         if u >= v:
             s[u] = v
-            return s
-        if v >= u:
+        elif v >= u:
             s[v] = u
-            return s
-        raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
+        else:
+            raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
 
-    if isinstance(u, tuple) and isinstance(v, tuple):
+    elif isinstance(u, tuple) and isinstance(v, tuple):
         if len(u) != len(v) != 2:
-            raise ValueError(repr((u, v)))
-        for uu, vv in zip(u, v):
-            s = unify(uu, vv, s)
-            if s == False: # (instead of a substitution dict.)
-                break
-        return s
+            raise ValueError(repr((u, v)))  # Bad input.
+        (a, b), (c, d) = u, v
+        s = unify(b, d, unify(a, c, s))
 
-    if isinstance(v, tuple):
-        if not stacky(u):
+    elif isinstance(v, tuple):
+        if not _stacky(u):
             raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
         s[u] = v
-        return s
 
-    if isinstance(u, tuple):
-        if not stacky(v):
+    elif isinstance(u, tuple):
+        if not _stacky(v):
             raise JoyTypeError('Cannot unify %r and %r.' % (v, u))
         s[v] = u
-        return s
 
-    return False
+    else:
+        raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
+
+    return s
 
 
-def stacky(thing):
+def _stacky(thing):
     return thing.__class__ in {AnyJoyType, StackJoyType}
 
 
-def compose(f, g):
-    (f_in, f_out), (g_in, g_out) = f, g
-
-    if not g_in:
-        fg_in, fg_out = f_in, stack_concat(g_out, f_out)
-    elif not f_out:
-        fg_in, fg_out = stack_concat(f_in, g_in), g_out
-    else:
-        s = unify(g_in, f_out)
-        if s == False:  # s can also be the empty dict, which is ok.
-            raise JoyTypeError('Cannot unify %r and %r.' % (fo, gi))
-        fg_in, fg_out = update(s, (f_in, g_out))
-
-    return fg_in, fg_out
-
-
-def _C(f, g):
-    f, g = relabel(f, g)
-    fg = compose(f, g)
+def _compose(f, g):
+    '''
+    Return the stack effect of the composition of two stack effects.
+    '''
+    # Relabel, unify, update, delabel.
+    (f_in, f_out), (g_in, g_out) = relabel(f, g)
+    fg = update(unify(g_in, f_out), (f_in, g_out))
     return delabel(fg)
 
 
-def C(*functions):
-    return reduce(_C, functions)
+def compose(*functions):
+    '''
+    Return the stack effect of the composition of some of stack effects.
+    '''
+    return reduce(_compose, functions)
 
 
 def compilable(f):
-    return isinstance(f, tuple) and all(imap(compilable, f)) or stacky(f)
+    '''
+    Return True if a stack effect represents a function that can be
+    automatically compiled (to Python), False otherwise.
+    '''
+    return isinstance(f, tuple) and all(imap(compilable, f)) or _stacky(f)
 
 
 def doc_from_stack_effect(inputs, outputs):
+    '''
+    Return a crude string representation of a stack effect.
+    '''
     switch = [False]  # Do we need to display the '...' for the rest of the main stack?
     i, o = _f(inputs, switch), _f(outputs, switch)
     if switch[0]:
@@ -213,6 +217,11 @@ def _to_str(term, stack, switch):
 
 
 def compile_(name, f, doc=None):
+    '''
+    Return a string of Python code implementing the function described
+    by the stack effect.  If no doc string is passed doc_from_stack_effect()
+    is used to generate one.
+    '''
     i, o = f
     if doc is None:
         doc = doc_from_stack_effect(i, o)
@@ -243,8 +252,11 @@ I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = map(IntJoyType, _R)
 
 
 def defs():
+    '''
+    Return a dict of named stack effects.
+    '''
     cons = __(a1, s0), __((a1, s0),)
-    ccons = C(cons, cons)
+    ccons = compose(cons, cons)
     dup = __(a1,), __(a1, a1)
     dupd = __(a2, a1), __(a2, a2, a1)
     dupdd = __(a3, a2, a1), __(a3, a3, a2, a1)
@@ -259,18 +271,18 @@ def defs():
     rest = __((a1, s0),), __(s0,)
     rolldown = __(a1, a2, a3), __(a2, a3, a1)
     rollup = __(a1, a2, a3), __(a3, a1, a2)
-    rrest = C(rest, rest)
-    second = C(rest, first)
+    rrest = compose(rest, rest)
+    second = compose(rest, first)
     stack = s0, (s0, s0)
     swaack = (s1, s0), (s0, s1)
     swap = __(a1, a2), __(a2, a1)
-    swons = C(swap, cons)
-    third = C(rest, second)
+    swons = compose(swap, cons)
+    third = compose(rest, second)
     tuck = __(a2, a1), __(a1, a2, a1)
     uncons = __((a1, s0),), __(a1, s0)
-    unswons = C(uncons, swap)
-    stuncons = C(stack, uncons)
-    stununcons = C(stack, uncons, uncons)
+    unswons = compose(uncons, swap)
+    stuncons = compose(stack, uncons)
+    stununcons = compose(stack, uncons, uncons)
     unit = __(a1), __((a1, ()))
 
     eq = ge = gt = le = lt = ne = __(n1, n2), __(b1)
@@ -280,24 +292,25 @@ def defs():
 
     add = div = floordiv = modulus = mul = pow_ = sub = truediv = \
           lshift = rshift = __(n1, n2), __(n3,)
-    sqrt = C(dup, mul)
+    sqrt = compose(dup, mul)
     succ = pred = neg = __(n1,), __(n2,)
     divmod_ = pm = __(n2, n1), __(n4, n3)
 
-    first_two = C(uncons, uncons, pop)
-    fourth = C(rest, third)
+    first_two = compose(uncons, uncons, pop)
+    fourth = compose(rest, third)
 
-    _Tree_add_Ee = C(pop, swap, rolldown, rrest, ccons)
-    _Tree_get_E = C(popop, second)
-    _Tree_delete_clear_stuff = C(rollup, popop, rest)
-    _Tree_delete_R0 = C(over, first, swap, dup)
+    _Tree_add_Ee = compose(pop, swap, rolldown, rrest, ccons)
+    _Tree_get_E = compose(popop, second)
+    _Tree_delete_clear_stuff = compose(rollup, popop, rest)
+    _Tree_delete_R0 = compose(over, first, swap, dup)
 
-    return locals()
+    return {
+        name.rstrip('_'): stack_effect
+        for name, stack_effect in locals().iteritems()
+        }
 
 
 DEFS = defs()
-
-#globals().update(DEFS)
 
 
 def show():

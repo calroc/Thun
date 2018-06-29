@@ -125,6 +125,9 @@ step_zero == 0 roll> step
 codireco == cons dip rest cons
 make_generator == [codireco] ccons
 '''
+# ifte == [nullary not] dipd branch
+# ifte == [nullary] dipd swap branch
+              
 ##ccons == cons cons
 ##unit == [] cons
 ##second == rest first

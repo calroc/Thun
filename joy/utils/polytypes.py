@@ -1,3 +1,4 @@
+# -*- coding: utf_8
 '''
 
 Multiple Stack Effects
@@ -8,22 +9,29 @@ and we can introduce a kind of Kleene Star or sequence type that can stand for
 an unbounded sequence of other types.
 
 '''
+from inspect import stack as inspect_stack
 from itertools import chain, product
+from logging import getLogger
+
+_log = getLogger(__name__)
 
 import joy.library
 from joy.parser import Symbol
-from joy.utils.stack import concat as CONCAT
+from joy.utils.stack import (
+    concat as CONCAT,
+    expression_to_string,
+    list_to_stack,
+    )
 from joy.utils.types import (
   AnyJoyType, A,
   BooleanJoyType, B,
-  C,
   DEFS,
   doc_from_stack_effect,
   FloatJoyType, F,
   JoyTypeError,
   NumberJoyType, N,
   StackJoyType, S,
-  stacky,
+  _stacky,
   _R,
   relabel, delabel,
   update,
@@ -107,10 +115,28 @@ class FunctionJoyType(AnyJoyType):
         return self.name
 
 
-class SymbolJoyType(FunctionJoyType): prefix = 'F'
+class SymbolJoyType(FunctionJoyType):
+    '''
+    Represent non-combinator functions.
+
+    These type variables carry the stack effect comments and can
+    appear in expressions (as in quoted programs.)
+    '''
+    prefix = 'F'
 
 
 class CombinatorJoyType(FunctionJoyType):
+    '''
+    Represent combinators.
+    
+    These type variables carry Joy functions that implement the
+    behaviour of Joy combinators and they can appear in expressions.
+    For simple combinators the implementation functions can be the
+    combinators themselves.
+
+    These types can also specify a stack effect (input side only) to
+    guard against being used on invalid types.
+    '''
 
     prefix = 'C'
 
@@ -122,13 +148,15 @@ class CombinatorJoyType(FunctionJoyType):
         if self.expect is None:
             return f
         g = self.expect, self.expect
-        new_f = list(C(f, g, ()))
+        new_f = list(compose(f, g, ()))
         assert len(new_f) == 1, repr(new_f)
         return new_f[0][1]
 
 
-
 def unify(u, v, s=None):
+    '''
+    Return a tuple of substitution dicts representing unifiers for u and v.
+    '''
     if s is None:
         s = {}
     elif s:
@@ -136,12 +164,9 @@ def unify(u, v, s=None):
         v = update(s, v)
 
     if u == v:
-        return s,
+        res = s,
 
-    if isinstance(u, AnyJoyType) and isinstance(v, AnyJoyType):
-        return _lil_uni(u, v, s)
-
-    if isinstance(u, tuple) and isinstance(v, tuple):
+    elif isinstance(u, tuple) and isinstance(v, tuple):
         if len(u) != 2 or len(v) != 2:
             raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
 
@@ -149,41 +174,44 @@ def unify(u, v, s=None):
         if isinstance(a, KleeneStar):
             if isinstance(c, KleeneStar):
                 s = _lil_uni(a, c, s)  # Attempt to unify the two K-stars.
-                return unify(d, b, s[0])
+                res = unify(d, b, s[0])
 
-            # Two universes, in one the Kleene star disappears and unification
-            # continues without it...
-            s0 = unify(u, b)
-            
-            # In the other it spawns a new variable.
-            s1 = unify(u, (a.another(), v))
-            
-            t = s0 + s1
-            for sn in t:
-                sn.update(s)
-            return t
+            else:
+                # Two universes, in one the Kleene star disappears and
+                # unification continues without it...
+                s0 = unify(u, b)
+                
+                # In the other it spawns a new variable.
+                s1 = unify(u, (a.another(), v))
+                
+                res = s0 + s1
+                for sn in res:
+                    sn.update(s)
 
-        if isinstance(c, KleeneStar):
-            t = unify(v, d) + unify(v, (c.another(), u))
-            for sn in t:
+        elif isinstance(c, KleeneStar):
+            res = unify(v, d) + unify(v, (c.another(), u))
+            for sn in res:
               sn.update(s)
-            return t
 
-        return tuple(flatten(unify(d, b, sn) for sn in unify(c, a, s)))
+        else:
+            res = tuple(flatten(unify(d, b, sn) for sn in unify(c, a, s)))
  
-    if isinstance(v, tuple):
-        if not stacky(u):
+    elif isinstance(v, tuple):
+        if not _stacky(u):
             raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
         s[u] = v
-        return s,
+        res = s,
 
-    if isinstance(u, tuple):
-        if not stacky(v):
+    elif isinstance(u, tuple):
+        if not _stacky(v):
             raise JoyTypeError('Cannot unify %r and %r.' % (v, u))
         s[v] = u
-        return s,
+        res = s,
 
-    return _lil_uni(u, v, s)
+    else:
+        res = _lil_uni(u, v, s)
+
+    return res
 
 
 def _lil_uni(u, v, s):
@@ -196,28 +224,36 @@ def _lil_uni(u, v, s):
     raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
 
 
-def compose(f, g, e):
+def _compose(f, g, e):
     (f_in, f_out), (g_in, g_out) = f, g
     for s in unify(g_in, f_out):
         yield update(s, (e, (f_in, g_out)))
 
 
-def C(f, g, e):
+def compose(f, g, e):
+    '''
+    Yield the stack effects of the composition of two stack effects.  An
+    expression is carried along and updated and yielded.
+    '''
     f, g = relabel(f, g)
-    for fg in compose(f, g, e):
+    for fg in _compose(f, g, e):
         yield delabel(fg)
 
 
-def meta_compose(F, G, e):
+def _meta_compose(F, G, e):
     for f, g in product(F, G):
         try:
-            for result in C(f, g, e): yield result
+            for result in compose(f, g, e): yield result
         except JoyTypeError:
             pass
 
 
-def MC(F, G, e):
-    res = sorted(set(meta_compose(F, G, e)))
+def meta_compose(F, G, e):
+    '''
+    Yield the stack effects of the composition of two lists of stack
+    effects.  An expression is carried along and updated and yielded.
+    '''
+    res = sorted(set(_meta_compose(F, G, e)))
     if not res:
         raise JoyTypeError('Cannot unify %r and %r.' % (F, G))
     return res
@@ -230,14 +266,16 @@ def flatten(g):
 ID = S[0], S[0]  # Identity function.
 
 
-def infer(e, F=ID):
+def _infer(e, F=ID):
+    _log_it(e, F)
     if not e:
         return [F]
 
     n, e = e
 
     if isinstance(n, SymbolJoyType):
-        res = flatten(infer(e, Fn) for e, Fn in MC([F], n.stack_effects, e))
+        eFG = meta_compose([F], n.stack_effects, e)
+        res = flatten(_infer(e, Fn) for e, Fn in eFG)
 
     elif isinstance(n, CombinatorJoyType):
         fi, fo = n.enter_guard(F)
@@ -250,7 +288,7 @@ def infer(e, F=ID):
 
     else:
         fi, fo = F
-        res = infer(e, (fi, (n, fo)))
+        res = _infer(e, (fi, (n, fo)))
 
     return res
 
@@ -259,7 +297,34 @@ def _interpret(f, fi, fo, e):
   new_fo, ee, _ = f(fo, e, {})
   ee = update(FUNCTIONS, ee)  # Fix Symbols.
   new_F = fi, new_fo
-  return infer(ee, new_F)
+  return _infer(ee, new_F)
+
+
+def _log_it(e, F):
+    _log.info(
+        u'%3i %s ∘ %s',
+        len(inspect_stack()),
+        doc_from_stack_effect(*F),
+        expression_to_string(e),
+        )
+
+
+def infer(*expression):
+    '''
+    Return a list of stack effects for a Joy expression.
+
+    For example::
+
+        h = infer(pop, swap, rolldown, rest, rest, cons, cons)
+        for fi, fo in h:
+            print doc_from_stack_effect(fi, fo)
+
+    Prints::
+
+        ([a4 a5 ...1] a3 a2 a1 -- [a2 a3 ...1])
+
+    '''
+    return sorted(set(_infer(list_to_stack(expression))))
 
 
 a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = A
@@ -275,34 +340,76 @@ Ns = map(NumberStarJoyType, _R)
 Ss = map(StackStarJoyType, _R)
 
 
+'''Docstring for functions in Sphinx?'''
 FUNCTIONS = {
     name: SymbolJoyType(name, [DEFS[name]], i)
     for i, name in enumerate('''
-        ccons cons divmod_ dup dupd dupdd first first_two fourth over pop
+        ccons cons divmod dup dupd dupdd first first_two fourth over pop
         popd popdd popop popopd popopdd rest rrest rolldown rollup second
         stack swaack swap swons third tuck uncons unswons stuncons
-        stununcons unit eq ge gt le lt ne and_ bool_ not_
+        stununcons unit eq ge gt le lt ne and bool not
+        _Tree_add_Ee _Tree_delete_R0 _Tree_delete_clear_stuff _Tree_get_E
         '''.strip().split())
     }
-# sqrt succ pred pm
-FUNCTIONS['sum'] = SymbolJoyType('sum', [(((Ns[1], s1), s0), (n0, s0))], 100)
-FUNCTIONS['mul'] = SymbolJoyType('mul', [
-     ((i2, (i1, s0)), (i3, s0)),
-     ((f2, (i1, s0)), (f3, s0)),
-     ((i2, (f1, s0)), (f3, s0)),
-     ((f2, (f1, s0)), (f3, s0)),
-], 101)
+
+
+def defs():
+    '''
+    Return a dict of FunctionJoyType instances to be used with ``infer()``.
+    '''
+
+    sum_ = product = [(((Ns[1], s1), s0), (n0, s0))]
+
+    add = mul = sub = floordiv = modulus = [
+        ((i2, (i1, s0)), (i3, s0)),
+        ((f2, (i1, s0)), (f3, s0)),
+        ((i2, (f1, s0)), (f3, s0)),
+        ((f2, (f1, s0)), (f3, s0)),
+        ]
+
+    div = truediv = pow_ = [
+        ((i2, (i1, s0)), (f3, s0)),
+        ((f2, (i1, s0)), (f3, s0)),
+        ((i2, (f1, s0)), (f3, s0)),
+        ((f2, (f1, s0)), (f3, s0)),
+        ]
+
+    lshift = rshift = [((i2, (i1, s0)), (i3, s0))]
+
+    neg = pred = succ = [((n1, s0), (n2, s0))]
+
+    sqrt = [((n1, s0), (f2, s0))]
+
+    pm = divmod_ = [
+        ((i2, (i1, s0)), (i3, (i4, s0))),
+        ((f2, (i1, s0)), (f3, (f4, s0))),
+        ((i2, (f1, s0)), (f3, (f4, s0))),
+        ((f2, (f1, s0)), (f3, (f4, s0))),
+        ]
+
+    return {
+        name.rstrip('_'): stack_effect
+        for name, stack_effect in locals().iteritems()
+        }
+
+
+FUNCTIONS.update({
+    name: SymbolJoyType(name, stack_effect, i)
+    for i, (name, stack_effect) in enumerate(defs().iteritems())
+    })
 FUNCTIONS.update({
     combo.__name__: CombinatorJoyType(combo.__name__, [combo], i)
     for i, combo in enumerate((
-        joy.library.i,
+        joy.library.b,
+        joy.library.concat_,
         joy.library.dip,
         joy.library.dipd,
         joy.library.dipdd,
         joy.library.dupdip,
-        joy.library.b,
-        joy.library.x,
+        joy.library.i,
         joy.library.infra,
+        joy.library._dictionary['nullary'],
+        joy.library.x,
         ))
     })
 
@@ -315,25 +422,39 @@ def branch_false(stack, expression, dictionary):
   return stack, CONCAT(else_, expression), dictionary
 
 FUNCTIONS['branch'] = CombinatorJoyType('branch', [branch_true, branch_false], 100)
+pop = FUNCTIONS['pop']
+
+def loop_true(stack, expression, dictionary):
+    quote, (flag, stack) = stack
+    return stack, CONCAT(quote, (pop, expression)), dictionary
+
+def loop_two_true(stack, expression, dictionary):
+    quote, (flag, stack) = stack
+    return stack, CONCAT(quote, (pop, CONCAT(quote, (pop, expression)))), dictionary
+
+def loop_false(stack, expression, dictionary):
+    quote, (flag, stack) = stack
+    return stack, expression, dictionary
+
+FUNCTIONS['loop'] = CombinatorJoyType('loop', [loop_two_true, loop_true, loop_false], 101)
 
 
-globals().update(FUNCTIONS)
+def set_expectations():
+    branch.expect = s7, (s6, (b1, s5))
+    loop.expect = s6, (b1, s5)
+    i.expect = x.expect = s7, s6
+    dip.expect = dupdip.expect = s8, (a8, s7)
+    dipd.expect = s8, (a8, (a7, s7))
+    dipdd.expect = s8, (a8, (a7, (a6, s7)))
+    b.expect = concat_.expect = infra.expect = s8, (s7, s6)
+    nullary.expect = s7, s6
+scope = globals().copy()
+scope.update(FUNCTIONS)
+eval(set_expectations.func_code, scope)
 
-branch.expect = s7, (s6, (b1, s5))
-i.expect = x.expect = s7, s6
-dip.expect = s8, (a8, s7)
-dipd.expect = s8, (a8, (a7, s7))
-infra.expect = s8, (s7, s6)
 
-NULLARY = infer(((stack, s3), (dip, (infra, (first, ())))))
+#NULLARY = infer(((stack, s3), (dip, (infra, (first, ())))))
 ##print NULLARY
-
-nullary = FUNCTIONS['nullary'] = CombinatorJoyType(
-    'nullary',
-    [joy.library._dictionary['nullary']],
-    101,
-    )
-nullary.expect = s7, s6
 
 
 # Type Checking...

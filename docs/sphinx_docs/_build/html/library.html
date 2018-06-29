@@ -613,12 +613,6 @@ on top of the stack.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="joy.library.swaack">
-<code class="descclassname">joy.library.</code><code class="descname">swaack</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#swaack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.swaack" title="Permalink to this definition">¶</a></dt>
-<dd><p>swap stack</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="joy.library.take">
 <code class="descclassname">joy.library.</code><code class="descname">take</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#take"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.take" title="Permalink to this definition">¶</a></dt>
 <dd><p>Expects an integer and a quote on the stack and returns the quote with
@@ -708,7 +702,7 @@ from each list.  The smallest list sets the length of the result list.</p>
 <dl class="function">
 <dt id="joy.utils.generated_library.ccons">
 <code class="descclassname">joy.utils.generated_library.</code><code class="descname">ccons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#ccons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.ccons" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="n">a0</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="n">a0</span> <span class="o">...</span><span class="mi">0</span><span class="p">])</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -756,7 +750,7 @@ from each list.  The smallest list sets the length of the result list.</p>
 <dl class="function">
 <dt id="joy.utils.generated_library.first_two">
 <code class="descclassname">joy.utils.generated_library.</code><code class="descname">first_two</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#first_two"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.first_two" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="n">a0</span> <span class="n">a1</span><span class="p">)</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a2</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -764,7 +758,7 @@ from each list.  The smallest list sets the length of the result list.</p>
 <dl class="function">
 <dt id="joy.utils.generated_library.fourth">
 <code class="descclassname">joy.utils.generated_library.</code><code class="descname">fourth</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#fourth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.fourth" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="n">a3</span><span class="p">)</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="n">a4</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">a4</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -852,7 +846,7 @@ from each list.  The smallest list sets the length of the result list.</p>
 <dl class="function">
 <dt id="joy.utils.generated_library.rrest">
 <code class="descclassname">joy.utils.generated_library.</code><code class="descname">rrest</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#rrest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.rrest" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">])</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -860,7 +854,7 @@ from each list.  The smallest list sets the length of the result list.</p>
 <dl class="function">
 <dt id="joy.utils.generated_library.second">
 <code class="descclassname">joy.utils.generated_library.</code><code class="descname">second</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#second"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.second" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">a2</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -876,7 +870,7 @@ from each list.  The smallest list sets the length of the result list.</p>
 <dl class="function">
 <dt id="joy.utils.generated_library.stuncons">
 <code class="descclassname">joy.utils.generated_library.</code><code class="descname">stuncons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#stuncons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.stuncons" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="n">a0</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a0</span> <span class="n">a0</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="n">a1</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a1</span> <span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -884,7 +878,15 @@ from each list.  The smallest list sets the length of the result list.</p>
 <dl class="function">
 <dt id="joy.utils.generated_library.stununcons">
 <code class="descclassname">joy.utils.generated_library.</code><code class="descname">stununcons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#stununcons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.stununcons" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="n">a1</span> <span class="n">a0</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a1</span> <span class="n">a0</span> <span class="n">a0</span> <span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a2</span> <span class="n">a1</span> <span class="n">a1</span> <span class="n">a2</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.generated_library.swaack">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">swaack</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#swaack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.swaack" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -900,7 +902,7 @@ from each list.  The smallest list sets the length of the result list.</p>
 <dl class="function">
 <dt id="joy.utils.generated_library.swons">
 <code class="descclassname">joy.utils.generated_library.</code><code class="descname">swons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#swons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.swons" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="n">a0</span> <span class="o">--</span> <span class="p">[</span><span class="n">a0</span> <span class="o">...</span><span class="mi">0</span><span class="p">])</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -908,7 +910,7 @@ from each list.  The smallest list sets the length of the result list.</p>
 <dl class="function">
 <dt id="joy.utils.generated_library.third">
 <code class="descclassname">joy.utils.generated_library.</code><code class="descname">third</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#third"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.third" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="n">a1</span> <span class="n">a2</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="n">a2</span><span class="p">)</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">a3</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -930,9 +932,17 @@ from each list.  The smallest list sets the length of the result list.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="joy.utils.generated_library.unit">
+<code class="descclassname">joy.utils.generated_library.</code><code class="descname">unit</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.unit" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="joy.utils.generated_library.unswons">
 <code class="descclassname">joy.utils.generated_library.</code><code class="descname">unswons</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/generated_library.html#unswons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.generated_library.unswons" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a0</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="n">a0</span><span class="p">)</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a1</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>

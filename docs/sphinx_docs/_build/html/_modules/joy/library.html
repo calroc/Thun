@@ -127,7 +127,6 @@
 <span class="s1">of == swap at</span>
 <span class="s1">product == 1 swap [*] step</span>
 <span class="s1">flatten == [] swap [concat] step</span>
-<span class="s1">unit == [] cons</span>
 <span class="s1">quoted == [unit] dip</span>
 <span class="s1">unquoted == [i] dip</span>
 <span class="s1">enstacken == stack [clear] dip</span>
@@ -153,13 +152,17 @@
 <span class="s1">anamorphism == [pop []] swap [dip swons] genrec</span>
 <span class="s1">range == [0 &lt;=] [1 - dup] anamorphism</span>
 <span class="s1">while == swap [nullary] cons dup dipd concat loop</span>
-<span class="s1">dudipd == dup dipd</span>
+<span class="s1">dupdipd == dup dipd</span>
 <span class="s1">primrec == [i] genrec</span>
 <span class="s1">step_zero == 0 roll&gt; step</span>
 <span class="s1">codireco == cons dip rest cons</span>
 <span class="s1">make_generator == [codireco] ccons</span>
-<span class="s1">ccons == cons cons</span>
 <span class="s1">&#39;&#39;&#39;</span>
+<span class="c1"># ifte == [nullary not] dipd branch</span>
+<span class="c1"># ifte == [nullary] dipd swap branch</span>
+              
+<span class="c1">##ccons == cons cons</span>
+<span class="c1">##unit == [] cons</span>
 <span class="c1">##second == rest first</span>
 <span class="c1">##third == rest rest first</span>
 <span class="c1">##swons == swap cons</span>
@@ -605,12 +608,12 @@
 <span class="c1">##  return second, (tos, stack)</span>
 
 
-<div class="viewcode-block" id="swaack"><a class="viewcode-back" href="../../library.html#joy.library.swaack">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">swaack</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;swap stack&#39;&#39;&#39;</span>
-  <span class="n">old_stack</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">stack</span>
-  <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">old_stack</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@SimpleFunctionWrapper</span>
+<span class="c1">##def swaack(stack):</span>
+<span class="c1">##  &#39;&#39;&#39;swap stack&#39;&#39;&#39;</span>
+<span class="c1">##  old_stack, stack = stack</span>
+<span class="c1">##  return stack, old_stack</span>
 
 
 <span class="c1">##@inscribe</span>
