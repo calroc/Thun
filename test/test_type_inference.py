@@ -45,8 +45,8 @@ class TestCombinators(TestMixin, unittest.TestCase):
     '''
     expression = a1, (dup, s0), (cons, s0), branch
     f = [
-      ((s0, (a0, s1)), ((a0, s0), s1)),  # (a0 [...0] -- [a0 ...0])
       ((a0, s0),        (a0, (a0, s0))), #        (a0 -- a0 a0)
+      ((s0, (a0, s1)), ((a0, s0), s1)),  # (a0 [...0] -- [a0 ...0])
       ]
     self.assertEqualTypeStructure(infer(*expression), f)
 
@@ -61,9 +61,9 @@ class TestCombinators(TestMixin, unittest.TestCase):
     self.assertEqualTypeStructure(infer(*expression), [f])
 
   def test_cons_dip(self):
-    expression = (cons, s0), dip  # [cons] dip
+    expression = (cons, s3), dip  # [cons] dip
     # (a2 [...1] a1 -- [a2 ...1] a1)
-    f =  (a1, (s1, (a2, s2))), (a1, ((a2, s1), s2))
+    f = (a1, (s1, (a2, s2))), (a1, ((a2, s1), s2))
     self.assertEqualTypeStructure(infer(*expression), [f])
 
   def test_cons_dipd(self):
@@ -186,4 +186,4 @@ class TestYin(TestMixin, unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main() #defaultTest='TestCombinators.test_nullary_too')
+    unittest.main() #defaultTest='TestCombinators.test_cons_dip')

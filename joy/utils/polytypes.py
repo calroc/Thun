@@ -168,7 +168,7 @@ def unify(u, v, s=None):
 
     elif isinstance(u, tuple) and isinstance(v, tuple):
         if len(u) != 2 or len(v) != 2:
-            raise JoyTypeError('Cannot unify %r and %r.' % (u, v))
+            raise ValueError(repr((u, v)))  # Bad input.
 
         (a, b), (c, d) = v, u
         if isinstance(a, KleeneStar):
@@ -442,19 +442,14 @@ FUNCTIONS['loop'] = CombinatorJoyType('loop', [loop_two_true, loop_true, loop_fa
 def set_expectations():
     branch.expect = s7, (s6, (b1, s5))
     loop.expect = s6, (b1, s5)
-    i.expect = x.expect = s7, s6
+    i.expect = nullary.expect = x.expect = s7, s6
     dip.expect = dupdip.expect = s8, (a8, s7)
     dipd.expect = s8, (a8, (a7, s7))
     dipdd.expect = s8, (a8, (a7, (a6, s7)))
     b.expect = concat_.expect = infra.expect = s8, (s7, s6)
-    nullary.expect = s7, s6
 scope = globals().copy()
 scope.update(FUNCTIONS)
 eval(set_expectations.func_code, scope)
-
-
-#NULLARY = infer(((stack, s3), (dip, (infra, (first, ())))))
-##print NULLARY
 
 
 # Type Checking...
@@ -467,43 +462,4 @@ def _ge(self, other):
 AnyJoyType.__ge__ = _ge
 AnyJoyType.accept = tuple, int, float, long, str, unicode, bool, Symbol
 StackJoyType.accept = tuple
-
-
-##if __name__ == '__main__':
-##
-##  from joy.parser import text_to_expression
-##  from joy.utils.stack import list_to_stack as l2s
-##
-##
-##  F = infer(l2s((pop, pop, pop)))
-##  for f in F:
-##      print doc_from_stack_effect(*f)
-##  s = text_to_expression('0 1 2')
-##  L = unify(s, F[0][0])
-##  print L
-##
-##  print
-##
-##  F = infer(l2s((pop, swap, rolldown, rest, rest, cons, cons)))
-##  for f in F:
-##      print doc_from_stack_effect(*f)
-##  s = text_to_expression('0 1 2 [3 4]')
-##  L = unify(s, F[0][0])
-##  print L
-##  print
-##
-##  g = update(L[0], F[0])
-##  print doc_from_stack_effect(*g)
-##  print g
-##
-##
-##  print '- - - - - -'
-##  s = text_to_expression('[3 4]')
-##  L = unify(s, F[0][1])
-##  print L
-##  print
-##
-##  g = update(L[0], F[0])
-##  print doc_from_stack_effect(*g)
-##  print g
-##
+FloatJoyType.accept = float

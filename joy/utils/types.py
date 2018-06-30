@@ -26,6 +26,10 @@ class AnyJoyType(object):
     def __ge__(self, other):
         return issubclass(other.__class__, self.__class__)
 
+    def __le__(self, other):
+        # 'a string' >= AnyJoyType() should be False.
+        return issubclass(self.__class__, other.__class__)
+
     def __add__(self, other):
         return self.__class__(self.number + other)
     __radd__ = __add__
@@ -53,9 +57,23 @@ def update(s, term):
     '''
     Apply substitution dict to term, returning new term.
     '''
+    t = _update(s, term)
+    n = 10
+    while t != term:
+        n -= 1
+        if not n:
+            print t
+            print term
+            print 'lalala'
+            1/0
+        term = t
+        t = _update(s, term)
+    return term
+
+def _update(s, term):
     if not isinstance(term, tuple):
         return s.get(term, term)
-    return tuple(update(s, inner) for inner in term)
+    return tuple(_update(s, inner) for inner in term)
 
 
 def relabel(left, right):

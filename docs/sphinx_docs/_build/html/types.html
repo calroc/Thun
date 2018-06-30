@@ -1,0 +1,449 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Type Inference of Joy Expressions &#8212; Thun 0.2.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Essays about Programming in Joy" href="notebooks/index.html" />
+    <link rel="prev" title="Functions Grouped by, er, Function with Examples" href="lib.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="type-inference-of-joy-expressions">
+<h1>Type Inference of Joy Expressions<a class="headerlink" href="#type-inference-of-joy-expressions" title="Permalink to this headline">¶</a></h1>
+<p>Two kinds of type inference are provided, a simple inferencer that can handle functions that have a single stack effect (aka “type signature”) and that can generate Python code for a limited subset of those functions, and a more complex inferencer/interpreter hybrid that can infer the stack effects of most Joy expressions, including multiple stack effects, unbounded sequences of values, and combinators (if enough information is available.)</p>
+<div class="section" id="joy-utils-types">
+<h2><code class="docutils literal notranslate"><span class="pre">joy.utils.types</span></code><a class="headerlink" href="#joy-utils-types" title="Permalink to this headline">¶</a></h2>
+<p>Curently (asterix after name indicates a function that can be auto-compiled to Python):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_Tree_add_Ee</span> <span class="o">=</span> <span class="p">([</span><span class="n">a4</span> <span class="n">a5</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a2</span> <span class="n">a3</span> <span class="o">...</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">_Tree_delete_R0</span> <span class="o">=</span> <span class="p">([</span><span class="n">a2</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a2</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a2</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">_Tree_delete_clear_stuff</span> <span class="o">=</span> <span class="p">(</span><span class="n">a3</span> <span class="n">a2</span> <span class="p">[</span><span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">_Tree_get_E</span> <span class="o">=</span> <span class="p">([</span><span class="n">a3</span> <span class="n">a4</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a4</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">add</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">n3</span><span class="p">)</span>
+<span class="ow">and</span> <span class="o">=</span> <span class="p">(</span><span class="n">b1</span> <span class="n">b2</span> <span class="o">--</span> <span class="n">b3</span><span class="p">)</span>
+<span class="nb">bool</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">ccons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">cons</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">div</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">n3</span><span class="p">)</span>
+<span class="nb">divmod</span> <span class="o">=</span> <span class="p">(</span><span class="n">n2</span> <span class="n">n1</span> <span class="o">--</span> <span class="n">n4</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">dup</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">dupd</span> <span class="o">=</span> <span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">dupdd</span> <span class="o">=</span> <span class="p">(</span><span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a3</span> <span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">eq</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">first</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">first_two</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a2</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">floordiv</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">fourth</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="n">a4</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">a4</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">ge</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">gt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">le</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">lshift</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">lt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">modulus</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">mul</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">ne</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">neg</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
+<span class="ow">not</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">over</span> <span class="o">=</span> <span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span> <span class="n">a2</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">pm</span> <span class="o">=</span> <span class="p">(</span><span class="n">n2</span> <span class="n">n1</span> <span class="o">--</span> <span class="n">n4</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">pop</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="o">--</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">popd</span> <span class="o">=</span> <span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">popdd</span> <span class="o">=</span> <span class="p">(</span><span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">popop</span> <span class="o">=</span> <span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">popopd</span> <span class="o">=</span> <span class="p">(</span><span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">popopdd</span> <span class="o">=</span> <span class="p">(</span><span class="n">a4</span> <span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="nb">pow</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
+<span class="n">rest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">rolldown</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a3</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">rollup</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">--</span> <span class="n">a3</span> <span class="n">a1</span> <span class="n">a2</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">rrest</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">rshift</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">second</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">a2</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">sqrt</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
+<span class="n">stack</span> <span class="o">=</span> <span class="p">(</span><span class="o">...</span> <span class="o">--</span> <span class="o">...</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">stuncons</span> <span class="o">=</span> <span class="p">(</span><span class="o">...</span> <span class="n">a1</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a1</span> <span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">stununcons</span> <span class="o">=</span> <span class="p">(</span><span class="o">...</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="o">...</span> <span class="n">a2</span> <span class="n">a1</span> <span class="n">a1</span> <span class="n">a2</span> <span class="p">[</span><span class="o">...</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">sub</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">succ</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
+<span class="n">swaack</span> <span class="o">=</span> <span class="p">([</span><span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">swap</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="n">a2</span> <span class="o">--</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">swons</span> <span class="o">=</span> <span class="p">([</span><span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">third</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="n">a2</span> <span class="n">a3</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">a3</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">truediv</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="n">n2</span> <span class="o">--</span> <span class="n">n3</span><span class="p">)</span>
+<span class="n">tuck</span> <span class="o">=</span> <span class="p">(</span><span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="n">a1</span> <span class="n">a2</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+<span class="n">uncons</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="o">--</span> <span class="n">a1</span> <span class="p">[</span><span class="o">...</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span>
+<span class="n">unit</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a1</span> <span class="p">])</span> <span class="o">*</span>
+<span class="n">unswons</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
+</pre></div>
+</div>
+<span class="target" id="module-joy.utils.types"></span><dl class="class">
+<dt id="joy.utils.types.AnyJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">AnyJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#AnyJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.AnyJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Joy type variable.  Represents any Joy value.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.types.BooleanJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">BooleanJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#BooleanJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.BooleanJoyType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.types.FloatJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">FloatJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#FloatJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.FloatJoyType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.types.IntJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">IntJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#IntJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.IntJoyType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="joy.utils.types.JoyTypeError">
+<em class="property">exception </em><code class="descclassname">joy.utils.types.</code><code class="descname">JoyTypeError</code><a class="reference internal" href="_modules/joy/utils/types.html#JoyTypeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.JoyTypeError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.types.NumberJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">NumberJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#NumberJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.NumberJoyType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.types.StackJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">StackJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#StackJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.StackJoyType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.types.compilable">
+<code class="descclassname">joy.utils.types.</code><code class="descname">compilable</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#compilable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.compilable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if a stack effect represents a function that can be
+automatically compiled (to Python), False otherwise.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.types.compile_">
+<code class="descclassname">joy.utils.types.</code><code class="descname">compile_</code><span class="sig-paren">(</span><em>name</em>, <em>f</em>, <em>doc=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#compile_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.compile_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string of Python code implementing the function described
+by the stack effect.  If no doc string is passed doc_from_stack_effect()
+is used to generate one.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.types.compose">
+<code class="descclassname">joy.utils.types.</code><code class="descname">compose</code><span class="sig-paren">(</span><em>*functions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.compose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the stack effect of the composition of some of stack effects.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.types.defs">
+<code class="descclassname">joy.utils.types.</code><code class="descname">defs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#defs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.defs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict of named stack effects.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.types.delabel">
+<code class="descclassname">joy.utils.types.</code><code class="descname">delabel</code><span class="sig-paren">(</span><em>f</em>, <em>seen=None</em>, <em>c=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#delabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.delabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fix up type variable numbers after relabel().</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.types.doc_from_stack_effect">
+<code class="descclassname">joy.utils.types.</code><code class="descname">doc_from_stack_effect</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#doc_from_stack_effect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.doc_from_stack_effect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a crude string representation of a stack effect.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.types.relabel">
+<code class="descclassname">joy.utils.types.</code><code class="descname">relabel</code><span class="sig-paren">(</span><em>left</em>, <em>right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#relabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.relabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-number type variables to avoid collisions between stack effects.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.types.unify">
+<code class="descclassname">joy.utils.types.</code><code class="descname">unify</code><span class="sig-paren">(</span><em>u</em>, <em>v</em>, <em>s=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#unify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.unify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a substitution dict representing a unifier for u and v.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.types.update">
+<code class="descclassname">joy.utils.types.</code><code class="descname">update</code><span class="sig-paren">(</span><em>s</em>, <em>term</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply substitution dict to term, returning new term.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="joy-utils-polytypes">
+<h2><code class="docutils literal notranslate"><span class="pre">joy.utils.polytypes</span></code><a class="headerlink" href="#joy-utils-polytypes" title="Permalink to this headline">¶</a></h2>
+<p>Example output of the <code class="docutils literal notranslate"><span class="pre">infer()</span></code> function.  The first number on each line is the depth of the Python stack.  It goes down when the function backtracks.  The next thing on each line is the currently-computed stack effect so far.  It starts with the empty “identity function” and proceeds through the expression, which is the rest of each line.  The function acts like an interpreter but instead of executing the terms of the expression it composes them, but for combinators it <em>does</em> execute them, using the output side of the stack effect as the stack.  This seems to work fine.  With proper definitions for the behavior of the combinators that can have more than one effect (like <code class="docutils literal notranslate"><span class="pre">branch</span></code> or <code class="docutils literal notranslate"><span class="pre">loop</span></code>) the <code class="docutils literal notranslate"><span class="pre">infer()</span></code> function seems to be able to handle anything I throw at it so far.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  7 (--) ∘ pop swap rolldown rest rest cons cons
+ 10 (a1 --) ∘ swap rolldown rest rest cons cons
+ 13 (a3 a2 a1 -- a2 a3) ∘ rolldown rest rest cons cons
+ 16 (a4 a3 a2 a1 -- a2 a3 a4) ∘ rest rest cons cons
+ 19 ([a4 ...1] a3 a2 a1 -- a2 a3 [...1]) ∘ rest cons cons
+ 22 ([a4 a5 ...1] a3 a2 a1 -- a2 a3 [...1]) ∘ cons cons
+ 25 ([a4 a5 ...1] a3 a2 a1 -- a2 [a3 ...1]) ∘ cons
+ 28 ([a4 a5 ...1] a3 a2 a1 -- [a2 a3 ...1]) ∘
+----------------------------------------
+([a4 a5 ...1] a3 a2 a1 -- [a2 a3 ...1])
+</pre></div>
+</div>
+<p>Here’s another example (implementing <code class="docutils literal notranslate"><span class="pre">ifte</span></code>) using some combinators:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  7 (--) ∘ [pred] [mul] [div] [nullary bool] dipd branch
+  8 (-- [pred ...2]) ∘ [mul] [div] [nullary bool] dipd branch
+  9 (-- [pred ...2] [mul ...3]) ∘ [div] [nullary bool] dipd branch
+ 10 (-- [pred ...2] [mul ...3] [div ...4]) ∘ [nullary bool] dipd branch
+ 11 (-- [pred ...2] [mul ...3] [div ...4] [nullary bool ...5]) ∘ dipd branch
+ 15 (-- [pred ...5]) ∘ nullary bool [mul] [div] branch
+ 19 (-- [pred ...2]) ∘ [stack] dinfrirst bool [mul] [div] branch
+ 20 (-- [pred ...2] [stack ]) ∘ dinfrirst bool [mul] [div] branch
+ 22 (-- [pred ...2] [stack ]) ∘ dip infra first bool [mul] [div] branch
+ 26 (--) ∘ stack [pred] infra first bool [mul] [div] branch
+ 29 (... -- ... [...]) ∘ [pred] infra first bool [mul] [div] branch
+ 30 (... -- ... [...] [pred ...1]) ∘ infra first bool [mul] [div] branch
+ 34 (--) ∘ pred s1 swaack first bool [mul] [div] branch
+ 37 (n1 -- n2) ∘ [n1] swaack first bool [mul] [div] branch
+ 38 (... n1 -- ... n2 [n1 ...]) ∘ swaack first bool [mul] [div] branch
+ 41 (... n1 -- ... n1 [n2 ...]) ∘ first bool [mul] [div] branch
+ 44 (n1 -- n1 n2) ∘ bool [mul] [div] branch
+ 47 (n1 -- n1 b1) ∘ [mul] [div] branch
+ 48 (n1 -- n1 b1 [mul ...1]) ∘ [div] branch
+ 49 (n1 -- n1 b1 [mul ...1] [div ...2]) ∘ branch
+ 53 (n1 -- n1) ∘ div
+ 56 (f2 f1 -- f3) ∘
+ 56 (i1 f1 -- f2) ∘
+ 56 (f1 i1 -- f2) ∘
+ 56 (i2 i1 -- f1) ∘
+ 53 (n1 -- n1) ∘ mul
+ 56 (f2 f1 -- f3) ∘
+ 56 (i1 f1 -- f2) ∘
+ 56 (f1 i1 -- f2) ∘
+ 56 (i2 i1 -- i3) ∘
+----------------------------------------
+(f2 f1 -- f3)
+(i1 f1 -- f2)
+(f1 i1 -- f2)
+(i2 i1 -- f1)
+(i2 i1 -- i3)
+</pre></div>
+</div>
+<span class="target" id="module-joy.utils.polytypes"></span><p>Multiple Stack Effects</p>
+<p>By adjusting the machinery in types.py to handles lists of stack effect comments
+we can capture more information about the type signatures of some functions,
+and we can introduce a kind of Kleene Star or sequence type that can stand for
+an unbounded sequence of other types.</p>
+<dl class="class">
+<dt id="joy.utils.polytypes.AnyStarJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">AnyStarJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#AnyStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.AnyStarJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="joy.utils.polytypes.AnyStarJoyType.kind">
+<code class="descname">kind</code><a class="headerlink" href="#joy.utils.polytypes.AnyStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#joy.utils.types.AnyJoyType" title="joy.utils.types.AnyJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">joy.utils.types.AnyJoyType</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.polytypes.CombinatorJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">CombinatorJoyType</code><span class="sig-paren">(</span><em>name</em>, <em>sec</em>, <em>number</em>, <em>expect=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#CombinatorJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.CombinatorJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent combinators.</p>
+<p>These type variables carry Joy functions that implement the
+behaviour of Joy combinators and they can appear in expressions.
+For simple combinators the implementation functions can be the
+combinators themselves.</p>
+<p>These types can also specify a stack effect (input side only) to
+guard against being used on invalid types.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.polytypes.FunctionJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">FunctionJoyType</code><span class="sig-paren">(</span><em>name</em>, <em>sec</em>, <em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#FunctionJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.FunctionJoyType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.polytypes.IntJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">IntJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#IntJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.IntJoyType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.polytypes.KleeneStar">
+<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">KleeneStar</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#KleeneStar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.KleeneStar" title="Permalink to this definition">¶</a></dt>
+<dd><p>A sequence of zero or more <cite>AnyJoyType</cite> variables would be:</p>
+<blockquote>
+<div>A*</div></blockquote>
+<p>The <cite>A*</cite> works by splitting the universe into two alternate histories:</p>
+<blockquote>
+<div><p>A* -&gt; 0</p>
+<p>A* -&gt; A A*</p>
+</div></blockquote>
+<p>The Kleene star variable disappears in one universe, and in the other
+it turns into an <cite>AnyJoyType</cite> variable followed by itself again.</p>
+<p>We have to return all universes (represented by their substitution
+dicts, the “unifiers”) that don’t lead to type conflicts.</p>
+<dl class="attribute">
+<dt id="joy.utils.polytypes.KleeneStar.kind">
+<code class="descname">kind</code><a class="headerlink" href="#joy.utils.polytypes.KleeneStar.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#joy.utils.types.AnyJoyType" title="joy.utils.types.AnyJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">joy.utils.types.AnyJoyType</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.polytypes.NumberStarJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">NumberStarJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#NumberStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.NumberStarJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="joy.utils.polytypes.NumberStarJoyType.kind">
+<code class="descname">kind</code><a class="headerlink" href="#joy.utils.polytypes.NumberStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#joy.utils.types.NumberJoyType" title="joy.utils.types.NumberJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">joy.utils.types.NumberJoyType</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="joy.utils.polytypes.Ss">
+<code class="descclassname">joy.utils.polytypes.</code><code class="descname">Ss</code><em class="property"> = [s1*, s2*, s3*, s4*, s5*, s6*, s7*, s8*, s9*, s10*]</em><a class="headerlink" href="#joy.utils.polytypes.Ss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Docstring for functions in Sphinx?</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.polytypes.StackStarJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">StackStarJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#StackStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.StackStarJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="joy.utils.polytypes.StackStarJoyType.kind">
+<code class="descname">kind</code><a class="headerlink" href="#joy.utils.polytypes.StackStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#joy.utils.types.StackJoyType" title="joy.utils.types.StackJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">joy.utils.types.StackJoyType</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="joy.utils.polytypes.SymbolJoyType">
+<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">SymbolJoyType</code><span class="sig-paren">(</span><em>name</em>, <em>sec</em>, <em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#SymbolJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.SymbolJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent non-combinator functions.</p>
+<p>These type variables carry the stack effect comments and can
+appear in expressions (as in quoted programs.)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.polytypes.compose">
+<code class="descclassname">joy.utils.polytypes.</code><code class="descname">compose</code><span class="sig-paren">(</span><em>f</em>, <em>g</em>, <em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.compose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield the stack effects of the composition of two stack effects.  An
+expression is carried along and updated and yielded.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.polytypes.defs">
+<code class="descclassname">joy.utils.polytypes.</code><code class="descname">defs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#defs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.defs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict of FunctionJoyType instances to be used with <code class="docutils literal notranslate"><span class="pre">infer()</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.polytypes.infer">
+<code class="descclassname">joy.utils.polytypes.</code><code class="descname">infer</code><span class="sig-paren">(</span><em>*expression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#infer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.infer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of stack effects for a Joy expression.</p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span> <span class="n">infer</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">rolldown</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">cons</span><span class="p">,</span> <span class="n">cons</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="ow">in</span> <span class="n">h</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Prints:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a4</span> <span class="n">a5</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a2</span> <span class="n">a3</span> <span class="o">...</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.polytypes.meta_compose">
+<code class="descclassname">joy.utils.polytypes.</code><code class="descname">meta_compose</code><span class="sig-paren">(</span><em>F</em>, <em>G</em>, <em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#meta_compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.meta_compose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield the stack effects of the composition of two lists of stack
+effects.  An expression is carried along and updated and yielded.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.polytypes.unify">
+<code class="descclassname">joy.utils.polytypes.</code><code class="descname">unify</code><span class="sig-paren">(</span><em>u</em>, <em>v</em>, <em>s=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#unify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.unify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of substitution dicts representing unifiers for u and v.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Type Inference of Joy Expressions</a><ul>
+<li><a class="reference internal" href="#joy-utils-types"><code class="docutils literal notranslate"><span class="pre">joy.utils.types</span></code></a></li>
+<li><a class="reference internal" href="#joy-utils-polytypes"><code class="docutils literal notranslate"><span class="pre">joy.utils.polytypes</span></code></a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="lib.html" title="previous chapter">Functions Grouped by, er, Function with Examples</a></li>
+      <li>Next: <a href="notebooks/index.html" title="next chapter">Essays about Programming in Joy</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/types.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+</a>
+<br />
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+    </div>
+
+  </body>
+</html>
