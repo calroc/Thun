@@ -153,6 +153,22 @@ class CombinatorJoyType(FunctionJoyType):
         return new_f[0][1]
 
 
+def _log_uni(U):
+  def inner(u, v, s=None):
+    _log.info(
+      '%3i %s U %s   w/ %s',
+      len(inspect_stack()), u, v, s,
+      )
+    res = U(u, v, s)
+    _log.info(
+      '%3i %s U %s   w/ %s => %s',
+      len(inspect_stack()), u, v, s, res,
+      )
+    return res
+  return inner
+
+
+@_log_uni
 def unify(u, v, s=None):
     '''
     Return a tuple of substitution dicts representing unifiers for u and v.

@@ -174,6 +174,12 @@ class TestYin(TestMixin, unittest.TestCase):
     # ([...1] -- [a2 ...1] [...3] a1)
     self.assertEqualTypeStructure(infer(*expression), [f])
 
+  def test_stack_dup_ccons(self):
+    expression = stack, dup, ccons
+    f = ((a1, s1), ((a1, ((a1, s1), (a1, s1))), s1))
+    # (... a1 -- ... [a1 [a1 ...] a1 ...])
+    self.assertEqualTypeStructure(infer(*expression), [f])
+
 ##  def test_(self):
 ##    expression = pop, swap, rolldown, rest, rest, cons, cons
 ##    f = 
