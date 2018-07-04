@@ -34,7 +34,7 @@ from joy.utils.types import (
   _stacky,
   _R,
   relabel, delabel,
-  update,
+  reify,
   )
 
 
@@ -155,12 +155,12 @@ class CombinatorJoyType(FunctionJoyType):
 
 def _log_uni(U):
   def inner(u, v, s=None):
-    _log.info(
+    _log.debug(
       '%3i %s U %s   w/ %s',
       len(inspect_stack()), u, v, s,
       )
     res = U(u, v, s)
-    _log.info(
+    _log.debug(
       '%3i %s U %s   w/ %s => %s',
       len(inspect_stack()), u, v, s, res,
       )
@@ -176,8 +176,8 @@ def unify(u, v, s=None):
     if s is None:
         s = {}
     elif s:
-        u = update(s, u)
-        v = update(s, v)
+        u = reify(s, u)
+        v = reify(s, v)
 
     if u == v:
         res = s,
@@ -243,7 +243,7 @@ def _lil_uni(u, v, s):
 def _compose(f, g, e):
     (f_in, f_out), (g_in, g_out) = f, g
     for s in unify(g_in, f_out):
-        yield update(s, (e, (f_in, g_out)))
+        yield reify(s, (e, (f_in, g_out)))
 
 
 def compose(f, g, e):
@@ -311,7 +311,7 @@ def _infer(e, F=ID):
 
 def _interpret(f, fi, fo, e):
   new_fo, ee, _ = f(fo, e, {})
-  ee = update(FUNCTIONS, ee)  # Fix Symbols.
+  ee = reify(FUNCTIONS, ee)  # Fix Symbols.
   new_F = fi, new_fo
   return _infer(ee, new_F)
 
@@ -375,6 +375,8 @@ def defs():
     '''
 
     sum_ = product = [(((Ns[1], s1), s0), (n0, s0))]
+
+    clear = [((As[1], s0), s1)]
 
     add = mul = sub = floordiv = modulus = [
         ((i2, (i1, s0)), (i3, s0)),
@@ -466,6 +468,7 @@ def set_expectations():
 scope = globals().copy()
 scope.update(FUNCTIONS)
 eval(set_expectations.func_code, scope)
+del scope
 
 
 # Type Checking...

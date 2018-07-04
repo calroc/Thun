@@ -127,7 +127,8 @@ make_generator == [codireco] ccons
 '''
 # ifte == [nullary not] dipd branch
 # ifte == [nullary] dipd swap branch
-              
+# genrec == [[genrec] cons cons cons cons] nullary swons concat ifte
+
 ##ccons == cons cons
 ##unit == [] cons
 ##second == rest first

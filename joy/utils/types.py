@@ -1,6 +1,7 @@
 from collections import Counter
 from itertools import imap
 from joy.utils.stack import concat
+from joy.parser import Symbol
 
 
 class AnyJoyType(object):
@@ -53,27 +54,19 @@ class StackJoyType(AnyJoyType):
 class JoyTypeError(Exception): pass
 
 
-def update(s, term):
-    '''
-    Apply substitution dict to term, returning new term.
-    '''
-    t = _update(s, term)
-    n = 10
-    while t != term:
-        n -= 1
-        if not n:
-            print t
-            print term
-            print 'lalala'
-            1/0
-        term = t
-        t = _update(s, term)
-    return term
-
-def _update(s, term):
-    if not isinstance(term, tuple):
-        return s.get(term, term)
-    return tuple(_update(s, inner) for inner in term)
+def reify(meaning, name, seen=None):
+  '''
+  Apply substitution dict to term, returning new term.
+  '''
+  if isinstance(name, tuple):
+    return tuple(reify(meaning, inner) for inner in name)
+  safety = 101
+  while name in meaning and safety:
+    safety -= 1
+    name = meaning[name]
+  if not safety:
+      raise ValueError('Cycle in substitution dict: %s' % (meaning,))
+  return name
 
 
 def relabel(left, right):
@@ -121,8 +114,8 @@ def unify(u, v, s=None):
     if s is None:
         s = {}
     elif s:
-        u = update(s, u)
-        v = update(s, v)
+        u = reify(s, u)
+        v = reify(s, v)
 
     if isinstance(u, AnyJoyType) and isinstance(v, AnyJoyType):
         if u >= v:
@@ -164,7 +157,7 @@ def _compose(f, g):
     '''
     # Relabel, unify, update, delabel.
     (f_in, f_out), (g_in, g_out) = relabel(f, g)
-    fg = update(unify(g_in, f_out), (f_in, g_out))
+    fg = reify(unify(g_in, f_out), (f_in, g_out))
     return delabel(fg)
 
 
@@ -273,6 +266,8 @@ def defs():
     '''
     Return a dict of named stack effects.
     '''
+    at = __(s0, i1), __(a1)
+    drop = take = __(s0, i1), __(s1)
     cons = __(a1, s0), __((a1, s0),)
     ccons = compose(cons, cons)
     dup = __(a1,), __(a1, a1)
@@ -316,6 +311,7 @@ def defs():
 
     first_two = compose(uncons, uncons, pop)
     fourth = compose(rest, third)
+    of = compose(swap, at)
 
     _Tree_add_Ee = compose(pop, swap, rolldown, rrest, ccons)
     _Tree_get_E = compose(popop, second)

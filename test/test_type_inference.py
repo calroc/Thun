@@ -31,7 +31,8 @@ class TestMixin(object):
     else:
       if a in seen:
         self.assertEqual(b, seen[a])
-      seen[a] = b
+      else:
+        seen[a] = b
 
 
 class TestCombinators(TestMixin, unittest.TestCase):
@@ -43,7 +44,7 @@ class TestCombinators(TestMixin, unittest.TestCase):
     '''
     a1 [dup] [cons] branch
     '''
-    expression = a1, (dup, s0), (cons, s0), branch
+    expression = a1, (dup, s1), (cons, s2), branch
     f = [
       ((a0, s0),        (a0, (a0, s0))), #        (a0 -- a0 a0)
       ((s0, (a0, s1)), ((a0, s0), s1)),  # (a0 [...0] -- [a0 ...0])
@@ -51,8 +52,8 @@ class TestCombinators(TestMixin, unittest.TestCase):
     self.assertEqualTypeStructure(infer(*expression), f)
 
   def test_concat(self):
-    expression = (swons, s3), (a4, s0), concat_
-    f = (s1, ((swons, (a1, s1)), s1))  # (... -- ... [swons a1 ...])
+    expression = (swons, s3), (a4, s1), concat_
+    f = (s1, ((swons, (a1, s2)), s1))  # (-- [swons a1 ...2])
     self.assertEqualTypeStructure(infer(*expression), [f])
 
   def test_dip(self):
@@ -67,15 +68,20 @@ class TestCombinators(TestMixin, unittest.TestCase):
     self.assertEqualTypeStructure(infer(*expression), [f])
 
   def test_cons_dipd(self):
-    expression = a1, a3, (cons, s0), dipd
-    f = ((s0, (a0, s1)), (a1, (a2, ((a0, s0), s1))))
-    # (a0 [...0] -- [a0 ...0] a2 a1)
+    expression = (cons, s0), dipd
+    f = ((a2, (a1, (s1, (a3, s2)))), (a2, (a1, ((a3, s1), s2))))
+    # (a3 [...1] a1 a2 -- [a3 ...1] a1 a2)
     self.assertEqualTypeStructure(infer(*expression), [f])
 
   def test_i(self):
     # [cons] i == cons
     expression = (cons, s0), i
     self.assertEqualTypeStructure(infer(*expression), infer(cons))
+
+  def test_i_dip(self):
+    expression = (i, s3), dip  # [i] dip
+    f = ((a1, (s1, s2)), (a1, s2))  # ([...1] a1 -- a1)
+    self.assertEqualTypeStructure(infer(*expression), [f])
 
   def test_infra(self):
     expression = [
@@ -106,11 +112,7 @@ class TestCombinators(TestMixin, unittest.TestCase):
     expression = (stack, s3), dip, infra, first
     f = ((s1, (a1, s2)), (a1, (a1, s2)))  # (a1 [...1] -- a1 a1)
     self.assertEqualTypeStructure(infer(*expression), [f])
-
     expression = nullary,
-    f = ((s1, (a1, s2)), (a1, (a1, s2)))  # (a1 [...1] -- a1 a1)
-    # Something's not quite right here...
-    # e = infer(*expression)
     self.assertEqualTypeStructure(infer(*expression), [f])
 
   def test_x(self):
@@ -192,4 +194,4 @@ class TestYin(TestMixin, unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main() #defaultTest='TestCombinators.test_cons_dip')
+    unittest.main() #defaultTest='TestCombinators.test_branch')
