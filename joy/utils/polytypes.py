@@ -356,7 +356,6 @@ Ns = map(NumberStarJoyType, _R)
 Ss = map(StackStarJoyType, _R)
 
 
-'''Docstring for functions in Sphinx?'''
 FUNCTIONS = {
     name: SymbolJoyType(name, [DEFS[name]], i)
     for i, name in enumerate('''
@@ -367,6 +366,7 @@ FUNCTIONS = {
         _Tree_add_Ee _Tree_delete_R0 _Tree_delete_clear_stuff _Tree_get_E
         '''.strip().split())
     }
+'''Docstring for functions in Sphinx?'''
 
 
 def defs():
@@ -471,14 +471,3 @@ eval(set_expectations.func_code, scope)
 del scope
 
 
-# Type Checking...
-
-def _ge(self, other):
-    return (issubclass(other.__class__, self.__class__)
-            or hasattr(self, 'accept')
-            and isinstance(other, self.accept))
-
-AnyJoyType.__ge__ = _ge
-AnyJoyType.accept = tuple, int, float, long, str, unicode, bool, Symbol
-StackJoyType.accept = tuple
-FloatJoyType.accept = float
