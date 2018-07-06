@@ -129,6 +129,9 @@ make_generator == [codireco] ccons
 # ifte == [nullary] dipd swap branch
 # genrec == [[genrec] cons cons cons cons] nullary swons concat ifte
 
+# Another definition for while. FWIW
+# while == over [[i] dip nullary] ccons [nullary] dip loop
+
 ##ccons == cons cons
 ##unit == [] cons
 ##second == rest first
