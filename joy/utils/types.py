@@ -9,6 +9,7 @@ class AnyJoyType(object):
     Joy type variable.  Represents any Joy value.
     '''
 
+    accept = tuple, int, float, long, str, unicode, bool, Symbol
     prefix = 'a'
 
     def __init__(self, number):
@@ -25,7 +26,10 @@ class AnyJoyType(object):
         )
 
     def __ge__(self, other):
-        return issubclass(other.__class__, self.__class__)
+        return (
+            issubclass(other.__class__, self.__class__)
+            or isinstance(other, self.accept)
+            )
 
     def __le__(self, other):
         # 'a string' >= AnyJoyType() should be False.
@@ -39,13 +43,31 @@ class AnyJoyType(object):
         return hash(repr(self))
 
 
-class BooleanJoyType(AnyJoyType): prefix = 'b'
-class NumberJoyType(AnyJoyType): prefix = 'n'
-class FloatJoyType(NumberJoyType): prefix = 'f'
-class IntJoyType(FloatJoyType): prefix = 'i'
+class BooleanJoyType(AnyJoyType):
+    accept = bool
+    prefix = 'b'
+
+
+class NumberJoyType(AnyJoyType):
+    accept = int, float, long, complex
+    prefix = 'n'
+
+
+class FloatJoyType(NumberJoyType):
+    accept = float
+    prefix = 'f'
+
+
+class IntJoyType(FloatJoyType):
+    accept = int
+    prefix = 'i'
+
 
 class StackJoyType(AnyJoyType):
+
+    accept = tuple
     prefix = 's'
+
     def __nonzero__(self):
         # Imitate () at the end of cons list.
         return False
