@@ -109,17 +109,35 @@
 <dl class="class">
 <dt id="joy.utils.types.BooleanJoyType">
 <em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">BooleanJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#BooleanJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.BooleanJoyType" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="attribute">
+<dt id="joy.utils.types.BooleanJoyType.accept">
+<code class="descname">accept</code><a class="headerlink" href="#joy.utils.types.BooleanJoyType.accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__builtin__.bool</span></code></p>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="class">
 <dt id="joy.utils.types.FloatJoyType">
 <em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">FloatJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#FloatJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.FloatJoyType" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="attribute">
+<dt id="joy.utils.types.FloatJoyType.accept">
+<code class="descname">accept</code><a class="headerlink" href="#joy.utils.types.FloatJoyType.accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__builtin__.float</span></code></p>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="class">
 <dt id="joy.utils.types.IntJoyType">
 <em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">IntJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#IntJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.IntJoyType" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="attribute">
+<dt id="joy.utils.types.IntJoyType.accept">
+<code class="descname">accept</code><a class="headerlink" href="#joy.utils.types.IntJoyType.accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__builtin__.int</span></code></p>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="exception">
 <dt id="joy.utils.types.JoyTypeError">
@@ -134,7 +152,13 @@
 <dl class="class">
 <dt id="joy.utils.types.StackJoyType">
 <em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">StackJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#StackJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.StackJoyType" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="attribute">
+<dt id="joy.utils.types.StackJoyType.accept">
+<code class="descname">accept</code><a class="headerlink" href="#joy.utils.types.StackJoyType.accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__builtin__.tuple</span></code></p>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="function">
 <dt id="joy.utils.types.compilable">
@@ -176,6 +200,12 @@ is used to generate one.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="joy.utils.types.reify">
+<code class="descclassname">joy.utils.types.</code><code class="descname">reify</code><span class="sig-paren">(</span><em>meaning</em>, <em>name</em>, <em>seen=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#reify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.reify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply substitution dict to term, returning new term.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="joy.utils.types.relabel">
 <code class="descclassname">joy.utils.types.</code><code class="descname">relabel</code><span class="sig-paren">(</span><em>left</em>, <em>right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#relabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.relabel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Re-number type variables to avoid collisions between stack effects.</p>
@@ -185,12 +215,6 @@ is used to generate one.</p>
 <dt id="joy.utils.types.unify">
 <code class="descclassname">joy.utils.types.</code><code class="descname">unify</code><span class="sig-paren">(</span><em>u</em>, <em>v</em>, <em>s=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#unify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.unify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a substitution dict representing a unifier for u and v.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.utils.types.update">
-<code class="descclassname">joy.utils.types.</code><code class="descname">update</code><span class="sig-paren">(</span><em>s</em>, <em>term</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply substitution dict to term, returning new term.</p>
 </dd></dl>
 
 </div>
@@ -276,6 +300,12 @@ combinators themselves.</p>
 guard against being used on invalid types.</p>
 </dd></dl>
 
+<dl class="data">
+<dt id="joy.utils.polytypes.FUNCTIONS">
+<code class="descclassname">joy.utils.polytypes.</code><code class="descname">FUNCTIONS</code><em class="property"> = {'_Tree_add_Ee': _Tree_add_Ee, '_Tree_delete_R0': _Tree_delete_R0, '_Tree_delete_clear_stuff': _Tree_delete_clear_stuff, '_Tree_get_E': _Tree_get_E, 'add': add, 'and': and, 'b': b, 'bool': bool, 'branch': branch, 'ccons': ccons, 'clear': clear, 'concat_': concat_, 'cons': cons, 'dip': dip, 'dipd': dipd, 'dipdd': dipdd, 'div': div, 'divmod': divmod, 'dup': dup, 'dupd': dupd, 'dupdd': dupdd, 'dupdip': dupdip, 'eq': eq, 'first': first, 'first_two': first_two, 'floordiv': floordiv, 'fourth': fourth, 'ge': ge, 'gt': gt, 'i': i, 'infra': infra, 'le': le, 'loop': loop, 'lshift': lshift, 'lt': lt, 'modulus': modulus, 'mul': mul, 'ne': ne, 'neg': neg, 'not': not, 'nullary': nullary, 'over': over, 'pm': pm, 'pop': pop, 'popd': popd, 'popdd': popdd, 'popop': popop, 'popopd': popopd, 'popopdd': popopdd, 'pow': pow, 'pred': pred, 'product': product, 'rest': rest, 'rolldown': rolldown, 'rollup': rollup, 'rrest': rrest, 'rshift': rshift, 'second': second, 'sqrt': sqrt, 'stack': stack, 'stuncons': stuncons, 'stununcons': stununcons, 'sub': sub, 'succ': succ, 'sum': sum, 'swaack': swaack, 'swap': swap, 'swons': swons, 'third': third, 'truediv': truediv, 'tuck': tuck, 'uncons': uncons, 'unit': unit, 'unswons': unswons, 'x': x}</em><a class="headerlink" href="#joy.utils.polytypes.FUNCTIONS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Docstring for functions in Sphinx?</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="joy.utils.polytypes.FunctionJoyType">
 <em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">FunctionJoyType</code><span class="sig-paren">(</span><em>name</em>, <em>sec</em>, <em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#FunctionJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.FunctionJoyType" title="Permalink to this definition">¶</a></dt>
@@ -318,12 +348,6 @@ dicts, the “unifiers”) that don’t lead to type conflicts.</p>
 <dd><p>alias of <a class="reference internal" href="#joy.utils.types.NumberJoyType" title="joy.utils.types.NumberJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">joy.utils.types.NumberJoyType</span></code></a></p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="data">
-<dt id="joy.utils.polytypes.Ss">
-<code class="descclassname">joy.utils.polytypes.</code><code class="descname">Ss</code><em class="property"> = [s1*, s2*, s3*, s4*, s5*, s6*, s7*, s8*, s9*, s10*]</em><a class="headerlink" href="#joy.utils.polytypes.Ss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Docstring for functions in Sphinx?</p>
 </dd></dl>
 
 <dl class="class">
@@ -379,12 +403,6 @@ expression is carried along and updated and yielded.</p>
 <code class="descclassname">joy.utils.polytypes.</code><code class="descname">meta_compose</code><span class="sig-paren">(</span><em>F</em>, <em>G</em>, <em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#meta_compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.meta_compose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Yield the stack effects of the composition of two lists of stack
 effects.  An expression is carried along and updated and yielded.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.utils.polytypes.unify">
-<code class="descclassname">joy.utils.polytypes.</code><code class="descname">unify</code><span class="sig-paren">(</span><em>u</em>, <em>v</em>, <em>s=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#unify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.unify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a tuple of substitution dicts representing unifiers for u and v.</p>
 </dd></dl>
 
 </div>
