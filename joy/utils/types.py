@@ -120,7 +120,8 @@ def delabel(f, seen=None, c=None):
     if not isinstance(f, tuple):
         try:
             seen[f] = f.__class__(c[f.prefix] + 1)
-        except TypeError:  # FunctionJoyTypes break this.
+        except (TypeError,  # FunctionJoyTypes break this.
+                AttributeError):  # Symbol
             seen[f] = f
         else:
             c[f.prefix] += 1
