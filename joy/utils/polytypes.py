@@ -43,16 +43,16 @@ class IntJoyType(NumberJoyType): prefix = 'i'
 
 
 class KleeneStar(object):
-    '''
+    u'''
     A sequence of zero or more `AnyJoyType` variables would be:
 
        A*
 
     The `A*` works by splitting the universe into two alternate histories:
 
-       A* -> 0
+       A* → ∅
 
-       A* -> A A*
+       A* → A A*
 
     The Kleene star variable disappears in one universe, and in the other
     it turns into an `AnyJoyType` variable followed by itself again.
