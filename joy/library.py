@@ -71,7 +71,7 @@ ALIASES = (
   ('pred', ['--']),
   ('rolldown', ['roll<']),
   ('rollup', ['roll>']),
-  ('id', ['•']),
+  ('id', [u'•']),
   )
 
 
@@ -108,7 +108,8 @@ pam == [i] map
 run == [] swap infra
 sqr == dup mul
 size == 0 swap [pop ++] step
-cleave == [i] app2 [popd] dip
+fork == [i] app2
+cleave == fork [popd] dip
 average == [sum 1.0 *] [size] cleave /
 gcd == 1 [tuck modulus dup 0 >] loop pop
 least_fraction == dup [gcd] infra [div] concat map
@@ -124,8 +125,9 @@ primrec == [i] genrec
 step_zero == 0 roll> step
 codireco == cons dip rest cons
 make_generator == [codireco] ccons
+ifte == [nullary not] dipd branch
 '''
-# ifte == [nullary not] dipd branch
+# 
 # ifte == [nullary] dipd swap branch
 # genrec == [[genrec] cons cons cons cons] nullary swons concat ifte
 
@@ -476,6 +478,8 @@ def sort_(S):
 def clear(stack):
   '''Clear everything from the stack.
   ::
+
+    clear == stack [pop stack] loop
 
        ... clear
     ---------------
@@ -958,32 +962,32 @@ def branch(stack, expression, dictionary):
   return stack, concat(then if flag else else_, expression), dictionary
 
 
-@inscribe
-@FunctionWrapper
-def ifte(stack, expression, dictionary):
-  '''
-  If-Then-Else Combinator
-  ::
-
-                  ... [if] [then] [else] ifte
-       ---------------------------------------------------
-          ... [[else] [then]] [...] [if] infra select i
-
-
-
-
-                ... [if] [then] [else] ifte
-       -------------------------------------------------------
-          ... [else] [then] [...] [if] infra first choice i
-
-
-  Has the effect of grabbing a copy of the stack on which to run the
-  if-part using infra.
-  '''
-  (else_, (then, (if_, stack))) = stack
-  expression = (S_infra, (S_first, (S_choice, (S_i, expression))))
-  stack = (if_, (stack, (then, (else_, stack))))
-  return stack, expression, dictionary
+##@inscribe
+##@FunctionWrapper
+##def ifte(stack, expression, dictionary):
+##  '''
+##  If-Then-Else Combinator
+##  ::
+##
+##                  ... [if] [then] [else] ifte
+##       ---------------------------------------------------
+##          ... [[else] [then]] [...] [if] infra select i
+##
+##
+##
+##
+##                ... [if] [then] [else] ifte
+##       -------------------------------------------------------
+##          ... [else] [then] [...] [if] infra first choice i
+##
+##
+##  Has the effect of grabbing a copy of the stack on which to run the
+##  if-part using infra.
+##  '''
+##  (else_, (then, (if_, stack))) = stack
+##  expression = (S_infra, (S_first, (S_choice, (S_i, expression))))
+##  stack = (if_, (stack, (then, (else_, stack))))
+##  return stack, expression, dictionary
 
 
 @inscribe
