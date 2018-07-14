@@ -3,7 +3,7 @@
 
     from notebook_preamble import D, DefinitionWrapper, J, V, define
 
-Recursive Combinators
+Recursion Combinators
 =====================
 
 This article describes the ``genrec`` combinator, how to use it, and

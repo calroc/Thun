@@ -23,7 +23,7 @@ $(docs_rst): %.rst : %.ipynb
 	python -m nbconvert --to rst $<
 
 
-move_us = Generator_Programs.rst Newton-Raphson.rst Ordered_Binary_Trees.rst Quadratic.rst Recursion_Combinators.rst Replacing.rst Treestep.rst Types.rst Zipper.rst
+move_us = Derivatives_of_Regular_Expressions.rst Generator_Programs.rst Newton-Raphson.rst Ordered_Binary_Trees.rst Quadratic.rst Recursion_Combinators.rst Replacing.rst The_Four_Operations.rst Treestep.rst TypeChecking.rst Types.rst Zipper.rst
 
 mov: $(move_us)
 	cp -v $? ./sphinx_docs/notebooks/

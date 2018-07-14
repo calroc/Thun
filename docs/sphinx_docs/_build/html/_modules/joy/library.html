@@ -104,7 +104,7 @@
   <span class="p">(</span><span class="s1">&#39;pred&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;--&#39;</span><span class="p">]),</span>
   <span class="p">(</span><span class="s1">&#39;rolldown&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;roll&lt;&#39;</span><span class="p">]),</span>
   <span class="p">(</span><span class="s1">&#39;rollup&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;roll&gt;&#39;</span><span class="p">]),</span>
-  <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;•&#39;</span><span class="p">]),</span>
+  <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="p">[</span><span class="sa">u</span><span class="s1">&#39;•&#39;</span><span class="p">]),</span>
   <span class="p">)</span>
 
 
@@ -141,7 +141,8 @@
 <span class="s1">run == [] swap infra</span>
 <span class="s1">sqr == dup mul</span>
 <span class="s1">size == 0 swap [pop ++] step</span>
-<span class="s1">cleave == [i] app2 [popd] dip</span>
+<span class="s1">fork == [i] app2</span>
+<span class="s1">cleave == fork [popd] dip</span>
 <span class="s1">average == [sum 1.0 *] [size] cleave /</span>
 <span class="s1">gcd == 1 [tuck modulus dup 0 &gt;] loop pop</span>
 <span class="s1">least_fraction == dup [gcd] infra [div] concat map</span>
@@ -157,8 +158,9 @@
 <span class="s1">step_zero == 0 roll&gt; step</span>
 <span class="s1">codireco == cons dip rest cons</span>
 <span class="s1">make_generator == [codireco] ccons</span>
+<span class="s1">ifte == [nullary not] dipd branch</span>
 <span class="s1">&#39;&#39;&#39;</span>
-<span class="c1"># ifte == [nullary not] dipd branch</span>
+<span class="c1"># </span>
 <span class="c1"># ifte == [nullary] dipd swap branch</span>
 <span class="c1"># genrec == [[genrec] cons cons cons cons] nullary swons concat ifte</span>
 
@@ -509,6 +511,8 @@
 <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
   <span class="sd">&#39;&#39;&#39;Clear everything from the stack.</span>
 <span class="sd">  ::</span>
+
+<span class="sd">    clear == stack [pop stack] loop</span>
 
 <span class="sd">       ... clear</span>
 <span class="sd">    ---------------</span>
@@ -991,32 +995,32 @@
   <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">then</span> <span class="k">if</span> <span class="n">flag</span> <span class="k">else</span> <span class="n">else_</span><span class="p">,</span> <span class="n">expression</span><span class="p">),</span> <span class="n">dictionary</span></div>
 
 
-<div class="viewcode-block" id="ifte"><a class="viewcode-back" href="../../library.html#joy.library.ifte">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@FunctionWrapper</span>
-<span class="k">def</span> <span class="nf">ifte</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  If-Then-Else Combinator</span>
-<span class="sd">  ::</span>
-
-<span class="sd">                  ... [if] [then] [else] ifte</span>
-<span class="sd">       ---------------------------------------------------</span>
-<span class="sd">          ... [[else] [then]] [...] [if] infra select i</span>
-
-
-
-
-<span class="sd">                ... [if] [then] [else] ifte</span>
-<span class="sd">       -------------------------------------------------------</span>
-<span class="sd">          ... [else] [then] [...] [if] infra first choice i</span>
-
-
-<span class="sd">  Has the effect of grabbing a copy of the stack on which to run the</span>
-<span class="sd">  if-part using infra.</span>
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="p">(</span><span class="n">else_</span><span class="p">,</span> <span class="p">(</span><span class="n">then</span><span class="p">,</span> <span class="p">(</span><span class="n">if_</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">stack</span>
-  <span class="n">expression</span> <span class="o">=</span> <span class="p">(</span><span class="n">S_infra</span><span class="p">,</span> <span class="p">(</span><span class="n">S_first</span><span class="p">,</span> <span class="p">(</span><span class="n">S_choice</span><span class="p">,</span> <span class="p">(</span><span class="n">S_i</span><span class="p">,</span> <span class="n">expression</span><span class="p">))))</span>
-  <span class="n">stack</span> <span class="o">=</span> <span class="p">(</span><span class="n">if_</span><span class="p">,</span> <span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="p">(</span><span class="n">then</span><span class="p">,</span> <span class="p">(</span><span class="n">else_</span><span class="p">,</span> <span class="n">stack</span><span class="p">))))</span>
-  <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
+<span class="c1">##@inscribe</span>
+<span class="c1">##@FunctionWrapper</span>
+<span class="c1">##def ifte(stack, expression, dictionary):</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  If-Then-Else Combinator</span>
+<span class="c1">##  ::</span>
+<span class="c1">##</span>
+<span class="c1">##                  ... [if] [then] [else] ifte</span>
+<span class="c1">##       ---------------------------------------------------</span>
+<span class="c1">##          ... [[else] [then]] [...] [if] infra select i</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">##                ... [if] [then] [else] ifte</span>
+<span class="c1">##       -------------------------------------------------------</span>
+<span class="c1">##          ... [else] [then] [...] [if] infra first choice i</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">##  Has the effect of grabbing a copy of the stack on which to run the</span>
+<span class="c1">##  if-part using infra.</span>
+<span class="c1">##  &#39;&#39;&#39;</span>
+<span class="c1">##  (else_, (then, (if_, stack))) = stack</span>
+<span class="c1">##  expression = (S_infra, (S_first, (S_choice, (S_i, expression))))</span>
+<span class="c1">##  stack = (if_, (stack, (then, (else_, stack))))</span>
+<span class="c1">##  return stack, expression, dictionary</span>
 
 
 <div class="viewcode-block" id="cond"><a class="viewcode-back" href="../../library.html#joy.library.cond">[docs]</a><span class="nd">@inscribe</span>

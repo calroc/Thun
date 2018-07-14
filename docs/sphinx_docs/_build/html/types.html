@@ -278,17 +278,6 @@ we can capture more information about the type signatures of some functions,
 and we can introduce a kind of Kleene Star or sequence type that can stand for
 an unbounded sequence of other types.</p>
 <dl class="class">
-<dt id="joy.utils.polytypes.AnyStarJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">AnyStarJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#AnyStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.AnyStarJoyType" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
-<dt id="joy.utils.polytypes.AnyStarJoyType.kind">
-<code class="descname">kind</code><a class="headerlink" href="#joy.utils.polytypes.AnyStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#joy.utils.types.AnyJoyType" title="joy.utils.types.AnyJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">joy.utils.types.AnyJoyType</span></code></a></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="joy.utils.polytypes.CombinatorJoyType">
 <em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">CombinatorJoyType</code><span class="sig-paren">(</span><em>name</em>, <em>sec</em>, <em>number</em>, <em>expect=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#CombinatorJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.CombinatorJoyType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represent combinators.</p>
@@ -324,8 +313,8 @@ guard against being used on invalid types.</p>
 <div>A*</div></blockquote>
 <p>The <cite>A*</cite> works by splitting the universe into two alternate histories:</p>
 <blockquote>
-<div><p>A* -&gt; 0</p>
-<p>A* -&gt; A A*</p>
+<div><p>A* → ∅</p>
+<p>A* → A A*</p>
 </div></blockquote>
 <p>The Kleene star variable disappears in one universe, and in the other
 it turns into an <cite>AnyJoyType</cite> variable followed by itself again.</p>
@@ -335,28 +324,6 @@ dicts, the “unifiers”) that don’t lead to type conflicts.</p>
 <dt id="joy.utils.polytypes.KleeneStar.kind">
 <code class="descname">kind</code><a class="headerlink" href="#joy.utils.polytypes.KleeneStar.kind" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <a class="reference internal" href="#joy.utils.types.AnyJoyType" title="joy.utils.types.AnyJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">joy.utils.types.AnyJoyType</span></code></a></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="joy.utils.polytypes.NumberStarJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">NumberStarJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#NumberStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.NumberStarJoyType" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
-<dt id="joy.utils.polytypes.NumberStarJoyType.kind">
-<code class="descname">kind</code><a class="headerlink" href="#joy.utils.polytypes.NumberStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#joy.utils.types.NumberJoyType" title="joy.utils.types.NumberJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">joy.utils.types.NumberJoyType</span></code></a></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="joy.utils.polytypes.StackStarJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.polytypes.</code><code class="descname">StackStarJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#StackStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.StackStarJoyType" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
-<dt id="joy.utils.polytypes.StackStarJoyType.kind">
-<code class="descname">kind</code><a class="headerlink" href="#joy.utils.polytypes.StackStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#joy.utils.types.StackJoyType" title="joy.utils.types.StackJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">joy.utils.types.StackJoyType</span></code></a></p>
 </dd></dl>
 
 </dd></dl>

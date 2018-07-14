@@ -187,7 +187,9 @@ Boolean value (so empty string, zero, etc. are counted as false, etc.)</p>
 <dt id="joy.library.clear">
 <code class="descclassname">joy.library.</code><code class="descname">clear</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear everything from the stack.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="n">clear</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">clear</span> <span class="o">==</span> <span class="n">stack</span> <span class="p">[</span><span class="n">pop</span> <span class="n">stack</span><span class="p">]</span> <span class="n">loop</span>
+
+   <span class="o">...</span> <span class="n">clear</span>
 <span class="o">---------------</span>
 </pre></div>
 </div>
@@ -401,26 +403,6 @@ onto the pending expression for evaluation.</p>
 <dt id="joy.library.id_">
 <code class="descclassname">joy.library.</code><code class="descname">id_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#id_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.id_" title="Permalink to this definition">¶</a></dt>
 <dd><p>The identity function.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.ifte">
-<code class="descclassname">joy.library.</code><code class="descname">ifte</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#ifte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.ifte" title="Permalink to this definition">¶</a></dt>
-<dd><p>If-Then-Else Combinator</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>           <span class="o">...</span> <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="k">else</span><span class="p">]</span> <span class="n">ifte</span>
-<span class="o">---------------------------------------------------</span>
-   <span class="o">...</span> <span class="p">[[</span><span class="k">else</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]]</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="n">infra</span> <span class="n">select</span> <span class="n">i</span>
-
-
-
-
-         <span class="o">...</span> <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="k">else</span><span class="p">]</span> <span class="n">ifte</span>
-<span class="o">-------------------------------------------------------</span>
-   <span class="o">...</span> <span class="p">[</span><span class="k">else</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="n">infra</span> <span class="n">first</span> <span class="n">choice</span> <span class="n">i</span>
-</pre></div>
-</div>
-<p>Has the effect of grabbing a copy of the stack on which to run the
-if-part using infra.</p>
 </dd></dl>
 
 <dl class="function">
