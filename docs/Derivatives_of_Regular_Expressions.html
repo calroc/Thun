@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>Generator_Programs</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Derivatives_of_Regular_Expressions</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11775,8 +11775,107 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Using-x-to-Generate-Values">Using <code>x</code> to Generate Values<a class="anchor-link" href="#Using-x-to-Generate-Values">&#182;</a></h1><p>Cf. jp-reprod.html</p>
+<h1 id="&#8706;RE">&#8706;RE<a class="anchor-link" href="#&#8706;RE">&#182;</a></h1><h2 id="Brzozowski's-Derivatives-of-Regular-Expressions">Brzozowski's Derivatives of Regular Expressions<a class="anchor-link" href="#Brzozowski's-Derivatives-of-Regular-Expressions">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Legend:</p>
 
+<pre><code>∧ intersection
+∨ union
+∘ concatenation (see below)
+¬ complement
+ϕ empty set (aka ∅)
+λ singleton set containing just the empty string
+I set of all letters in alphabet</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Derivative of a set <code>R</code> of strings and a string <code>a</code>:</p>
+
+<pre><code>∂a(R)
+
+∂a(a) → λ
+∂a(λ) → ϕ
+∂a(ϕ) → ϕ
+∂a(¬a) → ϕ
+∂a(R*) → ∂a(R)∘R*
+∂a(¬R) → ¬∂a(R)
+∂a(R∘S) → ∂a(R)∘S ∨ δ(R)∘∂a(S)
+∂a(R ∧ S) → ∂a(R) ∧ ∂a(S)
+∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
+
+∂ab(R) = ∂b(∂a(R))</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Auxiliary predicate function <code>δ</code> (I call it <code>nully</code>) returns either <code>λ</code> if <code>λ ⊆ R</code> or <code>ϕ</code> otherwise:</p>
+
+<pre><code>δ(a) → ϕ
+δ(λ) → λ
+δ(ϕ) → ϕ
+δ(R*) → λ
+δ(¬R) δ(R)≟ϕ → λ
+δ(¬R) δ(R)≟λ → ϕ
+δ(R∘S) → δ(R) ∧ δ(S)
+δ(R ∧ S) → δ(R) ∧ δ(S)
+δ(R ∨ S) → δ(R) ∨ δ(S)</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Some rules we will use later for "compaction":</p>
+
+<pre><code>R ∧ ϕ = ϕ ∧ R = ϕ
+
+R ∧ I = I ∧ R = R
+
+R ∨ ϕ = ϕ ∨ R = R
+
+R ∨ I = I ∨ R = I
+
+R∘ϕ = ϕ∘R = ϕ
+
+R∘λ = λ∘R = R</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Concatination of sets: for two sets A and B the set A∘B is defined as:</p>
+<p>{a∘b for a in A for b in B}</p>
+<p>E.g.:</p>
+<p>{'a', 'b'}∘{'c', 'd'} → {'ac', 'ad', 'bc', 'bd'}</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Implementation">Implementation<a class="anchor-link" href="#Implementation">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -11785,7 +11884,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span> <span class="k">as</span> <span class="n">curry</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 </pre></div>
 
 </div>
@@ -11797,76 +11897,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Consider the <code>x</code> combinator:</p>
-
-<pre><code>x == dup i</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can apply it to a quoted program consisting of some value <code>a</code> and some function <code>B</code>:</p>
-
-<pre><code>[a B] x
-[a B] a B</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let <code>B</code> function <code>swap</code> the <code>a</code> with the quote and run some function <code>C</code> on it to generate a new value <code>b</code>:</p>
-
-<pre><code>B == swap [C] dip
-
-[a B] a B
-[a B] a swap [C] dip
-a [a B]      [C] dip
-a C [a B]
-b [a B]</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Now discard the quoted <code>a</code> with <code>rest</code> then <code>cons</code> <code>b</code>:</p>
-
-<pre><code>b [a B] rest cons
-b [B]        cons
-[b B]</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Altogether, this is the definition of <code>B</code>:</p>
-
-<pre><code>B == swap [C] dip rest cons</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can make a generator for the Natural numbers (0, 1, 2, ...) by using <code>0</code> for <code>a</code> and <code>[dup ++]</code> for <code>[C]</code>:</p>
-
-<pre><code>[0 swap [dup ++] dip rest cons]
-
-</code></pre>
-<p>Let's try it:</p>
+<h3 id="&#981;-and-&#955;"><code>&#981;</code> and <code>&#955;</code><a class="anchor-link" href="#&#981;-and-&#955;">&#182;</a></h3><p>The empty set and the set of just the empty string.</p>
 
 </div>
 </div>
@@ -11876,39 +11907,11 @@ b [B]        cons
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[0 swap [dup ++] dip rest cons] x&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">phi</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>   <span class="c1"># ϕ</span>
+<span class="n">y</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;&#39;</span><span class="p">})</span> <span class="c1"># λ</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>                                           . [0 swap [dup ++] dip rest cons] x
-           [0 swap [dup ++] dip rest cons] . x
-           [0 swap [dup ++] dip rest cons] . 0 swap [dup ++] dip rest cons
-         [0 swap [dup ++] dip rest cons] 0 . swap [dup ++] dip rest cons
-         0 [0 swap [dup ++] dip rest cons] . [dup ++] dip rest cons
-0 [0 swap [dup ++] dip rest cons] [dup ++] . dip rest cons
-                                         0 . dup ++ [0 swap [dup ++] dip rest cons] rest cons
-                                       0 0 . ++ [0 swap [dup ++] dip rest cons] rest cons
-                                       0 1 . [0 swap [dup ++] dip rest cons] rest cons
-       0 1 [0 swap [dup ++] dip rest cons] . rest cons
-         0 1 [swap [dup ++] dip rest cons] . cons
-         0 [1 swap [dup ++] dip rest cons] . 
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -11917,7 +11920,8 @@ b [B]        cons
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>After one application of <code>x</code> the quoted program contains <code>1</code> and <code>0</code> is below it on the stack.</p>
+<h3 id="Two-letter-Alphabet">Two-letter Alphabet<a class="anchor-link" href="#Two-letter-Alphabet">&#182;</a></h3><p>I'm only going to use two symbols (at first) becaase this is enough to illustrate the algorithm and because you can represent any other alphabet with two symbols (if you had to.)</p>
+<p>I chose the names <code>O</code> and <code>l</code> (uppercase "o" and lowercase "L") to look like <code>0</code> and <code>1</code> (zero and one) respectively.</p>
 
 </div>
 </div>
@@ -11927,28 +11931,10 @@ b [B]        cons
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 swap [dup ++] dip rest cons] x x x x x pop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">syms</span> <span class="o">=</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;0&#39;</span><span class="p">}),</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;1&#39;</span><span class="p">})</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>0 1 2 3 4
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -11957,7 +11943,19 @@ b [B]        cons
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="direco"><code>direco</code><a class="anchor-link" href="#direco">&#182;</a></h2>
+<h3 id="Representing-Regular-Expressions">Representing Regular Expressions<a class="anchor-link" href="#Representing-Regular-Expressions">&#182;</a></h3><p>To represent REs in Python I'm going to use tagged tuples.  A <em>regular expression</em> is one of:</p>
+
+<pre><code>O
+l
+(KSTAR, R)
+(NOT, R)
+(AND, R, S)
+(CONS, R, S)
+(OR, R, S)
+
+</code></pre>
+<p>Where <code>R</code> and <code>S</code> stand for <em>regular expressions</em>.</p>
+
 </div>
 </div>
 </div>
@@ -11966,87 +11964,80 @@ b [B]        cons
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;direco == dip rest cons&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">AND</span><span class="p">,</span> <span class="n">CONS</span><span class="p">,</span> <span class="n">KSTAR</span><span class="p">,</span> <span class="n">NOT</span><span class="p">,</span> <span class="n">OR</span> <span class="o">=</span> <span class="s1">&#39;and cons * not or&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  <span class="c1"># Tags are just strings.</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Because they are formed of <code>frozenset</code>, <code>tuple</code> and <code>str</code> objects only, these datastructures are immutable.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="String-Representation-of-RE-Datastructures">String Representation of RE Datastructures<a class="anchor-link" href="#String-Representation-of-RE-Datastructures">&#182;</a></h3>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[0 swap [dup ++] direco] x&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Return a nice string repr for a regular expression datastructure.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">re</span> <span class="o">==</span> <span class="n">I</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;.&#39;</span>
+    <span class="k">if</span> <span class="n">re</span> <span class="ow">in</span> <span class="n">syms</span><span class="p">:</span> <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">re</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">re</span> <span class="o">==</span> <span class="n">y</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;^&#39;</span>
+    <span class="k">if</span> <span class="n">re</span> <span class="o">==</span> <span class="n">phi</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;X&#39;</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">re</span><span class="p">)</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">re</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">KSTAR</span><span class="p">:</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">body</span><span class="p">:</span> <span class="k">return</span> <span class="n">body</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">body</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="s2">&quot;)*&quot;</span>
+        <span class="k">return</span> <span class="n">body</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span>
+
+    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">NOT</span><span class="p">:</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">body</span><span class="p">:</span> <span class="k">return</span> <span class="n">body</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">body</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="s2">&quot;)&#39;&quot;</span>
+        <span class="k">return</span> <span class="n">body</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+
+    <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">CONS</span><span class="p">:</span> <span class="k">return</span> <span class="n">r</span> <span class="o">+</span> <span class="n">s</span>
+    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">OR</span><span class="p">:</span>   <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> | </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">AND</span><span class="p">:</span>  <span class="k">return</span> <span class="s1">&#39;(</span><span class="si">%s</span><span class="s1">) &amp; (</span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">ValueError</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>                                    . [0 swap [dup ++] direco] x
-           [0 swap [dup ++] direco] . x
-           [0 swap [dup ++] direco] . 0 swap [dup ++] direco
-         [0 swap [dup ++] direco] 0 . swap [dup ++] direco
-         0 [0 swap [dup ++] direco] . [dup ++] direco
-0 [0 swap [dup ++] direco] [dup ++] . direco
-0 [0 swap [dup ++] direco] [dup ++] . dip rest cons
-                                  0 . dup ++ [0 swap [dup ++] direco] rest cons
-                                0 0 . ++ [0 swap [dup ++] direco] rest cons
-                                0 1 . [0 swap [dup ++] direco] rest cons
-       0 1 [0 swap [dup ++] direco] . rest cons
-         0 1 [swap [dup ++] direco] . cons
-         0 [1 swap [dup ++] direco] . 
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Making-Generators">Making Generators<a class="anchor-link" href="#Making-Generators">&#182;</a></h2><p>We want to define a function that accepts <code>a</code> and <code>[C]</code> and builds our quoted program:</p>
+<h3 id="I"><code>I</code><a class="anchor-link" href="#I">&#182;</a></h3><p>Match anything.  Often spelled "."</p>
 
-<pre><code>         a [C] G
--------------------------
-   [a swap [C] direco]</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Working in reverse:</p>
-
-<pre><code>[a swap   [C] direco] cons
-a [swap   [C] direco] concat
-a [swap] [[C] direco] swap
-a [[C] direco] [swap]
-a [C] [direco] cons [swap]
-
-</code></pre>
-<p>Reading from the bottom up:</p>
-
-<pre><code>G == [direco] cons [swap] swap concat cons
-G == [direco] cons [swap] swoncat cons</code></pre>
+<pre><code>I = (0|1)*</code></pre>
 
 </div>
 </div>
@@ -12056,29 +12047,20 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;G == [direco] cons [swap] swoncat cons&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="n">KSTAR</span><span class="p">,</span> <span class="p">(</span><span class="n">OR</span><span class="p">,</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's try it out:</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 [dup ++] G&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span> <span class="n">stringy</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12095,7 +12077,7 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[0 swap [dup ++] direco]
+<pre>.
 </pre>
 </div>
 </div>
@@ -12103,52 +12085,44 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="(.111.)-&amp;-(.01-+-11*)'"><code>(.111.) &amp; (.01 + 11*)'</code><a class="anchor-link" href="#(.111.)-&amp;-(.01-+-11*)'">&#182;</a></h3><p>The example expression from Brzozowski:</p>
+
+<pre><code>(.111.) &amp; (.01 + 11*)'
+   a    &amp;  (b  +  c)'
+
+</code></pre>
+<p>Note that it contains one of everything.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 [dup ++] G x x x pop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">I</span><span class="p">))))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+<span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">KSTAR</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+<span class="n">it</span> <span class="o">=</span> <span class="p">(</span><span class="n">AND</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">NOT</span><span class="p">,</span> <span class="p">(</span><span class="n">OR</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)))</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>0 1 2
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Powers-of-2">Powers of 2<a class="anchor-link" href="#Powers-of-2">&#182;</a></h3>
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 [dup 1 &lt;&lt;] G x x x x x x x x x pop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span> <span class="n">stringy</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12165,7 +12139,7 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>1 2 4 8 16 32 64 128 256
+<pre>(.111.) &amp; ((.01 | 11*)&#39;)
 </pre>
 </div>
 </div>
@@ -12178,7 +12152,7 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="[x]-times"><code>[x] times</code><a class="anchor-link" href="#[x]-times">&#182;</a></h3><p>If we have one of these quoted programs we can drive it using <code>times</code> with the <code>x</code> combinator.</p>
+<h3 id="nully()"><code>nully()</code><a class="anchor-link" href="#nully()">&#182;</a></h3><p>Let's get that auxiliary predicate function <code>δ</code> out of the way.</p>
 
 </div>
 </div>
@@ -12188,28 +12162,39 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 [dup ++] G 5 [x] times&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">nully</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    δ - Return λ if λ ⊆ R otherwise ϕ.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># δ(a) → ϕ</span>
+    <span class="c1"># δ(ϕ) → ϕ</span>
+    <span class="k">if</span> <span class="n">R</span> <span class="ow">in</span> <span class="n">syms</span> <span class="ow">or</span> <span class="n">R</span> <span class="o">==</span> <span class="n">phi</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">phi</span>
+
+    <span class="c1"># δ(λ) → λ</span>
+    <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="n">y</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">y</span>
+
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># δ(R*) → λ</span>
+    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">KSTAR</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">y</span>
+
+    <span class="c1"># δ(¬R) δ(R)≟ϕ → λ</span>
+    <span class="c1"># δ(¬R) δ(R)≟λ → ϕ</span>
+    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">NOT</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">phi</span> <span class="k">if</span> <span class="n">nully</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">else</span> <span class="n">y</span>
+
+    <span class="c1"># δ(R∘S) → δ(R) ∧ δ(S)</span>
+    <span class="c1"># δ(R ∧ S) → δ(R) ∧ δ(S)</span>
+    <span class="c1"># δ(R ∨ S) → δ(R) ∨ δ(S)</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">nully</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">nully</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">r</span> <span class="o">&amp;</span> <span class="n">s</span> <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="p">{</span><span class="n">AND</span><span class="p">,</span> <span class="n">CONS</span><span class="p">}</span> <span class="k">else</span> <span class="n">r</span> <span class="o">|</span> <span class="n">s</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>23 24 25 26 27 [28 swap [dup ++] direco]
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -12218,18 +12203,9 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Generating-Multiples-of-Three-and-Five">Generating Multiples of Three and Five<a class="anchor-link" href="#Generating-Multiples-of-Three-and-Five">&#182;</a></h2><p>Look at the treatment of the Project Euler Problem One in the "Developing a Program" notebook and you'll see that we might be interested in generating an endless cycle of:</p>
-
-<pre><code>3 2 1 3 1 2 3
-
-</code></pre>
-<p>To do this we want to encode the numbers as pairs of bits in a single int:</p>
-
-<pre><code>    3  2  1  3  1  2  3
-0b 11 10 01 11 01 10 11 == 14811
-
-</code></pre>
-<p>And pick them off by masking with 3 (binary 11) and then shifting the int right two bits.</p>
+<h3 id="No-&quot;Compaction&quot;">No "Compaction"<a class="anchor-link" href="#No-&quot;Compaction&quot;">&#182;</a></h3><p>This is the straightforward version with no "compaction".
+It works fine, but does waaaay too much work because the
+expressions grow each derivation.</p>
 
 </div>
 </div>
@@ -12239,51 +12215,52 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.1 == dup [3 &amp;] dip 2 &gt;&gt;&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># This is the straightforward version with no &quot;compaction&quot;.</span>
+<span class="c1"># It works fine, but does waaaay too much work because the</span>
+<span class="c1"># expressions grow each derivation.</span>
+
+<span class="k">def</span> <span class="nf">D</span><span class="p">(</span><span class="n">symbol</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">derv</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+
+        <span class="c1"># ∂a(a) → λ</span>
+        <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="p">{</span><span class="n">symbol</span><span class="p">}:</span>
+            <span class="k">return</span> <span class="n">y</span>
+
+        <span class="c1"># ∂a(λ) → ϕ</span>
+        <span class="c1"># ∂a(ϕ) → ϕ</span>
+        <span class="c1"># ∂a(¬a) → ϕ</span>
+        <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="n">y</span> <span class="ow">or</span> <span class="n">R</span> <span class="o">==</span> <span class="n">phi</span> <span class="ow">or</span> <span class="n">R</span> <span class="ow">in</span> <span class="n">syms</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">phi</span>
+        
+        <span class="n">tag</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># ∂a(R*) → ∂a(R)∘R*</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">KSTAR</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">R</span><span class="p">)</span>
+
+        <span class="c1"># ∂a(¬R) → ¬∂a(R)</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">NOT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">NOT</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="c1"># ∂a(R∘S) → ∂a(R)∘S ∨ δ(R)∘∂a(S)</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">CONS</span><span class="p">:</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">s</span><span class="p">)</span>  <span class="c1"># A = ∂a(R)∘S</span>
+            <span class="c1"># A ∨ δ(R) ∘ ∂a(S)</span>
+            <span class="c1"># A ∨  λ   ∘ ∂a(S) → A ∨ ∂a(S)</span>
+            <span class="c1"># A ∨  ϕ   ∘ ∂a(S) → A ∨ ϕ → A</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">OR</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="k">if</span> <span class="n">nully</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">else</span> <span class="n">A</span>
+
+        <span class="c1"># ∂a(R ∧ S) → ∂a(R) ∧ ∂a(S)</span>
+        <span class="c1"># ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">derv</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">derv</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;14811 PE1.1&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>                  . 14811 PE1.1
-            14811 . PE1.1
-            14811 . dup [3 &amp;] dip 2 &gt;&gt;
-      14811 14811 . [3 &amp;] dip 2 &gt;&gt;
-14811 14811 [3 &amp;] . dip 2 &gt;&gt;
-            14811 . 3 &amp; 14811 2 &gt;&gt;
-          14811 3 . &amp; 14811 2 &gt;&gt;
-                3 . 14811 2 &gt;&gt;
-          3 14811 . 2 &gt;&gt;
-        3 14811 2 . &gt;&gt;
-           3 3702 . 
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -12292,7 +12269,34 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>If we plug <code>14811</code> and <code>[PE1.1]</code> into our generator form...</p>
+<h3 id="Compaction-Rules">Compaction Rules<a class="anchor-link" href="#Compaction-Rules">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">_compaction_rule</span><span class="p">(</span><span class="n">relation</span><span class="p">,</span> <span class="n">one</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">b</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">one</span> <span class="k">else</span>  <span class="c1"># R*1 = 1*R = R</span>
+        <span class="n">a</span> <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="n">one</span> <span class="k">else</span>
+        <span class="n">zero</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">zero</span> <span class="ow">or</span> <span class="n">b</span> <span class="o">==</span> <span class="n">zero</span> <span class="k">else</span>  <span class="c1"># R*0 = 0*R = 0</span>
+        <span class="p">(</span><span class="n">relation</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>An elegant symmetry.</p>
 
 </div>
 </div>
@@ -12302,28 +12306,20 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;14811 [PE1.1] G&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># R ∧ I = I ∧ R = R</span>
+<span class="c1"># R ∧ ϕ = ϕ ∧ R = ϕ</span>
+<span class="n">_and</span> <span class="o">=</span> <span class="n">curry</span><span class="p">(</span><span class="n">_compaction_rule</span><span class="p">,</span> <span class="n">AND</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+
+<span class="c1"># R ∨ ϕ = ϕ ∨ R = R</span>
+<span class="c1"># R ∨ I = I ∨ R = I</span>
+<span class="n">_or</span> <span class="o">=</span> <span class="n">curry</span><span class="p">(</span><span class="n">_compaction_rule</span><span class="p">,</span> <span class="n">OR</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">I</span><span class="p">)</span>
+
+<span class="c1"># R∘λ = λ∘R = R</span>
+<span class="c1"># R∘ϕ = ϕ∘R = ϕ</span>
+<span class="n">_cons</span> <span class="o">=</span> <span class="n">curry</span><span class="p">(</span><span class="n">_compaction_rule</span><span class="p">,</span> <span class="n">CONS</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[14811 swap [PE1.1] direco]
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -12332,7 +12328,7 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>...we get a generator that works for seven cycles before it reaches zero:</p>
+<h3 id="Memoizing">Memoizing<a class="anchor-link" href="#Memoizing">&#182;</a></h3><p>We can save re-processing by remembering results we have already computed.  RE datastructures are immutable and the <code>derv()</code> functions are <em>pure</em> so this is fine.</p>
 
 </div>
 </div>
@@ -12342,28 +12338,24 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 <div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1] direco] 7 [x] times&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">class</span> <span class="nc">Memo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hits</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mem</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calls</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hits</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>3 2 1 3 1 2 3 [0 swap [PE1.1] direco]
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -12372,7 +12364,7 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Reset-at-Zero">Reset at Zero<a class="anchor-link" href="#Reset-at-Zero">&#182;</a></h3><p>We need a function that checks if the int has reached zero and resets it if so.</p>
+<h3 id="With-&quot;Compaction&quot;">With "Compaction"<a class="anchor-link" href="#With-&quot;Compaction&quot;">&#182;</a></h3><p>This version uses the rules above to perform compaction.  It keeps the expressions from growing too large.</p>
 
 </div>
 </div>
@@ -12382,20 +12374,88 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 <div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.1.check == dup [pop 14811] [] branch&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">D_compaction</span><span class="p">(</span><span class="n">symbol</span><span class="p">):</span>
+
+    <span class="nd">@Memo</span>
+    <span class="k">def</span> <span class="nf">derv</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+
+        <span class="c1"># ∂a(a) → λ</span>
+        <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="p">{</span><span class="n">symbol</span><span class="p">}:</span>
+            <span class="k">return</span> <span class="n">y</span>
+
+        <span class="c1"># ∂a(λ) → ϕ</span>
+        <span class="c1"># ∂a(ϕ) → ϕ</span>
+        <span class="c1"># ∂a(¬a) → ϕ</span>
+        <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="n">y</span> <span class="ow">or</span> <span class="n">R</span> <span class="o">==</span> <span class="n">phi</span> <span class="ow">or</span> <span class="n">R</span> <span class="ow">in</span> <span class="n">syms</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">phi</span>
+
+        <span class="n">tag</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># ∂a(R*) → ∂a(R)∘R*</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">KSTAR</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_cons</span><span class="p">(</span><span class="n">derv</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">R</span><span class="p">)</span>
+
+        <span class="c1"># ∂a(¬R) → ¬∂a(R)</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">NOT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">NOT</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="c1"># ∂a(R∘S) → ∂a(R)∘S ∨ δ(R)∘∂a(S)</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">CONS</span><span class="p">:</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">_cons</span><span class="p">(</span><span class="n">derv</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">s</span><span class="p">)</span>  <span class="c1"># A = ∂a(r)∘s</span>
+            <span class="c1"># A ∨ δ(R) ∘ ∂a(S)</span>
+            <span class="c1"># A ∨  λ   ∘ ∂a(S) → A ∨ ∂a(S)</span>
+            <span class="c1"># A ∨  ϕ   ∘ ∂a(S) → A ∨ ϕ → A</span>
+            <span class="k">return</span> <span class="n">_or</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="k">if</span> <span class="n">nully</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">else</span> <span class="n">A</span>
+
+        <span class="c1"># ∂a(R ∧ S) → ∂a(R) ∧ ∂a(S)</span>
+        <span class="c1"># ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)</span>
+        <span class="n">dr</span><span class="p">,</span> <span class="n">ds</span> <span class="o">=</span> <span class="n">derv</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">derv</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_and</span><span class="p">(</span><span class="n">dr</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span> <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">AND</span> <span class="k">else</span> <span class="n">_or</span><span class="p">(</span><span class="n">dr</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">derv</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Let's-try-it-out...">Let's try it out...<a class="anchor-link" href="#Let's-try-it-out...">&#182;</a></h2><p>(FIXME: redo.)</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;14811 [PE1.1.check PE1.1] G&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">o</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">),</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="n">REs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])))</span>
+<span class="n">dervs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">[(</span><span class="n">o</span><span class="p">,</span> <span class="n">z</span><span class="p">)])))</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">ds</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">dervs</span><span class="p">):</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">it</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">ds</span><span class="p">:</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pop</span><span class="p">()(</span><span class="n">R</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="n">phi</span> <span class="ow">or</span> <span class="n">R</span> <span class="o">==</span> <span class="n">I</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">REs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">stringy</span><span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="p">;</span> <span class="k">print</span>
+<span class="k">print</span> <span class="n">o</span><span class="o">.</span><span class="n">hits</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">calls</span>
+<span class="k">print</span> <span class="n">z</span><span class="o">.</span><span class="n">hits</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">calls</span>
+<span class="k">print</span>
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">stringy</span><span class="p">,</span> <span class="n">REs</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">n</span><span class="p">)):</span>
+    <span class="k">print</span> <span class="n">s</span>
 </pre></div>
 
 </div>
@@ -12412,7 +12472,20 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[14811 swap [PE1.1.check PE1.1] direco]
+<pre>(.111.) &amp; ((.01 | 11*)&#39;)
+
+92 / 122
+92 / 122
+
+(.01)&#39;
+(.01 | 1)&#39;
+(.01 | ^)&#39;
+(.01 | 1*)&#39;
+(.111.) &amp; ((.01 | 1)&#39;)
+(.111. | 11.) &amp; ((.01 | ^)&#39;)
+(.111. | 11. | 1.) &amp; ((.01)&#39;)
+(.111. | 11.) &amp; ((.01 | 1*)&#39;)
+(.111. | 11. | 1.) &amp; ((.01 | 1*)&#39;)
 </pre>
 </div>
 </div>
@@ -12420,83 +12493,171 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Should match:</p>
+
+<pre><code>(.111.) &amp; ((.01 | 11*)')
+
+92 / 122
+92 / 122
+
+(.01     )'
+(.01 | 1 )'
+(.01 | ^ )'
+(.01 | 1*)'
+(.111.)            &amp; ((.01 | 1 )')
+(.111. | 11.)      &amp; ((.01 | ^ )')
+(.111. | 11.)      &amp; ((.01 | 1*)')
+(.111. | 11. | 1.) &amp; ((.01     )')
+(.111. | 11. | 1.) &amp; ((.01 | 1*)')</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Larger-Alphabets">Larger Alphabets<a class="anchor-link" href="#Larger-Alphabets">&#182;</a></h2><p>We could parse larger alphabets by defining patterns for e.g. each byte of the ASCII code.  Or we can generalize this code.  If you study the code above you'll see that we never use the "set-ness" of the symbols <code>O</code> and <code>l</code>.  The only time Python set operators (<code>&amp;</code> and <code>|</code>) appear is in the <code>nully()</code> function, and there they operate on (recursively computed) outputs of that function, never <code>O</code> and <code>l</code>.</p>
+<p>What if we try:</p>
+
+<pre><code>(OR, O, l)
+
+∂1((OR, O, l))
+                            ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
+∂1(O) ∨ ∂1(l)
+                            ∂a(¬a) → ϕ
+ϕ ∨ ∂1(l)
+                            ∂a(a) → λ
+ϕ ∨ λ
+                            ϕ ∨ R = R
+λ
+
+</code></pre>
+<p>And compare it to:</p>
+
+<pre><code>{'0', '1')
+
+∂1({'0', '1'))
+                            ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
+∂1({'0')) ∨ ∂1({'1'))
+                            ∂a(¬a) → ϕ
+ϕ ∨ ∂1({'1'))
+                            ∂a(a) → λ
+ϕ ∨ λ
+                            ϕ ∨ R = R
+λ
+
+</code></pre>
+<p>This suggests that we should be able to alter the functions above to detect sets and deal with them appropriately.  Exercise for the Reader for now.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="State-Machine">State Machine<a class="anchor-link" href="#State-Machine">&#182;</a></h2><p>We can drive the regular expressions to flesh out the underlying state machine transition table.</p>
+
+<pre><code>.111. &amp; (.01 + 11*)'
+
+</code></pre>
+<p>Says, "Three or more 1's and not ending in 01 nor composed of all 1's."</p>
+<p><img src="attachment:omg.svg" alt="omg.svg"></p>
+<p>Start at <code>a</code> and follow the transition arrows according to their labels.  Accepting states have a double outline.  (Graphic generated with <a href="http://www.graphviz.org/">Dot from Graphviz</a>.)  You'll see that only paths that lead to one of the accepting states will match the regular expression.  All other paths will terminate at one of the non-accepting states.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>There's a happy path to <code>g</code> along 111:</p>
+
+<pre><code>a→c→e→g
+
+</code></pre>
+<p>After you reach <code>g</code> you're stuck there eating 1's until you see a 0, which takes you to the <code>i→j→i|i→j→h→i</code> "trap".  You can't reach any other states from those two loops.</p>
+<p>If you see a 0 before you see 111 you will reach <code>b</code>, which forms another "trap" with <code>d</code> and <code>f</code>.  The only way out is another happy path along 111 to <code>h</code>:</p>
+
+<pre><code>b→d→f→h
+
+</code></pre>
+<p>Once you have reached <code>h</code> you can see as many 1's or as many 0' in a row and still be either still at <code>h</code> (for 1's) or move to <code>i</code> (for 0's).  If you find yourself at <code>i</code> you can see as many 0's, or repetitions of 10, as there are, but if you see just a 1 you move to <code>j</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="RE-to-FSM">RE to FSM<a class="anchor-link" href="#RE-to-FSM">&#182;</a></h3><p>So how do we get the state machine from the regular expression?</p>
+<p>It turns out that each RE is effectively a state, and each arrow points to the derivative RE in respect to the arrow's symbol.</p>
+<p>If we label the initial RE <code>a</code>, we can say:</p>
+
+<pre><code>a --0--&gt; ∂0(a)
+a --1--&gt; ∂1(a)
+
+</code></pre>
+<p>And so on, each new unique RE is a new state in the FSM table.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are the derived REs at each state:</p>
+
+<pre><code>a = (.111.) &amp; ((.01 | 11*)')
+b = (.111.) &amp; ((.01 | 1)')
+c = (.111. | 11.) &amp; ((.01 | 1*)')
+d = (.111. | 11.) &amp; ((.01 | ^)')
+e = (.111. | 11. | 1.) &amp; ((.01 | 1*)')
+f = (.111. | 11. | 1.) &amp; ((.01)')
+g = (.01 | 1*)'
+h = (.01)'
+i = (.01 | 1)'
+j = (.01 | ^)'
+
+</code></pre>
+<p>You can see the one-way nature of the <code>g</code> state and the <code>hij</code> "trap" in the way that the <code>.111.</code> on the left-hand side of the <code>&amp;</code> disappears once it has been matched.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] direco] 21 [x] times&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">ascii_lowercase</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 [0 swap [PE1.1.check PE1.1] direco]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>(It would be more efficient to reset the int every seven cycles but that's a little beyond the scope of this article.  This solution does extra work, but not much, and we're not using it "in production" as they say.)</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Run-466-times">Run 466 times<a class="anchor-link" href="#Run-466-times">&#182;</a></h3><p>In the PE1 problem we are asked to sum all the multiples of three and five less than 1000.  It's worked out that we need to use all seven numbers sixty-six times and then four more.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;7 66 * 4 +&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">d0</span><span class="p">,</span> <span class="n">d1</span> <span class="o">=</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">),</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>466
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -12505,8 +12666,7 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>If we drive our generator 466 times and sum the stack we get 999.</p>
-
+<h3 id="explore()"><code>explore()</code><a class="anchor-link" href="#explore()">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12515,28 +12675,33 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 <div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">explore</span><span class="p">(</span><span class="n">re</span><span class="p">):</span>
+
+    <span class="c1"># Don&#39;t have more than 26 states...</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">ascii_lowercase</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">)</span>
+
+    <span class="n">table</span><span class="p">,</span> <span class="n">accepting</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(),</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="n">to_check</span> <span class="o">=</span> <span class="p">{</span><span class="n">re</span><span class="p">}</span>
+    <span class="k">while</span> <span class="n">to_check</span><span class="p">:</span>
+
+        <span class="n">re</span> <span class="o">=</span> <span class="n">to_check</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">state_name</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">re</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">nully</span><span class="p">(</span><span class="n">re</span><span class="p">):</span>
+            <span class="n">accepting</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">state_name</span><span class="p">)</span>
+
+        <span class="n">o</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="n">d0</span><span class="p">(</span><span class="n">re</span><span class="p">),</span> <span class="n">d1</span><span class="p">(</span><span class="n">re</span><span class="p">)</span>
+        <span class="n">table</span><span class="p">[</span><span class="n">state_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="p">;</span> <span class="n">to_check</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+        <span class="n">table</span><span class="p">[</span><span class="n">state_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">;</span> <span class="n">to_check</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">table</span><span class="p">,</span> <span class="n">accepting</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 [57 swap [PE1.1.check PE1.1] direco]
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -12546,7 +12711,8 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 <div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times pop enstacken sum&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">table</span><span class="p">,</span> <span class="n">accepting</span> <span class="o">=</span> <span class="n">explore</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="n">table</span>
 </pre></div>
 
 </div>
@@ -12559,36 +12725,69 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 
 <div class="output_area">
 
-<div class="prompt"></div>
+<div class="prompt output_prompt">Out[20]:</div>
 
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>999
-</pre>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{(&#39;a&#39;, 0): &#39;b&#39;,
+ (&#39;a&#39;, 1): &#39;c&#39;,
+ (&#39;b&#39;, 0): &#39;b&#39;,
+ (&#39;b&#39;, 1): &#39;d&#39;,
+ (&#39;c&#39;, 0): &#39;b&#39;,
+ (&#39;c&#39;, 1): &#39;e&#39;,
+ (&#39;d&#39;, 0): &#39;b&#39;,
+ (&#39;d&#39;, 1): &#39;f&#39;,
+ (&#39;e&#39;, 0): &#39;b&#39;,
+ (&#39;e&#39;, 1): &#39;g&#39;,
+ (&#39;f&#39;, 0): &#39;b&#39;,
+ (&#39;f&#39;, 1): &#39;h&#39;,
+ (&#39;g&#39;, 0): &#39;i&#39;,
+ (&#39;g&#39;, 1): &#39;g&#39;,
+ (&#39;h&#39;, 0): &#39;i&#39;,
+ (&#39;h&#39;, 1): &#39;h&#39;,
+ (&#39;i&#39;, 0): &#39;i&#39;,
+ (&#39;i&#39;, 1): &#39;j&#39;,
+ (&#39;j&#39;, 0): &#39;i&#39;,
+ (&#39;j&#39;, 1): &#39;h&#39;}</pre>
 </div>
+
 </div>
 
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Project-Euler-Problem-One">Project Euler Problem One<a class="anchor-link" href="#Project-Euler-Problem-One">&#182;</a></h2>
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.2 == + dup [+] dip&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">accepting</span>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[21]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;h&#39;, &#39;i&#39;}</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -12597,7 +12796,7 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we can add <code>PE1.2</code> to the quoted program given to <code>G</code>.</p>
+<h3 id="Generate-Diagram">Generate Diagram<a class="anchor-link" href="#Generate-Diagram">&#182;</a></h3><p>Once we have the FSM table and the set of accepting states we can generate the diagram above.</p>
 
 </div>
 </div>
@@ -12607,194 +12806,41 @@ G == [direco] cons [swap] swoncat cons</code></pre>
 <div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 0 [PE1.1.check PE1.1] G 466 [x [PE1.2] dip] times popop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">_template</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">digraph finite_state_machine {</span>
+<span class="s1">  rankdir=LR;</span>
+<span class="s1">  size=&quot;8,5&quot;</span>
+<span class="s1">  node [shape = doublecircle]; </span><span class="si">%s</span><span class="s1">;</span>
+<span class="s1">  node [shape = circle];</span>
+<span class="si">%s</span><span class="s1"></span>
+<span class="s1">}</span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+<span class="k">def</span> <span class="nf">link</span><span class="p">(</span><span class="n">fr</span><span class="p">,</span> <span class="n">nm</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;  </span><span class="si">%s</span><span class="s1"> -&gt; </span><span class="si">%s</span><span class="s1"> [ label = &quot;</span><span class="si">%s</span><span class="s1">&quot; ];&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fr</span><span class="p">,</span> <span class="n">nm</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">make_graph</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">accepting</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_template</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">accepting</span><span class="p">),</span>
+        <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+          <span class="n">link</span><span class="p">(</span><span class="n">from_</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="n">char</span><span class="p">)</span>
+          <span class="k">for</span> <span class="p">(</span><span class="n">from_</span><span class="p">,</span> <span class="n">char</span><span class="p">),</span> <span class="p">(</span><span class="n">to</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">iteritems</span><span class="p">())</span>
+          <span class="p">)</span>
+        <span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>233168
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="A-generator-for-the-Fibonacci-Sequence.">A generator for the Fibonacci Sequence.<a class="anchor-link" href="#A-generator-for-the-Fibonacci-Sequence.">&#182;</a></h2><p>Consider:</p>
-
-<pre><code>[b a F] x
-[b a F] b a F</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The obvious first thing to do is just add <code>b</code> and <code>a</code>:</p>
-
-<pre><code>[b a F] b a +
-[b a F] b+a</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>From here we want to arrive at:</p>
-
-<pre><code>b [b+a b F]</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's start with <code>swons</code>:</p>
-
-<pre><code>[b a F] b+a swons
-[b+a b a F]</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Considering this quote as a stack:</p>
-
-<pre><code>F a b b+a</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We want to get it to:</p>
-
-<pre><code>F b b+a b</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>So:</p>
-
-<pre><code>F a b b+a popdd over
-F b b+a b</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>And therefore:</p>
-
-<pre><code>[b+a b a F] [popdd over] infra
-[b b+a b F]</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>But we can just use <code>cons</code> to carry <code>b+a</code> into the quote:</p>
-
-<pre><code>[b a F] b+a [popdd over] cons infra
-[b a F] [b+a popdd over]      infra
-[b b+a b F]</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Lastly:</p>
-
-<pre><code>[b b+a b F] uncons
-b [b+a b F]</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Putting it all together:</p>
-
-<pre><code>F == + [popdd over] cons infra uncons
-fib_gen == [1 1 F]</code></pre>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;fib == + [popdd over] cons infra uncons&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;fib_gen == [1 1 fib]&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;fib_gen 10 [x] times&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span> <span class="n">make_graph</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">accepting</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12811,7 +12857,33 @@ fib_gen == [1 1 F]</code></pre>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>1 2 3 5 8 13 21 34 55 89 [144 89 fib]
+<pre>digraph finite_state_machine {
+  rankdir=LR;
+  size=&#34;8,5&#34;
+  node [shape = doublecircle]; i h;
+  node [shape = circle];
+  a -&gt; b [ label = &#34;0&#34; ];
+  a -&gt; c [ label = &#34;1&#34; ];
+  b -&gt; b [ label = &#34;0&#34; ];
+  b -&gt; d [ label = &#34;1&#34; ];
+  c -&gt; b [ label = &#34;0&#34; ];
+  c -&gt; e [ label = &#34;1&#34; ];
+  d -&gt; b [ label = &#34;0&#34; ];
+  d -&gt; f [ label = &#34;1&#34; ];
+  e -&gt; b [ label = &#34;0&#34; ];
+  e -&gt; g [ label = &#34;1&#34; ];
+  f -&gt; b [ label = &#34;0&#34; ];
+  f -&gt; h [ label = &#34;1&#34; ];
+  g -&gt; i [ label = &#34;0&#34; ];
+  g -&gt; g [ label = &#34;1&#34; ];
+  h -&gt; i [ label = &#34;0&#34; ];
+  h -&gt; h [ label = &#34;1&#34; ];
+  i -&gt; i [ label = &#34;0&#34; ];
+  i -&gt; j [ label = &#34;1&#34; ];
+  j -&gt; i [ label = &#34;0&#34; ];
+  j -&gt; h [ label = &#34;1&#34; ];
+}
+
 </pre>
 </div>
 </div>
@@ -12824,9 +12896,77 @@ fib_gen == [1 1 F]</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Project-Euler-Problem-Two">Project Euler Problem Two<a class="anchor-link" href="#Project-Euler-Problem-Two">&#182;</a></h2><blockquote><p>By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.</p>
-</blockquote>
-<p>Now that we have a generator for the Fibonacci sequence, we need a function that adds a term in the sequence to a sum if it is even, and <code>pop</code>s it otherwise.</p>
+<h3 id="Drive-a-FSM">Drive a FSM<a class="anchor-link" href="#Drive-a-FSM">&#182;</a></h3><p>There are <em>lots</em> of FSM libraries already.  Once you have the state transition table they should all be straightforward to use.  State Machine code is very simple.  Just for fun, here is an implementation in Python that imitates what "compiled" FSM code might look like in an "unrolled" form.  Most FSM code uses a little driver loop and a table datastructure, the code below instead acts like JMP instructions ("jump", or GOTO in higher-level-but-still-low-level languages) to hard-code the information in the table into a little patch of branches.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Trampoline-Function">Trampoline Function<a class="anchor-link" href="#Trampoline-Function">&#182;</a></h4><p>Python has no GOTO statement but we can fake it with a "trampoline" function.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">trampoline</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">jump_from</span><span class="p">,</span> <span class="n">accepting</span><span class="p">):</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">input_</span><span class="p">)</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">bounce_to</span> <span class="o">=</span> <span class="n">jump_from</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">jump_from</span> <span class="ow">in</span> <span class="n">accepting</span>
+        <span class="n">jump_from</span> <span class="o">=</span> <span class="n">bounce_to</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Stream-Functions">Stream Functions<a class="anchor-link" href="#Stream-Functions">&#182;</a></h4><p>Little helpers to process the iterator of our data (a "stream" of "1" and "0" characters, not bits.)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">getch</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">I</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_1</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Loop on ones.&#39;&#39;&#39;</span>
+    <span class="k">while</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">):</span> <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_0</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Loop on zeros.&#39;&#39;&#39;</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">):</span> <span class="k">pass</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="A-Finite-State-Machine">A Finite State Machine<a class="anchor-link" href="#A-Finite-State-Machine">&#182;</a></h4><p>With those preliminaries out of the way, from the state table of <code>.111. &amp; (.01 + 11*)'</code> we can immediately write down state machine code.  (You have to imagine that these are GOTO statements in C or branches in assembly and that the state names are branch destination labels.)</p>
 
 </div>
 </div>
@@ -12836,7 +12976,16 @@ fib_gen == [1 1 F]</code></pre>
 <div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE2.1 == dup 2 % [+] [pop] branch&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">c</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
+<span class="n">b</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">_0</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="ow">or</span> <span class="n">d</span>
+<span class="n">c</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">e</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
+<span class="n">d</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">f</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
+<span class="n">e</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">g</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
+<span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">h</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
+<span class="n">g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">_1</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="ow">or</span> <span class="n">i</span>
+<span class="n">h</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">_1</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="ow">or</span> <span class="n">i</span>
+<span class="n">i</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">_0</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="ow">or</span> <span class="n">j</span>
+<span class="n">j</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">h</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">i</span>
 </pre></div>
 
 </div>
@@ -12848,7 +12997,7 @@ fib_gen == [1 1 F]</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>And a predicate function that detects when the terms in the series "exceed four million".</p>
+<p>Note that the implementations of <code>h</code> and <code>g</code> are identical ergo <code>h = g</code> and we could eliminate one in the code but <code>h</code> is an accepting state and <code>g</code> isn't.</p>
 
 </div>
 </div>
@@ -12858,42 +13007,23 @@ fib_gen == [1 1 F]</code></pre>
 <div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;&gt;4M == 4000000 &gt;&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">acceptable</span><span class="p">(</span><span class="n">input_</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">trampoline</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="p">{</span><span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">})</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Now it's straightforward to define <code>PE2</code> as a recursive function that generates terms in the Fibonacci sequence until they exceed four million and sums the even ones.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE2 == 0 fib_gen x [pop &gt;4M] [popop] [[PE2.1] dip x] primrec&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE2&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="n">n</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="k">print</span> <span class="s1">&#39;</span><span class="si">%05s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">s</span><span class="p">,</span> <span class="n">acceptable</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12910,7 +13040,38 @@ fib_gen == [1 1 F]</code></pre>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>4613732
+<pre>    0 False
+    1 False
+   10 False
+   11 False
+  100 False
+  101 False
+  110 False
+  111 False
+ 1000 False
+ 1001 False
+ 1010 False
+ 1011 False
+ 1100 False
+ 1101 False
+ 1110 True
+ 1111 False
+10000 False
+10001 False
+10010 False
+10011 False
+10100 False
+10101 False
+10110 False
+10111 True
+11000 False
+11001 False
+11010 False
+11011 False
+11100 True
+11101 False
+11110 True
+11111 False
 </pre>
 </div>
 </div>
@@ -12923,16 +13084,8 @@ fib_gen == [1 1 F]</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Here's the collected program definitions:</p>
-
-<pre><code>fib == + swons [popdd over] infra uncons
-fib_gen == [1 1 fib]
-
-even == dup 2 %
-&gt;4M == 4000000 &gt;
-
-PE2.1 == even [+] [pop] branch
-PE2 == 0 fib_gen x [pop &gt;4M] [popop] [[PE2.1] dip x] primrec</code></pre>
+<h2 id="Reversing-the-Derivatives-to-Generate-Matching-Strings">Reversing the Derivatives to Generate Matching Strings<a class="anchor-link" href="#Reversing-the-Derivatives-to-Generate-Matching-Strings">&#182;</a></h2><p>(UNFINISHED)
+Brzozowski also shewed how to go from the state machine to strings and expressions...</p>
 
 </div>
 </div>
@@ -12941,296 +13094,53 @@ PE2 == 0 fib_gen x [pop &gt;4M] [popop] [[PE2.1] dip x] primrec</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Even-valued-Fibonacci-Terms">Even-valued Fibonacci Terms<a class="anchor-link" href="#Even-valued-Fibonacci-Terms">&#182;</a></h3><p>Using <code>o</code> for odd and <code>e</code> for even:</p>
+<p>Each of these states is just a name for a Brzozowskian RE, and so, other than the initial state <code>a</code>, they can can be described in terms of the derivative-with-respect-to-N of some other state/RE:</p>
 
-<pre><code>o + o = e
-e + e = e
-o + e = o
+<pre><code>c = d1(a)
+b = d0(a)
+b = d0(c)
+...
+i = d0(j)
+j = d1(i)
 
 </code></pre>
-<p>So the Fibonacci sequence considered in terms of just parity would be:</p>
+<p>Consider:</p>
 
-<pre><code>o o e o o e o o e o o e o o e o o e
-1 1 2 3 5 8 . . .
+<pre><code>c = d1(a)
+b = d0(c)
 
 </code></pre>
-<p>Every third term is even.</p>
+<p>Substituting:</p>
 
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 0 fib] x x x&#39;</span><span class="p">)</span>  <span class="c1"># To start the sequence with 1 1 2 3 instead of 1 2 3.</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>1 1 2 [3 2 fib]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Drive the generator three times and <code>popop</code> the two odd terms.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 0 fib] x x x [popop] dipd&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>2 [3 2 fib]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE2.2 == x x x [popop] dipd&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 0 fib] 10 [PE2.2] times&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>2 8 34 144 610 2584 10946 46368 196418 832040 [1346269 832040 fib]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Replace <code>x</code> with our new driver function <code>PE2.2</code> and start our <code>fib</code> generator at <code>1 0</code>.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 [1 0 fib] PE2.2 [pop &gt;4M] [popop] [[PE2.1] dip PE2.2] primrec&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>4613732
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="How-to-compile-these?">How to compile these?<a class="anchor-link" href="#How-to-compile-these?">&#182;</a></h2><p>You would probably start with a special version of <code>G</code>, and perhaps modifications to the default <code>x</code>?</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="An-Interesting-Variation">An Interesting Variation<a class="anchor-link" href="#An-Interesting-Variation">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;codireco == cons dip rest cons&#39;</span><span class="p">)</span>
-</pre></div>
+<pre><code>b = d0(d1(a))
 
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[0 [dup ++] codireco] x&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>                                 . [0 [dup ++] codireco] x
-           [0 [dup ++] codireco] . x
-           [0 [dup ++] codireco] . 0 [dup ++] codireco
-         [0 [dup ++] codireco] 0 . [dup ++] codireco
-[0 [dup ++] codireco] 0 [dup ++] . codireco
-[0 [dup ++] codireco] 0 [dup ++] . cons dip rest cons
-[0 [dup ++] codireco] [0 dup ++] . dip rest cons
-                                 . 0 dup ++ [0 [dup ++] codireco] rest cons
-                               0 . dup ++ [0 [dup ++] codireco] rest cons
-                             0 0 . ++ [0 [dup ++] codireco] rest cons
-                             0 1 . [0 [dup ++] codireco] rest cons
-       0 1 [0 [dup ++] codireco] . rest cons
-         0 1 [[dup ++] codireco] . cons
-         0 [1 [dup ++] codireco] . 
-</pre>
-</div>
-</div>
-
-</div>
-</div>
+</code></pre>
+<p>Unwrapping:</p>
 
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;G == [codireco] cons cons&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
+<pre><code>b = d10(a)
 
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;230 [dup ++] G 5 [x] times pop&#39;</span><span class="p">)</span>
-</pre></div>
+</code></pre>
+<p>'''</p>
 
-</div>
-</div>
-</div>
+<pre><code>j = d1(d0(j))
 
-<div class="output_wrapper">
-<div class="output">
+</code></pre>
+<p>Unwrapping:</p>
 
+<pre><code>j = d1(d0(j)) = d01(j)
 
-<div class="output_area">
+</code></pre>
+<p>We have a loop or "fixed point".</p>
 
-<div class="prompt"></div>
+<pre><code>j = d01(j) = d0101(j) = d010101(j) = ...
 
+</code></pre>
+<p>hmm...</p>
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>230 231 232 233 234
-</pre>
-</div>
-</div>
+<pre><code>j = (01)*</code></pre>
 
 </div>
 </div>
-
 </div>
     </div>
   </div>

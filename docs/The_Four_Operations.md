@@ -154,18 +154,11 @@ Joy has a few parallel combinators, the main one being `cleave`:
     ---------------------------------------------------------
                        ... a b
 
-The `cleave` combinator expects a value and two quotes and it executes each quote in "separate universes" such that neither can affect the other, then it takes the first item from the stack in each universe and replaces the quotes with their respective results.
+The `cleave` combinator expects a value and two quotes and it executes each quote in "separate universes" such that neither can affect the other, then it takes the first item from the stack in each universe and replaces the value and quotes with their respective results.
 
-(I'm not sure why it was specified to take that value, I may make a combinator that does the same thing but without expecting a value.)
+(I think this corresponds to the "fork" operator, the little upward-pointed triangle, that takes two functions `A :: x -> a` and `B :: x -> b` and returns a function `F :: x -> (a, b)`, in Conal Elliott's "Compiling to Categories" paper, et. al.)
 
-    cleavish  == unit cons pam uncons uncons pop
-
-    [A] [B] cleavish
-    [A] [B] unit cons pam uncons uncons pop
-    [A] [[B]] cons pam uncons uncons pop
-    [[A] [B]] pam uncons uncons pop
-    [a b] uncons uncons pop
-    a b
+Just a thought, if you `cleave` two jobs and one requires more time to finish than the other you'd like to be able to assign resources accordingly so that they both finish at the same time.
 
 ### "Apply" Functions
 
@@ -185,6 +178,14 @@ There are also `app2` and `app3` which run a single quote on more than one value
 Because the quoted program can be `i` we can define `cleave` in terms of `app2`:
 
     cleave == [i] app2 [popd] dip
+
+(I'm not sure why `cleave` was specified to take that value, I may make a combinator that does the same thing but without expecting a value.)
+
+    clv == [i] app2
+
+       [A] [B] clv
+    ------------------
+         a b
 
 ### `map`
 
@@ -208,10 +209,22 @@ This can be used to run any number of programs separately on the current stack a
 
 ### Handling Other Kinds of Join
 
-We can imagine a few different potentially useful patterns of "joining" results from parallel combinators.
+The `cleave` operators and others all have pretty brutal join semantics: everything works and we always wait for every sub-computation.  We can imagine a few different potentially useful patterns of "joining" results from parallel combinators.
 
 #### first-to-finish
 
 Thinking about variations of `pam` there could be one that only returns the first result of the first-to-finish sub-program, or the stack could be replaced by its output stack.
 
 The other sub-programs would be cancelled.
+
+#### "Fulminators"
+
+Also known as "Futures" or "Promises" (by *everybody* else.  "Fulinators" is what I was going to call them when I was thinking about implementing them in Thun.)
+
+The runtime could be amended to permit "thunks" representing the results of in-progress computations to be left on the stack and picked up by subsequent functions.  These would themselves be able to leave behind more "thunks", the values of which depend on the eventual resolution of the values of the previous thunks.
+
+In this way you can create "chains" (and more complex shapes) out of normal-looking code that consist of a kind of call-graph interspersed with "asyncronous" ... events?
+
+In any case, until I can find a rigorous theory that shows that this sort of thing works perfectly in Joy code I'm not going to worry about it.  (And I think the Categories can deal with it anyhow?  Incremental evaluation, yeah?)
+
+

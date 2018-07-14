@@ -363,8 +363,7 @@ J('fib_gen 10 [x] times')
 
 
 ## Project Euler Problem Two
-    By considering the terms in the Fibonacci sequence whose values do not exceed four million,
-    find the sum of the even-valued terms.
+> By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.
 
 Now that we have a generator for the Fibonacci sequence, we need a function that adds a term in the sequence to a sum if it is even, and `pop`s it otherwise.
 

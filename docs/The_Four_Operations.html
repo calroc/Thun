@@ -11980,25 +11980,9 @@ while == swap [nullary] cons dup dipd concat loop
                    ... a b
 
 </code></pre>
-<p>The <code>cleave</code> combinator expects a value and two quotes and it executes each quote in "separate universes" such that neither can affect the other, then it takes the first item from the stack in each universe and replaces the quotes with their respective results.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>(I'm not sure why it was specified to take that value, I may make a combinator that does the same thing but without expecting a value.)</p>
-
-<pre><code>cleavish  == unit cons pam uncons uncons pop
-
-[A] [B] cleavish
-[A] [B] unit cons pam uncons uncons pop
-[A] [[B]] cons pam uncons uncons pop
-[[A] [B]] pam uncons uncons pop
-[a b] uncons uncons pop
-a b</code></pre>
+<p>The <code>cleave</code> combinator expects a value and two quotes and it executes each quote in "separate universes" such that neither can affect the other, then it takes the first item from the stack in each universe and replaces the value and quotes with their respective results.</p>
+<p>(I think this corresponds to the "fork" operator, the little upward-pointed triangle, that takes two functions <code>A :: x -&gt; a</code> and <code>B :: x -&gt; b</code> and returns a function <code>F :: x -&gt; (a, b)</code>, in Conal Elliott's "Compiling to Categories" paper, et. al.)</p>
+<p>Just a thought, if you <code>cleave</code> two jobs and one requires more time to finish than the other you'd like to be able to assign resources accordingly so that they both finish at the same time.</p>
 
 </div>
 </div>
@@ -12024,6 +12008,21 @@ a b</code></pre>
 <p>Because the quoted program can be <code>i</code> we can define <code>cleave</code> in terms of <code>app2</code>:</p>
 
 <pre><code>cleave == [i] app2 [popd] dip</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>(I'm not sure why <code>cleave</code> was specified to take that value, I may make a combinator that does the same thing but without expecting a value.)</p>
+
+<pre><code>clv == [i] app2
+
+   [A] [B] clv
+------------------
+     a b</code></pre>
 
 </div>
 </div>
@@ -12064,9 +12063,29 @@ a b</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Handling-Other-Kinds-of-Join">Handling Other Kinds of Join<a class="anchor-link" href="#Handling-Other-Kinds-of-Join">&#182;</a></h3><p>We can imagine a few different potentially useful patterns of "joining" results from parallel combinators.</p>
+<h3 id="Handling-Other-Kinds-of-Join">Handling Other Kinds of Join<a class="anchor-link" href="#Handling-Other-Kinds-of-Join">&#182;</a></h3><p>The <code>cleave</code> operators and others all have pretty brutal join semantics: everything works and we always wait for every sub-computation.  We can imagine a few different potentially useful patterns of "joining" results from parallel combinators.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="first-to-finish">first-to-finish<a class="anchor-link" href="#first-to-finish">&#182;</a></h4><p>Thinking about variations of <code>pam</code> there could be one that only returns the first result of the first-to-finish sub-program, or the stack could be replaced by its output stack.</p>
 <p>The other sub-programs would be cancelled.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="&quot;Fulminators&quot;">"Fulminators"<a class="anchor-link" href="#&quot;Fulminators&quot;">&#182;</a></h4><p>Also known as "Futures" or "Promises" (by <em>everybody</em> else.  "Fulinators" is what I was going to call them when I was thinking about implementing them in Thun.)</p>
+<p>The runtime could be amended to permit "thunks" representing the results of in-progress computations to be left on the stack and picked up by subsequent functions.  These would themselves be able to leave behind more "thunks", the values of which depend on the eventual resolution of the values of the previous thunks.</p>
+<p>In this way you can create "chains" (and more complex shapes) out of normal-looking code that consist of a kind of call-graph interspersed with "asyncronous" ... events?</p>
+<p>In any case, until I can find a rigorous theory that shows that this sort of thing works perfectly in Joy code I'm not going to worry about it.  (And I think the Categories can deal with it anyhow?  Incremental evaluation, yeah?)</p>
 
 </div>
 </div>
