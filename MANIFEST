@@ -9,7 +9,17 @@ joy/__main__.py
 joy/joy.py
 joy/library.py
 joy/parser.py
+joy/gui/__init__.py
+joy/gui/__main__.py
+joy/gui/main.py
+joy/gui/mousebindings.py
+joy/gui/textwidget.py
+joy/gui/world.py
 joy/utils/__init__.py
 joy/utils/brutal_hackery.py
+joy/utils/generated_library.py
+joy/utils/polytypes.py
 joy/utils/pretty_print.py
 joy/utils/stack.py
+joy/utils/types.py
+test/test_type_inference.py
