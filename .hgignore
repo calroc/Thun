@@ -4,4 +4,5 @@ build
 .pytest_cache
 .vscode
 docs/.ipynb_checkpoints
+test/*
 
