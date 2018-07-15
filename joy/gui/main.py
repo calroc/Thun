@@ -113,12 +113,6 @@ def grand_reset(s, e, d):
   return stack, e, d
 
 
-def load_stack():
-  if os.path.exists(STACK_FN):
-    with open(STACK_FN) as f:
-      return pickle.load(f)
-
-
 D = initialize()
 for func in (
   reset_log,
@@ -129,12 +123,8 @@ for func in (
   ):
   D[func.__name__] = func
 
-stack = load_stack()
-if stack is None:
-  world = StackDisplayWorld(repo, STACK_FN, REL_STACK_FN, dictionary=D)
-else:
-  world = StackDisplayWorld(repo, STACK_FN, REL_STACK_FN, stack=stack, dictionary=D)
 
+world = StackDisplayWorld(repo, STACK_FN, REL_STACK_FN, dictionary=D)
 t = TextViewerWidget(world, **defaults)
 log_window = tk.Toplevel()
 log_window.protocol("WM_DELETE_WINDOW", log_window.withdraw)

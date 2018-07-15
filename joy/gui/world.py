@@ -101,10 +101,11 @@ class World(object):
 class StackDisplayWorld(World):
 
   
-  def __init__(self, repo, filename, rel_filename, stack=(), dictionary=None, text_widget=None):
+  def __init__(self, repo, filename, rel_filename, dictionary=None, text_widget=None):
+    self.filename = filename
+    stack = self.load_stack() or ()
     World.__init__(self, stack, dictionary, text_widget)
     self.repo = repo
-    self.filename = filename
     self.relative_STACK_FN = rel_filename
 
   def interpret(self, command):
@@ -126,3 +127,8 @@ class StackDisplayWorld(World):
       committer='Simon Forman <forman.simon@gmail.com>',
       )
     print >> sys.stderr, commit_id
+
+  def load_stack(self):
+    if os.path.exists(self.filename):
+      with open(self.filename) as f:
+        return pickle.load(f)
