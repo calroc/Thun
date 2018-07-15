@@ -65,6 +65,7 @@ class MouseBindingsMixin:
     self.bind("<ButtonRelease-3>", self.B3r)
 
     self.bind("<Any-Leave>", self.leave)
+    self.bind("<Motion>", self.scan_command)
 
   def B1d(self, event):
     '''button one pressed'''
@@ -166,6 +167,9 @@ class MouseBindingsMixin:
       self.update_command_word(event)
 
     return "break"
+
+  def scan_command(self, event):
+    self.update_command_word(event)
 
   def B1r(self, event):
     '''button one released'''

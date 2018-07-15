@@ -23,6 +23,7 @@ from inspect import getdoc
 from joy.joy import run
 from joy.parser import Symbol
 from joy.utils.stack import stack_to_string
+from joy.utils.polytypes import type_check
 
 
 def is_numerical(s):
@@ -39,6 +40,9 @@ class World(object):
     self.stack = stack
     self.dictionary = dictionary or {}
     self.text_widget = text_widget
+
+  def check(self, name):
+    return type_check(name, self.stack)
 
   def do_lookup(self, name):
     if name in self.dictionary:
@@ -75,6 +79,10 @@ class World(object):
       return self.stack[0]
 
   def interpret(self, command):
+    if len(command.split()) == 1 and not is_numerical(command):
+      assert self.has(command), repr(command)
+      if self.check(command) == False:  # not in {True, None}:
+        return
     try:
       self.stack, _, self.dictionary = run(
         command,
@@ -109,8 +117,14 @@ class StackDisplayWorld(World):
     self.relative_STACK_FN = rel_filename
 
   def interpret(self, command):
-    print '\njoy?', command
-    super(StackDisplayWorld, self).interpret(command)
+    if (
+      is_numerical(command)
+      or len(command.split()) > 1
+      or self.has(command)
+      and self.check(command) in {True, None}
+      ):
+      print '\njoy?', command
+      super(StackDisplayWorld, self).interpret(command)
 
   def print_stack(self):
     print '\n%s <-' % stack_to_string(self.stack)

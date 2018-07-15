@@ -164,10 +164,11 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 
   #These are the config tags for command text when it's highlighted.
   command_tags = dict(
-    underline = 1,
-    bgstipple = "gray50",
-    borderwidth = "1",
-    foreground = "orange"
+    #underline = 1,
+    #bgstipple = "gray50",
+    borderwidth = 2,
+    relief=tk.RIDGE,
+    foreground = "green"
   )
 
   def __init__(self, world, master=None, **kw):
@@ -196,6 +197,9 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 
     #Add tag config for command highlighting.
     self.tag_config('command', **self.command_tags)
+    self.tag_config('bzzt', foreground = "orange")
+    self.tag_config('huh', foreground = "grey")
+    self.tag_config('number', foreground = "blue")
 
     #Create us a command instance variable
     self.command = ''
@@ -246,18 +250,28 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
       return
 
     cmd, b, e = cmd
-    if self.world.has(cmd) or is_numerical(cmd):
-      self.command = cmd
-      self.highlight_command(
-        '%d.%d' % (row, b),
-        '%d.%d' % (row, e),
-        )
+    if is_numerical(cmd):
+      extra_tags = 'number',
+    elif self.world.has(cmd):
+      check = self.world.check(cmd)
+      if check: extra_tags = ()
+      elif check is None: extra_tags = 'huh',
+      else: extra_tags = 'bzzt',
+    else:
+      return
+    self.command = cmd
+    self.highlight_command(
+      '%d.%d' % (row, b),
+      '%d.%d' % (row, e),
+      *extra_tags)
 
-  def highlight_command(self, from_, to):
+  def highlight_command(self, from_, to, *extra_tags):
     '''Apply command style from from_ to to.'''
     cmdstart = self.index(from_)
     cmdend = self.index(to)
     self.tag_add('command', cmdstart, cmdend)
+    for tag in extra_tags:
+      self.tag_add(tag, cmdstart, cmdend)
 
   def do_command(self, event):
     '''Do the currently highlighted command.'''
@@ -288,6 +302,9 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 
   def unhighlight_command(self):
     '''Remove any command highlighting.'''
+    self.tag_remove('number', 1.0, tk.END)
+    self.tag_remove('huh', 1.0, tk.END)
+    self.tag_remove('bzzt', 1.0, tk.END)
     self.tag_remove('command', 1.0, tk.END)
 
   def set_insertion_point(self, event):

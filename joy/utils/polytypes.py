@@ -9,6 +9,7 @@ and we can introduce a kind of Kleene Star or sequence type that can stand for
 an unbounded sequence of other types.
 
 '''
+import sys
 from inspect import stack as inspect_stack
 from itertools import chain, product
 from logging import getLogger
@@ -341,6 +342,31 @@ def infer(*expression):
 
     '''
     return sorted(set(_infer(list_to_stack(expression))))
+
+
+def type_check(name, stack):
+    '''
+    Trinary predicate.  True if named function type-checks, False if it
+    fails, None if it's indeterminate (because I haven't entered it into
+    the FUNCTIONS dict yet.)
+    '''
+    try:
+        func = FUNCTIONS[name]
+    except KeyError:
+        return # None, indicating unknown
+
+    for fi, fo in infer(func):
+        try:
+          U = unify(fi, stack)
+        except JoyTypeError, e:
+            #print e
+            continue
+        except ValueError, e:
+            #print >> sys.stderr, name, e, stack
+            continue
+        #print U
+        return True
+    return False
 
 
 a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = A

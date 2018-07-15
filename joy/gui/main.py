@@ -19,10 +19,10 @@ from joy.utils.stack import stack_to_string
 
 tb = TEXT_BINDINGS.copy()
 tb.update({
-  '<F4>': lambda tv: tv.cut,
   '<F3>': lambda tv: tv.copy_selection_to_stack,
+  '<F4>': lambda tv: tv.cut,
   #  '<F-->': lambda tv: tv.pastecut,
-  '<F6>': lambda tv: tv.copyto,
+  #  '<F6>': lambda tv: tv.copyto,
   })
 defaults = dict(text_bindings=tb, width=80, height=25)
 
