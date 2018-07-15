@@ -17,6 +17,36 @@ from joy.library import initialize
 from joy.utils.stack import stack_to_string
 
 
+tb = TEXT_BINDINGS.copy()
+tb.update({
+  '<F4>': lambda tv: tv.cut,
+  '<F3>': lambda tv: tv.copy_selection_to_stack,
+  #  '<F-->': lambda tv: tv.pastecut,
+  '<F6>': lambda tv: tv.copyto,
+  })
+defaults = dict(text_bindings=tb, width=80, height=25)
+
+
+GLOBAL_COMMANDS = {
+  '<F5>': 'swap',
+  '<F6>': 'dup',
+
+  '<Shift-F5>': 'roll<',
+  '<Shift-F6>': 'roll>',
+
+  '<F7>': 'over',
+  '<Shift-F7>': 'tuck',
+
+  '<Shift-F3>': 'parse',
+
+  '<F12>': 'words',
+  '<F1>': 'reset_log show_log',
+  '<Escape>': 'clear reset_log show_log',
+  '<Control-Delete>': 'pop',
+  '<Control-Shift-Delete>': 'popd',
+  }
+
+
 JOY_HOME, repo = init_home()
 
 
@@ -102,34 +132,15 @@ def show_log(*args):
 
 def grand_reset(s, e, d):
   stack = load_stack() or ()
-  reset_text(log, LOG_FN)
-  reset_text(t, JOY_FN)
+  log.reset()
+  t.reset()
   return stack, e, d
-
-
-def reset_text(t, filename):
-  if os.path.exists(filename):
-    with open(filename) as f:
-      data = f.read()
-    if data:
-      t.delete('0.0', tk.END)
-      t.insert(tk.END, data)
 
 
 def load_stack():
   if os.path.exists(STACK_FN):
     with open(STACK_FN) as f:
       return pickle.load(f)
-
-
-tb = TEXT_BINDINGS.copy()
-tb.update({
-  '<F4>': lambda tv: tv.cut,
-  '<F3>': lambda tv: tv.copy_selection_to_stack,
-#  '<F-->': lambda tv: tv.pastecut,
-  '<F6>': lambda tv: tv.copyto,
-  })
-defaults = dict(text_bindings=tb, width=80, height=25)
 
 
 D = initialize()
@@ -153,26 +164,6 @@ log = TextViewerWidget(world, log_window, **defaults)
 FONT = get_font('Iosevka', size=14)  # Requires Tk root already set up.
 log.init('Log', LOG_FN, repo_relative_path(LOG_FN), repo, FONT)
 t.init('Joy - ' + JOY_HOME, JOY_FN, repo_relative_path(JOY_FN), repo, FONT)
-
-
-GLOBAL_COMMANDS = {
-  '<F5>': 'swap',
-  '<F6>': 'dup',
-
-  '<Shift-F5>': 'roll<',
-  '<Shift-F6>': 'roll>',
-
-  '<F7>': 'over',
-  '<Shift-F7>': 'tuck',
-
-  '<Shift-F3>': 'parse',
-
-  '<F12>': 'words',
-  '<F1>': 'reset_log show_log',
-  '<Escape>': 'clear reset_log show_log',
-  '<Control-Delete>': 'pop',
-  '<Control-Shift-Delete>': 'popd',
-  }
 for event, command in GLOBAL_COMMANDS.items():
   t.bind_all(event, lambda _, _command=command: world.interpret(_command))
 

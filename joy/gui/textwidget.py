@@ -414,6 +414,15 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
     self.repo = repo
     self['font'] = font  # See below.
 
+  def reset(self):
+    if os.path.exists(self.filename):
+      with open(self.filename) as f:
+        data = f.read()
+      if data:
+        self.delete('0.0', tk.END)
+        self.insert(tk.END, data)
+
+
   def popupTB(self, tb):
     top = tk.Toplevel()
     T = TextViewerWidget(
