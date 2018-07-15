@@ -18,7 +18,7 @@
 #    along with Joypy.  If not see <http://www.gnu.org/licenses/>.
 #
 import sys
-from joy.gui.main import main
+import joy.gui.main
 
 
-sys.exit(main())
+sys.exit(joy.gui.main.main())
