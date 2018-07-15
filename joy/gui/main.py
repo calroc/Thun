@@ -47,10 +47,7 @@ class StackDisplayWorld(World):
     with open(STACK_FN, 'wb') as f:
       os.chmod(STACK_FN, 0600)
       pickle.dump(self.stack, f)
-      f.flush()from dulwich.errors import NotGitRepository
-from dulwich.repo import Repo
-
-
+      f.flush()
       os.fsync(f.fileno())
     repo.stage([self.relative_STACK_FN])
     commit_id = repo.do_commit(
