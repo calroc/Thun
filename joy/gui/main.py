@@ -47,20 +47,11 @@ GLOBAL_COMMANDS = {
   }
 
 
-JOY_HOME, repo = init_home()
-
-
 def repo_relative_path(path):
   return os.path.relpath(
     path,
     os.path.commonprefix((repo.controldir(), path))
     )
-
-
-STACK_FN = os.path.join(JOY_HOME, 'stack.pickle')
-REL_STACK_FN = repo_relative_path(STACK_FN)
-JOY_FN = os.path.join(JOY_HOME, 'scratch.txt')
-LOG_FN = os.path.join(JOY_HOME, 'log.txt')
 
 
 def key_bindings(*args):
@@ -107,12 +98,17 @@ def show_log(*args):
 
 
 def grand_reset(s, e, d):
-  stack = load_stack() or ()
+  stack = world.load_stack() or ()
   log.reset()
   t.reset()
   return stack, e, d
 
 
+JOY_HOME, repo = init_home()
+STACK_FN = os.path.join(JOY_HOME, 'stack.pickle')
+REL_STACK_FN = repo_relative_path(STACK_FN)
+JOY_FN = os.path.join(JOY_HOME, 'scratch.txt')
+LOG_FN = os.path.join(JOY_HOME, 'log.txt')
 D = initialize()
 for func in (
   reset_log,
@@ -122,8 +118,6 @@ for func in (
   mouse_bindings,
   ):
   D[func.__name__] = func
-
-
 world = StackDisplayWorld(repo, STACK_FN, REL_STACK_FN, dictionary=D)
 t = TextViewerWidget(world, **defaults)
 log_window = tk.Toplevel()
