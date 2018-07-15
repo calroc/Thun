@@ -12,7 +12,7 @@ from textwrap import dedent
 
 from joy.gui.textwidget import TextViewerWidget, tk, get_font, TEXT_BINDINGS
 from joy.gui.utils import init_home, FileFaker
-from joy.gui.world import World
+from joy.gui.world import StackDisplayWorld
 from joy.library import initialize
 from joy.utils.stack import stack_to_string
 
@@ -58,33 +58,9 @@ def repo_relative_path(path):
 
 
 STACK_FN = os.path.join(JOY_HOME, 'stack.pickle')
+REL_STACK_FN = repo_relative_path(STACK_FN)
 JOY_FN = os.path.join(JOY_HOME, 'scratch.txt')
 LOG_FN = os.path.join(JOY_HOME, 'log.txt')
-
-
-class StackDisplayWorld(World):
-
-  relative_STACK_FN = repo_relative_path(STACK_FN)
-
-  def interpret(self, command):
-    print '\njoy?', command
-    super(StackDisplayWorld, self).interpret(command)
-
-  def print_stack(self):
-    print '\n%s <-' % stack_to_string(self.stack)
-
-  def save(self):
-    with open(STACK_FN, 'wb') as f:
-      os.chmod(STACK_FN, 0600)
-      pickle.dump(self.stack, f)
-      f.flush()
-      os.fsync(f.fileno())
-    repo.stage([self.relative_STACK_FN])
-    commit_id = repo.do_commit(
-      'message',
-      committer='Simon Forman <forman.simon@gmail.com>',
-      )
-    print >> sys.stderr, commit_id
 
 
 def key_bindings(*args):
@@ -152,11 +128,13 @@ for func in (
   mouse_bindings,
   ):
   D[func.__name__] = func
+
 stack = load_stack()
 if stack is None:
-  world = StackDisplayWorld(dictionary=D)
+  world = StackDisplayWorld(repo, STACK_FN, REL_STACK_FN, dictionary=D)
 else:
-  world = StackDisplayWorld(stack=stack, dictionary=D)
+  world = StackDisplayWorld(repo, STACK_FN, REL_STACK_FN, stack=stack, dictionary=D)
+
 t = TextViewerWidget(world, **defaults)
 log_window = tk.Toplevel()
 log_window.protocol("WM_DELETE_WINDOW", log_window.withdraw)

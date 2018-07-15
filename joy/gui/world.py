@@ -17,6 +17,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
 #
+import os, pickle, sys
 from inspect import getdoc
 
 from joy.joy import run
@@ -95,3 +96,33 @@ class World(object):
       self.text_widget.see(stack_out_index)
       s = stack_to_string(self.stack) + '\n'
       self.text_widget.insert(stack_out_index, s)
+
+
+class StackDisplayWorld(World):
+
+  
+  def __init__(self, repo, filename, rel_filename, stack=(), dictionary=None, text_widget=None):
+    World.__init__(self, stack, dictionary, text_widget)
+    self.repo = repo
+    self.filename = filename
+    self.relative_STACK_FN = rel_filename
+
+  def interpret(self, command):
+    print '\njoy?', command
+    super(StackDisplayWorld, self).interpret(command)
+
+  def print_stack(self):
+    print '\n%s <-' % stack_to_string(self.stack)
+
+  def save(self):
+    with open(self.filename, 'wb') as f:
+      os.chmod(self.filename, 0600)
+      pickle.dump(self.stack, f)
+      f.flush()
+      os.fsync(f.fileno())
+    self.repo.stage([self.relative_STACK_FN])
+    commit_id = self.repo.do_commit(
+      'message',
+      committer='Simon Forman <forman.simon@gmail.com>',
+      )
+    print >> sys.stderr, commit_id
