@@ -104,8 +104,8 @@ class MouseBindingsMixin:
         self.dothis = self.cancel
 
       else:
-        #left-middle-interclick - cut selection to stack
-        self.dothis = self.cut
+        #left-middle-interclick - copy selection to stack
+        self.dothis = self.copy_selection_to_stack
 
     elif self.B3_DOWN :
       self.unhighlight_command()

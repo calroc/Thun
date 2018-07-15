@@ -98,12 +98,10 @@ def init_text(t, title, filename):
 def key_bindings(*args):
   print dedent('''
     Ctrl-Enter - Run the selection as Joy code.
+
     F1 - Reset and show (if hidden) the log.
     Esc - Like F1 but also clears the stack.
-    F5 - Copy the selection to text on the stack.
-    Shift-F5 - As F5 but cuts the selection.
-    F6 - Paste as text from top of stack.
-    Shift-F6 - As F6 but pops the item.
+    ...
     F12 - print a list of all command words, or right-click "words".
     ''')
   return args
@@ -164,9 +162,9 @@ def load_stack():
 
 tb = TEXT_BINDINGS.copy()
 tb.update({
-  '<Shift-F5>': lambda tv: tv.cut,
-  '<F5>': lambda tv: tv.copy_selection_to_stack,
-  '<Shift-F6>': lambda tv: tv.pastecut,
+  '<F4>': lambda tv: tv.cut,
+  '<F3>': lambda tv: tv.copy_selection_to_stack,
+#  '<F-->': lambda tv: tv.pastecut,
   '<F6>': lambda tv: tv.copyto,
   })
 
@@ -210,9 +208,22 @@ init_text(t, 'Joy - ' + JOY_HOME, JOY_FN)
 
 
 GLOBAL_COMMANDS = {
+  '<F5>': 'swap',
+  '<F6>': 'dup',
+
+  '<Shift-F5>': 'roll<',
+  '<Shift-F6>': 'roll>',
+
+  '<F7>': 'over',
+  '<Shift-F7>': 'tuck',
+
+  '<Shift-F3>': 'parse',
+
   '<F12>': 'words',
   '<F1>': 'reset_log show_log',
   '<Escape>': 'clear reset_log show_log',
+  '<Control-Delete>': 'pop',
+  '<Control-Shift-Delete>': 'popd',
   }
 for event, command in GLOBAL_COMMANDS.items():
   t.bind_all(event, lambda _, _command=command: w.interpret(_command))
