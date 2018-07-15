@@ -399,6 +399,21 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 
     return 'break'
 
+  def init(self, title, filename, repo_relative_filename, repo, font):
+    self.winfo_toplevel().title(title)
+    if os.path.exists(filename):
+      with open(filename) as f:
+        data = f.read()
+      self.insert(tk.END, data)
+      # Prevent this from triggering a git commit.
+      self.update()
+      self._cancelSave()
+    self.pack(expand=True, fill=tk.BOTH)
+    self.filename = filename
+    self.repo_relative_filename = repo_relative_filename
+    self.repo = repo
+    self['font'] = font  # See below.
+
   def popupTB(self, tb):
     top = tk.Toplevel()
     T = TextViewerWidget(

@@ -10,9 +10,6 @@ Joypy - Copyright © 2018 Simon Forman
 import os, pickle, sys
 from textwrap import dedent
 
-from dulwich.errors import NotGitRepository
-from dulwich.repo import Repo
-
 from joy.gui.textwidget import TextViewerWidget, tk, get_font, TEXT_BINDINGS
 from joy.gui.utils import init_home, FileFaker
 from joy.gui.world import World
@@ -50,30 +47,17 @@ class StackDisplayWorld(World):
     with open(STACK_FN, 'wb') as f:
       os.chmod(STACK_FN, 0600)
       pickle.dump(self.stack, f)
-      f.flush()
+      f.flush()from dulwich.errors import NotGitRepository
+from dulwich.repo import Repo
+
+
       os.fsync(f.fileno())
     repo.stage([self.relative_STACK_FN])
     commit_id = repo.do_commit(
       'message',
       committer='Simon Forman <forman.simon@gmail.com>',
       )
-    #print >> sys.stderr, commit_id
-
-
-def init_text(t, title, filename):
-  t.winfo_toplevel().title(title)
-  if os.path.exists(filename):
-    with open(filename) as f:
-      data = f.read()
-    t.insert(tk.END, data)
-    # Prevent this from triggering a git commit.
-    t.update()
-    t._cancelSave()
-  t.pack(expand=True, fill=tk.BOTH)
-  t.filename = filename
-  t.repo_relative_filename = repo_relative_path(filename)
-  t.repo = repo
-  t['font'] = FONT  # See below.
+    print >> sys.stderr, commit_id
 
 
 def key_bindings(*args):
@@ -148,8 +132,6 @@ tb.update({
 #  '<F-->': lambda tv: tv.pastecut,
   '<F6>': lambda tv: tv.copyto,
   })
-
-
 defaults = dict(text_bindings=tb, width=80, height=25)
 
 
@@ -162,30 +144,18 @@ for func in (
   mouse_bindings,
   ):
   D[func.__name__] = func
-
-
 stack = load_stack()
-
-
 if stack is None:
-  w = StackDisplayWorld(dictionary=D)
+  world = StackDisplayWorld(dictionary=D)
 else:
-  w = StackDisplayWorld(stack=stack, dictionary=D)
-
-
-t = TextViewerWidget(w, **defaults)
-
-
+  world = StackDisplayWorld(stack=stack, dictionary=D)
+t = TextViewerWidget(world, **defaults)
 log_window = tk.Toplevel()
 log_window.protocol("WM_DELETE_WINDOW", log_window.withdraw)
-log = TextViewerWidget(w, log_window, **defaults)
-
-
+log = TextViewerWidget(world, log_window, **defaults)
 FONT = get_font('Iosevka', size=14)  # Requires Tk root already set up.
-
-
-init_text(log, 'Log', LOG_FN)
-init_text(t, 'Joy - ' + JOY_HOME, JOY_FN)
+log.init('Log', LOG_FN, repo_relative_path(LOG_FN), repo, FONT)
+t.init('Joy - ' + JOY_HOME, JOY_FN, repo_relative_path(JOY_FN), repo, FONT)
 
 
 GLOBAL_COMMANDS = {
@@ -207,7 +177,7 @@ GLOBAL_COMMANDS = {
   '<Control-Shift-Delete>': 'popd',
   }
 for event, command in GLOBAL_COMMANDS.items():
-  t.bind_all(event, lambda _, _command=command: w.interpret(_command))
+  t.bind_all(event, lambda _, _command=command: world.interpret(_command))
 
 
 def main():
