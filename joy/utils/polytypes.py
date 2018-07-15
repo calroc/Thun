@@ -355,6 +355,8 @@ def type_check(name, stack):
     except KeyError:
         return # None, indicating unknown
 
+    stack = _foo_stack(stack)
+
     for fi, fo in infer(func):
         try:
           U = unify(fi, stack)
@@ -367,6 +369,16 @@ def type_check(name, stack):
         #print U
         return True
     return False
+
+
+def _foo_stack(stack, s=None):
+    if s is None:
+        s = (StackJoyType(n) for n in xrange(23, 100))
+    if stack == ():
+        return next(s)
+    if isinstance(stack, tuple):
+        return tuple(_foo_stack(inner, s) for inner in stack)
+    return stack
 
 
 a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = A
