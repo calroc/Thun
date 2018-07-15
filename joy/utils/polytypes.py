@@ -355,30 +355,15 @@ def type_check(name, stack):
     except KeyError:
         return # None, indicating unknown
 
-    stack = _foo_stack(stack)
-
     for fi, fo in infer(func):
         try:
           U = unify(fi, stack)
-        except JoyTypeError, e:
-            #print e
-            continue
-        except ValueError, e:
+        except (JoyTypeError, ValueError), e:
             #print >> sys.stderr, name, e, stack
             continue
         #print U
         return True
     return False
-
-
-def _foo_stack(stack, s=None):
-    if s is None:
-        s = (StackJoyType(n) for n in xrange(23, 100))
-    if stack == ():
-        return next(s)
-    if isinstance(stack, tuple):
-        return tuple(_foo_stack(inner, s) for inner in stack)
-    return stack
 
 
 a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = A
@@ -414,7 +399,7 @@ def defs():
 
     sum_ = product = [(((Ns[1], s1), s0), (n0, s0))]
 
-    clear = [((As[1], s0), s1)]
+    clear = [(s0, s1)]
 
     add = mul = sub = floordiv = modulus = [
         ((i2, (i1, s0)), (i3, s0)),
