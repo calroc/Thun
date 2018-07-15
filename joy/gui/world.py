@@ -20,6 +20,7 @@
 from inspect import getdoc
 
 from joy.joy import run
+from joy.parser import Symbol
 from joy.utils.stack import stack_to_string
 
 
@@ -39,9 +40,12 @@ class World(object):
     self.text_widget = text_widget
 
   def do_lookup(self, name):
-    word = self.dictionary[name]
-    self.stack = word, self.stack
-    self.print_stack()
+    if name in self.dictionary:
+      self.stack = (Symbol(name), ()), self.stack
+      self.print_stack()
+    else:
+      assert is_numerical(name)
+      self.interpret(name)
 
   def do_opendoc(self, name):
     if is_numerical(name):
@@ -53,7 +57,7 @@ class World(object):
         print repr(name), '???'
       else:
         print getdoc(word)
-    self.text_widget.see('end')
+    self.print_stack()
 
   def pop(self):
     if self.stack:
@@ -70,12 +74,14 @@ class World(object):
       return self.stack[0]
 
   def interpret(self, command):
-    self.stack, _, self.dictionary = run(
-      command,
-      self.stack,
-      self.dictionary,
-      )
-    self.print_stack()
+    try:
+      self.stack, _, self.dictionary = run(
+        command,
+        self.stack,
+        self.dictionary,
+        )
+    finally:
+      self.print_stack()
 
   def has(self, name):
     return self.dictionary.has_key(name)
