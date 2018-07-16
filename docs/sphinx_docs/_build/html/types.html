@@ -291,7 +291,7 @@ guard against being used on invalid types.</p>
 
 <dl class="data">
 <dt id="joy.utils.polytypes.FUNCTIONS">
-<code class="descclassname">joy.utils.polytypes.</code><code class="descname">FUNCTIONS</code><em class="property"> = {'_Tree_add_Ee': _Tree_add_Ee, '_Tree_delete_R0': _Tree_delete_R0, '_Tree_delete_clear_stuff': _Tree_delete_clear_stuff, '_Tree_get_E': _Tree_get_E, 'add': add, 'and': and, 'b': b, 'bool': bool, 'branch': branch, 'ccons': ccons, 'clear': clear, 'concat_': concat_, 'cons': cons, 'dip': dip, 'dipd': dipd, 'dipdd': dipdd, 'div': div, 'divmod': divmod, 'dup': dup, 'dupd': dupd, 'dupdd': dupdd, 'dupdip': dupdip, 'eq': eq, 'first': first, 'first_two': first_two, 'floordiv': floordiv, 'fourth': fourth, 'ge': ge, 'gt': gt, 'i': i, 'infra': infra, 'le': le, 'loop': loop, 'lshift': lshift, 'lt': lt, 'modulus': modulus, 'mul': mul, 'ne': ne, 'neg': neg, 'not': not, 'nullary': nullary, 'over': over, 'pm': pm, 'pop': pop, 'popd': popd, 'popdd': popdd, 'popop': popop, 'popopd': popopd, 'popopdd': popopdd, 'pow': pow, 'pred': pred, 'product': product, 'rest': rest, 'rolldown': rolldown, 'rollup': rollup, 'rrest': rrest, 'rshift': rshift, 'second': second, 'sqrt': sqrt, 'stack': stack, 'stuncons': stuncons, 'stununcons': stununcons, 'sub': sub, 'succ': succ, 'sum': sum, 'swaack': swaack, 'swap': swap, 'swons': swons, 'third': third, 'truediv': truediv, 'tuck': tuck, 'uncons': uncons, 'unit': unit, 'unswons': unswons, 'x': x}</em><a class="headerlink" href="#joy.utils.polytypes.FUNCTIONS" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">joy.utils.polytypes.</code><code class="descname">FUNCTIONS</code><em class="property"> = {'!=': ne, '&amp;': and, '*': mul, '+': add, '++': succ, '-': sub, '--': pred, '/': truediv, '&lt;': lt, '&lt;&lt;': lshift, '&lt;=': le, '&lt;&gt;': ne, '=': eq, '&gt;': gt, '&gt;=': ge, '&gt;&gt;': rshift, '_Tree_add_Ee': _Tree_add_Ee, '_Tree_delete_R0': _Tree_delete_R0, '_Tree_delete_clear_stuff': _Tree_delete_clear_stuff, '_Tree_get_E': _Tree_get_E, 'add': add, 'and': and, 'b': b, 'bool': bool, 'branch': branch, 'ccons': ccons, 'clear': clear, 'concat_': concat_, 'cons': cons, 'dip': dip, 'dipd': dipd, 'dipdd': dipdd, 'div': div, 'divmod': divmod, 'dup': dup, 'dupd': dupd, 'dupdd': dupdd, 'dupdip': dupdip, 'eq': eq, 'first': first, 'first_two': first_two, 'floordiv': floordiv, 'fourth': fourth, 'ge': ge, 'gt': gt, 'i': i, 'infra': infra, 'le': le, 'loop': loop, 'lshift': lshift, 'lt': lt, 'modulus': modulus, 'mul': mul, 'ne': ne, 'neg': neg, 'not': not, 'nullary': nullary, 'over': over, 'pop': pop, 'popd': popd, 'popdd': popdd, 'popop': popop, 'popopd': popopd, 'popopdd': popopdd, 'pow': pow, 'pred': pred, 'product': product, 'rest': rest, 'roll&lt;': rolldown, 'roll&gt;': rollup, 'rolldown': rolldown, 'rollup': rollup, 'rrest': rrest, 'rshift': rshift, 'second': second, 'sqrt': sqrt, 'stack': stack, 'stuncons': stuncons, 'stununcons': stununcons, 'sub': sub, 'succ': succ, 'sum': sum, 'swaack': swaack, 'swap': swap, 'swons': swons, 'third': third, 'truediv': truediv, 'truthy': bool, 'tuck': tuck, 'uncons': uncons, 'unit': unit, 'unswons': unswons, 'x': x}</em><a class="headerlink" href="#joy.utils.polytypes.FUNCTIONS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Docstring for functions in Sphinx?</p>
 </dd></dl>
 
@@ -370,6 +370,14 @@ expression is carried along and updated and yielded.</p>
 <code class="descclassname">joy.utils.polytypes.</code><code class="descname">meta_compose</code><span class="sig-paren">(</span><em>F</em>, <em>G</em>, <em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#meta_compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.meta_compose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Yield the stack effects of the composition of two lists of stack
 effects.  An expression is carried along and updated and yielded.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.utils.polytypes.type_check">
+<code class="descclassname">joy.utils.polytypes.</code><code class="descname">type_check</code><span class="sig-paren">(</span><em>name</em>, <em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/polytypes.html#type_check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.polytypes.type_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trinary predicate.  True if named function type-checks, False if it
+fails, None if it’s indeterminate (because I haven’t entered it into
+the FUNCTIONS dict yet.)</p>
 </dd></dl>
 
 </div>

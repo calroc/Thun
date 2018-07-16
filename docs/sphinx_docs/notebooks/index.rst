@@ -18,6 +18,9 @@ These essays are adapted from Jupyter notebooks.  I hope to have those hosted so
    Newton-Raphson
    Zipper
    Types
+   TypeChecking
    NoUpdates
    Categorical
+   The_Four_Operations
+   Derivatives_of_Regular_Expressions
 

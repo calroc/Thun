@@ -232,10 +232,6 @@ expressions grow each derivation.
 
 
 ```python
-# This is the straightforward version with no "compaction".
-# It works fine, but does waaaay too much work because the
-# expressions grow each derivation.
-
 def D(symbol):
 
     def derv(R):

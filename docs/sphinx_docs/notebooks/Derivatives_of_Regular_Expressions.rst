@@ -266,10 +266,6 @@ derivation.
 
 .. code:: ipython2
 
-    # This is the straightforward version with no "compaction".
-    # It works fine, but does waaaay too much work because the
-    # expressions grow each derivation.
-    
     def D(symbol):
     
         def derv(R):
@@ -539,9 +535,8 @@ machine transition table.
 Says, "Three or more 1's and not ending in 01 nor composed of all 1's."
 
 .. figure:: omg.svg
-   :alt: omg.svg
+   :alt: State Machine Diagram
 
-   omg.svg
 
 Start at ``a`` and follow the transition arrows according to their
 labels. Accepting states have a double outline. (Graphic generated with
