@@ -9,7 +9,7 @@ class AnyJoyType(object):
     Joy type variable.  Represents any Joy value.
     '''
 
-    accept = tuple, int, float, long, str, unicode, bool, Symbol
+    accept = tuple, int, float, long, complex, str, unicode, bool, Symbol
     prefix = 'a'
 
     def __init__(self, number):

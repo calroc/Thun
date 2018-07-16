@@ -185,7 +185,10 @@ def unify(u, v, s=None):
 
     elif isinstance(u, tuple) and isinstance(v, tuple):
         if len(u) != 2 or len(v) != 2:
+            if _that_one_special_case(u, v):
+                return s,
             raise ValueError(repr((u, v)))  # Bad input.
+            
 
         (a, b), (c, d) = v, u
         if isinstance(a, KleeneStar):
@@ -229,6 +232,18 @@ def unify(u, v, s=None):
         res = _lil_uni(u, v, s)
 
     return res
+
+
+def _that_one_special_case(u, v):
+    '''
+    Handle e.g. ((), (n1*, s1)) when type-checking sum, product, etc...
+    '''
+    return (
+        u == ()
+        and len(v) == 2
+        and isinstance(v[0], KleeneStar)
+        and isinstance(v[1], StackJoyType)
+        )
 
 
 def _lil_uni(u, v, s):
@@ -387,6 +402,8 @@ FUNCTIONS = {
         stack swaack swap swons third tuck uncons unswons stuncons
         stununcons unit eq ge gt le lt ne and bool not
         _Tree_add_Ee _Tree_delete_R0 _Tree_delete_clear_stuff _Tree_get_E
+        add mul sub floordiv modulus div truediv pow
+        neg pred succ
         '''.strip().split())
     }
 '''Docstring for functions in Sphinx?'''
@@ -401,32 +418,32 @@ def defs():
 
     clear = [(s0, s1)]
 
-    add = mul = sub = floordiv = modulus = [
-        ((i2, (i1, s0)), (i3, s0)),
-        ((f2, (i1, s0)), (f3, s0)),
-        ((i2, (f1, s0)), (f3, s0)),
-        ((f2, (f1, s0)), (f3, s0)),
-        ]
+##    add = mul = sub = floordiv = modulus = [
+##        ((i2, (i1, s0)), (i3, s0)),
+##        ((f2, (i1, s0)), (f3, s0)),
+##        ((i2, (f1, s0)), (f3, s0)),
+##        ((f2, (f1, s0)), (f3, s0)),
+##        ]
 
-    div = truediv = pow_ = [
-        ((i2, (i1, s0)), (f3, s0)),
-        ((f2, (i1, s0)), (f3, s0)),
-        ((i2, (f1, s0)), (f3, s0)),
-        ((f2, (f1, s0)), (f3, s0)),
-        ]
+##    div = truediv = pow_ = [
+##        ((i2, (i1, s0)), (f3, s0)),
+##        ((f2, (i1, s0)), (f3, s0)),
+##        ((i2, (f1, s0)), (f3, s0)),
+##        ((f2, (f1, s0)), (f3, s0)),
+##        ]
 
     lshift = rshift = [((i2, (i1, s0)), (i3, s0))]
 
-    neg = pred = succ = [((n1, s0), (n2, s0))]
+##    neg = pred = succ = [((n1, s0), (n2, s0))]
 
     sqrt = [((n1, s0), (f2, s0))]
 
-    pm = divmod_ = [
-        ((i2, (i1, s0)), (i3, (i4, s0))),
-        ((f2, (i1, s0)), (f3, (f4, s0))),
-        ((i2, (f1, s0)), (f3, (f4, s0))),
-        ((f2, (f1, s0)), (f3, (f4, s0))),
-        ]
+##    pm = divmod_ = [
+##        ((i2, (i1, s0)), (i3, (i4, s0))),
+##        ((f2, (i1, s0)), (f3, (f4, s0))),
+##        ((i2, (f1, s0)), (f3, (f4, s0))),
+##        ((f2, (f1, s0)), (f3, (f4, s0))),
+##        ]
 
     return {
         name.rstrip('_'): stack_effect
@@ -478,6 +495,9 @@ def loop_false(stack, expression, dictionary):
     return stack, expression, dictionary
 
 FUNCTIONS['loop'] = CombinatorJoyType('loop', [loop_two_true, loop_true, loop_false], 101)
+
+
+joy.library.add_aliases(FUNCTIONS, joy.library.ALIASES)
 
 
 def set_expectations():
