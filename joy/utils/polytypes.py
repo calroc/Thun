@@ -417,35 +417,7 @@ def defs():
     '''
 
     average = sum_ = product = min_ = max_ = [(((Ns[1], s1), s0), (n0, s0))]
-
-    clear = [(s0, s1)]
-
-##    add = mul = sub = floordiv = modulus = [
-##        ((i2, (i1, s0)), (i3, s0)),
-##        ((f2, (i1, s0)), (f3, s0)),
-##        ((i2, (f1, s0)), (f3, s0)),
-##        ((f2, (f1, s0)), (f3, s0)),
-##        ]
-
-##    div = truediv = pow_ = [
-##        ((i2, (i1, s0)), (f3, s0)),
-##        ((f2, (i1, s0)), (f3, s0)),
-##        ((i2, (f1, s0)), (f3, s0)),
-##        ((f2, (f1, s0)), (f3, s0)),
-##        ]
-
-    lshift = rshift = [((i2, (i1, s0)), (i3, s0))]
-
-##    neg = pred = succ = [((n1, s0), (n2, s0))]
-
-    sqrt = [((n1, s0), (f2, s0))]
-
-##    pm = divmod_ = [
-##        ((i2, (i1, s0)), (i3, (i4, s0))),
-##        ((f2, (i1, s0)), (f3, (f4, s0))),
-##        ((i2, (f1, s0)), (f3, (f4, s0))),
-##        ((f2, (f1, s0)), (f3, (f4, s0))),
-##        ]
+    flatten = [(((Ss[1], s1), s0), (s2, s0))]
 
     return {
         name.rstrip('_'): stack_effect
@@ -472,6 +444,10 @@ FUNCTIONS.update({
         joy.library._dictionary['unary'],
         joy.library._dictionary['binary'],
         joy.library._dictionary['ternary'],
+        joy.library._dictionary['quoted'],
+        joy.library._dictionary['unquoted'],
+        joy.library._dictionary['enstacken'],
+        joy.library._dictionary['disenstacken'],
         joy.library.x,
         ))
     })
@@ -505,7 +481,7 @@ FUNCTIONS['loop'] = CombinatorJoyType('loop', [loop_two_true, loop_true, loop_fa
 joy.library.add_aliases(FUNCTIONS, joy.library.ALIASES)
 
 
-def expectations_of_definition(cjt):
+def set_expectations_of_definition(cjt):
     if len(cjt.stack_effects) != 1:
         raise ValueError
     defi = cjt.stack_effects[0]
@@ -526,9 +502,13 @@ def set_expectations():
     dipd.expect = s8, (a8, (a7, s7))
     dipdd.expect = s8, (a8, (a7, (a6, s7)))
     b.expect = concat_.expect = infra.expect = s8, (s7, s6)
-    expectations_of_definition(unary)
-    expectations_of_definition(binary)
-    expectations_of_definition(ternary)
+    set_expectations_of_definition(unary)
+    set_expectations_of_definition(binary)
+    set_expectations_of_definition(ternary)
+    set_expectations_of_definition(quoted)
+    set_expectations_of_definition(unquoted)
+    set_expectations_of_definition(enstacken)
+    disenstacken.expect = (As[1], s1), s0
 scope = globals().copy()
 scope.update(FUNCTIONS)
 eval(set_expectations.func_code, scope)

@@ -320,6 +320,8 @@ def defs():
     stuncons = compose(stack, uncons)
     stununcons = compose(stack, uncons, uncons)
     unit = __(a1), __((a1, ()))
+    of = compose(swap, at)
+    clear = s0, s1
 
     eq = ge = gt = le = lt = ne = __(n1, n2), __(b1)
 
@@ -330,7 +332,7 @@ def defs():
     add = div = floordiv = mod = mul = pow_ = sub = truediv = \
           lshift = rshift = __(n1, n2), __(n3,)
     sqr = compose(dup, mul)
-    abs_ = floor = succ = pred = neg = __(n1,), __(n2,)
+    abs_ = floor = sqrt = succ = pred = neg = __(n1,), __(n2,)
     divmod_ = pm = __(n2, n1), __(n4, n3)
 
     first_two = compose(uncons, uncons, pop)
