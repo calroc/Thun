@@ -17,7 +17,7 @@ from logging import getLogger
 _log = getLogger(__name__)
 
 import joy.library
-from joy.parser import Symbol
+from joy.parser import Symbol, text_to_expression
 from joy.utils.stack import (
     concat as CONCAT,
     expression_to_string,
@@ -359,6 +359,16 @@ def infer(*expression):
     return sorted(set(_infer(list_to_stack(expression))))
 
 
+def infer_string(string):
+    e = reify(FUNCTIONS, text_to_expression(string))  # Fix Symbols.
+    return sorted(set(_infer(e)))
+
+
+def infer_expression(expression):
+    e = reify(FUNCTIONS, expression)  # Fix Symbols.
+    return sorted(set(_infer(e)))
+
+
 def type_check(name, stack):
     '''
     Trinary predicate.  True if named function type-checks, False if it
@@ -495,17 +505,30 @@ FUNCTIONS['loop'] = CombinatorJoyType('loop', [loop_two_true, loop_true, loop_fa
 joy.library.add_aliases(FUNCTIONS, joy.library.ALIASES)
 
 
+def expectations_of_definition(cjt):
+    if len(cjt.stack_effects) != 1:
+        raise ValueError
+    defi = cjt.stack_effects[0]
+    if not isinstance(defi, joy.library.DefinitionWrapper):
+        raise ValueError
+    F = infer_expression(defi.body)
+    assert len(F) == 1, repr(F)
+    fi, fo = F[0]
+    cjt.expect = fi
+
+
+
 def set_expectations():
     branch.expect = s7, (s6, (b1, s5))
     loop.expect = s6, (b1, s5)
     i.expect = nullary.expect = x.expect = s7, s6
-    unary.expect = (s1, (a1, s2))
-    binary.expect = (s1, (a1, (a2, s2)))
-    ternary.expect = (s1, (a1, (a2, (a3, s2))))
     dip.expect = dupdip.expect = s8, (a8, s7)
     dipd.expect = s8, (a8, (a7, s7))
     dipdd.expect = s8, (a8, (a7, (a6, s7)))
     b.expect = concat_.expect = infra.expect = s8, (s7, s6)
+    expectations_of_definition(unary)
+    expectations_of_definition(binary)
+    expectations_of_definition(ternary)
 scope = globals().copy()
 scope.update(FUNCTIONS)
 eval(set_expectations.func_code, scope)
