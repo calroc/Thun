@@ -20,9 +20,9 @@ from joy.utils.stack import stack_to_string
 tb = TEXT_BINDINGS.copy()
 tb.update({
   '<F3>': lambda tv: tv.copy_selection_to_stack,
-  '<F4>': lambda tv: tv.cut,
-  #  '<F-->': lambda tv: tv.pastecut,
-  #  '<F6>': lambda tv: tv.copyto,
+  '<Shift-F3>': lambda tv: tv.cut,
+  '<F4>': lambda tv: tv.copyto,
+  '<Shift-F4>': lambda tv: tv.pastecut,
   })
 defaults = dict(text_bindings=tb, width=80, height=25)
 
@@ -30,20 +30,15 @@ defaults = dict(text_bindings=tb, width=80, height=25)
 GLOBAL_COMMANDS = {
   '<F5>': 'swap',
   '<F6>': 'dup',
-
   '<Shift-F5>': 'roll<',
   '<Shift-F6>': 'roll>',
-
   '<F7>': 'over',
   '<Shift-F7>': 'tuck',
-
-  '<Shift-F3>': 'parse',
-
+  '<F8>': 'parse',
   '<F12>': 'words',
   '<F1>': 'reset_log show_log',
   '<Escape>': 'clear reset_log show_log',
   '<Control-Delete>': 'pop',
-  '<Control-Shift-Delete>': 'popd',
   }
 
 
@@ -55,14 +50,16 @@ def repo_relative_path(path):
 
 
 def key_bindings(*args):
-  print dedent('''
-    Ctrl-Enter - Run the selection as Joy code.
-
-    F1 - Reset and show (if hidden) the log.
-    Esc - Like F1 but also clears the stack.
-    ...
-    F12 - print a list of all command words, or right-click "words".
-    ''')
+  commands = [
+    'Control-Enter - Run the selection as Joy code.',
+    'F3 - Copy selection to stack.',
+    'Shift-F3 - Cut selection to stack.',
+    'F4 - Paste item on top of stack to insertion cursor.',
+    'Shift-F4 - Pop and paste top of stack to insertion cursor.',
+    ]
+  for key, command in GLOBAL_COMMANDS.iteritems():
+    commands.append('%s - %s' % (key.strip('<>'), command))
+  print '\n'.join([''] + sorted(commands))
   return args
 
 
@@ -127,7 +124,8 @@ FONT = get_font('Iosevka', size=14)  # Requires Tk root already set up.
 log.init('Log', LOG_FN, repo_relative_path(LOG_FN), repo, FONT)
 t.init('Joy - ' + JOY_HOME, JOY_FN, repo_relative_path(JOY_FN), repo, FONT)
 for event, command in GLOBAL_COMMANDS.items():
-  t.bind_all(event, lambda _, _command=command: world.interpret(_command))
+  t.bind(event, lambda _, _command=command: world.interpret(_command))
+  log.bind(event, lambda _, _command=command: world.interpret(_command))
 
 
 def main():

@@ -325,11 +325,12 @@ def defs():
 
     and_ = __(b1, b2), __(b3)
     bool_ = not_ = __(a1), __(b1)
+    eh = compose(dup, bool_)
 
-    add = div = floordiv = modulus = mul = pow_ = sub = truediv = \
+    add = div = floordiv = mod = mul = pow_ = sub = truediv = \
           lshift = rshift = __(n1, n2), __(n3,)
-    sqrt = compose(dup, mul)
-    succ = pred = neg = __(n1,), __(n2,)
+    sqr = compose(dup, mul)
+    abs_ = floor = succ = pred = neg = __(n1,), __(n2,)
     divmod_ = pm = __(n2, n1), __(n4, n3)
 
     first_two = compose(uncons, uncons, pop)

@@ -396,15 +396,7 @@ Ss = map(StackStarJoyType, _R)
 
 FUNCTIONS = {
     name: SymbolJoyType(name, [DEFS[name]], i)
-    for i, name in enumerate('''
-        ccons cons divmod dup dupd dupdd first first_two fourth over pop
-        popd popdd popop popopd popopdd rest rrest rolldown rollup second
-        stack swaack swap swons third tuck uncons unswons stuncons
-        stununcons unit eq ge gt le lt ne and bool not
-        _Tree_add_Ee _Tree_delete_R0 _Tree_delete_clear_stuff _Tree_get_E
-        add mul sub floordiv modulus div truediv pow
-        neg pred succ
-        '''.strip().split())
+    for i, name in enumerate(sorted(DEFS))
     }
 '''Docstring for functions in Sphinx?'''
 
@@ -414,7 +406,7 @@ def defs():
     Return a dict of FunctionJoyType instances to be used with ``infer()``.
     '''
 
-    sum_ = product = [(((Ns[1], s1), s0), (n0, s0))]
+    average = sum_ = product = min_ = max_ = [(((Ns[1], s1), s0), (n0, s0))]
 
     clear = [(s0, s1)]
 
@@ -467,6 +459,9 @@ FUNCTIONS.update({
         joy.library.i,
         joy.library.infra,
         joy.library._dictionary['nullary'],
+        joy.library._dictionary['unary'],
+        joy.library._dictionary['binary'],
+        joy.library._dictionary['ternary'],
         joy.library.x,
         ))
     })
@@ -504,6 +499,9 @@ def set_expectations():
     branch.expect = s7, (s6, (b1, s5))
     loop.expect = s6, (b1, s5)
     i.expect = nullary.expect = x.expect = s7, s6
+    unary.expect = (s1, (a1, s2))
+    binary.expect = (s1, (a1, (a2, s2)))
+    ternary.expect = (s1, (a1, (a2, (a3, s2))))
     dip.expect = dupdip.expect = s8, (a8, s7)
     dipd.expect = s8, (a8, (a7, s7))
     dipdd.expect = s8, (a8, (a7, (a6, s7)))

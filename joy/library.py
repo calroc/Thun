@@ -71,6 +71,7 @@ ALIASES = (
   ('pred', ['--']),
   ('rolldown', ['roll<']),
   ('rollup', ['roll>']),
+  ('eh', ['?']),
   ('id', [u'•']),
   )
 

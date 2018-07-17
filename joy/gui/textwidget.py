@@ -439,7 +439,6 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
         self.delete('0.0', tk.END)
         self.insert(tk.END, data)
 
-
   def popupTB(self, tb):
     top = tk.Toplevel()
     T = TextViewerWidget(
