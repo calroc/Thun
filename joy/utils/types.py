@@ -281,6 +281,16 @@ def __(*seq):
     return stack
 
 
+
+def stack_effect(*inputs):
+
+    def _stack_effect(*outputs):
+        pass
+
+return _stack_effect
+
+
+
 _R = range(10)
 A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = map(AnyJoyType, _R)
 B = b0, b1, b2, b3, b4, b5, b6, b7, b8, b9 = map(BooleanJoyType, _R)

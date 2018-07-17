@@ -33,6 +33,26 @@ from .utils.stack import list_to_stack, iter_stack, pick, concat
 from .utils.brutal_hackery import rename_code_object
 
 from .utils import generated_library as genlib
+from .utils.types import (
+  stack_effect,
+  AnyJoyType,
+  BooleanJoyType,
+  NumberJoyType,
+  StackJoyType,
+  FloatJoyType,
+  IntJoyType,
+  TextJoyType,
+  )
+  
+  
+_R = range(10)
+A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = map(AnyJoyType, _R)
+B = b0, b1, b2, b3, b4, b5, b6, b7, b8, b9 = map(BooleanJoyType, _R)
+N = n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = map(NumberJoyType, _R)
+S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = map(StackJoyType, _R)
+F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = map(FloatJoyType, _R)
+I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = map(IntJoyType, _R)
+T = t0, t1, t2, t3, t4, t5, t6, t7, t8, t9 = map(TextJoyType, _R)
 
 
 _dictionary = {}
@@ -278,9 +298,9 @@ def _text_to_defs(text):
 for name, primitive in getmembers(genlib, isfunction):
   inscribe(SimpleFunctionWrapper(primitive))
 
-
 @inscribe
 @FunctionWrapper
+@stack_effect(t1)()
 def inscribe_(stack, expression, dictionary):
     '''
     Create a new Joy function definition in the Joy dictionary.  A
