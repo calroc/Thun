@@ -275,108 +275,41 @@ def compile_(name, f, doc=None):
   return %s''' % (name, doc, i, o)
 
 
+_functions = {}
+
+
 def __(*seq):
   stack = StackJoyType(23)
   for item in seq: stack = item, stack
   return stack
 
 
-
 def stack_effect(*inputs):
-
   def _stack_effect(*outputs):
-    pass
-
-return _stack_effect
-
-
-
-_R = range(10)
-A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = map(AnyJoyType, _R)
-B = b0, b1, b2, b3, b4, b5, b6, b7, b8, b9 = map(BooleanJoyType, _R)
-N = n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = map(NumberJoyType, _R)
-S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = map(StackJoyType, _R)
-F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = map(FloatJoyType, _R)
-I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = map(IntJoyType, _R)
-T = t0, t1, t2, t3, t4, t5, t6, t7, t8, t9 = map(TextJoyType, _R)
+    def _apply_to(function):
+      i, o = _functions[function.name] = __(*inputs), __(*outputs)
+      function.__doc__ += (
+        '\nStack effect::\n\n    '  # '::' for Sphinx docs.
+        + doc_from_stack_effect(i, o)
+        )
+      return function
+    return _apply_to
+  return _stack_effect
 
 
-def defs():
-  '''
-  Return a dict of named stack effects.
-  '''
-  at = __(s0, i1), __(a1)
-  drop = take = __(s0, i1), __(s1)
-  cons = __(a1, s0), __((a1, s0),)
-  ccons = compose(cons, cons)
-  dup = __(a1,), __(a1, a1)
-  dupd = __(a2, a1), __(a2, a2, a1)
-  dupdd = __(a3, a2, a1), __(a3, a3, a2, a1)
-  first = __((a1, s1),), __(a1,)
-  inscribe = __(t1), __()
-  over = __(a2, a1), __(a2, a1, a2)
-  pop = __(a1), __()
-  popd = __(a2, a1,), __(a1)
-  popdd = __(a3, a2, a1,), __(a2, a1,)
-  popop = __(a2, a1,), __()
-  popopd = __(a3, a2, a1,), __(a1)
-  popopdd = __(a4, a3, a2, a1,), __(a2, a1)
-  rest = __((a1, s0),), __(s0,)
-  rolldown = __(a1, a2, a3), __(a2, a3, a1)
-  rollup = __(a1, a2, a3), __(a3, a1, a2)
-  rrest = compose(rest, rest)
-  second = compose(rest, first)
-  stack = s0, (s0, s0)
-  swaack = (s1, s0), (s0, s1)
-  swap = __(a1, a2), __(a2, a1)
-  swons = compose(swap, cons)
-  third = compose(rest, second)
-  tuck = __(a2, a1), __(a1, a2, a1)
-  uncons = __((a1, s0),), __(a1, s0)
-  unswons = compose(uncons, swap)
-  stuncons = compose(stack, uncons)
-  stununcons = compose(stack, uncons, uncons)
-  unit = __(a1), __((a1, ()))
-  of = compose(swap, at)
-  clear = s0, s1
-
-  eq = ge = gt = le = lt = ne = __(n1, n2), __(b1)
-
-  and_ = __(b1, b2), __(b3)
-  bool_ = not_ = __(a1), __(b1)
-  eh = compose(dup, bool_)
-
-  add = div = floordiv = mod = mul = pow_ = sub = truediv = \
-      lshift = rshift = __(n1, n2), __(n3,)
-  sqr = compose(dup, mul)
-  abs_ = floor = sqrt = succ = pred = neg = __(n1,), __(n2,)
-  divmod_ = pm = __(n2, n1), __(n4, n3)
-
-  first_two = compose(uncons, uncons, pop)
-  fourth = compose(rest, third)
-  of = compose(swap, at)
-
-  _Tree_add_Ee = compose(pop, swap, rolldown, rrest, ccons)
-  _Tree_get_E = compose(popop, second)
-  _Tree_delete_clear_stuff = compose(rollup, popop, rest)
-  _Tree_delete_R0 = compose(over, first, swap, dup)
-
-  return {
-    name.rstrip('_'): stack_effect
-    for name, stack_effect in locals().iteritems()
-    }
+def ef(*inputs):
+  def _ef(*outputs):
+    return __(*inputs), __(*outputs)
+  return _ef
 
 
-DEFS = defs()
-
-
-def show():
+def show(DEFS):
   for name, stack_effect_comment in sorted(DEFS.iteritems()):
     t = ' *'[compilable(stack_effect_comment)]
     print name, '=', doc_from_stack_effect(*stack_effect_comment), t
 
 
-def generate_library_code(f=None):
+def generate_library_code(DEFS, f=None):
   if f is None:
     import sys
     f = sys.stdout
@@ -389,5 +322,5 @@ def generate_library_code(f=None):
     print >> f
 
 
-if __name__ == '__main__':
-  show()
+##if __name__ == '__main__':
+##  show()

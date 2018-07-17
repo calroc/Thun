@@ -34,6 +34,8 @@ from .utils.brutal_hackery import rename_code_object
 
 from .utils import generated_library as genlib
 from .utils.types import (
+  compose,
+  ef,
   stack_effect,
   AnyJoyType,
   BooleanJoyType,
@@ -42,6 +44,7 @@ from .utils.types import (
   FloatJoyType,
   IntJoyType,
   TextJoyType,
+  _functions,
   )
   
   
@@ -53,6 +56,17 @@ S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = map(StackJoyType, _R)
 F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = map(FloatJoyType, _R)
 I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = map(IntJoyType, _R)
 T = t0, t1, t2, t3, t4, t5, t6, t7, t8, t9 = map(TextJoyType, _R)
+
+
+sec0 = stack_effect(t1)()
+sec1 = stack_effect(s0, i1)(s1)
+sec2 = stack_effect(s0, i1)(a1)
+sec_binary_cmp = stack_effect(n1, n2)(b1)
+sec_binary_ints = stack_effect(i1, i2)(i3)
+sec_binary_logic = stack_effect(b1, b2)(b3)
+sec_binary_math = stack_effect(n1, n2)(n3)
+sec_unary_logic = stack_effect(a1)(b1)
+sec_unary_math = stack_effect(n1)(n2)
 
 
 _dictionary = {}
@@ -74,6 +88,8 @@ ALIASES = (
   ('and', ['&']),
   ('bool', ['truthy']),
   ('mul', ['*']),
+  ('floordiv', ['/floor', '//']),
+  ('floor', ['round']),
   ('truediv', ['/']),
   ('mod', ['%', 'rem', 'remainder', 'modulus']),
   ('eq', ['=']),
@@ -109,6 +125,58 @@ def add_aliases(D, A):
       continue
     for alias in aliases:
       D[alias] = F
+
+
+def yin_functions():
+  '''
+  Return a dict of named stack effects.
+
+  "Yin" functions are those that only rearrange items in stacks and
+  can be defined completely by their stack effects.  This means they
+  can be auto-compiled.
+  '''
+  cons = ef(a1, s0)((a1, s0))
+  ccons = compose(cons, cons)
+  dup = ef(a1)(a1, a1)
+  dupd = ef(a2, a1)(a2, a2, a1)
+  dupdd = ef(a3, a2, a1)(a3, a3, a2, a1)
+  first = ef((a1, s1),)(a1,)
+  over = ef(a2, a1)(a2, a1, a2)
+  pop = ef(a1)()
+  popd = ef(a2, a1,)(a1)
+  popdd = ef(a3, a2, a1,)(a2, a1,)
+  popop = ef(a2, a1,)()
+  popopd = ef(a3, a2, a1,)(a1)
+  popopdd = ef(a4, a3, a2, a1,)(a2, a1)
+  rest = ef((a1, s0),)(s0,)
+  rolldown = ef(a1, a2, a3)(a2, a3, a1)
+  rollup = ef(a1, a2, a3)(a3, a1, a2)
+  rrest = compose(rest, rest)
+  second = compose(rest, first)
+  stack = s0, (s0, s0)
+  swaack = (s1, s0), (s0, s1)
+  swap = ef(a1, a2)(a2, a1)
+  swons = compose(swap, cons)
+  third = compose(rest, second)
+  tuck = ef(a2, a1)(a1, a2, a1)
+  uncons = ef((a1, s0),)(a1, s0)
+  unswons = compose(uncons, swap)
+  stuncons = compose(stack, uncons)
+  stununcons = compose(stack, uncons, uncons)
+  unit = ef(a1)((a1, ()))
+
+  first_two = compose(uncons, uncons, pop)
+  fourth = compose(rest, third)
+
+  _Tree_add_Ee = compose(pop, swap, rolldown, rrest, ccons)
+  _Tree_get_E = compose(popop, second)
+  _Tree_delete_clear_stuff = compose(rollup, popop, rest)
+  _Tree_delete_R0 = compose(over, first, swap, dup)
+
+  return {
+    name.rstrip('_'): stack_effect
+    for name, stack_effect in locals().iteritems()
+    }
 
 
 definitions = ('''\
@@ -289,32 +357,40 @@ def _text_to_defs(text):
   return (line.strip() for line in text.splitlines() if '==' in line)
 
 
+
+##  eh = compose(dup, bool_)
+##  sqr = compose(dup, mul)
+##  of = compose(swap, at)
+
+
 #
 # Functions
 #
 
 
 # Load the auto-generated primitives into the dictionary.
+_functions.update(yin_functions())
 for name, primitive in getmembers(genlib, isfunction):
   inscribe(SimpleFunctionWrapper(primitive))
 
+
 @inscribe
+@sec0
 @FunctionWrapper
-@stack_effect(t1)()
 def inscribe_(stack, expression, dictionary):
-    '''
-    Create a new Joy function definition in the Joy dictionary.  A
-    definition is given as a string with a name followed by a double
-    equal sign then one or more Joy functions, the body. for example:
+  '''
+  Create a new Joy function definition in the Joy dictionary.  A
+  definition is given as a string with a name followed by a double
+  equal sign then one or more Joy functions, the body. for example:
 
-        sqr == dup mul
+      sqr == dup mul
 
-    If you want the definition to persist over restarts, enter it into
-    the definitions.txt resource.
-    '''
-    definition, stack = stack
-    DefinitionWrapper.add_def(definition, dictionary)
-    return stack, expression, dictionary
+  If you want the definition to persist over restarts, enter it into
+  the definitions.txt resource.
+  '''
+  definition, stack = stack
+  DefinitionWrapper.add_def(definition, dictionary)
+  return stack, expression, dictionary
 
 
 @inscribe
@@ -327,6 +403,7 @@ def parse(stack):
 
 
 @inscribe
+@sec2
 @SimpleFunctionWrapper
 def getitem(stack):
   '''
@@ -348,6 +425,7 @@ def getitem(stack):
 
 
 @inscribe
+@sec1
 @SimpleFunctionWrapper
 def drop(stack):
   '''
@@ -375,6 +453,7 @@ def drop(stack):
 
 
 @inscribe
+@sec1
 @SimpleFunctionWrapper
 def take(stack):
   '''
@@ -512,6 +591,7 @@ def sort_(S):
   return list_to_stack(sorted(iter_stack(tos))), stack
 
 
+_functions['clear'] = s0, s1
 @inscribe
 @SimpleFunctionWrapper
 def clear(stack):
@@ -1319,32 +1399,39 @@ def cmp_(stack, expression, dictionary):
 
 
 for F in (
-  BinaryBuiltinWrapper(operator.add),
-  BinaryBuiltinWrapper(operator.and_),
-  BinaryBuiltinWrapper(operator.div),
-  BinaryBuiltinWrapper(operator.eq),
-  BinaryBuiltinWrapper(operator.floordiv),
-  BinaryBuiltinWrapper(operator.ge),
-  BinaryBuiltinWrapper(operator.gt),
-  BinaryBuiltinWrapper(operator.le),
-  BinaryBuiltinWrapper(operator.lshift),
-  BinaryBuiltinWrapper(operator.lt),
-  BinaryBuiltinWrapper(operator.mod),
-  BinaryBuiltinWrapper(operator.mul),
-  BinaryBuiltinWrapper(operator.ne),
-  BinaryBuiltinWrapper(operator.or_),
-  BinaryBuiltinWrapper(operator.pow),
-  BinaryBuiltinWrapper(operator.rshift),
-  BinaryBuiltinWrapper(operator.sub),
-  BinaryBuiltinWrapper(operator.truediv),
-  BinaryBuiltinWrapper(operator.xor),
 
-  UnaryBuiltinWrapper(abs),
-  UnaryBuiltinWrapper(bool),
-  UnaryBuiltinWrapper(floor),
-  UnaryBuiltinWrapper(operator.neg),
-  UnaryBuiltinWrapper(operator.not_),
-  UnaryBuiltinWrapper(sqrt),
+  #divmod_ = pm = __(n2, n1), __(n4, n3)
+
+  sec_binary_cmp(BinaryBuiltinWrapper(operator.eq)),
+  sec_binary_cmp(BinaryBuiltinWrapper(operator.ge)),
+  sec_binary_cmp(BinaryBuiltinWrapper(operator.gt)),
+  sec_binary_cmp(BinaryBuiltinWrapper(operator.le)),
+  sec_binary_cmp(BinaryBuiltinWrapper(operator.lt)),
+  sec_binary_cmp(BinaryBuiltinWrapper(operator.ne)),
+
+  sec_binary_ints(BinaryBuiltinWrapper(operator.xor)),
+  sec_binary_ints(BinaryBuiltinWrapper(operator.lshift)),
+  sec_binary_ints(BinaryBuiltinWrapper(operator.rshift)),
+
+  sec_binary_logic(BinaryBuiltinWrapper(operator.and_)),
+  sec_binary_logic(BinaryBuiltinWrapper(operator.or_)),
+
+  sec_binary_math(BinaryBuiltinWrapper(operator.add)),
+  sec_binary_math(BinaryBuiltinWrapper(operator.floordiv)),
+  sec_binary_math(BinaryBuiltinWrapper(operator.mod)),
+  sec_binary_math(BinaryBuiltinWrapper(operator.mul)),
+  sec_binary_math(BinaryBuiltinWrapper(operator.pow)),
+  sec_binary_math(BinaryBuiltinWrapper(operator.sub)),
+  sec_binary_math(BinaryBuiltinWrapper(operator.truediv)),
+
+  sec_unary_logic(UnaryBuiltinWrapper(bool)),
+  sec_unary_logic(UnaryBuiltinWrapper(operator.not_)),
+
+  sec_unary_math(UnaryBuiltinWrapper(abs)),
+  sec_unary_math(UnaryBuiltinWrapper(operator.neg)),
+  sec_unary_math(UnaryBuiltinWrapper(sqrt)),
+
+  stack_effect(n1)(i1)(UnaryBuiltinWrapper(floor)),
   ):
   inscribe(F)
 del F  # Otherwise Sphinx autodoc will pick it up.
