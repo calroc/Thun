@@ -63,6 +63,11 @@ class IntJoyType(FloatJoyType):
     prefix = 'i'
 
 
+class TextJoyType(FloatJoyType):
+    accept = basestring
+    prefix = 't'
+
+
 class StackJoyType(AnyJoyType):
 
     accept = tuple
@@ -283,6 +288,7 @@ N = n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = map(NumberJoyType, _R)
 S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = map(StackJoyType, _R)
 F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = map(FloatJoyType, _R)
 I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = map(IntJoyType, _R)
+T = t0, t1, t2, t3, t4, t5, t6, t7, t8, t9 = map(TextJoyType, _R)
 
 
 def defs():
@@ -297,6 +303,7 @@ def defs():
     dupd = __(a2, a1), __(a2, a2, a1)
     dupdd = __(a3, a2, a1), __(a3, a3, a2, a1)
     first = __((a1, s1),), __(a1,)
+    inscribe = __(t1), __()
     over = __(a2, a1), __(a2, a1, a2)
     pop = __(a1), __()
     popd = __(a2, a1,), __(a1)

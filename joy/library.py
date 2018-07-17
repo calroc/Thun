@@ -280,6 +280,24 @@ for name, primitive in getmembers(genlib, isfunction):
 
 
 @inscribe
+@FunctionWrapper
+def inscribe_(stack, expression, dictionary):
+    '''
+    Create a new Joy function definition in the Joy dictionary.  A
+    definition is given as a string with a name followed by a double
+    equal sign then one or more Joy functions, the body. for example:
+
+        sqr == dup mul
+
+    If you want the definition to persist over restarts, enter it into
+    the definitions.txt resource.
+    '''
+    definition, stack = stack
+    DefinitionWrapper.add_def(definition, dictionary)
+    return stack, expression, dictionary
+
+
+@inscribe
 @SimpleFunctionWrapper
 def parse(stack):
   '''Parse the string on the stack to a Joy expression.'''
