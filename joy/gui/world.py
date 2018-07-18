@@ -23,7 +23,7 @@ from inspect import getdoc
 from joy.joy import run
 from joy.parser import Symbol
 from joy.utils.stack import stack_to_string
-from joy.utils.polytypes import type_check
+from joy.utils.types import type_check
 
 
 def is_numerical(s):

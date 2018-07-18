@@ -236,6 +236,7 @@ codireco == cons dip rest cons
 make_generator == [codireco] ccons
 ifte == [nullary not] dipd branch
 '''
+#
 # 
 # ifte == [nullary] dipd swap branch
 # genrec == [[genrec] cons cons cons cons] nullary swons concat ifte
@@ -365,17 +366,20 @@ class DefinitionWrapper(object):
       class_.add_def(definition, dictionary)
 
   @classmethod
-  def add_def(class_, definition, dictionary):
+  def add_def(class_, definition, dictionary, fail_fails=False):
     '''
     Add the definition to the dictionary.
     '''
     F = class_.parse_definition(definition)
     try:
-      #print F._body
+      # print F.name, F._body
       secs = infer(*F._body)
     except JoyTypeError:
       pass
       print F.name, '==', expression_to_string(F.body), '   --failed to infer stack effect.'
+      if fail_fails:
+        print 'Function not inscribed.'
+        return
     else:
       FUNCTIONS[F.name] = SymbolJoyType(F.name, secs, _SYM_NUMS())
     dictionary[F.name] = F
@@ -405,7 +409,7 @@ def inscribe_(stack, expression, dictionary):
   the definitions.txt resource.
   '''
   definition, stack = stack
-  DefinitionWrapper.add_def(definition, dictionary)
+  DefinitionWrapper.add_def(definition, dictionary, fail_fails=True)
   return stack, expression, dictionary
 
 
@@ -652,6 +656,7 @@ def reverse(S):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), s7, s6)
 @SimpleFunctionWrapper
 def concat_(S):
   '''Concatinate the two lists on the top of the stack.
@@ -982,7 +987,7 @@ def infra(stack, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), s7, s6, s5, s4)
+#@combinator_effect(_COMB_NUMS(), s7, s6, s5, s4)
 @FunctionWrapper
 def genrec(stack, expression, dictionary):
   '''
@@ -1396,7 +1401,7 @@ def times(stack, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), b1, s6)
+#@combinator_effect(_COMB_NUMS(), b1, s6)
 @FunctionWrapper
 def loop(stack, expression, dictionary):
   '''
