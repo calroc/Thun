@@ -155,6 +155,7 @@ def yin_functions():
   can be defined completely by their stack effects.  This means they
   can be auto-compiled.
   '''
+  # pylint: disable=unused-variable
   cons = ef(a1, s0)((a1, s0))
   ccons = compose(cons, cons)
   dup = ef(a1)(a1, a1)
@@ -341,7 +342,7 @@ class DefinitionWrapper(object):
 
   def __call__(self, stack, expression, dictionary):
     if self._compiled:
-      return self._compiled(stack, expression, dictionary)
+      return self._compiled(stack, expression, dictionary)  # pylint: disable=E1102
     expression = list_to_stack(self._body, expression)
     return stack, expression, dictionary
 
@@ -1088,11 +1089,13 @@ def map_(S, expression, dictionary):
 
 
 def branch_true(stack, expression, dictionary):
+  # pylint: disable=unused-variable
   (then, (else_, (flag, stack))) = stack
   return stack, concat(then, expression), dictionary
 
 
 def branch_false(stack, expression, dictionary):
+  # pylint: disable=unused-variable
   (then, (else_, (flag, stack))) = stack
   return stack, concat(else_, expression), dictionary
 
