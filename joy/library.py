@@ -25,11 +25,12 @@ function.
 '''
 from inspect import getdoc
 from functools import wraps
+from itertools import count
 from inspect import getmembers, isfunction
 import operator, math
 
 from .parser import text_to_expression, Symbol
-from .utils.stack import list_to_stack, iter_stack, pick, concat
+from .utils.stack import expression_to_string, list_to_stack, iter_stack, pick, concat
 from .utils.brutal_hackery import rename_code_object
 
 from .utils import generated_library as genlib
@@ -38,16 +39,28 @@ from .utils.types import (
   ef,
   stack_effect,
   AnyJoyType,
+  AnyStarJoyType,
   BooleanJoyType,
   NumberJoyType,
+  NumberStarJoyType,
   StackJoyType,
+  StackStarJoyType,
   FloatJoyType,
   IntJoyType,
+  SymbolJoyType,
   TextJoyType,
   _functions,
+  FUNCTIONS,
+  infer,
+  JoyTypeError,
+  combinator_effect,
   )
   
   
+_SYM_NUMS = count().next
+_COMB_NUMS = count().next
+
+
 _R = range(10)
 A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = map(AnyJoyType, _R)
 B = b0, b1, b2, b3, b4, b5, b6, b7, b8, b9 = map(BooleanJoyType, _R)
@@ -56,6 +69,12 @@ S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = map(StackJoyType, _R)
 F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = map(FloatJoyType, _R)
 I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = map(IntJoyType, _R)
 T = t0, t1, t2, t3, t4, t5, t6, t7, t8, t9 = map(TextJoyType, _R)
+
+
+_R = range(1, 11)
+As = map(AnyStarJoyType, _R)
+Ns = map(NumberStarJoyType, _R)
+Ss = map(StackStarJoyType, _R)
 
 
 sec0 = stack_effect(t1)()
@@ -67,7 +86,7 @@ sec_binary_logic = stack_effect(b1, b2)(b3)
 sec_binary_math = stack_effect(n1, n2)(n3)
 sec_unary_logic = stack_effect(a1)(b1)
 sec_unary_math = stack_effect(n1)(n2)
-
+sec_Ns_math = stack_effect((Ns[1], s1),)(n0)
 
 _dictionary = {}
 
@@ -350,6 +369,14 @@ class DefinitionWrapper(object):
     Add the definition to the dictionary.
     '''
     F = class_.parse_definition(definition)
+    try:
+      #print F._body
+      secs = infer(*F._body)
+    except JoyTypeError:
+      pass
+      print F.name, '==', expression_to_string(F.body), '   --failed to infer stack effect.'
+    else:
+      FUNCTIONS[F.name] = SymbolJoyType(F.name, secs, _SYM_NUMS())
     dictionary[F.name] = F
 
 
@@ -357,21 +384,9 @@ def _text_to_defs(text):
   return (line.strip() for line in text.splitlines() if '==' in line)
 
 
-
-##  eh = compose(dup, bool_)
-##  sqr = compose(dup, mul)
-##  of = compose(swap, at)
-
-
 #
 # Functions
 #
-
-
-# Load the auto-generated primitives into the dictionary.
-_functions.update(yin_functions())
-for name, primitive in getmembers(genlib, isfunction):
-  inscribe(SimpleFunctionWrapper(primitive))
 
 
 @inscribe
@@ -528,6 +543,7 @@ def select(stack):
 
 
 @inscribe
+@sec_Ns_math
 @SimpleFunctionWrapper
 def max_(S):
   '''Given a list find the maximum.'''
@@ -536,6 +552,7 @@ def max_(S):
 
 
 @inscribe
+@sec_Ns_math
 @SimpleFunctionWrapper
 def min_(S):
   '''Given a list find the minimum.'''
@@ -544,6 +561,7 @@ def min_(S):
 
 
 @inscribe
+@sec_Ns_math
 @SimpleFunctionWrapper
 def sum_(S):
   '''Given a quoted sequence of numbers return the sum.
@@ -872,6 +890,7 @@ S_truthy = Symbol('truthy')
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), s1)
 @FunctionWrapper
 def i(stack, expression, dictionary):
   '''
@@ -889,6 +908,7 @@ def i(stack, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), s1)
 @FunctionWrapper
 def x(stack, expression, dictionary):
   '''
@@ -906,6 +926,7 @@ def x(stack, expression, dictionary):
 
 
 @inscribe
+#@combinator_effect(_COMB_NUMS(), s7, s6)
 @FunctionWrapper
 def b(stack, expression, dictionary):
   '''
@@ -941,6 +962,7 @@ def dupdip(stack, expression, dictionary):
 
 
 @inscribe
+#@combinator_effect(_COMB_NUMS(), s7, s6)
 @FunctionWrapper
 def infra(stack, expression, dictionary):
   '''
@@ -1150,6 +1172,7 @@ def _cond(conditions, expression):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), a1, s1)
 @FunctionWrapper
 def dip(stack, expression, dictionary):
   '''
@@ -1437,7 +1460,31 @@ for F in (
 del F  # Otherwise Sphinx autodoc will pick it up.
 
 
+YIN_STACK_EFFECTS = yin_functions()
+
+# Load the auto-generated primitives into the dictionary.
+_functions.update(YIN_STACK_EFFECTS)
+# exec '''
+
+# eh = compose(dup, bool)
+# sqr = compose(dup, mul)
+# of = compose(swap, at)
+
+# ''' in dict(compose=compose), _functions
+
+FUNCTIONS.update(
+  (name, SymbolJoyType(name, [_functions[name]], _SYM_NUMS()))
+  for name in sorted(_functions)
+  )
+for name, primitive in getmembers(genlib, isfunction):
+  inscribe(SimpleFunctionWrapper(primitive))
+
+
 add_aliases(_dictionary, ALIASES)
+add_aliases(_functions, ALIASES)
+add_aliases(FUNCTIONS, ALIASES)
 
 
 DefinitionWrapper.add_definitions(definitions, _dictionary)
+
+#sec_Ns_math(_dictionary['product'])
