@@ -17,6 +17,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
 #
+from logging import getLogger
+
+_log = getLogger(__name__)
+
 import os, pickle, sys
 from inspect import getdoc
 
@@ -40,14 +44,20 @@ class World(object):
     self.stack = stack
     self.dictionary = dictionary or {}
     self.text_widget = text_widget
+    self.check_cache = {}
 
   def check(self, name):
-    return type_check(name, self.stack)
+    try:
+      res = self.check_cache[name]
+    except KeyError:
+      res = self.check_cache[name] = type_check(name, self.stack)
+    return res
 
   def do_lookup(self, name):
     if name in self.dictionary:
       self.stack = (Symbol(name), ()), self.stack
       self.print_stack()
+      self.check_cache.clear()
     else:
       assert is_numerical(name)
       self.interpret(name)
@@ -68,11 +78,13 @@ class World(object):
     if self.stack:
       self.stack = self.stack[1]
     self.print_stack()
+    self.check_cache.clear()
 
   def push(self, it):
     it = it.encode('utf8')
     self.stack = it, self.stack
     self.print_stack()
+    self.check_cache.clear()
 
   def peek(self):
     if self.stack:
@@ -83,6 +95,7 @@ class World(object):
       assert self.has(command), repr(command)
       if self.check(command) == False:  # not in {True, None}:
         return
+    old_stack = self.stack
     try:
       self.stack, _, self.dictionary = run(
         command,
@@ -91,6 +104,8 @@ class World(object):
         )
     finally:
       self.print_stack()
+    if old_stack != self.stack:
+      self.check_cache.clear()
 
   def has(self, name):
     return self.dictionary.has_key(name)
@@ -140,7 +155,7 @@ class StackDisplayWorld(World):
       'message',
       committer='Simon Forman <forman.simon@gmail.com>',
       )
-    print >> sys.stderr, commit_id
+    _log.info('commit %s', commit_id)
 
   def load_stack(self):
     if os.path.exists(self.filename):
