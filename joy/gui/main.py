@@ -7,11 +7,21 @@ Joypy - Copyright © 2018 Simon Forman
 ' This is free software, and you are welcome to redistribute it under certain conditions;'
 ' right-click "sharing" for details.'
 ' Right-click on these commands to see docs on UI commands: key_bindings mouse_bindings')
-import os, pickle, sys
+import logging, os, pickle, sys
 from textwrap import dedent
 
-from joy.gui.textwidget import TextViewerWidget, tk, get_font, TEXT_BINDINGS
 from joy.gui.utils import init_home, FileFaker
+
+JOY_HOME, repo = init_home()
+
+logging.basicConfig(
+  format='%(asctime)-15s %(levelname)s %(name)s %(message)s',
+  filename=os.path.join(JOY_HOME, 'thun.log'),
+  level=logging.INFO,
+  )
+
+
+from joy.gui.textwidget import TextViewerWidget, tk, get_font, TEXT_BINDINGS
 from joy.gui.world import StackDisplayWorld
 from joy.library import initialize
 from joy.utils.stack import stack_to_string
@@ -101,7 +111,6 @@ def grand_reset(s, e, d):
   return stack, e, d
 
 
-JOY_HOME, repo = init_home()
 STACK_FN = os.path.join(JOY_HOME, 'stack.pickle')
 REL_STACK_FN = repo_relative_path(STACK_FN)
 JOY_FN = os.path.join(JOY_HOME, 'scratch.txt')

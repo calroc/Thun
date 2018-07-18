@@ -6,7 +6,12 @@ _log = getLogger(__name__)
 from collections import Counter
 from itertools import imap, chain, product
 from inspect import stack as inspect_stack
-from joy.utils.stack import concat, expression_to_string, list_to_stack
+from joy.utils.stack import (
+  concat,
+  expression_to_string,
+  list_to_stack,
+  stack_to_string,
+  )
 from joy.parser import Symbol, text_to_expression
 
 
@@ -222,6 +227,8 @@ def relabel(left, right):
 
 
 def _1000(right):
+  if isinstance(right, Symbol):
+    return right
   if not isinstance(right, tuple):
     return 1000 + right
   return tuple(_1000(n) for n in right)
@@ -539,7 +546,8 @@ ID = _S0, _S0  # Identity function.
 
 
 def _infer(e, F=ID):
-    _log_it(e, F)
+    if __debug__:
+        _log_it(e, F)
     if not e:
         return [F]
 
@@ -577,7 +585,7 @@ def _interpret(f, fi, fo, e):
 
 
 def _log_it(e, F):
-    _log.info(
+    _log.debug(
         u'%3i %s ∘ %s',
         len(inspect_stack()),
         doc_from_stack_effect(*F),
@@ -614,25 +622,38 @@ def infer_expression(expression):
 
 
 def type_check(name, stack):
-    '''
-    Trinary predicate.  True if named function type-checks, False if it
-    fails, None if it's indeterminate (because I haven't entered it into
-    the FUNCTIONS dict yet.)
-    '''
+  '''
+  Trinary predicate.  True if named function type-checks, False if it
+  fails, None if it's indeterminate (because I haven't entered it into
+  the FUNCTIONS dict yet.)
+  '''
+  try:
+    func = FUNCTIONS[name]
+  except KeyError:
+    return # None, indicating unknown
+  if isinstance(func, SymbolJoyType):
+    secs = func.stack_effects
+  elif isinstance(func, CombinatorJoyType):
+    if func.expect is None:
+      return # None, indicating unknown
+    secs = [(func.expect, ())]
+  else:
+    raise TypeError(repr(func))  # wtf?
+  for fi, fo in secs:
     try:
-        func = FUNCTIONS[name]
-    except KeyError:
-        return # None, indicating unknown
-
-    for fi, fo in infer(func):
-        try:
-          U = unify(fi, stack)
-        except (JoyTypeError, ValueError), e:
-            #print >> sys.stderr, name, e, stack
-            continue
-        #print U
-        return True
-    return False
+      unify(fi, stack)
+    except (JoyTypeError, ValueError):
+      continue
+    except:
+      _log.exception(
+        'Type-checking %s %s against %s',
+        name,
+        doc_from_stack_effect(fi, fo), 
+        stack_to_string(stack),
+        )
+      continue
+    return True
+  return False
 
 
 FUNCTIONS = {}  # Polytypes (lists of stack effects.)
