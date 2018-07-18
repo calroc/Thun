@@ -17,32 +17,12 @@ from joy.utils.stack import (
     expression_to_string,
     list_to_stack,
     )
-# from joy.utils.types import (
-#   AnyJoyType, A,
-#   BooleanJoyType, B,
-#   DEFS,
-#   doc_from_stack_effect,
-#   FloatJoyType, F,
-#   JoyTypeError,
-#   NumberJoyType, N,
-#   StackJoyType, S,
-#   _stacky,
-#   _R,
-#   relabel, delabel,
-#   reify,
-#   )
 
-
-'''Docstring for functions in Sphinx?'''
-
-
-def defs():
-    '''
-    Return a dict of FunctionJoyType instances to be used with ``infer()``.
-    '''
-
-    average = sum_ = product = min_ = max_ = [(((Ns[1], s1), s0), (n0, s0))]
-    flatten = [(((Ss[1], s1), s0), (s2, s0))]
+    average = 
+    # sum_ = 
+    # product = 
+    # min_ = max_ = [(((Ns[1], s1), s0), (n0, s0))]
+ #   flatten = [(((Ss[1], s1), s0), (s2, s0))]
 
     return {
         name.rstrip('_'): stack_effect
@@ -57,21 +37,7 @@ FUNCTIONS.update({
 FUNCTIONS.update({
     combo.__name__: CombinatorJoyType(combo.__name__, [combo], i)
     for i, combo in enumerate((
-        joy.library.b,
         joy.library.concat_,
-        joy.library.dip,
-        joy.library.dipd,
-        joy.library.dipdd,
-        joy.library.dupdip,
-        joy.library.i,
-        joy.library.infra,
-        joy.library._dictionary['nullary'],
-        joy.library._dictionary['unary'],
-        joy.library._dictionary['binary'],
-        joy.library._dictionary['ternary'],
-        joy.library._dictionary['quoted'],
-        joy.library._dictionary['unquoted'],
-        joy.library._dictionary['enstacken'],
         joy.library._dictionary['disenstacken'],
         joy.library.x,
         ))
@@ -121,19 +87,20 @@ def set_expectations_of_definition(cjt):
 
 
 def set_expectations():
-    branch.expect = s7, (s6, (b1, s5))
+    
     loop.expect = s6, (b1, s5)
-    i.expect = nullary.expect = x.expect = s7, s6
-    dip.expect = dupdip.expect = s8, (a8, s7)
-    dipd.expect = s8, (a8, (a7, s7))
-    dipdd.expect = s8, (a8, (a7, (a6, s7)))
-    b.expect = concat_.expect = infra.expect = s8, (s7, s6)
-    set_expectations_of_definition(unary)
-    set_expectations_of_definition(binary)
-    set_expectations_of_definition(ternary)
-    set_expectations_of_definition(quoted)
-    set_expectations_of_definition(unquoted)
-    set_expectations_of_definition(enstacken)
+#    i.expect = nullary.expect = x.expect = s7, s6
+#    dip.expect = dupdip.expect = s8, (a8, s7)
+#    dipd.expect = s8, (a8, (a7, s7))
+#    dipdd.expect = s8, (a8, (a7, (a6, s7)))
+    concat_.expect = s8, (s7, s6)
+#    b.expect = infra.expect = s8, (s7, s6)
+    # set_expectations_of_definition(unary)
+    # set_expectations_of_definition(binary)
+    # set_expectations_of_definition(ternary)
+    # set_expectations_of_definition(quoted)
+    # set_expectations_of_definition(unquoted)
+    # set_expectations_of_definition(enstacken)
     disenstacken.expect = (As[1], s1), s0
 scope = globals().copy()
 scope.update(FUNCTIONS)

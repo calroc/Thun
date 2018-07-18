@@ -54,6 +54,7 @@ from .utils.types import (
   infer,
   JoyTypeError,
   combinator_effect,
+  poly_combinator_effect,
   )
   
   
@@ -926,7 +927,7 @@ def x(stack, expression, dictionary):
 
 
 @inscribe
-#@combinator_effect(_COMB_NUMS(), s7, s6)
+@combinator_effect(_COMB_NUMS(), s7, s6)
 @FunctionWrapper
 def b(stack, expression, dictionary):
   '''
@@ -943,6 +944,7 @@ def b(stack, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), a1, s1)
 @FunctionWrapper
 def dupdip(stack, expression, dictionary):
   '''
@@ -962,7 +964,7 @@ def dupdip(stack, expression, dictionary):
 
 
 @inscribe
-#@combinator_effect(_COMB_NUMS(), s7, s6)
+@combinator_effect(_COMB_NUMS(), s7, s6)
 @FunctionWrapper
 def infra(stack, expression, dictionary):
   '''
@@ -980,6 +982,7 @@ def infra(stack, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), s7, s6, s5, s4)
 @FunctionWrapper
 def genrec(stack, expression, dictionary):
   '''
@@ -1041,6 +1044,7 @@ def genrec(stack, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), s7, s6)
 @FunctionWrapper
 def map_(S, expression, dictionary):
   '''
@@ -1078,7 +1082,18 @@ def map_(S, expression, dictionary):
 #  return (q, (p, stack)), expression, dictionary
 
 
+def branch_true(stack, expression, dictionary):
+  (then, (else_, (flag, stack))) = stack
+  return stack, concat(then, expression), dictionary
+
+
+def branch_false(stack, expression, dictionary):
+  (then, (else_, (flag, stack))) = stack
+  return stack, concat(else_, expression), dictionary
+
+
 @inscribe
+@poly_combinator_effect(_COMB_NUMS(), [branch_true, branch_false], b1, s7, s6)
 @FunctionWrapper
 def branch(stack, expression, dictionary):
   '''
@@ -1101,6 +1116,9 @@ def branch(stack, expression, dictionary):
   '''
   (then, (else_, (flag, stack))) = stack
   return stack, concat(then if flag else else_, expression), dictionary
+
+
+#FUNCTIONS['branch'] = CombinatorJoyType('branch', [branch_true, branch_false], 100)
 
 
 ##@inscribe
@@ -1192,6 +1210,7 @@ def dip(stack, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), a2, a1, s1)
 @FunctionWrapper
 def dipd(S, expression, dictionary):
   '''
@@ -1209,6 +1228,7 @@ def dipd(S, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), a3, a2, a1, s1)
 @FunctionWrapper
 def dipdd(S, expression, dictionary):
   '''
@@ -1226,6 +1246,7 @@ def dipdd(S, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), a1, s1)
 @FunctionWrapper
 def app1(S, expression, dictionary):
   '''
@@ -1245,6 +1266,7 @@ def app1(S, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), a2, a1, s1)
 @FunctionWrapper
 def app2(S, expression, dictionary):
   '''Like app1 with two items.
@@ -1265,6 +1287,7 @@ def app2(S, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), a3, a2, a1, s1)
 @FunctionWrapper
 def app3(S, expression, dictionary):
   '''Like app1 with three items.
@@ -1287,6 +1310,7 @@ def app3(S, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), s7, s6)
 @FunctionWrapper
 def step(S, expression, dictionary):
   '''
@@ -1322,6 +1346,7 @@ def step(S, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), i1, s6)
 @FunctionWrapper
 def times(stack, expression, dictionary):
   '''
@@ -1371,6 +1396,7 @@ def times(stack, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), b1, s6)
 @FunctionWrapper
 def loop(stack, expression, dictionary):
   '''
@@ -1393,6 +1419,7 @@ def loop(stack, expression, dictionary):
 
 
 @inscribe
+@combinator_effect(_COMB_NUMS(), a1, a2, s6, s7, s8)
 @FunctionWrapper
 def cmp_(stack, expression, dictionary):
   '''

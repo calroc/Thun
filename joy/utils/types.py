@@ -665,11 +665,12 @@ def ef(*inputs):
 
 
 def combinator_effect(number, *expect):
-    def _combinator_effect(c):
-        C = FUNCTIONS[c.name] = CombinatorJoyType(c.name, [c], number)
-        if expect: C.expect = __(*expect)
-        return c
-    return _combinator_effect
+  def _combinator_effect(c):
+    e = __(*expect) if expect else None
+    C = FUNCTIONS[c.name] = CombinatorJoyType(c.name, [c], number, e)
+    if expect: C.expect = __(*expect)
+    return c
+  return _combinator_effect
 
 
 def show(DEFS):
@@ -693,3 +694,13 @@ def generate_library_code(DEFS, f=None):
 
 ##if __name__ == '__main__':
 ##  show()
+
+def poly_combinator_effect(number, effect_funcs, *expect):
+  def _poly_combinator_effect(c):
+    e = __(*expect) if expect else None
+    FUNCTIONS[c.name] = CombinatorJoyType(c.name, effect_funcs, number, e)
+    return c
+  return _poly_combinator_effect
+
+#FUNCTIONS['branch'].expect = s7, (s6, (b1, s5))
+
