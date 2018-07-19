@@ -1520,13 +1520,19 @@ DefinitionWrapper.add_definitions(definitions, _dictionary)
 
 
 EXPECTATIONS = dict(
+  ifte=(s7, (s6, (s5, s4))),
   nullary=(s7, s6),
+  run=(s7, s6),
+
 )
 
 
 for name in '''
   dinfrirst
   nullary
+  ifte
+  run
+  dupdipd codireco
   '''.split():
   C = _dictionary[name]
   expect = EXPECTATIONS.get(name)
@@ -1539,10 +1545,10 @@ for name in '''
 
 
 for name in ('''
-of quoted enstacken ?
-unary binary ternary
-sqr codireco unquoted
-'''.split()):
+  of quoted enstacken ?
+  unary binary ternary
+  sqr unquoted
+  '''.split()):
   of_ = _dictionary[name]
   secs = infer_expression(of_.body)
   assert len(secs) == 1, repr(secs)
@@ -1558,13 +1564,8 @@ sqr codireco unquoted
 
 ##  product == 1 swap [*] step
 ##  flatten == [] swap [concat] step
-##  quoted == [unit] dip
-##  unquoted == [i] dip
-##  enstacken == stack [clear] dip
-##  ? == dup truthy
 ##  disenstacken == ? [uncons ?] loop pop
 ##  pam == [i] map
-##  run == [] swap infra
 ##  size == 0 swap [pop ++] step
 ##  fork == [i] app2
 ##  cleave == fork [popd] dip
