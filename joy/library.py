@@ -53,10 +53,12 @@ from .utils.types import (
   FloatJoyType,
   IntJoyType,
   SymbolJoyType,
+  CombinatorJoyType,
   TextJoyType,
   _functions,
   FUNCTIONS,
   infer,
+  infer_expression,
   JoyTypeError,
   combinator_effect,
   poly_combinator_effect,
@@ -375,20 +377,7 @@ class DefinitionWrapper(object):
     Add the definition to the dictionary.
     '''
     F = class_.parse_definition(definition)
-    try:
-      # print F.name, F._body
-      secs = infer(*F._body)
-    except JoyTypeError:
-      _log.error(
-        'Failed to infer stack effect of %s == %s',
-        F.name,
-        expression_to_string(F.body),
-        )
-      if fail_fails:
-        return
-    else:
-      FUNCTIONS[F.name] = SymbolJoyType(F.name, secs, _SYM_NUMS())
-      _log.info('Setting stack effect for definition %s := %s', F.name, secs)
+    _log.info('Adding definition %s := %s', F.name, expression_to_string(F.body))
     dictionary[F.name] = F
 
 
@@ -1529,4 +1518,68 @@ add_aliases(FUNCTIONS, ALIASES)
 
 DefinitionWrapper.add_definitions(definitions, _dictionary)
 
+
+for name in ('''
+of quoted enstacken ? dinfrirst
+'''.split()):
+  of_ = _dictionary[name]
+  secs = infer_expression(of_.body)
+  assert len(secs) == 1, repr(secs)
+  _log.info(
+    'Setting stack effect for definition %s := %s',
+    name,
+    doc_from_stack_effect(*secs[0]),
+    )
+  FUNCTIONS[name] = SymbolJoyType(name, infer_expression(of_.body), _SYM_NUMS())
+
+
+for name in ('''
+of quoted enstacken ? dinfrirst
+'''.split()):
+  of_ = _dictionary[name]
+  
+  assert len(secs) == 1, repr(secs)
+  _log.info(
+    'Setting stack effect for definition %s := %s',
+    name,
+    doc_from_stack_effect(*secs[0]),
+    )
+  FUNCTIONS[name] = SymbolJoyType(name, infer_expression(of_.body), _SYM_NUMS())
+
+
 #sec_Ns_math(_dictionary['product'])
+
+##  product == 1 swap [*] step
+##  flatten == [] swap [concat] step
+##  quoted == [unit] dip
+##  unquoted == [i] dip
+##  enstacken == stack [clear] dip
+##  ? == dup truthy
+##  disenstacken == ? [uncons ?] loop pop
+##  dinfrirst == dip infra first
+##  nullary == [stack] dinfrirst
+##  unary == nullary popd
+##  binary == nullary [popop] dip
+##  ternary == unary [popop] dip
+##  pam == [i] map
+##  run == [] swap infra
+##  sqr == dup mul
+##  size == 0 swap [pop ++] step
+##  fork == [i] app2
+##  cleave == fork [popd] dip
+##  average == [sum 1.0 *] [size] cleave /
+##  gcd == 1 [tuck modulus dup 0 >] loop pop
+##  least_fraction == dup [gcd] infra [div] concat map
+##  *fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
+##  *fraction0 == concat [[swap] dip * [*] dip] infra
+##  down_to_zero == [0 >] [dup --] while
+##  range_to_zero == unit [down_to_zero] infra
+##  anamorphism == [pop []] swap [dip swons] genrec
+##  range == [0 <=] [1 - dup] anamorphism
+##  while == swap [nullary] cons dup dipd concat loop
+##  dupdipd == dup dipd
+##  primrec == [i] genrec
+##  step_zero == 0 roll> step
+##  codireco == cons dip rest cons
+##  make_generator == [codireco] ccons
+##  ifte == [nullary not] dipd branch

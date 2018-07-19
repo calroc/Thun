@@ -565,7 +565,7 @@ def _infer(e, F=ID):
         if n in FUNCTIONS:
           res =_infer((FUNCTIONS[n], e), F)
         else:
-          raise JoyTypeError
+          raise JoyTypeError(n)
         #   print n
         #   func = joy.library._dictionary[n]
         #   res = _interpret(func, F[0], F[1], e)
