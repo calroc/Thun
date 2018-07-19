@@ -1519,25 +1519,32 @@ add_aliases(FUNCTIONS, ALIASES)
 DefinitionWrapper.add_definitions(definitions, _dictionary)
 
 
+EXPECTATIONS = dict(
+  nullary=(s7, s6),
+)
+
+
+for name in '''
+  dinfrirst
+  nullary
+  '''.split():
+  C = _dictionary[name]
+  expect = EXPECTATIONS.get(name)
+  if expect:
+    sec = doc_from_stack_effect(expect)
+    _log.info('Setting stack EXPECT for combinator %s := %s', C.name, sec)
+  else:
+    _log.info('combinator %s', C.name)
+  FUNCTIONS[name] = CombinatorJoyType(name, [C], _COMB_NUMS(), expect)
+
+
 for name in ('''
-of quoted enstacken ? dinfrirst
+of quoted enstacken ?
+unary binary ternary
+sqr codireco unquoted
 '''.split()):
   of_ = _dictionary[name]
   secs = infer_expression(of_.body)
-  assert len(secs) == 1, repr(secs)
-  _log.info(
-    'Setting stack effect for definition %s := %s',
-    name,
-    doc_from_stack_effect(*secs[0]),
-    )
-  FUNCTIONS[name] = SymbolJoyType(name, infer_expression(of_.body), _SYM_NUMS())
-
-
-for name in ('''
-of quoted enstacken ? dinfrirst
-'''.split()):
-  of_ = _dictionary[name]
-  
   assert len(secs) == 1, repr(secs)
   _log.info(
     'Setting stack effect for definition %s := %s',
@@ -1556,14 +1563,8 @@ of quoted enstacken ? dinfrirst
 ##  enstacken == stack [clear] dip
 ##  ? == dup truthy
 ##  disenstacken == ? [uncons ?] loop pop
-##  dinfrirst == dip infra first
-##  nullary == [stack] dinfrirst
-##  unary == nullary popd
-##  binary == nullary [popop] dip
-##  ternary == unary [popop] dip
 ##  pam == [i] map
 ##  run == [] swap infra
-##  sqr == dup mul
 ##  size == 0 swap [pop ++] step
 ##  fork == [i] app2
 ##  cleave == fork [popd] dip

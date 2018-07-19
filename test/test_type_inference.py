@@ -1,11 +1,25 @@
 #!/usr/bin/env python
-import unittest
+import logging, sys, unittest
 
-from joy.utils.polytypes import *
+from joy.utils.types import *
 from joy.utils.stack import list_to_stack as __
-
+from joy.library import (
+  a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, As,
+  b0, b1, b2, b3, b4, b5, b6, b7, b8, b9,
+  n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, Ns,
+  s0, s1, s2, s3, s4, s5, s6, s7, s8, s9,
+  f0, f1, f2, f3, f4, f5, f6, f7, f8, f9,
+  i0, i1, i2, i3, i4, i5, i6, i7, i8, i9,
+  t0, t1, t2, t3, t4, t5, t6, t7, t8, t9,
+  )
 
 globals().update(FUNCTIONS)
+
+logging.basicConfig(
+  format='%(message)s',
+  stream=sys.stdout,
+  level=logging.INFO,
+  )
 
 
 class TestMixin(object):
@@ -52,7 +66,7 @@ class TestCombinators(TestMixin, unittest.TestCase):
     self.assertEqualTypeStructure(infer(*expression), f)
 
   def test_concat(self):
-    expression = (swons, s3), (a4, s1), concat_
+    expression = (swons, s3), (a4, s1), concat
     f = (s1, ((swons, (a1, s2)), s1))  # (-- [swons a1 ...2])
     self.assertEqualTypeStructure(infer(*expression), [f])
 
@@ -90,18 +104,14 @@ class TestCombinators(TestMixin, unittest.TestCase):
       infra
       ]
     f = [
-      (s1, ((f1, (n1, s2)), s3)),  # (-- [f1 n1 ...2])
-      (s1, ((i1, (n1, s2)), s3)),  # (-- [i1 n1 ...2])
+      (s1, ((n1, (n2, s2)), s1)),  # (-- [n1 n2 ...2])
       ]
     self.assertEqualTypeStructure(infer(*expression), f)
 
   def test_nullary(self):
     expression = n1, n2, (mul, s2), (stack, s3), dip, infra, first
     f = [
-      (s1, (f1, (f2, (f3, s1)))),  # (-- f3 f2 f1)
-      (s1, (f1, (f2, (i1, s1)))),  # (-- i1 f2 f1)
-      (s1, (f1, (i1, (f2, s1)))),  # (-- f2 i1 f1)
-      (s1, (i1, (i2, (i3, s1)))),  # (-- i3 i2 i1)
+      (s1, (n1, (n2, (n3, s1)))),  # (-- n3 n2 n1)
       ]
     self.assertEqualTypeStructure(infer(*expression), f)
 
