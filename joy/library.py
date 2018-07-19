@@ -210,8 +210,8 @@ flatten == [] swap [concat] step
 quoted == [unit] dip
 unquoted == [i] dip
 enstacken == stack [clear] dip
-disenstacken == ? [uncons ?] loop pop
 ? == dup truthy
+disenstacken == ? [uncons ?] loop pop
 dinfrirst == dip infra first
 nullary == [stack] dinfrirst
 unary == nullary popd

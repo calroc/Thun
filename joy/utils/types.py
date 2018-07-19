@@ -74,7 +74,7 @@ class IntJoyType(FloatJoyType):
   prefix = 'i'
 
 
-class TextJoyType(FloatJoyType):
+class TextJoyType(AnyJoyType):
   accept = basestring
   prefix = 't'
 
