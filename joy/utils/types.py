@@ -435,7 +435,7 @@ def compilable(f):
   return isinstance(f, tuple) and all(imap(compilable, f)) or _stacky(f)
 
 
-def doc_from_stack_effect(inputs, outputs):
+def doc_from_stack_effect(inputs, outputs=('??', ())):
   '''
   Return a crude string representation of a stack effect.
   '''
@@ -670,10 +670,12 @@ def stack_effect(*inputs):
   def _stack_effect(*outputs):
     def _apply_to(function):
       i, o = _functions[function.name] = __(*inputs), __(*outputs)
+      d = doc_from_stack_effect(i, o)
       function.__doc__ += (
         '\nStack effect::\n\n    '  # '::' for Sphinx docs.
-        + doc_from_stack_effect(i, o)
+        + d
         )
+      _log.info('Setting stack effect for %s := %s', function.name, d)
       return function
     return _apply_to
   return _stack_effect
@@ -688,8 +690,10 @@ def ef(*inputs):
 def combinator_effect(number, *expect):
   def _combinator_effect(c):
     e = __(*expect) if expect else None
-    C = FUNCTIONS[c.name] = CombinatorJoyType(c.name, [c], number, e)
-    if expect: C.expect = __(*expect)
+    FUNCTIONS[c.name] = CombinatorJoyType(c.name, [c], number, e)
+    if e:
+      sec = doc_from_stack_effect(e)
+      _log.info('Setting stack EXPECT for combinator %s := %s', c.name, sec)
     return c
   return _combinator_effect
 
@@ -713,13 +717,12 @@ def generate_library_code(DEFS, f=None):
     print >> f
 
 
-##if __name__ == '__main__':
-##  show()
-
 def poly_combinator_effect(number, effect_funcs, *expect):
   def _poly_combinator_effect(c):
     e = __(*expect) if expect else None
     FUNCTIONS[c.name] = CombinatorJoyType(c.name, effect_funcs, number, e)
+    if e:
+      _log.info('Setting stack EXPECT for combinator %s := %s', c.name, e)
     return c
   return _poly_combinator_effect
 

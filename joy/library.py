@@ -23,6 +23,11 @@ functions.  Its main export is a Python function initialize() that
 returns a dictionary of Joy functions suitable for use with the joy()
 function.
 '''
+from logging import getLogger
+
+_log = getLogger(__name__)
+_log.info('Loading library.')
+
 from inspect import getdoc
 from functools import wraps
 from itertools import count
@@ -55,6 +60,7 @@ from .utils.types import (
   JoyTypeError,
   combinator_effect,
   poly_combinator_effect,
+  doc_from_stack_effect,
   )
   
   
@@ -194,10 +200,7 @@ def yin_functions():
   _Tree_delete_clear_stuff = compose(rollup, popop, rest)
   _Tree_delete_R0 = compose(over, first, swap, dup)
 
-  return {
-    name.rstrip('_'): stack_effect
-    for name, stack_effect in locals().iteritems()
-    }
+  return locals()
 
 
 definitions = ('''\
@@ -376,13 +379,16 @@ class DefinitionWrapper(object):
       # print F.name, F._body
       secs = infer(*F._body)
     except JoyTypeError:
-      pass
-      print F.name, '==', expression_to_string(F.body), '   --failed to infer stack effect.'
+      _log.error(
+        'Failed to infer stack effect of %s == %s',
+        F.name,
+        expression_to_string(F.body),
+        )
       if fail_fails:
-        print 'Function not inscribed.'
         return
     else:
       FUNCTIONS[F.name] = SymbolJoyType(F.name, secs, _SYM_NUMS())
+      _log.info('Setting stack effect for definition %s := %s', F.name, secs)
     dictionary[F.name] = F
 
 
@@ -1506,11 +1512,12 @@ _functions.update(YIN_STACK_EFFECTS)
 # of = compose(swap, at)
 
 # ''' in dict(compose=compose), _functions
+for name in sorted(_functions):
+  sec = _functions[name]
+  F = FUNCTIONS[name] = SymbolJoyType(name, [sec], _SYM_NUMS())
+  if name in YIN_STACK_EFFECTS:
+    _log.info('Setting stack effect for Yin function %s := %s', F.name, doc_from_stack_effect(*sec))
 
-FUNCTIONS.update(
-  (name, SymbolJoyType(name, [_functions[name]], _SYM_NUMS()))
-  for name in sorted(_functions)
-  )
 for name, primitive in getmembers(genlib, isfunction):
   inscribe(SimpleFunctionWrapper(primitive))
 

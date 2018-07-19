@@ -8,6 +8,9 @@ Joypy - Copyright © 2018 Simon Forman
 ' right-click "sharing" for details.'
 ' Right-click on these commands to see docs on UI commands: key_bindings mouse_bindings')
 import logging, os, pickle, sys
+
+_log = logging.getLogger(__name__)
+
 from textwrap import dedent
 
 from joy.gui.utils import init_home, FileFaker
@@ -111,6 +114,7 @@ def grand_reset(s, e, d):
   return stack, e, d
 
 
+_log.info('Starting.')
 STACK_FN = os.path.join(JOY_HOME, 'stack.pickle')
 REL_STACK_FN = repo_relative_path(STACK_FN)
 JOY_FN = os.path.join(JOY_HOME, 'scratch.txt')
