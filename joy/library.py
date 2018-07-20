@@ -703,6 +703,7 @@ def zip_(S):
 
 
 @inscribe
+@sec_unary_math
 @SimpleFunctionWrapper
 def succ(S):
   '''Increment TOS.'''
@@ -711,6 +712,7 @@ def succ(S):
 
 
 @inscribe
+@sec_unary_math
 @SimpleFunctionWrapper
 def pred(S):
   '''Decrement TOS.'''
@@ -885,6 +887,7 @@ S_loop = Symbol('loop')
 S_i = Symbol('i')
 S_ifte = Symbol('ifte')
 S_infra = Symbol('infra')
+S_pop = Symbol('pop')
 S_step = Symbol('step')
 S_times = Symbol('times')
 S_swaack = Symbol('swaack')
@@ -1398,8 +1401,21 @@ def times(stack, expression, dictionary):
 #  return stack, expression, dictionary
 
 
+def loop_true(stack, expression, dictionary):
+    quote, (flag, stack) = stack  # pylint: disable=unused-variable
+    return stack, concat(quote, (S_pop, expression)), dictionary
+
+def loop_two_true(stack, expression, dictionary):
+    quote, (flag, stack) = stack  # pylint: disable=unused-variable
+    return stack, concat(quote, (S_pop, concat(quote, (S_pop, expression)))), dictionary
+
+def loop_false(stack, expression, dictionary):
+    quote, (flag, stack) = stack  # pylint: disable=unused-variable
+    return stack, expression, dictionary
+
+
 @inscribe
-#@combinator_effect(_COMB_NUMS(), b1, s6)
+@poly_combinator_effect(_COMB_NUMS(), [loop_two_true, loop_true, loop_false], b1, s6)
 @FunctionWrapper
 def loop(stack, expression, dictionary):
   '''
@@ -1523,8 +1539,8 @@ EXPECTATIONS = dict(
   ifte=(s7, (s6, (s5, s4))),
   nullary=(s7, s6),
   run=(s7, s6),
-
 )
+EXPECTATIONS['while'] = (s7, (s6, s5))
 
 
 for name in '''
@@ -1533,6 +1549,7 @@ for name in '''
   ifte
   run
   dupdipd codireco
+  while
   '''.split():
   C = _dictionary[name]
   expect = EXPECTATIONS.get(name)

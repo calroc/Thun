@@ -1,7 +1,8 @@
 # -*- coding: utf_8
-from logging import getLogger
+from logging import getLogger, addLevelName
 
 _log = getLogger(__name__)
+addLevelName(15, 'hmm')
 
 from collections import Counter
 from itertools import imap, chain, product
@@ -585,12 +586,13 @@ def _interpret(f, fi, fo, e):
 
 
 def _log_it(e, F):
-    _log.debug(
-        u'%3i %s ∘ %s',
-        len(inspect_stack()),
-        doc_from_stack_effect(*F),
-        expression_to_string(e),
-        )
+    _log.log(
+      15,
+      u'%3i %s ∘ %s',
+      len(inspect_stack()),
+      doc_from_stack_effect(*F),
+      expression_to_string(e),
+      )
 
 
 def infer(*expression):
