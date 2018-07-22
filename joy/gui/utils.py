@@ -55,11 +55,7 @@ def init_repo(repo_dir):
   repo = Repo.init(repo_dir)
   import joy.gui.init_joy_home
   joy.gui.init_joy_home.initialize(repo_dir)
-  repo.stage([
-      fn
-      for fn in listdir(repo_dir)
-      if isfile(join(repo_dir, fn))
-      ])
+  repo.stage([fn for fn in listdir(repo_dir) if isfile(join(repo_dir, fn))])
   repo.do_commit('Initial commit.', committer=COMMITTER)
   return repo
 

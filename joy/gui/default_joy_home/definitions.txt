@@ -1,17 +1,49 @@
-see_stack == good_viewer_location open_stack
-see_resources == list_resources good_viewer_location open_viewer
-open_resource_at_good_location == good_viewer_location open_resource
-see_log == "log.txt" open_resource_at_good_location
-see_definitions == "definitions.txt" open_resource_at_good_location
-round_to_cents == 100 * ++ floor 100 /
-reset_log == "del log.lines[1:] ; log.at_line = 0" evaluate
-see_menu == "menu.txt" good_viewer_location open_resource
 
-# Ordered Binary Tree datastructure functions.
-BTree-new == swap [[] []] cons cons
- _BTree-P == over [popop popop first] nullary
- _BTree-T> == [cons cons dipdd] cons cons cons infra
- _BTree-T< == [cons cons dipd] cons cons cons infra
- _BTree-E == pop swap roll< rest rest cons cons
- _BTree-recur == _BTree-P [_BTree-T>] [_BTree-E] [_BTree-T<] cmp
-BTree-add == [popop not] [[pop] dipd BTree-new] [] [_BTree-recur] genrec
+round_to_cents == 100 * ++ floor 100 /
+
+
+Ordered Binary Tree datastructure functions.
+
+fourth == rest_two rest first
+?fourth == [] [fourth] [] ifte
+first_two == uncons uncons pop
+ccons == cons cons
+cinf == cons infra
+rest_two == rest rest
+
+_Tree_T> == [dipd] cinf
+_Tree_T< == [dipdd] cinf
+
+_Tree_add_P == over [popop popop first] nullary
+_Tree_add_T> == ccons _Tree_T<
+_Tree_add_T< == ccons _Tree_T>
+_Tree_add_Ee = = pop swap roll< rest_two ccons
+_Tree_add_R == _Tree_add_P [_Tree_add_T>] [_Tree_add_Ee] [_Tree_add_T<] cmp
+_Tree_add_E == [pop] dipd Tree-new
+
+_Tree_iter_order_left == [cons dip] dupdip
+_Tree_iter_order_current == [[F] dupdip] dip
+_Tree_iter_order_right == [fourth] dip i
+_Tree_iter_order_R == _Tree_iter_order_left _Tree_iter_order_current _Tree_iter_order_right
+
+_Tree_get_P == over [pop popop first] nullary
+_Tree_get_T> == [fourth] dipd i
+_Tree_get_T< == [third] dipd i
+_Tree_get_E = = popop second
+_Tree_get_R == _Tree_get_P [_Tree_get_T>] [_Tree_get_E] [_Tree_get_T<] cmp
+
+_Tree_delete_rightmost == [?fourth] [fourth] while
+_Tree_delete_clear_stuff = = roll> popop rest
+_Tree_delete_del == dip cons dipd swap
+_Tree_delete_W == dup _Tree_delete_rightmost first_two over
+_Tree_delete_E.0 == _Tree_delete_clear_stuff [_Tree_delete_W] _Tree_delete_del
+_Tree_delete_E == [[[pop third not] pop fourth] [[pop fourth not] pop third] [[_Tree_delete_E.0] cinf]] cond
+_Tree_delete_R0 = = over first swap dup
+_Tree_delete_R1 == cons roll> [_Tree_T>] [_Tree_delete_E] [_Tree_T<] cmp
+
+Tree-new == swap [[] []] ccons
+Tree-add == [popop not] [_Tree_add_E] [] [_Tree_add_R] genrec
+Tree-iter == [not] [pop] roll< [dupdip rest_two] cons [step] genrec
+Tree-iter-order == [not] [pop] [dup third] [_Tree_iter_order_R] genrec
+Tree-get == [pop not] swap [] [_Tree_get_R] genrec
+Tree-delete == [pop not] [pop] [_Tree_delete_R0] [_Tree_delete_R1] genrec

@@ -15,6 +15,7 @@ from joy.gui.utils import init_home, argparser, FileFaker
 
 args = argparser.parse_args()
 JOY_HOME = args.joy_home
+repo = init_home(JOY_HOME)
 
 
 _log = logging.getLogger(__name__)
@@ -23,9 +24,6 @@ logging.basicConfig(
   filename=os.path.join(JOY_HOME, 'thun.log'),
   level=logging.INFO,
   )
-
-
-repo = init_home(JOY_HOME)
 
 
 from joy.gui.textwidget import TextViewerWidget, tk, get_font, TEXT_BINDINGS
