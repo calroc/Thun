@@ -91,10 +91,8 @@ class World(object):
       return self.stack[0]
 
   def interpret(self, command):
-    if len(command.split()) == 1 and not is_numerical(command):
-      assert self.has(command), repr(command)
-      if self.check(command) == False:  # not in {True, None}:
-        return
+    if self.has(command) and self.check(command) == False:  # not in {True, None}:
+      return
     old_stack = self.stack
     try:
       self.stack, _, self.dictionary = run(
@@ -132,14 +130,11 @@ class StackDisplayWorld(World):
     self.relative_STACK_FN = rel_filename
 
   def interpret(self, command):
-    if (
-      is_numerical(command)
-      or len(command.split()) > 1
-      or self.has(command)
-      and self.check(command) in {True, None}
-      ):
-      print '\njoy?', command
-      super(StackDisplayWorld, self).interpret(command)
+    command = command.strip()
+    if self.has(command) and self.check(command) == False:  # not in {True, None}:
+      return
+    print '\njoy?', command
+    super(StackDisplayWorld, self).interpret(command)
 
   def print_stack(self):
     print '\n%s <-' % stack_to_string(self.stack)
