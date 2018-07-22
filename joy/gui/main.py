@@ -29,7 +29,7 @@ _log.info('Starting with JOY_HOME=%s', JOY_HOME)
 
 from joy.gui.textwidget import TextViewerWidget, tk, get_font
 from joy.gui.world import StackDisplayWorld
-from joy.library import initialize
+from joy.library import initialize, DefinitionWrapper
 from joy.utils.stack import stack_to_string
 
 
@@ -47,7 +47,6 @@ def repo_relative_path(path):
     path,
     os.path.commonprefix((repo.controldir(), path))
     )
-
 
 def commands():
   # pylint: disable=unused-variable
@@ -112,6 +111,7 @@ JOY_FN = os.path.join(JOY_HOME, 'scratch.txt')
 LOG_FN = os.path.join(JOY_HOME, 'log.txt')
 D = initialize()
 D.update(commands())
+DefinitionWrapper.load_definitions(os.path.join(JOY_HOME, 'definitions.txt'), D)
 world = StackDisplayWorld(repo, STACK_FN, REL_STACK_FN, dictionary=D)
 defaults = dict(width=80, height=25)
 t = TextViewerWidget(world, **defaults)

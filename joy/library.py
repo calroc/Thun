@@ -380,6 +380,13 @@ class DefinitionWrapper(object):
     _log.info('Adding definition %s := %s', F.name, expression_to_string(F.body))
     dictionary[F.name] = F
 
+  @classmethod
+  def load_definitions(class_, filename, dictionary):
+    with open(filename) as f:
+      lines = [line for line in f if '==' in line]
+    for line in lines:
+      class_.add_def(line, dictionary)
+
 
 def _text_to_defs(text):
   return (line.strip() for line in text.splitlines() if '==' in line)
