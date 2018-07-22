@@ -8,15 +8,16 @@ Joypy - Copyright © 2018 Simon Forman
 ' right-click "sharing" for details.'
 ' Right-click on these commands to see docs on UI commands: key_bindings mouse_bindings')
 import logging, os, pickle, sys
+from textwrap import dedent
+from ConfigParser import RawConfigParser
+
+from joy.gui.utils import init_home, argparser, FileFaker
+
+args = argparser.parse_args()
+JOY_HOME = args.joy_home
+
 
 _log = logging.getLogger(__name__)
-
-from textwrap import dedent
-
-from joy.gui.utils import init_home, FileFaker
-
-JOY_HOME, repo = init_home()
-
 logging.basicConfig(
   format='%(asctime)-15s %(levelname)s %(name)s %(message)s',
   filename=os.path.join(JOY_HOME, 'thun.log'),
@@ -24,10 +25,22 @@ logging.basicConfig(
   )
 
 
+repo = init_home(JOY_HOME)
+
+
 from joy.gui.textwidget import TextViewerWidget, tk, get_font, TEXT_BINDINGS
 from joy.gui.world import StackDisplayWorld
 from joy.library import initialize
 from joy.utils.stack import stack_to_string
+
+
+cp = RawConfigParser()
+cp.optionxform = str  # Don't mess with uppercase.
+with open(os.path.join(args.joy_home, 'thun.config')) as f:
+  cp.readfp(f)
+
+
+GLOBAL_COMMANDS = dict(cp.items('key bindings'))
 
 
 tb = TEXT_BINDINGS.copy()
@@ -38,21 +51,6 @@ tb.update({
   '<Shift-F4>': lambda tv: tv.pastecut,
   })
 defaults = dict(text_bindings=tb, width=80, height=25)
-
-
-GLOBAL_COMMANDS = {
-  '<F5>': 'swap',
-  '<F6>': 'dup',
-  '<Shift-F5>': 'roll<',
-  '<Shift-F6>': 'roll>',
-  '<F7>': 'over',
-  '<Shift-F7>': 'tuck',
-  '<F8>': 'parse',
-  '<F12>': 'words',
-  '<F1>': 'reset_log show_log',
-  '<Escape>': 'clear reset_log show_log',
-  '<Control-Delete>': 'pop',
-  }
 
 
 def repo_relative_path(path):

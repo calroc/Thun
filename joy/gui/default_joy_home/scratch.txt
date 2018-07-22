@@ -1,0 +1,120 @@
+reset_log words mouse_bindings key_bindings
+
+Stack Chatter
+
+ dup dupd dupdd over tuck
+ pop popd popdd popop popopd popopdd
+ swap roll< roll> rolldown rollup 
+ unit clear
+
+Math
+
+ add + sub - mul * truediv / mod %
+ div divmod floor pm
+ abs sqr sqrt neg pow
+ max min sum average product
+ pred -- succ ++ lshift << rshift >>
+
+Logic
+
+ ge gt eq le lt ne
+  < <= =  >= >  != <>
+ and & or not xor ^
+ bool truthy ?
+
+Combinators
+
+ i x b infra dip dipd dipdd dupdip dupdipd
+ cleave fork app1 app2 app3 map pam
+ nullary unary binary ternary 
+
+Control Flow
+
+ branch cond ifte choice
+ loop while genrec primrec
+ make_generator
+
+List Manipulation
+
+ enstacken disenstacken stack unstack
+ first first_two second third fourth rest rrest
+ flatten drop take reverse select zip
+ size sort shunt getitem
+ step step_zero times 
+ cons ccons uncons swons unswons
+ concat unique
+ remove
+ at of pick
+ unquoted quoted
+
+Misc
+
+ down_to_zero cmp gcd help id 
+ least_fraction parse quoted
+ range range_to_zero
+ reset_log  show_log
+ run 
+ stuncons stununcons
+ swaack 
+ void     
+
+
+[ ] Add logging?
+[ ] INI file?
+[ ] definitions.txt
+[ ] Integrate inference
+[ ] command to (re-)run with trace
+[ ] Backtime button?
+
+
+------------------------------------------
+[23 18]   [unit i]
+
+sqr  foo == uncons mul
+
+ swaack
+
+ over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
+
+5 sqrt 2 / 0.5 +
+5 sqrt 1 + 2 /
+phi == 5 sqrt ++ 2 /
+phi == 1.618033988749895
+(But this is Lambda Abstaction sneaking in the back door.)
+=
+clear
+
+(n1 n2 -- ☯)
+
+2018 20 18 20 23 0.5
+472 83 / -7
+100
+
+100 * floor 100 /  show_log
+
+[2 3] [swap truediv] infra
+
+dup infra key_bindings divmod
+
+  1 [dup 1 <<] make_generator   23 [x popd] times first
+
+mcc91 == [100 >] [10 -] [11 + mcc91 mcc91] ifte
+      == [100 >] [10 -] [11 + [mcc91] [mcc91] b] ifte
+      == [100 >] [10 -] [11 + [mcc91] dup b] ifte
+mcc91 == [100 >] [10 -] [11 +] [dup b] genrec
+
+279841 20 20 20 202318 279841 279841 27984127984120202318
+
+inscribe
+
+round_to_cents == 100 * ++ floor 100 /
+
+
+    [12 18] [[pm] infra] make_generator
+
+    [12 18] [[[+] [3 /] fork popopdd] infra] make_generator
+
+   [stack] [pop] while
+
+
+
