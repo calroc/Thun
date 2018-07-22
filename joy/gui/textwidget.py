@@ -73,10 +73,14 @@ def get_font(family='EB Garamond', size=14):
 TEXT_BINDINGS = {
 
   #I want to ensure that these keyboard shortcuts work.
+  '<Control-Return>': lambda tv: tv._control_enter,
   '<Control-v>': lambda tv: tv._paste,
   '<Control-V>': lambda tv: tv._paste,
+  '<F3>': lambda tv: tv.copy_selection_to_stack,
+  '<F4>': lambda tv: tv.copyto,
+  '<Shift-F3>': lambda tv: tv.cut,
+  '<Shift-F4>': lambda tv: tv.pastecut,
   '<Shift-Insert>': lambda tv: tv._paste,
-  '<Control-Return>': lambda tv: tv._control_enter,
   }
 
 
