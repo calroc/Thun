@@ -1,3 +1,15 @@
+'''
+A crude compiler for a subset of Joy functions.
+
+I think I'm going about this the wrong way.
+
+The inference algorithm can "collapse" Yin function sequences into
+single stack effects which can then be written out as Python functions.
+Why not keep track of the new variables introduced as results of Yang
+functions, during inference?  Could I write out better code that way?
+
+In any event, I am proceeding with this sort of ad hoc way for now.
+'''
 from joy.parser import text_to_expression, Symbol
 from joy.utils.stack import concat, iter_stack, list_to_stack
 from joy.library import SimpleFunctionWrapper, YIN_STACK_EFFECTS
@@ -8,18 +20,22 @@ def import_yin():
     return locals()
 
 
-def _names():
-    n = 0
-    while True:
-        yield Symbol('a' + str(n))
-        n += 1
-
-
 class InfiniteStack(tuple):
 
-    names = _names().next
+    def _names():
+        n = 0
+        while True:
+            m = yield Symbol('a' + str(n))
+            n = n + 1 if m is None else m
+
+    _NAMES = _names()
+    _NAMES.next()
+
+    names = _NAMES.next
+    reset = lambda _, _n=_NAMES: _n.send(-1)
 
     def __init__(self, code):
+        self.reset()
         self.code = code
 
     def __iter__(self):
@@ -27,18 +43,6 @@ class InfiniteStack(tuple):
             new_var = self.names()
             self.code.append(('pop', new_var))
             return iter((new_var, self))
-
-
-class Foo(object):
-
-    def __init__(self, name):
-        self.name = name
-
-    def __call__(self, stack, expression, code):
-        in1, (in0, stack) = stack
-        out = InfiniteStack.names()
-        code.append(('call', out, self.name, (in0, in1)))
-        return (out, stack), expression, code
 
 
 def I(expression):
@@ -53,8 +57,7 @@ def I(expression):
         else:
             stack = term, stack
 
-    s = list(iter_stack(stack))
-    if s: code.append(tuple(['ret'] + s))
+    code.append(tuple(['ret'] + list(iter_stack(stack))))
     return code
 
 
@@ -79,7 +82,8 @@ def code_gen(code):
 
 def coalesce_pops(code):
     code.sort(key=lambda p: p[0] != 'pop')  # All pops to the front.
-    index = (i for i, t in enumerate(code) if t[0] != 'pop').next()
+    try: index = (i for i, t in enumerate(code) if t[0] != 'pop').next()
+    except StopIteration: return
     code[:index] = [tuple(['pop'] + [t for _, t in code[:index][::-1]])]
 
 
@@ -119,32 +123,114 @@ def remap_inputs(in_, stack, code):
     return stack, map_
 
 
-def first_two(stack, expression, code):
-    in_, out = YIN_STACK_EFFECTS['first_two']
-    stack, map_ = remap_inputs(in_, stack, code)
-    out = type_vars_to_labels(out, map_)
-    return concat(out, stack), expression, code
+class BinaryBuiltin(object):
+
+    def __init__(self, name):
+        self.name = name
+
+    def __call__(self, stack, expression, code):
+        in1, (in0, stack) = stack
+        out = InfiniteStack.names()
+        code.append(('call', out, self.name, (in0, in1)))
+        return (out, stack), expression, code
 
 
 YIN = import_yin()
 
 
 D = {
-    name: SimpleFunctionWrapper(func)
-    for name, func in YIN.iteritems()
+    name: SimpleFunctionWrapper(YIN[name])
+    for name in '''
+        ccons
+        cons
+        dup
+        dupd
+        dupdd
+        over
+        pop
+        popd
+        popdd
+        popop
+        popopd
+        popopdd
+        rolldown
+        rollup
+        swap
+        swons
+        tuck
+        unit
+        '''.split()
     }
 
 
-D['mul'] = Foo('mul')
-D['sub'] = Foo('sub')
-D['first_two'] = first_two
+for name in '''
+    first
+    first_two
+    fourth
+    rest
+    rrest
+    second
+    third
+    uncons
+    unswons
+    '''.split():
+
+    def foo(stack, expression, code, name=name):
+        in_, out = YIN_STACK_EFFECTS[name]
+        stack, map_ = remap_inputs(in_, stack, code)
+        out = type_vars_to_labels(out, map_)
+        return concat(out, stack), expression, code
+
+    foo.__name__ = name
+    D[name] = foo
+
+
+for name in '''
+  eq
+  ge
+  gt
+  le
+  lt
+  ne
+  xor
+  lshift
+  rshift
+  and_
+  or_
+  add
+  floordiv
+  mod
+  mul
+  pow
+  sub
+  truediv
+  '''.split():
+    D[name.rstrip('-')] = BinaryBuiltin(name)
+
+
+'''
+        stack
+        stuncons
+        stununcons
+        swaack
+'''
+
+for name in sorted(D):
+    print name,
+##    print compile_yinyang(name, name)
+print '-' * 100
+
 
 print compile_yinyang('mul_', 'mul')
+print compile_yinyang('pop', 'pop')
+print compile_yinyang('ppm', 'popop mul')
 print compile_yinyang('sqr', 'dup mul')
 print compile_yinyang('foo', 'dup 23 sub mul')
-print compile_yinyang('bar', 'mul mul mul mul')
+print compile_yinyang('four_mul', 'mul mul mul mul')
 print compile_yinyang('baz', 'mul dup sub dup')
 print compile_yinyang('to_the_fifth_power', 'dup dup mul dup mul mul')
-print compile_yinyang('hey', 'dup dup dup')
-print compile_yinyang('hey', 'dup first_two mul')
-
+print compile_yinyang('dup3', 'dup dup dup')
+print compile_yinyang('df2m', 'dup first_two mul')
+print compile_yinyang('sqr_first', 'uncons swap dup mul swons')
+print compile_yinyang('0BAD',      'uncons      dup mul')
+print compile_yinyang('uncons', 'uncons')

@@ -426,6 +426,16 @@ def parse(stack):
 
 
 @inscribe
+@SimpleFunctionWrapper
+def infer_(stack):
+  '''Attempt to infer the stack effect of a Joy expression.'''
+  E, stack = stack
+  effects = infer_expression(E)
+  e = list_to_stack([(fi, (fo, ())) for fi, fo in effects])
+  return e, stack
+
+
+@inscribe
 @sec2
 @SimpleFunctionWrapper
 def getitem(stack):
