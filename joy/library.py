@@ -1524,6 +1524,7 @@ del F  # Otherwise Sphinx autodoc will pick it up.
 
 
 YIN_STACK_EFFECTS = yin_functions()
+add_aliases(YIN_STACK_EFFECTS, ALIASES)
 
 # Load the auto-generated primitives into the dictionary.
 _functions.update(YIN_STACK_EFFECTS)
