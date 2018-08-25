@@ -534,9 +534,10 @@ machine transition table.
 
 Says, "Three or more 1's and not ending in 01 nor composed of all 1's."
 
-.. figure:: omg.svg
-   :alt: State Machine Diagram
+.. figure:: attachment:omg.svg
+   :alt: omg.svg
 
+   omg.svg
 
 Start at ``a`` and follow the transition arrows according to their
 labels. Accepting states have a double outline. (Graphic generated with
