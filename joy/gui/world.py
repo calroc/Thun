@@ -121,7 +121,6 @@ class World(object):
 
 class StackDisplayWorld(World):
 
-  
   def __init__(self, repo, filename, rel_filename, dictionary=None, text_widget=None):
     self.filename = filename
     stack = self.load_stack() or ()
