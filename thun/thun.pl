@@ -1,4 +1,4 @@
-%
+﻿%
 %    Copyright © 2018 Simon Forman
 %
 %    This file is part of Thun
@@ -19,6 +19,7 @@
 :- use_module(library(clpfd)).
 :- use_module(library(dcg/basics)).
 :- op(990, xfy, ≡).  % for Joy definitions.
+:- dynamic func/3.
 
 /*
 An entry point.
@@ -30,14 +31,17 @@ joy(InputString, StackIn, StackOut) :-
 
 /*
 Parser
+
+    joy :== number | '[' joy* ']' | chars
+
 */
 
-joy_parse([T|S]) --> blanks, joy_term(T), blanks, joy_parse(S).
+joy_parse([T|J]) --> blanks, joy_term(T), blanks, joy_parse(J).
 joy_parse([]) --> [].
 
 joy_term(N) --> number(N), !.
-joy_term(S) --> "[", !, joy_parse(S), "]".
-joy_term(A) --> chars(Chars), !, {atom_string(A, Chars)}.
+joy_term(J) --> "[", !, joy_parse(J), "]".
+joy_term(C) --> chars(Chars), !, {atom_string(C, Chars)}.
 
 chars([Ch|Rest]) --> char(Ch), chars(Rest).
 chars([Ch])      --> char(Ch).
@@ -51,6 +55,7 @@ thun(Expression, InputStack, OutputStack)
 
 thun([], S, S).
 thun(  [Lit|E], Si, So) :- literal(Lit), !, thun(E, [Lit|Si], So).
+thun(  [Def|E], Si, So) :- Def ≡ Body, !, append(Body, E, Eo), thun(Eo, Si, So).
 thun( [Func|E], Si, So) :- func(Func, Si, S), thun(E, S, So).
 thun([Combo|E], Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
 
@@ -69,8 +74,12 @@ literal(false).
 Functions
 */
 
-func(app1,     [P, Xi|S],     [Xo|S]) :- thun(P, [Xi|S], [Xo|_]).
-func(app2, [P, Xi, Yi|S], [Xo, Yo|S]) :- thun(P, [Xi|S], [Xo|_]), thun(P, [Yi|S], [Yo|_]).
+func(app1,     [P, Xi|S],     [Xo|S]) :- thun(P, [Xi|S], [Xo|_]).  % Combinator.
+func(app2, [P, Xi, Yi|S], [Xo, Yo|S]) :- thun(P, [Xi|S], [Xo|_]),  % Combinator.
+                                         thun(P, [Yi|S], [Yo|_]).
+
+func(nullary,   [P|S],   [X|S]) :- thun(P, S, [X|_]).  % Combinator.
+func(infra,  [P, R|S],   [Q|S]) :- thun(P, R, Q).  % Combinator.
 
 func(cons, [A, B|S], [[B|A]|S]).
 func(swap, [A, B|S],  [B, A|S]).
@@ -80,9 +89,6 @@ func(+,    [A, B|S],     [C|S]) :- C #= A + B.
 func(-,    [A, B|S],     [C|S]) :- C #= B - A.
 func(*,    [A, B|S],     [C|S]) :- C #= A * B.
 func(/,    [A, B|S],     [C|S]) :- C #= B div A.
-
-func(nullary,   [P|S],   [X|S]) :- thun(P, S, [X|_]).  % Combinator.
-func(infra,  [P, R|S],   [Q|S]) :- thun(P, R, Q).  % Combinator.
 
 func(concat, [A, B|S],   [C|S]) :- append(B, A, C).
 func(flatten,   [A|S],   [B|S]) :- flatten(A, B).
@@ -108,11 +114,13 @@ func(>=, [A, B|S], [T|S]) :- B #>= A #<==> R, r_truth(R, T).
 func(<=, [A, B|S], [T|S]) :- B #=< A #<==> R, r_truth(R, T).
 func(<>, [A, B|S], [T|S]) :- B #\= A #<==> R, r_truth(R, T).
 
+r_truth(0, false).
+r_truth(1, true).
+
+
 /*
 Definitions
 */
-
-func(Name, Si, So) :- Name ≡ Body, thun(Body, Si, So).
 
 swons ≡ [swap, cons].
 unswons ≡ [uncons, swap].
@@ -148,8 +156,6 @@ cleave ≡ [fork, [popd], dip].
 codireco ≡ [cons, dip, rest, cons].
 make_generator ≡ [[codireco], ccons].
 
-r_truth(0, false).
-r_truth(1, true).
 
 /*
 Combinators
@@ -181,7 +187,7 @@ Compiler
 
 joy_compile(Name, Expression) :- jcmpl(Name, Expression, Rule), asserta(Rule).
 
-show_joy_compile(Name, Expression) :- jcmpl(Name, Expression, Rule), write(Rule).
+show_joy_compile(Name, Expression) :- jcmpl(Name, Expression, Rule), portray_clause(Rule).
 
 jcmpl(Name, Expression, Rule) :-
     call_residue_vars(thun(Expression, Si, So), Term),
