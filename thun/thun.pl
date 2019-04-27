@@ -32,7 +32,7 @@ joy(InputString, StackIn, StackOut) :-
 /*
 Parser
 
-    joy :== number | '[' joy* ']' | chars
+    joy :== number | '[' joy* ']' | atom
 
 */
 
