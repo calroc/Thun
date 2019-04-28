@@ -442,6 +442,8 @@ asm(N, vs_offset(Label))      --> instruction_format_F3b(0, vs, Label, N).
 asm(_, vs_link(C))            --> instruction_format_F3a(1, vs, C).
 asm(N, vs_link_offset(Label)) --> instruction_format_F3b(1, vs, Label, N).
 
+% This is the core of the assembler where the instruction formats are specified.
+
 instruction_format_F0(U,    A, B, Op, C ) --> [0, 0, U, 0], reg(A), reg(B), operation(Op), skip(12), reg(C).
 instruction_format_F1(U, V, A, B, Op, Im) --> [0, 1, U, V], reg(A), reg(B), operation(Op), immediate(Im).
 instruction_format_F2(U, V, A, B, Offset) --> [1, 0, U, V], reg(A), reg(B), offset(Offset).
@@ -455,7 +457,7 @@ skip(N) --> collect(N, Zeros), {Zeros ins 0..0}.
 
 encode_jump_offset(To, Here) --> {Offset is ((To - Here) >> 2) - 1}, encode_int(24, Offset).
 
-encode_int(Width, I) --> {I >= 0}, !, collect(Width, Bits), {binary_number(Bits, I)}, !.
+encode_int(Width, I) --> {I >= 0}, !, collect(Width, Bits), {  binary_number(Bits, I)       }, !.
 encode_int(Width, I) --> {I < 0},  !, collect(Width, Bits), {twos_compliment(Bits, I, Width)}, !.
 
 collect(N,       []) --> {N =< 0}.
@@ -553,10 +555,8 @@ canonical_binary_number([1|Bits], Number):-
     canonical_binary_number(Bits1, Number1),
     Number is Number1 + 2 ^ Pow.
 
-binary_number(Bits, Number):-
-    canonical_binary_number(Bits, Number).
-binary_number([0|Bits], Number):-
-    binary_number(Bits, Number).
+binary_number([0|Bits], Number) :-           binary_number(Bits, Number).
+binary_number(   Bits , Number) :- canonical_binary_number(Bits, Number).
 
 
 % Helper code to write the list of bits as a binary file.
