@@ -197,3 +197,12 @@ jcmpl(Name, Expression, Rule) :-
 
 rule(Head, [],    Head                        ). 
 rule(Head, [A|B], Head :- maplist(call, [A|B])).
+
+
+% Simple DCGs to expand/contract definitions.
+
+expando,    Body --> [Def], {Def ≡ Body}.
+contracto, [Def] --> {Def ≡ Body}, Body.
+
+% phrase(expando, ExprIn, ExprOut).
+
