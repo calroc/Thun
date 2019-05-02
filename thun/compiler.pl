@@ -1,4 +1,4 @@
-/*
+﻿/*
 
 Copyright © 2018 Simon Forman
 
@@ -284,10 +284,10 @@ high_half_word(I, HighHalf) :- HighHalf is I >> 16 /\ 0xFFFF.
 low_half_word( I,  LowHalf) :-  LowHalf is I       /\ 0xFFFF.
 
 compile_program(Program, Binary) :-
-    phrase(pass0(Program, AST), [], _),
-    phrase(⟐(AST), IR),
-    phrase(linker(IR), ASM),
-    phrase(asm(ASM), Binary).
+    phrase(pass0(Program, IR), [], _),
+    phrase(⟐(IR), ASM),
+    phrase(linker(ASM), EnumeratedASM),
+    phrase(asm(EnumeratedASM), Binary).
 
 
 % Linker
@@ -555,8 +555,8 @@ canonical_binary_number([1|Bits], Number):-
     canonical_binary_number(Bits1, Number1),
     Number is Number1 + 2 ^ Pow.
 
-binary_number([0|Bits], Number) :-           binary_number(Bits, Number).
 binary_number(   Bits , Number) :- canonical_binary_number(Bits, Number).
+binary_number([0|Bits], Number) :-           binary_number(Bits, Number).
 
 
 % Helper code to write the list of bits as a binary file.
