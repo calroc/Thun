@@ -36,12 +36,13 @@ do :- Program = [
 compile_program(Program, Binary),
 write_binary('joy_asm.bin', Binary).
 
-% phrase(pass0(Program, AST), [], _),
-% write_canonical(AST),
-% phrase(⟐(AST), IR),
-% write_canonical(IR),
-% phrase(linker(IR), ASM),
-% write_canonical(ASM).
+
+compile_program(Program, Binary) :-
+    phrase((init, ⦾(Program, IR)), [], _),
+    phrase(⟐(IR), ASM),
+    phrase(linker(ASM), EnumeratedASM),
+    phrase(asm(EnumeratedASM), Binary).
+
 
 ⦾([], []) --> [].
 
@@ -85,8 +86,8 @@ write_binary('joy_asm.bin', Binary).
     set_reg_const(TERM, 0),
     asm(store_word(TOS, SP, 0))  % RAM[SP] := 0
     |Ts]) -->
-    get(dict_top, DICT_TOP), get(expr, EXPR),
-    get(sp, SP), get(term, TERM), get(tos, TOS),
+    get([(dict_top, DICT_TOP), (expr, EXPR),
+    (sp, SP), (term, TERM), (tos, TOS)]),
     ⦾(Terms, Ts), get(dict, LastWord).
 
 ⦾([メ|Terms], [  % Mainloop.
@@ -100,9 +101,9 @@ write_binary('joy_asm.bin', Binary).
     label(DONE), write_ram(SP, TOS),   % RAM[SP] := TOS
     jump(MAIN)
     |Ts]) -->
-    get(done, DONE), get(main, MAIN), get(halt, HALT),
-    get(dict_ptr, DICT_PTR), get(dict_top, DICT_TOP), get(expr, EXPR),
-    get(sp, SP), get(term, TERM), get(tos, TOS),
+    get([(dict_ptr, DICT_PTR), (dict_top, DICT_TOP),
+    (done, DONE), (expr, EXPR), (halt, HALT), (main, MAIN),
+    (sp, SP), (term, TERM), (tos, TOS)]),
     ⦾(Terms, Ts).
 
 ⦾([Term|Terms], [T|Ts]) --> ⦾(Term, T), ⦾(Terms, Ts).
@@ -136,9 +137,22 @@ write_binary('joy_asm.bin', Binary).
 ⦾(ナ, low_half(TEMP0, TOS))     --> get(temp0, TEMP0), get(tos, TOS).
 ⦾(ヶ, low_half(TOS, SP))        --> get(sp, SP), get(tos, TOS).
 
+
+/* 
+
+Context (state) manipulation for the ⦾//2 relation.
+
+Association lists are used to keep a kind of symbol table as well as a dictionary
+of name atoms to address logic variables for defined Joy functions.
+
+ */
+
 init, [Context] -->
     {empty_assoc(C), empty_assoc(Dictionary),
      put_assoc(dictionary, C, Dictionary, Context)}.
+
+get([]) --> !.
+get([(Key, Value)|Ts]) --> !, get(Key, Value), get(Ts).
 
 get(Key, Value) --> state(Context), {get_assoc(Key, Context, Value)}.
 set(Key, Value) --> state(ContextIn, ContextOut),
@@ -156,6 +170,7 @@ lookup(NameAtom, Label) --> state(Context),
 
 state(S), [S] --> [S].
 state(S0, S), [S] --> [S0].
+
 
 ⟐([]) --> [].
 ⟐([Term|Terms]) --> ⟐(Term), ⟐(Terms).
@@ -280,12 +295,6 @@ add_label(CmpIn, Label, CmpOut) :-
 
 high_half_word(I, HighHalf) :- HighHalf is I >> 16 /\ 0xFFFF.
 low_half_word( I,  LowHalf) :-  LowHalf is I       /\ 0xFFFF.
-
-compile_program(Program, Binary) :-
-    phrase((init, ⦾(Program, IR)), [], _),
-    phrase(⟐(IR), ASM),
-    phrase(linker(ASM), EnumeratedASM),
-    phrase(asm(EnumeratedASM), Binary).
 
 
 % Linker
