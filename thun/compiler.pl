@@ -44,25 +44,20 @@ compile_program(Program, Binary) :-
     phrase(asm(EnumeratedASM), Binary).
 
 
+/*
+
+This first stage ⦾//2 converts the Joy description into a kind of intermediate
+representation that models the Joy interpreter on top of the machine but doesn't
+actually use assembly instructions.  It also manages the named registers and
+memory locations so thet don't appear in the program.
+
+The idea here is to extract the low-level "primitives" needed to define the Joy
+interpreter to make it easier to think about (and maybe eventually retarget other
+CPUs.)
+
+ */
+
 ⦾([], []) --> [].
-
-⦾([Body, ≡(NameAtom)|Terms], [defi(Name, B, Prev, I, SP, TOS)|Ts]) -->
-    get(dict, Prev), set(dict, Name), get(sp, SP), get(tos, TOS),
-    inscribe(NameAtom, Name), ⦾(Terms, Ts), lookup(i, I), lookup(Body, B).
-
-⦾([Body, ヮ(NameAtom)|Terms], [definition(Name, DONE, B, Prev)|Ts]) -->
-    get(dict, Prev), set(dict, Name), inscribe(NameAtom, Name),
-    get(done, DONE), ⦾([Body, Terms], [B, Ts]).
-
-⦾([Body, ワ(NameAtom)|Terms], [definition(Name, MAIN, B, Prev)|Ts]) -->
-    get(dict, Prev), set(dict, Name), inscribe(NameAtom, Name),
-    get(main, MAIN), ⦾([Body, Terms], [B, Ts]).
-
-⦾([P, T, E, ヰ|Terms], [br(Predicate, Then, Else)|Ts]) -->
-    ⦾([P, T, E, Terms], [Predicate, Then, Else, Ts]).
-
-⦾([P, B, ヱ|Terms], [repeat_until(Predicate, Body)|Ts]) -->
-    ⦾([P, B, Terms], [Predicate, Body, Ts]).
 
 ⦾([ヲ|Terms], Ts) -->  % Preamble.
     set(dict, 0), set(done, _DONE),
@@ -106,6 +101,24 @@ compile_program(Program, Binary) :-
     (sp, SP), (term, TERM), (tos, TOS)]),
     ⦾(Terms, Ts).
 
+⦾([Body, ≡(NameAtom)|Terms], [defi(Name, B, Prev, I, SP, TOS)|Ts]) -->
+    get(dict, Prev), set(dict, Name), get(sp, SP), get(tos, TOS),
+    inscribe(NameAtom, Name), ⦾(Terms, Ts), lookup(i, I), lookup(Body, B).
+
+⦾([Body, ヮ(NameAtom)|Terms], [definition(Name, DONE, B, Prev)|Ts]) -->
+    get(dict, Prev), set(dict, Name), inscribe(NameAtom, Name),
+    get(done, DONE), ⦾([Body, Terms], [B, Ts]).
+
+⦾([Body, ワ(NameAtom)|Terms], [definition(Name, MAIN, B, Prev)|Ts]) -->
+    get(dict, Prev), set(dict, Name), inscribe(NameAtom, Name),
+    get(main, MAIN), ⦾([Body, Terms], [B, Ts]).
+
+⦾([P, T, E, ヰ|Terms], [br(Predicate, Then, Else)|Ts]) -->
+    ⦾([P, T, E, Terms], [Predicate, Then, Else, Ts]).
+
+⦾([P, B, ヱ|Terms], [repeat_until(Predicate, Body)|Ts]) -->
+    ⦾([P, B, Terms], [Predicate, Body, Ts]).
+
 ⦾([Term|Terms], [T|Ts]) --> ⦾(Term, T), ⦾(Terms, Ts).
 
 ⦾(∅, dw(0))                    --> [].
@@ -145,7 +158,7 @@ Context (state) manipulation for the ⦾//2 relation.
 Association lists are used to keep a kind of symbol table as well as a dictionary
 of name atoms to address logic variables for defined Joy functions.
 
- */
+*/
 
 init, [Context] -->
     {empty_assoc(C), empty_assoc(Dictionary),
@@ -171,6 +184,13 @@ lookup(NameAtom, Label) --> state(Context),
 state(S), [S] --> [S].
 state(S0, S), [S] --> [S0].
 
+
+/*
+
+This second stage ⟐//1 converts the intermediate representation to assembly
+language.
+
+*/
 
 ⟐([]) --> [].
 ⟐([Term|Terms]) --> ⟐(Term), ⟐(Terms).
@@ -283,21 +303,50 @@ state(S0, S), [S] --> [S0].
 
 ⟐(pop(Reg, TOS)) --> ⟐([split_word(Reg, TOS), deref(TOS)]).
 
+
+/* 
+
+Support for ⟐//1 second stage.
+
+The dexpr//2 DCG establishes a sequence of labeled expr_cell/2 pseudo-assembly
+memory locations as a linked list that encodes a Prolog list of Joy function
+labels comprising e.g. the body of some Joy definition.
+
+*/
+
 dexpr([], 0) --> [].
 dexpr([Func|Rest], ThisCell) -->
     [label(ThisCell), expr_cell(Func, NextCell)],
     dexpr(Rest, NextCell).
+
+/*
+
+The add_label/3 relation is a meta-logical construct that accepts a comparision
+predicate (e.g. if_zero/2) and "patches" it by adding the Label logic variable
+to the end.
+
+*/
 
 add_label(CmpIn, Label, CmpOut) :-
     CmpIn =.. F,
     append(F, [Label], G),
     CmpOut =.. G.
 
+/*
+
+Two simple masking predicates.
+
+*/
+
 high_half_word(I, HighHalf) :- HighHalf is I >> 16 /\ 0xFFFF.
 low_half_word( I,  LowHalf) :-  LowHalf is I       /\ 0xFFFF.
 
 
-% Linker
+/*
+
+Linker
+
+*/
 
 linker(IntermediateRepresentation) --> enumerate_asm(IntermediateRepresentation, 0, _).
 
@@ -312,7 +361,12 @@ align(N,     1, M) :- !, M is N + 1.
 align(N, Bytes, M) :- N mod 4 =:= 0, !, M is N + Bytes.
 align(N, Bytes, M) :- Padding is 4 - (N mod 4), M is N + Bytes + Padding.
 
-% Assembler
+
+/*
+
+Assembler
+
+*/
 
 asm([]) --> !, [].
 asm([      skip(Bits)|Rest]) --> !, skip(Bits),          asm(Rest).
