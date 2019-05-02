@@ -348,7 +348,7 @@ Linker
 
 */
 
-linker(IntermediateRepresentation) --> enumerate_asm(IntermediateRepresentation, 0, _).
+linker(ASM) --> enumerate_asm(ASM, 0, _).
 
 enumerate_asm(                [], N, N) --> !, [].
 enumerate_asm(      [Term|Terms], N, M) --> !, enumerate_asm(Term, N, O), enumerate_asm(Terms, O, M).
