@@ -1,6 +1,6 @@
 ﻿/*
 
-Copyright © 2018 Simon Forman
+Copyright © 2018-2019 Simon Forman
 
 This file is part of Thun
 
@@ -42,12 +42,6 @@ write_binary('joy_asm.bin', Binary).
 % write_canonical(IR),
 % phrase(linker(IR), ASM),
 % write_canonical(ASM).
-
-pass0(Code, Program) --> init, ⦾(Code, Program).
-
-init, [Context] -->
-    {empty_assoc(C), empty_assoc(Dictionary),
-     put_assoc(dictionary, C, Dictionary, Context)}.
 
 ⦾([], []) --> [].
 
@@ -141,6 +135,10 @@ init, [Context] -->
 ⦾(ゴ, low_half(TOS))            --> get(tos, TOS).
 ⦾(ナ, low_half(TEMP0, TOS))     --> get(temp0, TEMP0), get(tos, TOS).
 ⦾(ヶ, low_half(TOS, SP))        --> get(sp, SP), get(tos, TOS).
+
+init, [Context] -->
+    {empty_assoc(C), empty_assoc(Dictionary),
+     put_assoc(dictionary, C, Dictionary, Context)}.
 
 get(Key, Value) --> state(Context), {get_assoc(Key, Context, Value)}.
 set(Key, Value) --> state(ContextIn, ContextOut),
@@ -284,7 +282,7 @@ high_half_word(I, HighHalf) :- HighHalf is I >> 16 /\ 0xFFFF.
 low_half_word( I,  LowHalf) :-  LowHalf is I       /\ 0xFFFF.
 
 compile_program(Program, Binary) :-
-    phrase(pass0(Program, IR), [], _),
+    phrase((init, ⦾(Program, IR)), [], _),
     phrase(⟐(IR), ASM),
     phrase(linker(ASM), EnumeratedASM),
     phrase(asm(EnumeratedASM), Binary).
