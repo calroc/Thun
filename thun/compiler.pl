@@ -60,12 +60,22 @@ CPUs.)
 ⦾([], []) --> [].
 
 ⦾([ヲ|Terms], Ts) -->  % Preamble.
-    set(dict, 0), set(done, _DONE),
-    set(temp0, 6), set(temp1, 7),
-    set(temp2, 8), set(temp3, 9),
-    set(tos, 3), set(sp, 2), set(expr, 4), set(term, 5),
-    set(dict_top, 12), set(dict_ptr, 11),
-    set(halt, _HALT), set(main, _MAIN), set(reset, _Reset),
+    % Initialize context/state/symbol table.
+    set(dict_ptr, 11),  % Reg 11 is a pointer used during func lookup.
+    set(dict_top, 12),  % Reg 12 points to top of dictionary.
+    set(dict, 0),  % Address of top of dict during compilation.
+    set(done, _DONE),  % DONE label (logic variable.)
+    set(expr, 4),  % Reg 4 points to expression.
+    set(halt, _HALT),  % HALT label (logic variable.)
+    set(main, _MAIN),  % MAIN label (logic variable.)
+    set(reset, _Reset),  % Reset label (logic variable.)
+    set(sp, 2),  % Reg 2 points to just under top of stack.
+    set(temp0, 6),  % Reg 6 is a temp var.
+    set(temp1, 7),  % Reg 7 is a temp var.
+    set(temp2, 8),  % Reg 8 is a temp var.
+    set(temp3, 9),  % Reg 9 is a temp var.
+    set(term, 5),  % Reg 4 holds current term.
+    set(tos, 3),  % Reg 3 holds Top of Stack.
     ⦾(Terms, Ts).
 
 ⦾([ヵ|Terms], [  % Initialization.
@@ -81,8 +91,7 @@ CPUs.)
     set_reg_const(TERM, 0),
     asm(store_word(TOS, SP, 0))  % RAM[SP] := 0
     |Ts]) -->
-    get([(dict_top, DICT_TOP), (expr, EXPR),
-    (sp, SP), (term, TERM), (tos, TOS)]),
+    get([dict_top, DICT_TOP, expr, EXPR, sp, SP, term, TERM, tos, TOS]),
     ⦾(Terms, Ts), get(dict, LastWord).
 
 ⦾([メ|Terms], [  % Mainloop.
@@ -96,9 +105,8 @@ CPUs.)
     label(DONE), write_ram(SP, TOS),   % RAM[SP] := TOS
     jump(MAIN)
     |Ts]) -->
-    get([(dict_ptr, DICT_PTR), (dict_top, DICT_TOP),
-    (done, DONE), (expr, EXPR), (halt, HALT), (main, MAIN),
-    (sp, SP), (term, TERM), (tos, TOS)]),
+    get([dict_ptr, DICT_PTR, dict_top, DICT_TOP, done, DONE, expr, EXPR,
+         halt, HALT, main, MAIN, sp, SP, term, TERM, tos, TOS]),
     ⦾(Terms, Ts).
 
 ⦾([Body, ≡(NameAtom)|Terms], [defi(Name, B, Prev, I, SP, TOS)|Ts]) -->
@@ -165,7 +173,7 @@ init, [Context] -->
      put_assoc(dictionary, C, Dictionary, Context)}.
 
 get([]) --> !.
-get([(Key, Value)|Ts]) --> !, get(Key, Value), get(Ts).
+get([Key, Value|Ts]) --> !, get(Key, Value), get(Ts).
 
 get(Key, Value) --> state(Context), {get_assoc(Key, Context, Value)}.
 set(Key, Value) --> state(ContextIn, ContextOut),
@@ -353,7 +361,7 @@ linker(ASM) --> enumerate_asm(ASM, 0, _).
 enumerate_asm(                [], N, N) --> !, [].
 enumerate_asm(      [Term|Terms], N, M) --> !, enumerate_asm(Term, N, O), enumerate_asm(Terms, O, M).
 enumerate_asm(   label(N)       , N, N) --> !, [].
-enumerate_asm(allocate(N, Bytes), N, M) --> !, [skip(Bits)], {align(N, Bytes, M), Bits is 8 * Bytes}.
+enumerate_asm(allocate(N, Bytes), N, M) --> !, {Bits is 8 * Bytes}, [skip(Bits)], {align(N, Bytes, M)}.
 enumerate_asm(             Instr, N, M) -->    [(Z, Instr)], {align(N, 0, Z), align(Z, 4, M)}.
 
 align(_, Bytes, _) :- (Bytes < 0 -> write('Align negative number? No!')), !, fail.
