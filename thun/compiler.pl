@@ -17,6 +17,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Thun.  If not see <http://www.gnu.org/licenses/>.
 
+The Joy interpreter that this implements is pretty crude.  the only types
+are 16-bit integers and linked lists.  The lists are 32-bit words divided
+into two 16-bit fields.  The high half is the node value and the low half
+points directly (not offset) to the next cell, zero terminates the list.
+
+The expression is expected to be already written in RAM as a linked list at
+the time the mainloop starts.  As yet there is no support for actually doing
+this.  Both the new stack and expression cells are written to the same heap
+intermixed.  The stack and expression pointers never decrease, the whole
+history of the computation is recorded in RAM.  If the computation of the
+expression overruns the end of RAM (or 16-bits whichever comes first) the
+machine crashes.
+
+At the moment, functions are recognized by setting high bit, but I don't
+think I remembered to set the bits during compilation, so it won't work
+at all right now.  Er...  Boo.  Anyhow, the whole thing is very crude and
+not at all what I am hoping eventually to build.
+
+But it's a start, and I feel good about emitting machine code (even if the
+program doesn't do anything useful yet.)
+
 */
 :- use_module(library(assoc)).
 :- use_module(library(clpfd)).
@@ -38,10 +59,16 @@ write_binary('joy_asm.bin', Binary).
 
 
 compile_program(Program, Binary) :-
-    phrase((init, ⦾(Program, IR)), [], _),
+    phrase((init, ⦾(Program, IR)), [], [Context]),
     phrase(⟐(IR), ASM),
     phrase(linker(ASM), EnumeratedASM),
+    foo(Context),
     phrase(asm(EnumeratedASM), Binary).
+
+foo(Context) :-
+    get_assoc(dictionary, Context, D),
+    assoc_to_list(D, Dictionary),
+    portray_clause(Dictionary).
 
 
 /*
@@ -110,7 +137,7 @@ CPUs.)
     ⦾(Terms, Ts).
 
 ⦾([Body, ≡(NameAtom)|Terms], [defi(Name, B, Prev, I, SP, TOS)|Ts]) -->
-    get(dict, Prev), set(dict, Name), get(sp, SP), get(tos, TOS),
+    get(dict, Prev), set(dict, Name), get([sp, SP, tos, TOS]),
     inscribe(NameAtom, Name), ⦾(Terms, Ts), lookup(i, I), lookup(Body, B).
 
 ⦾([Body, ヮ(NameAtom)|Terms], [definition(Name, DONE, B, Prev)|Ts]) -->
