@@ -1,19 +1,19 @@
 % A Tracing Meta-Interpreter for Thun
 
-alpha(true).
-alpha((A, B)) :- alpha(A), alpha(B).
-alpha(number(A)) :- !, number(A).
-alpha(var(A)) :- !, var(A).
-alpha(!) :- !.
+tmi(true).
+tmi((A, B)) :- tmi(A), tmi(B).
+tmi(number(A)) :- !, number(A).
+tmi(var(A)) :- !, var(A).
+tmi(!) :- !.
 
 % Meta-logical print trace.
 % (Could also be captured in a list or something instead.)
-alpha(thun(E, Si, _)) :- portray_clause(Si-E), fail.
+tmi(thun(E, Si, _)) :- portray_clause(Si-E), fail.
 
-alpha(Goal) :-
+tmi(Goal) :-
     checky(Goal),
     clause(Goal, Body),  % doesn't work for e.g. +
-    alpha(Body).
+    tmi(Body).
 
 checky(Goal) :-
     Goal \= true,
@@ -24,7 +24,7 @@ checky(Goal) :-
 
 /*
 
-[debug]  ?- alpha(thun([1, 2, swap], Si, So)).
+[debug]  ?- tmi(thun([1, 2, swap], Si, So)).
 _-[1, 2, swap].
 [1|_]-[2, swap].
 [2, 1|_]-[swap].
@@ -32,7 +32,7 @@ _-[1, 2, swap].
 So = [1, 2|Si] ;
 false.
 
-[debug]  ?- alpha(thun([[1], 2, swons], Si, So)).
+[debug]  ?- tmi(thun([[1], 2, swons], Si, So)).
 _-[[1], 2, swons].
 [[1]|_]-[2, swons].
 [2, [1]|_]-[swons].
@@ -41,7 +41,7 @@ _-[[1], 2, swons].
 [[2, 1]|_]-[].
 So = [[2, 1]|Si] .
 
-[debug]  ?- alpha(thun([[1], 2, [swons], i], Si, So)).
+[debug]  ?- tmi(thun([[1], 2, [swons], i], Si, So)).
 _-[[1], 2, [swons], i].
 [[1]|_]-[2, [swons], i].
 [2, [1]|_]-[[swons], i].
