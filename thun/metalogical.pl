@@ -1,10 +1,10 @@
 % A Tracing Meta-Interpreter for Thun
 
 tmi(true).
+tmi(!).
 tmi((A, B)) :- tmi(A), tmi(B).
-tmi(number(A)) :- !, number(A).
-tmi(var(A)) :- !, var(A).
-tmi(!) :- !.
+tmi(number(A)) :- number(A).
+tmi(var(A)) :- var(A).
 
 % Meta-logical print trace.
 % (Could also be captured in a list or something instead.)
