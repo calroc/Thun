@@ -194,7 +194,7 @@ def check_filename(name):
 
 
 if __name__ == '__main__':
-    JOY_HOME = os.path.expanduser('~/.joypy')
+    JOY_HOME = os.path.expanduser('~/.thun')
     pt = PersistTask(JOY_HOME)
     content_id, thing = pt.open('stack.pickle')
     pt.persist(content_id)

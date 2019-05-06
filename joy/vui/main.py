@@ -28,7 +28,7 @@ FULLSCREEN = '-f' in sys.argv
 
 JOY_HOME = os.environ.get('JOY_HOME')
 if JOY_HOME is None:
-    JOY_HOME = os.path.expanduser('~/.joypy')
+    JOY_HOME = os.path.expanduser('~/.thun')
     if not os.path.isabs(JOY_HOME):
         raise ValueError('what directory?')
 
