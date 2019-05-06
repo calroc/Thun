@@ -1,0 +1,51 @@
+  name_viewer
+  list_resources
+  open_resource_at_good_location
+  good_viewer_location
+  open_viewer
+  see_stack
+  see_resources
+  see_definitions
+  see_log
+  reset_log
+
+  inscribe
+  evaluate
+
+  pop clear    dup swap
+
+  add sub mul div truediv modulus divmod
+  pm ++ -- sum product pow sqr sqrt
+  < <= = >= > <>
+  & << >>
+
+  i dupdip
+
+!= % & * *fraction *fraction0 + ++ - -- / < << <= <> = > >= >> ? ^
+abs add anamorphism and app1 app2 app3 at average
+b binary branch
+choice clear cleave concat cons
+dinfrirst dip dipd dipdd disenstacken div divmod down_to_zero drop
+dudipd dup dupd dupdip
+enstacken eq
+first flatten floor floordiv
+gcd ge genrec getitem grand_reset gt
+help
+i id ifte infra inscribe
+key_bindings
+le least_fraction loop lshift lt
+map max min mod modulus mouse_bindings mul
+ne neg not nullary
+of or over
+pam parse pick pm pop popd popdd popop pow pred primrec product
+quoted
+range range_to_zero rem remainder remove reset_log rest reverse
+roll< roll> rolldown rollup rshift run
+second select sharing show_log shunt size sort sqr sqrt stack step
+step_zero sub succ sum swaack swap swoncat swons
+take ternary third times truediv truthy tuck
+unary uncons unique unit unquoted unstack
+void
+warranty while words
+x xor
+zip
