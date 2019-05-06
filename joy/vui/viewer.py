@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#    Copyright © 2018 Simon Forman
+#    Copyright © 2019 Simon Forman
 #
 #    This file is part of joy.py
 #
@@ -18,7 +18,7 @@
 #    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
 #
 import pygame
-from core import BACKGROUND, FOREGROUND
+from joy.vui.core import BACKGROUND, FOREGROUND
 
 
 class Viewer(object):

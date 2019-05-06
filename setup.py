@@ -36,7 +36,7 @@ setup(
   author_email='forman.simon@gmail.com',
   url='https://joypy.osdn.io',
   license='GPLv3+',
-  packages=['joy', 'joy.utils', 'joy.gui'],
+  packages=['joy', 'joy.utils', 'joy.gui', 'joy.vui'],
   classifiers=[
     'Development Status :: 4 - Beta',
     'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',

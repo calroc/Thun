@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 #
-#    Copyright © 2018 Simon Forman
+#    Copyright © 2019 Simon Forman
 #
-#    This file is part of joy.py
+#    This file is part of Thun
 #
-#    joy.py is free software: you can redistribute it and/or modify
+#    Thun is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    joy.py is distributed in the hope that it will be useful,
+#    Thun is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
+#    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
 '''
 This module implements a simple visual display system modeled on Oberon.
@@ -29,13 +29,13 @@ from copy import copy
 from sys import stderr
 from traceback import format_exc
 import pygame
-from core import (
+from .core import (
     open_viewer_on_string,
     GREY,
     MOUSE_EVENTS,
     )
-from viewer import Viewer
-import text_viewer
+from .viewer import Viewer
+from joy.vui import text_viewer
 
 
 class Display(object):

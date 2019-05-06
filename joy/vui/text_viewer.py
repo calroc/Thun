@@ -1,7 +1,26 @@
+# -*- coding: utf-8 -*-
+#
+#    Copyright © 2019 Simon Forman
+#
+#    This file is part of Thun
+#
+#    Thun is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Thun is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Thun.  If not see <http://www.gnu.org/licenses/>.
+#
 import string
 import pygame
 from joy.utils.stack import expression_to_string
-from core import (
+from joy.vui.core import (
     ARROW_KEYS,
     BACKGROUND as BG,
     FOREGROUND as FG,
@@ -11,8 +30,8 @@ from core import (
     SUCCESS,
     push,
     )
-import viewer, font_data
-reload(viewer)
+from joy.vui import viewer, font_data
+#reload(viewer)
 
 
 MenuViewer = viewer.MenuViewer

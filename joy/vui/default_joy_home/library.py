@@ -16,7 +16,7 @@ from joy.library import (
     SimpleFunctionWrapper,
     )
 from joy.utils.stack import list_to_stack, concat
-from vui import core, text_viewer, stack_viewer
+from joy.vui import core, text_viewer, stack_viewer
 
 
 def install(command): D[command.name] = command
