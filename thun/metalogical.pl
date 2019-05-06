@@ -1,5 +1,7 @@
 % A Tracing Meta-Interpreter for Thun
 
+% See https://www.metalevel.at/acomip/
+
 tmi(true).
 tmi(!).
 tmi((A, B)) :- tmi(A), tmi(B).
