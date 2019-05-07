@@ -18,6 +18,10 @@
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
 '''
+
+Display
+=================
+
 This module implements a simple visual display system modeled on Oberon.
 
 Refer to Chapter 4 of the Project Oberon book for more information.
@@ -355,7 +359,7 @@ class Track(Viewer):
         return self, y
 
     def open_viewer(self, y, class_):
-        '''Open and return a viewer of class_ at y.'''
+        '''Open and return a viewer of class at y.'''
         # Todo: if y coincides with some other viewer's y replace it.
         viewer, viewer_y = self.viewer_at(y)
         h = viewer.split(viewer_y)

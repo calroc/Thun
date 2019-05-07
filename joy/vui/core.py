@@ -17,6 +17,14 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
+'''
+
+Core
+=====================
+
+
+A Module docstring yo.
+'''
 from sys import stderr
 from traceback import format_exc
 import pygame
@@ -39,8 +47,9 @@ MOUSE_EVENTS = frozenset({
     pygame.MOUSEBUTTONDOWN,
     pygame.MOUSEBUTTONUP
     })
+# AM I DOCSY?
 
-
+# What about *moi?*
 ARROW_KEYS = frozenset({
     pygame.K_UP,
     pygame.K_DOWN,
@@ -68,6 +77,7 @@ SUCCESS = 1
 
 
 class Message(object):
+    '''Message class.'''
 
     def __init__(self, sender):
         self.sender = sender

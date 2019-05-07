@@ -17,11 +17,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
 #
+'''
+
+Viewer
+=================
+
+'''
 import pygame
 from joy.vui.core import BACKGROUND, FOREGROUND
 
 
 class Viewer(object):
+    '''
+    Base Viewer class
+    '''
 
     MINIMUM_HEIGHT = 11
 
@@ -96,6 +105,10 @@ class Viewer(object):
 
 
 class MenuViewer(Viewer):
+
+    '''
+    MenuViewer class
+    '''
 
     MINIMUM_HEIGHT = 26
 

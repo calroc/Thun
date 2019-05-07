@@ -17,6 +17,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
+'''
+
+Text Viewer
+=================
+
+'''
 import string
 import pygame
 from joy.utils.stack import expression_to_string
