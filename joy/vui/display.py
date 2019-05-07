@@ -224,11 +224,20 @@ class Display(object):
         return viewer, x, y
 
     def iter_viewers(self):
+        '''
+        Iterate through all viewers yielding (viewer, x, y) three-tuples.
+        The x and y coordinates are screen pixels of the top-left corner
+        of the viewer.
+        '''
         for x, T in self.tracks:
             for y, V in T.viewers:
                 yield V, x, y
 
     def done_resizing(self):
+        '''
+        Helper method called directly by ``MenuViewer.mouse_up()`` to (hackily)
+        update the display when done resizing a viewer.
+        '''
         for _, track in self.tracks: # This should be done by a Message?
             if track.resizing_viewer:
                 track.resizing_viewer.draw()
@@ -236,16 +245,26 @@ class Display(object):
                 break
 
     def broadcast(self, message):
+        '''
+        Broadcast a message to all viewers (except the sender) and all
+        registered handlers.
+        '''
         for _, track in self.tracks:
             track.broadcast(message)
         for handler in self.handlers:
             handler(message)
 
     def redraw(self):
+        '''
+        Redraw all tracks (which will redraw all viewers.)
+        '''
         for _, track in self.tracks:
             track.redraw()
 
     def focus(self, viewer):
+        '''
+        Set system focus to a given viewer (or no viewer if a track.)
+        '''
         if isinstance(viewer, Track):
             if self.focused_viewer: self.focused_viewer.unfocus()
             self.focused_viewer = None
@@ -315,6 +334,10 @@ class Display(object):
                 V.mouse_up(self, x, y, event.button)
 
     def init_text(self, pt, x, y, filename):
+        '''
+        Open and return a ``TextViewer`` on a given file (which must be present
+        in the ``JOYHOME`` directory.)
+        '''
         viewer = self.open_viewer(x, y, text_viewer.TextViewer)
         viewer.content_id, viewer.lines = pt.open(filename)
         viewer.draw()
@@ -322,6 +345,9 @@ class Display(object):
 
 
 class Track(Viewer):
+    '''
+    Manage a vertical strip of the display, and the viewers on it.
+    '''
 
     def __init__(self, surface):
         Viewer.__init__(self, surface)
@@ -464,6 +490,9 @@ class Track(Viewer):
         assert sorted(self.viewers) == self.viewers
 
     def broadcast(self, message):
+        '''
+        Broadcast a message to all viewers on this track (except the sender.)
+        '''
         for _, viewer in self.viewers:
             if viewer is not message.sender:
                 viewer.handle(message)

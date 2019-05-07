@@ -22,8 +22,11 @@
 Core
 =====================
 
+The core module defines a bunch of system-wide "constants" (some colors
+and PyGame event groups), the message classes for Oberon-style message
+passing, a "world" class that holds the main context for the system, and
+a mainloop class that manages the, uh, main loop (the PyGame event queue.)
 
-A Module docstring yo.
 '''
 from sys import stderr
 from traceback import format_exc
@@ -47,51 +50,53 @@ MOUSE_EVENTS = frozenset({
     pygame.MOUSEBUTTONDOWN,
     pygame.MOUSEBUTTONUP
     })
-# AM I DOCSY?
+'PyGame mouse events.'
 
-# What about *moi?*
 ARROW_KEYS = frozenset({
     pygame.K_UP,
     pygame.K_DOWN,
     pygame.K_LEFT,
     pygame.K_RIGHT
     })
+'PyGame arrow key events.'
 
 
 TASK_EVENTS = tuple(range(pygame.USEREVENT, pygame.NUMEVENTS))
-AVAILABLE_TASK_EVENTS = set(TASK_EVENTS)
+'Keep track of all possible task events.'
 
+AVAILABLE_TASK_EVENTS = set(TASK_EVENTS)
+'Task IDs that have not been assigned to a task.'
 
 ALLOWED_EVENTS = [pygame.QUIT, pygame.KEYUP, pygame.KEYDOWN]
 ALLOWED_EVENTS.extend(MOUSE_EVENTS)
 ALLOWED_EVENTS.extend(TASK_EVENTS)
+'Event "mask" for PyGame event queue, we are only interested in these event types.'
 
 
-# Message status codes...  dunno if this is a good idea or not...
 ERROR = -1
 PENDING = 0
 SUCCESS = 1
-
-
-# messaging support
+# 'Message status codes...  dunno if this is a good idea or not...
 
 
 class Message(object):
-    '''Message class.'''
-
+    '''Message base class.  Contains ``sender`` field.'''
     def __init__(self, sender):
         self.sender = sender
 
 
 class CommandMessage(Message):
-
+    '''For commands, adds ``command`` field.'''
     def __init__(self, sender, command):
         Message.__init__(self, sender)
         self.command = command
 
 
 class ModifyMessage(Message):
-
+    '''
+    For when resources are modified, adds ``subject`` and ``details``
+    fields.
+    '''
     def __init__(self, sender, subject, **details):
         Message.__init__(self, sender)
         self.subject = subject
@@ -99,7 +104,10 @@ class ModifyMessage(Message):
 
 
 class OpenMessage(Message):
-
+    '''
+    For when resources are modified, adds ``name``, content_id``,
+    ``status``, and ``traceback`` fields.
+    '''
     def __init__(self, sender, name):
         Message.__init__(self, sender)
         self.name = name
@@ -109,19 +117,28 @@ class OpenMessage(Message):
 
 
 class PersistMessage(Message):
+    '''
+    For when resources are modified, adds ``content_id`` and ``details``
+    fields.
+    '''
     def __init__(self, sender, content_id, **details):
         Message.__init__(self, sender)
         self.content_id = content_id
         self.details = details
 
 
-class ShutdownMessage(Message): pass
+class ShutdownMessage(Message):
+    '''Signals that the system is shutting down.'''
 
 
 # Joy Interpreter & Context
 
 
 class World(object):
+    '''
+    This object contains the system context, the stack, dictionary, a
+    reference to the display broadcast method, and the log.
+    '''
 
     def __init__(self, stack_id, stack_holder, dictionary, notify, log):
         self.stack_holder = stack_holder
@@ -132,6 +149,9 @@ class World(object):
         self.log_id = log.content_id
 
     def handle(self, message):
+        '''
+        Deal with updates to the stack and commands.
+        '''
         if (isinstance(message, ModifyMessage)
             and message.subject is self.stack_holder
             ):
@@ -157,6 +177,9 @@ class World(object):
 
 
 def push(sender, item, notify, stack_name='stack.pickle'):
+    '''
+    Helper function to push an item onto the system stack with message.
+    '''
     om = OpenMessage(sender, stack_name)
     notify(om)
     if om.status == SUCCESS:
@@ -166,6 +189,10 @@ def push(sender, item, notify, stack_name='stack.pickle'):
 
 
 def open_viewer_on_string(sender, content, notify):
+    '''
+    Helper function to open a text viewer on a string.
+    Typically used to show tracebacks.
+    '''
     push(sender, content, notify)
     notify(CommandMessage(sender, 'good_viewer_location open_viewer'))
 
@@ -174,6 +201,10 @@ def open_viewer_on_string(sender, content, notify):
 
 
 class TheLoop(object):
+    '''
+    The main loop manages tasks and the PyGame event queue
+    and framerate clock.
+    '''
 
     FRAME_RATE = 24
 
@@ -184,6 +215,9 @@ class TheLoop(object):
         self.running = False
 
     def install_task(self, F, milliseconds):
+        '''
+        Install a task to run every so many milliseconds.
+        '''
         try:
             task_event_id = AVAILABLE_TASK_EVENTS.pop()
         except KeyError:
@@ -193,16 +227,23 @@ class TheLoop(object):
         return task_event_id
 
     def remove_task(self, task_event_id):
+        '''
+        Remove an installed task.
+        '''
         assert task_event_id in self.tasks, repr(task_event_id)
         pygame.time.set_timer(task_event_id, 0)
         del self.tasks[task_event_id]
         AVAILABLE_TASK_EVENTS.add(task_event_id)
 
     def __del__(self):
+        # Best effort to cancel all running tasks.
         for task_event_id in self.tasks:
             pygame.time.set_timer(task_event_id, 0)
 
     def run_task(self, task_event_id):
+        '''
+        Give a task its time to shine.
+        '''
         task = self.tasks[task_event_id]
         try:
             task()
@@ -214,6 +255,15 @@ class TheLoop(object):
             open_viewer_on_string(self, traceback, self.display.broadcast)
 
     def loop(self):
+        '''
+        The actual main loop machinery.
+
+        Maintain a ``running`` flag, pump the PyGame event queue and
+        handle the events (dispatching to the display), tick the clock.
+
+        When the loop is exited (by clicking the window close button or
+        pressing the ``escape`` key) it broadcasts a ``ShutdownMessage``.
+        '''
         self.running = True
         while self.running:
             for event in pygame.event.get():
