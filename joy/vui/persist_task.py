@@ -17,6 +17,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
+'''
+
+Persist Task
+===========================
+
+'''
 import os, pickle, traceback
 from collections import Counter
 from dulwich.errors import NotGitRepository

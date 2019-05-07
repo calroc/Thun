@@ -6,31 +6,42 @@
 Welcome to Joy VUI's documentation!
 ===================================
 
+A simple Graphical User Interface for the Joy programming language,
+written using Pygame to bypass X11 et. al., modeled on the Oberon OS, and
+intended to be just functional enough to support bootstrapping further Joy
+development.
+
+Screenshot
+-----------------------------
 .. image:: _static/Joy-VUI-screenshot.PNG
+
+If you have PyGame and Dulwich installed you should be able to start the
+VUI with the following command:
+
+::
+
+    python -m joy.vui
+
+This will create a `~/.thun` directory in your home dir to store your
+data.
+
+
+Modules
+-----------------------------
+
+.. image:: _static/packages_Vui.png
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-
-.. automodule:: joy.vui.core
-   :members:
-
-
-.. automodule:: joy.vui.display
-   :members:
-
-
-.. automodule:: joy.vui.viewer
-   :members:
-
-
-.. automodule:: joy.vui.text_viewer
-   :members:
-
-
-.. automodule:: joy.vui.stack_viewer
-   :members:
+   
+   core
+   display
+   viewer
+   text_viewer
+   stack_viewer
+   persist_task
 
 
 Indices and tables
