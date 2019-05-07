@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#    Copyright © 2014, 2015, 2017 Simon Forman
+#    Copyright © 2014, 2015, 2017, 2019 Simon Forman
 #
 #    This file is part of Thun
 #
