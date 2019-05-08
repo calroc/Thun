@@ -152,6 +152,21 @@ Modules
    persist_task
 
 
+Start Up Sequence
+------------------------------
+
+PersistTask is the first (non-PyGame-specific) object created.
+
+The ``screen``, ``clock``, and ``pt`` are created in ``init()`` and passed
+into ``main()``, which calls ``init_context()`` and then starts
+the main loop.
+
+During ``init_context()`` a few text viewers are opened on files
+in the home dir with the help of the ``pt``.  Then the main loop
+is started and the ``pt`` task is installed and ``pt`` and ``world``
+handlers are registered.
+
+
 Indices and tables
 ------------------
 

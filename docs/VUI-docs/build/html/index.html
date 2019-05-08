@@ -151,6 +151,17 @@ instead, but for now look for output in the terminal.</p>
 </ul>
 </div>
 </div>
+<div class="section" id="start-up-sequence">
+<h2>Start Up Sequence<a class="headerlink" href="#start-up-sequence" title="Permalink to this headline">¶</a></h2>
+<p>PersistTask is the first (non-PyGame-specific) object created.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">screen</span></code>, <code class="docutils literal notranslate"><span class="pre">clock</span></code>, and <code class="docutils literal notranslate"><span class="pre">pt</span></code> are created in <code class="docutils literal notranslate"><span class="pre">init()</span></code> and passed
+into <code class="docutils literal notranslate"><span class="pre">main()</span></code>, which calls <code class="docutils literal notranslate"><span class="pre">init_context()</span></code> and then starts
+the main loop.</p>
+<p>During <code class="docutils literal notranslate"><span class="pre">init_context()</span></code> a few text viewers are opened on files
+in the home dir with the help of the <code class="docutils literal notranslate"><span class="pre">pt</span></code>.  Then the main loop
+is started and the <code class="docutils literal notranslate"><span class="pre">pt</span></code> task is installed and <code class="docutils literal notranslate"><span class="pre">pt</span></code> and <code class="docutils literal notranslate"><span class="pre">world</span></code>
+handlers are registered.</p>
+</div>
 <div class="section" id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
