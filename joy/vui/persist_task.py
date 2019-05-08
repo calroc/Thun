@@ -22,6 +22,9 @@
 Persist Task
 ===========================
 
+This module deals with persisting the "resources" (text files and the
+stack) to the git repo in the ``JOY_HOME`` directory.
+
 '''
 import os, pickle, traceback
 from collections import Counter
@@ -31,6 +34,13 @@ from joy.vui import core, init_joy_home
 
 
 def open_repo(repo_dir=None, initialize=False):
+    '''
+    Open, or create, and return a Dulwich git repo object for the given
+    directory.  If the dir path doesn't exist it will be created.  If it
+    does exist but isn't a repo the result depends on the ``initialize``
+    argument.  If it is ``False`` (the default) a ``NotGitRepository``
+    exception is raised, otherwise ``git init`` is effected in the dir.
+    '''
     if not os.path.exists(repo_dir):
         os.makedirs(repo_dir, 0700)
         return init_repo(repo_dir)
@@ -43,6 +53,10 @@ def open_repo(repo_dir=None, initialize=False):
 
 
 def init_repo(repo_dir):
+    '''
+    Initialize a git repository in the directory.  Stage and commit all
+    files (toplevel, not those in subdirectories if any) in the dir.
+    '''
     repo = Repo.init(repo_dir)
     init_joy_home.initialize(repo_dir)
     repo.stage([
@@ -55,6 +69,10 @@ def init_repo(repo_dir):
 
 
 def make_repo_relative_path_maker(repo):
+    '''
+    Helper function to return a function that returns a path given a path,
+    that's relative to the repository.
+    '''
     c = repo.controldir()
     def repo_relative_path(path):
         return os.path.relpath(path, os.path.commonprefix((c, path)))
@@ -62,6 +80,10 @@ def make_repo_relative_path_maker(repo):
 
 
 class Resource(object):
+    '''
+    Handle the content of a text files as a list of lines, deal with
+    saving it and staging the changes to a repo.
+    '''
 
     def __init__(self, filename, repo_relative_filename, thing=None):
         self.filename = filename
@@ -76,6 +98,9 @@ class Resource(object):
             print >> f, line
 
     def persist(self, repo):
+        '''
+        Save the lines to the file and stage the file in the repo.
+        '''
         with open(self.filename, 'w') as f:
             os.chmod(self.filename, 0600)
             self._to_file(f)
@@ -86,6 +111,9 @@ class Resource(object):
 
 
 class PickledResource(Resource):
+    '''
+    A ``Resource`` subclass that uses ``pickle`` on its file/thing.
+    '''
 
     def _from_file(self, f):
         return [pickle.load(f)]
@@ -95,6 +123,9 @@ class PickledResource(Resource):
 
 
 class PersistTask(object):
+    '''
+    This class deals with saving changes to the git repo.
+    '''
 
     LIMIT = 10
     MAX_SAVE = 10
@@ -107,7 +138,9 @@ class PersistTask(object):
         self.store = {}
 
     def open(self, name):
-        # look up the file in home and get its data
+        '''
+        Look up the named file in home and return its content_id and data.
+        '''
         fn = os.path.join(self.home, name)
         content_id = name # hash(fn)
         try:
@@ -118,6 +151,9 @@ class PersistTask(object):
         return content_id, resource.thing
 
     def handle(self, message):
+        '''
+        Handle messages, dispatch to ``handle_FOO()`` methods.
+        '''
         if isinstance(message, core.OpenMessage):
             self.handle_open(message)
         elif isinstance(message, core.ModifyMessage):
@@ -130,6 +166,9 @@ class PersistTask(object):
             self.commit('shutdown')
 
     def handle_open(self, message):
+        '''
+        Foo.
+        '''
         try:
             message.content_id, message.thing = self.open(message.name)
         except:
@@ -139,6 +178,9 @@ class PersistTask(object):
             message.status = core.SUCCESS
 
     def handle_modify(self, message):
+        '''
+        Foo.
+        '''
         try:
             content_id = message.details['content_id']
         except KeyError:
@@ -151,6 +193,9 @@ class PersistTask(object):
             self.commit('due to activity')
 
     def handle_persist(self, message):
+        '''
+        Foo.
+        '''
         try:
             resource = self.store[message.content_id]
         except KeyError:
@@ -159,6 +204,9 @@ class PersistTask(object):
         self.commit('by request from %r' % (message.sender,))
 
     def handle_persist_new(self, message):
+        '''
+        Foo.
+        '''
         name = message.content_id
         check_filename(name)
         fn = os.path.join(self.home, name)
@@ -168,10 +216,16 @@ class PersistTask(object):
         return resource
 
     def persist(self, content_id):
+        '''
+        Persist a resource.
+        '''
         del self.counter[content_id]
         self.store[content_id].persist(self.repo)
 
     def task_run(self):
+        '''
+        Stage any outstanding changes.
+        '''
         if not self.counter:
             return
         for content_id, _ in self.counter.most_common(self.MAX_SAVE):
@@ -179,9 +233,15 @@ class PersistTask(object):
         self.commit()
 
     def commit(self, message='auto-commit'):
+        '''
+        Commit.
+        '''
         return self.repo.do_commit(message, committer=core.COMMITTER)
 
     def scan(self):
+        '''
+        Return a sorted list of all the files in the home dir.
+        '''
         return sorted([
             fn
             for fn in os.listdir(self.home)
@@ -190,13 +250,15 @@ class PersistTask(object):
 
 
 def check_filename(name):
+    '''
+    Sanity checks for filename.
+    '''
     # TODO: improve this...
     if len(name) > 64:
         raise ValueError('bad name %r' % (name,))
     left, dot, right = name.partition('.')
     if not left.isalnum() or dot and not right.isalnum():
         raise ValueError('bad name %r' % (name,))
-
 
 
 if __name__ == '__main__':

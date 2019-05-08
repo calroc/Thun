@@ -1,0 +1,222 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Persist Task &#8212; Joy VUI 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Stack Viewer" href="stack_viewer.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-joy.vui.persist_task"></span><div class="section" id="persist-task">
+<h1>Persist Task<a class="headerlink" href="#persist-task" title="Permalink to this headline">¶</a></h1>
+<p>This module deals with persisting the “resources” (text files and the
+stack) to the git repo in the <code class="docutils literal notranslate"><span class="pre">JOY_HOME</span></code> directory.</p>
+<dl class="class">
+<dt id="joy.vui.persist_task.PersistTask">
+<em class="property">class </em><code class="descclassname">joy.vui.persist_task.</code><code class="descname">PersistTask</code><span class="sig-paren">(</span><em>home</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class deals with saving changes to the git repo.</p>
+<dl class="method">
+<dt id="joy.vui.persist_task.PersistTask.commit">
+<code class="descname">commit</code><span class="sig-paren">(</span><em>message='auto-commit'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask.commit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask.commit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Commit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="joy.vui.persist_task.PersistTask.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle messages, dispatch to <code class="docutils literal notranslate"><span class="pre">handle_FOO()</span></code> methods.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="joy.vui.persist_task.PersistTask.handle_modify">
+<code class="descname">handle_modify</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask.handle_modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask.handle_modify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Foo.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="joy.vui.persist_task.PersistTask.handle_open">
+<code class="descname">handle_open</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask.handle_open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask.handle_open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Foo.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="joy.vui.persist_task.PersistTask.handle_persist">
+<code class="descname">handle_persist</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask.handle_persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask.handle_persist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Foo.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="joy.vui.persist_task.PersistTask.handle_persist_new">
+<code class="descname">handle_persist_new</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask.handle_persist_new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask.handle_persist_new" title="Permalink to this definition">¶</a></dt>
+<dd><p>Foo.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="joy.vui.persist_task.PersistTask.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Look up the named file in home and return its content_id and data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="joy.vui.persist_task.PersistTask.persist">
+<code class="descname">persist</code><span class="sig-paren">(</span><em>content_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask.persist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Persist a resource.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="joy.vui.persist_task.PersistTask.scan">
+<code class="descname">scan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask.scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a sorted list of all the files in the home dir.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="joy.vui.persist_task.PersistTask.task_run">
+<code class="descname">task_run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PersistTask.task_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PersistTask.task_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stage any outstanding changes.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="joy.vui.persist_task.PickledResource">
+<em class="property">class </em><code class="descclassname">joy.vui.persist_task.</code><code class="descname">PickledResource</code><span class="sig-paren">(</span><em>filename</em>, <em>repo_relative_filename</em>, <em>thing=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#PickledResource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.PickledResource" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">Resource</span></code> subclass that uses <code class="docutils literal notranslate"><span class="pre">pickle</span></code> on its file/thing.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="joy.vui.persist_task.Resource">
+<em class="property">class </em><code class="descclassname">joy.vui.persist_task.</code><code class="descname">Resource</code><span class="sig-paren">(</span><em>filename</em>, <em>repo_relative_filename</em>, <em>thing=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#Resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.Resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle the content of a text files as a list of lines, deal with
+saving it and staging the changes to a repo.</p>
+<dl class="method">
+<dt id="joy.vui.persist_task.Resource.persist">
+<code class="descname">persist</code><span class="sig-paren">(</span><em>repo</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#Resource.persist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.Resource.persist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the lines to the file and stage the file in the repo.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.vui.persist_task.check_filename">
+<code class="descclassname">joy.vui.persist_task.</code><code class="descname">check_filename</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#check_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.check_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sanity checks for filename.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.vui.persist_task.init_repo">
+<code class="descclassname">joy.vui.persist_task.</code><code class="descname">init_repo</code><span class="sig-paren">(</span><em>repo_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#init_repo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.init_repo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a git repository in the directory.  Stage and commit all
+files (toplevel, not those in subdirectories if any) in the dir.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.vui.persist_task.make_repo_relative_path_maker">
+<code class="descclassname">joy.vui.persist_task.</code><code class="descname">make_repo_relative_path_maker</code><span class="sig-paren">(</span><em>repo</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#make_repo_relative_path_maker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.make_repo_relative_path_maker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to return a function that returns a path given a path,
+that’s relative to the repository.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.vui.persist_task.open_repo">
+<code class="descclassname">joy.vui.persist_task.</code><code class="descname">open_repo</code><span class="sig-paren">(</span><em>repo_dir=None</em>, <em>initialize=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/vui/persist_task.html#open_repo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.vui.persist_task.open_repo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open, or create, and return a Dulwich git repo object for the given
+directory.  If the dir path doesn’t exist it will be created.  If it
+does exist but isn’t a repo the result depends on the <code class="docutils literal notranslate"><span class="pre">initialize</span></code>
+argument.  If it is <code class="docutils literal notranslate"><span class="pre">False</span></code> (the default) a <code class="docutils literal notranslate"><span class="pre">NotGitRepository</span></code>
+exception is raised, otherwise <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">init</span></code> is effected in the dir.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Joy VUI</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">Main Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="display.html">Display</a></li>
+<li class="toctree-l1"><a class="reference internal" href="viewer.html">Viewer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_viewer.html">Text Viewer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stack_viewer.html">Stack Viewer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Persist Task</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="stack_viewer.html" title="previous chapter">Stack Viewer</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Simon Forman.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/persist_task.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
