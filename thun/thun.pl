@@ -145,41 +145,41 @@ r_truth(1, true).
 Definitions
 */
 
-swons ≡ [swap, cons].
-unswons ≡ [uncons, swap].
-x ≡ [dup, i].
-b ≡ [[i], dip, i].
-sqr ≡ [dup, *].
-ifte ≡ [[nullary], dipd, swap, branch].
-while ≡ [swap, [nullary], cons, dup, dipd, concat, loop].
-popop ≡ [pop, pop].
-ccons ≡ [cons, cons].
-unary ≡ [nullary, popd].
-binary ≡ [unary, popd].
-trinary ≡ [binary, popd].
-popd ≡ [[pop], dip].
-popdd ≡ [[pop], dipd].
-popopd ≡ [[popop], dip].
-popopdd ≡ [[popop], dipd].
-dupd ≡ [[dup], dip].
-dupdd ≡ [[dup], dipd].
-second ≡ [rest, first].
-third ≡ [rest, second].
-fourth ≡ [rest, third].
-rrest ≡ [rest, rest].
-unit ≡ [[], cons].
-drop ≡ [[rest], times].
 at ≡ [drop, first].
-of ≡ [swap, at].
-sum ≡ [0, swap, [+], step].
-product ≡ [1, swap, [*], step].
-size ≡ [0, swap, [pop, 1, +], step].
-fork ≡ [[i], app2].
+b ≡ [[i], dip, i].
+binary ≡ [unary, popd].
+ccons ≡ [cons, cons].
 cleave ≡ [fork, [popd], dip].
 codireco ≡ [cons, dip, rest, cons].
+drop ≡ [[rest], times].
+dupd ≡ [[dup], dip].
+dupdd ≡ [[dup], dipd].
+fork ≡ [[i], app2].
+fourth ≡ [rest, third].
+ifte ≡ [[nullary], dipd, swap, branch].
 make_generator ≡ [[codireco], ccons].
 neg ≡ [0, swap, -].
+of ≡ [swap, at].
 pm ≡ [[+], [-], cleave, popdd].
+popd ≡ [[pop], dip].
+popdd ≡ [[pop], dipd].
+popop ≡ [pop, pop].
+popopd ≡ [[popop], dip].
+popopdd ≡ [[popop], dipd].
+product ≡ [1, swap, [*], step].
+rrest ≡ [rest, rest].
+second ≡ [rest, first].
+size ≡ [0, swap, [pop, 1, +], step].
+sqr ≡ [dup, *].
+sum ≡ [0, swap, [+], step].
+swons ≡ [swap, cons].
+third ≡ [rest, second].
+trinary ≡ [binary, popd].
+unary ≡ [nullary, popd].
+unit ≡ [[], cons].
+unswons ≡ [uncons, swap].
+while ≡ [swap, [nullary], cons, dup, dipd, concat, loop].
+x ≡ [dup, i].
 
 
 /*
