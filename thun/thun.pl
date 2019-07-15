@@ -83,8 +83,6 @@ literal(_/_).
 Functions
 */
 
-func(nullary,   [P|S],   [X|S]) :- thun(P, S, [X|_]).  % Combinator.
-
 func(cons, [A, B|S], [[B|A]|S]).
 func(swap, [A, B|S],  [B, A|S]).
 func(dup,     [A|S],  [A, A|S]).
@@ -159,6 +157,7 @@ ii ≡ [[dip], dupdip, i].
 infra ≡ [swons, swaack, [i], dip, swaack].
 make_generator ≡ [[codireco], ccons].
 neg ≡ [0, swap, -].
+nullary ≡ [stack, popd, [i], infra, first].
 of ≡ [swap, at].
 pm ≡ [[+], [-], cleave, popdd].
 popd ≡ [[pop], dip].
