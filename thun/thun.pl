@@ -51,10 +51,6 @@ chars([Ch])      --> char(Ch).
 
 char(Ch) --> [Ch], {Ch \== 91, Ch \== 93, code_type(Ch, graph)}.
 
-joy_def(Def ≡ Body) --> symbol(Def), blanks, "==", joy_parse(Body).
-
-joy_defs([Def|Defs]) --> blanks, joy_def(Def), blanks, joy_defs(Defs).
-joy_defs([]) --> [].
 
 /*
 Interpreter
@@ -145,36 +141,23 @@ r_truth(1, true).
 /*
 Definitions
 */
-app1 ≡ [grba, infrst].
-app2 ≡ [[grba, swap, grba, swap], dip, [infrst], cons, ii].
-at ≡ [drop, first].
-b ≡ [[i], dip, i].
-ccons ≡ [cons, cons].
-drop ≡ [[rest], times].
-dupd ≡ [[dup], dip].
-dupdd ≡ [[dup], dipd].
-fourth ≡ [rest, third].
-grba ≡ [[stack, popd], dip].
-ifte ≡ [[nullary], dipd, swap, branch].
-ii ≡ [[dip], dupdip, i].
-infra ≡ [swons, swaack, [i], dip, swaack].
-infrst ≡ [infra, first].
-neg ≡ [0, swap, -].
-nullary ≡ [stack, popd, [i], infrst].
-pm ≡ [[+], [-], cleave, popdd].
-popd ≡ [[pop], dip].
-popdd ≡ [[pop], dipd].
-popop ≡ [pop, pop].
-popopd ≡ [[popop], dip].
-popopdd ≡ [[popop], dipd].
-product ≡ [1, swap, [*], step].
-rrest ≡ [rest, rest].
-second ≡ [rest, first].
-sum ≡ [0, swap, [+], step].
-swons ≡ [swap, cons].
-third ≡ [rest, second].
-unit ≡ [[], cons].
-unswons ≡ [uncons, swap].
+
+joy_def(Def ≡ Body) --> symbol(Def), blanks, "==", joy_parse(Body).
+
+joy_defs([Def|Defs]) --> blanks, joy_def(Def), blanks, joy_defs(Defs).
+joy_defs([]) --> [].
+
+read_defs(DefsFile, Defs) :-
+    read_file_to_codes(DefsFile, Codes, []),
+    phrase(joy_defs(Defs), Codes).  
+
+assert_defs(DefsFile) :-
+    read_defs(DefsFile, Defs),
+    forall(member(Def, Defs), assert_def(Def)).
+
+assert_def(Def≡Body) :- retractall(Def≡_), assertz(Def≡Body).
+
+:- assert_defs("defs.txt").
 
 
 /*
@@ -228,15 +211,3 @@ contracto, [Def] --> {Def ≡ Body}, Body.
 
 % phrase(expando, ExprIn, ExprOut).
 
-
-read_defs(DefsFile, Defs) :-
-    read_file_to_codes(DefsFile, Codes, []),
-    phrase(joy_defs(Defs), Codes).  
-
-assert_defs(DefsFile) :-
-    read_defs(DefsFile, Defs),
-    forall(member(Def, Defs), assert_def(Def)).
-
-assert_def(Def≡Body) :- retractall(Def≡_), assertz(Def≡Body).
-
-:- assert_defs("defs.txt").
