@@ -84,7 +84,6 @@ Functions
 */
 
 func(nullary,   [P|S],   [X|S]) :- thun(P, S, [X|_]).  % Combinator.
-func(infra,  [P, R|S],   [Q|S]) :- thun(P, R, Q).  % Combinator.
 
 func(cons, [A, B|S], [[B|A]|S]).
 func(swap, [A, B|S],  [B, A|S]).
@@ -157,6 +156,7 @@ fourth ≡ [rest, third].
 grba ≡ [[stack, popd], dip].
 ifte ≡ [[nullary], dipd, swap, branch].
 ii ≡ [[dip], dupdip, i].
+infra ≡ [swons, swaack, [i], dip, swaack].
 make_generator ≡ [[codireco], ccons].
 neg ≡ [0, swap, -].
 of ≡ [swap, at].
