@@ -41,12 +41,19 @@ joy_parse([]) --> [].
 
 joy_term(N) --> number(N), !.
 joy_term(J) --> "[", !, joy_parse(J), "]".
-joy_term(C) --> chars(Chars), !, {atom_string(C, Chars)}.
+joy_term(C) --> symbol(C).
+
+symbol(C) --> chars(Chars), !, {Chars \= [61, 61], atom_string(C, Chars)}.
 
 chars([Ch|Rest]) --> char(Ch), chars(Rest).
 chars([Ch])      --> char(Ch).
 
 char(Ch) --> [Ch], {Ch \== 91, Ch \== 93, code_type(Ch, graph)}.
+
+joy_def(Def ≡ Body) --> symbol(Def), blanks, "==", joy_parse(Body).
+
+joy_defs([Def|Defs]) --> blanks, joy_def(Def), blanks, joy_defs(Defs).
+joy_defs([]) --> [].
 
 /*
 Interpreter
