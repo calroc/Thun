@@ -990,7 +990,7 @@ def dupdip(stack, expression, dictionary):
 def infra(stack, expression, dictionary):
   '''
   Accept a quoted program and a list on the stack and run the program
-  with the list as its stack.
+  with the list as its stack.  Does not affect the rest of the stack.
   ::
 
        ... [a b c] [Q] . infra
