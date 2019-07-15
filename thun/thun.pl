@@ -235,8 +235,8 @@ read_defs(DefsFile, Defs) :-
 
 assert_defs(DefsFile) :-
     read_defs(DefsFile, Defs),
-    forall(member(Def, Defs), assertz(Def)).
+    forall(member(Def, Defs), assert_def(Def)).
+
+assert_def(Def≡Body) :- retractall(Def≡_), assertz(Def≡Body).
 
 :- assert_defs("defs.txt").
-% working_directory(_, 'c:/users/sforman/desktop/src/joypy/thun/'), 
-
