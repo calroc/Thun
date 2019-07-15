@@ -59,6 +59,9 @@ thun(  [Def|E], Si, So) :- Def ≡ Body, !, append(Body, E, Eo), thun(Eo, Si, So
 thun( [Func|E], Si, So) :- func(Func, Si, S), thun(E, S, So).
 thun([Combo|E], Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
 
+% Some error handling.
+thun([Unknown|E], Si, So) :- write("wtf? "), writeln(Unknown), So = [[Unknown|E]|Si].
+
 /*
 Literals
 */
@@ -69,6 +72,12 @@ literal([]).
 literal([_|_]).
 literal(true).
 literal(false).
+
+% Symbolic math expressions are literals.
+literal(_+_).
+literal(_-_).
+literal(_*_).
+literal(_/_).
 
 /*
 Functions
@@ -85,10 +94,24 @@ func(cons, [A, B|S], [[B|A]|S]).
 func(swap, [A, B|S],  [B, A|S]).
 func(dup,     [A|S],  [A, A|S]).
 func(pop,     [_|S],        S ).
-func(+,    [A, B|S],     [C|S]) :- C #= A + B.
-func(-,    [A, B|S],     [C|S]) :- C #= B - A.
-func(*,    [A, B|S],     [C|S]) :- C #= A * B.
-func(/,    [A, B|S],     [C|S]) :- C #= B div A.
+% func(+,    [A, B|S],     [C|S]) :- C #= A + B.
+% func(-,    [A, B|S],     [C|S]) :- C #= B - A.
+% func(*,    [A, B|S],     [C|S]) :- C #= A * B.
+% func(/,    [A, B|S],     [C|S]) :- C #= B div A.
+
+% Symbolic math.  Compute the answer, or derivative, or whatever, later.
+func(+, [A, B|S], [B + A|S]).
+func(-, [A, B|S], [B - A|S]).
+func(*, [A, B|S], [B * A|S]).
+func(/, [A, B|S], [B / A|S]).
+
+func(=, [A|S], [B|S]) :- B is A.
+
+% func(pm, [A, B|S],    [C, D|S]) :- C #= A + B, D #= B - A.
+% func(pm, [A, B|S],    [B + A, B - A|S]).
+
+% func(sqrt, [A|S], [B|S]) :- B^2 #= A.
+func(sqrt, [A|S], [sqrt(A)|S]).
 
 func(concat, [A, B|S],   [C|S]) :- append(B, A, C).
 func(flatten,   [A|S],   [B|S]) :- flatten(A, B).
@@ -155,6 +178,8 @@ fork ≡ [[i], app2].
 cleave ≡ [fork, [popd], dip].
 codireco ≡ [cons, dip, rest, cons].
 make_generator ≡ [[codireco], ccons].
+neg ≡ [0, swap, -].
+pm ≡ [[+], [-], cleave, popdd].
 
 
 /*
@@ -164,6 +189,8 @@ Combinators
 combo(i,          [P|S], S, Ei, Eo) :- append(P, Ei, Eo).
 combo(dip,     [P, X|S], S, Ei, Eo) :- append(P, [X|Ei], Eo).
 combo(dipd, [P, X, Y|S], S, Ei, Eo) :- append(P, [Y, X|Ei], Eo).
+
+combo(dupdip, [P, X|S], [X|S], Ei, Eo) :- append(P, [X|Ei], Eo).
 
 combo(branch, [T, _,  true|S], S, Ei, Eo) :- append(T, Ei, Eo).
 combo(branch, [_, F, false|S], S, Ei, Eo) :- append(F, Ei, Eo).
