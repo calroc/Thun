@@ -137,9 +137,8 @@ r_truth(1, true).
 /*
 Definitions
 */
-
-app1 ≡ [grba, infra, first].
-app2 ≡ [[grba, swap, grba, swap], dip, [infra, first], cons, ii].
+app1 ≡ [grba, infrst].
+app2 ≡ [[grba, swap, grba, swap], dip, [infrst], cons, ii].
 at ≡ [drop, first].
 b ≡ [[i], dip, i].
 binary ≡ [unary, popd].
@@ -155,9 +154,10 @@ grba ≡ [[stack, popd], dip].
 ifte ≡ [[nullary], dipd, swap, branch].
 ii ≡ [[dip], dupdip, i].
 infra ≡ [swons, swaack, [i], dip, swaack].
+infrst ≡ [infra, first].
 make_generator ≡ [[codireco], ccons].
 neg ≡ [0, swap, -].
-nullary ≡ [stack, popd, [i], infra, first].
+nullary ≡ [stack, popd, [i], infrst].
 of ≡ [swap, at].
 pm ≡ [[+], [-], cleave, popdd].
 popd ≡ [[pop], dip].
