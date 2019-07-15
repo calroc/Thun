@@ -1,0 +1,31 @@
+++ == 1 +
+anamorphism == [pop []] swap [dip swons] genrec
+average == [sum 1.0 *] [size] cleave /
+binary == unary popd
+cleave == fork [popd] dip
+codireco == cons dip rest cons
+dinfrirst == dip infra first
+disenstacken == ? [uncons ?] loop pop
+down_to_zero == [0 >] [dup --] while
+dupdipd == dup dipd
+enstacken == stack [clear] dip
+flatten == [] swap [concat] step
+fork == [i] app2
+gcd == 1 [tuck modulus dup 0 >] loop pop
+make_generator == [codireco] ccons
+of == swap at
+pam == [i] map
+primrec == [i] genrec
+product == 1 swap [*] step
+quoted == [unit] dip
+range == [0 <=] [1 - dup] anamorphism
+range_to_zero == unit [down_to_zero] infra
+run == [] swap infra
+size == 0 swap [pop ++] step
+sqr == dup *
+step_zero == 0 roll> step
+ternary == binary popd
+unary == nullary popd
+unquoted == [i] dip
+while == swap [nullary] cons dup dipd concat loop
+x == dup i

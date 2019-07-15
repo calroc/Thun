@@ -20,6 +20,7 @@
 :- use_module(library(dcg/basics)).
 :- op(990, xfy, ≡).  % for Joy definitions.
 :- dynamic func/3.
+:- dynamic '≡'/2.
 
 /*
 An entry point.
@@ -148,24 +149,18 @@ app1 ≡ [grba, infrst].
 app2 ≡ [[grba, swap, grba, swap], dip, [infrst], cons, ii].
 at ≡ [drop, first].
 b ≡ [[i], dip, i].
-binary ≡ [unary, popd].
 ccons ≡ [cons, cons].
-cleave ≡ [fork, [popd], dip].
-codireco ≡ [cons, dip, rest, cons].
 drop ≡ [[rest], times].
 dupd ≡ [[dup], dip].
 dupdd ≡ [[dup], dipd].
-fork ≡ [[i], app2].
 fourth ≡ [rest, third].
 grba ≡ [[stack, popd], dip].
 ifte ≡ [[nullary], dipd, swap, branch].
 ii ≡ [[dip], dupdip, i].
 infra ≡ [swons, swaack, [i], dip, swaack].
 infrst ≡ [infra, first].
-make_generator ≡ [[codireco], ccons].
 neg ≡ [0, swap, -].
 nullary ≡ [stack, popd, [i], infrst].
-of ≡ [swap, at].
 pm ≡ [[+], [-], cleave, popdd].
 popd ≡ [[pop], dip].
 popdd ≡ [[pop], dipd].
@@ -175,17 +170,11 @@ popopdd ≡ [[popop], dipd].
 product ≡ [1, swap, [*], step].
 rrest ≡ [rest, rest].
 second ≡ [rest, first].
-size ≡ [0, swap, [pop, 1, +], step].
-sqr ≡ [dup, *].
 sum ≡ [0, swap, [+], step].
 swons ≡ [swap, cons].
 third ≡ [rest, second].
-trinary ≡ [binary, popd].
-unary ≡ [nullary, popd].
 unit ≡ [[], cons].
 unswons ≡ [uncons, swap].
-while ≡ [swap, [nullary], cons, dup, dipd, concat, loop].
-x ≡ [dup, i].
 
 
 /*
@@ -238,4 +227,16 @@ expando,    Body --> [Def], {Def ≡ Body}.
 contracto, [Def] --> {Def ≡ Body}, Body.
 
 % phrase(expando, ExprIn, ExprOut).
+
+
+read_defs(DefsFile, Defs) :-
+    read_file_to_codes(DefsFile, Codes, []),
+    phrase(joy_defs(Defs), Codes).  
+
+assert_defs(DefsFile) :-
+    read_defs(DefsFile, Defs),
+    forall(member(Def, Defs), assertz(Def)).
+
+:- assert_defs("defs.txt").
+% working_directory(_, 'c:/users/sforman/desktop/src/joypy/thun/'), 
 
