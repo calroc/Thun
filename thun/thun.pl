@@ -83,10 +83,6 @@ literal(_/_).
 Functions
 */
 
-func(app1,     [P, Xi|S],     [Xo|S]) :- thun(P, [Xi|S], [Xo|_]).  % Combinator.
-func(app2, [P, Xi, Yi|S], [Xo, Yo|S]) :- thun(P, [Xi|S], [Xo|_]),  % Combinator.
-                                         thun(P, [Yi|S], [Yo|_]).
-
 func(nullary,   [P|S],   [X|S]) :- thun(P, S, [X|_]).  % Combinator.
 func(infra,  [P, R|S],   [Q|S]) :- thun(P, R, Q).  % Combinator.
 
@@ -145,6 +141,8 @@ r_truth(1, true).
 Definitions
 */
 
+app1 ≡ [grba, infra, first].
+app2 ≡ [[grba, swap, grba, swap], dip, [infra, first], cons, ii].
 at ≡ [drop, first].
 b ≡ [[i], dip, i].
 binary ≡ [unary, popd].
@@ -156,7 +154,9 @@ dupd ≡ [[dup], dip].
 dupdd ≡ [[dup], dipd].
 fork ≡ [[i], app2].
 fourth ≡ [rest, third].
+grba ≡ [[stack, popd], dip].
 ifte ≡ [[nullary], dipd, swap, branch].
+ii ≡ [[dip], dupdip, i].
 make_generator ≡ [[codireco], ccons].
 neg ≡ [0, swap, -].
 of ≡ [swap, at].
