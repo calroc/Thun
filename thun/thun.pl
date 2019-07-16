@@ -91,10 +91,6 @@ func(cons, [A, B|S], [[B|A]|S]).
 func(swap, [A, B|S],  [B, A|S]).
 func(dup,     [A|S],  [A, A|S]).
 func(pop,     [_|S],        S ).
-% func(+,    [A, B|S],     [C|S]) :- C #= A + B.
-% func(-,    [A, B|S],     [C|S]) :- C #= B - A.
-% func(*,    [A, B|S],     [C|S]) :- C #= A * B.
-% func(/,    [A, B|S],     [C|S]) :- C #= B div A.
 
 % Symbolic math.  Compute the answer, or derivative, or whatever, later.
 func(+, [A, B|S], [B + A|S]).
@@ -102,20 +98,9 @@ func(-, [A, B|S], [B - A|S]).
 func(*, [A, B|S], [B * A|S]).
 func(/, [A, B|S], [B / A|S]).
 
+% Attempt to calculate the value of a symbolic math expression.
 func(calc, [A|S], [B|S]) :- B is A.
 
-func(bool, [    0|S], [false|S]) :- !.
-func(bool, [  0.0|S], [false|S]) :- !.
-func(bool, [   []|S], [false|S]) :- !.
-func(bool, [   ""|S], [false|S]) :- !.
-func(bool, [false|S], [false|S]) :- !.
-
-func(bool, [_|S], [true|S]).
-
-% func(pm, [A, B|S],    [C, D|S]) :- C #= A + B, D #= B - A.
-% func(pm, [A, B|S],    [B + A, B - A|S]).
-
-% func(sqrt, [A|S], [B|S]) :- B^2 #= A.
 func(sqrt, [A|S], [sqrt(A)|S]).
 
 func(concat, [A, B|S],   [C|S]) :- append(B, A, C).
@@ -135,6 +120,14 @@ func(tuck,        [A, B|S], [A, B, A|S]).
 func(rollup, Si, So) :- func(rolldown, So, Si).
 func(uncons, Si, So) :- func(cons, So, Si).
 
+func(bool, [    0|S], [false|S]) :- !.
+func(bool, [  0.0|S], [false|S]) :- !.
+func(bool, [   []|S], [false|S]) :- !.
+func(bool, [   ""|S], [false|S]) :- !.
+func(bool, [false|S], [false|S]) :- !.
+
+func(bool, [_|S], [true|S]).
+
 func(>,  [A, B|S], [ true|S]) :-    B > A.
 func(>,  [A, B|S], [false|S]) :- \+ B > A.
 func(<,  [A, B|S], [ true|S]) :-    B < A.
@@ -147,16 +140,6 @@ func(=,  [A, B|S], [ true|S]) :- B =:= A.
 func(=,  [A, B|S], [false|S]) :- B =\= A.
 func(<>, [A, B|S], [ true|S]) :- B =\= A.
 func(<>, [A, B|S], [false|S]) :- B =:= A.
-
-% func(>,  [A, B|S], [T|S]) :- B #> A #<==> R, r_truth(R, T).
-% func(<,  [A, B|S], [T|S]) :- B #< A #<==> R, r_truth(R, T).
-% func(=,  [A, B|S], [T|S]) :- B #= A #<==> R, r_truth(R, T).
-% func(>=, [A, B|S], [T|S]) :- B #>= A #<==> R, r_truth(R, T).
-% func(<=, [A, B|S], [T|S]) :- B #=< A #<==> R, r_truth(R, T).
-% func(<>, [A, B|S], [T|S]) :- B #\= A #<==> R, r_truth(R, T).
-
-r_truth(0, false).
-r_truth(1, true).
 
 
 /*
