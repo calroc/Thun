@@ -9,7 +9,7 @@ binary == unary popd
 ccons == cons cons
 cleave == fork [popd] dip
 codireco == cons dip rest cons
-dinfrirst == dip infra first
+dinfrirst == dip infrst
 disenstacken == ? [uncons ?] loop pop
 down_to_zero == [0 >] [dup --] while
 drop == [rest] times
@@ -20,7 +20,6 @@ enstacken == stack [clear] dip
 flatten == [] swap [concat] step
 fork == [i] app2
 fourth == rest third
-gcd == 1 [tuck modulus dup 0 >] loop pop
 grba == [stack popd] dip
 ifte == [nullary] dipd swap branch
 ii == [dip] dupdip i
@@ -28,7 +27,7 @@ infra == swons swaack [i] dip swaack
 infrst == infra first
 make_generator == [codireco] ccons
 neg == 0 swap -
-nullary == stack popd [i] infrst
+nullary == [stack] dinfrirst
 of == swap at
 pam == [i] map
 pm == [+] [-] cleave popdd
@@ -38,7 +37,6 @@ popop == pop pop
 popopd == [popop] dip
 popopdd == [popop] dipd
 primrec == [i] genrec
-product == 1 swap [*] step
 product == 1 swap [*] step
 quoted == [unit] dip
 range == [0 <=] [1 - dup] anamorphism
