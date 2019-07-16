@@ -211,6 +211,8 @@ jcmpl(Name, Expression, Rule) :-
 rule(Head, [],    Head                        ). 
 rule(Head, [A|B], Head :- maplist(call, [A|B])).
 
+sjc(Name, InputString) :- phrase(joy_parse(E), InputString), show_joy_compile(Name, E).
+
 
 % Simple DCGs to expand/contract definitions.
 
