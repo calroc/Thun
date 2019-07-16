@@ -191,7 +191,8 @@ combo(times, [_, N|S], S, _,  _ ) :- N #< 0, fail.
 
 combo(genrec, [R1, R0, Then, If|S],
               [  Else, Then, If|S], E, [ifte|E]) :-
-    append(R0, [[If, Then, R0, R1, genrec]|R1], Else).
+    Quoted = [If, Then, R0, R1, genrec],
+    append(R0, [Quoted|R1], Else).
 
 
 /*
