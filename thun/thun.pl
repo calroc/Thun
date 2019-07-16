@@ -104,6 +104,14 @@ func(/, [A, B|S], [B / A|S]).
 
 func(calc, [A|S], [B|S]) :- B is A.
 
+func(bool, [    0|S], [false|S]) :- !.
+func(bool, [  0.0|S], [false|S]) :- !.
+func(bool, [   []|S], [false|S]) :- !.
+func(bool, [   ""|S], [false|S]) :- !.
+func(bool, [false|S], [false|S]) :- !.
+
+func(bool, [_|S], [true|S]).
+
 % func(pm, [A, B|S],    [C, D|S]) :- C #= A + B, D #= B - A.
 % func(pm, [A, B|S],    [B + A, B - A|S]).
 
