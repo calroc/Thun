@@ -185,6 +185,10 @@ combo(times, [P, 1|S], S, Ei, Eo) :- append(P, Ei, Eo).
 combo(times, [P, N|S], S, Ei, Eo) :- N #>= 2, M #= N - 1, append(P, [M, P, times|Ei], Eo).
 combo(times, [_, N|S], S, _,  _ ) :- N #< 0, fail.
 
+combo(genrec, [R1, R0, Then, If|S],
+              [  Else, Then, If|S], E, [ifte|E]) :-
+    append(R0, [[If, Then, R0, R1, genrec]|R1], Else).
+
 
 /*
 Compiler
