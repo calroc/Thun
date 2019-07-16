@@ -908,7 +908,6 @@ S_pop = Symbol('pop')
 S_step = Symbol('step')
 S_times = Symbol('times')
 S_swaack = Symbol('swaack')
-S_truthy = Symbol('truthy')
 
 
 @inscribe
