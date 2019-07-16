@@ -102,7 +102,7 @@ func(-, [A, B|S], [B - A|S]).
 func(*, [A, B|S], [B * A|S]).
 func(/, [A, B|S], [B / A|S]).
 
-func(=, [A|S], [B|S]) :- B is A.
+func(calc, [A|S], [B|S]) :- B is A.
 
 % func(pm, [A, B|S],    [C, D|S]) :- C #= A + B, D #= B - A.
 % func(pm, [A, B|S],    [B + A, B - A|S]).
@@ -127,12 +127,25 @@ func(tuck,        [A, B|S], [A, B, A|S]).
 func(rollup, Si, So) :- func(rolldown, So, Si).
 func(uncons, Si, So) :- func(cons, So, Si).
 
-func(>,  [A, B|S], [T|S]) :- B #> A #<==> R, r_truth(R, T).
-func(<,  [A, B|S], [T|S]) :- B #< A #<==> R, r_truth(R, T).
-func(=,  [A, B|S], [T|S]) :- B #= A #<==> R, r_truth(R, T).
-func(>=, [A, B|S], [T|S]) :- B #>= A #<==> R, r_truth(R, T).
-func(<=, [A, B|S], [T|S]) :- B #=< A #<==> R, r_truth(R, T).
-func(<>, [A, B|S], [T|S]) :- B #\= A #<==> R, r_truth(R, T).
+func(>,  [A, B|S], [ true|S]) :-    B > A.
+func(>,  [A, B|S], [false|S]) :- \+ B > A.
+func(<,  [A, B|S], [ true|S]) :-    B < A.
+func(<,  [A, B|S], [false|S]) :- \+ B < A.
+func(>=, [A, B|S], [ true|S]) :-    B >= A.
+func(>=, [A, B|S], [false|S]) :- \+ B >= A.
+func(<=, [A, B|S], [ true|S]) :-    B =< A.
+func(<=, [A, B|S], [false|S]) :- \+ B =< A.
+func(=,  [A, B|S], [ true|S]) :- B =:= A.
+func(=,  [A, B|S], [false|S]) :- B =\= A.
+func(<>, [A, B|S], [ true|S]) :- B =\= A.
+func(<>, [A, B|S], [false|S]) :- B =:= A.
+
+% func(>,  [A, B|S], [T|S]) :- B #> A #<==> R, r_truth(R, T).
+% func(<,  [A, B|S], [T|S]) :- B #< A #<==> R, r_truth(R, T).
+% func(=,  [A, B|S], [T|S]) :- B #= A #<==> R, r_truth(R, T).
+% func(>=, [A, B|S], [T|S]) :- B #>= A #<==> R, r_truth(R, T).
+% func(<=, [A, B|S], [T|S]) :- B #=< A #<==> R, r_truth(R, T).
+% func(<>, [A, B|S], [T|S]) :- B #\= A #<==> R, r_truth(R, T).
 
 r_truth(0, false).
 r_truth(1, true).
