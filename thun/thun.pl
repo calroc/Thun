@@ -22,6 +22,30 @@
 :- dynamic func/3.
 :- dynamic '≡'/2.
 
+
+/*
+To handle comparision operators the possibility of exceptions due to insufficiently instantiated
+arguments must be handled.  First try to make the comparison and set the result to a Boolean atom.
+If an exception happens just leave the comparison expression as the result and some other function
+or combinator will deal with it.  Example:
+
+    func(>,  [A, B|S], [C|S]) :- catch(
+            (B > A -> C=true ; C=false),
+            _,
+            C=(B>A)  % in case of error.
+            ).
+
+To save on conceptual overhead I've defined a term_expansion/2 that sets up the func/3 for each op.
+*/
+
+term_expansion(comparison_operator(X), (func(X, [A, B|S], [C|S]) :-
+    F =.. [X, B, A], catch((F -> C=true ; C=false), _, C=F))).
+
+% I don't use Prolog-compatible op symbols in all cases.
+term_expansion(comparison_operator(X, Y), (func(X, [A, B|S], [C|S]) :-
+    F =.. [Y, B, A], catch((F -> C=true ; C=false), _, C=F))).
+
+
 /*
 An entry point.
 */
@@ -128,18 +152,12 @@ func(bool, [false|S], [false|S]) :- !.
 
 func(bool, [_|S], [true|S]).
 
-func(>,  [A, B|S], [ true|S]) :-    B > A.
-func(>,  [A, B|S], [false|S]) :- \+ B > A.
-func(<,  [A, B|S], [ true|S]) :-    B < A.
-func(<,  [A, B|S], [false|S]) :- \+ B < A.
-func(>=, [A, B|S], [ true|S]) :-    B >= A.
-func(>=, [A, B|S], [false|S]) :- \+ B >= A.
-func(<=, [A, B|S], [ true|S]) :-    B =< A.
-func(<=, [A, B|S], [false|S]) :- \+ B =< A.
-func(=,  [A, B|S], [ true|S]) :- B =:= A.
-func(=,  [A, B|S], [false|S]) :- B =\= A.
-func(<>, [A, B|S], [ true|S]) :- B =\= A.
-func(<>, [A, B|S], [false|S]) :- B =:= A.
+comparison_operator(>).
+comparison_operator(<).
+comparison_operator(>=).
+comparison_operator(<=, =<).
+comparison_operator(=, =:=).
+comparison_operator(<>, =\=).
 
 
 /*
