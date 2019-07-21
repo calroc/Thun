@@ -44,6 +44,14 @@ term_expansion(comparison_operator(X), (func(X, [A, B|S], [C|S]) :-
 term_expansion(comparison_operator(X, Y), (func(X, [A, B|S], [C|S]) :-
     F =.. [Y, B, A], catch((F -> C=true ; C=false), _, C=F))).
 
+% Likewise for math operators, try to evaluate, otherwise use the symbolic form.
+
+term_expansion(math_operator(X), (func(X, [A, B|S], [C|S]) :-
+    F =.. [X, B, A], catch(C is F, _, C=F))).
+
+term_expansion(math_operator(X, Y), (func(X, [A, B|S], [C|S]) :-
+    F =.. [Y, B, A], catch(C is F, _, C=F))).
+
 
 /*
 An entry point.
@@ -128,10 +136,11 @@ func(dup,     [A|S],  [A, A|S]).
 func(pop,     [_|S],        S ).
 
 % Symbolic math.  Compute the answer, or derivative, or whatever, later.
-func(+, [A, B|S], [B + A|S]).
-func(-, [A, B|S], [B - A|S]).
-func(*, [A, B|S], [B * A|S]).
-func(/, [A, B|S], [B / A|S]).
+math_operator(+).
+math_operator(-).
+math_operator(*).
+math_operator(/).
+math_operator(mod).
 
 % Attempt to calculate the value of a symbolic math expression.
 func(calc, [A|S], [B|S]) :- B is A.

@@ -9,7 +9,7 @@ average == [sum 1.0 *] [size] cleave /
 b == [i] dip i
 binary == unary popd
 ccons == cons cons
-cleave == fork [popd] dip
+cleave == fork popdd
 codireco == cons dip rest cons
 dinfrirst == dip infrst
 disenstacken == ? [uncons ?] loop pop
@@ -22,7 +22,9 @@ enstacken == stack [clear] dip
 flatten == [] swap [concat] step
 fork == [i] app2
 fourth == rest third
+gcd == true [tuck mod dup 0 >] loop pop
 grba == [stack popd] dip
+hypot == [sqr] ii + sqrt
 ifte == [nullary] dipd swap branch
 ii == [dip] dupdip i
 infra == swons swaack [i] dip swaack
