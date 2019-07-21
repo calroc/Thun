@@ -214,9 +214,10 @@ combo(dipd, [P, X, Y|S], S, Ei, Eo) :- append(P, [Y, X|Ei], Eo).
 
 combo(dupdip, [P, X|S], [X|S], Ei, Eo) :- append(P, [X|Ei], Eo).
 
-combo(branch, [T, _,  true|S], S, Ei, Eo) :- !, append(T, Ei, Eo).
-combo(branch, [_, F, false|S], S, Ei, Eo) :- !, append(F, Ei, Eo).
+combo(branch, [T, _,  true|S], S, Ei, Eo) :- append(T, Ei, Eo).
+combo(branch, [_, F, false|S], S, Ei, Eo) :- append(F, Ei, Eo).
 combo(branch, [T, F,  Expr|S], S, Ei, Eo) :-
+    \+ Expr = true, \+ Expr = false,
     catch(  % Try Expr and do one or the other,
         (Expr -> append(T, Ei, Eo) ; append(F, Ei, Eo)),
         _,  % If Expr don't grok, try both branches.
