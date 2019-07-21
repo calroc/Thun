@@ -208,10 +208,10 @@ combo(dupdip, [P, X|S], [X|S], Ei, Eo) :- append(P, [X|Ei], Eo).
 combo(branch, [T, _,  true|S], S, Ei, Eo) :- !, append(T, Ei, Eo).
 combo(branch, [_, F, false|S], S, Ei, Eo) :- !, append(F, Ei, Eo).
 combo(branch, [T, F,  Expr|S], S, Ei, Eo) :-
-    catch(
+    catch(  % Try Expr and do one or the other,
         (Expr -> append(T, Ei, Eo) ; append(F, Ei, Eo)),
-        _,
-        try_both_branches(T, F, Ei, Eo)  % in case of error.
+        _,  % If Expr don't grok, try both branches.
+        (append(T, Ei, Eo) ; append(F, Ei, Eo))
         ).
 
 
@@ -231,10 +231,6 @@ combo(genrec, [R1, R0, Then, If|S],
               [  Else, Then, If|S], E, [ifte|E]) :-
     Quoted = [If, Then, R0, R1, genrec],
     append(R0, [Quoted|R1], Else).
-
-
-try_both_branches(T, _, Ei, Eo) :- append(T, Ei, Eo).
-try_both_branches(_, F, Ei, Eo) :- append(F, Ei, Eo).
 
 
 /*
