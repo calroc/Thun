@@ -18,9 +18,8 @@
 %
 :- use_module(library(clpfd)).
 :- use_module(library(dcg/basics)).
-:- op(990, xfy, ≡).  % for Joy definitions.
 :- dynamic func/3.
-:- dynamic '≡'/2.
+:- dynamic def/2.
 
 
 /*
@@ -83,17 +82,21 @@ thun(Expression, InputStack, OutputStack)
 
 thun([], S, S).
 thun(  [Lit|E], Si, So) :- literal(Lit), !, thun(E, [Lit|Si], So).
-thun(  [Def|E], Si, So) :- Def ≡ Body, !, append(Body, E, Eo), thun(Eo, Si, So).
+thun(  [Def|E], Si, So) :- def(Def, Body), !, append(Body, E, Eo), thun(Eo, Si, So).
 thun( [Func|E], Si, So) :- func(Func, Si, S), thun(E, S, So).
 thun([Combo|E], Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
 
 % Some error handling.
 
-thun([Unknown|E], Si, So) :- damned_thing(Unknown), write("wtf? "), writeln(Unknown), So = [[Unknown|E]|Si].
+thun([Unknown|E], Si, So) :-
+    damned_thing(Unknown),
+    write("wtf? "),
+    writeln(Unknown),
+    So = [[Unknown|E]|Si].
 
 damned_thing(It) :-
     \+ literal(It),
-    \+ (It ≡ _),
+    \+ def(It, _),
     \+ func(It, _, _),
     \+ combo(It, _, _, _, _).
 
@@ -172,7 +175,7 @@ comparison_operator(<>, =\=).
 Definitions
 */
 
-joy_def(Def ≡ Body) --> symbol(Def), blanks, "==", joy_parse(Body).
+joy_def(def(Def, Body)) --> symbol(Def), blanks, "==", joy_parse(Body).
 
 joy_defs([Def|Defs]) --> blanks, joy_def(Def), blanks, joy_defs(Defs).
 joy_defs([]) --> [].
@@ -185,7 +188,9 @@ assert_defs(DefsFile) :-
     read_defs(DefsFile, Defs),
     forall(member(Def, Defs), assert_def(Def)).
 
-assert_def(Def≡Body) :- retractall(Def≡_), assertz(Def≡Body).
+assert_def(def(Def, Body)) :-
+    retractall(def(Def, _)),
+    assertz(def(Def, Body)).
 
 :- assert_defs("defs.txt").
 
@@ -254,8 +259,8 @@ sjc(Name, InputString) :- phrase(joy_parse(E), InputString), show_joy_compile(Na
 
 % Simple DCGs to expand/contract definitions.
 
-expando,    Body --> [Def], {Def ≡ Body}.
-contracto, [Def] --> {Def ≡ Body}, Body.
+expando,    Body --> [Def], {def(Def, Body)}.
+contracto, [Def] --> {def(Def, Body)}, Body.
 
 % phrase(expando, ExprIn, ExprOut).
 
