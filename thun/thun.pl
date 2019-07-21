@@ -186,16 +186,12 @@ Definitions
 
 joy_def(def(Def, Body)) --> symbol(Def), blanks, "==", joy_parse(Body).
 
-joy_defs([Def|Defs]) --> blanks, joy_def(Def), blanks, joy_defs(Defs).
-joy_defs([]) --> [].
-
-read_defs(DefsFile, Defs) :-
-    read_file_to_codes(DefsFile, Codes, []),
-    phrase(joy_defs(Defs), Codes).  
+joy_defs --> blanks, joy_def(Def), {assert_def(Def)}, blanks, joy_defs.
+joy_defs --> [].
 
 assert_defs(DefsFile) :-
-    read_defs(DefsFile, Defs),
-    forall(member(Def, Defs), assert_def(Def)).
+    read_file_to_codes(DefsFile, Codes, []),
+    phrase(joy_defs, Codes).  
 
 assert_def(def(Def, Body)) :-
     retractall(def(Def, _)),
