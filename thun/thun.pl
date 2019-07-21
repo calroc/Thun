@@ -88,7 +88,15 @@ thun( [Func|E], Si, So) :- func(Func, Si, S), thun(E, S, So).
 thun([Combo|E], Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
 
 % Some error handling.
-% thun([Unknown|E], Si, So) :- write("wtf? "), writeln(Unknown), So = [[Unknown|E]|Si].
+
+thun([Unknown|E], Si, So) :- damned_thing(Unknown), write("wtf? "), writeln(Unknown), So = [[Unknown|E]|Si].
+
+damned_thing(It) :-
+    \+ literal(It),
+    \+ (It ≡ _),
+    \+ func(It, _, _),
+    \+ combo(It, _, _, _, _).
+
 
 /*
 Literals
