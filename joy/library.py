@@ -1069,7 +1069,7 @@ def genrec(stack, expression, dictionary):
 def map_(S, expression, dictionary):
   '''
   Run the quoted program on TOS on the items in the list under it, push a
-  new list with the results (in place of the program and original list.
+  new list with the results in place of the program and original list.
   '''
 #  (quote, (aggregate, stack)) = S
 #  results = list_to_stack([
