@@ -1,9 +1,11 @@
 -- == 1 -
-++ == 1 +
 ? == dup bool
+++ == 1 +
 anamorphism == [pop []] swap [dip swons] genrec
 app1 == grba infrst
 app2 == [grba swap grba swap] dip [infrst] cons ii
+app3 == 3 appN
+appN == [grabN] cons dip map disenstacken
 at == drop first
 average == [sum 1.0 *] [size] cleave /
 b == [i] dip i
@@ -23,6 +25,7 @@ flatten == [] swap [concat] step
 fork == [i] app2
 fourth == rest third
 gcd == true [tuck mod dup 0 >] loop pop
+grabN == [] swap [cons] times
 grba == [stack popd] dip
 hypot == [sqr] ii + sqrt
 ifte == [nullary] dipd swap branch
