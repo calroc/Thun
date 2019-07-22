@@ -43,18 +43,8 @@ type_ok(Small, Big) :- Small in 0..3, Big in 0..5.
 next_dh(Small, Big, S, B, Mi, Mo) :-
     B #\= 4, type_ok(Small, Big),
     die_hard(Move, Small, Big, Si, Bi),
-    % write_state(Move, Small, Big, Si, Bi),
     State = [Move, Si, Bi],
     (Bi = 4 -> Mo=[State|Mi] ; next_dh(Si, Bi, S, B, [State|Mi], Mo)).
-% next_dh(_, _, _, 4, M, M).
-
-
-write_state(Move, Small, Big, Si, Bi) :-
-    write(Move), write(": "),
-    write(Small), write(" "), write(Big),
-    write(" -> "),
-    write(Si), write(" "), writeln(Bi).
-
 
 
 % die_hard(Small, Big, S, B).
