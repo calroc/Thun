@@ -36,15 +36,15 @@ next(PC, I) :- PC \= done, relly(PC, I, PCnext, Inext), next(PCnext, Inext).
 % Inext in 1..1001.
 
 
-
 type_ok(Small, Big) :- Small in 0..3, Big in 0..5.
 
 
-next_dh(Small, Big, S, B, Mi, Mo) :-
-    B #\= 4, type_ok(Small, Big),
+next_dh(Moves) :- next_dh(0, 0, Moves).
+
+next_dh(Small, Big, [[Move, Si, Bi]|Moves]) :-
+    type_ok(Small, Big),
     die_hard(Move, Small, Big, Si, Bi),
-    State = [Move, Si, Bi],
-    (Bi = 4 -> Mo=[State|Mi] ; next_dh(Si, Bi, S, B, [State|Mi], Mo)).
+    (Bi = 4 -> Moves=[] ; next_dh(Si, Bi, Moves)).
 
 
 % die_hard(Small, Big, S, B).
@@ -66,7 +66,7 @@ big_to_small(Small, Big, S, 0) :-
     Small + Big #=< 3,
     S is Small + Big.
 
-big_to_small(Small, Big, 3, B) :-  % 
+big_to_small(Small, Big, 3, B) :-
     Small + Big #> 3,
     B is Big - (3 - Small).
 
@@ -80,10 +80,18 @@ small_to_big(Small, Big, S, 5) :-
 
 /*
 
+With some manual reflow of the list for presentation...
 
-call_with_depth_limit(next_dh(0, 0, S, B, Mi, Mo), 12, REsult).
-
-
+?- call_with_depth_limit(next_dh(Moves), 11, _).
+Moves = [
+    [fill_big, 0, 5],
+    [big_to_small, 3, 2],
+    [empty_small, 0, 2],
+    [big_to_small, 2, 0],
+    [fill_big, 2, 5],
+    [big_to_small, 3, 4]
+    ] ;
+true.
 
 
 

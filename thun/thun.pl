@@ -220,7 +220,6 @@ combo(branch, [T, F,  Expr|S], S, Ei, Eo) :-
         (append(T, Ei, Eo) ; append(F, Ei, Eo))
         ).
 
-
 combo(loop, [_, false|S], S, E,  E ).
 combo(loop, [B,  true|S], S, Ei, Eo) :- append(B, [B, loop|Ei], Eo).
 
