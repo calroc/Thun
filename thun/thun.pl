@@ -1,5 +1,5 @@
 ﻿%
-%    Copyright © 2018 Simon Forman
+%    Copyright © 2018, 2019 Simon Forman
 %
 %    This file is part of Thun
 %
@@ -23,10 +23,12 @@
 
 
 /*
-To handle comparision operators the possibility of exceptions due to insufficiently instantiated
-arguments must be handled.  First try to make the comparison and set the result to a Boolean atom.
-If an exception happens just leave the comparison expression as the result and some other function
-or combinator will deal with it.  Example:
+
+To handle comparision operators the possibility of exceptions due to
+insufficiently instantiated arguments must be handled.  First try to make
+the comparison and set the result to a Boolean atom.  If an exception
+happens just leave the comparison expression as the result and some other
+function or combinator will deal with it.  Example:
 
     func(>,  [A, B|S], [C|S]) :- catch(
             (B > A -> C=true ; C=false),
@@ -34,7 +36,8 @@ or combinator will deal with it.  Example:
             C=(B>A)  % in case of error.
             ).
 
-To save on conceptual overhead I've defined a term_expansion/2 that sets up the func/3 for each op.
+To save on conceptual overhead I've defined a term_expansion/2 that sets
+up the func/3 for each op.
 */
 
 term_expansion(comparison_operator(X), (func(X, [A, B|S], [C|S]) :-
@@ -44,7 +47,8 @@ term_expansion(comparison_operator(X), (func(X, [A, B|S], [C|S]) :-
 term_expansion(comparison_operator(X, Y), (func(X, [A, B|S], [C|S]) :-
     F =.. [Y, B, A], catch((F -> C=true ; C=false), _, C=F))).
 
-% Likewise for math operators, try to evaluate, otherwise use the symbolic form.
+% Likewise for math operators, try to evaluate, otherwise use the
+% symbolic form.
 
 term_expansion(math_operator(X), (func(X, [A, B|S], [C|S]) :-
     F =.. [X, B, A], catch(C is F, _, C=F))).
@@ -125,6 +129,16 @@ literal(_+_).
 literal(_-_).
 literal(_*_).
 literal(_/_).
+literal(_ mod _).
+
+% Symbolic comparisons are literals.
+literal(_>_).
+literal(_<_).
+literal(_>=_).
+literal(_=<_).
+literal(_=:=_).
+literal(_=\=_).
+
 
 /*
 Functions
@@ -191,7 +205,7 @@ joy_defs --> [].
 
 assert_defs(DefsFile) :-
     read_file_to_codes(DefsFile, Codes, []),
-    phrase(joy_defs, Codes).  
+    phrase(joy_defs, Codes).
 
 assert_def(def(Def, Body)) :-
     retractall(def(Def, _)),
@@ -238,15 +252,20 @@ combo(genrec, [R1, R0, Then, If|S],
     append(R0, [Quoted|R1], Else).
 
 /*
-This is a crude but servicable implementation of map combinator.
-Obviously it would be nice to take advantage of the implied parallelism.
-Instead the quoted program, stack, and each term in the arg list are
-transformed to a simple Joy expression that runs the program on a prepared
-stack.  These expressions are collected in a list and the whole thing is
-evaluated with infra on an empty list, so the result is the mapped list.
+This is a crude but servicable implementation of the map combinator.
 
-The chief advantage of doing it this way (as opposed to using Prolog's map)
-is that the whole state remains in the continuation expression.
+Obviously it would be nice to take advantage of the implied parallelism.
+Instead the quoted program, stack, and terms in the input list are
+transformed to simple Joy expressions that run the quoted program on
+prepared copies of the stack that each have one of the input terms on
+top.  These expressions are collected in a list and the whole thing is
+evaluated (with infra) on an empty list, which becomes the output list.
+
+The chief advantage of doing it this way (as opposed to using Prolog's
+map) is that the whole state remains in the pending expression, so
+there's nothing stashed in Prolog's call stack.  This preserves the nice
+property that you can interrupt the Joy evaluation and save or transmit
+the stack+expression knowing that you have all the state.
 */
 
 combo(map, [_,   []|S],         [[]|S], E,        E ) :- !.
@@ -280,7 +299,7 @@ jcmpl(Name, Expression, Rule) :-
     Head =.. [func, Name, Si, So],
     rule(Head, Gs, Rule).
 
-rule(Head, [],    Head                        ). 
+rule(Head, [],    Head                        ).
 rule(Head, [A|B], Head :- maplist(call, [A|B])).
 
 sjc(Name, InputString) :- phrase(joy_parse(E), InputString), show_joy_compile(Name, E).
