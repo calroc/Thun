@@ -58,26 +58,29 @@ die_hard(Small, Big, Small, 5) :- Big #\= 5, writeln("fill big").  % Fill big.
 die_hard(Small, Big, 0, Big) :- Small #> 0, writeln("empty small").  % empty small.
 die_hard(Small, Big, Small, 0) :- Big #> 0, writeln("empty big").  % empty big.
 
-die_hard(Small, Big, 0, B) :-  % small to big.
-    Big #< 5, Small #> 0,
-    Small + Big #=< 5,
-    B is Small + Big, writeln("small to big").    
-die_hard(Small, Big, S, 5) :-  % small to big.
-    Big #< 5, Small #> 0,
-    Small + Big #> 5,
-    N is 5 - Big,
-    (N #< Small -> S is Small - N ; S=0), writeln("small to big").    
+die_hard(Small, Big, S, B) :- Big #< 5, Small #> 0,
+    small_to_big(Small, Big, S, B),
+    writeln("small to big").
 
-die_hard(Small, Big, S, 0) :-  % big to small.
-    Small #< 3, Big #> 0,
+die_hard(Small, Big, S, B) :- Small #< 3, Big #> 0,
+    big_to_small(Small, Big, S, B),
+    writeln("big to small").
+
+big_to_small(Small, Big, S, 0) :-
     Small + Big #=< 3,
-    S is Small + Big, writeln("big to small").    
+    S is Small + Big.
 
-die_hard(Small, Big, 3, B) :-  % big to small.
-    Small #< 3, Big #> 0,
+big_to_small(Small, Big, 3, B) :-  % 
     Small + Big #> 3,
-    N is 3 - Small,
-    (N #< Big -> B is Big - N ; B=0), writeln("big to small").    
+    B is Big - (3 - Small).
+
+small_to_big(Small, Big, 0, B) :-
+    Small + Big #=< 5,
+    B is Small + Big.
+
+small_to_big(Small, Big, S, 5) :-
+    Small + Big #> 5,
+    S is Small - (5 - Big).
 
 /*
 
