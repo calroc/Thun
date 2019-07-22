@@ -39,32 +39,38 @@ next(PC, I) :- PC \= done, relly(PC, I, PCnext, Inext), next(PCnext, Inext).
 
 type_ok(Small, Big) :- Small in 0..3, Big in 0..5.
 
-initi :- die_hard(0, 0, _, _).
 
-next_dh(Small, Big, S, B) :-
-    B #\= 4,
-    type_ok(Small, Big),
-    die_hard(Small, Big, Si, Bi),
-    write(Small), write(" "), write(Big), write(" -> "), write(Si), write(" "), writeln(Bi),
-    (Bi = 4 -> true ; next_dh(Si, Bi, S, B)).
-next_dh(_, _, _, 4).
+next_dh(Small, Big, S, B, Mi, Mo) :-
+    B #\= 4, type_ok(Small, Big),
+    die_hard(Move, Small, Big, Si, Bi),
+    % write_state(Move, Small, Big, Si, Bi),
+    State = [Move, Si, Bi],
+    (Bi = 4 -> Mo=[State|Mi] ; next_dh(Si, Bi, S, B, [State|Mi], Mo)).
+% next_dh(_, _, _, 4, M, M).
+
+
+write_state(Move, Small, Big, Si, Bi) :-
+    write(Move), write(": "),
+    write(Small), write(" "), write(Big),
+    write(" -> "),
+    write(Si), write(" "), writeln(Bi).
 
 
 
 % die_hard(Small, Big, S, B).
-die_hard(Small, Big, 3, Big) :- Small #\= 3, writeln("fill small").  % Fill small.
-die_hard(Small, Big, Small, 5) :- Big #\= 5, writeln("fill big").  % Fill big.
+die_hard(fill_small, Small, Big, 3, Big) :- Small #\= 3.
+die_hard(  fill_big, Small, Big, Small, 5) :- Big #\= 5.
 
-die_hard(Small, Big, 0, Big) :- Small #> 0, writeln("empty small").  % empty small.
-die_hard(Small, Big, Small, 0) :- Big #> 0, writeln("empty big").  % empty big.
+die_hard(empty_small, Small, Big, 0, Big) :- Small #> 0.
+die_hard(  empty_big, Small, Big, Small, 0) :- Big #> 0.
 
-die_hard(Small, Big, S, B) :- Big #< 5, Small #> 0,
-    small_to_big(Small, Big, S, B),
-    writeln("small to big").
+die_hard(small_to_big, Small, Big, S, B) :-
+    Big #< 5, Small #> 0,
+    small_to_big(Small, Big, S, B).
 
-die_hard(Small, Big, S, B) :- Small #< 3, Big #> 0,
-    big_to_small(Small, Big, S, B),
-    writeln("big to small").
+die_hard(big_to_small, Small, Big, S, B) :-
+    Small #< 3, Big #> 0,
+    big_to_small(Small, Big, S, B).
 
 big_to_small(Small, Big, S, 0) :-
     Small + Big #=< 3,
@@ -83,6 +89,39 @@ small_to_big(Small, Big, S, 5) :-
     S is Small - (5 - Big).
 
 /*
+
+
+call_with_depth_limit(next_dh(0, 0, S, B, Mi, Mo), 12, REsult).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 call_with_depth_limit(next_dh(0, 0, S, B), 12, REsult).
 
