@@ -7,7 +7,7 @@ from dulwich.repo import Repo
 
 
 COMMITTER = 'Joy <auto-commit@example.com>'
-DEFAULT_JOY_HOME = '~/.joypy'
+DEFAULT_JOY_HOME = expanduser(join('~', '.joypy'))
 
 
 def home_dir(path):
