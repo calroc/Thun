@@ -295,20 +295,20 @@ contracto, [Def] --> {def(Def, Body)}, Body.
 % Apply expando/contracto more than once, and descend into sub-lists.
 % The K term is one of expando or contracto, and the J term is used
 % on sub-lists, i.e. expando/grow and contracto/shrink.
-% BTW, "crbo" and "rebo" are meaningless names, don't break your brain
-% trying to figure them out.
+% BTW, "rebo" is a meaningless name, don't break your brain
+% trying to figure it out.
 
 rebo(K, J)      -->    K   ,                         rebo(K, J).
 rebo(K, J), [E] --> [[H|T]], !, {call(J, [H|T], E)}, rebo(K, J).
 rebo(K, J), [A] --> [  A  ], !,                      rebo(K, J).
 rebo(_, _)      --> [].
 
-crbo(K, J, Ei, Eo) :-
-    phrase(rebo(K, J), Ei, E),  % Apply expando/grow or contracto/shrink...
-    (Ei=E -> Eo=E ; crbo(K, J, E, Eo)).  % ...until a fixed-point is reached.
+to_fixed_point(DCG, Ei, Eo) :-
+    phrase(DCG, Ei, E),  % Apply DCG...
+    (Ei=E -> Eo=E ; to_fixed_point(DCG, E, Eo)).  % ...until a fixed-point is reached.
 
-grow(Ei, Eo)   :- crbo(expando,   grow,   Ei, Eo).
-shrink(Ei, Eo) :- crbo(contracto, shrink, Ei, Eo).
+grow(Ei, Eo)   :- to_fixed_point(rebo(expando,   grow  ), Ei, Eo).
+shrink(Ei, Eo) :- to_fixed_point(rebo(contracto, shrink), Ei, Eo).
 
 
 /*
