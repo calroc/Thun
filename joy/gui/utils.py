@@ -10,6 +10,14 @@ COMMITTER = 'Joy <auto-commit@example.com>'
 DEFAULT_JOY_HOME = expanduser(join('~', '.joypy'))
 
 
+def is_numerical(s):
+  try:
+    float(s)
+  except ValueError:
+    return False
+  return True
+
+
 def home_dir(path):
   '''Return the absolute path of an existing directory.'''
 

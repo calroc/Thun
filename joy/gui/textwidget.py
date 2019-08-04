@@ -49,7 +49,8 @@ import os, sys
 from joy.utils.stack import stack_to_string
 
 from .mousebindings import MouseBindingsMixin
-from .world import World, is_numerical
+from .utils import is_numerical
+from .world import World
 
 
 def make_gui(dictionary):
