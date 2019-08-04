@@ -292,5 +292,45 @@ sjc(Name, InputString) :- phrase(joy_parse(E), InputString), show_joy_compile(Na
 expando,    Body --> [Def], {def(Def, Body)}.
 contracto, [Def] --> {def(Def, Body)}, Body.
 
+% Apply expando/contracto more than once, and descend into sub-lists.
+% The K term is one of expando or contracto, and the J term is used
+% on sub-lists, i.e. expando/grow and contracto/shrink.
+% BTW, "crbo" and "rebo" are meaningless names, don't break your brain
+% trying to figure them out.
+
+rebo(K, J)      -->    K   ,                         rebo(K, J).
+rebo(K, J), [E] --> [[H|T]], !, {call(J, [H|T], E)}, rebo(K, J).
+rebo(K, J), [A] --> [  A  ], !,                      rebo(K, J).
+rebo(_, _)      --> [].
+
+crbo(K, J, Ei, Eo) :-
+    phrase(rebo(K, J), Ei, E),  % Apply expando/grow or contracto/shrink...
+    (Ei=E -> Eo=E ; crbo(K, J, E, Eo)).  % ...until a fixed-point is reached.
+
+grow(Ei, Eo)   :- crbo(expando,   grow,   Ei, Eo).
+shrink(Ei, Eo) :- crbo(contracto, shrink, Ei, Eo).
+
+
+/*
+?- E=[foo,bar,swap,cons,baz],phrase(shrink, E, ExprOut).
+E = [foo, bar, swap, cons, baz],
+ExprOut = [foo, bar, swons, baz].
+
+?- E=[foo, bar, swons, baz],phrase(grow, E, ExprOut).
+E = [foo, bar, swons, baz],
+ExprOut = [foo, bar, swap, cons, baz].
+
+*/
+
+
+% ... --> [] | [_], ... .
+
+% for the ellipsis operator
+% http://swi-prolog.996271.n3.nabble.com/DCG-idioms-td3117.html which references:
+% David B. Searls, Investigating the Linguistics of DNA with Definite Clause Grammars.  NACLP 1989. 
+
 % phrase(expando, ExprIn, ExprOut).
 
+% E=[foo,bar,swap,cons,baz],phrase((...,contracto,...), E, ExprOut).
+% E = [foo, bar, swap, cons, baz],
+% ExprOut = [swons, baz] 
