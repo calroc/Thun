@@ -10,7 +10,7 @@ tmi(var(A)) :- var(A).
 
 % Meta-logical print trace.
 % (Could also be captured in a list or something instead.)
-tmi(thun(E, Si, _)) :- portray_clause(Si-E), fail.
+tmi(thun(E, Si, _)) :- frump(Si, E), fail.
 
 tmi(Goal) :-
     checky(Goal),
@@ -23,6 +23,33 @@ checky(Goal) :-
     Goal \= var(_),
     Goal \= number(_),
     Goal \= !.
+
+
+format_state(Stack, Expression, Codes) :-
+    reverse(Stack, RStack),
+    phrase(format_stack(RStack), RStackCodes),
+    phrase(format_stack(Expression), ExpressionCodes),
+    append(RStackCodes, [32, 46, 32|ExpressionCodes], Codes).
+
+
+frump(Stack, Expression) :-
+    format_state(Stack, Expression, Codes),
+    maplist(put_code, Codes), nl.
+
+% do(In) :- phrase(format_stack(In), Codes), maplist(put_code, Codes).
+
+% Print Joy expressions as text.
+
+format_stack(Tail)  --> {var(Tail)}, !, [46, 46, 46].
+format_stack([T])   --> format_term(T), !.
+format_stack([T|S]) --> format_term(T), " ", format_stack(S).
+format_stack([])    --> [].
+
+format_term(N) --> {number(N), number_codes(N, Codes)}, Codes.
+format_term(A) --> {  atom(A),   atom_codes(A, Codes)}, Codes.
+format_term([A|As]) --> "[", format_stack([A|As]), "]".
+
+
 
 /*
 
