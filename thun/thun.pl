@@ -223,6 +223,13 @@ combo(branch, [T, F,  Expr|S], S, Ei, Eo) :-
 
 combo(loop, [_, false|S], S, E,  E ).
 combo(loop, [B,  true|S], S, Ei, Eo) :- append(B, [B, loop|Ei], Eo).
+combo(loop, [B,  Expr|S], S, Ei, Eo) :-
+    \+ Expr = true, \+ Expr = false,
+    catch(  % Try Expr and do one or the other,
+        (Expr -> append(B, [B, loop|Ei], Eo) ; Ei=Eo),
+        _,  % If Expr don't grok, try both branches.
+        (Ei=Eo ; append(B, [B, loop|Ei], Eo))
+        ).
 
 combo(step, [_,    []|S],    S,  E,  E ).
 combo(step, [P,   [X]|S], [X|S], Ei, Eo) :- !, append(P, Ei, Eo).
@@ -309,28 +316,3 @@ to_fixed_point(DCG, Ei, Eo) :-
 
 grow(Ei, Eo)   :- to_fixed_point(rebo(expando,   grow  ), Ei, Eo).
 shrink(Ei, Eo) :- to_fixed_point(rebo(contracto, shrink), Ei, Eo).
-
-
-/*
-?- E=[foo,bar,swap,cons,baz],phrase(shrink, E, ExprOut).
-E = [foo, bar, swap, cons, baz],
-ExprOut = [foo, bar, swons, baz].
-
-?- E=[foo, bar, swons, baz],phrase(grow, E, ExprOut).
-E = [foo, bar, swons, baz],
-ExprOut = [foo, bar, swap, cons, baz].
-
-*/
-
-
-% ... --> [] | [_], ... .
-
-% for the ellipsis operator
-% http://swi-prolog.996271.n3.nabble.com/DCG-idioms-td3117.html which references:
-% David B. Searls, Investigating the Linguistics of DNA with Definite Clause Grammars.  NACLP 1989. 
-
-% phrase(expando, ExprIn, ExprOut).
-
-% E=[foo,bar,swap,cons,baz],phrase((...,contracto,...), E, ExprOut).
-% E = [foo, bar, swap, cons, baz],
-% ExprOut = [swons, baz] 
