@@ -220,7 +220,6 @@ combo(branch, [T, F,  Expr|S], S, Ei, Eo) :-
         (append(T, Ei, Eo) ; append(F, Ei, Eo))
         ).
 
-
 combo(loop, [_, false|S], S, E,  E ).
 combo(loop, [B,  true|S], S, Ei, Eo) :- append(B, [B, loop|Ei], Eo).
 combo(loop, [B,  Expr|S], S, Ei, Eo) :-
@@ -316,3 +315,14 @@ to_fixed_point(DCG, Ei, Eo) :-
 
 grow(Ei, Eo)   :- to_fixed_point(rebo(expando,   grow  ), Ei, Eo).
 shrink(Ei, Eo) :- to_fixed_point(rebo(contracto, shrink), Ei, Eo).
+
+
+% format_n(N) --> {number(N), !, number_codes(N, Codes)}, Codes.
+% format_n(N) --> signed_digits(Codes), !, {number_codes(N, Codes)}.
+
+% signed_digits([45|Codes]) --> [45], !, digits(Codes).
+% signed_digits(    Codes ) -->          digits(Codes).
+
+% digits([Ch|Chars]) --> [Ch], {code_type(Ch, digit)}, digits(Chars).
+% digits([]), [Ch]   --> [Ch], {code_type(Ch, space) ; Ch=0'] }.
+% digits([], [], _).  % Match if followed by space, ], or nothing.
