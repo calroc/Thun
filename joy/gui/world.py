@@ -28,14 +28,7 @@ from joy.joy import run
 from joy.parser import Symbol
 from joy.utils.stack import stack_to_string
 from joy.utils.types import type_check
-
-
-def is_numerical(s):
-  try:
-    float(s)
-  except ValueError:
-    return False
-  return True
+from .utils import is_numerical
 
 
 class World(object):
@@ -121,7 +114,6 @@ class World(object):
 
 class StackDisplayWorld(World):
 
-  
   def __init__(self, repo, filename, rel_filename, dictionary=None, text_widget=None):
     self.filename = filename
     stack = self.load_stack() or ()

@@ -236,6 +236,13 @@ combo(branch, [T, F,  Expr|S], S, Ei, Eo) :-
 
 combo(loop, [_, false|S], S, E,  E ).
 combo(loop, [B,  true|S], S, Ei, Eo) :- append(B, [B, loop|Ei], Eo).
+combo(loop, [B,  Expr|S], S, Ei, Eo) :-
+    \+ Expr = true, \+ Expr = false,
+    catch(  % Try Expr and do one or the other,
+        (Expr -> append(B, [B, loop|Ei], Eo) ; Ei=Eo),
+        _,  % If Expr don't grok, try both branches.
+        (Ei=Eo ; append(B, [B, loop|Ei], Eo))
+        ).
 
 combo(step, [_,    []|S],    S,  E,  E ).
 combo(step, [P,   [X]|S], [X|S], Ei, Eo) :- !, append(P, Ei, Eo).
@@ -310,5 +317,31 @@ sjc(Name, InputString) :- phrase(joy_parse(E), InputString), show_joy_compile(Na
 expando,    Body --> [Def], {def(Def, Body)}.
 contracto, [Def] --> {def(Def, Body)}, Body.
 
-% phrase(expando, ExprIn, ExprOut).
+% Apply expando/contracto more than once, and descend into sub-lists.
+% The K term is one of expando or contracto, and the J term is used
+% on sub-lists, i.e. expando/grow and contracto/shrink.
+% BTW, "rebo" is a meaningless name, don't break your brain
+% trying to figure it out.
 
+rebo(K, J)      -->    K   ,                         rebo(K, J).
+rebo(K, J), [E] --> [[H|T]], !, {call(J, [H|T], E)}, rebo(K, J).
+rebo(K, J), [A] --> [  A  ], !,                      rebo(K, J).
+rebo(_, _)      --> [].
+
+to_fixed_point(DCG, Ei, Eo) :-
+    phrase(DCG, Ei, E),  % Apply DCG...
+    (Ei=E -> Eo=E ; to_fixed_point(DCG, E, Eo)).  % ...until a fixed-point is reached.
+
+grow   --> to_fixed_point(rebo(expando,   grow  )).
+shrink --> to_fixed_point(rebo(contracto, shrink)).
+
+
+% format_n(N) --> {number(N), !, number_codes(N, Codes)}, Codes.
+% format_n(N) --> signed_digits(Codes), !, {number_codes(N, Codes)}.
+
+% signed_digits([45|Codes]) --> [45], !, digits(Codes).
+% signed_digits(    Codes ) -->          digits(Codes).
+
+% digits([Ch|Chars]) --> [Ch], {code_type(Ch, digit)}, digits(Chars).
+% digits([]), [Ch]   --> [Ch], {code_type(Ch, space) ; Ch=0'] }.
+% digits([], [], _).  % Match if followed by space, ], or nothing.
