@@ -313,8 +313,8 @@ to_fixed_point(DCG, Ei, Eo) :-
     phrase(DCG, Ei, E),  % Apply DCG...
     (Ei=E -> Eo=E ; to_fixed_point(DCG, E, Eo)).  % ...until a fixed-point is reached.
 
-grow(Ei, Eo)   :- to_fixed_point(rebo(expando,   grow  ), Ei, Eo).
-shrink(Ei, Eo) :- to_fixed_point(rebo(contracto, shrink), Ei, Eo).
+grow   --> to_fixed_point(rebo(expando,   grow  )).
+shrink --> to_fixed_point(rebo(contracto, shrink)).
 
 
 % format_n(N) --> {number(N), !, number_codes(N, Codes)}, Codes.
