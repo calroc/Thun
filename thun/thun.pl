@@ -337,6 +337,21 @@ to_fixed_point(DCG, Ei, Eo) :-
 grow   --> to_fixed_point(rebo(expando,   grow  )).
 shrink --> to_fixed_point(rebo(contracto, shrink)).
 
+% ?- phrase(grow, [third], Out).
+% Out = [rest, rest, first] ;
+% Out = [rest, rest, first] ;
+% Out = [rest, second] ;
+% Out = [third].
+
+% ?- phrase(grow, In, [rest, rest, first]).
+% Action (h for help) ? abort
+% % Execution Aborted
+% ?- phrase(shrink, [rest, rest, first], Out).
+% Out = [rrest, first] ;
+% Out = [third] ;
+% Out = [rest, second] ;
+% Out = [rest, rest, first].
+
 
 % format_n(N) --> {number(N), !, number_codes(N, Codes)}, Codes.
 % format_n(N) --> signed_digits(Codes), !, {number_codes(N, Codes)}.
