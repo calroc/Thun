@@ -213,6 +213,7 @@ assert_defs(DefsFile) :-
 
 assert_def(def(Def, Body)) :-
     \+ func(Def, _, _),
+    \+ combo(Def, _, _, _, _),
     retractall(def(Def, _)),
     assertz(def(Def, Body)).
 
