@@ -64,8 +64,8 @@ from .utils.types import (
   poly_combinator_effect,
   doc_from_stack_effect,
   )
-  
-  
+
+
 _SYM_NUMS = count().next
 _COMB_NUMS = count().next
 
@@ -243,7 +243,7 @@ make_generator == [codireco] ccons
 ifte == [nullary not] dipd branch
 '''
 #
-# 
+#
 # ifte == [nullary] dipd swap branch
 # genrec == [[genrec] cons cons cons cons] nullary swons concat ifte
 

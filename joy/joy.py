@@ -36,7 +36,7 @@ from .utils.pretty_print import TracePrinter
 
 def joy(stack, expression, dictionary, viewer=None):
   '''Evaluate the Joy expression on the stack.
-  
+
   The basic joy() function is quite straightforward.  It iterates through a
   sequence of terms which are either literals (strings, numbers, sequences)
   or functions.  Literals are put onto the stack and functions are
