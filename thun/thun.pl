@@ -202,7 +202,9 @@ Definitions
 
 joy_def(def(Def, Body)) --> symbol(Def), blanks, "==", joy_parse(Body).
 
-joy_defs --> blanks, joy_def(Def), {assert_def(Def)}, blanks, joy_defs.
+joy_def --> joy_def(Def), {ignore(assert_def(Def))}.
+
+joy_defs --> blanks, joy_def, blanks, joy_defs.
 joy_defs --> [].
 
 assert_defs(DefsFile) :-
@@ -210,6 +212,7 @@ assert_defs(DefsFile) :-
     phrase(joy_defs, Codes).
 
 assert_def(def(Def, Body)) :-
+    \+ func(Def, _, _),
     retractall(def(Def, _)),
     assertz(def(Def, Body)).
 
