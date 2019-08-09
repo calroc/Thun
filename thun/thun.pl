@@ -175,6 +175,8 @@ func(dupd,        [A, B|S], [A, B, B|S]).
 func(over,        [A, B|S], [B, A, B|S]).
 func(tuck,        [A, B|S], [A, B, A|S]).
 
+func(shift, [[B|A], C|D], [A, [B|C]|D]).
+
 func(rollup, Si, So) :- func(rolldown, So, Si).
 func(uncons, Si, So) :- func(cons, So, Si).
 

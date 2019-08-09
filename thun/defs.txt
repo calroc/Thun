@@ -12,6 +12,7 @@ b == [i] dip i
 binary == unary popd
 ccons == cons cons
 cleave == fork popdd
+clop == cleave popdd
 codireco == cons dip rest cons
 dinfrirst == dip infrst
 disenstacken == ? [uncons ?] loop pop
@@ -37,7 +38,7 @@ neg == 0 swap -
 nullary == [stack] dinfrirst
 of == swap at
 pam == [i] map
-pm == [+] [-] cleave popdd
+pm == [+] [-] clop
 popd == [pop] dip
 popdd == [pop] dipd
 popop == pop pop
@@ -48,14 +49,19 @@ product == 1 swap [*] step
 quoted == [unit] dip
 range == [0 <=] [1 - dup] anamorphism
 range_to_zero == unit [down_to_zero] infra
+reverse == [] swap shunt
 rrest == rest rest
 run == [] swap infra
 second == rest first
+shift == uncons [swons] dip
+shunt == [swons] step
 size == 0 swap [pop ++] step
+split_at == [drop] [take] clop
 sqr == dup *
 step_zero == 0 roll> step
 sum == 0 swap [+] step
 swons == swap cons
+take == [] rolldown [shift] times pop
 ternary == binary popd
 third == rest second
 unary == nullary popd
