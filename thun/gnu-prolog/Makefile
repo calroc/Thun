@@ -1,6 +1,6 @@
 GPLC_OPTIONS="--min-size"
 
-thun: thun.pl parser.pl
+thun: thun.pl parser.pl defs.pl
 	gplc $(GPLC_OPTIONS) -o thun thun.pl parser.pl
 
 defs.pl: meta-defs.pl parser.pl defs.txt
