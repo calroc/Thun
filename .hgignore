@@ -1,4 +1,5 @@
 .*\.pyc$
+.*\.swp$
 .hypothesis
 .pytest_cache
 .vscode
