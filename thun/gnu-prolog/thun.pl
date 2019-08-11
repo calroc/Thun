@@ -20,10 +20,6 @@
 % :- dynamic(func/3).
 % :- discontiguous(func/3).
 
-
-:- initialization(loop).
-
-
 /*
 Interpreter
 thun(Expression, InputStack, OutputStack)
@@ -193,25 +189,4 @@ prepare_mapping(P, S, In, Out) :- prepare_mapping(P, S, In, [], Out).
 prepare_mapping(    _, _,     [],                   Out,  Out) :- !.
 prepare_mapping(    P, S, [T|In],                   Acc,  Out) :-
     prepare_mapping(P, S,    In,  [[T|S], P, infrst|Acc], Out).
-
-
-
-/*
-Main Loop
-*/
-
-loop :- line(Line), loop(Line, [], _Out).
-
-loop([eof],  S,   S) :- !.
-loop( Line, In, Out) :-
-  do_line(Line, In, S),
-  write(S), nl,
-  line(NextLine), !,
-  loop(NextLine, S, Out).
-
-
-do_line(Line, In, Out) :- phrase(joy_parse(E), Line), thun(E, In, Out).
-do_line(_Line, S,   S) :- write('Err'), nl.
-
-
 
