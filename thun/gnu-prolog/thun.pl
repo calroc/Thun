@@ -161,10 +161,38 @@ combo(genrec, [R1, R0, Then, If|S],
     Quoted = [If, Then, R0, R1, genrec],
     append(R0, [Quoted|R1], Else).
 
+/*
+This is a crude but servicable implementation of the map combinator.
 
- 
+Obviously it would be nice to take advantage of the implied parallelism.
+Instead the quoted program, stack, and terms in the input list are
+transformed to simple Joy expressions that run the quoted program on
+prepared copies of the stack that each have one of the input terms on
+top.  These expressions are collected in a list and the whole thing is
+evaluated (with infra) on an empty list, which becomes the output list.
 
+The chief advantage of doing it this way (as opposed to using Prolog's
+map) is that the whole state remains in the pending expression, so
+there's nothing stashed in Prolog's call stack.  This preserves the nice
+property that you can interrupt the Joy evaluation and save or transmit
+the stack+expression knowing that you have all the state.
+*/
 
+combo(map, [_,   []|S],         [[]|S], E,        E ) :- !.
+combo(map, [P, List|S], [Mapped, []|S], E, [infra|E]) :-
+    prepare_mapping(P, S, List, Mapped).
+
+% Set up a program for each term in ListIn
+%
+%     [term S] [P] infrst
+%
+% prepare_mapping(P, S, ListIn, ListOut).
+
+prepare_mapping(P, S, In, Out) :- prepare_mapping(P, S, In, [], Out).
+
+prepare_mapping(    _, _,     [],                   Out,  Out) :- !.
+prepare_mapping(    P, S, [T|In],                   Acc,  Out) :-
+    prepare_mapping(P, S,    In,  [[T|S], P, infrst|Acc], Out).
 
 
 
