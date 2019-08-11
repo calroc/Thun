@@ -53,7 +53,7 @@ char(Ch) --> [Ch], { Ch \== 0'[, Ch \== 0'], Ch >= 33, Ch =< 126 }.
 blanks --> blank, !, blanks.
 blanks --> [].
 
-blank --> [32].
+blank --> [32] | [13] | [10].
 
 
 % TODO: negative numbers, floats, scientific notation.
