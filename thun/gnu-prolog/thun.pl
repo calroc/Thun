@@ -196,16 +196,6 @@ prepare_mapping(    P, S, [T|In],                   Acc,  Out) :-
 
 
 
-
-
-/*
-Definitions
-*/
-
-def(x, [dup, i]).
-
-
-
 /*
 Main Loop
 */

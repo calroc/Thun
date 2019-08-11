@@ -34,7 +34,9 @@ stream_to_codes(Ch, Stream, [Ch|Codes]) :- stream_to_codes(Stream, Codes).
 
 print_defs :-
     findall(def(Name, Body), def(Name, Body), List),
-    maplist(print_def, List).
+    open(`defs.pl`, write, Stream),
+    maplist(print_def(Stream), List),
+    close(Stream).
 
-print_def(Def) :- write(Def), write(`.`), nl.
+print_def(Stream, Def) :- write(Stream, Def), write(Stream, `.`), nl(Stream).
 

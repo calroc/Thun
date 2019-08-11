@@ -7,7 +7,6 @@ app2 == [grba swap grba swap] dip [infrst] cons ii
 app3 == 3 appN
 appN == [grabN] cons dip map disenstacken
 at == drop first
-average == [sum 1.0 *] [size] cleave /
 b == [i] dip i
 binary == unary popd
 ccons == cons cons
@@ -58,7 +57,7 @@ shunt == [swons] step
 size == 0 swap [pop ++] step
 split_at == [drop] [take] clop
 sqr == dup *
-step_zero == 0 roll> step
+step_zero == 0 rollup step
 sum == 0 swap [+] step
 swons == swap cons
 take == [] rolldown [shift] times pop

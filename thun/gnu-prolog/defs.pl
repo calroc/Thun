@@ -1,12 +1,3 @@
-GNU Prolog 1.4.4 (64 bits)
-Compiled Oct 11 2018, 14:29:28 with cc
-By Daniel Diaz
-Copyright (C) 1999-2013 Daniel Diaz
-compiling /home/sforman/src/Joypy/thun/gnu-prolog/meta-defs.pl for byte code...
-/home/sforman/src/Joypy/thun/gnu-prolog/meta-defs.pl compiled, 40 lines read - 4480 bytes written, 6 ms
-compiling /home/sforman/src/Joypy/thun/gnu-prolog/parser.pl for byte code...
-/home/sforman/src/Joypy/thun/gnu-prolog/parser.pl compiled, 72 lines read - 7481 bytes written, 8 ms
-| ?- do.
 def(--,[1,-]).
 def(?,[dup,bool]).
 def(++,[1,+]).
@@ -16,7 +7,6 @@ def(app2,[[grba,swap,grba,swap],dip,[infrst],cons,ii]).
 def(app3,[3,appN]).
 def(appN,[[grabN],cons,dip,map,disenstacken]).
 def(at,[drop,first]).
-def(average,[[sum,1,.0,*],[size],cleave,/]).
 def(b,[[i],dip,i]).
 def(binary,[unary,popd]).
 def(ccons,[cons,cons]).
@@ -67,7 +57,7 @@ def(shunt,[[swons],step]).
 def(size,[0,swap,[pop,++],step]).
 def(split_at,[[drop],[take],clop]).
 def(sqr,[dup,*]).
-def(step_zero,[0,roll>,step]).
+def(step_zero,[0,rollup,step]).
 def(sum,[0,swap,[+],step]).
 def(swons,[swap,cons]).
 def(take,[[],rolldown,[shift],times,pop]).
