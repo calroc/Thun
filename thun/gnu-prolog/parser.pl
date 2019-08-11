@@ -30,8 +30,7 @@ joy_term(N) --> num(N), !.
 joy_term(J) --> "[", !, joy_parse(J), "]".
 joy_term(C) --> symbol(C).
 
-symbol(C) --> chars(Chars), !, {Chars \= [61, 61], atom_codes(C, Chars)}.
-
+symbol(C) --> chars(Chars), !, {Chars \= "==", atom_codes(C, Chars)}.
 
 
 % Line is the next new-line delimited line from standard input stream as
@@ -68,5 +67,4 @@ digits([H|T]) --> digit(H), !, digits(T).
 digits([]) --> [].
 
 digit(C) --> [C], { nonvar(C), C =< 57, C >= 48 }.
-
 
