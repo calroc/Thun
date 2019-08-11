@@ -14,9 +14,10 @@ assert_defs(DefsFile) :-
     phrase(joy_defs, Codes).
 
 assert_def(def(Def, Body)) :-
+    \+ func(Def, _, _),
+    \+ combo(Def, _, _, _, _),
     retractall(def(Def, _)),
     assertz(def(Def, Body)).
-
 
 
 read_file_to_codes(File, Codes, _) :-
@@ -31,6 +32,7 @@ stream_to_codes(Stream, Codes) :-
 
 stream_to_codes(-1,      _,         []) :- !.
 stream_to_codes(Ch, Stream, [Ch|Codes]) :- stream_to_codes(Stream, Codes).
+
 
 print_defs :-
     findall(def(Name, Body), def(Name, Body), List),
