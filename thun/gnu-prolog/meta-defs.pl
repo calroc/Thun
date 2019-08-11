@@ -6,8 +6,11 @@ do :- assert_defs(`defs.txt`), print_defs, halt.
 
 joy_def(def(Def, Body)) --> symbol(Def), blanks, "==", joy_parse(Body).
 
-joy_defs --> blanks, joy_def(Def), {assert_def(Def)}, blanks, joy_defs.
+joy_def --> joy_def(Def), {ignore(assert_def(Def))}.
+
+joy_defs --> blanks, joy_def, blanks, joy_defs.
 joy_defs --> [].
+
 
 assert_defs(DefsFile) :-
     read_file_to_codes(DefsFile, Codes, []),
@@ -41,4 +44,8 @@ print_defs :-
     close(Stream).
 
 print_def(Stream, Def) :- write(Stream, Def), write(Stream, `.`), nl(Stream).
+
+
+ignore(Goal) :- Goal, !.
+ignore(_).
 

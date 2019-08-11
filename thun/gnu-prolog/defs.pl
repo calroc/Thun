@@ -17,11 +17,9 @@ def(dinfrirst,[dip,infrst]).
 def(disenstacken,[?,[uncons,?],loop,pop]).
 def(down_to_zero,[[0,>],[dup,--],while]).
 def(drop,[[rest],times]).
-def(dupd,[[dup],dip]).
 def(dupdd,[[dup],dipd]).
 def(dupdipd,[dup,dipd]).
 def(enstacken,[stack,[clear],dip]).
-def(flatten,[[],swap,[concat],step]).
 def(fork,[[i],app2]).
 def(fourth,[rest,third]).
 def(gcd,[true,[tuck,mod,dup,0,>],loop,pop]).
@@ -52,7 +50,6 @@ def(reverse,[[],swap,shunt]).
 def(rrest,[rest,rest]).
 def(run,[[],swap,infra]).
 def(second,[rest,first]).
-def(shift,[uncons,[swons],dip]).
 def(shunt,[[swons],step]).
 def(size,[0,swap,[pop,++],step]).
 def(split_at,[[drop],[take],clop]).
@@ -64,7 +61,6 @@ def(take,[[],rolldown,[shift],times,pop]).
 def(ternary,[binary,popd]).
 def(third,[rest,second]).
 def(unary,[nullary,popd]).
-def(unit,[[],cons]).
 def(unquoted,[[i],dip]).
 def(unswons,[uncons,swap]).
 def(while,[swap,[nullary],cons,dup,dipd,concat,loop]).
