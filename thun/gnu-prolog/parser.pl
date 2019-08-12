@@ -1,5 +1,5 @@
 /*
-    Copyright  2018, 2019 Simon Forman
+    Copyright  2019 Simon Forman
 
     This file is part of Thun
 
