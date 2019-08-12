@@ -22,16 +22,20 @@ Main Loop
 
 :- initialization(loop).
 
-loop :- line(Line), loop(Line, [], _Out).
+loop :- prompt, line(Line), loop(Line, [], _Out).
 
 loop([eof],  S,   S) :- !.
 loop( Line, In, Out) :-
   do_line(Line, In, S),
-  write(S), nl,
+  show_stack(S),
+  prompt,
   line(NextLine), !,
   loop(NextLine, S, Out).
 
 
 do_line(Line, In, Out) :- phrase(joy_parse(E), Line), thun(E, In, Out).
 do_line(_Line, S,   S) :- write('Err'), nl.
+
+prompt :- write(`joy? `).
+show_stack(S) :- nl, print_stack(S), write(` <-top`), nl, nl.
 

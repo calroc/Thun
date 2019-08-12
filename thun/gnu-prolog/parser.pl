@@ -68,3 +68,40 @@ digits([]) --> [].
 
 digit(C) --> [C], { nonvar(C), C =< 57, C >= 48 }.
 
+
+/*
+
+Print state.
+
+*/
+
+format_state(Stack, Expression, Codes) :-
+    reverse(Stack, RStack),
+    phrase(format_joy(RStack), RStackCodes),
+    phrase(format_joy(Expression), ExpressionCodes),
+    append(RStackCodes, [32, 46, 32|ExpressionCodes], Codes).
+
+
+frump(Stack, Expression) :-
+    format_state(Stack, Expression, Codes),
+    maplist(put_code, Codes), nl.
+
+print_stack(Stack) :-
+    reverse(Stack, RStack),
+    phrase(format_joy(RStack), Codes),
+    maplist(put_code, Codes).
+
+
+
+% Print Joy expressions as text.
+
+format_joy(Tail)  --> {var(Tail)}, !, [46, 46, 46].
+format_joy([T])   --> format_term(T), !.
+format_joy([T|S]) --> format_term(T), " ", format_joy(S).
+format_joy([])    --> [].
+
+format_term(N) --> {number(N), number_codes(N, Codes)}, Codes.
+format_term(A) --> {  atom(A),   atom_codes(A, Codes)}, Codes.
+format_term([A|As]) --> "[", format_joy([A|As]), "]".
+
+
