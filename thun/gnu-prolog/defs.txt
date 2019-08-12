@@ -32,6 +32,7 @@ ifte == [nullary] dipd swap branch
 ii == [dip] dupdip i
 infra == swons swaack [i] dip swaack
 infrst == infra first
+least_fraction == dup [gcd] infra [div] concat map
 make_generator == [codireco] ccons
 neg == 0 swap -
 nullary == [stack] dinfrirst

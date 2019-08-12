@@ -82,13 +82,11 @@ func(cons, [A, B|S], [[B|A]|S]).
 func(swap, [A, B|S],  [B, A|S]).
 func(dup,     [A|S],  [A, A|S]).
 func(pop,     [_|S],        S ).
-
-func(sqrt, [A|S], [B|S]) :- B is sqrt(A).
-
 func(concat, [A, B|S],   [C|S]) :- append(B, A, C).
 func(flatten,   [A|S],   [B|S]) :- flatten(A, B).
 func(swaack,    [R|S],   [S|R]).
 func(stack,        S ,   [S|S]).
+func(unstack,   [S|_],      S ).
 func(clear,        _ ,      []).
 func(first, [[X|_]|S],   [X|S]).
 func(rest,  [[_|X]|S],   [X|S]).
@@ -112,6 +110,7 @@ func(bool, [false|S], [false|S]) :- !.
 
 func(bool, [_|S], [true|S]).
 
+func(sqrt, [A|S], [B|S]) :- B is sqrt(A).
 
 
 /*
