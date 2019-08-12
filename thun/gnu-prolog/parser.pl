@@ -100,8 +100,10 @@ format_joy([T])   --> format_term(T), !.
 format_joy([T|S]) --> format_term(T), " ", format_joy(S).
 format_joy([])    --> [].
 
-format_term(N) --> {number(N), number_codes(N, Codes)}, Codes.
-format_term(A) --> {  atom(A),   atom_codes(A, Codes)}, Codes.
+format_term(N) --> {number(N),   number_codes(N, Codes)}, Codes.
+format_term(A) --> {  atom(A),     atom_codes(A, Codes)}, Codes.
+format_term(V) --> {   var(V), write_to_codes(Codes, V)}, Codes.
 format_term([A|As]) --> "[", format_joy([A|As]), "]".
+format_term(F) --> {    write_to_codes(Codes, F)}, Codes.
 
 

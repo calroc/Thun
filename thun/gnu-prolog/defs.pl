@@ -28,6 +28,7 @@ def(grba,[[stack,popd],dip]).
 def(hypot,[[sqr],ii,+,sqrt]).
 def(ifte,[[nullary],dipd,swap,branch]).
 def(ii,[[dip],dupdip,i]).
+def(infer,[thunk,dup,rollup,infra]).
 def(infra,[swons,swaack,[i],dip,swaack]).
 def(infrst,[infra,first]).
 def(least_fraction,[dup,[gcd],infra,[div],concat,map]).

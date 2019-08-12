@@ -30,6 +30,7 @@ grba == [stack popd] dip
 hypot == [sqr] ii + sqrt
 ifte == [nullary] dipd swap branch
 ii == [dip] dupdip i
+infer == thunk dup rollup infra
 infra == swons swaack [i] dip swaack
 infrst == infra first
 least_fraction == dup [gcd] infra [div] concat map

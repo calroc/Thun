@@ -91,6 +91,7 @@ func(clear,        _ ,      []).
 func(first, [[X|_]|S],   [X|S]).
 func(rest,  [[_|X]|S],   [X|S]).
 func(unit,      [X|S], [[X]|S]).
+func(thunk,        S ,   [X|S]).
 
 func(rolldown, [A, B, C|S], [B, C, A|S]).
 func(dupd,        [A, B|S], [A, B, B|S]).
