@@ -20,6 +20,9 @@ Main Loop
 
 */
 
+% :- debug.
+% :- spy(thun).
+
 :- initialization(loop).
 
 loop :- prompt, line(Line), loop(Line, [], _Out).
@@ -32,9 +35,8 @@ loop( Line, In, Out) :-
   line(NextLine), !,
   loop(NextLine, S, Out).
 
-
 do_line(Line, In, Out) :-
-    phrase(joy_parse(E), Line),
+    phrase(joy_parse(E), Line), !,
     thun(E, In, Out).
 do_line(_Line, S,   S) :- write('Err'), nl.
 

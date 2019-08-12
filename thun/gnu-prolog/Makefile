@@ -1,5 +1,6 @@
 #GPLC_OPTIONS=--min-size
 GPLC_OPTIONS=--no-top-level
+#GPLC_OPTIONS=
 
 thun: thun.pl parser.pl defs.pl main.pl math.pl Makefile
 	gplc $(GPLC_OPTIONS) -o thun thun.pl parser.pl defs.pl main.pl math.pl

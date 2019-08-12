@@ -36,7 +36,7 @@ thun([Combo|E], Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
 
 thun([Unknown|E], Si, So) :-
     damned_thing(Unknown),
-    write(`wtf? `),
+    write(`huh? `),
     write(Unknown), nl,
     So = [[Unknown|E]|Si].
 
@@ -82,7 +82,8 @@ func(cons, [A, B|S], [[B|A]|S]).
 func(swap, [A, B|S],  [B, A|S]).
 func(dup,     [A|S],  [A, A|S]).
 func(pop,     [_|S],        S ).
-func(sqrt, [A|S], [sqrt(A)|S]).
+
+func(sqrt, [A|S], [B|S]) :- B is sqrt(A).
 
 func(concat, [A, B|S],   [C|S]) :- append(B, A, C).
 func(flatten,   [A|S],   [B|S]) :- flatten(A, B).
