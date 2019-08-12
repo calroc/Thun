@@ -10,3 +10,8 @@ defs.pl: meta-defs.pl parser.pl defs.txt thun.pl
 		--consult-file thun.pl \
 		--query-goal do
 
+math.pl: meta-math.pl
+	gprolog \
+		--consult-file meta-math.pl \
+		--query-goal do
+
