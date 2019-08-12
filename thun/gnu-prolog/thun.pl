@@ -19,6 +19,7 @@
 */
 % :- dynamic(func/3).
 % :- discontiguous(func/3).
+:- multifile(func/3).
 
 /*
 Interpreter

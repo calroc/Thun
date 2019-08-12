@@ -1,3 +1,4 @@
+:- multifile(func/3).
 func(+, [A, B|C], [D|C]) :-
 	E =.. [+, B, A],
 	catch(D is E, _, D = E).

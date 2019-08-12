@@ -33,7 +33,9 @@ loop( Line, In, Out) :-
   loop(NextLine, S, Out).
 
 
-do_line(Line, In, Out) :- phrase(joy_parse(E), Line), thun(E, In, Out).
+do_line(Line, In, Out) :-
+    phrase(joy_parse(E), Line),
+    thun(E, In, Out).
 do_line(_Line, S,   S) :- write('Err'), nl.
 
 prompt :- write(`joy? `).

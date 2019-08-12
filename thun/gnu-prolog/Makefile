@@ -1,7 +1,8 @@
-GPLC_OPTIONS="--min-size"
+#GPLC_OPTIONS=--min-size
+GPLC_OPTIONS=--no-top-level
 
-thun: thun.pl parser.pl defs.pl main.pl
-	gplc $(GPLC_OPTIONS) -o thun thun.pl parser.pl defs.pl main.pl
+thun: thun.pl parser.pl defs.pl main.pl math.pl Makefile
+	gplc $(GPLC_OPTIONS) -o thun thun.pl parser.pl defs.pl main.pl math.pl
 
 defs.pl: meta-defs.pl parser.pl defs.txt thun.pl
 	gprolog \
