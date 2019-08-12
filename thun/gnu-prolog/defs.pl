@@ -30,6 +30,7 @@ def(ifte,[[nullary],dipd,swap,branch]).
 def(ii,[[dip],dupdip,i]).
 def(infra,[swons,swaack,[i],dip,swaack]).
 def(infrst,[infra,first]).
+def(least_fraction,[dup,[gcd],infra,[div],concat,map]).
 def(make_generator,[[codireco],ccons]).
 def(neg,[0,swap,-]).
 def(nullary,[[stack],dinfrirst]).
