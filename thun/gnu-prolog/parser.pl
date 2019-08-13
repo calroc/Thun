@@ -37,27 +37,31 @@ symbol(C) --> chars(Chars), !, { Chars \= "==", atom_codes(C, Chars) }.
 num(N) --> signed_digits(Codes), !, end_num, { number_codes(N, Codes) }.
 % TODO: floats, scientific notation.
 
+signed_digits([45|Codes]) --> "-", !, digits(Codes).
+signed_digits(    Codes ) -->         digits(Codes).
+
+end_num, [Ch] --> [Ch], { [Ch] = "[" ; is_space(Ch) }.
+end_num([], []).
+
 % Groups of characters.
 
 chars(Chars)   --> one_or_more(char, Chars).
 blanks         --> blank, !, blanks | [].
 digits(Digits) --> one_or_more(digit, Digits).
 
-signed_digits([45|Codes]) --> "-", !, digits(Codes).
-signed_digits(    Codes ) -->         digits(Codes).
-
 % Character types.
 
-char(Ch)  --> [Ch], { nonvar(Ch), is_glyph(Ch)}.
+char(Ch)  --> [Ch], { nonvar(Ch), is_glyph(Ch) }.
 blank     --> [Ch], { nonvar(Ch), is_space(Ch) }.
 digit(Ch) --> [Ch], { nonvar(Ch), between(0'0, 0'9, Ch) }.
 
-
-end_num, [Ch] --> [Ch], { [Ch] = "[" ; is_space(Ch) }.
-end_num([], []).
-
 is_glyph(Ch) :- Ch =\= 0'[, Ch =\= 0'], between(0'!, 0'~, Ch).
 is_space(Ch) :- Ch =:= 32 ; between(9, 13, Ch).
+
+one_or_more(E, List) --> one_or_more_(List, E).
+
+one_or_more_([Ch|Rest], P) --> call(P, Ch), one_or_more_(Rest, P).
+one_or_more_([Ch],      P) --> call(P, Ch).
 
 
 % Line is the next new-line delimited line from standard input stream as
@@ -69,10 +73,6 @@ line(10,      []) :- !.  % break on new-lines.
 line(-1,   [eof]) :- !.  % break on EOF
 line(X, [X|Line]) :- get_code(Y), !, line(Y, Line).
 
-one_or_more(E, List) --> one_or_more_(List, E).
-
-one_or_more_([Ch|Rest], P) --> call(P, Ch), one_or_more_(Rest, P).
-one_or_more_([Ch],      P) --> call(P, Ch).
 
 /*
 
