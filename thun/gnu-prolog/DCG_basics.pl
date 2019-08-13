@@ -52,8 +52,6 @@ digit(Ch) --> [Ch], { nonvar(Ch), between(0'0, 0'9, Ch) }.
 is_glyph(Ch) :- Ch =\= 0'[, Ch =\= 0'], between(0'!, 0'~, Ch).
 is_space(Ch) :- Ch =:= 32 ; between(9, 13, Ch).
 
-one_or_more(E, List) --> one_or_more_(List, E).
-
-one_or_more_([Ch|Rest], P) --> call(P, Ch), one_or_more_(Rest, P).
-one_or_more_([Ch],      P) --> call(P, Ch).
+one_or_more(P, [Ch|Rest]) --> call(P, Ch), one_or_more(P, Rest).
+one_or_more(P, [Ch]     ) --> call(P, Ch).
 
