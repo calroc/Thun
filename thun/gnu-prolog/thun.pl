@@ -94,6 +94,7 @@ func(unit,      [X|S], [[X]|S]).
 func(thunk,        S ,   [X|S]).
 
 func(rolldown, [A, B, C|S], [B, C, A|S]).
+func(swapd,    [A, B, C|S], [A, C, B|S]).
 func(dupd,        [A, B|S], [A, B, B|S]).
 func(over,        [A, B|S], [B, A, B|S]).
 func(tuck,        [A, B|S], [A, B, A|S]).
