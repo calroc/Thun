@@ -35,13 +35,16 @@ symbol(C) --> chars(Chars), !, {Chars \= "==", atom_codes(C, Chars)}.
 
 % TODO: negative numbers, floats, scientific notation.
 
-num(N) --> digits(Codes), !, { number_codes(N, Codes) }.
+num(N) --> signed_digits(Codes), !, { number_codes(N, Codes) }.
 
 % Groups of characters.
 
 chars(Chars)   --> one_or_more(char, Chars).
 blanks         --> blank, !, blanks | [].
 digits(Digits) --> one_or_more(digit, Digits).
+
+signed_digits([45|Codes]) --> "-", !, digits(Codes).
+signed_digits(    Codes ) -->         digits(Codes).
 
 % Character types.
 
