@@ -35,7 +35,7 @@ symbol(C) --> chars(Chars), !, {Chars \= "==", atom_codes(C, Chars)}.
 
 % TODO: negative numbers, floats, scientific notation.
 
-num(N) --> signed_digits(Codes), !, { number_codes(N, Codes) }.
+num(N) --> signed_digits(Codes), !, end_num, { number_codes(N, Codes) }.
 
 % Groups of characters.
 
@@ -49,8 +49,14 @@ signed_digits(    Codes ) -->         digits(Codes).
 % Character types.
 
 char(Ch)  --> [Ch], { nonvar(Ch), Ch =\= 0'[, Ch =\= 0'], between(33, 126, Ch) }.
-blank     --> [Ch], { nonvar(Ch),(Ch =:= 32 ; between(9, 13, Ch)) }.
+blank     --> [Ch], { nonvar(Ch), is_space(Ch) }.
 digit(Ch) --> [Ch], { nonvar(Ch), between(48, 57, Ch) }.
+
+
+end_num, [Ch] --> [Ch], { [Ch] = "[" ; is_space(Ch) }.
+end_num([], []).
+
+is_space(Ch) :- Ch =:= 32 ; between(9, 13, Ch).
 
 
 % Line is the next new-line delimited line from standard input stream as
