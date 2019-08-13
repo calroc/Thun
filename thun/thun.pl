@@ -197,30 +197,6 @@ comparison_operator(<>, =\=).
 
 
 /*
-Definitions
-*/
-
-joy_def(def(Def, Body)) --> symbol(Def), blanks, "==", joy_parse(Body).
-
-joy_def --> joy_def(Def), {ignore(assert_def(Def))}.
-
-joy_defs --> blanks, joy_def, blanks, joy_defs.
-joy_defs --> [].
-
-assert_defs(DefsFile) :-
-    read_file_to_codes(DefsFile, Codes, []),
-    phrase(joy_defs, Codes).
-
-assert_def(def(Def, Body)) :-
-    \+ func(Def, _, _),
-    \+ combo(Def, _, _, _, _),
-    retractall(def(Def, _)),
-    assertz(def(Def, Body)).
-
-:- assert_defs("defs.txt").
-
-
-/*
 Combinators
 */
 
@@ -296,6 +272,30 @@ prepare_mapping(P, S, In, Out) :- prepare_mapping(P, S, In, [], Out).
 prepare_mapping(    _, _,     [],                   Out,  Out) :- !.
 prepare_mapping(    P, S, [T|In],                   Acc,  Out) :-
     prepare_mapping(P, S,    In,  [[T|S], P, infrst|Acc], Out).
+
+
+/*
+Definitions
+*/
+
+joy_def(def(Def, Body)) --> symbol(Def), blanks, "==", joy_parse(Body).
+
+joy_def --> joy_def(Def), {ignore(assert_def(Def))}.
+
+joy_defs --> blanks, joy_def, blanks, joy_defs.
+joy_defs --> [].
+
+assert_defs(DefsFile) :-
+    read_file_to_codes(DefsFile, Codes, []),
+    phrase(joy_defs, Codes).
+
+assert_def(def(Def, Body)) :-
+    \+ func(Def, _, _),
+    \+ combo(Def, _, _, _, _),
+    retractall(def(Def, _)),
+    assertz(def(Def, Body)).
+
+:- assert_defs("defs.txt").
 
 
 /*
