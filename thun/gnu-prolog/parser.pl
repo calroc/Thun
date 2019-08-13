@@ -43,8 +43,8 @@ line(-1,   [eof]) :- !.  % break on EOF
 line(X, [X|Line]) :- get_code(Y), !, line(Y, Line).
 
 
-chars([Ch|Rest]) --> char(Ch), !, chars(Rest).
-chars([])        --> [].
+chars([Ch|Rest]) --> char(Ch), chars(Rest).
+chars([Ch])      --> char(Ch).
 
 char(Ch) --> [Ch], { Ch \== 0'[, Ch \== 0'], between(33, 126, Ch) }.
 
