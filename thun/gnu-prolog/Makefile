@@ -2,8 +2,10 @@
 GPLC_OPTIONS=--no-top-level
 #GPLC_OPTIONS=
 
-thun: thun.pl parser.pl defs.pl main.pl math.pl DCG_basics.pl Makefile
-	gplc $(GPLC_OPTIONS) -o thun thun.pl parser.pl defs.pl main.pl DCG_basics.pl math.pl
+THUN_DEPS=parser.pl defs.pl main.pl math.pl DCG_basics.pl
+
+thun: thun.pl $(THUN_DEPS) Makefile
+	gplc $(GPLC_OPTIONS) -o thun thun.pl $(THUN_DEPS)
 
 defs.pl: meta-defs.pl parser.pl defs.txt thun.pl DCG_basics.pl
 	gprolog \
