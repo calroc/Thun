@@ -21,7 +21,9 @@ Parser
 
 */
 
+
 :- set_prolog_flag(double_quotes, codes).
+
 
 joy_parse([T|J]) --> blanks, joy_term(T), blanks, joy_parse(J).
 joy_parse([]) --> [].
@@ -30,12 +32,10 @@ joy_term(N) --> num(N), !.
 joy_term(J) --> "[", !, joy_parse(J), "]".
 joy_term(C) --> symbol(C).
 
-symbol(C) --> chars(Chars), !, {Chars \= "==", atom_codes(C, Chars)}.
 
-
-% TODO: negative numbers, floats, scientific notation.
-
+symbol(C) --> chars(Chars), !, { Chars \= "==", atom_codes(C, Chars) }.
 num(N) --> signed_digits(Codes), !, end_num, { number_codes(N, Codes) }.
+% TODO: floats, scientific notation.
 
 % Groups of characters.
 
@@ -48,14 +48,15 @@ signed_digits(    Codes ) -->         digits(Codes).
 
 % Character types.
 
-char(Ch)  --> [Ch], { nonvar(Ch), Ch =\= 0'[, Ch =\= 0'], between(33, 126, Ch) }.
+char(Ch)  --> [Ch], { nonvar(Ch), is_glyph(Ch)}.
 blank     --> [Ch], { nonvar(Ch), is_space(Ch) }.
-digit(Ch) --> [Ch], { nonvar(Ch), between(48, 57, Ch) }.
+digit(Ch) --> [Ch], { nonvar(Ch), between(0'0, 0'9, Ch) }.
 
 
 end_num, [Ch] --> [Ch], { [Ch] = "[" ; is_space(Ch) }.
 end_num([], []).
 
+is_glyph(Ch) :- Ch =\= 0'[, Ch =\= 0'], between(0'!, 0'~, Ch).
 is_space(Ch) :- Ch =:= 32 ; between(9, 13, Ch).
 
 
