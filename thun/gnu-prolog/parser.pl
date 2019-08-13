@@ -43,8 +43,8 @@ line(-1,   [eof]) :- !.  % break on EOF
 line(X, [X|Line]) :- get_code(Y), !, line(Y, Line).
 
 
-chars([Ch|Rest]) --> char(Ch), chars(Rest).
-chars([Ch])      --> char(Ch).
+chars([Ch|Rest]) --> char(Ch), !, chars(Rest).
+chars([])        --> [].
 
 char(Ch) --> [Ch], { Ch \== 0'[, Ch \== 0'], between(33, 126, Ch) }.
 
@@ -66,7 +66,7 @@ num(N, [C|Codes]) :- number_codes(N, [C|Codes]).
 digits([H|T]) --> digit(H), !, digits(T).
 digits([]) --> [].
 
-digit(C) --> [C], { nonvar(C), C =< 57, C >= 48 }.
+digit(C) --> [C], { nonvar(C), between(48, 57, C) }.
 
 
 /*
