@@ -46,13 +46,13 @@ line(X, [X|Line]) :- get_code(Y), !, line(Y, Line).
 chars([Ch|Rest]) --> char(Ch), chars(Rest).
 chars([Ch])      --> char(Ch).
 
-char(Ch) --> [Ch], { Ch \== 0'[, Ch \== 0'], Ch >= 33, Ch =< 126 }.
+char(Ch) --> [Ch], { Ch \== 0'[, Ch \== 0'], between(33, 126, Ch) }.
 
 
 blanks --> blank, !, blanks.
 blanks --> [].
 
-blank --> [32] | [13] | [10].
+blank --> [Ch], { Ch =:= 32 ; between(9, 13, Ch) }.
 
 
 % TODO: negative numbers, floats, scientific notation.

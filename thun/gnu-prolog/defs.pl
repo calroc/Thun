@@ -58,6 +58,7 @@ def(split_at,[[drop],[take],clop]).
 def(sqr,[dup,*]).
 def(step_zero,[0,rollup,step]).
 def(sum,[0,swap,[+],step]).
+def(swoncat,[swap,concat]).
 def(swons,[swap,cons]).
 def(take,[[],rolldown,[shift],times,pop]).
 def(ternary,[binary,popd]).

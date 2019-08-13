@@ -61,6 +61,7 @@ split_at == [drop] [take] clop
 sqr == dup *
 step_zero == 0 rollup step
 sum == 0 swap [+] step
+swoncat == swap concat
 swons == swap cons
 take == [] rolldown [shift] times pop
 ternary == binary popd
