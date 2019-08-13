@@ -34,8 +34,13 @@ joy_term(C) --> symbol(C).
 
 
 symbol(C) --> chars(Chars), !, { Chars \= "==", atom_codes(C, Chars) }.
-num(N) --> signed_digits(Codes), !, end_num, { number_codes(N, Codes) }.
+num(N) --> number_digits(Codes), { number_codes(N, Codes) }.
+
+number_digits(Codes) --> signed_float_or_integer(Codes), !, end_num.
 % TODO: floats, scientific notation.
+
+signed_float_or_integer(Codes) --> signed_digits(J), ".", !, digits(I),
+    { append(J, [0'.|I], Codes) }.
 
 signed_digits([45|Codes]) --> "-", !, digits(Codes).
 signed_digits(    Codes ) -->         digits(Codes).

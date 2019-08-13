@@ -124,7 +124,6 @@ combo(dip,     [P, X|S], S, Ei, Eo) :- append(P, [X|Ei], Eo).
 combo(dipd, [P, X, Y|S], S, Ei, Eo) :- append(P, [Y, X|Ei], Eo).
 
 combo(dupdip, [P, X|S], [X|S], Ei, Eo) :- append(P, [X|Ei], Eo).
-combo(dupdip, [P, X|S], [X|S], Ei, Eo) :- append(P, [X|Ei], Eo).
 
 combo(branch, [T, _,  true|S], S, Ei, Eo) :- append(T, Ei, Eo).
 combo(branch, [_, F, false|S], S, Ei, Eo) :- append(F, Ei, Eo).
