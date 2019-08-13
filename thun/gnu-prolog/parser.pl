@@ -41,6 +41,7 @@ number_digits(Codes) --> signed_float_or_integer(Codes), !, end_num.
 
 signed_float_or_integer(Codes) --> signed_digits(J), ".", !, digits(I),
     { append(J, [0'.|I], Codes) }.
+signed_float_or_integer(Codes) --> signed_digits(Codes).
 
 signed_digits([45|Codes]) --> "-", !, digits(Codes).
 signed_digits(    Codes ) -->         digits(Codes).
@@ -67,16 +68,6 @@ one_or_more(E, List) --> one_or_more_(List, E).
 
 one_or_more_([Ch|Rest], P) --> call(P, Ch), one_or_more_(Rest, P).
 one_or_more_([Ch],      P) --> call(P, Ch).
-
-
-% Line is the next new-line delimited line from standard input stream as
-% a list of character codes.
-
-line(Line) :- get_code(X), line(X, Line).
-
-line(10,      []) :- !.  % break on new-lines.
-line(-1,   [eof]) :- !.  % break on EOF
-line(X, [X|Line]) :- get_code(Y), !, line(Y, Line).
 
 
 /*

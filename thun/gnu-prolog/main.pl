@@ -41,3 +41,13 @@ do_line(_Line, S,   S) :- write('Err'), nl.
 prompt :- write(`joy? `).
 show_stack(S) :- nl, print_stack(S), write(` <-top`), nl, nl.
 
+
+% Line is the next new-line delimited line from standard input stream as
+% a list of character codes.
+
+line(Line) :- get_code(X), line(X, Line).
+
+line(10,      []) :- !.  % break on new-lines.
+line(-1,   [eof]) :- !.  % break on EOF
+line(X, [X|Line]) :- get_code(Y), !, line(Y, Line).
+
