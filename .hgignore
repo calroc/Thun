@@ -5,4 +5,4 @@
 .vscode
 docs/.ipynb_checkpoints
 test/*
-thun
+gnu-prolog/thun
