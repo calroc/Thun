@@ -1,25 +1,29 @@
 :- multifile(func/3).
 
 func(fork, [F, G|S], [X, Y|S]) :-
-    fork(F, S, X, ChildPID),
+    fork(F, S, R, ChildPID),
     thun(G, S, [Y|_]),
+    read_pipe(R, X),
     wait(ChildPID, Status).  % FIXME check status!!!
 
-fork(Expr, Stack, Result, ChildPID) :-
+fork(Expr, Stack, In, ChildPID) :-
     mkpipe(In, Out),
     fork_prolog(ChildPID),
-    bar(ChildPID, In, Out, Expr, Stack, Result).
+    bar(ChildPID, In, Out, Expr, Stack).
 
-bar(0, In, Out, Expr, Stack, Result) :-
+bar(0, In, Out, Expr, Stack) :-
     close(In),
     thun(Expr, Stack, [Result|_]),
     w(Out, Result),
     close(Out),
     halt.
 
-bar(P, In, Out, Expr, Stack, Result) :-
-    integer(P), P =\= 0,
-    close(Out),
+bar(PID, _, Out, _, _) :-
+    integer(PID),
+    PID =\= 0,
+    close(Out).
+
+read_pipe(In, Result) :-
     select([In], R, [], _, 1500),
     (R=[In] ->
         read(In, Result)
