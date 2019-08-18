@@ -22,6 +22,7 @@ dupdd == [dup] dipd
 dupdipd == dup dipd
 enstacken == stack [clear] dip
 flatten == [] swap [concat] step
+fork == [i] app2
 fourth == rest third
 gcd == true [tuck mod dup 0 >] loop pop
 grabN == [] swap [cons] times
