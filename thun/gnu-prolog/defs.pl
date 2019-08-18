@@ -20,7 +20,6 @@ def(drop,[[rest],times]).
 def(dupdd,[[dup],dipd]).
 def(dupdipd,[dup,dipd]).
 def(enstacken,[stack,[clear],dip]).
-def(fork,[[i],app2]).
 def(fourth,[rest,third]).
 def(gcd,[true,[tuck,mod,dup,0,>],loop,pop]).
 def(grabN,[[],swap,[cons],times]).
