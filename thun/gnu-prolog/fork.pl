@@ -1,26 +1,26 @@
 :- multifile(func/3).
 
 func(fork, [F, G|S], [X, Y|S]) :-
-    fork(F, S, R, ChildPID),
-    thun(G, S, [Y|_]),
-    read_pipe(R, X),
+    fork(F, S, R, ChildPID), % Send F off to the child,
+    thun(G, S, [Y|_]),       % Run G locally,
+    read_pipe(R, X),         % Collect the result from F,
     wait(ChildPID, Status).  % FIXME check status!!!
 
 fork(Expr, Stack, In, ChildPID) :-
     mkpipe(In, Out),
     fork_prolog(ChildPID),
-    bar(ChildPID, In, Out, Expr, Stack).
+    korf(ChildPID, In, Out, Expr, Stack).
 
-bar(0, In, Out, Expr, Stack) :- close(In),
+korf(0, In, Out, Expr, Stack) :- close(In),  % In the child.
     thun(Expr, Stack, [Result|_]),
     w(Out, Result), close(Out),
     halt.
 
-bar(PID, _, Out, _, _) :-
+korf(PID, _, Out, _, _) :-  % In the parent.
     integer(PID), PID =\= 0,
     close(Out).
 
-read_pipe(In, Result) :-
+read_pipe(In, Result) :-  % select/5, read the pipe or timeout.
     select([In], R, [], _, 1500),
     read_pipe_(R, In, Result),
     close(In).
