@@ -11,26 +11,22 @@ fork(Expr, Stack, In, ChildPID) :-
     fork_prolog(ChildPID),
     bar(ChildPID, In, Out, Expr, Stack).
 
-bar(0, In, Out, Expr, Stack) :-
-    close(In),
+bar(0, In, Out, Expr, Stack) :- close(In),
     thun(Expr, Stack, [Result|_]),
-    w(Out, Result),
-    close(Out),
+    w(Out, Result), close(Out),
     halt.
 
 bar(PID, _, Out, _, _) :-
-    integer(PID),
-    PID =\= 0,
+    integer(PID), PID =\= 0,
     close(Out).
 
 read_pipe(In, Result) :-
     select([In], R, [], _, 1500),
-    (R=[In] ->
-        read(In, Result)
-    ;
-        Result=timeout
-    ),
+    read_pipe_(R, In, Result),
     close(In).
+
+read_pipe_([In], In,  Result) :- read(In, Result).
+read_pipe_(  [],  _, timeout).
 
 mkpipe(In, Out) :-
     create_pipe(In, Out),
