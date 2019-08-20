@@ -114,6 +114,10 @@ func(bool, [_|S], [true|S]).
 
 func(sqrt, [A|S], [B|S]) :- B is sqrt(A).
 
+func(small, [[_]|S], [ true|S]).
+func(small, [ []|S], [ true|S]).
+func(small, [  X|S], [false|S]) :- X \= [_], X \= [].
+
 
 /*
 Combinators
