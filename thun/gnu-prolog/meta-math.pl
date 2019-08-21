@@ -78,7 +78,8 @@ writeln(Stream, Thing) :-
 
 do :-
     open(`math.pl`, write, Stream),
-    write(Stream, `:- multifile(func/3).`), nl(Stream),
+    write(Stream, `:- multifile(func/3).`),
+    nl(Stream), nl(Stream),
     print_o(Stream, math_operator(Op)),
     print_o(Stream, comparison_operator(Op)),
     print_o(Stream, comparison_operator(Op, Po)),

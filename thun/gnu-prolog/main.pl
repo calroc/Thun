@@ -25,27 +25,26 @@ Main Loop
 
 :- initialization(loop).
 
-loop :- prompt, line(Line), loop(Line, [], _Out).
+loop :- prompt(Line), loop(Line, [], _Out).
 
 loop([eof],  S,   S) :- !.
 loop( Line, In, Out) :-
   do_line(Line, In, S),
   show_stack(S),
-  prompt,
-  line(NextLine), !,
+  prompt(NextLine), !,
   loop(NextLine, S, Out).
 
 do_line(Line, In, Out) :- phrase(joy_parse(E), Line), thun(E, In, Out).
 do_line(_Line, S,   S) :- write('Err'), nl.
 
-prompt :- write(`joy? `).
+prompt(Line) :- write(`joy? `), get_line(Line).
 show_stack(S) :- nl, print_stack(S), write(` <-top`), nl, nl.
 
 
-% Line is the next new-line delimited line from standard input stream as
+% Line is the next newget_line-delimited line from standard input stream as
 % a list of character codes.
 
-line(Line) :- get_code(X), line(X, Line).
+get_line(Line) :- get_code(X), line(X, Line).
 
 line(10,      []) :- !.  % break on new-lines.
 line(-1,   [eof]) :- !.  % break on EOF

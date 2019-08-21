@@ -38,6 +38,8 @@ num(N) --> number_digits(Codes), { number_codes(N, Codes) }.
 
 number_digits(Codes) --> signed_float_or_integer(Codes), !, end_num.
 
+% At the end of a number look ahead one character for a space
+% or '[' character, or the end of the code list.
 end_num, [Ch] --> [Ch], { [Ch] = "[" ; is_space(Ch) }.
 end_num([], []).
 
@@ -54,7 +56,6 @@ format_state(Stack, Expression, Codes) :-
     phrase(format_joy(Expression), ExpressionCodes),
     append(RStackCodes, [32, 46, 32|ExpressionCodes], Codes).
 
-
 frump(Stack, Expression) :-
     format_state(Stack, Expression, Codes),
     maplist(put_code, Codes), nl.
@@ -63,8 +64,6 @@ print_stack(Stack) :-
     reverse(Stack, RStack),
     phrase(format_joy(RStack), Codes),
     maplist(put_code, Codes).
-
-
 
 % Print Joy expressions as text.
 
@@ -78,5 +77,4 @@ format_term(A) --> {  atom(A),     atom_codes(A, Codes)}, Codes.
 format_term(V) --> {   var(V), write_to_codes(Codes, V)}, Codes.
 format_term([A|As]) --> "[", format_joy([A|As]), "]".
 format_term(F) --> {    write_to_codes(Codes, F)}, Codes.
-
 
