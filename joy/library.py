@@ -206,6 +206,7 @@ def yin_functions():
 
 
 definitions = ('''\
+ii == [dip] dupdip i
 of == swap at
 product == 1 swap [*] step
 flatten == [] swap [concat] step
