@@ -104,7 +104,7 @@ thun([Unknown|E], Si, So) :-
     damned_thing(Unknown),
     write("wtf? "),
     writeln(Unknown),
-    So = [[Unknown|E]|Si].
+    So = [Unknown|E]-Si.
 
 damned_thing(It) :-
     \+ literal(It),
@@ -143,6 +143,8 @@ literal(_=\=_).
 /*
 Functions
 */
+
+func(words, S, [Words|S]) :- words(Words).
 
 func(cons, [A, B|S], [[B|A]|S]).
 func(swap, [A, B|S],  [B, A|S]).
@@ -296,6 +298,14 @@ assert_def(def(Def, Body)) :-
     assertz(def(Def, Body)).
 
 :- assert_defs("defs.txt").
+
+
+words(Words) :-
+    findall(Name, clause(func(Name, _, _), _), Funcs),
+    findall(Name, clause(combo(Name, _, _, _, _), _), Combos, Funcs),
+    findall(Name, clause(def(Name, _), _), Words0, Combos),
+    list_to_set(Words0, Words1),
+    sort(Words1, Words).
 
 
 /*
