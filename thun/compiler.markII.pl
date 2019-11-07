@@ -17,6 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Thun.  If not see <http://www.gnu.org/licenses/>.
 
+
+
 The Joy interpreter that this implements is pretty crude.  the only types
 are 16-bit integers and linked lists.  The lists are 32-bit words divided
 into two 16-bit fields.  The high half is the node value and the low half
@@ -62,6 +64,7 @@ compile_program(Program, Binary) :-
     phrase((init, ⦾(Program, IR)), [], [Context]),
     phrase(⟐(IR), ASM),
     phrase(linker(ASM), EnumeratedASM),
+    % writeln(EnumeratedASM),
     foo(Context),
     phrase(asm(EnumeratedASM), Binary).
 
@@ -124,8 +127,11 @@ CPUs.)
 ⦾([メ|Terms], [  % Mainloop.
     label(MAIN),
     if_zero(EXPR, HALT),
-    deref(EXPR),
-    split_word(TERM, EXPR),
+    deref(EXPR, TEMP0),
+    % At this point EXPR holds the record word of the expression and TEMP0 
+    % has a copy of the address of the record.
+    split_pair(TERM, TEMP1, EXPR, TEMP0),
+    % Now Term has the term's record data and temp1 has the address of the term.
     if_literal(TERM, PUSH),
     lookup(DICT_PTR, DICT_TOP, TERM, HALT),  % Jump to command or if not found halt.
     label(PUSH), push(TOS, TERM, SP),  % stack = TERM, stack
@@ -133,7 +139,8 @@ CPUs.)
     jump(MAIN)
     |Ts]) -->
     get([dict_ptr, DICT_PTR, dict_top, DICT_TOP, done, DONE, expr, EXPR,
-         halt, HALT, main, MAIN, sp, SP, term, TERM, tos, TOS]),
+         halt, HALT, main, MAIN, sp, SP, term, TERM, tos, TOS,
+         temp0, TEMP0, temp1, TEMP1]),
     ⦾(Terms, Ts).
 
 ⦾([Body, ≡(NameAtom)|Terms], [defi(Name, B, Prev, I, SP, TOS)|Ts]) -->
@@ -282,6 +289,10 @@ language.
 
 ⟐(deref(Reg)) --> [load_word(Reg, Reg, 0)].
 
+⟐(deref(Reg, Temp)) -->
+    [mov(Temp, Reg),  % Save the address for adding it to offsets later.
+     load_word(Reg, Reg, 0)].
+
 ⟐(or_inplace(To, From)) --> [ior(To, To, From)].
 
 ⟐(definition(Label, Exit, Body, Prev)) -->
@@ -337,6 +348,22 @@ language.
 ⟐(add_const(To, From, Immediate)) --> [add_imm(To, From, Immediate)].
 
 ⟐(pop(Reg, TOS)) --> ⟐([split_word(Reg, TOS), deref(TOS)]).
+
+% From is a register containing a pair record
+% FromAddr is a register containing the address of the record in From
+% after,
+% To is a register that will contain the record from the head
+% ToAddr holds the address of the record in To.
+% From is a register containing a pair record
+% FromAddr is a register containing the address of the record in From
+⟐(split_pair(To, ToAddr, From, FromAddr)) -->
+    [ior_imm(ToAddr, From, -15),  % roll right 15 bits
+     % No need to mask off high bits as the type tag for pairs is 00
+     add(ToAddr, ToAddr, FromAddr),
+     load_word(To, ToAddr, 0),  % Bring the record in from RAM.
+     and_imm(From, From, 0x7fff),  % Mask off  lower 15 bits.
+     add(From, From, FromAddr)  % Add the address to the offset.
+    ].
 
 
 /* 
