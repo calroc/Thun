@@ -668,7 +668,8 @@ for_serial(Binary, Ser) :-
 
 write_binary(Name, Binary) :-
     open(Name, write, Stream, [type(binary)]),
-    phrase(write_binary_(Stream), Binary),
+    for_serial(Binary, Ser),
+    phrase(write_binary_(Stream), Ser),
     close(Stream).
 
 write_binary_(Stream) -->
