@@ -1,6 +1,9 @@
 :- use_module(library(clpfd)).
 
 %-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+%
+%    Program 18.3 from "Art of Prolog"
+%
 
 process(Program, ReducedProgram) :-
     findall(PC1, (member(C1, Program), preduce(C1, PC1), portray_clause(PC1)), ReducedProgram).
@@ -23,13 +26,15 @@ test(Name, Program) :- program(Name, Clauses), process(Clauses, Program).
 program(tundra, [
     ( thun([], S, S) ),
     ( thun(  [Lit|E], Si, So) :- literal(Lit), thun(E, [Lit|Si], So) ),
+    ( thun(  [Def|E], Si, So) :- def(Def, Body), append(Body, E, Eo), thun(Eo, Si, So) ),
     ( thun( [Func|E], Si, So) :- func(Func, Si, S), thun(E, S, So) ),
     ( thun([Combo|E], Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So) )
     ]).
 
+should_unfold(literal(Lit)).
+should_unfold(def(Def, Body)).
 should_unfold(func(Func, Si, So)).
 should_unfold(combo(A, B, C, D, E)).
-should_unfold(literal(Lit)).
 should_fold(sam, bill).
 
 %-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -65,6 +70,12 @@ func(unit,      [X|S], [[X]|S]).
 combo(i,          [P|S], S, Ei, Eo) :- append(P, Ei, Eo).
 combo(dip,     [P, X|S], S, Ei, Eo) :- append(P, [X|Ei], Eo).
 combo(dipd, [P, X, Y|S], S, Ei, Eo) :- append(P, [Y, X|Ei], Eo).
+
+def(at,[drop,first]).
+def(b,[[i],dip,i]).
+def(binary,[unary,popd]).
+
+% thun([binary|A], C, D) :- thun([unary, popd|A], C, D).
 
 %-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 

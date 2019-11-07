@@ -61,14 +61,12 @@ next(PC, I) :- PC \= done, relly(PC, I, PCnext, Inext), next(PCnext, Inext).
 
 type_ok(Small, Big) :- Small in 0..3, Big in 0..5.
 
-
 next_dh(Moves) :- next_dh(0, 0, Moves).
 
 next_dh(Small, Big, [[Move, Si, Bi]|Moves]) :-
     type_ok(Small, Big),
     die_hard(Move, Small, Big, Si, Bi),
     (Bi = 4 -> Moves = [] ; next_dh(Si, Bi, Moves)).
-
 
 die_hard( fill_small, Small, Big, 3, Big) :- Small #< 3.
 die_hard(   fill_big, Small, Big, Small, 5) :- Big #< 5.
@@ -83,7 +81,6 @@ die_hard(big_to_small, Small, Big, S, B) :-
     Small #< 3, Big #> 0,
     big_to_small(Small, Big, S, B).
 
-
 big_to_small(Small, Big, S, 0) :-
     Small + Big #=< 3,
     S #= Small + Big.
@@ -91,7 +88,6 @@ big_to_small(Small, Big, S, 0) :-
 big_to_small(Small, Big, 3, B) :-
     Small + Big #> 3,
     B #= Big - (3 - Small).
-
 
 small_to_big(Small, Big, 0, B) :-
     Small + Big #=< 5,
