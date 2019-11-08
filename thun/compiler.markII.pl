@@ -132,10 +132,12 @@ CPUs.)
     % has a copy of the address of the record.
     split_pair(TERM, TEMP1, EXPR, TEMP0),
     % Now Term has the term's record data and temp1 has the address of the term.
+    % temp0 still has the address of the expression record.
     if_literal(TERM, PUSH),
     % if it is a symbol the rest of it is the pointer to the machine code.
     lookup(TERM),  % Jump to command.
-    label(PUSH), push(TOS, TERM, SP),  % stack = TERM, stack
+    % going in to push we have the term
+    label(PUSH), push2(TOS, TEMP1, SP),  % stack = TERM, stack
     label(DONE), write_ram(SP, TOS),   % RAM[SP] := TOS
     jump(MAIN)
     |Ts]) -->
@@ -285,6 +287,12 @@ language.
     [lsl_imm(TOS, TERM, 16),  %  TOS := TERM << 16
      ior(TOS, TOS, SP),       %  TOS := TOS | SP
      add_imm(SP, SP, 4)].     % SP += 1 (word, not byte)
+
+⟐(push2(TOS, TERMADDR, SP)) -->
+    [sub_imm(SP, SP, 4),     % SP -= 1 (word, not byte)
+     sub(TOS, TERMADDR, SP), % TOS := &temp - sp
+     lsl_imm(TOS, TOS, 15),  % TOS := TOS << 15
+     ior(TOS, TOS, 4)].      % TOS := TOS | 4
 
 ⟐( write_ram(To, From)) -->                     [store_word(From, To, 0)].
 ⟐(write_cell(From, SP)) --> [add_imm(SP, SP, 4), store_word(From, SP, 0)].

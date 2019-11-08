@@ -112,3 +112,45 @@ lookup(DICT_PTR, DICT_TOP, TERM, HALT)
 It turns out that you don;t need anything but the record since it's
 already been looked up.  The symbol contains the jump address.
 
+
+
+Next, push
+
+push(TOS, TERM, SP)
+
+There's a note saying
+
+    set(sp, 2),  % Reg 2 points to just under top of stack.
+
+But I've forgotten if that's exactly true.  I want to just point to TOS
+pair record in SP.  If that's the case, then the PUSH operation is:
+
+Since the record we are constructing is going to have the rest of the
+stack as its tail and it's going to be written to the next word in RAM
+after (before) the SP (the address of the stack/tail) the offset is +4.
+
+The address of the term is in a register, the address of the pair record
+that we are contrsucting will be SP - 4, to get the offset we have to
+subtract that from the term's address.  Since we need it anyway, and
+we're going to do it sooner or later, let's subtract 4 from the SP right
+off:
+
+    sp = sp - 4
+
+Then we can use it to calculate the offset and put it in tos:
+
+    tos = &temp - sp
+    tos = tos << 15
+
+If I was as slick as I like to pretend I would insert a check here that
+the two high bits are indeed 00. ...
+
+With the offset of the term in the tos register already we just have to
+OR 4:
+
+    tos = tos | 4
+
+And write it to the (already decremented) sp.
+
+    ram[sp] = tos
+
