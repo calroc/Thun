@@ -93,13 +93,62 @@ program([  % Mainloop.
     % TOS has the offset from new stack cell to term cell.
     % Combine with the offset to the previous stack cell.
     lsl_imm(TOS, TOS, 15),  % TOS := TOS << 15
-    ior(TOS, TOS, 4),      % TOS := TOS | 4
+    ior_imm(TOS, TOS, 4),      % TOS := TOS | 4
 
-    % label(DONE),
+    label(Done),
     store_word(TOS, SP, 0),   % RAM[SP] := TOS
     do_offset(Main),
-    label(HALT),
-    do_offset(HALT)
+
+    label(HALT),  % This is a HALT loop, the emulator detects and traps
+    do_offset(HALT),  % on this "10 goto 10" instruction.
+
+% ======================================
+
+    label(Cons),  % Let's cons.
+
+    ror_imm(TEMP0, TOS, 15),  % TEMP0 := TOS >> 15
+    add(TEMP0, TEMP0, SP),  % TEMP0 = SP + TOS[30:15]
+    % TEMP0 = Address of the list to which to append.
+
+    and_imm(TOS, TOS, 0x7fff),  % get the offset of the tail of the stack
+    add(TOS, TOS, SP),  % TOS = SP + TOS[15:0]
+    % TOS = Address of the second stack cell.
+
+    % the address of the second item on the stack is (TOS) + ram[TOS][30:15]
+    % the address of the third stack cell         is (TOS) + ram[TOS][15: 0]
+
+    load_word(TEMP1, TOS, 0),
+    % TEMP1 contains the record of the second stack cell.
+
+    % the address of the second item on the stack is (TOS) + TEMP1[30:15]
+    % the address of the third stack cell         is (TOS) + TEMP1[15: 0]
+
+    ror_imm(TEMP2, TEMP1, 15),  % TEMP2 := TEMP1 >> 15
+    add(TEMP2, TEMP2, TOS),
+    % TEMP2 contains the address of the second item on the stack
+
+    and_imm(TEMP3, TEMP1, 0x7fff),  % get the offset of the third stack cell
+    add(TEMP3, TEMP1, TOS),
+    % TEMP3 = TOS +  TEMP1[15:0]  the address of the third stack cell
+
+
+    sub_imm(SP, SP, 4),
+    sub(TEMP2, TEMP2, SP),
+    sub(TEMP0, TEMP0, SP),
+    lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := TEMP2 << 15
+    ior(TEMP2, TEMP2, TEMP0),
+    store_word(TEMP2, SP, 0),
+
+    % Now reuse TEMP0 and put the next record in TOS.
+    sub_imm(SP, SP, 4),
+    sub(TEMP0, TEMP0, SP),
+
+    mov_imm_with_shift(TOS, 2),  % TOS := 4 << 15
+
+    ior(TOS, TOS, TEMP0),
+    % store_word(TOS, SP, 0),
+    do_offset(Done)
+    
 
 ]) :- [SP, EXPR_addr, TOS, TERM, EXPR, TermAddr, TEMP0]=[0, 1, 2, 3, 4, 5, 6].
 

@@ -198,3 +198,79 @@ So now that i've recreated it, what is it doing?
 
 
 This blows, just write it in assembly already.
+
+
+-------------------------------
+
+TO review, at this point, when we jump to the machine code of a
+definition, the following registers hold:
+
+    EXPR - the record word of the expression.
+    EXPR_addr - the address of the next cell of the expression list.
+    TERM - the term's record word.
+    TermAddr - the address of the term.
+    SP - points to TOS record in RAM
+    TOS - the record word of TOS
+
+    address of the list to append to is SP + TOS[30:15]
+    the address of the second stack cell is SP + TOS[15:0]
+    the address of the second item on the stack is (SP + TOS[15:0]) + ram[SP + TOS[15:0]][30:15]
+    the address of the third stack cell         is (SP + TOS[15:0]) + ram[SP + TOS[15:0]][15: 0]
+
+we need to create
+
+    [SP - 4] -> 00:(address of the second item on the stack):(address of the list to append to)
+    [SP - 8] -> 00:(address of the record above)            :(address of the third stack cell)
+
+Each of the addresses above must be converted to offsets from their
+respective records.
+
+ror_imm(TEMP0, TOS, 15), % TEMP0 := TOS >> 15
+add(TEMP0, TEMP0, SP)
+% TEMP0 = SP + TOS[30:15] Address of the list to which to append.
+
+and_imm(TOS, TOS, 0x7fff),  % get the offset of the tail of the stack
+add(TOS, TOS, SP)
+% TOS = SP + TOS[15:0] Address of the second stack cell.
+
+% the address of the second item on the stack is (TOS) + ram[TOS][30:15]
+% the address of the third stack cell         is (TOS) + ram[TOS][15: 0]
+
+load_word(TEMP1, TOS, 0),  % TOS := TOS << 15
+% TEMP1 contains the record of the second stack cell.
+
+% the address of the second item on the stack is (TOS) + TEMP1[30:15]
+% the address of the third stack cell         is (TOS) + TEMP1[15: 0]
+
+ror_imm(TEMP2, TEMP1, 15),  % TEMP2 := TEMP1 >> 15
+add(TEMP2, TEMP2, TOS)
+% TEMP2 contains the address of the second item on the stack
+
+and_imm(TEMP3, TEMP1, 0x7fff),  % get the offset of the third stack cell
+add(TEMP3, TEMP1, TOS)
+% TEMP3 = TOS +  TEMP1[15:0]  the address of the third stack cell
+
+
+we need to create
+
+    [SP - 4] -> 00:(address of the second item on the stack):(address of the list to append to)
+    [SP - 8] -> 00:(address of the record above)            :(address of the third stack cell)
+                     4 << 15
+Each of the addresses above must be converted to offsets from their
+respective records.
+
+sub_imm(SP, SP, 4),
+sub(TEMP2, TEMP2, SP),
+sub(TEMP0, TEMP0, SP),
+lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := TEMP2 << 15
+ior(TEMP2, TEMP2, TEMP0),
+store_word(TEMP2, SP, 0),
+
+
+sub_imm(SP, SP, 4),
+sub(TEMP3, TEMP3, SP),
+mov_imm(TEMP2, 4),
+lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := 4 << 15
+ior(TEMP2, TEMP2, TEMP3),
+store_word(TEMP2, SP, 0),
+
