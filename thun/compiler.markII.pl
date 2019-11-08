@@ -133,7 +133,8 @@ CPUs.)
     split_pair(TERM, TEMP1, EXPR, TEMP0),
     % Now Term has the term's record data and temp1 has the address of the term.
     if_literal(TERM, PUSH),
-    lookup(DICT_PTR, DICT_TOP, TERM, HALT),  % Jump to command or if not found halt.
+    % if it is a symbol the rest of it is the pointer to the machine code.
+    lookup(TERM),  % Jump to command.
     label(PUSH), push(TOS, TERM, SP),  % stack = TERM, stack
     label(DONE), write_ram(SP, TOS),   % RAM[SP] := TOS
     jump(MAIN)
@@ -316,14 +317,11 @@ language.
      ior(TOS, TOS, SP)],
     ⟐(write_cell(TOS, SP)).
 
-⟐(lookup(PTR, TOP, TERM, Exit)) -->
-    [mov(PTR, TOP),  % point to the top of the dictionary.
-     label(Lookup),
-     sub(0, TERM, PTR), eq(PTR),  % if the term is found jump to it,
-     sub_imm(PTR, PTR, 4),        % else load the next pointer.
-     load_word(PTR, PTR, 0),
-     sub_imm(PTR, PTR, 0), eq_offset(Exit),  % exit if it's zero.
-     do_offset(Lookup)].  % loop to the top.
+⟐(lookup(TERM)) -->
+    [mov_imm_with_shift(0, 0x3fff),
+     ior_imm(0, 0, 0xffff),
+     and(0, 0, TERM),
+     eq(0)].  % Jump to term's machine code.
 
 ⟐(repeat_until(Condition, Body)) -->
     {add_label(Condition, End, ConditionL)},

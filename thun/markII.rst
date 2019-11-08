@@ -107,3 +107,8 @@ Next, we must check if the term is a literal (not a symbol)
 That involves rolling the value to get the top two bits and then checking
 whether they are 10 or not.
 
+lookup(DICT_PTR, DICT_TOP, TERM, HALT)
+
+It turns out that you don;t need anything but the record since it's
+already been looked up.  The symbol contains the jump address.
+
