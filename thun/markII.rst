@@ -154,3 +154,47 @@ And write it to the (already decremented) sp.
 
     ram[sp] = tos
 
+
+cons
+------------------------------
+
+    [グ,ケ,ゲ,ド,ゴ,サ],ヮ(cons),
+
+    グ pop(TEMP0, TOS)           split_word(TEMP0, TOS),        high_half_to(To, From),     swap_halves(To, From),    ror_imm(To, From, 16)
+                                                                                            low_half(To)              and_imm(Reg, Reg, 0xffff)
+                                                                low_half(From)                                        and_imm(Reg, Reg, 0xffff)
+
+                                                                   Puts the term on tos (the list to cons onto) into temp0 and points tos
+                                 deref(TOS)                        to the value under tos (the item to cons onto the list.)
+
+    ケ high_half(TEMP1, TOS)     mov_imm_with_shift(0, 0xffff),    Mask off the high half of (new) tos to isolate value.
+                                 and(TEMP1, TOS, 0)
+    ゲ or_inplace(TEMP0, TEMP1)  ior(TEMP0, TEMP0, TEMP1)          Combines value with the list in a new pair record.
+    ド write_cell(TEMP0, SP)     add_imm(SP, SP, 4),               Writes the new pair cell word to ++sp.
+                                 store_word(TEMP0, SP, 0)
+    ゴ low_half(TOS)             and_imm(TOS, TOS, 0xffff)         Delete the reference to second item down.
+    サ merge(SP, TOS)            lsl_imm(0, SP, 16),               Make a new pair record from the SP which points to the new cons'd list
+                                 ior(TOS, TOS, 0),                 and TOS which points to the rest of the stack.  This record is then the
+                                 add_imm(SP, SP, 4)                new TOS pair cell word, and we let the mainloop write it to RAM for us.
+
+So now that i've recreated it, what is it doing?
+
+⦾(グ, pop(TEMP0, TOS))
+⦾(ケ, high_half(TEMP1, TOS))
+⦾(ゲ, or_inplace(TEMP0, TEMP1))
+⦾(ド, write_cell(TEMP0, SP))
+⦾(ゴ, low_half(TOS))
+⦾(サ, merge(SP, TOS))
+
+⟐(pop(Reg, TOS)) --> ⟐([split_word(Reg, TOS), deref(TOS)]).
+⟐(high_half(To, From)) --> [mov_imm_with_shift(0, 0xffff), and(To, From, 0)].
+⟐(or_inplace(To, From)) --> [ior(To, To, From)].
+⟐(write_cell(From, SP)) --> [add_imm(SP, SP, 4), store_word(From, SP, 0)].
+⟐(       low_half(Reg)) --> [and_imm(Reg, Reg, 0xffff)].
+⟐(merge(SP, TOS)) -->
+    [lsl_imm(0, SP, 16),
+     ior(TOS, TOS, 0),
+     add_imm(SP, SP, 4)].
+
+
+This blows, just write it in assembly already.
