@@ -36,7 +36,7 @@ program([  % Mainloop.
     store_word(0, 0, 0),
 
     mov_imm(SP, 0x1000),
-    mov_imm(EXPR_addr, 0x500),
+    mov_imm(EXPR_addr, Expression),
     mov_imm(TOS, 0),
     mov_imm(TERM, 0),
     store_word(TOS, SP, 0),  % RAM[SP] := 0
@@ -52,7 +52,7 @@ program([  % Mainloop.
 
     % At this point EXPR holds the record word of the expression.
 
-    ror_imm(TermAddr, EXPR, -15),  % put the offset in TermAddr
+    asr_imm(TermAddr, EXPR, 15),  % put the offset in TermAddr
     % No need to mask off high bits as the type tag for pairs is 00
 
     add(TermAddr, TermAddr, EXPR_addr), 
@@ -72,7 +72,7 @@ program([  % Mainloop.
     % EXPR_addr now holds the address of the next cell of the expression list.
 
     % if_literal(TERM, PUSH),
-    ror_imm(TEMP0, TERM, -30),  % get just the two tag bits.
+    asr_imm(TEMP0, TERM, 30),  % get just the two tag bits.
     sub_imm(TEMP0, TEMP0, 2),  % if this is a symbol result is zero.
     ne_offset(PUSH),
 
@@ -106,7 +106,7 @@ program([  % Mainloop.
 
     label(Cons),  % Let's cons.
 
-    ror_imm(TEMP0, TOS, 15),  % TEMP0 := TOS >> 15
+    asr_imm(TEMP0, TOS, 15),  % TEMP0 := TOS >> 15
     add(TEMP0, TEMP0, SP),  % TEMP0 = SP + TOS[30:15]
     % TEMP0 = Address of the list to which to append.
 
@@ -123,7 +123,7 @@ program([  % Mainloop.
     % the address of the second item on the stack is (TOS) + TEMP1[30:15]
     % the address of the third stack cell         is (TOS) + TEMP1[15: 0]
 
-    ror_imm(TEMP2, TEMP1, 15),  % TEMP2 := TEMP1 >> 15
+    asr_imm(TEMP2, TEMP1, 15),  % TEMP2 := TEMP1 >> 15
     add(TEMP2, TEMP2, TOS),
     % TEMP2 contains the address of the second item on the stack
 
@@ -131,7 +131,7 @@ program([  % Mainloop.
     add(TEMP3, TEMP1, TOS),
     % TEMP3 = TOS +  TEMP1[15:0]  the address of the third stack cell
 
-
+    % Build and write the new list cell.
     sub_imm(SP, SP, 4),
     sub(TEMP2, TEMP2, SP),
     sub(TEMP0, TEMP0, SP),
@@ -142,15 +142,16 @@ program([  % Mainloop.
     % Now reuse TEMP0 and put the next record in TOS.
     sub_imm(SP, SP, 4),
     sub(TEMP0, TEMP0, SP),
-
     mov_imm_with_shift(TOS, 2),  % TOS := 4 << 15
-
     ior(TOS, TOS, TEMP0),
-    % store_word(TOS, SP, 0),
-    do_offset(Done)
-    
+    do_offset(Done),  % Rely on mainloop::Done to write TOS to RAM.
 
-]) :- [SP, EXPR_addr, TOS, TERM, EXPR, TermAddr, TEMP0]=[0, 1, 2, 3, 4, 5, 6].
+    label(Expression),
+    expr_cell(ConsSym, 0),
+    label(ConsSym), symbol(Cons)
+
+]) :- [SP, EXPR_addr, TOS, TERM, EXPR, TermAddr, TEMP0, TEMP1, TEMP2, TEMP3]
+    = [0,  1,         2,   3,    4,    5,        6,     7,     8,     9    ].
 
 
 
@@ -195,8 +196,10 @@ asm([]) --> !, [].
 asm([      skip(Bits)|Rest]) --> !, skip(Bits),          asm(Rest).
 asm([(N, Instruction)|Rest]) --> !, asm(N, Instruction), asm(Rest).
 
-asm(_, expr_cell(Func, NextCell)) --> !,
-    {Data is (Func << 16) \/ NextCell}, asm(_, word(Data)).
+asm(Here, expr_cell(Func, NextCell)) --> !,
+    {Data is ((Func - Here) << 15) \/ NextCell}, asm(Here, word(Data)).
+
+asm(_, symbol(Sym)) --> !, {Data is Sym \/ 0x80000000}, asm(_, word(Data)).
 
 asm(_, word(Word)) --> !, {binary_number(Bits, Word)}, collect(32, Bits).
 
