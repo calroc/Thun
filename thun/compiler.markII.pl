@@ -237,9 +237,10 @@ language.
 ⟐([]) --> [].
 ⟐([Term|Terms]) --> ⟐(Term), ⟐(Terms).
 
-⟐(if_literal(Reg, Label)) -->  %  commands marked by setting high bit.
-    [and_imm(0, Reg, 0x8000),  % 1 << 15
-     eq_offset(Label)].
+⟐(if_literal(Reg, Label)) -->
+    [ior_imm(0, Reg, -30),  % get just the two tag bits.
+     sub_imm(0, 0, 2),  % subtract 2 to check if result is zero.
+     ne_offset(Label)].
 
 % if reg = 0 jump to label.
 ⟐(if_zero(Reg, Label)) --> [sub_imm(Reg, Reg, 0), eq_offset(Label)].

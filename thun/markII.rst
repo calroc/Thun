@@ -101,3 +101,9 @@ the offsets will always be negative (or positive).  SInce it's easier to
 deal with positive offsets and it's just as easy to allocate up as down,
 I'm going to do that.
 
+
+Next, we must check if the term is a literal (not a symbol)
+
+That involves rolling the value to get the top two bits and then checking
+whether they are 10 or not.
+
