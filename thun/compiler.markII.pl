@@ -112,46 +112,19 @@ Mark II
 
 % ======================================
 
-    label(Cons),  % Let's cons.
+    label(Cons)],  % Let's cons.
 
-    lsl_imm(TEMP0, TOS, 2),  % Trim off the type tag 00 bits.
-    asr_imm(TEMP0, TEMP0, 17),  % TEMP0 := TOS >> 15
-    eq_offset(Foo1),  % if the offset is zero don't add the address. it's empty list.
-    add(TEMP0, TEMP0, SP),  % TEMP0 = SP + TOS[30:15]
-    label(Foo1),
+    ⟐(unpack_pair(TOS, TEMP0, TOS)),
     % TEMP0 = Address of the list to which to append.
-
-    lsl_imm(TOS, TOS, 17),  % Get the offset of the tail of the stack
-    asr_imm(TOS, TOS, 17),  % while preserving the sign.
-    eq_offset(Foo2),  % if the offset is zero don't add the address. it's empty list.
-    add(TOS, TOS, SP),  % TOS = SP + TOS[15:0]
-    label(Foo2),
     % TOS = Address of the second stack cell.
-
-    % the address of the second item on the stack is (TOS) + ram[TOS][30:15]
-    % the address of the third stack cell         is (TOS) + ram[TOS][15: 0]
-
-    load_word(TEMP1, TOS, 0),
+    [load_word(TEMP1, TOS, 0)],
     % TEMP1 contains the record of the second stack cell.
-
-    % the address of the second item on the stack is (TOS) + TEMP1[30:15]
-    % the address of the third stack cell         is (TOS) + TEMP1[15: 0]
-
-    lsl_imm(TEMP2, TEMP1, 2),  % Trim off the type tag 00 bits.
-    asr_imm(TEMP2, TEMP2, 17),  % TEMP2 := TEMP1 >> 15
-    eq_offset(Foo3),  % if the offset is zero don't add the address. it's empty list.
-    add(TEMP2, TEMP2, TOS),
-    label(Foo3),
+    ⟐(unpack_pair(TEMP1, TEMP2, TEMP3)),
     % TEMP2 contains the address of the second item on the stack
-
-    lsl_imm(TEMP3, TEMP1, 17),  % Get the offset of the third stack cell
-    asr_imm(TEMP3, TEMP3, 17),  % while preserving the sign.
-    eq_offset(Foo4),  % if the offset is zero don't add the address. it's empty list.
-    add(TEMP3, TEMP1, TOS),
-    label(Foo4),
     % TEMP3 = TOS +  TEMP1[15:0]  the address of the third stack cell
 
     % Build and write the new list cell.
+    [
     sub_imm(SP, SP, 4)
 
     ],⟐([
@@ -195,6 +168,22 @@ language.
      and_imm(Reg, Reg, 0x7fff),  % Mask off high bits.
      label(Label)].
 
+⟐(unpack_pair(From, HeadAddr, TailAddr)) -->
+    [
+    lsl_imm(HeadAddr, From, 2),  % Trim off the type tag 00 bits.
+    asr_imm(HeadAddr, HeadAddr, 17),  % HeadAddr := From >> 15
+    eq_offset(Label0),  % if the offset is zero don't add the address. it's empty list.
+    add(HeadAddr, HeadAddr, TOS),
+    label(Label0),
+    % HeadAddr contains the address of the second item on the stack
+    lsl_imm(TailAddr, From, 17),  % Get the offset of the third stack cell
+    asr_imm(TailAddr, TailAddr, 17),  % while preserving the sign.
+    eq_offset(Label1),  % if the offset is zero don't add the address. it's empty list.
+    add(TailAddr, TailAddr, TOS),
+    label(Label1)
+    % TailAddr = TOS +  From[15:0]  the address of the third stack cell
+    ].
+
 
 do :-
     compile_program(Binary),
@@ -203,6 +192,7 @@ do :-
 
 compile_program(Binary) :-
     phrase(⟐(program), ASM),
+    writeln(ASM),
     phrase(linker(ASM), EnumeratedASM),
     phrase(asm(EnumeratedASM), Binary).
 
