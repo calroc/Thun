@@ -152,27 +152,21 @@ Mark II
     % TEMP3 = TOS +  TEMP1[15:0]  the address of the third stack cell
 
     % Build and write the new list cell.
-    sub_imm(SP, SP, 4),
-    sub_imm(TEMP2, TEMP2, 0),
-    eq_offset(Foo5),  % if the offset is zero don't subtract the address. it's empty list.
-    sub(TEMP2, TEMP2, SP),
-    and_imm(TEMP2, TEMP2, 0x7fff),  % Mask off high bits.
-    label(Foo5),
-    sub_imm(TEMP0, TEMP0, 0),
-    eq_offset(Foo6),  % if the offset is zero don't subtract the address. it's empty list.
-    sub(TEMP0, TEMP0, SP),
-    and_imm(TEMP0, TEMP0, 0x7fff),  % Mask off high bits.
-    label(Foo6),
+    sub_imm(SP, SP, 4)
+
+    ],⟐([
+
+    sub_base_from_offset(TEMP2, SP),
+    sub_base_from_offset(TEMP0, SP)
+
+    ]),[
+
     lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := TEMP2 << 15
     ior(TEMP2, TEMP2, TEMP0),
     store_word(TEMP2, SP, 0),
 
-    sub_imm(SP, SP, 4),
-    sub_imm(TEMP3, TEMP3, 0),
-    eq_offset(Foo7),  % if the offset is zero don't subtract the address. it's empty list.
-    sub(TEMP3, TEMP3, SP),
-    and_imm(TEMP3, TEMP3, 0x7fff),  % Mask off high bits.
-    label(Foo7),
+    sub_imm(SP, SP, 4)               ],⟐(
+    sub_base_from_offset(TEMP3, SP)  ),[
     mov_imm_with_shift(TOS, 2),  % TOS := 4 << 15
     ior(TOS, TOS, TEMP3),
     do_offset(Done),  % Rely on mainloop::Done to write TOS to RAM.
@@ -194,6 +188,13 @@ language.
 ⟐([Term|Terms]) --> ⟐(Term), ⟐(Terms).
 
 ⟐(if_zero(Reg, Label)) --> [sub_imm(Reg, Reg, 0), eq_offset(Label)].
+
+⟐(sub_base_from_offset(Reg, Base)) -->
+    [sub_imm(Reg, Reg, 0),
+    eq_offset(LABEL),  % if the offset is zero don't subtract the Base address. it's empty list.
+    sub(Reg, Reg, Base),
+    and_imm(Reg, Reg, 0x7fff),  % Mask off high bits.
+    label(LABEL)].
 
 
 do :-
