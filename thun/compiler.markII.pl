@@ -44,14 +44,12 @@ Mark II
     mov_imm(TERM, 0),
     store_word(TOS, SP, 0),  % RAM[SP] := 0
 
-    label(Main),
+    label(Main)],
 
-    % if_zero(EXPR_addr, HALT),
-    sub_imm(EXPR_addr, EXPR_addr, 0),
-    eq_offset(HALT),
+    ⟐(if_zero(EXPR_addr, HALT)),
 
     % deref(EXPR_addr, EXPR),
-    load_word(EXPR, EXPR_addr, 0),  % Load expr pair record into EXPR
+    [load_word(EXPR, EXPR_addr, 0),  % Load expr pair record into EXPR
 
     % At this point EXPR holds the record word of the expression.
 
@@ -194,6 +192,8 @@ language.
 
 ⟐([]) --> [].
 ⟐([Term|Terms]) --> ⟐(Term), ⟐(Terms).
+
+⟐(if_zero(Reg, Label)) --> [sub_imm(Reg, Reg, 0), eq_offset(Label)].
 
 
 do :-
