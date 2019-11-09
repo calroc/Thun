@@ -190,11 +190,10 @@ language.
 ⟐(if_zero(Reg, Label)) --> [sub_imm(Reg, Reg, 0), eq_offset(Label)].
 
 ⟐(sub_base_from_offset(Reg, Base)) -->
-    [sub_imm(Reg, Reg, 0),
-    eq_offset(LABEL),  % if the offset is zero don't subtract the Base address. it's empty list.
-    sub(Reg, Reg, Base),
-    and_imm(Reg, Reg, 0x7fff),  % Mask off high bits.
-    label(LABEL)].
+    ⟐(if_zero(Reg, Label)),  % if the offset is zero don't subtract 
+    [sub(Reg, Reg, Base),  % the Base address, it's the empty list.
+     and_imm(Reg, Reg, 0x7fff),  % Mask off high bits.
+     label(Label)].
 
 
 do :-
