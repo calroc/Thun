@@ -65,7 +65,7 @@ program([  % Mainloop.
     % Now Term has the term's record data and TermAddr has the address of the term.
 
     lsl_imm(TEMP0, EXPR, 17),  % Get the offset of the tail of the expr
-    asr_imm(TEMP0, TEMP0, 17),  % while preserveing the sign.
+    asr_imm(TEMP0, TEMP0, 17),  % while preserving the sign.
     eq_offset(Foo0),  % if the offset is zero don't add the address. it's empty list.
     add(TEMP0, TEMP0, EXPR_addr),  % Add the address to the offset.
     label(Foo0),
@@ -113,13 +113,15 @@ program([  % Mainloop.
 
     label(Cons),  % Let's cons.
 
-    asr_imm(TEMP0, TOS, 15),  % TEMP0 := TOS >> 15
+    lsl_imm(TEMP0, TOS, 2),  % Trim off the type tag 00 bits.
+    asr_imm(TEMP0, TEMP0, 17),  % TEMP0 := TOS >> 15
     eq_offset(Foo1),  % if the offset is zero don't add the address. it's empty list.
     add(TEMP0, TEMP0, SP),  % TEMP0 = SP + TOS[30:15]
     label(Foo1),
     % TEMP0 = Address of the list to which to append.
 
-    and_imm(TOS, TOS, 0x7fff),  % get the offset of the tail of the stack
+    lsl_imm(TOS, TOS, 17),  % Get the offset of the tail of the stack
+    asr_imm(TOS, TOS, 17),  % while preserving the sign.
     eq_offset(Foo2),  % if the offset is zero don't add the address. it's empty list.
     add(TOS, TOS, SP),  % TOS = SP + TOS[15:0]
     label(Foo2),
@@ -134,13 +136,15 @@ program([  % Mainloop.
     % the address of the second item on the stack is (TOS) + TEMP1[30:15]
     % the address of the third stack cell         is (TOS) + TEMP1[15: 0]
 
-    asr_imm(TEMP2, TEMP1, 15),  % TEMP2 := TEMP1 >> 15
+    lsl_imm(TEMP2, TEMP1, 2),  % Trim off the type tag 00 bits.
+    asr_imm(TEMP2, TEMP2, 17),  % TEMP2 := TEMP1 >> 15
     eq_offset(Foo3),  % if the offset is zero don't add the address. it's empty list.
     add(TEMP2, TEMP2, TOS),
     label(Foo3),
     % TEMP2 contains the address of the second item on the stack
 
-    and_imm(TEMP3, TEMP1, 0x7fff),  % get the offset of the third stack cell
+    lsl_imm(TEMP3, TEMP1, 17),  % Get the offset of the third stack cell
+    asr_imm(TEMP3, TEMP3, 17),  % while preserving the sign.
     eq_offset(Foo4),  % if the offset is zero don't add the address. it's empty list.
     add(TEMP3, TEMP1, TOS),
     label(Foo4),
@@ -151,10 +155,12 @@ program([  % Mainloop.
     sub_imm(TEMP2, TEMP2, 0),
     eq_offset(Foo5),  % if the offset is zero don't subtract the address. it's empty list.
     sub(TEMP2, TEMP2, SP),
+    and_imm(TEMP2, TEMP2, 0x7fff),  % Mask off high bits.
     label(Foo5),
     sub_imm(TEMP0, TEMP0, 0),
     eq_offset(Foo6),  % if the offset is zero don't subtract the address. it's empty list.
     sub(TEMP0, TEMP0, SP),
+    and_imm(TEMP0, TEMP0, 0x7fff),  % Mask off high bits.
     label(Foo6),
     lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := TEMP2 << 15
     ior(TEMP2, TEMP2, TEMP0),
@@ -164,6 +170,7 @@ program([  % Mainloop.
     sub_imm(TEMP3, TEMP3, 0),
     eq_offset(Foo7),  % if the offset is zero don't subtract the address. it's empty list.
     sub(TEMP3, TEMP3, SP),
+    and_imm(TEMP3, TEMP3, 0x7fff),  % Mask off high bits.
     label(Foo7),
     mov_imm_with_shift(TOS, 2),  % TOS := 4 << 15
     ior(TOS, TOS, TEMP3),
