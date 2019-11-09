@@ -274,6 +274,27 @@ lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := 4 << 15
 ior(TEMP2, TEMP2, TEMP3),
 store_word(TEMP2, SP, 0),
 
+I had some bugs because I forgot that when the offset is zero the base
+should not be added/subtracted: zero offset means the value is the empty
+list.
+
+If offsets can only be positive (as I have it now) then record pairs on
+the stack can only point to cells above them.  That implies that symbols
+must be allocated above the stack in RAM.  However, I am constructing the
+code library from low mem upwards, and if I include the symbol cells in
+the function machine code as a kind of header (as I intend to) they'll be
+below the stack.  I could put the symbol cells together in a clump just
+above the stack but then I would need to implement org() and modify the
+for_serial/2 relation to emit more than one "patch" for the bootloader.
+
+I could modify the implementation to allow for negative offsets.  That
+would be a little tricky but probably easier at the moment than adding
+org() and changing for_serial/2.  It would also facilitate writing lists
+in "reverse" order (the head cell is above the tail in RAM) which is
+useful for appending lists to other lists.
+
+Yeah, I think that's the way to go...
+
 
 
 PC == 0
