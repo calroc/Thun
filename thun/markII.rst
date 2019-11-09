@@ -274,3 +274,10 @@ lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := 4 << 15
 ior(TEMP2, TEMP2, TEMP3),
 store_word(TEMP2, SP, 0),
 
+
+
+PC == 0
+PC == 0x25
+
+ram[R[0]]
+ram[R[1]]

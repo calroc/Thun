@@ -27,12 +27,12 @@ Mark II
 
 
 program([  % Mainloop.
+    word(0),  % Zero root cell.
+    do_offset(Reset),  % Oberon bootloader writes MemLim to RAM[12] and
+    allocate(_, 20),  % stackOrg to RAM[24], we don't need these
+    label(Reset),  % but they must not be allowed to corrupt our code.
 
-    do_offset(Over),  % Oberon bootloader writes MemLim to RAM[12] and
-    allocate(_, 16),  % stackOrg to RAM[24], we don't need these
-    label(Over),  % but they must not be allowed to corrupt our code.
-
-    mov_imm(0, 0),  % zero out the root cell.
+    mov_imm(0, 0),  % zero out the root cell.  (After reset.)
     store_word(0, 0, 0),
 
     mov_imm(SP, 0x1000),
@@ -64,15 +64,16 @@ program([  % Mainloop.
     % Now Term has the term's record data and TermAddr has the address of the term.
 
     and_imm(TEMP0, EXPR, 0x7fff),  % get the offset of the tail of the expr
-    eq_offset(Foo),  % if the offset is zero don't add the adress. it's empty list.
+    eq_offset(Foo0),  % if the offset is zero don't add the adress. it's empty list.
     add(TEMP0, TEMP0, EXPR_addr),  % Add the address to the offset.
-    label(Foo),
+    label(Foo0),
     mov(EXPR_addr, TEMP0),
 
     % EXPR_addr now holds the address of the next cell of the expression list.
 
     % if_literal(TERM, PUSH),
     asr_imm(TEMP0, TERM, 30),  % get just the two tag bits.
+    and_imm(TEMP0, TEMP0, 2),  % mask the two tag bits.
     sub_imm(TEMP0, TEMP0, 2),  % if this is a symbol result is zero.
     ne_offset(PUSH),
 
@@ -81,7 +82,7 @@ program([  % Mainloop.
     mov_imm_with_shift(TEMP0, 0x3fff),  % TEMP0 = 0x3fffffff
     ior_imm(TEMP0, TEMP0, 0xffff),
     and(TEMP0, TEMP0, TERM),
-    eq(TEMP0),  % double check that this works with pointer in reg...
+    do(TEMP0),
 
     % going into push we have the term
     label(PUSH),
@@ -90,10 +91,11 @@ program([  % Mainloop.
     sub_imm(SP, SP, 4),     % SP -= 1 (word, not byte)
     % SP points to the future home of the new stack cell.
     sub(TOS, TermAddr, SP), % TOS := &temp - sp
+    % Er, what if it's negative?
     % TOS has the offset from new stack cell to term cell.
     % Combine with the offset to the previous stack cell.
     lsl_imm(TOS, TOS, 15),  % TOS := TOS << 15
-    ior_imm(TOS, TOS, 4),      % TOS := TOS | 4
+    ior_imm(TOS, TOS, 4),   % TOS := TOS | 4
 
     label(Done),
     store_word(TOS, SP, 0),   % RAM[SP] := TOS
@@ -107,11 +109,15 @@ program([  % Mainloop.
     label(Cons),  % Let's cons.
 
     asr_imm(TEMP0, TOS, 15),  % TEMP0 := TOS >> 15
+    eq_offset(Foo1),  % if the offset is zero don't add the adress. it's empty list.
     add(TEMP0, TEMP0, SP),  % TEMP0 = SP + TOS[30:15]
+    label(Foo1),
     % TEMP0 = Address of the list to which to append.
 
     and_imm(TOS, TOS, 0x7fff),  % get the offset of the tail of the stack
+    eq_offset(Foo2),  % if the offset is zero don't add the adress. it's empty list.
     add(TOS, TOS, SP),  % TOS = SP + TOS[15:0]
+    label(Foo2),
     % TOS = Address of the second stack cell.
 
     % the address of the second item on the stack is (TOS) + ram[TOS][30:15]
@@ -124,26 +130,38 @@ program([  % Mainloop.
     % the address of the third stack cell         is (TOS) + TEMP1[15: 0]
 
     asr_imm(TEMP2, TEMP1, 15),  % TEMP2 := TEMP1 >> 15
+    eq_offset(Foo3),  % if the offset is zero don't add the adress. it's empty list.
     add(TEMP2, TEMP2, TOS),
+    label(Foo3),
     % TEMP2 contains the address of the second item on the stack
 
     and_imm(TEMP3, TEMP1, 0x7fff),  % get the offset of the third stack cell
+    eq_offset(Foo4),  % if the offset is zero don't add the adress. it's empty list.
     add(TEMP3, TEMP1, TOS),
+    label(Foo4),
     % TEMP3 = TOS +  TEMP1[15:0]  the address of the third stack cell
 
     % Build and write the new list cell.
     sub_imm(SP, SP, 4),
+    sub_imm(TEMP2, TEMP2, 0),
+    eq_offset(Foo5),  % if the offset is zero don't subtract the adress. it's empty list.
     sub(TEMP2, TEMP2, SP),
+    label(Foo5),
+    sub_imm(TEMP0, TEMP0, 0),
+    eq_offset(Foo6),  % if the offset is zero don't subtract the adress. it's empty list.
     sub(TEMP0, TEMP0, SP),
+    label(Foo6),
     lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := TEMP2 << 15
     ior(TEMP2, TEMP2, TEMP0),
     store_word(TEMP2, SP, 0),
 
-    % Now reuse TEMP0 and put the next record in TOS.
     sub_imm(SP, SP, 4),
-    sub(TEMP0, TEMP0, SP),
+    sub_imm(TEMP3, TEMP3, 0),
+    eq_offset(Foo7),  % if the offset is zero don't subtract the adress. it's empty list.
+    sub(TEMP3, TEMP3, SP),
+    label(Foo7),
     mov_imm_with_shift(TOS, 2),  % TOS := 4 << 15
-    ior(TOS, TOS, TEMP0),
+    ior(TOS, TOS, TEMP3),
     do_offset(Done),  % Rely on mainloop::Done to write TOS to RAM.
 
     label(Expression),
