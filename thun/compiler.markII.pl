@@ -25,8 +25,11 @@ Mark II
 
 % Just do it in assembler.
 
-
-program([  % Mainloop.
+⟐(program) -->
+    { [SP, EXPR_addr, TOS, TERM, EXPR, TermAddr, TEMP0, TEMP1, TEMP2, TEMP3]
+    = [0,  1,         2,   3,    4,    5,        6,     7,     8,     9    ]
+    },
+    [  % Mainloop.
     word(0),  % Zero root cell.
     do_offset(Reset),  % Oberon bootloader writes MemLim to RAM[12] and
     allocate(_, 20),  % stackOrg to RAM[24], we don't need these
@@ -180,20 +183,28 @@ program([  % Mainloop.
     expr_cell(ConsSym, 0),
     label(ConsSym), symbol(Cons)
 
-]) :- [SP, EXPR_addr, TOS, TERM, EXPR, TermAddr, TEMP0, TEMP1, TEMP2, TEMP3]
-    = [0,  1,         2,   3,    4,    5,        6,     7,     8,     9    ].
+].
+
+/*
+
+This stage ⟐//1 converts the intermediate representation to assembly
+language.
+
+*/
+
+⟐([]) --> [].
+⟐([Term|Terms]) --> ⟐(Term), ⟐(Terms).
 
 
-
-do :- program(Program),
-    compile_program(Program, Binary),
+do :-
+    compile_program(Binary),
     write_binary('joy_asmii.bin', Binary).
 
 
-compile_program(ASM, Binary) :-
+compile_program(Binary) :-
+    phrase(⟐(program), ASM),
     phrase(linker(ASM), EnumeratedASM),
     phrase(asm(EnumeratedASM), Binary).
-
 
 
 /*
