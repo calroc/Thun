@@ -44,31 +44,17 @@ Mark II
     mov_imm(TERM, 0),
     store_word(TOS, SP, 0),  % RAM[SP] := 0
 
-    label(Main)],
-    ⟐([
+    label(Main)
+],⟐([
     if_zero(EXPR_addr, HALT),
-    load(EXPR, EXPR_addr)
-    ]),[
+    load(EXPR, EXPR_addr),
     % At this point EXPR holds the record word of the expression.
-    lsl_imm(TermAddr, EXPR, 2),  % Trim off the type tag 00 bits.
-    asr_imm(TermAddr, TermAddr, 17),  % preserve sign of offset.
-    eq_offset(Foo),  % if the offset is zero don't add the address. it's empty list.
-    add(TermAddr, TermAddr, EXPR_addr), 
-    label(Foo),
-
+    unpack_pair(EXPR, TermAddr, TEMP0, EXPR_addr),
+    load(TERM, TermAddr)
+]),[
     % TermAddr has the address of the term record.
-
-    load_word(TERM, TermAddr, 0),  % Bring the record in from RAM.
-
-    % Now Term has the term's record data and TermAddr has the address of the term.
-
-    lsl_imm(TEMP0, EXPR, 17),  % Get the offset of the tail of the expr
-    asr_imm(TEMP0, TEMP0, 17),  % while preserving the sign.
-    eq_offset(Foo0),  % if the offset is zero don't add the address. it's empty list.
-    add(TEMP0, TEMP0, EXPR_addr),  % Add the address to the offset.
-    label(Foo0),
+    % Now TERM has the term's record data and TermAddr has the address of the term.
     mov(EXPR_addr, TEMP0),
-
     % EXPR_addr now holds the address of the next cell of the expression list.
 
     % if_literal(TERM, PUSH),
@@ -110,33 +96,31 @@ Mark II
 % ======================================
 
     label(Cons)  % Let's cons.
-    ],⟐([
+],⟐([
     unpack_pair(TOS, TEMP0, TOS, SP),
     % TEMP0 = Address of the list to which to append.
     % TOS = Address of the second stack cell.
     load(TEMP1, TOS),
     % TEMP1 contains the record of the second stack cell.
     unpack_pair(TEMP1, TEMP2, TEMP3, TOS)
-    ]),[
+]),[
     % TEMP2 contains the address of the second item on the stack
     % TEMP3 = TOS +  TEMP1[15:0]  the address of the third stack cell
 
     % Build and write the new list cell.
     sub_imm(SP, SP, 4)
-
-    ],⟐([
-
+],⟐([
     sub_base_from_offset(TEMP2, SP),
     sub_base_from_offset(TEMP0, SP)
-
-    ]),[
-
+]),[
     lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := TEMP2 << 15
     ior(TEMP2, TEMP2, TEMP0),
     store_word(TEMP2, SP, 0),
 
-    sub_imm(SP, SP, 4)               ],⟐(
-    sub_base_from_offset(TEMP3, SP)  ),[
+    sub_imm(SP, SP, 4)
+],⟐(
+    sub_base_from_offset(TEMP3, SP)
+),[
     mov_imm_with_shift(TOS, 2),  % TOS := 4 << 15
     ior(TOS, TOS, TEMP3),
     do_offset(Done),  % Rely on mainloop::Done to write TOS to RAM.
