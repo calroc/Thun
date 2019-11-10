@@ -137,16 +137,16 @@ language.
      label(Label)].
 
 ⟐(unpack_pair(From, HeadAddr, TailAddr, Base)) -->
-    [lsl_imm(HeadAddr, From, 2),  % Trim off the type tag 00 bits.
-     asr_imm(HeadAddr, HeadAddr, 17),  % HeadAddr := From >> 15
-     eq_offset(Label0),  % if the offset is zero don't add the address. it's empty list.
-     add(HeadAddr, HeadAddr, Base),
-     label(Label0),
-     lsl_imm(TailAddr, From, 17),  % Get the offset of the third stack cell
-     asr_imm(TailAddr, TailAddr, 17),  % while preserving the sign.
-     eq_offset(Label1),  % if the offset is zero don't add the address. it's empty list.
-     add(TailAddr, TailAddr, Base),
-     label(Label1)].
+    [lsl_imm(HeadAddr, From, 2)],  % Trim off the type tag 00 bits.
+    ⟐(roll_down_add_base_if_not_zero(HeadAddr, Base)),
+    [lsl_imm(TailAddr, From, 17)],  % Trim off tag and head address.
+    ⟐(roll_down_add_base_if_not_zero(TailAddr, Base)).
+
+⟐(roll_down_add_base_if_not_zero(Addr, Base)) -->
+    [asr_imm(Addr, Addr, 17),  % Preserving sign.
+    eq_offset(Label),  % If the offset is zero don't add the address. it's empty list.
+    add(Addr, Addr, Base),
+    label(Label)].
 
 ⟐(load(From, To)) --> [load_word(From, To, 0)].
 
