@@ -45,14 +45,11 @@ Mark II
     store_word(TOS, SP, 0),  % RAM[SP] := 0
 
     label(Main)],
-
-    ⟐(if_zero(EXPR_addr, HALT)),
-
-    % deref(EXPR_addr, EXPR),
-    [load_word(EXPR, EXPR_addr, 0),  % Load expr pair record into EXPR
-
+    ⟐([
+    if_zero(EXPR_addr, HALT),
+    load(EXPR, EXPR_addr)
+    ]),[
     % At this point EXPR holds the record word of the expression.
-
     lsl_imm(TermAddr, EXPR, 2),  % Trim off the type tag 00 bits.
     asr_imm(TermAddr, TermAddr, 17),  % preserve sign of offset.
     eq_offset(Foo),  % if the offset is zero don't add the address. it's empty list.
@@ -112,19 +109,19 @@ Mark II
 
 % ======================================
 
-    label(Cons)],  % Let's cons.
-
-    ⟐(unpack_pair(TOS, TEMP0, TOS, SP)),
+    label(Cons)  % Let's cons.
+    ],⟐([
+    unpack_pair(TOS, TEMP0, TOS, SP),
     % TEMP0 = Address of the list to which to append.
     % TOS = Address of the second stack cell.
-    [load_word(TEMP1, TOS, 0)],
+    load(TEMP1, TOS),
     % TEMP1 contains the record of the second stack cell.
-    ⟐(unpack_pair(TEMP1, TEMP2, TEMP3, TOS)),
+    unpack_pair(TEMP1, TEMP2, TEMP3, TOS)
+    ]),[
     % TEMP2 contains the address of the second item on the stack
     % TEMP3 = TOS +  TEMP1[15:0]  the address of the third stack cell
 
     % Build and write the new list cell.
-    [
     sub_imm(SP, SP, 4)
 
     ],⟐([
@@ -169,21 +166,18 @@ language.
      label(Label)].
 
 ⟐(unpack_pair(From, HeadAddr, TailAddr, Base)) -->
-    [
-    lsl_imm(HeadAddr, From, 2),  % Trim off the type tag 00 bits.
-    asr_imm(HeadAddr, HeadAddr, 17),  % HeadAddr := From >> 15
-    eq_offset(Label0),  % if the offset is zero don't add the address. it's empty list.
-    add(HeadAddr, HeadAddr, Base),
-    label(Label0),
-    % HeadAddr contains the address of the second item on the stack
-    lsl_imm(TailAddr, From, 17),  % Get the offset of the third stack cell
-    asr_imm(TailAddr, TailAddr, 17),  % while preserving the sign.
-    eq_offset(Label1),  % if the offset is zero don't add the address. it's empty list.
-    add(TailAddr, TailAddr, Base),
-    label(Label1)
-    % TailAddr = Base +  From[15:0]  the address of the third stack cell
-    ].
+    [lsl_imm(HeadAddr, From, 2),  % Trim off the type tag 00 bits.
+     asr_imm(HeadAddr, HeadAddr, 17),  % HeadAddr := From >> 15
+     eq_offset(Label0),  % if the offset is zero don't add the address. it's empty list.
+     add(HeadAddr, HeadAddr, Base),
+     label(Label0),
+     lsl_imm(TailAddr, From, 17),  % Get the offset of the third stack cell
+     asr_imm(TailAddr, TailAddr, 17),  % while preserving the sign.
+     eq_offset(Label1),  % if the offset is zero don't add the address. it's empty list.
+     add(TailAddr, TailAddr, Base),
+     label(Label1)].
 
+⟐(load(From, To)) --> [load_word(From, To, 0)].
 
 do :-
     compile_program(Binary),
