@@ -29,7 +29,7 @@ Mark II
     { [SP, EXPR_addr, TOS, TERM, EXPR, TermAddr, TEMP0, TEMP1, TEMP2, TEMP3]
     = [0,  1,         2,   3,    4,    5,        6,     7,     8,     9    ]
     },
-    [  % Mainloop.
+[
     word(0),  % Zero root cell.
     do_offset(Reset),  % Oberon bootloader writes MemLim to RAM[12] and
     allocate(_, 20),  % stackOrg to RAM[24], we don't need these
@@ -42,10 +42,9 @@ Mark II
     mov_imm(EXPR_addr, Expression),
     mov_imm(TOS, 0),
     mov_imm(TERM, 0),
-    store_word(TOS, SP, 0),  % RAM[SP] := 0
-
-    label(Main)
+    store_word(TOS, SP, 0)  % RAM[SP] := 0
 ],⟐([
+    label(Main),  % Mainloop.
     if_zero(EXPR_addr, HALT),
     load(EXPR, EXPR_addr),
     % At this point EXPR holds the record word of the expression.
@@ -59,14 +58,12 @@ Mark II
 ],⟐([
     if_literal(TERM, PUSH, TEMP0),
     % if it is a symbol the rest of it is the pointer to the machine code.
-    lookup(TERM, TEMP0)  % Jump to command.
-]),[
+    lookup(TERM, TEMP0),  % Jump to command.
     % going into push we have the term
-    label(PUSH)
+    label(PUSH),
     % push2(TOS, TEMP1, SP),  % stack = TERM, stack
-],⟐(
     incr(SP)
-),[
+]),[
     % SP points to the future home of the new stack cell.
     sub(TOS, TermAddr, SP), % TOS := &temp - sp
     % Er, what if it's negative?
@@ -83,12 +80,13 @@ Mark II
     do_offset(Main),
 
     label(HALT),  % This is a HALT loop, the emulator detects and traps
-    do_offset(HALT),  % on this "10 goto 10" instruction.
+    do_offset(HALT)  % on this "10 goto 10" instruction.
 
 % ======================================
-
-    label(Cons)  % Let's cons.
 ],⟐([
+
+    label(Cons),  % Let's cons.
+
     unpack_pair(TOS, TEMP0, TOS, SP),
     % TEMP0 = Address of the list to which to append.
     % TOS = Address of the second stack cell.
@@ -151,6 +149,8 @@ language.
      label(Label1)].
 
 ⟐(load(From, To)) --> [load_word(From, To, 0)].
+
+⟐(label(L)) --> [label(L)].  % Pass through.
 
 ⟐(incr(SP)) --> [sub_imm(SP, SP, 4)].  % SP -= 1 (word, not byte).
 
