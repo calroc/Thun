@@ -77,13 +77,11 @@ Mark II
 
     label(Done),
     store_word(TOS, SP, 0),   % RAM[SP] := TOS
-    do_offset(Main),
+    do_offset(Main)
 
-    label(HALT),  % This is a HALT loop, the emulator detects and traps
-    do_offset(HALT)  % on this "10 goto 10" instruction.
+    ],⟐([
 
-% ======================================
-],⟐([
+    halt(HALT),  % ======================================
 
     definition(Cons),  % Let's cons.
 
@@ -146,6 +144,9 @@ language.
 ⟐(label(L)) --> [label(L)].  % Pass through.
 
 ⟐(jump(To)) --> [do_offset(To)].  % Pass through.
+
+⟐(halt(Halt)) --> [label(Halt), do_offset(Halt)].
+% This is a HALT loop, the emulator detects and traps on this "10 goto 10" instruction.
 
 ⟐(incr(SP)) --> [sub_imm(SP, SP, 4)].  % SP -= 1 (word, not byte).
 
