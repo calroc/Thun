@@ -99,24 +99,18 @@ Mark II
     % Build and write the new list cell.
     incr(SP),
     sub_base_from_offset(TEMP2, SP),
-    sub_base_from_offset(TEMP0, SP)
-]),[
-    lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := TEMP2 << 15
-    ior(TEMP2, TEMP2, TEMP0),
-    store_word(TEMP2, SP, 0)
-],⟐([
+    sub_base_from_offset(TEMP0, SP),
+    merge_and_store(TEMP2, TEMP0, SP),
     incr(SP),
-    sub_base_from_offset(TEMP3, SP)
+    sub_base_from_offset(TEMP3, SP),
+    chain_link(TOS, TEMP3),
+    jump(Done)  % Rely on mainloop::Done to write TOS to RAM.
 ]),[
-    mov_imm_with_shift(TOS, 2),  % TOS := 4 << 15
-    ior(TOS, TOS, TEMP3),
-    do_offset(Done),  % Rely on mainloop::Done to write TOS to RAM.
-
     label(Expression),
     expr_cell(ConsSym, 0),
     label(ConsSym), symbol(Cons)
-
 ].
+
 
 /*
 
@@ -152,6 +146,8 @@ language.
 
 ⟐(label(L)) --> [label(L)].  % Pass through.
 
+⟐(jump(To)) --> [do_offset(To)].  % Pass through.
+
 ⟐(incr(SP)) --> [sub_imm(SP, SP, 4)].  % SP -= 1 (word, not byte).
 
 ⟐(if_literal(TERM, Push, TEMP)) -->
@@ -166,6 +162,15 @@ language.
      ior_imm(TEMP, TEMP, 0xffff),
      and(TEMP, TEMP, TERM),
      do(TEMP)].  % Jump to command.
+
+⟐(merge_and_store(HeadAddr, TailAddr, SP)) -->
+    [lsl_imm(HeadAddr, HeadAddr, 15),  % HeadAddr := HeadAddr << 15
+     ior(HeadAddr, HeadAddr, TailAddr),
+     store_word(HeadAddr, SP, 0)].
+
+⟐(chain_link(In, Term)) -->
+    [mov_imm_with_shift(In, 2),  % In := 4 << 15
+     ior(In, In, Term)].
 
 
 do :-
