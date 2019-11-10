@@ -295,6 +295,23 @@ useful for appending lists to other lists.
 
 Yeah, I think that's the way to go...
 
+---------------------------------------------
+
+There's soething fishey with the symbols now that they are in the header
+of the machine code.  Each symbol's pointer field points to the next cell,
+which seems really redundant.  We need some symbol record to
+differentiate from lists and ints.  Maybe if more information was in the
+header? Like the name of the function?  It would make more sense?
+
+Right now I'm assuming that the eventual parser would be looking up
+symbols at parse-time and reusing the header symbols rather than
+allocating cells for new ones.  If the symbols were kept apart from the
+machine code then it makes sense for them to have pointers?
+
+Maybe I can dispense with symbol records by modifying the
+is-this-a-symbol code to just check if the address is below the end of
+the library code.
+
 
 
 PC == 0

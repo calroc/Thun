@@ -85,7 +85,7 @@ Mark II
 % ======================================
 ],⟐([
 
-    label(Cons),  % Let's cons.
+    definition(Cons),  % Let's cons.
 
     unpack_pair(TOS, TEMP0, TOS, SP),
     % TEMP0 = Address of the list to which to append.
@@ -107,8 +107,7 @@ Mark II
     jump(Done)  % Rely on mainloop::Done to write TOS to RAM.
 ]),[
     label(Expression),
-    expr_cell(ConsSym, 0),
-    label(ConsSym), symbol(Cons)
+    expr_cell(Cons, 0)
 ].
 
 
@@ -172,6 +171,8 @@ language.
     [mov_imm_with_shift(In, 2),  % In := 4 << 15
      ior(In, In, Term)].
 
+⟐(definition(Name)) --> [label(Name), symbol(Name)].
+
 
 do :-
     compile_program(Binary),
@@ -218,9 +219,13 @@ asm([(N, Instruction)|Rest]) --> !, asm(N, Instruction), asm(Rest).
 asm(Here, expr_cell(Func, NextCell)) --> !,
     {Data is ((Func - Here) << 15) \/ NextCell}, asm(Here, word(Data)).
 
-asm(_, symbol(Sym)) --> !, {Data is Sym \/ 0x80000000}, asm(_, word(Data)).
+asm(_, symbol(Sym)) --> !, {Data is (Sym + 4) \/ 0x80000000}, asm(_, word(Data)).
+% The symbol is at the beginning of the function machine code, so the pointer it
+% holds to that code has to be one word beyond the pointer/label Sym that points
+% to the symbol itself (one word before the machine code.)  The symbol's address
+% is used in expressions.
 
-asm(_, word(Word)) --> !, {binary_number(Bits, Word)}, collect(32, Bits).
+asm(_, word(Word)) --> !, encode_int(32, Word).
 
 asm(_,  load_word(A, B, Offset)) --> !, instruction_format_F2(0, 0, A, B, Offset).
 asm(_,  load_byte(A, B, Offset)) --> !, instruction_format_F2(0, 1, A, B, Offset).
