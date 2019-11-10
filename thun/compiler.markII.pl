@@ -54,29 +54,21 @@ Mark II
 ]),[
     % TermAddr has the address of the term record.
     % Now TERM has the term's record data and TermAddr has the address of the term.
-    mov(EXPR_addr, TEMP0),
+    mov(EXPR_addr, TEMP0)
     % EXPR_addr now holds the address of the next cell of the expression list.
-
-    % if_literal(TERM, PUSH),
-    asr_imm(TEMP0, TERM, 30),  % get just the two tag bits.
-    and_imm(TEMP0, TEMP0, 2),  % mask the two tag bits.
-    sub_imm(TEMP0, TEMP0, 2),  % if this is a symbol result is zero.
-    ne_offset(PUSH),
-
+],⟐([
+    if_literal(TERM, PUSH, TEMP0),
     % if it is a symbol the rest of it is the pointer to the machine code.
-    % lookup(TERM),  % Jump to command.
-    mov_imm_with_shift(TEMP0, 0x3fff),  % TEMP0 = 0x3fffffff
-    ior_imm(TEMP0, TEMP0, 0xffff),
-    and(TEMP0, TEMP0, TERM),
-    do(TEMP0),
-
+    lookup(TERM, TEMP0)  % Jump to command.
+]),[
     % going into push we have the term
-    label(PUSH)],
+    label(PUSH)
     % push2(TOS, TEMP1, SP),  % stack = TERM, stack
-
-    ⟐(incr(SP)),
+],⟐(
+    incr(SP)
+),[
     % SP points to the future home of the new stack cell.
-    [sub(TOS, TermAddr, SP), % TOS := &temp - sp
+    sub(TOS, TermAddr, SP), % TOS := &temp - sp
     % Er, what if it's negative?
     hi_offset(Bar0),
     and_imm(TOS, TOS, 0x7fff),  % Mask off high bits so
@@ -161,6 +153,19 @@ language.
 ⟐(load(From, To)) --> [load_word(From, To, 0)].
 
 ⟐(incr(SP)) --> [sub_imm(SP, SP, 4)].  % SP -= 1 (word, not byte).
+
+⟐(if_literal(TERM, Push, TEMP)) -->
+    [asr_imm(TEMP, TERM, 30),  % get just the two tag bits.
+     and_imm(TEMP, TEMP, 2),  % mask the two tag bits.
+     sub_imm(TEMP, TEMP, 2),  % if this is a symbol result is zero.
+     ne_offset(Push)].
+
+⟐(lookup(TERM, TEMP)) -->
+    % if it is a symbol the rest of it is the pointer to the machine code.
+    [mov_imm_with_shift(TEMP, 0x3fff),  % TEMP = 0x3fffffff
+     ior_imm(TEMP, TEMP, 0xffff),
+     and(TEMP, TEMP, TERM),
+     do(TEMP)].  % Jump to command.
 
 
 do :-
