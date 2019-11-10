@@ -79,7 +79,7 @@ Mark II
     store_word(TOS, SP, 0),   % RAM[SP] := TOS
     do_offset(Main)
 
-    ],⟐([
+],⟐([
 
     halt(HALT),  % ======================================
 
@@ -102,10 +102,18 @@ Mark II
     incr(SP),
     sub_base_from_offset(TEMP3, SP),
     chain_link(TOS, TEMP3),
-    jump(Done)  % Rely on mainloop::Done to write TOS to RAM.
+    jump(Done),  % Rely on mainloop::Done to write TOS to RAM.
+
+    definition(Dup)
+]),[
+    % TermAddr := TOS << 2 >> 17
+    lsl_imm(TermAddr, TOS, 2),
+    asr_imm(TermAddr, TermAddr, 17)
+],⟐([
+    jump(PUSH)
 ]),[
     label(Expression),
-    expr_cell(Cons, 0)
+    expr_cell(Dup, 0)
 ].
 
 
@@ -182,7 +190,7 @@ do :-
 
 compile_program(Binary) :-
     phrase(⟐(program), ASM),
-    writeln(ASM),
+    portray_clause(ASM),
     phrase(linker(ASM), EnumeratedASM),
     phrase(asm(EnumeratedASM), Binary).
 

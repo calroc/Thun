@@ -312,6 +312,22 @@ Maybe I can dispense with symbol records by modifying the
 is-this-a-symbol code to just check if the address is below the end of
 the library code.
 
+------------------------------------
+
+ 
+    [ザ,シ],ヮ(dup),
+
+    ザ swap_halves(TOS)
+    シ push(TOS, TOS, SP)
+
+
+
+
+
+
+
+
+
 
 
 PC == 0
