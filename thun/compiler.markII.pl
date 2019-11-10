@@ -71,12 +71,12 @@ Mark II
     do(TEMP0),
 
     % going into push we have the term
-    label(PUSH),
+    label(PUSH)],
     % push2(TOS, TEMP1, SP),  % stack = TERM, stack
 
-    sub_imm(SP, SP, 4),     % SP -= 1 (word, not byte)
+    ⟐(incr(SP)),
     % SP points to the future home of the new stack cell.
-    sub(TOS, TermAddr, SP), % TOS := &temp - sp
+    [sub(TOS, TermAddr, SP), % TOS := &temp - sp
     % Er, what if it's negative?
     hi_offset(Bar0),
     and_imm(TOS, TOS, 0x7fff),  % Mask off high bits so
@@ -102,25 +102,22 @@ Mark II
     % TOS = Address of the second stack cell.
     load(TEMP1, TOS),
     % TEMP1 contains the record of the second stack cell.
-    unpack_pair(TEMP1, TEMP2, TEMP3, TOS)
-]),[
+    unpack_pair(TEMP1, TEMP2, TEMP3, TOS),
     % TEMP2 contains the address of the second item on the stack
     % TEMP3 = TOS +  TEMP1[15:0]  the address of the third stack cell
 
     % Build and write the new list cell.
-    sub_imm(SP, SP, 4)
-],⟐([
+    incr(SP),
     sub_base_from_offset(TEMP2, SP),
     sub_base_from_offset(TEMP0, SP)
 ]),[
     lsl_imm(TEMP2, TEMP2, 15),  % TEMP2 := TEMP2 << 15
     ior(TEMP2, TEMP2, TEMP0),
-    store_word(TEMP2, SP, 0),
-
-    sub_imm(SP, SP, 4)
-],⟐(
+    store_word(TEMP2, SP, 0)
+],⟐([
+    incr(SP),
     sub_base_from_offset(TEMP3, SP)
-),[
+]),[
     mov_imm_with_shift(TOS, 2),  % TOS := 4 << 15
     ior(TOS, TOS, TEMP3),
     do_offset(Done),  % Rely on mainloop::Done to write TOS to RAM.
@@ -162,6 +159,9 @@ language.
      label(Label1)].
 
 ⟐(load(From, To)) --> [load_word(From, To, 0)].
+
+⟐(incr(SP)) --> [sub_imm(SP, SP, 4)].  % SP -= 1 (word, not byte).
+
 
 do :-
     compile_program(Binary),
