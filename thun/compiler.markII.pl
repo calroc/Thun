@@ -109,12 +109,8 @@ Mark II
     chain_link(TOS, TEMP3),
     jump(Done),  % Rely on mainloop::Done to write TOS to RAM.
 
-    definition(Dup)
-]),[
-    % TermAddr := TOS << 2 >> 17
-    lsl_imm(TermAddr, TOS, 2),
-    asr_imm(TermAddr, TermAddr, 17)
-],⟐([
+    definition(Dup),
+    head_addr(TOS, TermAddr),
     jump(PUSH)
 ]),[
     label(Expression),
@@ -186,6 +182,8 @@ language.
      ior(In, In, Term)].
 
 ⟐(definition(Name)) --> [label(Name), symbol(Name)].
+
+⟐(head_addr(Pair, HeadAddr)) --> [lsl_imm(HeadAddr, Pair, 2), asr_imm(HeadAddr, HeadAddr, 17)].
 
 
 do :-
