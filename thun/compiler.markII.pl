@@ -62,7 +62,8 @@ Mark II
     % going into push we have the term
     label(PUSH),
     % push2(TOS, TEMP1, SP),  % stack = TERM, stack
-    incr(SP)
+    incr(SP),
+    if_zero(TermAddr, JustPushEmptyList)
 ]),[
     % SP points to the future home of the new stack cell.
     sub(TOS, TermAddr, SP), % TOS := &temp - sp
@@ -74,6 +75,10 @@ Mark II
     % Combine with the offset to the previous stack cell.
     lsl_imm(TOS, TOS, 15),  % TOS := TOS << 15
     ior_imm(TOS, TOS, 4),   % TOS := TOS | 4
+    do_offset(Done),
+    label(JustPushEmptyList),
+    mov_imm(TOS, 4),  % TOS is a pair record with 0 as the head addr
+    % and the previous word in RAM as tail addr.
 
     label(Done),
     store_word(TOS, SP, 0),   % RAM[SP] := TOS
