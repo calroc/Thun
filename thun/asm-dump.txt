@@ -187,4 +187,5 @@ store_word(6, 0, 0),
 do_offset(H),
 label(I1),
 expr_cell(R, 4),
+expr_cell(J, 4),
 expr_cell(S, 0)].

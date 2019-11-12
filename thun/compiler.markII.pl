@@ -162,9 +162,9 @@ Mark II
 
 
     % ======================================
-    label(Expression)
-]),
-    dexpr([Dup, I]).
+    label(Expression),
+    dexpr([Dup, Cons, I])
+]).
 
 
 /*
@@ -200,6 +200,7 @@ language.
 ⟐(load(From, To)) --> [load_word(From, To, 0)].
 
 ⟐(label(L)) --> [label(L)].  % Pass through.
+⟐(dexpr(L)) -->  dexpr(L).   % Pass through.
 
 ⟐(jump(To)) --> [do_offset(To)].  % Pass through.
 
