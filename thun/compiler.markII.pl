@@ -99,9 +99,7 @@ Mark II
 
     % Build and write the new list cell.
     incr(SP),
-    sub_base_from_offset(TEMP2, SP),
-    sub_base_from_offset(TEMP0, SP),
-    merge_and_store(TEMP2, TEMP0, SP),
+    sub_base_merge_and_store(TEMP2, TEMP0, SP),
     incr(SP),
     sub_base_from_offset(TEMP3, SP),
     chain_link(TOS, TEMP3),
@@ -132,9 +130,7 @@ Mark II
                 [  % TERM is the last item in the quoted program.
                     % The expr should point to a cell that has TEMP1 head and tail
                     % of the rest of the expression.
-                    sub_base_from_offset(TEMP1, SP),
-                    sub_base_from_offset(EXPR_addr, SP),
-                    merge_and_store(TEMP1, EXPR_addr, SP)
+                    sub_base_merge_and_store(TEMP1, EXPR_addr, SP)
                 ], [  % TERM has at least one more item after it.
                     % We know that we will be writing that item in a
                     % cell immediately after this one, so it has TEMP1
@@ -155,9 +151,7 @@ Mark II
     unpack_pair(TEMP1, TEMP0, TEMP1, TOS),
     % TEMP0 = HeadAddr, TEMP1 = TailAddr
     incr(SP),
-    sub_base_from_offset(TEMP0, SP),
-    sub_base_from_offset(TEMP1, SP),
-    merge_and_store(TEMP0, TEMP1, SP),
+    sub_base_merge_and_store(TEMP0, TEMP1, SP),
     jump(Main),  % We already wrote the stack cell so 'Main' not 'Done'.
 
 
@@ -259,6 +253,11 @@ language.
         ConditionL, Else, jump(END),
         label(THEN), Then, label(END)
     ]).
+
+⟐(sub_base_merge_and_store(HeadAddr, TailAddr, Base)) -->
+    ⟐([sub_base_from_offset(HeadAddr, Base),
+    sub_base_from_offset(TailAddr, Base),
+    merge_and_store(HeadAddr, TailAddr, Base)]).
 
 
 /*
