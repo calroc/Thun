@@ -109,9 +109,7 @@ Mark II
     head_addr(TOS, TermAddr),
     jump(PUSH),
 
-
     definition(I),  % ======================================
-
     unpack_pair(TOS, TEMP0, TOS, SP),
     % TEMP0 = Address of the quoted program.
     % TOS = Address of the stack tail.
@@ -127,16 +125,15 @@ Mark II
             asm(mov(TEMP0, TEMP2)),  % update temp0 to point to rest of quoted program.
             incr(SP),  % We are about to write a cell.
             br(if_zero(TEMP2),
-                [  % TERM is the last item in the quoted program.
-                    % The expr should point to a cell that has TEMP1 head and tail
-                    % of the rest of the expression.
-                    sub_base_merge_and_store(TEMP1, EXPR_addr, SP)
-                ], [  % TERM has at least one more item after it.
-                    % We know that we will be writing that item in a
-                    % cell immediately after this one, so it has TEMP1
-                    % head and 4 for the tail.
-                    merge_and_store(TEMP1, TEMP3, SP)
-                ]
+                [sub_base_merge_and_store(TEMP1, EXPR_addr, SP)],
+                % TERM is the last item in the quoted program.
+                % The expr should point to a cell that has TEMP1 head and tail
+                % of the rest of the expression.
+                [merge_and_store(TEMP1, TEMP3, SP)]
+                % TERM has at least one more item after it.
+                % We know that we will be writing that item in a
+                % cell immediately after this one, so it has TEMP1
+                % head and 4 for the tail.
             )
         ]),
         asm(mov(EXPR_addr, TEMP4))
@@ -147,17 +144,18 @@ Mark II
     load(TEMP1, TOS),  % TEMP1 contains the record of the second stack cell.
     % write a new cell, the head is head of TEMP1, the tail is tail of TEMP1
     % but adjusted to offset from SP+4 where we are about to write this record.
-    % Load tos with ram[tos]
-    unpack_pair(TEMP1, TEMP0, TEMP1, TOS),
-    % TEMP0 = HeadAddr, TEMP1 = TailAddr
+    unpack_pair(TEMP1, TEMP0, TEMP1, TOS),  % TEMP0 = HeadAddr, TEMP1 = TailAddr
     incr(SP),
     sub_base_merge_and_store(TEMP0, TEMP1, SP),
     jump(Main),  % We already wrote the stack cell so 'Main' not 'Done'.
 
+    definition(New),  % ======================================
+    asm(mov_imm(TermAddr, 0)),  % Rely on push machinery.
+    jump(PUSH),
 
     % ======================================
     label(Expression),
-    dexpr([Dup, Cons, I])
+    dexpr([New, Dup, Cons, I])
 ]).
 
 
