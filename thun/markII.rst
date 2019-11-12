@@ -321,14 +321,61 @@ the library code.
     シ push(TOS, TOS, SP)
 
 
+------------------------------------
+
+
+    [グ,ス,[],[ジ,ス,[ズ,セ,ス,[ゼ,ソ],[タ,ゾ],ヰ,ヂ],ヱ],ヰ,チ],ヮ(i),
+
+    グ, pop(TEMP0, TOS)
+    ス, if_zero(TEMP0)
+    ジ, add_const(TEMP3, SP, 4)
+    ズ, deref(TEMP0)
+    セ, chop_word(TEMP1, TEMP0)
+    ゼ, or_inplace(TEMP1,  EXPR)
+    ソ, asm(mov(EXPR, TEMP3))
+    タ, add_const(TEMP2, SP, 8)
+    ゾ, or_inplace(TEMP1, TEMP2)
+    ヂ, write_cell(TEMP1, SP)
+    チ, add_const(SP, SP, 4)
 
 
 
+⦾([P, T, E, ヰ|Terms], [br(Predicate, Then, Else)|Ts]) -->
+    ⦾([P, T, E, Terms], [Predicate, Then, Else, Ts]).
+
+⦾([P, B, ヱ|Terms], [repeat_until(Predicate, Body)|Ts]) -->
+    ⦾([P, B, Terms], [Predicate, Body, Ts]).
 
 
 
-
-
+    [
+        グ, pop(TEMP0, TOS)
+        ス, if_zero(TEMP0)
+        [], Then
+        [   Else
+            ジ, add_const(TEMP3, SP, 4)
+            ス, if_zero(TEMP0)
+            [ Body
+                ズ, deref(TEMP0)
+                セ, chop_word(TEMP1, TEMP0)
+                ス, if_zero(TEMP0)
+                [ Then
+                    ゼ, or_inplace(TEMP1,  EXPR)
+                    ソ  asm(mov(EXPR, TEMP3))
+                ],
+                [ Else
+                    タ, add_const(TEMP2, SP, 8)
+                    ゾ  or_inplace(TEMP1, TEMP2)
+                ],
+                ヰ, br(Predicate, Then, Else)
+                ヂ  write_cell(TEMP1, SP)
+            ],
+            ヱ repeat_until(Predicate, Body)
+        ],
+        ヰ, br(Predicate, Then, Else)
+        チ  add_const(SP, SP, 4)
+    ],
+    ヮ(i),
 
 PC == 0
 PC == 0x25

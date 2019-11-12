@@ -26,8 +26,8 @@ Mark II
 % Just do it in assembler.
 
 ⟐(program) -->
-    { [SP, EXPR_addr, TOS, TERM, EXPR, TermAddr, TEMP0, TEMP1, TEMP2, TEMP3]
-    = [0,  1,         2,   3,    4,    5,        6,     7,     8,     9    ]
+    { [SP, EXPR_addr, TOS, TERM, EXPR, TermAddr, TEMP0, TEMP1, TEMP2, TEMP3, TEMP4]
+    = [0,  1,         2,   3,    4,    5,        6,     7,     8,     9,     10   ]
     },
 [
     word(0),  % Zero root cell.
@@ -49,13 +49,11 @@ Mark II
     load(EXPR, EXPR_addr),
     % At this point EXPR holds the record word of the expression.
     unpack_pair(EXPR, TermAddr, TEMP0, EXPR_addr),
-    load(TERM, TermAddr)
-]),[
+    load(TERM, TermAddr),
     % TermAddr has the address of the term record.
     % Now TERM has the term's record data and TermAddr has the address of the term.
-    mov(EXPR_addr, TEMP0)
+    asm(mov(EXPR_addr, TEMP0)),
     % EXPR_addr now holds the address of the next cell of the expression list.
-],⟐([
     if_literal(TERM, PUSH, TEMP0),
     % if it is a symbol the rest of it is the pointer to the machine code.
     lookup(TERM, TEMP0),  % Jump to command.
@@ -86,9 +84,9 @@ Mark II
 
 ],⟐([
 
-    halt(HALT),  % ======================================
+    halt(HALT),
 
-    definition(Cons),  % Let's cons.
+    definition(Cons),  % ======================================
 
     unpack_pair(TOS, TEMP0, TOS, SP),
     % TEMP0 = Address of the list to which to append.
@@ -109,9 +107,61 @@ Mark II
     chain_link(TOS, TEMP3),
     jump(Done),  % Rely on mainloop::Done to write TOS to RAM.
 
-    definition(Dup),
+    definition(Dup),  % ======================================
     head_addr(TOS, TermAddr),
-    jump(PUSH)
+    jump(PUSH),
+
+
+    definition(I),  % ======================================
+
+    unpack_pair(TOS, TEMP0, TOS, SP),
+    % TEMP0 = Address of the quoted program.
+    % TOS = Address of the stack tail.
+    br(if_zero(TEMP0), [],  %  If the program is empty do nothing.
+    [  % The program has elements.  Since we are going to be reading the q.p.
+        % from the head to the tail we will have to write the cells in that order.
+        incr(TEMP4, SP),  %  TEMP4 = address of head of eventual new expression.
+        asm(mov_imm(TEMP3, 4)),  % Factored out of the loop.  Used for linking.
+        repeat_until(if_zero(TEMP0), [  % TEMP0 = Address of the quoted program.
+            load(TERM, TEMP0),
+            unpack_pair(TERM, TEMP1, TEMP2, TEMP0),
+            % TEMP1 is the address of head item, TEMP2 is the tail
+            asm(mov(TEMP0, TEMP2)),  % update temp0 to point to rest of quoted program.
+            incr(SP),  % We are about to write a cell.
+            br(if_zero(TEMP2),
+                [  % TERM is the last item in the quoted program.
+                    % The expr should point to a cell that has TEMP1 head and tail
+                    % of the rest of the expression.
+                    sub_base_from_offset(TEMP1, SP),
+                    sub_base_from_offset(EXPR_addr, SP),
+                    merge_and_store(TEMP1, EXPR_addr, SP)
+                ], [  % TERM has at least one more item after it.
+                    % We know that we will be writing that item in a
+                    % cell immediately after this one, so it has TEMP1
+                    % head and 4 for the tail.
+                    merge_and_store(TEMP1, TEMP3, SP)
+                ]
+            )
+        ]),
+        asm(mov(EXPR_addr, TEMP4))
+    ]),
+
+    % SP can never go down, so to point to an earlier cell we have to write
+    % a new cell.  (Maybe use a separate heap register/pointer?)
+    load(TEMP1, TOS),  % TEMP1 contains the record of the second stack cell.
+    % write a new cell, the head is head of TEMP1, the tail is tail of TEMP1
+    % but adjusted to offset from SP+4 where we are about to write this record.
+    % Load tos with ram[tos]
+    unpack_pair(TEMP1, TEMP0, TEMP1, TOS),
+    % TEMP0 = HeadAddr, TEMP1 = TailAddr
+    incr(SP),
+    sub_base_from_offset(TEMP0, SP),
+    sub_base_from_offset(TEMP1, SP),
+    merge_and_store(TEMP0, TEMP1, SP)
+    
+    
+
+      % ======================================
 ]),[
     label(Expression),
     expr_cell(Dup, 0)
@@ -157,7 +207,11 @@ language.
 ⟐(halt(Halt)) --> [label(Halt), do_offset(Halt)].
 % This is a HALT loop, the emulator detects and traps on this "10 goto 10" instruction.
 
+⟐(asm(ASM)) --> [ASM].
+
 ⟐(incr(SP)) --> [sub_imm(SP, SP, 4)].  % SP -= 1 (word, not byte).
+⟐(incr(To, SP)) --> [sub_imm(To, SP, 4)].
+⟐(incr(To, SP, N)) --> {M is 4 * N}, [sub_imm(To, SP, M)].
 
 ⟐(if_literal(TERM, Push, TEMP)) -->
     [asr_imm(TEMP, TERM, 30),  % get just the two tag bits.
@@ -184,6 +238,41 @@ language.
 ⟐(definition(Name)) --> [label(Name), symbol(Name)].
 
 ⟐(head_addr(Pair, HeadAddr)) --> [lsl_imm(HeadAddr, Pair, 2), asr_imm(HeadAddr, HeadAddr, 17)].
+
+⟐(repeat_until(Condition, Body)) -->
+    {add_label(Condition, End, ConditionL)},
+    ⟐([
+        label(Loop),
+        Body,
+        ConditionL,
+        jump(Loop),
+        label(End)
+    ]).
+
+⟐(br(Condition, [], Else)) --> !,
+    {add_label(Condition, END, ConditionL)},
+    ⟐([ConditionL, Else, label(END)]).
+
+⟐(br(Condition, Then, Else)) -->
+    {add_label(Condition, THEN, ConditionL)},
+    ⟐([
+        ConditionL, Else, jump(END),
+        label(THEN), Then, label(END)
+    ]).
+
+
+/*
+
+The add_label/3 relation is a meta-logical construct that accepts a comparision
+predicate (e.g. if_zero/2) and "patches" it by adding the Label logic variable
+to the end.
+
+*/
+
+add_label(CmpIn, Label, CmpOut) :-
+    CmpIn =.. F,
+    append(F, [Label], G),
+    CmpOut =.. G.
 
 
 do :-
