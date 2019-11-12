@@ -157,15 +157,13 @@ Mark II
     incr(SP),
     sub_base_from_offset(TEMP0, SP),
     sub_base_from_offset(TEMP1, SP),
-    merge_and_store(TEMP0, TEMP1, SP)
-    
-    
+    merge_and_store(TEMP0, TEMP1, SP),
 
-      % ======================================
-]),[
-    label(Expression),
-    expr_cell(Dup, 0)
-].
+
+    % ======================================
+    label(Expression)
+]),
+    dexpr([Dup, I]).
 
 
 /*
@@ -262,17 +260,27 @@ language.
 
 
 /*
-
 The add_label/3 relation is a meta-logical construct that accepts a comparision
 predicate (e.g. if_zero/2) and "patches" it by adding the Label logic variable
 to the end.
-
 */
 
 add_label(CmpIn, Label, CmpOut) :-
     CmpIn =.. F,
     append(F, [Label], G),
     CmpOut =.. G.
+
+
+/* 
+The dexpr//1 DCG establishes a sequence of labeled expr_cell/2 pseudo-assembly
+memory locations as a linked list that encodes a Prolog list of Joy function
+labels comprising e.g. the body of some Joy definition.
+*/
+% This is simpler now that link offsets are just 4.
+
+dexpr([]) --> !, [].
+dexpr([Func]) --> !, [expr_cell(Func, 0)].
+dexpr([Func|Rest]) --> !, [expr_cell(Func, 4)], dexpr(Rest).
 
 
 do :-
