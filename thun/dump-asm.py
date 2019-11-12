@@ -1,6 +1,5 @@
-s = ''''''
-s = s.splitlines()
-s = ' '.join(s)
-s = s.replace('), ', '),\n')
-with open('thun/asm-dump.txt', 'wb') as f:
+s = ' '.join('''\
+'''.splitlines()).replace('), ', '),\n')
+
+with open('./asm-dump.txt', 'wb') as f:
     f.write(s)
