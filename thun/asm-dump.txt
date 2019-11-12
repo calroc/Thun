@@ -184,6 +184,7 @@ label(H1),
 lsl_imm(6, 6, 15),
 ior(6, 6, 7),
 store_word(6, 0, 0),
+do_offset(H),
 label(I1),
 expr_cell(R, 4),
 expr_cell(S, 0)].

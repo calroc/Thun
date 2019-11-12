@@ -158,6 +158,7 @@ Mark II
     sub_base_from_offset(TEMP0, SP),
     sub_base_from_offset(TEMP1, SP),
     merge_and_store(TEMP0, TEMP1, SP),
+    jump(Main),  % We already wrote the stack cell so 'Main' not 'Done'.
 
 
     % ======================================
