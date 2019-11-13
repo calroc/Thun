@@ -386,8 +386,19 @@ the library code.
     ペ, write_cell(TOS,   SP)
 
 
+------------------------------------------
 
 
+    [ナ,ズ,セ,ネ,ヒ,ド,ャ,ペ],ワ(swap),
+
+    ナ, low_half(TEMP0, TOS)
+    ズ, deref(TEMP0)
+    セ, chop_word(TEMP1, TEMP0)
+    ネ, chop_word(TEMP2, TOS)
+    ヒ, or_inplace(TEMP0, TEMP2)
+    ド, write_cell(TEMP0, SP)
+    ャ, asm(ior(TOS, TEMP1, SP))
+    ペ, write_cell(TOS,   SP)
 
 
 

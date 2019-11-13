@@ -153,9 +153,24 @@ Mark II
     asm(mov_imm(TermAddr, 0)),  % Rely on push machinery.
     jump(PUSH),
 
+    definition(Swap),  % ======================================
+    unpack_pair(TOS, TEMP0, TEMP1, SP),
+    % TEMP0 = Address of the first item on the stack.
+    % TEMP1 = Address of the stack tail.
+    load(TEMP2, TEMP1),  % TEMP1 contains the record of the second stack cell.
+    unpack_pair(TOS, TEMP3, TEMP4, SP),
+    % TEMP3 = Address of the second item on the stack.
+    % TEMP4 = Address of the stack tail.
+    incr(SP),
+    sub_base_merge_and_store(TEMP0, TEMP4, SP),  % Push first item onto stack.
+    asm(mov_imm(TEMP0, 4)),  % Used for linking to previous cell.
+    incr(SP),
+    sub_base_merge_and_store(TEMP3, TEMP0, SP),  % Push first item onto stack.
+    jump(Main),
+
     % ======================================
     label(Expression),
-    dexpr([New, Dup, Cons, I])
+    dexpr([New, Dup, Swap, Cons, I])
 ]).
 
 
