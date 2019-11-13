@@ -168,9 +168,21 @@ Mark II
     sub_base_merge_and_store(TEMP3, TEMP0, SP),  % Push first item onto stack.
     jump(Main),
 
+    definition(Unit, [New, Cons], DoDef, TOS),
+    definition(X, [Dup, I], DoDef, TOS),
+    definition(Swons, [Swap, Cons], DoDef, TOS),
+
+    label(DoDef),  % TOS points to body expr, set by definition.
+    asm(mov_imm(TEMP1, 4)),  % Used for linking to previous cell.
+    incr(SP),
+    sub_base_merge_and_store(TOS, TEMP1, SP),  % Push body expr onto stack.
+    asm(mov_imm(TEMP1, I)),  % Get address of I's machine code.
+    asm(add_imm(TEMP1, TEMP1, 4)),
+    asm(do(TEMP1)),
+
     % ======================================
     label(Expression),
-    dexpr([New, Dup, Swap, Cons, I])
+    dexpr([New, Dup, Swons, I])
 ]).
 
 
@@ -243,6 +255,12 @@ language.
      ior(In, In, Term)].
 
 ⟐(definition(Name)) --> [label(Name), symbol(Name)].
+
+⟐(definition(Name, Body, DoDef, TEMP)) --> ⟐(definition(Name)),
+    [mov_imm(TEMP, BodyList),
+     do_offset(DoDef),
+     label(BodyList)],
+    dexpr(Body).
 
 ⟐(head_addr(Pair, HeadAddr)) --> [lsl_imm(HeadAddr, Pair, 2), asr_imm(HeadAddr, HeadAddr, 17)].
 
