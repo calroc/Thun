@@ -165,7 +165,8 @@ Mark II
     sub_base_merge_and_store(TEMP0, TEMP4, SP),  % Push first item onto stack.
     asm(mov_imm(TEMP0, 4)),  % Used for linking to previous cell.
     incr(SP),
-    sub_base_merge_and_store(TEMP3, TEMP0, SP),  % Push first item onto stack.
+    sub_base_from_offset(TEMP3, SP),
+    merge_and_store(TEMP3, TEMP0, SP),  % Push second item onto stack.
     jump(Main),
 
     definition(Unit, [New, Cons], DoDef, TOS),
@@ -175,7 +176,8 @@ Mark II
     label(DoDef),  % TOS points to body expr, set by definition.
     asm(mov_imm(TEMP1, 4)),  % Used for linking to previous cell.
     incr(SP),
-    sub_base_merge_and_store(TOS, TEMP1, SP),  % Push body expr onto stack.
+    sub_base_from_offset(TOS, SP),
+    merge_and_store(TOS, TEMP1, SP),  % Push body expr onto stack.
     asm(mov_imm(TEMP1, I)),  % Get address of I's machine code.
     asm(add_imm(TEMP1, TEMP1, 4)),
     asm(do(TEMP1)),
