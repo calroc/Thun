@@ -33,7 +33,7 @@ Mark II
     word(0),  % Zero root cell.
     do_offset(Reset),  % Oberon bootloader writes MemLim to RAM[12] and
     allocate(_, 20),  % stackOrg to RAM[24], we don't need these
-    label(Reset),  % but they must not be allowed to corrupt our code.
+    label(reset, Reset),  % but they must not be allowed to corrupt our code.
 
     mov_imm(0, 0),  % zero out the root cell.  (After reset.)
     store_word(0, 0, 0),
@@ -44,7 +44,7 @@ Mark II
     mov_imm(TERM, 0),
     store_word(TOS, SP, 0)  % RAM[SP] := 0
 ],⟐([
-    label(Main),  % Mainloop.
+    label(main, Main),  % Mainloop.
     if_zero(EXPR_addr, HALT),
     load(EXPR, EXPR_addr),
     % At this point EXPR holds the record word of the expression.
@@ -58,7 +58,7 @@ Mark II
     % if it is a symbol the rest of it is the pointer to the machine code.
     lookup(TERM, TEMP0),  % Jump to command.
     % going into push we have the term
-    label(PUSH),
+    label(push, PUSH),
     % push2(TOS, TEMP1, SP),  % stack = TERM, stack
     incr(SP),
     if_zero(TermAddr, JustPushEmptyList)
@@ -74,11 +74,11 @@ Mark II
     lsl_imm(TOS, TOS, 15),  % TOS := TOS << 15
     ior_imm(TOS, TOS, 4),   % TOS := TOS | 4
     do_offset(Done),
-    label(JustPushEmptyList),
+    label(jpel, JustPushEmptyList),
     mov_imm(TOS, 4),  % TOS is a pair record with 0 as the head addr
     % and the previous word in RAM as tail addr.
 
-    label(Done),
+    label(done, Done),
     store_word(TOS, SP, 0),   % RAM[SP] := TOS
     do_offset(Main)
 
@@ -86,7 +86,7 @@ Mark II
 
     halt(HALT),
 
-    definition(Cons),  % ======================================
+    definition(cons, Cons),  % ======================================
 
     unpack_pair(TOS, TEMP0, TOS, SP),
     % TEMP0 = Address of the list to which to append.
@@ -105,11 +105,11 @@ Mark II
     chain_link(TOS, TEMP3),
     jump(Done),  % Rely on mainloop::Done to write TOS to RAM.
 
-    definition(Dup),  % ======================================
+    definition(dup, Dup),  % ======================================
     head_addr(TOS, TermAddr),
     jump(PUSH),
 
-    definition(I),  % ======================================
+    definition(i, I),  % ======================================
     unpack_pair(TOS, TEMP0, TOS, SP),
     % TEMP0 = Address of the quoted program.
     % TOS = Address of the stack tail.
@@ -149,11 +149,11 @@ Mark II
     sub_base_merge_and_store(TEMP0, TEMP1, SP),
     jump(Main),  % We already wrote the stack cell so 'Main' not 'Done'.
 
-    definition(New),  % ======================================
+    definition(new, New),  % ======================================
     asm(mov_imm(TermAddr, 0)),  % Rely on push machinery.
     jump(PUSH),
 
-    definition(Swap),  % ======================================
+    definition(swap, Swap),  % ======================================
     unpack_pair(TOS, TEMP0, TEMP1, SP),
     % TEMP0 = Address of the first item on the stack.
     % TEMP1 = Address of the stack tail.
@@ -169,11 +169,11 @@ Mark II
     merge_and_store(TEMP3, TEMP0, SP),  % Push second item onto stack.
     jump(Main),
 
-    definition(Unit, [New, Cons], DoDef, TOS),
-    definition(X, [Dup, I], DoDef, TOS),
-    definition(Swons, [Swap, Cons], DoDef, TOS),
+    definition(unit, Unit, [New, Cons], DoDef, TOS),
+    definition(x, X, [Dup, I], DoDef, TOS),
+    definition(swons, Swons, [Swap, Cons], DoDef, TOS),
 
-    label(DoDef),  % TOS points to body expr, set by definition.
+    label(dodef, DoDef),  % TOS points to body expr, set by definition.
     asm(mov_imm(TEMP1, 4)),  % Used for linking to previous cell.
     incr(SP),
     sub_base_from_offset(TOS, SP),
@@ -183,7 +183,7 @@ Mark II
     asm(do(TEMP1)),
 
     % ======================================
-    label(Expression),
+    label(expression, Expression),
     dexpr([New, Dup, Swons, I])
 ]).
 
@@ -221,6 +221,7 @@ language.
 ⟐(load(From, To)) --> [load_word(From, To, 0)].
 
 ⟐(label(L)) --> [label(L)].  % Pass through.
+⟐(label(Name, L)) --> [label(Name, L)].  % Pass through.
 ⟐(dexpr(L)) -->  dexpr(L).   % Pass through.
 
 ⟐(jump(To)) --> [do_offset(To)].  % Pass through.
@@ -256,9 +257,9 @@ language.
     [mov_imm_with_shift(In, 2),  % In := 4 << 15
      ior(In, In, Term)].
 
-⟐(definition(Name)) --> [label(Name), symbol(Name)].
+⟐(definition(Name, Label)) --> [label(Name, Label), symbol(Label)].
 
-⟐(definition(Name, Body, DoDef, TEMP)) --> ⟐(definition(Name)),
+⟐(definition(Name, Label, Body, DoDef, TEMP)) --> ⟐(definition(Name, Label)),
     [mov_imm(TEMP, BodyList),
      do_offset(DoDef),
      label(BodyList)],
@@ -340,6 +341,7 @@ linker(ASM) --> enumerate_asm(ASM, 0, _).
 enumerate_asm(                [], N, N) --> !, [].
 enumerate_asm(      [Term|Terms], N, M) --> !, enumerate_asm(Term, N, O), enumerate_asm(Terms, O, M).
 enumerate_asm(   label(N)       , N, N) --> !, [].
+enumerate_asm(   label(Name, N) , N, N) --> !, [], {writeln(Name-N)}.  % Emit "symbol table" by side-effect.
 enumerate_asm(allocate(N, Bytes), N, M) --> !, {Bits is 8 * Bytes}, [skip(Bits)], {align(N, Bytes, M)}.
 enumerate_asm(             Instr, N, M) -->    [(Z, Instr)], {align(N, 0, Z), align(Z, 4, M)}.
 
