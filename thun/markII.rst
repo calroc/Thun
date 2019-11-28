@@ -4,6 +4,14 @@ Mark II
 =========================
 
 
+
+This (and the previous incarnation) is really more of a "macro assembler"
+than a compiler, and nothing like what I want it to be.  It should be
+tracking the "types" of registers in some enviroment that gets carried
+along and picking primitives and making optimizations based on that
+information.
+
+
 TO replace the crude first draft I want to expand the representation of
 data types.
 
@@ -399,6 +407,556 @@ the library code.
     ド, write_cell(TEMP0, SP)
     ャ, asm(ior(TOS, TEMP1, SP))
     ペ, write_cell(TOS,   SP)
+
+
+--------------------------------------
+
+Debugging definitions
+
+     swons 0xd2 load R[0] <- ram[R[0] + 0x34c]
+>          0xd3 mov R[2] <- 0x354
+           0xd4 BR T 0x2 immediate 
+           0xd5 BR F -0x69fffc immediate  and R[15] <- PC + 1
+           0xd6 BR GT -0x4c0000 immediate  and R[15] <- PC + 1
+     dodef 0xd7 mov R[7] <- 0x4
+           0xd8 sub R[0] <- R[0] 0x4 immediate
+
+Q: Is 0x354 >> 2 == 0xd5 ?
+
+In [1]: 0x354 >> 2 == 0xd5
+Out[1]: True
+
+Okay then.
+
+
+>    dodef 0xd7 mov R[7] <- 0x4
+           0xd8 sub R[0] <- R[0] 0x4 immediate
+           0xd9 sub R[2] <- R[2] 0x0 immediate
+           0xda BR EQ 0x2 immediate 
+           0xdb sub R[2] <- R[2] R[0]
+           0xdc and R[2] <- R[2] 0x7fff immediate
+
+
+0xff4  r0
+0x354  r2
+
+
+>          0xde ior R[2] <- R[2] R[7]
+           0xdf store R[2] -> ram[R[0]]
+           0xe0 mov R[7] <- 0x168
+           0xe1 add R[7] <- R[7] 0x4 immediate
+           0xe2 BR T R[7]
+  expressi 0xe3 BR F 0x740004 immediate  and R[15] <- PC + 1
+
+0x39b00004  r2
+
+           0xe0 mov R[7] <- 0x168
+>          0xe1 add R[7] <- R[7] 0x4 immediate
+           0xe2 BR T R[7]
+  expressi 0xe3 BR F 0x740004 immediate  and R[15] <- PC + 1
+
+
+0x16c  r7   = 364 decimal
+
+0x5b I machine code in words
+
+In [8]: 0x16c >> 2 == 0x5b
+Out[8]: True
+
+         i 0x5a load R[0] <- ram[R[0] + 0x16c]
+>          0x5b lsl R[6] <- R[2] 0x2 immediate
+           0x5c asr R[6] <- R[6] 0x11 immediate
+           0x5d BR EQ 0x1 immediate 
+           0x5e add R[6] <- R[6] R[0]
+           0x5f lsl R[2] <- R[2] 0x11 immediate
+           0x60 asr R[2] <- R[2] 0x11 immediate
+
+and then...
+
+         i 0x5a load R[0] <- ram[R[0] + 0x16c]
+           0x5b lsl R[6] <- R[2] 0x2 immediate
+           0x5c asr R[6] <- R[6] 0x11 immediate
+           0x5d BR EQ 0x1 immediate 
+>          0x5e add R[6] <- R[6] R[0]
+           0x5f lsl R[2] <- R[2] 0x11 immediate
+           0x60 asr R[2] <- R[2] 0x11 immediate
+           0x61 BR EQ 0x1 immediate 
+           0x62 add R[2] <- R[2] R[0]
+           0x63 sub R[6] <- R[6] 0x0 immediate
+
+0x354  r6  check
+
+           0x5e add R[6] <- R[6] R[0]
+           0x5f lsl R[2] <- R[2] 0x11 immediate
+           0x60 asr R[2] <- R[2] 0x11 immediate
+           0x61 BR EQ 0x1 immediate 
+>          0x62 add R[2] <- R[2] R[0]
+           0x63 sub R[6] <- R[6] 0x0 immediate
+           0x64 BR EQ 0x22 immediate 
+           0x65 sub R[10] <- R[0] 0x4 immediate
+
+0xff8  r2
+
+           0x61 BR EQ 0x1 immediate 
+           0x62 add R[2] <- R[2] R[0]
+           0x63 sub R[6] <- R[6] 0x0 immediate
+#117       0x64 BR EQ 0x22 immediate 
+>          0x65 sub R[10] <- R[0] 0x4 immediate
+           0x66 mov R[9] <- 0x4
+           0x67 load R[3] <- ram[R[6]]
+     iball 0x68 lsl R[7] <- R[3] 0x2 immediate
+           0x69 asr R[7] <- R[7] 0x11 immediate
+           0x6a BR EQ 0x1 immediate 
+
+line 120
+
+#120       0x65 sub R[10] <- R[0] 0x4 immediate
+           0x66 mov R[9] <- 0x4
+>          0x67 load R[3] <- ram[R[6]]
+     iball 0x68 lsl R[7] <- R[3] 0x2 immediate
+           0x69 asr R[7] <- R[7] 0x11 immediate
+           0x6a BR EQ 0x1 immediate 
+           0x6b add R[7] <- R[7] R[6]
+           0x6c lsl R[8] <- R[3] 0x11 immediate
+
+line 123
+
+0xff960004  r3
+
+     iball 0x68 lsl R[7] <- R[3] 0x2 immediate
+           0x69 asr R[7] <- R[7] 0x11 immediate
+           0x6a BR EQ 0x1 immediate 
+>          0x6b add R[7] <- R[7] R[6]
+           0x6c lsl R[8] <- R[3] 0x11 immediate
+           0x6d asr R[8] <- R[8] 0x11 immediate
+           0x6e BR EQ 0x1 immediate 
+           0x6f add R[8] <- R[8] R[6]
+           0x70 mov R[6] <- R[8]
+
+0x280  r7  Address of swons def list?  of swap symbol?
+
+    In [4]: w.cpu.R[7]
+    Out[4]: 640L
+
+    In [5]: hex(_)
+    Out[5]: '0x280L'
+
+    In [6]: w.cpu.ram[w.cpu.R[7]]
+    Out[6]: 2147484292L
+
+    In [7]: bin(_)
+    Out[7]: '0b10000000000000000000001010000100'
+
+    In [8]: w.syms.keys()
+    Out[8]: [160, 35, 7, 104, 44, 45, 14, 205, 48, 200, 210, 227, 86, 215, 90, 157]
+
+    In [9]: 640 >> 2
+    Out[9]: 160
+
+    In [10]: w.syms[160]
+    Out[10]: 'swap'
+
+0x280  r7  points to swap symbol record.
+===================================================
+
+           0x6b add R[7] <- R[7] R[6]
+           0x6c lsl R[8] <- R[3] 0x11 immediate
+           0x6d asr R[8] <- R[8] 0x11 immediate
+           0x6e BR EQ 0x1 immediate 
+>          0x6f add R[8] <- R[8] R[6]
+#127       0x70 mov R[6] <- R[8]
+           0x71 sub R[0] <- R[0] 0x4 immediate
+           0x72 sub R[8] <- R[8] 0x0 immediate
+           0x73 BR EQ 0x4 immediate 
+
+0x358  r8
+
+>          0x70 mov R[6] <- R[8]
+
+line 127
+
+           0x70 mov R[6] <- R[8]
+           0x71 sub R[0] <- R[0] 0x4 immediate
+           0x72 sub R[8] <- R[8] 0x0 immediate
+>          0x73 BR EQ 0x4 immediate 
+           0x74 lsl R[7] <- R[7] 0xf immediate
+           0x75 ior R[7] <- R[7] R[9]
+           0x76 store R[7] -> ram[R[0]]
+           0x77 BR T 0xb immediate 
+           0x78 sub R[7] <- R[7] 0x0 immediate
+
+line 129
+
+           0x73 BR EQ 0x4 immediate 
+           0x74 lsl R[7] <- R[7] 0xf immediate
+           0x75 ior R[7] <- R[7] R[9]
+>          0x76 store R[7] -> ram[R[0]]
+           0x77 BR T 0xb immediate 
+
+0x1400004 r7  -> ram[r[0]]  w/ r0 = 0xff0
+
+saved foobar1
+
+I think I found it.  Not subtracting SP from r7 address
+before merge_and_store(TEMP1, TEMP3, SP) on line #134.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+jmp @ 0x77 to 0xb  -> 0x83
+repeat
+>          0x83 sub R[6] <- R[6] 0x0 immediate
+           0x84 BR EQ 0x1 immediate 
+           0x85 BR T -0x1f immediate 
+           0x86 mov R[1] <- R[10]
+           0x87 load R[7] <- ram[R[2]]
+           0x88 lsl R[6] <- R[7] 0x2 immediate
+
+
+0x85 +  -0x1f
+
+>          0x67 load R[3] <- ram[R[6]]
+     iball 0x68 lsl R[7] <- R[3] 0x2 immediate
+           0x69 asr R[7] <- R[7] 0x11 immediate
+           0x6a BR EQ 0x1 immediate 
+           0x6b add R[7] <- R[7] R[6]
+           0x6c lsl R[8] <- R[3] 0x11 immediate
+
+back to line 123
+
+     iball 0x68 lsl R[7] <- R[3] 0x2 immediate
+           0x69 asr R[7] <- R[7] 0x11 immediate
+           0x6a BR EQ 0x1 immediate 
+           0x6b add R[7] <- R[7] R[6]
+           0x6c lsl R[8] <- R[3] 0x11 immediate
+           0x6d asr R[8] <- R[8] 0x11 immediate
+>          0x6e BR EQ 0x1 immediate 
+           0x6f add R[8] <- R[8] R[6]
+           0x70 mov R[6] <- R[8]
+           0x71 sub R[0] <- R[0] 0x4 immediate
+           0x72 sub R[8] <- R[8] 0x0 immediate
+           0x73 BR EQ 0x4 immediate 
+
+0xc0  r7
+0x0   r8
+
+           0x6e BR EQ 0x1 immediate 
+           0x6f add R[8] <- R[8] R[6]
+           0x70 mov R[6] <- R[8]
+           0x71 sub R[0] <- R[0] 0x4 immediate
+           0x72 sub R[8] <- R[8] 0x0 immediate
+>          0x73 BR EQ 0x4 immediate 
+           0x74 lsl R[7] <- R[7] 0xf immediate
+           0x75 ior R[7] <- R[7] R[9]
+           0x76 store R[7] -> ram[R[0]]
+           0x77 BR T 0xb immediate 
+           0x78 sub R[7] <- R[7] 0x0 immediate
+
+We take the high road this time
+
+           0x73 BR EQ 0x4 immediate 
+           0x74 lsl R[7] <- R[7] 0xf immediate
+           0x75 ior R[7] <- R[7] R[9]
+           0x76 store R[7] -> ram[R[0]]
+           0x77 BR T 0xb immediate 
+>          0x78 sub R[7] <- R[7] 0x0 immediate
+           0x79 BR EQ 0x2 immediate 
+           0x7a sub R[7] <- R[7] R[0]
+           0x7b and R[7] <- R[7] 0x7fff immediate
+           0x7c sub R[1] <- R[1] 0x0 immediate
+           0x7d BR EQ 0x2 immediate 
+
+
+r7 = 0xc0
+r0 = 0xfec
+
+so, @0x7a, r7 <- r7 - r0  -> -3884 or -0xf2c
+Hmm...
+
+           0x78 sub R[7] <- R[7] 0x0 immediate
+           0x79 BR EQ 0x2 immediate 
+           0x7a sub R[7] <- R[7] R[0]
+>          0x7b and R[7] <- R[7] 0x7fff immediate
+           0x7c sub R[1] <- R[1] 0x0 immediate
+           0x7d BR EQ 0x2 immediate 
+           0x7e sub R[1] <- R[1] R[0]
+           0x7f and R[1] <- R[1] 0x7fff immediate
+           0x80 lsl R[7] <- R[7] 0xf immediate
+
+
+
+           0x7b and R[7] <- R[7] 0x7fff immediate
+           0x7c sub R[1] <- R[1] 0x0 immediate
+           0x7d BR EQ 0x2 immediate 
+>          0x7e sub R[1] <- R[1] R[0]
+           0x7f and R[1] <- R[1] 0x7fff immediate
+           0x80 lsl R[7] <- R[7] 0xf immediate
+           0x81 ior R[7] <- R[7] R[1]
+           0x82 store R[7] -> ram[R[0]]
+
+0xfffff3ac  r1  ... 0x73ac
+
+           0x7e sub R[1] <- R[1] R[0]
+           0x7f and R[1] <- R[1] 0x7fff immediate
+           0x80 lsl R[7] <- R[7] 0xf immediate
+           0x81 ior R[7] <- R[7] R[1]
+>          0x82 store R[7] -> ram[R[0]]
+           0x83 sub R[6] <- R[6] 0x0 immediate
+           0x84 BR EQ 0x1 immediate 
+           0x85 BR T -0x1f immediate 
+           0x86 mov R[1] <- R[10]
+           0x87 load R[7] <- ram[R[2]]
+
+0x386a73ac  r7 !?
+
+           0x82 store R[7] -> ram[R[0]]
+           0x83 sub R[6] <- R[6] 0x0 immediate
+           0x84 BR EQ 0x1 immediate 
+           0x85 BR T -0x1f immediate 
+>          0x86 mov R[1] <- R[10]
+           0x87 load R[7] <- ram[R[2]]
+           0x88 lsl R[6] <- R[7] 0x2 immediate
+           0x89 asr R[6] <- R[6] 0x11 immediate
+           0x8a BR EQ 0x1 immediate 
+           0x8b add R[6] <- R[6] R[2]
+
+line 141
+
+>          0x87 load R[7] <- ram[R[2]]
+
+line 146
+
+0x4  r7  "the record of the second stack cell"
+empty list followed by the record one cell above
+
+           0x87 load R[7] <- ram[R[2]]
+*          0x88 lsl R[6] <- R[7] 0x2 immediate
+*          0x89 asr R[6] <- R[6] 0x11 immediate
+*          0x8a BR EQ 0x1 immediate 
+*          0x8b add R[6] <- R[6] R[2]
+*          0x8c lsl R[7] <- R[7] 0x11 immediate
+*          0x8d asr R[7] <- R[7] 0x11 immediate
+*          0x8e BR EQ 0x1 immediate 
+*          0x8f add R[7] <- R[7] R[2]
+>          0x90 sub R[0] <- R[0] 0x4 immediate
+           0x91 sub R[6] <- R[6] 0x0 immediate
+           0x92 BR EQ 0x2 immediate 
+           0x93 sub R[6] <- R[6] R[0]
+           0x94 and R[6] <- R[6] 0x7fff immediate
+           0x95 sub R[7] <- R[7] 0x0 immediate
+
+at line 150
+0x0   r6
+0xffc r7
+
+TEMP0 = HeadAddr, TEMP1 = TailAddr
+
+mkII.2.2 saved here.
+
+           0x90 sub R[0] <- R[0] 0x4 immediate
+           0x91 sub R[6] <- R[6] 0x0 immediate
+           0x92 BR EQ 0x2 immediate 
+           0x93 sub R[6] <- R[6] R[0]
+           0x94 and R[6] <- R[6] 0x7fff immediate
+           0x95 sub R[7] <- R[7] 0x0 immediate
+           0x96 BR EQ 0x2 immediate 
+           0x97 sub R[7] <- R[7] R[0]
+           0x98 and R[7] <- R[7] 0x7fff immediate
+           0x99 lsl R[6] <- R[6] 0xf immediate
+           0x9a ior R[6] <- R[6] R[7]
+>          0x9b store R[6] -> ram[R[0]]
+           0x9c BR T -0x8f immediate 
+       new 0x9d load R[0] <- ram[R[0] + 0x278]
+           0x9e mov R[5] <- 0x0
+           0x9f BR T -0x7d immediate 
+      swap 0xa0 load R[0] <- ram[R[0] + 0x284]
+
+
+lie 151-152 end of I machine code
+
+0x14  r6  20 decimal  5 words/cells above
+0xfe8 r0
+
+>     main 0xe sub R[1] <- R[1] 0x0 immediate
+           0xf BR EQ 0x1f immediate 
+           0x10 load R[4] <- ram[R[1]]
+           0x11 lsl R[5] <- R[4] 0x2 immediate
+           0x12 asr R[5] <- R[5] 0x11 immediate
+           0x13 BR EQ 0x1 immediate 
+
+0xff0  r1
+
+
+
+saved mkII.2.3
+
+      main 0xe sub R[1] <- R[1] 0x0 immediate
+           0xf BR EQ 0x1f immediate 
+>          0x10 load R[4] <- ram[R[1]]
+           0x11 lsl R[5] <- R[4] 0x2 immediate
+           0x12 asr R[5] <- R[5] 0x11 immediate
+           0x13 BR EQ 0x1 immediate 
+           0x14 add R[5] <- R[5] R[1]
+           0x15 lsl R[6] <- R[4] 0x11 immediate
+
+line 50 
+0x1400004  r4
+
+      main 0xe sub R[1] <- R[1] 0x0 immediate
+           0xf BR EQ 0x1f immediate 
+           0x10 load R[4] <- ram[R[1]]
+           0x11 lsl R[5] <- R[4] 0x2 immediate
+           0x12 asr R[5] <- R[5] 0x11 immediate
+           0x13 BR EQ 0x1 immediate 
+>          0x14 add R[5] <- R[5] R[1]
+           0x15 lsl R[6] <- R[4] 0x11 immediate
+           0x16 asr R[6] <- R[6] 0x11 immediate
+           0x17 BR EQ 0x1 immediate 
+           0x18 add R[6] <- R[6] R[1]
+           0x19 load R[3] <- ram[R[5]]
+
+0x1270  r5
+
+           0x14 add R[5] <- R[5] R[1]
+           0x15 lsl R[6] <- R[4] 0x11 immediate
+           0x16 asr R[6] <- R[6] 0x11 immediate
+           0x17 BR EQ 0x1 immediate 
+>          0x18 add R[6] <- R[6] R[1]
+           0x19 load R[3] <- ram[R[5]]
+           0x1a mov R[1] <- R[6]
+           0x1b asr R[6] <- R[3] 0x1e immediate
+           0x1c and R[6] <- R[6] 0x2 immediate
+           0x1d sub R[6] <- R[6] 0x2 immediate
+
+0xff4  r6
+
+>          0x19 load R[3] <- ram[R[5]]
+
+line 53
+0x0  r3   ram[0x1270]  
+
+>          0x1a mov R[1] <- R[6]
+
+line 56
+
+0xff4  r1
+
+
+           0x1d sub R[6] <- R[6] 0x2 immediate
+           0x1e BR NE 0x4 immediate 
+           0x1f mov R[6] <- 0x3fff0000
+           0x20 ior R[6] <- R[6] 0xffff immediate
+           0x21 and R[6] <- R[6] R[3]
+           0x22 BR T R[6]
+>     push 0x23 sub R[0] <- R[0] 0x4 immediate
+           0x24 sub R[5] <- R[5] 0x0 immediate
+           0x25 BR EQ 0x6 immediate 
+           0x26 sub R[2] <- R[5] R[0]
+           0x27 BR HI 0x1 immediate 
+           0x28 and R[2] <- R[2] 0x7fff immediate
+
+Not a literal, 0x0 (but it should be, it should point to swap)
+
+      push 0x23 sub R[0] <- R[0] 0x4 immediate
+           0x24 sub R[5] <- R[5] 0x0 immediate
+           0x25 BR EQ 0x6 immediate 
+>          0x26 sub R[2] <- R[5] R[0]
+           0x27 BR HI 0x1 immediate 
+           0x28 and R[2] <- R[2] 0x7fff immediate
+           0x29 lsl R[2] <- R[2] 0xf immediate
+           0x2a ior R[2] <- R[2] 0x4 immediate
+           0x2b BR T 0x1 immediate 
+
+line 68
+
+0xfe4  r0  SP
+0x28c  r2  TOS
+0x1270 r5  TermAddr
+
+      push 0x23 sub R[0] <- R[0] 0x4 immediate
+           0x24 sub R[5] <- R[5] 0x0 immediate
+           0x25 BR EQ 0x6 immediate 
+           0x26 sub R[2] <- R[5] R[0]
+           0x27 BR HI 0x1 immediate 
+           0x28 and R[2] <- R[2] 0x7fff immediate
+>          0x29 lsl R[2] <- R[2] 0xf immediate
+           0x2a ior R[2] <- R[2] 0x4 immediate
+           0x2b BR T 0x1 immediate 
+      jpel 0x2c mov R[2] <- 0x4
+      done 0x2d store R[2] -> ram[R[0]]
+           0x2e BR T -0x21 immediate 
+
+line 75
+
+
+
+
+==================================================
+
+iball * 2
+
+0xfeac0000  r2
+
+
+0xc0  r7
+
+           0x67 load R[3] <- ram[R[6]]
+     iball 0x68 lsl R[7] <- R[3] 0x2 immediate
+           0x69 asr R[7] <- R[7] 0x11 immediate
+           0x6a BR EQ 0x1 immediate 
+>          0x6b add R[7] <- R[7] R[6]
+           0x6c lsl R[8] <- R[3] 0x11 immediate
+           0x6d asr R[8] <- R[8] 0x11 immediate
+           0x6e BR EQ 0x1 immediate 
+           0x6f add R[8] <- R[8] R[6]
+           0x70 mov R[6] <- R[8]
+
+0x0  r8
+
+           0x70 mov R[6] <- R[8]
+>          0x71 sub R[0] <- R[0] 0x4 immediate
+           0x72 sub R[8] <- R[8] 0x0 immediate
+           0x73 BR EQ 0x8 immediate 
+           0x74 sub R[7] <- R[7] 0x0 immediate
+           0x75 BR EQ 0x2 immediate 
+           0x76 sub R[7] <- R[7] R[0]
+           0x77 and R[7] <- R[7] 0x7fff immediate
+           0x78 lsl R[7] <- R[7] 0xf immediate
+           0x79 ior R[7] <- R[7] R[9]
+           0x7a store R[7] -> ram[R[0]]
+           0x7b BR T 0xb immediate 
+>          0x7c sub R[7] <- R[7] 0x0 immediate
+           0x7d BR EQ 0x2 immediate 
+           0x7e sub R[7] <- R[7] R[0]
+           0x7f and R[7] <- R[7] 0x7fff immediate
+           0x80 sub R[1] <- R[1] 0x0 immediate
+           0x81 BR EQ 0x2 immediate 
+
+
+
+===================================================
+
+Looksgood so far...
+
+but we just loaded
+>          0x67 load R[3] <- ram[R[6]]
+
+and the value in r3 is malformed:
+
+In [14]: x = 0xfeac0000
+
+In [15]: bin(x)
+Out[15]: '0b11111110101011000000000000000000'
+
+In [16]: len(_)-2
+Out[16]: 32
+
+We just loaded that at line 123
+load(TERM, TEMP0),
+
+Ah!
+
+I think it's that expr_cell/2 doesn't zero out the top two bits for
+records that have negative head offsets.
+
 
 
 

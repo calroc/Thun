@@ -19,6 +19,7 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
 
 Mark II
 
+
 */
 :- use_module(library(assoc)).
 :- use_module(library(clpfd)).
@@ -120,6 +121,7 @@ Mark II
         asm(mov_imm(TEMP3, 4)),  % Factored out of the loop.  Used for linking.
         repeat_until(if_zero(TEMP0), [  % TEMP0 = Address of the quoted program.
             load(TERM, TEMP0),
+            label(iball, _),
             unpack_pair(TERM, TEMP1, TEMP2, TEMP0),
             % TEMP1 is the address of head item, TEMP2 is the tail
             asm(mov(TEMP0, TEMP2)),  % update temp0 to point to rest of quoted program.
@@ -129,7 +131,7 @@ Mark II
                 % TERM is the last item in the quoted program.
                 % The expr should point to a cell that has TEMP1 head and tail
                 % of the rest of the expression.
-                [merge_and_store(TEMP1, TEMP3, SP)]
+                [sub_base_from_offset(TEMP1, SP), merge_and_store(TEMP1, TEMP3, SP)]
                 % TERM has at least one more item after it.
                 % We know that we will be writing that item in a
                 % cell immediately after this one, so it has TEMP1
@@ -169,11 +171,14 @@ Mark II
     merge_and_store(TEMP3, TEMP0, SP),  % Push second item onto stack.
     jump(Main),
 
+  % ======================================
     definition(unit, Unit, [New, Cons], DoDef, TOS),
     definition(x, X, [Dup, I], DoDef, TOS),
     definition(swons, Swons, [Swap, Cons], DoDef, TOS),
+  % ======================================
 
-    label(dodef, DoDef),  % TOS points to body expr, set by definition.
+    label(dodef, DoDef),  % ======================================
+    % TOS points to body expr, set by definition.
     asm(mov_imm(TEMP1, 4)),  % Used for linking to previous cell.
     incr(SP),
     sub_base_from_offset(TOS, SP),
@@ -207,10 +212,11 @@ language.
      label(Label)].
 
 ⟐(unpack_pair(From, HeadAddr, TailAddr, Base)) -->
-    [lsl_imm(HeadAddr, From, 2)],  % Trim off the type tag 00 bits.
+    [label('unpack[', _), lsl_imm(HeadAddr, From, 2)],  % Trim off the type tag 00 bits.
     ⟐(roll_down_add_base_if_not_zero(HeadAddr, Base)),
     [lsl_imm(TailAddr, From, 17)],  % Trim off tag and head address.
-    ⟐(roll_down_add_base_if_not_zero(TailAddr, Base)).
+    ⟐(roll_down_add_base_if_not_zero(TailAddr, Base)),
+    [label(']unpack', _)].
 
 ⟐(roll_down_add_base_if_not_zero(Addr, Base)) -->
     [asr_imm(Addr, Addr, 17),  % Preserving sign.
@@ -362,7 +368,8 @@ asm([      skip(Bits)|Rest]) --> !, skip(Bits),          asm(Rest).
 asm([(N, Instruction)|Rest]) --> !, asm(N, Instruction), asm(Rest).
 
 asm(Here, expr_cell(Func, NextCell)) --> !,
-    {Data is ((Func - Here) << 15) \/ NextCell}, asm(Here, word(Data)).
+    {Data is (((Func - Here) /\ 0x7fff) << 15) \/ NextCell},
+    asm(Here, word(Data)).
 
 asm(_, symbol(Sym)) --> !, {Data is (Sym + 4) \/ 0x80000000}, asm(_, word(Data)).
 % The symbol is at the beginning of the function machine code, so the pointer it
