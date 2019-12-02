@@ -36,9 +36,18 @@ brackets.   Terms must be separated by blanks, which can be omitted
 around square brackets.
 
 '''
-#TODO: explain the details of float lits and strings.
 from re import Scanner
 from .utils.stack import list_to_stack
+
+
+#TODO: explain the details of float lits and strings.
+FLOAT = r'-?\d+\.\d*'
+INT = r'-?\d+'
+SYMBOL = r'[•\w!@$%^&*()_+<>?|\/;:`~,.=-]+'
+BRACKETS = r'\[|\]'
+STRING_DOUBLE_QUOTED = r'"(?:[^"\\]|\\.)*"'
+STRING_SINGLE_QUOTED = r"'(?:[^'\\]|\\.)*'"
+BLANKS = r'\s+'
 
 
 class Symbol(str):
@@ -105,11 +114,11 @@ def _parse(tokens):
 
 
 _scanner = Scanner([
-  (r'-?\d+\.\d*', lambda _, token: float(token)),
-  (r'-?\d+', lambda _, token: int(token)),
-  (r'[•\w!@$%^&*()_+<>?|\/;:`~,.=-]+', lambda _, token: Symbol(token)),
-  (r'\[|\]', lambda _, token: token),
-  (r'"(?:[^"\\]|\\.)*"', lambda _, token: token[1:-1].replace('\\"', '"')),
-  (r"'(?:[^'\\]|\\.)*'", lambda _, token: token[1:-1].replace("\\'", "'")),
-  (r'\s+', None),
+  (FLOAT, lambda _, token: float(token)),
+  (INT, lambda _, token: int(token)),
+  (SYMBOL, lambda _, token: Symbol(token)),
+  (BRACKETS, lambda _, token: token),
+  (STRING_DOUBLE_QUOTED, lambda _, token: token[1:-1].replace('\\"', '"')),
+  (STRING_SINGLE_QUOTED, lambda _, token: token[1:-1].replace("\\'", "'")),
+  (BLANKS, None),
   ])
