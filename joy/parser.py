@@ -26,11 +26,14 @@ by the fact that they are not Symbol objects.
 
 A crude grammar::
 
-  joy = term*
-  term = int | float | string | '[' joy ']' | function
+    joy = term*
+    term = int | float | string | '[' joy ']' | symbol
 
-A Joy expression is a sequence of zero or more terms
-
+A Joy expression is a sequence of zero or more terms.  A term is a
+literal value (integer, float, string, or Joy expression) or a function
+symbol.  Function symbols are unquoted strings and cannot contain square
+brackets.   Terms must be separated by blanks, which can be omitted
+around square brackets.
 
 '''
 #TODO: explain the details of float lits and strings.
