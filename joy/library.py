@@ -616,7 +616,6 @@ def unique(S):
   '''Given a list remove duplicate items.'''
   tos, stack = S
   I = list(iter_stack(tos))
-  list_to_stack(sorted(set(I), key=I.index))
   return list_to_stack(sorted(set(I), key=I.index)), stack
 
 

@@ -45,7 +45,7 @@ to when commands are executed, and so records the log of user actions and
 system events.  It tends to fill up quickly so there's a reset_log command
 that clears it out.
 
-Viewers have "grow" and "close" in ther menu bars.  These are buttons.
+Viewers have "grow" and "close" in their menu bars.  These are buttons.
 When you right-click on grow a viewer a copy is created that covers that
 viewer's entire track.  If you grow a viewer that already takes up its
 whole track then a copy is created that takes up an additional track, up
