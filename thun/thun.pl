@@ -1,5 +1,5 @@
 ﻿%
-%    Copyright © 2018, 2019 Simon Forman
+%    Copyright © 2018, 2019, 2020 Simon Forman
 %
 %    This file is part of Thun
 %
@@ -66,20 +66,59 @@ joy(InputString, StackIn, StackOut) :-
     thun(Expression, StackIn, StackOut).
 
 /*
+
 Parser
 
-    joy :== number | '[' joy* ']' | atom
+The grammar of Joy is very simple.  A Joy expression is zero or more Joy
+terms separated by blanks and terms can be either integers, quoted Joy
+expressions, or symbols (names of functions.)
+
+    joy ::= ( blanks term blanks )*
+
+    term ::= integer | '[' joy ']' | symbol
+
+    integer ::= [ '-' | '+' ] ('0'...'9')+
+    symbol ::= char+
+
+    char ::= <Any non-space other than '[' and ']'.>
+    blanks ::= <Zero or more whitespace characters.>
+
+For integer//1 and blanks//0 I delegate to SWI's dcg/basics library.  The
+blank//0 matches and discards space and newline characters and integer//1
+"processes an optional sign followed by a non-empty sequence of digits
+into an integer." (https://www.swi-prolog.org/pldoc/man?section=basics)
+
+Symbols can be made of any non-blank characters except '['and ']' which
+are fully reserved for list literals ("quotes"), and '==' is reserved as
+a kind of meta-logical punctuation for definitions (it's not a symbol,
+you can't use it in code, it only appears in the defs.txt file as a
+visual aid to humans.  The rule of one definition per line with the
+name as the first symbol in the definition would suffice, but I tried it
+and it looked ugly to me.  Any number of '=' characters can appear as
+part of a symbol, and any number of them other than two can be a symbol.)
+
+Symbols 'true' and 'false' are treated as literals for Boolean values.
+
+For now strings are neglected in favor of lists of numbers.  (But there's
+no support for parsing string notation and converting to lists of ints.)
+
+One wrinkle of the grammar is that numbers do not need to be followed by
+blanks before the next match, which is nice when the next match is a
+square bracket but a little weird when it's a symbol term.  E.g. "2[3]"
+parses as [2, [3]] but "23x" parses as [23, x].  It's a minor thing not
+worth disfiguring the grammar to change IMO.
+
+Integers are converted to Prolog integers, symbols to Prolog atoms, and
+list literals to Prolog lists.
 
 */
 
 joy_parse([T|J]) --> blanks, joy_term(T), blanks, joy_parse(J).
 joy_parse([]) --> [].
 
-joy_term(N) --> number(N), !.
-joy_term(J) --> "[", !, joy_parse(J), "]".
-joy_term(C) --> symbol(C).
+joy_term(J) --> integer(J) | "[", joy_parse(J), "]" | symbol(J).
 
-symbol(C) --> chars(Chars), !, {Chars \= [61, 61], atom_string(C, Chars)}.
+symbol(C) --> chars(Chars), {Chars \= `==`, atom_string(C, Chars)}.
 
 chars([Ch|Rest]) --> char(Ch), chars(Rest).
 chars([Ch])      --> char(Ch).
