@@ -23,41 +23,6 @@
 
 
 /*
-
-To handle comparision operators the possibility of exceptions due to
-insufficiently instantiated arguments must be handled.  First try to make
-the comparison and set the result to a Boolean atom.  If an exception
-happens just leave the comparison expression as the result and some other
-function or combinator will deal with it.  Example:
-
-    func(>,  [A, B|S], [C|S]) :- catch(
-            (B > A -> C=true ; C=false),
-            _,
-            C=(B>A)  % in case of error.
-            ).
-
-To save on conceptual overhead I've defined a term_expansion/2 that sets
-up the func/3 for each op.
-*/
-
-term_expansion(comparison_operator(X), (func(X, [A, B|S], [C|S]) :-
-    F =.. [X, B, A], catch((F -> C=true ; C=false), _, C=F))).
-
-% I don't use Prolog-compatible op symbols in all cases.
-term_expansion(comparison_operator(X, Y), (func(X, [A, B|S], [C|S]) :-
-    F =.. [Y, B, A], catch((F -> C=true ; C=false), _, C=F))).
-
-% Likewise for math operators, try to evaluate, otherwise use the
-% symbolic form.
-
-term_expansion(math_operator(X), (func(X, [A, B|S], [C|S]) :-
-    F =.. [X, B, A], catch(C is F, _, C=F))).
-
-term_expansion(math_operator(X, Y), (func(X, [A, B|S], [C|S]) :-
-    F =.. [Y, B, A], catch(C is F, _, C=F))).
-
-
-/*
 An entry point.
 */
 
@@ -116,9 +81,12 @@ list literals to Prolog lists.
 joy_parse([T|J]) --> blanks, joy_term(T), blanks, joy_parse(J).
 joy_parse([]) --> [].
 
-joy_term(J) --> integer(J) | "[", joy_parse(J), "]" | symbol(J).
+joy_term(J) --> integer(J), !.
+joy_term(J) --> "[", !, joy_parse(J), "]".
+joy_term(J) --> symbol(J).
 
-symbol(C) --> chars(Chars), {Chars \= `==`, atom_string(C, Chars)}.
+symbol(_) --> "==", !, {fail}.  % prevents '==' parsing as [= =].
+symbol(C) --> chars(Chars), !, {atom_string(C, Chars)}.
 
 chars([Ch|Rest]) --> char(Ch), chars(Rest).
 chars([Ch])      --> char(Ch).
@@ -163,21 +131,6 @@ literal([_|_]).
 literal(true).
 literal(false).
 
-% Symbolic math expressions are literals.
-literal(_+_).
-literal(_-_).
-literal(_*_).
-literal(_/_).
-literal(_ mod _).
-
-% Symbolic comparisons are literals.
-literal(_>_).
-literal(_<_).
-literal(_>=_).
-literal(_=<_).
-literal(_=:=_).
-literal(_=\=_).
-
 
 /*
 Functions
@@ -189,18 +142,6 @@ func(cons, [A, B|S], [[B|A]|S]).
 func(swap, [A, B|S],  [B, A|S]).
 func(dup,     [A|S],  [A, A|S]).
 func(pop,     [_|S],        S ).
-
-% Symbolic math.  Compute the answer, or derivative, or whatever, later.
-math_operator(+).
-math_operator(-).
-math_operator(*).
-math_operator(/).
-math_operator(mod).
-
-% Attempt to calculate the value of a symbolic math expression.
-func(calc, [A|S], [B|S]) :- B is A.
-
-func(sqrt, [A|S], [sqrt(A)|S]).
 
 func(concat, [A, B|S],   [C|S]) :- append(B, A, C).
 func(flatten,   [A|S],   [B|S]) :- flatten(A, B).
@@ -229,13 +170,25 @@ func(bool, [false|S], [false|S]) :- !.
 
 func(bool, [_|S], [true|S]).
 
-comparison_operator(>).
-comparison_operator(<).
-comparison_operator(>=).
-comparison_operator(<=, =<).
-comparison_operator(=, =:=).
-comparison_operator(<>, =\=).
+func( + ,  [A, B|S], [C|S]) :- C #= A + B.
+func( - ,  [A, B|S], [C|S]) :- C #= B - A.
+func( * ,  [A, B|S], [C|S]) :- C #= A * B.
+func( / ,  [A, B|S], [C|S]) :- C #= B div A.
+func('%',  [A, B|S], [C|S]) :- C #= B mod A.
 
+func('/%', [A, B|S], [C, D|S]) :- C #= A div B, D #= A mod B.
+func( pm , [A, B|S], [C, D|S]) :- C #= A + B,   D #= B - A.
+
+func(>,  [A, B|S], [T|S]) :- B #> A #<==> R, r_truth(R, T).
+func(<,  [A, B|S], [T|S]) :- B #< A #<==> R, r_truth(R, T).
+func(=,  [A, B|S], [T|S]) :- B #= A #<==> R, r_truth(R, T).
+func(>=, [A, B|S], [T|S]) :- B #>= A #<==> R, r_truth(R, T).
+func(<=, [A, B|S], [T|S]) :- B #=< A #<==> R, r_truth(R, T).
+func(<>, [A, B|S], [T|S]) :- B #\= A #<==> R, r_truth(R, T).
+
+
+r_truth(0, false).
+r_truth(1, true).
 
 /*
 Combinators
@@ -249,23 +202,9 @@ combo(dupdip, [P, X|S], [X|S], Ei, Eo) :- append(P, [X|Ei], Eo).
 
 combo(branch, [T, _,  true|S], S, Ei, Eo) :- append(T, Ei, Eo).
 combo(branch, [_, F, false|S], S, Ei, Eo) :- append(F, Ei, Eo).
-combo(branch, [T, F,  Expr|S], S, Ei, Eo) :-
-    \+ Expr = true, \+ Expr = false,
-    catch(  % Try Expr and do one or the other,
-        (Expr -> append(T, Ei, Eo) ; append(F, Ei, Eo)),
-        _,  % If Expr don't grok, try both branches.
-        (append(T, Ei, Eo) ; append(F, Ei, Eo))
-        ).
 
 combo(loop, [_, false|S], S, E,  E ).
 combo(loop, [B,  true|S], S, Ei, Eo) :- append(B, [B, loop|Ei], Eo).
-combo(loop, [B,  Expr|S], S, Ei, Eo) :-
-    \+ Expr = true, \+ Expr = false,
-    catch(  % Try Expr and do one or the other,
-        (Expr -> append(B, [B, loop|Ei], Eo) ; Ei=Eo),
-        _,  % If Expr don't grok, try both branches.
-        (Ei=Eo ; append(B, [B, loop|Ei], Eo))
-        ).
 
 combo(step, [_,    []|S],    S,  E,  E ).
 combo(step, [P,   [X]|S], [X|S], Ei, Eo) :- !, append(P, Ei, Eo).
