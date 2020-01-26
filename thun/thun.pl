@@ -78,12 +78,14 @@ list literals to Prolog lists.
 
 */
 
-joy_parse([T|J]) --> blanks, joy_term(T), blanks, joy_parse(J).
+joy_parse([J|Js]) --> blanks, joy_term(J), blanks, joy_parse(Js).
 joy_parse([]) --> [].
 
-joy_term(J) --> integer(J), !.
-joy_term(J) --> "[", !, joy_parse(J), "]".
-joy_term(J) --> symbol(J).
+joy_term(int(I)) --> integer(I), !.
+joy_term(list(J)) --> "[", !, joy_parse(J), "]".
+joy_term(bool(true)) --> "true", !.
+joy_term(bool(false)) --> "false", !.
+joy_term(symbol(S)) --> symbol(S).
 
 symbol(_) --> "==", !, {fail}.  % prevents '==' parsing as [= =].
 symbol(C) --> chars(Chars), !, {atom_string(C, Chars)}.
@@ -100,36 +102,22 @@ thun(Expression, InputStack, OutputStack)
 */
 
 thun([], S, S).
-thun(  [Lit|E], Si, So) :- literal(Lit), !, thun(E, [Lit|Si], So).
-thun(  [Def|E], Si, So) :- def(Def, Body), !, append(Body, E, Eo), thun(Eo, Si, So).
-thun( [Func|E], Si, So) :- func(Func, Si, S), thun(E, S, So).
-thun([Combo|E], Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
+thun([Term|E], Si, So) :- thun(Term, E, Si, So).
+
+thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So).
+thun(list(L), E, Si, So) :- thun(E, [list(L)|Si], So).
+thun(symbol(Def),   E, Si, So) :- def(Def, Body), !, append(Body, E, Eo), thun(Eo, Si, So).
+thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So).
+thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
 
 % Some error handling.
-
-thun([Unknown|E], Si, So) :-
-    damned_thing(Unknown),
-    write("wtf? "),
+thun(symbol(Unknown), _, _, _) :-
+    \+ def(Unknown, _),
+    \+ func(Unknown, _, _),
+    \+ combo(Unknown, _, _, _, _),
+    write("Unknown: "),
     writeln(Unknown),
-    So = [Unknown|E]-Si.
-
-damned_thing(It) :-
-    \+ literal(It),
-    \+ def(It, _),
-    \+ func(It, _, _),
-    \+ combo(It, _, _, _, _).
-
-
-/*
-Literals
-*/
-
-literal(V) :- var(V).
-literal(I) :- number(I).
-literal([]).
-literal([_|_]).
-literal(true).
-literal(false).
+    fail.
 
 
 /*
@@ -138,87 +126,105 @@ Functions
 
 func(words, S, [Words|S]) :- words(Words).
 
-func(cons, [A, B|S], [[B|A]|S]).
 func(swap, [A, B|S],  [B, A|S]).
 func(dup,     [A|S],  [A, A|S]).
 func(pop,     [_|S],        S ).
 
-func(concat, [A, B|S],   [C|S]) :- append(B, A, C).
-func(flatten,   [A|S],   [B|S]) :- flatten(A, B).
-func(swaack,    [R|S],   [S|R]).
-func(stack,        S ,   [S|S]).
-func(clear,        _ ,      []).
-func(first, [[X|_]|S],   [X|S]).
-func(rest,  [[_|X]|S],   [X|S]).
-func(unit,      [X|S], [[X]|S]).
+func(cons,   [list(A),      B |S], [list([B|A])|S]).
+func(concat, [list(A), list(B)|S],     [list(C)|S]) :- append(B, A, C).
+func(flatten,   [list(A)|S],   [list(B)|S]) :- flatten(A, B).
+func(swaack,    [list(R)|S],   [list(S)|R]).
+func(stack,              S ,   [list(S)|S]).
+func(clear,              _ ,            []).
+func(first, [list([X|_])|S],   [X|S]).
+func(rest,  [list([_|X])|S],   [X|S]).
+func(unit, [X|S], [list([X])|S]).
 
 func(rolldown, [A, B, C|S], [B, C, A|S]).
 func(dupd,        [A, B|S], [A, B, B|S]).
 func(over,        [A, B|S], [B, A, B|S]).
 func(tuck,        [A, B|S], [A, B, A|S]).
 
-func(shift, [[B|A], C|D], [A, [B|C]|D]).
+func(shift, [list([B|A]), list(C)|D], [list(A), list([B|C])|D]).
 
 func(rollup, Si, So) :- func(rolldown, So, Si).
 func(uncons, Si, So) :- func(cons, So, Si).
 
-func(bool, [    0|S], [false|S]) :- !.
-func(bool, [  0.0|S], [false|S]) :- !.
-func(bool, [   []|S], [false|S]) :- !.
-func(bool, [   ""|S], [false|S]) :- !.
-func(bool, [false|S], [false|S]) :- !.
+func(bool, [     int(0)|S], [bool(false)|S]).
+func(bool, [   list([])|S], [bool(false)|S]).
+func(bool, [bool(false)|S], [bool(false)|S]).
 
-func(bool, [_|S], [true|S]).
+func(bool, [_|S], [bool(true)|S]).
+% func(bool, [A|S], [bool(true)|S]) :- \+ func(bool, [A], [bool(false)]).
 
-func( + ,  [A, B|S], [C|S]) :- C #= A + B.
-func( - ,  [A, B|S], [C|S]) :- C #= B - A.
-func( * ,  [A, B|S], [C|S]) :- C #= A * B.
-func( / ,  [A, B|S], [C|S]) :- C #= B div A.
-func('%',  [A, B|S], [C|S]) :- C #= B mod A.
+func('empty?', [    list([])|S], [ bool(true)|S]).
+func('empty?', [ list([_|_])|S], [bool(false)|S]).
 
-func('/%', [A, B|S], [C, D|S]) :- C #= A div B, D #= A mod B.
-func( pm , [A, B|S], [C, D|S]) :- C #= A + B,   D #= B - A.
+func('list?', [  list(_)|S], [ bool(true)|S]).
+func('list?', [   int(_)|S], [bool(false)|S]).
+func('list?', [symbol(_)|S], [bool(false)|S]).
 
-func(>,  [A, B|S], [T|S]) :- B #> A #<==> R, r_truth(R, T).
-func(<,  [A, B|S], [T|S]) :- B #< A #<==> R, r_truth(R, T).
-func(=,  [A, B|S], [T|S]) :- B #= A #<==> R, r_truth(R, T).
-func(>=, [A, B|S], [T|S]) :- B #>= A #<==> R, r_truth(R, T).
-func(<=, [A, B|S], [T|S]) :- B #=< A #<==> R, r_truth(R, T).
-func(<>, [A, B|S], [T|S]) :- B #\= A #<==> R, r_truth(R, T).
+func('one-or-more?', [list([_|_])|S], [ bool(true)|S]).
+func('one-or-more?', [   list([])|S], [bool(false)|S]).
 
-r_truth(0, false).
-r_truth(1, true).
+func(and, [bool(true),   bool(true)|S], [ bool(true)|S]).
+func(and, [bool(true),  bool(false)|S], [bool(false)|S]).
+func(and, [bool(false),  bool(true)|S], [bool(false)|S]).
+func(and, [bool(false), bool(false)|S], [bool(false)|S]).
+
+func(or,  [bool(true),   bool(true)|S], [ bool(true)|S]).
+func(or,  [bool(true),  bool(false)|S], [ bool(true)|S]).
+func(or,  [bool(false),  bool(true)|S], [ bool(true)|S]).
+func(or,  [bool(false), bool(false)|S], [bool(false)|S]).
+
+func( + ,  [int(A), int(B)|S], [int(C)|S]) :- C #= A + B.
+func( - ,  [int(A), int(B)|S], [int(C)|S]) :- C #= B - A.
+func( * ,  [int(A), int(B)|S], [int(C)|S]) :- C #= A * B.
+func( / ,  [int(A), int(B)|S], [int(C)|S]) :- C #= B div A.
+func('%',  [int(A), int(B)|S], [int(C)|S]) :- C #= B mod A.
+
+func('/%', [int(A), int(B)|S], [int(C), int(D)|S]) :- C #= A div B, D #= A mod B.
+func( pm , [int(A), int(B)|S], [int(C), int(D)|S]) :- C #= A + B,   D #= B - A.
+
+func(>,  [int(A), int(B)|S], [T|S]) :- B #> A #<==> R, r_truth(R, T).
+func(<,  [int(A), int(B)|S], [T|S]) :- B #< A #<==> R, r_truth(R, T).
+func(=,  [int(A), int(B)|S], [T|S]) :- B #= A #<==> R, r_truth(R, T).
+func(>=, [int(A), int(B)|S], [T|S]) :- B #>= A #<==> R, r_truth(R, T).
+func(<=, [int(A), int(B)|S], [T|S]) :- B #=< A #<==> R, r_truth(R, T).
+func(<>, [int(A), int(B)|S], [T|S]) :- B #\= A #<==> R, r_truth(R, T).
+
+r_truth(0, bool(false)).
+r_truth(1, bool(true)).
 
 
 /*
 Combinators
 */
 
-combo(i,          [P|S], S, Ei, Eo) :- append(P, Ei, Eo).
-combo(dip,     [P, X|S], S, Ei, Eo) :- append(P, [X|Ei], Eo).
-combo(dipd, [P, X, Y|S], S, Ei, Eo) :- append(P, [Y, X|Ei], Eo).
+combo(i,          [list(P)|S], S, Ei, Eo) :- append(P, Ei, Eo).
+combo(dip,     [list(P), X|S], S, Ei, Eo) :- append(P, [X|Ei], Eo).
+combo(dipd, [list(P), X, Y|S], S, Ei, Eo) :- append(P, [Y, X|Ei], Eo).
 
-combo(dupdip, [P, X|S], [X|S], Ei, Eo) :- append(P, [X|Ei], Eo).
+combo(dupdip, [list(P), X|S], [X|S], Ei, Eo) :- append(P, [X|Ei], Eo).
 
-combo(branch, [T, _,  true|S], S, Ei, Eo) :- append(T, Ei, Eo).
-combo(branch, [_, F, false|S], S, Ei, Eo) :- append(F, Ei, Eo).
+combo(branch, [list(T), list(_),  bool(true)|S], S, Ei, Eo) :- append(T, Ei, Eo).
+combo(branch, [list(_), list(F), bool(false)|S], S, Ei, Eo) :- append(F, Ei, Eo).
 
-combo(loop, [_, false|S], S, E,  E ).
-combo(loop, [B,  true|S], S, Ei, Eo) :- append(B, [B, loop|Ei], Eo).
+combo(loop, [list(_), bool(false)|S], S, E,  E ).
+combo(loop, [list(B),  bool(true)|S], S, Ei, Eo) :- append(B, [list(B), symbol(loop)|Ei], Eo).
 
-combo(step, [_,    []|S],    S,  E,  E ).
-combo(step, [P,   [X]|S], [X|S], Ei, Eo) :- !, append(P, Ei, Eo).
-combo(step, [P, [X|Z]|S], [X|S], Ei, Eo) :-    append(P, [Z, P, step|Ei], Eo).
+combo(step, [list(_),    []|S],    S,  E,  E ).
+combo(step, [list(P),   [X]|S], [X|S], Ei, Eo) :- !, append(P, Ei, Eo).
+combo(step, [list(P), [X|Z]|S], [X|S], Ei, Eo) :-    append(P, [Z, list(P), symbol(step)|Ei], Eo).
 
-combo(times, [_, 0|S], S, E,  E ).
-combo(times, [P, 1|S], S, Ei, Eo) :- append(P, Ei, Eo).
-combo(times, [P, N|S], S, Ei, Eo) :- N #>= 2, M #= N - 1, append(P, [M, P, times|Ei], Eo).
-combo(times, [_, N|S], S, _,  _ ) :- N #< 0, fail.
+combo(times, [list(_), int(0)|S], S, E,  E ).
+combo(times, [list(P), int(1)|S], S, Ei, Eo) :- append(P, Ei, Eo).
+combo(times, [list(P), int(N)|S], S, Ei, Eo) :- N #>= 2, M #= N - 1, append(P, [int(M), list(P), symbol(times)|Ei], Eo).
+combo(times, [list(_), int(N)|S], S, _,  _ ) :- N #< 0, fail.
 
 combo(genrec, [R1, R0, Then, If|S],
               [  Else, Then, If|S], E, [ifte|E]) :-
-    Quoted = [If, Then, R0, R1, genrec],
-    append(R0, [Quoted|R1], Else).
+    append(R0, [[If, Then, R0, R1, symbol(genrec)]|R1], Else).
 
 /*
 This is a crude but servicable implementation of the map combinator.
@@ -249,9 +255,9 @@ combo(map, [P, List|S], [Mapped, []|S], E, [infra|E]) :-
 
 prepare_mapping(P, S, In, Out) :- prepare_mapping(P, S, In, [], Out).
 
-prepare_mapping(    _, _,     [],                   Out,  Out) :- !.
-prepare_mapping(    P, S, [T|In],                   Acc,  Out) :-
-    prepare_mapping(P, S,    In,  [[T|S], P, infrst|Acc], Out).
+prepare_mapping(    _, _,     [],                           Out,  Out) :- !.
+prepare_mapping(    P, S, [T|In],                           Acc,  Out) :-
+    prepare_mapping(P, S,    In,  [[T|S], P, symbol(infrst)|Acc], Out).
 
 
 /*
