@@ -97,12 +97,53 @@ thun(Expression, InputStack, OutputStack)
 thun([], S, S).
 thun([Term|E], Si, So) :- thun(Term, E, Si, So).
 
-thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So).
-thun(bool(B), E, Si, So) :- thun(E, [bool(B)|Si], So).
-thun(list(L), E, Si, So) :- thun(E, [list(L)|Si], So).
-thun(symbol(Def),   E, Si, So) :- def(Def, Body), !, append(Body, E, Eo), thun(Eo, Si, So).
-thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So).
-thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
+/*  Original code.  Partial reduction is used to generate the
+    actual relations, see below.
+
+    thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So).
+    thun(bool(B), E, Si, So) :- thun(E, [bool(B)|Si], So).
+    thun(list(L), E, Si, So) :- thun(E, [list(L)|Si], So).
+    thun(symbol(Def),   E, Si, So) :- def(Def, Body), append(Body, E, Eo), thun(Eo, Si, So).
+    thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So).
+    thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
+
+ */
+
+% Machine-generated thun/4 rules.
+% Literals okay.
+
+thun(int(A), [], B, [int(A)|B]).
+thun(int(C), [A|B], D, E) :- thun(A, B, [int(C)|D], E).
+
+thun(bool(A), [], B, [bool(A)|B]).
+thun(bool(C), [A|B], D, E) :- thun(A, B, [bool(C)|D], E).
+
+thun(list(A), [], B, [list(A)|B]).
+thun(list(C), [A|B], D, E) :- thun(A, B, [list(C)|D], E).
+
+% What is wrong here?
+% thun(symbol(B), D, A, A) :- def(B, C), append(C, D, []).
+% thun(symbol(A), C, F, G) :- def(A, B), append(B, C, [D|E]), thun(D, E, F, G).
+
+% We want something like...
+thun(symbol(B), [], A, D) :- def(B, [H|C]), thun(H, C, A, D).
+thun(symbol(A), [H|E0], Si, So) :-
+    def(A, [DH|DE]),
+    append(DE, [H|E0], E),
+    thun(DH, E, Si, So).
+
+% And func/3 works too,
+thun(symbol(A), [], B, C) :- func(A, B, C).
+thun(symbol(A), [C|D], B, F) :- func(A, B, E), thun(C, D, E, F).
+
+% Combo is all messed up.
+% thun(symbol(A), D, B, C) :- combo(A, B, C, D, []).
+% thun(symbol(A), C, B, G) :- combo(A, B, F, C, [D|E]), thun(D, E, F, G).
+
+thun(symbol(Combo), [], Si, So) :- combo(Combo, Si, S, [], Eo), thun(Eo, S, So).
+thun(symbol(Combo), [Term|Expr0], Si, So) :-
+    combo(Combo, Si, S, [Term|Expr0], Eo),
+    thun(Eo, S, So).
 
 % Some error handling.
 thun(symbol(Unknown), _, _, _) :-
@@ -112,7 +153,6 @@ thun(symbol(Unknown), _, _, _) :-
     write("Unknown: "),
     writeln(Unknown),
     fail.
-
 
 /*
 Functions
@@ -359,3 +399,48 @@ shrink --> to_fixed_point(rebo(contracto, shrink)).
 % digits([Ch|Chars]) --> [Ch], {code_type(Ch, digit)}, digits(Chars).
 % digits([]), [Ch]   --> [Ch], {code_type(Ch, space) ; Ch=0'] }.
 % digits([], [], _).  % Match if followed by space, ], or nothing.
+
+
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+/*  Partial Reducer from "The Art of Prolog" by Sterling and Shapiro
+    Program 18.3, pg. 362 */
+
+process(Program, ReducedProgram) :-
+    findall(PC1, (member(C1, Program), preduce(C1, PC1)), ReducedProgram).
+
+preduce( (A :- B), (Pa :- Pb) ) :- !, preduce(B, Pb), preduce(A, Pa).
+preduce(     true,       true ) :- !.
+preduce(   (A, B),    Residue ) :- !, preduce(A, Pa), preduce(B, Pb), combine(Pa, Pb, Residue).
+preduce(        A,          B ) :- should_fold(A, B), !.
+preduce(        A,    Residue ) :- should_unfold(A), !, clause(A, B), preduce(B, Residue).
+preduce(        A,          A ).
+
+combine(true, B, B) :- !.
+combine(A, true, A) :- !.
+combine(A,    B, (A, B)).
+
+should_fold(z, a).  % Just a "No Op" appease the linter.
+
+%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+/*  Partial reduction of thun/3 in the thun/4 relation gives a new
+    version of thun/4 that is tail-recursive.  You generate the new
+    relation rules like so:
+
+        ?- thunder(C), process(C, R), maplist(portray_clause, R).
+
+    I just cut-n-paste from the SWI terminal and rearrange it.
+*/
+
+should_unfold(thun(_, _, _)).
+% should_unfold(func(_, _, _)).
+% should_unfold(def(_, _)).
+
+thunder([  % Source code for thun/4.
+    (thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So)),
+    (thun(bool(B), E, Si, So) :- thun(E, [bool(B)|Si], So)),
+    (thun(list(L), E, Si, So) :- thun(E, [list(L)|Si], So)),
+    (thun(symbol(Def),   E, Si, So) :- def(Def, Body), append(Body, E, Eo), thun(Eo, Si, So)),
+    (thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So)),
+    (thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So))
+]).
+
