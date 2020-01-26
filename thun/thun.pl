@@ -35,14 +35,15 @@ joy(InputString, StackIn, StackOut) :-
 Parser
 
 The grammar of Joy is very simple.  A Joy expression is zero or more Joy
-terms separated by blanks and terms can be either integers, quoted Joy
-expressions, or symbols (names of functions.)
+terms separated by blanks and terms can be either integers, Booleans,
+quoted Joy expressions, or symbols (names of functions.)
 
     joy ::= ( blanks term blanks )*
 
-    term ::= integer | '[' joy ']' | symbol
+    term ::= integer | bool | '[' joy ']' | symbol
 
     integer ::= [ '-' | '+' ] ('0'...'9')+
+    bool ::= 'true' | 'false' 
     symbol ::= char+
 
     char ::= <Any non-space other than '[' and ']'.>
@@ -54,15 +55,8 @@ blank//0 matches and discards space and newline characters and integer//1
 into an integer." (https://www.swi-prolog.org/pldoc/man?section=basics)
 
 Symbols can be made of any non-blank characters except '['and ']' which
-are fully reserved for list literals ("quotes"), and '==' is reserved as
-a kind of meta-logical punctuation for definitions (it's not a symbol,
-you can't use it in code, it only appears in the defs.txt file as a
-visual aid to humans.  The rule of one definition per line with the
-name as the first symbol in the definition would suffice, but I tried it
-and it looked ugly to me.  Any number of '=' characters can appear as
-part of a symbol, and any number of them other than two can be a symbol.)
-
-Symbols 'true' and 'false' are treated as literals for Boolean values.
+are fully reserved for list literals (aka "quotes"). 'true' and 'false'
+would be valid symbols but they are reserved for Boolean literals.
 
 For now strings are neglected in favor of lists of numbers.  (But there's
 no support for parsing string notation and converting to lists of ints.)
@@ -73,8 +67,8 @@ square bracket but a little weird when it's a symbol term.  E.g. "2[3]"
 parses as [2, [3]] but "23x" parses as [23, x].  It's a minor thing not
 worth disfiguring the grammar to change IMO.
 
-Integers are converted to Prolog integers, symbols to Prolog atoms, and
-list literals to Prolog lists.
+Integers are converted to Prolog integers, symbols and bools to Prolog
+atoms, and list literals to Prolog lists.
 
 */
 
@@ -87,7 +81,6 @@ joy_term(bool(true)) --> "true", !.
 joy_term(bool(false)) --> "false", !.
 joy_term(symbol(S)) --> symbol(S).
 
-symbol(_) --> "==", !, {fail}.  % prevents '==' parsing as [= =].
 symbol(C) --> chars(Chars), !, {atom_string(C, Chars)}.
 
 chars([Ch|Rest]) --> char(Ch), chars(Rest).
@@ -105,6 +98,7 @@ thun([], S, S).
 thun([Term|E], Si, So) :- thun(Term, E, Si, So).
 
 thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So).
+thun(bool(B), E, Si, So) :- thun(E, [bool(B)|Si], So).
 thun(list(L), E, Si, So) :- thun(E, [list(L)|Si], So).
 thun(symbol(Def),   E, Si, So) :- def(Def, Body), !, append(Body, E, Eo), thun(Eo, Si, So).
 thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So).
@@ -264,27 +258,29 @@ prepare_mapping(    P, S, [T|In],                           Acc,  Out) :-
 Definitions
 */
 
-joy_def(def(Def, Body)) --> symbol(Def), blanks, "==", joy_parse(Body).
-
-joy_defs([Def|Rest]) --> blanks, joy_def(Def), blanks, joy_defs(Rest).
-joy_defs([]) --> [].
+joy_def --> joy_parse([symbol(Name)|Body]), { assert_def(Name, Body) }.
 
 assert_defs(DefsFile) :-
     read_file_to_codes(DefsFile, Codes, []),
-    phrase(joy_defs(Defs), Codes),
-    maplist(assert_def, Defs).
+    lines(Codes, Lines),
+    maplist(phrase(joy_def), Lines).
 
-assert_def(def(Def, Body)) :-
-    (  % Don't let Def "shadow" functions or combinators.
-        \+ func(Def, _, _),
-        \+ combo(Def, _, _, _, _)
-    ) -> (
-        retractall(def(Def, _)),
-        assertz(def(Def, Body))
-    ) ; true.  % Otherwise it's okay.
+assert_def(Symbol, Body) :-
+    (  % Don't let this "shadow" functions or combinators.
+        \+ func(Symbol, _, _),
+        \+ combo(Symbol, _, _, _, _)
+    ) -> (  % Replace any existing defs of this name.
+        retractall(def(Symbol, _)),
+        assertz(def(Symbol, Body))
+    ) ; true.
+
+% Split on newline chars a list of codes into a list of lists of codes
+% one per line.  Helper function.
+lines([], []) :- !.
+lines(Codes, [Line|Lines]) :- append(Line, [0'\n|Rest], Codes), !, lines(Rest, Lines).
+lines(Codes, [Codes]).
 
 :- assert_defs("defs.txt").
-
 
 words(Words) :-
     findall(Name, clause(func(Name, _, _), _), Funcs),
