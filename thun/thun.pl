@@ -121,16 +121,18 @@ thun(bool(C), [A|B], D, E) :- thun(A, B, [bool(C)|D], E).
 thun(list(A), [], B, [list(A)|B]).
 thun(list(C), [A|B], D, E) :- thun(A, B, [list(C)|D], E).
 
-% What is wrong here?
-% thun(symbol(B), D, A, A) :- def(B, C), append(C, D, []).
-% thun(symbol(A), C, F, G) :- def(A, B), append(B, C, [D|E]), thun(D, E, F, G).
+% def/2 works but...
+thun(symbol(A), C, F, G) :-
+    def(A, B),
+    append(B, C, [D|E]),
+    thun(D, E, F, G).
 
 % We want something like...
-thun(symbol(B), [], A, D) :- def(B, [H|C]), thun(H, C, A, D).
-thun(symbol(A), [H|E0], Si, So) :-
-    def(A, [DH|DE]),
-    append(DE, [H|E0], E),
-    thun(DH, E, Si, So).
+% thun(symbol(B), [], A, D) :- def(B, [H|C]), thun(H, C, A, D).
+% thun(symbol(A), [H|E0], Si, So) :-
+%     def(A, [DH|DE]),
+%     append(DE, [H|E0], E),
+%     thun(DH, E, Si, So).
 
 % And func/3 works too,
 thun(symbol(A), [], B, C) :- func(A, B, C).
@@ -433,13 +435,13 @@ should_fold(z, a).  % Just a "No Op" appease the linter.
 
 should_unfold(thun(_, _, _)).
 % should_unfold(func(_, _, _)).
-% should_unfold(def(_, _)).
+should_unfold(def(_, _)).
 
 thunder([  % Source code for thun/4.
     (thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So)),
     (thun(bool(B), E, Si, So) :- thun(E, [bool(B)|Si], So)),
     (thun(list(L), E, Si, So) :- thun(E, [list(L)|Si], So)),
-    (thun(symbol(Def),   E, Si, So) :- def(Def, Body), append(Body, E, Eo), thun(Eo, Si, So)),
+    (thun(symbol(Def),   E, Si, So) :- def(Def, Body), append(Body, E, [T|Eo]), thun(T, Eo, Si, So)),
     (thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So)),
     (thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So))
 ]).
