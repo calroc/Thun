@@ -186,9 +186,9 @@ func(>=, [A, B|S], [T|S]) :- B #>= A #<==> R, r_truth(R, T).
 func(<=, [A, B|S], [T|S]) :- B #=< A #<==> R, r_truth(R, T).
 func(<>, [A, B|S], [T|S]) :- B #\= A #<==> R, r_truth(R, T).
 
-
 r_truth(0, false).
 r_truth(1, true).
+
 
 /*
 Combinators
@@ -260,20 +260,22 @@ Definitions
 
 joy_def(def(Def, Body)) --> symbol(Def), blanks, "==", joy_parse(Body).
 
-joy_def --> joy_def(Def), {ignore(assert_def(Def))}.
-
-joy_defs --> blanks, joy_def, blanks, joy_defs.
-joy_defs --> [].
+joy_defs([Def|Rest]) --> blanks, joy_def(Def), blanks, joy_defs(Rest).
+joy_defs([]) --> [].
 
 assert_defs(DefsFile) :-
     read_file_to_codes(DefsFile, Codes, []),
-    phrase(joy_defs, Codes).
+    phrase(joy_defs(Defs), Codes),
+    maplist(assert_def, Defs).
 
 assert_def(def(Def, Body)) :-
-    \+ func(Def, _, _),
-    \+ combo(Def, _, _, _, _),
-    retractall(def(Def, _)),
-    assertz(def(Def, Body)).
+    (  % Don't let Def "shadow" functions or combinators.
+        \+ func(Def, _, _),
+        \+ combo(Def, _, _, _, _)
+    ) -> (
+        retractall(def(Def, _)),
+        assertz(def(Def, Body))
+    ) ; true.  % Otherwise it's okay.
 
 :- assert_defs("defs.txt").
 
