@@ -35,6 +35,7 @@ infra == swons swaack [i] dip swaack
 infrst == infra first
 make_generator == [codireco] ccons
 neg == 0 swap -
+not == [true] [false] branch
 nullary == [stack] dinfrirst
 of == swap at
 pam == [i] map
