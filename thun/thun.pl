@@ -155,6 +155,7 @@ func('empty?', [    list([])|S], [ bool(true)|S]).
 func('empty?', [ list([_|_])|S], [bool(false)|S]).
 
 func('list?', [  list(_)|S], [ bool(true)|S]).
+func('list?', [  bool(_)|S], [bool(false)|S]).
 func('list?', [   int(_)|S], [bool(false)|S]).
 func('list?', [symbol(_)|S], [bool(false)|S]).
 
@@ -237,9 +238,9 @@ property that you can interrupt the Joy evaluation and save or transmit
 the stack+expression knowing that you have all the state.
 */
 
-combo(map, [_,   []|S],         [[]|S], E,        E ) :- !.
-combo(map, [P, List|S], [Mapped, []|S], E, [infra|E]) :-
-    prepare_mapping(P, S, List, Mapped).
+combo(map, [list(_),   list([])|S],               [list([])|S], E,                E ) :- !.
+combo(map, [list(P), list(List)|S], [list(Mapped), list([])|S], E, [symbol(infra)|E]) :-
+    prepare_mapping(list(P), S, List, Mapped).
 
 % Set up a program for each term in ListIn
 %
@@ -247,11 +248,11 @@ combo(map, [P, List|S], [Mapped, []|S], E, [infra|E]) :-
 %
 % prepare_mapping(P, S, ListIn, ListOut).
 
-prepare_mapping(P, S, In, Out) :- prepare_mapping(P, S, In, [], Out).
+prepare_mapping(Pl, S, In, Out) :- prepare_mapping(Pl, S, In, [], Out).
 
-prepare_mapping(    _, _,     [],                           Out,  Out) :- !.
-prepare_mapping(    P, S, [T|In],                           Acc,  Out) :-
-    prepare_mapping(P, S,    In,  [[T|S], P, symbol(infrst)|Acc], Out).
+prepare_mapping(    _,  _,     [],                                  Out,  Out) :- !.
+prepare_mapping(    Pl, S, [T|In],                                  Acc,  Out) :-
+    prepare_mapping(Pl, S,    In,  [list([T|S]), Pl, symbol(infrst)|Acc], Out).
 
 
 /*
