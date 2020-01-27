@@ -167,8 +167,8 @@ func(flatten,   [list(A)|S],   [list(B)|S]) :- flatten(A, B).
 func(swaack,    [list(R)|S],   [list(S)|R]).
 func(stack,              S ,   [list(S)|S]).
 func(clear,              _ ,            []).
-func(first, [list([X|_])|S],   [X|S]).
-func(rest,  [list([_|X])|S],   [X|S]).
+func(first, [list([X|_])|S],   [     X |S]).
+func(rest,  [list([_|X])|S],   [list(X)|S]).
 func(unit, [X|S], [list([X])|S]).
 
 func(rolldown, [A, B, C|S], [B, C, A|S]).
@@ -185,7 +185,9 @@ func(bool, [     int(0)|S], [bool(false)|S]).
 func(bool, [   list([])|S], [bool(false)|S]).
 func(bool, [bool(false)|S], [bool(false)|S]).
 
-func(bool, [_|S], [bool(true)|S]).
+func(bool, [     int(N)|S], [bool(true)|S]) :- N #\= 0.
+func(bool, [list([_|_])|S], [bool(true)|S]).
+func(bool, [ bool(true)|S], [bool(true)|S]).
 % func(bool, [A|S], [bool(true)|S]) :- \+ func(bool, [A], [bool(false)]).
 
 func('empty?', [    list([])|S], [ bool(true)|S]).
