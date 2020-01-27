@@ -97,8 +97,7 @@ thun(Expression, InputStack, OutputStack)
 thun([], S, S).
 thun([Term|E], Si, So) :- thun(Term, E, Si, So).
 
-/*  Original code.  Partial reduction is used to generate the
-    actual relations, see below.
+/*  Original code.
 
     thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So).
     thun(bool(B), E, Si, So) :- thun(E, [bool(B)|Si], So).
@@ -107,45 +106,41 @@ thun([Term|E], Si, So) :- thun(Term, E, Si, So).
     thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So).
     thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
 
- */
+Partial reduction is used to generate the actual thun/4 rules, see below. */
 
-% Machine-generated thun/4 rules.
-% Literals okay.
+% Literals turn out okay.
 
-thun(int(A), [], B, [int(A)|B]).
+thun(int(A),    [], B, [int(A)|B]).
 thun(int(C), [A|B], D, E) :- thun(A, B, [int(C)|D], E).
 
-thun(bool(A), [], B, [bool(A)|B]).
+thun(bool(A),    [], B, [bool(A)|B]).
 thun(bool(C), [A|B], D, E) :- thun(A, B, [bool(C)|D], E).
 
-thun(list(A), [], B, [list(A)|B]).
+thun(list(A),    [], B, [list(A)|B]).
 thun(list(C), [A|B], D, E) :- thun(A, B, [list(C)|D], E).
 
-% def/2 works but...
-thun(symbol(A), C, F, G) :-
-    def(A, B),
-    append(B, C, [D|E]),
-    thun(D, E, F, G).
+/*  def/2 works...
 
-% We want something like...
-% thun(symbol(B), [], A, D) :- def(B, [H|C]), thun(H, C, A, D).
-% thun(symbol(A), [H|E0], Si, So) :-
-%     def(A, [DH|DE]),
-%     append(DE, [H|E0], E),
-%     thun(DH, E, Si, So).
+        thun(symbol(A), C, F, G) :-
+            def(A, B),
+            append(B, C, [D|E]),
+            thun(D, E, F, G).
+
+    ... but we want something like this: */
+
+thun(symbol(B),     [],  A,  D) :- def(B, [DH|DE]), thun(DH, DE, A, D).
+thun(symbol(A), [H|E0], Si, So) :- def(A, [DH|DE]),
+     append(DE, [H|E0], E), /* ................. */ thun(DH, E, Si, So).
 
 % And func/3 works too,
-thun(symbol(A), [], B, C) :- func(A, B, C).
+thun(symbol(A),    [], B, C) :- func(A, B, C).
 thun(symbol(A), [C|D], B, F) :- func(A, B, E), thun(C, D, E, F).
 
 % Combo is all messed up.
 % thun(symbol(A), D, B, C) :- combo(A, B, C, D, []).
 % thun(symbol(A), C, B, G) :- combo(A, B, F, C, [D|E]), thun(D, E, F, G).
 
-thun(symbol(Combo), [], Si, So) :- combo(Combo, Si, S, [], Eo), thun(Eo, S, So).
-thun(symbol(Combo), [Term|Expr0], Si, So) :-
-    combo(Combo, Si, S, [Term|Expr0], Eo),
-    thun(Eo, S, So).
+thun(symbol(Combo), Ei, Si, So) :- combo(Combo, Si, S, Ei, Eo), thun(Eo, S, So).
 
 % Some error handling.
 thun(symbol(Unknown), _, _, _) :-
@@ -413,15 +408,13 @@ process(Program, ReducedProgram) :-
 preduce( (A :- B), (Pa :- Pb) ) :- !, preduce(B, Pb), preduce(A, Pa).
 preduce(     true,       true ) :- !.
 preduce(   (A, B),    Residue ) :- !, preduce(A, Pa), preduce(B, Pb), combine(Pa, Pb, Residue).
-preduce(        A,          B ) :- should_fold(A, B), !.
+% preduce(        A,          B ) :- should_fold(A, B), !.
 preduce(        A,    Residue ) :- should_unfold(A), !, clause(A, B), preduce(B, Residue).
 preduce(        A,          A ).
 
 combine(true, B, B) :- !.
 combine(A, true, A) :- !.
 combine(A,    B, (A, B)).
-
-should_fold(z, a).  % Just a "No Op" appease the linter.
 
 %-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 /*  Partial reduction of thun/3 in the thun/4 relation gives a new
@@ -435,7 +428,7 @@ should_fold(z, a).  % Just a "No Op" appease the linter.
 
 should_unfold(thun(_, _, _)).
 % should_unfold(func(_, _, _)).
-should_unfold(def(_, _)).
+% should_unfold(def(_, _)).
 
 thunder([  % Source code for thun/4.
     (thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So)),
@@ -446,3 +439,53 @@ thunder([  % Source code for thun/4.
     (thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So))
 ]).
 
+/* (N.B.: in 'thun(symbol(Def)...' the last clause has changed from thun/3 to thun/4.
+    The earlier version doesn't transform into correct code:
+
+        thun(symbol(B), D, A, A) :- def(B, C), append(C, D, []).
+        thun(symbol(A), C, F, G) :- def(A, B), append(B, C, [D|E]), thun(D, E, F, G).
+
+    With the change to thun/4 it doesn't transform under reduction w/ thun/3.
+)
+
+You can also unfold def/2 and func/3 (but you need to check for bugs!)
+
+
+Functions become clauses like these:
+
+    thun(symbol(rolldown),    [], [C, A, B|D], [A, B, C|D]).
+    thun(symbol(rolldown), [A|B], [E, C, D|F], G) :- thun(A, B, [C, D, E|F], G).
+
+    thun(symbol(dupd),    [], [A, B|C], [A, B, B|C]).
+    thun(symbol(dupd), [A|B], [C, D|E], F) :- thun(A, B, [C, D, D|E], F).
+
+    thun(symbol(over),    [], [B, A|C], [A, B, A|C]).
+    thun(symbol(over), [A|B], [D, C|E], F) :- thun(A, B, [C, D, C|E], F).
+
+
+Definitions become
+
+    thun(symbol(of), A, D, E) :-
+        append([symbol(swap), symbol(at)], A, [B|C]),
+        thun(B, C, D, E).
+
+    thun(symbol(pam), A, D, E) :-
+        append([list([symbol(i)]), symbol(map)], A, [B|C]),
+        thun(B, C, D, E).
+
+    thun(symbol(popd), A, D, E) :-
+        append([list([symbol(pop)]), symbol(dip)], A, [B|C]),
+        thun(B, C, D, E).
+
+
+These are tail-recursive and allow for better indexing so I would expect
+them to be more efficient than the originals.  Ii would be even nicer to
+get them looking like this:
+
+    thun(symbol(of), A, D, E) :- thun(symbol(swap), [symbol(at)|A], D, E).
+
+And then if 'swap' was a definition you could push it out even further,
+you could pre-expand definitions and functions (and maybe even some
+combinators!)
+
+*/
