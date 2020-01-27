@@ -1,21 +1,34 @@
-﻿%
-%    Copyright © 2018, 2019, 2020 Simon Forman
-%
-%    This file is part of Thun
-%
-%    Thun is free software: you can redistribute it and/or modify
-%    it under the terms of the GNU General Public License as published by
-%    the Free Software Foundation, either version 3 of the License, or
-%    (at your option) any later version.
-%
-%    Thun is distributed in the hope that it will be useful,
-%    but WITHOUT ANY WARRANTY; without even the implied warranty of
-%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-%    GNU General Public License for more details.
-%
-%    You should have received a copy of the GNU General Public License
-%    along with Thun.  If not see <http://www.gnu.org/licenses/>.
-%
+﻿/* 
+
+████████╗██╗  ██╗██╗   ██╗███╗   ██╗
+╚══██╔══╝██║  ██║██║   ██║████╗  ██║
+   ██║   ███████║██║   ██║██╔██╗ ██║
+   ██║   ██╔══██║██║   ██║██║╚██╗██║
+   ██║   ██║  ██║╚██████╔╝██║ ╚████║
+   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+    Copyright © 2018, 2019, 2020 Simon Forman
+
+    This file is part of Thun
+
+    Thun is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Thun is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Thun.  If not see <http://www.gnu.org/licenses/>.
+
+
+(Big fonts are from Figlet ANSI Shadow http://www.patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=formatter )
+
+ */
+
 :- use_module(library(clpfd)).
 :- use_module(library(dcg/basics)).
 :- dynamic func/3.
@@ -32,10 +45,25 @@ joy(InputString, StackIn, StackOut) :-
 
 /*
 
-Parser
+██████╗  █████╗ ██████╗ ███████╗███████╗██████╗        ██╗     
+██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗       ██║     
+██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝    ████████╗  
+██╔═══╝ ██╔══██║██╔══██╗╚════██║██╔══╝  ██╔══██╗    ██╔═██╔═╝  
+██║     ██║  ██║██║  ██║███████║███████╗██║  ██║    ██████║    
+╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝    ╚═════╝    
+                                                               
+ ██████╗ ██████╗  █████╗ ███╗   ███╗███╗   ███╗ █████╗ ██████╗ 
+██╔════╝ ██╔══██╗██╔══██╗████╗ ████║████╗ ████║██╔══██╗██╔══██╗
+██║  ███╗██████╔╝███████║██╔████╔██║██╔████╔██║███████║██████╔╝
+██║   ██║██╔══██╗██╔══██║██║╚██╔╝██║██║╚██╔╝██║██╔══██║██╔══██╗
+╚██████╔╝██║  ██║██║  ██║██║ ╚═╝ ██║██║ ╚═╝ ██║██║  ██║██║  ██║
+ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
+                                                               
+
+
 
 The grammar of Joy is very simple.  A Joy expression is zero or more Joy
-terms separated by blanks and terms can be either integers, Booleans,
+terms separated by blanks, and terms can be either integers, Booleans,
 quoted Joy expressions, or symbols (names of functions.)
 
     joy ::= ( blanks term blanks )*
@@ -90,8 +118,17 @@ char(Ch) --> [Ch], {Ch \== 91, Ch \== 93, code_type(Ch, graph)}.
 
 
 /*
-Interpreter
+
+███████╗███████╗███╗   ███╗ █████╗ ███╗   ██╗████████╗██╗ ██████╗███████╗
+██╔════╝██╔════╝████╗ ████║██╔══██╗████╗  ██║╚══██╔══╝██║██╔════╝██╔════╝
+███████╗█████╗  ██╔████╔██║███████║██╔██╗ ██║   ██║   ██║██║     ███████╗
+╚════██║██╔══╝  ██║╚██╔╝██║██╔══██║██║╚██╗██║   ██║   ██║██║     ╚════██║
+███████║███████╗██║ ╚═╝ ██║██║  ██║██║ ╚████║   ██║   ██║╚██████╗███████║
+╚══════╝╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝ ╚═════╝╚══════╝
+
+
 thun(Expression, InputStack, OutputStack)
+
 */
 
 thun([], S, S).
@@ -119,24 +156,16 @@ thun(bool(C), [A|B], D, E) :- thun(A, B, [bool(C)|D], E).
 thun(list(A),    [], B, [list(A)|B]).
 thun(list(C), [A|B], D, E) :- thun(A, B, [list(C)|D], E).
 
-/*  def/2 works...
-
-        thun(symbol(A), C, F, G) :-
-            def(A, B),
-            append(B, C, [D|E]),
-            thun(D, E, F, G).
-
-    ... but we want something like this: */
-
+% I hand-wrote def/3 cases here.
 thun(symbol(B),     [],  A,  D) :- def(B, [DH|DE]), thun(DH, DE, A, D).
 thun(symbol(A), [H|E0], Si, So) :- def(A, [DH|DE]),
      append(DE, [H|E0], E), /* ................. */ thun(DH, E, Si, So).
 
-% And func/3 works too,
+% Partial reduction for func/3 cases works too,
 thun(symbol(A),    [], B, C) :- func(A, B, C).
 thun(symbol(A), [C|D], B, F) :- func(A, B, E), thun(C, D, E, F).
 
-% Combo is all messed up.
+% ...but Combo gets all messed up.
 % thun(symbol(A), D, B, C) :- combo(A, B, C, D, []).
 % thun(symbol(A), C, B, G) :- combo(A, B, F, C, [D|E]), thun(D, E, F, G).
 
@@ -152,7 +181,14 @@ thun(symbol(Unknown), _, _, _) :-
     fail.
 
 /*
-Functions
+
+███████╗██╗   ██╗███╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
+██╔════╝██║   ██║████╗  ██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
+█████╗  ██║   ██║██╔██╗ ██║██║        ██║   ██║██║   ██║██╔██╗ ██║███████╗
+██╔══╝  ██║   ██║██║╚██╗██║██║        ██║   ██║██║   ██║██║╚██╗██║╚════██║
+██║     ╚██████╔╝██║ ╚████║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║███████║
+╚═╝      ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
+
 */
 
 func(words, S, [Words|S]) :- words(Words).
@@ -232,7 +268,14 @@ r_truth(1, bool(true)).
 
 
 /*
-Combinators
+
+ ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ████████╗ ██████╗ ██████╗ ███████╗
+██╔════╝██╔═══██╗████╗ ████║██╔══██╗██║████╗  ██║██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝
+██║     ██║   ██║██╔████╔██║██████╔╝██║██╔██╗ ██║███████║   ██║   ██║   ██║██████╔╝███████╗
+██║     ██║   ██║██║╚██╔╝██║██╔══██╗██║██║╚██╗██║██╔══██║   ██║   ██║   ██║██╔══██╗╚════██║
+╚██████╗╚██████╔╝██║ ╚═╝ ██║██████╔╝██║██║ ╚████║██║  ██║   ██║   ╚██████╔╝██║  ██║███████║
+ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
+
 */
 
 combo(i,          [list(P)|S], S, Ei, Eo) :- append(P, Ei, Eo).
@@ -295,7 +338,14 @@ prepare_mapping(    Pl, S, [T|In],                                  Acc,  Out) :
 
 
 /*
-Definitions
+
+██████╗ ███████╗███████╗██╗███╗   ██╗██╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
+██╔══██╗██╔════╝██╔════╝██║████╗  ██║██║╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
+██║  ██║█████╗  █████╗  ██║██╔██╗ ██║██║   ██║   ██║██║   ██║██╔██╗ ██║███████╗
+██║  ██║██╔══╝  ██╔══╝  ██║██║╚██╗██║██║   ██║   ██║██║   ██║██║╚██╗██║╚════██║
+██████╔╝███████╗██║     ██║██║ ╚████║██║   ██║   ██║╚██████╔╝██║ ╚████║███████║
+╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
+
 */
 
 joy_def --> joy_parse([symbol(Name)|Body]), { assert_def(Name, Body) }.
@@ -322,6 +372,9 @@ lines(Codes, [Codes]).
 
 :- assert_defs("defs.txt").
 
+
+% A meta function that finds the names of all available functions.
+
 words(Words) :-
     findall(Name, clause(func(Name, _, _), _), Funcs),
     findall(Name, clause(combo(Name, _, _, _, _), _), Combos, Funcs),
@@ -331,7 +384,92 @@ words(Words) :-
 
 
 /*
-Compiler
+
+ ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗██╗     ███████╗██████╗ 
+██╔════╝██╔═══██╗████╗ ████║██╔══██╗██║██║     ██╔════╝██╔══██╗
+██║     ██║   ██║██╔████╔██║██████╔╝██║██║     █████╗  ██████╔╝
+██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██║██║     ██╔══╝  ██╔══██╗
+╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║███████╗███████╗██║  ██║
+ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
+
+This is an experimental compiler from Joy expressions to Prolog code.
+As you will see it's also doing type inference and type checking.
+
+For many Joy expressions the existing code is enough to "compile" them to
+Prolog code.  E.g. the definition of 'third' is 'rest rest first' and
+that's enough for the code to generate the "type" of the expression:
+
+    ?- joy(`third`, Si, So).
+    Si = [list([_32906, _32942, _32958|_32960])|_32898],
+    So = [_32958|_32898] .
+
+Because 'third' is just manipulating lists (the stack is a list too) the
+type signature is the whole of the (Prolog) implementation of the
+function:
+
+    ?- sjc(third, `third`).
+    func(third, [list([_, _, A|_])|B], [A|B]).
+
+So that's nice.
+
+Functions that involve just math require capturing the constraints
+recorded by the CLP(FD) subsystem.  SWI Prolog provide a predicate
+call_residue_vars/2 to do just that.  Together with copy_term/3 it's
+possible to collect all the information needed to capture functions
+made out of math and stack/list manipulation.  (I do not understand the
+details of how they work.  Markus Triska said they would do the trick and
+they did.)
+
+https://www.swi-prolog.org/pldoc/doc_for?object=call_residue_vars/2
+
+https://www.swi-prolog.org/pldoc/doc_for?object=copy_term/3
+
+I think this is sort of like "gradual" or "dependent" types.  But the
+formal theory there is beyond me.  In any event, it captures the integer
+constraints established by the expressions as well as the "types" of
+inputs and outputs.
+
+    ?- sjc(fn, `* + * -`).
+    func(fn, [int(H), int(I), int(F), int(D), int(C)|A], [int(B)|A]) :-
+        maplist(call,
+                
+                [ clpfd:(B+E#=C),
+                clpfd:(G*D#=E),
+                clpfd:(J+F#=G),
+                clpfd:(H*I#=J)
+                ]).
+
+For functions involving 'branch', compilation results in one rule for each
+(reachable) path of the branch:
+
+    ?- sjc(fn, `[+] [-] branch`).
+
+    func(fn, [bool(true), int(C), int(D)|A], [int(B)|A]) :-
+        maplist(call, [clpfd:(B+C#=D)]).
+
+    func(fn, [bool(false), int(B), int(C)|A], [int(D)|A]) :-
+        maplist(call, [clpfd:(B+C#=D)]).
+
+(Note that in the subtraction case (bool(true)) the CLP(FD) constraints
+are coded as addition but the meaning is the same (subtaction) because of
+how the logic variables are named:  B + C #= D  <==>  B #= D - C.)
+
+?- sjc(fn, `[[+] [-] branch] [pop *] branch`).
+
+    func(fn, [bool(true), _, int(B), int(C)|A], [int(D)|A]) :-
+        maplist(call, [clpfd:(B*C#=D)]).
+
+    func(fn, [bool(false), bool(true), int(C), int(D)|A], [int(B)|A]) :-
+        maplist(call, [clpfd:(B+C#=D)]).
+
+    func(fn, [bool(false), bool(false), int(B), int(C)|A], [int(D)|A]) :-
+        maplist(call, [clpfd:(B+C#=D)]).
+
+Three paths, three rules.  Neat, eh?
+
+That leaves loop, genrec, and x combinators...
+
+
 */
 
 joy_compile(Name, Expression) :- jcmpl(Name, Expression, Rule), asserta(Rule).
@@ -344,11 +482,132 @@ jcmpl(Name, Expression, Rule) :-
     Head =.. [func, Name, Si, So],
     rule(Head, Gs, Rule).
 
-rule(Head, [],    Head                        ).
+rule(Head, [],    Head).
 rule(Head, [A|B], Head :- maplist(call, [A|B])).
 
 sjc(Name, InputString) :- phrase(joy_parse(E), InputString), show_joy_compile(Name, E).
 
+
+/*
+
+Experiments with compilation.
+
+?- sjc(fn, `[+ dup bool] loop`).
+
+func(fn, [bool(false)|A], A).
+
+func(fn, [bool(true), int(B), int(C)|A], [int(0)|A]) :-
+    maplist(call, [clpfd:(B+C#=0)]).
+
+func(fn, [bool(true), int(D), int(E), int(B)|A], [int(0)|A]) :-
+    maplist(call,
+            [ clpfd:(B in inf.. -1\/1..sup),
+              clpfd:(C+B#=0),
+              clpfd:(C in inf.. -1\/1..sup),
+              clpfd:(D+E#=C)
+            ]).
+
+func(fn, [bool(true), int(F), int(G), int(D), int(B)|A], [int(0)|A]) :-
+    maplist(call,
+            [ clpfd:(B in inf.. -1\/1..sup),
+              clpfd:(C+B#=0),
+              clpfd:(C in inf.. -1\/1..sup),
+              clpfd:(E+D#=C),
+              clpfd:(E in inf.. -1\/1..sup),
+              clpfd:(F+G#=E)
+            ]).
+
+
+
+?- sjc(fn, `[] loop`).
+
+func(fn, [bool(false)|A], A).
+
+func(fn, [bool(true), bool(false)|A], A).
+
+func(fn, [bool(true), bool(true), bool(false)|A], A).
+
+func(fn, [bool(true), bool(true), bool(true), bool(false)|A], A).
+
+So...
+
+    `[] loop` ::= true* false
+
+sorta...
+
+
+The quine '[[dup cons] dup cons]' works fine:
+
+?- sjc(fn, `dup cons`).
+func(fn, [list(A)|B], [list([list(A)|A])|B]).
+
+?- sjc(fn, `[dup cons] dup cons`).
+func(fn, A, [list([list([symbol(dup), symbol(cons)]), symbol(dup), symbol(cons)])|A]).
+
+?- sjc(fn, `[dup cons] dup cons i`).
+func(fn, A, [list([list([symbol(dup), symbol(cons)]), symbol(dup), symbol(cons)])|A]).
+
+?- sjc(fn, `[dup cons] dup cons i i i i`).
+func(fn, A, [list([list([symbol(dup), symbol(cons)]), symbol(dup), symbol(cons)])|A]).
+
+
+In the right context the system will "hallucinate" programs:
+
+?- sjc(fn, `x`).
+func(fn, [list([])|A], [list([])|A]).
+
+func(fn, [list([int(A)])|B], [int(A), list([int(A)])|B]).
+
+func(fn, [list([bool(A)])|B], [bool(A), list([bool(A)])|B]).
+
+func(fn, [list([list(A)])|B], [list(A), list([list(A)])|B]).
+
+func(fn, [list([symbol(?)])|A], [bool(true), list([symbol(?)])|A]).
+
+func(fn, [list([symbol(app1)]), list([]), A|B], [A, A|B]).
+
+func(fn, [list([symbol(app1)]), list([int(A)]), B|C], [int(A), B|C]).
+
+func(fn, [list([symbol(app1)]), list([bool(A)]), B|C], [bool(A), B|C]).
+
+With iterative deepening this might be very interesting...
+
+
+Infinite loops are infinite:
+
+?- sjc(fn, `[x] x`).
+ERROR: Out of global-stack.
+
+
+TODO: genrec, fix points.
+
+
+
+
+
+
+
+███╗   ███╗███████╗████████╗ █████╗       ██████╗ ██████╗  ██████╗  ██████╗ ██████╗  █████╗ ███╗   ███╗███╗   ███╗██╗███╗   ██╗ ██████╗ 
+████╗ ████║██╔════╝╚══██╔══╝██╔══██╗      ██╔══██╗██╔══██╗██╔═══██╗██╔════╝ ██╔══██╗██╔══██╗████╗ ████║████╗ ████║██║████╗  ██║██╔════╝ 
+██╔████╔██║█████╗     ██║   ███████║█████╗██████╔╝██████╔╝██║   ██║██║  ███╗██████╔╝███████║██╔████╔██║██╔████╔██║██║██╔██╗ ██║██║  ███╗
+██║╚██╔╝██║██╔══╝     ██║   ██╔══██║╚════╝██╔═══╝ ██╔══██╗██║   ██║██║   ██║██╔══██╗██╔══██║██║╚██╔╝██║██║╚██╔╝██║██║██║╚██╗██║██║   ██║
+██║ ╚═╝ ██║███████╗   ██║   ██║  ██║      ██║     ██║  ██║╚██████╔╝╚██████╔╝██║  ██║██║  ██║██║ ╚═╝ ██║██║ ╚═╝ ██║██║██║ ╚████║╚██████╔╝
+╚═╝     ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝      ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝ 
+
+
+
+
+
+
+
+███████╗██╗  ██╗██████╗  █████╗ ███╗   ██╗██████╗         ██╗     ██████╗ ██████╗ ███╗   ██╗████████╗██████╗  █████╗  ██████╗████████╗
+██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗████╗  ██║██╔══██╗       ██╔╝    ██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██╔══██╗██╔════╝╚══██╔══╝
+█████╗   ╚███╔╝ ██████╔╝███████║██╔██╗ ██║██║  ██║      ██╔╝     ██║     ██║   ██║██╔██╗ ██║   ██║   ██████╔╝███████║██║        ██║   
+██╔══╝   ██╔██╗ ██╔═══╝ ██╔══██║██║╚██╗██║██║  ██║     ██╔╝      ██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██╗██╔══██║██║        ██║   
+███████╗██╔╝ ██╗██║     ██║  ██║██║ ╚████║██████╔╝    ██╔╝       ╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║██║  ██║╚██████╗   ██║   
+╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝     ╚═╝         ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝   ╚═╝   
+
+*/
 
 % Simple DCGs to expand/contract definitions.
 
@@ -388,21 +647,55 @@ shrink --> to_fixed_point(rebo(contracto, shrink)).
 % Out = [rest, second] ;
 % Out = [rest, rest, first].
 
+/* 
 
-% format_n(N) --> {number(N), !, number_codes(N, Codes)}, Codes.
-% format_n(N) --> signed_digits(Codes), !, {number_codes(N, Codes)}.
-
-% signed_digits([45|Codes]) --> [45], !, digits(Codes).
-% signed_digits(    Codes ) -->          digits(Codes).
-
-% digits([Ch|Chars]) --> [Ch], {code_type(Ch, digit)}, digits(Chars).
-% digits([]), [Ch]   --> [Ch], {code_type(Ch, space) ; Ch=0'] }.
-% digits([], [], _).  % Match if followed by space, ], or nothing.
+███████╗ ██████╗ ██████╗ ███╗   ███╗ █████╗ ████████╗████████╗███████╗██████╗ 
+██╔════╝██╔═══██╗██╔══██╗████╗ ████║██╔══██╗╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
+█████╗  ██║   ██║██████╔╝██╔████╔██║███████║   ██║      ██║   █████╗  ██████╔╝
+██╔══╝  ██║   ██║██╔══██╗██║╚██╔╝██║██╔══██║   ██║      ██║   ██╔══╝  ██╔══██╗
+██║     ╚██████╔╝██║  ██║██║ ╚═╝ ██║██║  ██║   ██║      ██║   ███████╗██║  ██║
+╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
 
 
-%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-/*  Partial Reducer from "The Art of Prolog" by Sterling and Shapiro
-    Program 18.3, pg. 362 */
+?- phrase(joy_parse(E), `22 18 true [false] [1[2[3]]]`), !, format_joy_terms(E, A, []), string_codes(S, A).
+E = [int(22), int(18), bool(true), list([bool(false)]), list([int(1), list([...|...])])],
+A = [50, 50, 32, 49, 56, 32, 116, 114, 117|...],
+S = "22 18 true [false] [1 [2 [3]]]".
+
+*/
+
+format_joy_expression(   int(I)) --> { number_codes(I, Codes) }, Codes.
+format_joy_expression(  bool(B)) --> {   atom_codes(B, Codes) }, Codes.
+format_joy_expression(symbol(S)) --> {   atom_codes(S, Codes) }, Codes.
+format_joy_expression(  list(J)) --> "[", format_joy_terms(J), "]".
+
+format_joy_terms(    []) --> [].
+format_joy_terms(   [T]) --> format_joy_expression(T), !.
+format_joy_terms([T|Ts]) --> format_joy_expression(T), " ", format_joy_terms(Ts).
+
+joy_terms_to_string(Expr, String) :-
+    format_joy_terms(Expr, Codes, []),
+    string_codes(String, Codes)
+
+
+/* 
+
+██████╗  █████╗ ██████╗ ████████╗██╗ █████╗ ██╗          
+██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██║██╔══██╗██║          
+██████╔╝███████║██████╔╝   ██║   ██║███████║██║          
+██╔═══╝ ██╔══██║██╔══██╗   ██║   ██║██╔══██║██║          
+██║     ██║  ██║██║  ██║   ██║   ██║██║  ██║███████╗     
+╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝╚═╝  ╚═╝╚══════╝     
+                                                         
+██████╗ ███████╗██████╗ ██╗   ██╗ ██████╗███████╗██████╗ 
+██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝██╔════╝██╔══██╗
+██████╔╝█████╗  ██║  ██║██║   ██║██║     █████╗  ██████╔╝
+██╔══██╗██╔══╝  ██║  ██║██║   ██║██║     ██╔══╝  ██╔══██╗
+██║  ██║███████╗██████╔╝╚██████╔╝╚██████╗███████╗██║  ██║
+╚═╝  ╚═╝╚══════╝╚═════╝  ╚═════╝  ╚═════╝╚══════╝╚═╝  ╚═╝
+
+Partial Reducer from "The Art of Prolog" by Sterling and Shapiro
+Program 18.3, pg. 362 */
 
 process(Program, ReducedProgram) :-
     findall(PC1, (member(C1, Program), preduce(C1, PC1)), ReducedProgram).
@@ -418,14 +711,16 @@ combine(true, B, B) :- !.
 combine(A, true, A) :- !.
 combine(A,    B, (A, B)).
 
-%-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-/*  Partial reduction of thun/3 in the thun/4 relation gives a new
-    version of thun/4 that is tail-recursive.  You generate the new
-    relation rules like so:
+/*
 
-        ?- thunder(C), process(C, R), maplist(portray_clause, R).
+Partial reduction of thun/3 in the thun/4 relation gives a new
+version of thun/4 that is tail-recursive.  You generate the new
+relation rules like so:
 
-    I just cut-n-paste from the SWI terminal and rearrange it.
+    ?- thunder(C), process(C, R), maplist(portray_clause, R).
+
+I just cut-n-paste from the SWI terminal and rearrange it.
+
 */
 
 should_unfold(thun(_, _, _)).
@@ -441,17 +736,17 @@ thunder([  % Source code for thun/4.
     (thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So))
 ]).
 
-/* (N.B.: in 'thun(symbol(Def)...' the last clause has changed from thun/3 to thun/4.
-    The earlier version doesn't transform into correct code:
+/*
 
-        thun(symbol(B), D, A, A) :- def(B, C), append(C, D, []).
-        thun(symbol(A), C, F, G) :- def(A, B), append(B, C, [D|E]), thun(D, E, F, G).
+N.B.: in 'thun(symbol(Def)...' the last clause has changed from thun/3 to thun/4.
+The earlier version doesn't transform into correct code:
 
-    With the change to thun/4 it doesn't transform under reduction w/ thun/3.
-)
+    thun(symbol(B), D, A, A) :- def(B, C), append(C, D, []).
+    thun(symbol(A), C, F, G) :- def(A, B), append(B, C, [D|E]), thun(D, E, F, G).
+
+With the change to thun/4 it doesn't transform under reduction w/ thun/3.
 
 You can also unfold def/2 and func/3 (but you need to check for bugs!)
-
 
 Functions become clauses like these:
 
@@ -463,7 +758,6 @@ Functions become clauses like these:
 
     thun(symbol(over),    [], [B, A|C], [A, B, A|C]).
     thun(symbol(over), [A|B], [D, C|E], F) :- thun(A, B, [C, D, C|E], F).
-
 
 Definitions become
 
@@ -478,7 +772,6 @@ Definitions become
     thun(symbol(popd), A, D, E) :-
         append([list([symbol(pop)]), symbol(dip)], A, [B|C]),
         thun(B, C, D, E).
-
 
 These are tail-recursive and allow for better indexing so I would expect
 them to be more efficient than the originals.  Ii would be even nicer to
