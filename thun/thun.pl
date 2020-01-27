@@ -290,9 +290,8 @@ combo(branch, [list(_), list(F), bool(false)|S], S, Ei, Eo) :- append(F, Ei, Eo)
 combo(loop, [list(_), bool(false)|S], S, E,  E ).
 combo(loop, [list(B),  bool(true)|S], S, Ei, Eo) :- append(B, [list(B), symbol(loop)|Ei], Eo).
 
-combo(step, [list(_),    []|S],    S,  E,  E ).
-combo(step, [list(P),   [X]|S], [X|S], Ei, Eo) :- !, append(P, Ei, Eo).
-combo(step, [list(P), [X|Z]|S], [X|S], Ei, Eo) :-    append(P, [Z, list(P), symbol(step)|Ei], Eo).
+combo(step, [list(_),    list([])|S],    S,  E,  E ).
+combo(step, [list(P), list([X|Z])|S], [X|S], Ei, Eo) :- append(P, [list(Z), list(P), symbol(step)|Ei], Eo).
 
 combo(times, [list(_), int(0)|S], S, E,  E ).
 combo(times, [list(P), int(1)|S], S, Ei, Eo) :- append(P, Ei, Eo).
@@ -638,9 +637,6 @@ shrink --> to_fixed_point(rebo(contracto, shrink)).
 % Out = [rest, second] ;
 % Out = [third].
 
-% ?- phrase(grow, In, [rest, rest, first]).
-% Action (h for help) ? abort
-% % Execution Aborted
 % ?- phrase(shrink, [rest, rest, first], Out).
 % Out = [rrest, first] ;
 % Out = [third] ;
@@ -675,7 +671,7 @@ format_joy_terms([T|Ts]) --> format_joy_expression(T), " ", format_joy_terms(Ts)
 
 joy_terms_to_string(Expr, String) :-
     format_joy_terms(Expr, Codes, []),
-    string_codes(String, Codes)
+    string_codes(String, Codes).
 
 
 /* 
