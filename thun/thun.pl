@@ -653,7 +653,7 @@ reggy(FreePool, References)
 
 */
 
-get_reggy([], _, _):- writeln('Out of Registers'), fail.
+get_reggy([], _, _) :- writeln('Out of Registers'), fail.
 get_reggy([Reg|FreePool], Reg, FreePool).
 
 
@@ -668,11 +668,15 @@ free_reg(Reg, reggy(FreePool0, References0), reggy(FreePool, References)) --> []
     ;  FreePool=[Reg|FreePool0] % otherwise we put it back in the pool.
     )}.
 
+add_ref(Reg, reggy(FreePool, References), reggy(FreePool, [Reg|References])) --> [].
+
 assoc_reg(_, _, _) --> [].
 
 thun_compile(E, Si, So) -->
-    {FP=reggy([r0, r1, r2, r3, r4, r5, r6, r7,
-               r8, r9, rA, rB, rC, rD, rE, rF], [])},
+    {FP=reggy([r0, r1, r2, r3,
+               r4, r5, r6, r7,
+               r8, r9, rA, rB,
+               rC, rD, rE, rF], [])},
     thun_compile(E, Si, So, FP, _).
 
 thun_compile([], S, S, FP, FP) --> [].
@@ -711,6 +715,10 @@ func_compile(+, E, [A, B|S], So, FP0, FP) --> !,
     [add(B, A, B)],
     free_reg(A, FP0, FP1),
     thun_compile(E, [B|S], So, FP1, FP).
+
+func_compile(dup, E, [A|S], So, FP0, FP) --> !,
+    add_ref(A, FP0, FP1),
+    thun_compile(E, [A, A|S], So, FP1, FP).
 
 
 func_compile(_Func, E, Si, So, FP0, FP) -->
@@ -783,7 +791,43 @@ MachineCode = [mov_imm(r0, int(1)), mov_imm(r1, int(2)), add(r0, r1, r0), mov_im
 StackOut = [r0|StackIn] ;
 false.
 
+- - - -
 
+?- compiler(`1 2 dup + 3 +`, MachineCode, StackIn, StackOut).
+MachineCode = [mov_imm(r0, int(1)), mov_imm(r1, int(2)), add(r1, r1, r1), mov_imm(r2, int(3)), add(r1, r2, r1)],
+StackOut = [r1, r0|StackIn] .
+
+?- compiler(`dup +`, MachineCode, StackIn, StackOut).
+MachineCode = [add(_37000, _37000, _37000)],
+StackIn = StackOut, StackOut = [_37000|_37002].
+
+?- compiler(`dup +`, MachineCode, [r0], StackOut).
+MachineCode = [add(r0, r0, r0)],
+StackOut = [r0].
+
+?- compiler(`dup +`, MachineCode, [r0], [r0]).
+MachineCode = [add(r0, r0, r0)].
+
+- - - -
+
+?- compiler(`1 2 3 4 5 + + + 6 7 + 8 + +`, MachineCode, StackIn, StackOut), maplist(portray_clause, MachineCode).
+mov_imm(r0, int(1)).
+mov_imm(r1, int(2)).
+mov_imm(r2, int(3)).
+mov_imm(r3, int(4)).
+mov_imm(r4, int(5)).
+add(r3, r4, r3).
+add(r2, r3, r2).
+add(r1, r2, r1).
+mov_imm(r2, int(6)).
+mov_imm(r3, int(7)).
+add(r2, r3, r2).
+mov_imm(r3, int(8)).
+add(r2, r3, r2).
+add(r1, r2, r1).
+
+
+Fun!
 
 
 
