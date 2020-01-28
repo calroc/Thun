@@ -390,6 +390,11 @@ words(Words) :-
 ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██║██║     ██╔══╝  ██╔══██╗
 ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║███████╗███████╗██║  ██║
  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
+  _         ___         _           
+ | |_ ___  | _ \_ _ ___| |___  __ _ 
+ |  _/ _ \ |  _/ '_/ _ \ / _ \/ _` |
+  \__\___/ |_| |_| \___/_\___/\__, |
+                              |___/ 
 
 This is an experimental compiler from Joy expressions to Prolog code.
 As you will see it's also doing type inference and type checking.
@@ -578,10 +583,110 @@ Infinite loops are infinite:
 ERROR: Out of global-stack.
 
 
+?- sjc(fn, `sum`).
+func(fn, [list([])|A], [int(0)|A]).
+
+func(fn, [list([int(A)])|B], [int(A)|B]) :-
+    maplist(call, [clpfd:(A in inf..sup)]).
+
+func(fn, [list([int(C), int(B)])|A], [int(D)|A]) :-
+    maplist(call, [clpfd:(B+C#=D)]).
+
+func(fn, [list([int(E), int(D), int(B)])|A], [int(C)|A]) :-
+    maplist(call,
+            
+            [ clpfd:(B+F#=C),
+              clpfd:(D+E#=F)
+            ]).
+
+func(fn, [list([int(G), int(F), int(D), int(B)])|A], [int(C)|A]) :-
+    maplist(call,
+            
+            [ clpfd:(B+E#=C),
+              clpfd:(D+H#=E),
+              clpfd:(F+G#=H)
+            ]).
+
+
 TODO: genrec, fix points.
 
+ ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗██╗     ███████╗██████╗ 
+██╔════╝██╔═══██╗████╗ ████║██╔══██╗██║██║     ██╔════╝██╔══██╗
+██║     ██║   ██║██╔████╔██║██████╔╝██║██║     █████╗  ██████╔╝
+██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██║██║     ██╔══╝  ██╔══██╗
+╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║███████╗███████╗██║  ██║
+ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
+  _         __  __         _    _                       _     
+ | |_ ___  |  \/  |__ _ __| |_ (_)_ _  ___   __ ___  __| |___ 
+ |  _/ _ \ | |\/| / _` / _| ' \| | ' \/ -_) / _/ _ \/ _` / -_)
+  \__\___/ |_|  |_\__,_\__|_||_|_|_||_\___| \__\___/\__,_\___|
+                                                              
+This is an experimental compiler from Joy expressions to machine code.
 
+One interesting twist is that Joy doesn't mention variables, just the
+operators, so they have to be inferred from the ops.
 
+So let's take e.g. '+'?
+
+It seems we want to maintain a mapping from stack locations to registers,
+and maybe from locations in lists on the stack, and to memory locations as
+well as registers?
+
+But consider 'pop', the register pointed to by stack_0 is put back in an
+available register pool, but then all the stack_N mappings have to point
+to stack_N+1 (i.e. stack_0 must now point to what stack_1 pointed to and
+stack_1 must point to stack_2, and so on...)
+
+What if we keep a stack of register/RAM locations in the same order as
+the Joy stack?
+
+*/
+
+get_reg(_, _).
+assoc_reg(_, _, _).
+
+thun_compile([], S, S).
+thun_compile([Term|Rest], Si, So) :- thun_compile(Term, Rest, Si, So).
+
+thun_compile(int(I), E, Si, So) :-
+    get_reg(R, _), assoc_reg(R, int(I), _),
+    thun_compile(E, [R|Si], So).
+
+thun_compile(bool(B), E, Si, So) :-
+    get_reg(R, _), assoc_reg(R, bool(B), _),
+    thun_compile(E, [R|Si], So).
+
+thun_compile(list(L), E, Si, So) :-
+    % encode_list(_), ???
+    get_reg(R, _), assoc_reg(R, list(L), _),
+    thun_compile(E, [R|Si], So).
+
+thun_compile(symbol(Name), E, Si, So) :-   def(Name, _), !,         def_compile(Name, E, Si, So).
+thun_compile(symbol(Name), E, Si, So) :-  func(Name, _, _), !,     func_compile(Name, E, Si, So).
+thun_compile(symbol(Name), E, Si, So) :- combo(Name, _, _, _, _), combo_compile(Name, E, Si, So).
+
+% I'm going to assume that any defs that can be compiled to funcs already
+% have been.  Defs that can't be pre-compiled shove their body expression
+% onto the pending expression (continuation) to be compiled "inline".
+
+def_compile(Def, E, Si, So) :-
+    def(Def, Body),
+    append(Body, E, Eo),
+    thun_compile(Eo, Si, So).
+
+% Functions delegate to a per-function compilation relation.
+
+func_compile(Func, E, Si, So) :-
+    % look up function, compile it...
+    Si = S,
+    thun_compile(E, S, So).
+
+combo_compile(Combo, E, Si, So) :-
+    % look up combinator, compile it...
+    Si = S, E = Eo,
+    thun_compile(Eo, S, So).
+
+/* 
 
 
 
