@@ -640,59 +640,88 @@ stack_1 must point to stack_2, and so on...)
 What if we keep a stack of register/RAM locations in the same order as
 the Joy stack?
 
-Reference counting for registers?  Can it be avoided?
+Reference counting for registers?  Can it be avoided?  When you "free" a
+register you can just check the stack to see if it's still in there and,
+if not, release it back to the free pool.  You can amortize that w/o
+keeping a counter by keeping a linear list of registars alongside the
+stack and pushing and popping registers from it as they are used/free'd
+and then checking if a register is ready for reclaimation is just
+member/3.  Or you can just keep a reference count for each register...
+Would it be useful to put CLP(FD) constraints on the ref counts?
+
+reggy(FreePool, References)
 
 */
 
-get_reg(R, _) --> {gensym(r, R)}, [].
+get_reggy([], _, _):- writeln('Out of Registers'), fail.
+get_reggy([Reg|FreePool], Reg, FreePool).
+
+
+
+get_reg(Reg, reggy(FreePool0, References), reggy(FreePool, [Reg|References])) --> [],
+    {get_reggy(FreePool0, Reg, FreePool)}.
+
+free_reg(Reg, reggy(FreePool0, References0), reggy(FreePool, References)) --> [],
+    { select(Reg, References0, References),
+    (  member(Reg, References)  % If reg is still in use
+    -> FreePool=     FreePool0  % we can't free it yet
+    ;  FreePool=[Reg|FreePool0] % otherwise we put it back in the pool.
+    )}.
+
 assoc_reg(_, _, _) --> [].
 
-thun_compile([], S, S) --> [].
-thun_compile([Term|Rest], Si, So) --> thun_compile(Term, Rest, Si, So).
+thun_compile(E, Si, So) -->
+    {FP=reggy([r0, r1, r2, r3, r4, r5, r6, r7,
+               r8, r9, rA, rB, rC, rD, rE, rF], [])},
+    thun_compile(E, Si, So, FP, _).
 
-thun_compile(int(I), E, Si, So) -->
+thun_compile([], S, S, FP, FP) --> [].
+thun_compile([Term|Rest], Si, So, FP0, FP1) --> thun_compile(Term, Rest, Si, So, FP0, FP1).
+
+thun_compile(int(I), E, Si, So, FP0, FP) -->
     [mov_imm(R, int(I))],
-    get_reg(R, _), assoc_reg(R, int(I), _),
-    thun_compile(E, [R|Si], So).
+    get_reg(R, FP0, FP1), assoc_reg(R, int(I), _),
+    thun_compile(E, [R|Si], So, FP1, FP).
 
-thun_compile(bool(B), E, Si, So) -->
-    get_reg(R, _), assoc_reg(R, bool(B), _),
-    thun_compile(E, [R|Si], So).
+thun_compile(bool(B), E, Si, So, FP0, FP) -->
+    get_reg(R, FP0, FP1), assoc_reg(R, bool(B), _),
+    thun_compile(E, [R|Si], So, FP1, FP).
 
-thun_compile(list(L), E, Si, So) -->
+thun_compile(list(L), E, Si, So, FP0, FP) -->
     % encode_list(_), ???
-    get_reg(R, _), assoc_reg(R, list(L), _),
-    thun_compile(E, [R|Si], So).
+    get_reg(R, FP0, FP1), assoc_reg(R, list(L), _),
+    thun_compile(E, [R|Si], So, FP1, FP).
 
-thun_compile(symbol(Name), E, Si, So) -->   {def(Name, _)}, !,         def_compile(Name, E, Si, So).
-thun_compile(symbol(Name), E, Si, So) -->  {func(Name, _, _)}, !,     func_compile(Name, E, Si, So).
-thun_compile(symbol(Name), E, Si, So) --> {combo(Name, _, _, _, _)}, combo_compile(Name, E, Si, So).
+thun_compile(symbol(Name), E, Si, So, FP0, FP) -->   {def(Name, _)}, !,         def_compile(Name, E, Si, So, FP0, FP).
+thun_compile(symbol(Name), E, Si, So, FP0, FP) -->  {func(Name, _, _)}, !,     func_compile(Name, E, Si, So, FP0, FP).
+thun_compile(symbol(Name), E, Si, So, FP0, FP) --> {combo(Name, _, _, _, _)}, combo_compile(Name, E, Si, So, FP0, FP).
 
 % I'm going to assume that any defs that can be compiled to funcs already
 % have been.  Defs that can't be pre-compiled shove their body expression
 % onto the pending expression (continuation) to be compiled "inline".
 
-def_compile(Def, E, Si, So) -->
+def_compile(Def, E, Si, So, FP0, FP) -->
     {def(Def, Body),
     append(Body, E, Eo)},
-    thun_compile(Eo, Si, So).
+    thun_compile(Eo, Si, So, FP0, FP).
 
 % Functions delegate to a per-function compilation relation.
 
-func_compile(+, E, [A, B|S], So) --> !,
+func_compile(+, E, [A, B|S], So, FP0, FP) --> !,
     [add(B, A, B)],
-    thun_compile(E, [B|S], So).
+    free_reg(A, FP0, FP1),
+    thun_compile(E, [B|S], So, FP1, FP).
 
 
-func_compile(Func, E, Si, So) -->
+func_compile(_Func, E, Si, So, FP0, FP) -->
     % look up function, compile it...
     {Si = S},
-    thun_compile(E, S, So).
+    thun_compile(E, S, So, FP0, FP).
 
-combo_compile(Combo, E, Si, So) -->
+combo_compile(_Combo, E, Si, So, FP0, FP) -->
     % look up combinator, compile it...
     {Si = S, E = Eo},
-    thun_compile(Eo, S, So).
+    thun_compile(Eo, S, So, FP0, FP).
 
 compiler(InputString, MachineCode, StackIn, StackOut) :-
     reset_gensym(r),
@@ -739,7 +768,20 @@ StackOut = [r3].
 MachineCode = [add(r2, r1, r2), add(r3, r2, r3)],
 StackOut = [r3, r4, r5, r6, r7].
 
+- - - - -
 
+
+?- compiler(`1 2 3 + +`, MachineCode, StackIn, StackOut).
+MachineCode = [mov_imm(r0, int(1)), mov_imm(r1, int(2)), mov_imm(r2, int(3)), add(r1, r2, r1), add(r0, r1, r0)],
+StackOut = [r0|StackIn].
+
+
+register free seems to work...
+
+?- compiler(`1 2 + 3 +`, MachineCode, StackIn, StackOut).
+MachineCode = [mov_imm(r0, int(1)), mov_imm(r1, int(2)), add(r0, r1, r0), mov_imm(r1, int(3)), add(r0, r1, r0)],
+StackOut = [r0|StackIn] ;
+false.
 
 
 
