@@ -640,9 +640,11 @@ stack_1 must point to stack_2, and so on...)
 What if we keep a stack of register/RAM locations in the same order as
 the Joy stack?
 
+Reference counting for registers?  Can it be avoided?
+
 */
 
-get_reg(_, _) --> [].
+get_reg(R, _) --> {gensym(r, R)}, [].
 assoc_reg(_, _, _) --> [].
 
 thun_compile([], S, S) --> [].
@@ -677,6 +679,11 @@ def_compile(Def, E, Si, So) -->
 
 % Functions delegate to a per-function compilation relation.
 
+func_compile(+, E, [A, B|S], So) --> !,
+    [add(B, A, B)],
+    thun_compile(E, [B|S], So).
+
+
 func_compile(Func, E, Si, So) -->
     % look up function, compile it...
     {Si = S},
@@ -688,6 +695,7 @@ combo_compile(Combo, E, Si, So) -->
     thun_compile(Eo, S, So).
 
 compiler(InputString, MachineCode, StackIn, StackOut) :-
+    reset_gensym(r),
     phrase(joy_parse(Expression), InputString), !,
     phrase(thun_compile(Expression, StackIn, StackOut), MachineCode, []).
 
@@ -699,6 +707,37 @@ MachineCode = [mov_imm(_18272, int(1)), mov_imm(_18298, int(2))],
 StackOut = [_18298, _18272|StackIn].
 
 
+- - - -
+
+
+?- compiler(`1 2 +`, MachineCode, StackIn, StackOut).
+MachineCode = [mov_imm(r1, int(1)), mov_imm(r2, int(2)), add(r1, r2, r1)],
+StackOut = [r1|StackIn].
+
+?- compiler(`1 2 +`, MachineCode, StackIn, StackOut).
+MachineCode = [mov_imm(r1, int(1)), mov_imm(r2, int(2)), add(r1, r2, r1)],
+StackOut = [r1|StackIn].
+
+?- compiler(`1 2 + 3 +`, MachineCode, StackIn, StackOut).
+MachineCode = [mov_imm(r1, int(1)), mov_imm(r2, int(2)), add(r1, r2, r1), mov_imm(r3, int(3)), add(r1, r3, r1)],
+StackOut = [r1|StackIn].
+
+?- compiler(`1 2 + +`, MachineCode, StackIn, StackOut).
+MachineCode = [mov_imm(r1, int(1)), mov_imm(r2, int(2)), add(r1, r2, r1), add(_37848, r1, _37848)],
+StackIn = StackOut, StackOut = [_37848|_37850].
+
+?- compiler(`+ +`, MachineCode, StackIn, StackOut).
+MachineCode = [add(_37270, _37264, _37270), add(_37688, _37270, _37688)],
+StackIn = [_37264, _37270, _37688|_37690],
+StackOut = [_37688|_37690].
+
+?- compiler(`+ +`, MachineCode, [r1, r2, r3], StackOut).
+MachineCode = [add(r2, r1, r2), add(r3, r2, r3)],
+StackOut = [r3].
+
+?- compiler(`+ +`, MachineCode, [r1, r2, r3, r4, r5, r6, r7], StackOut).
+MachineCode = [add(r2, r1, r2), add(r3, r2, r3)],
+StackOut = [r3, r4, r5, r6, r7].
 
 
 
