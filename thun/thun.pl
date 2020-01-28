@@ -642,54 +642,61 @@ the Joy stack?
 
 */
 
-get_reg(_, _).
-assoc_reg(_, _, _).
+get_reg(_, _) --> [].
+assoc_reg(_, _, _) --> [].
 
-thun_compile([], S, S).
-thun_compile([Term|Rest], Si, So) :- thun_compile(Term, Rest, Si, So).
+thun_compile([], S, S) --> [].
+thun_compile([Term|Rest], Si, So) --> thun_compile(Term, Rest, Si, So).
 
-thun_compile(int(I), E, Si, So) :-
+thun_compile(int(I), E, Si, So) -->
+    [mov_imm(R, int(I))],
     get_reg(R, _), assoc_reg(R, int(I), _),
     thun_compile(E, [R|Si], So).
 
-thun_compile(bool(B), E, Si, So) :-
+thun_compile(bool(B), E, Si, So) -->
     get_reg(R, _), assoc_reg(R, bool(B), _),
     thun_compile(E, [R|Si], So).
 
-thun_compile(list(L), E, Si, So) :-
+thun_compile(list(L), E, Si, So) -->
     % encode_list(_), ???
     get_reg(R, _), assoc_reg(R, list(L), _),
     thun_compile(E, [R|Si], So).
 
-thun_compile(symbol(Name), E, Si, So) :-   def(Name, _), !,         def_compile(Name, E, Si, So).
-thun_compile(symbol(Name), E, Si, So) :-  func(Name, _, _), !,     func_compile(Name, E, Si, So).
-thun_compile(symbol(Name), E, Si, So) :- combo(Name, _, _, _, _), combo_compile(Name, E, Si, So).
+thun_compile(symbol(Name), E, Si, So) -->   {def(Name, _)}, !,         def_compile(Name, E, Si, So).
+thun_compile(symbol(Name), E, Si, So) -->  {func(Name, _, _)}, !,     func_compile(Name, E, Si, So).
+thun_compile(symbol(Name), E, Si, So) --> {combo(Name, _, _, _, _)}, combo_compile(Name, E, Si, So).
 
 % I'm going to assume that any defs that can be compiled to funcs already
 % have been.  Defs that can't be pre-compiled shove their body expression
 % onto the pending expression (continuation) to be compiled "inline".
 
-def_compile(Def, E, Si, So) :-
-    def(Def, Body),
-    append(Body, E, Eo),
+def_compile(Def, E, Si, So) -->
+    {def(Def, Body),
+    append(Body, E, Eo)},
     thun_compile(Eo, Si, So).
 
 % Functions delegate to a per-function compilation relation.
 
-func_compile(Func, E, Si, So) :-
+func_compile(Func, E, Si, So) -->
     % look up function, compile it...
-    Si = S,
+    {Si = S},
     thun_compile(E, S, So).
 
-combo_compile(Combo, E, Si, So) :-
+combo_compile(Combo, E, Si, So) -->
     % look up combinator, compile it...
-    Si = S, E = Eo,
+    {Si = S, E = Eo},
     thun_compile(Eo, S, So).
+
+compiler(InputString, MachineCode, StackIn, StackOut) :-
+    phrase(joy_parse(Expression), InputString), !,
+    phrase(thun_compile(Expression, StackIn, StackOut), MachineCode, []).
+
 
 /* 
 
-phrase(joy_parse(Expression), InputString), !, thun_compile(Expression, StackIn, StackOut).
-
+?- compiler(`1 2 +`, MachineCode, StackIn, StackOut).
+MachineCode = [mov_imm(_18272, int(1)), mov_imm(_18298, int(2))],
+StackOut = [_18298, _18272|StackIn].
 
 
 
