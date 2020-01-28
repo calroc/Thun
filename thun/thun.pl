@@ -688,6 +688,15 @@ combo_compile(Combo, E, Si, So) :-
 
 /* 
 
+phrase(joy_parse(Expression), InputString), !, thun_compile(Expression, StackIn, StackOut).
+
+
+
+
+
+
+
+
 
 
 
