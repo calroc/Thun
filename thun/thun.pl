@@ -672,7 +672,7 @@ get_reg(Reg, reggy(FreePool0, References, V), reggy(FreePool, [Reg|References], 
 free_reg(Reg, reggy(FreePool0, References0, V0), reggy(FreePool, References, V)) --> [],
     { select(Reg, References0, References),
     (  member(Reg, References)  % If reg is still in use
-    -> FreePool=     FreePool0  % we can't free it yet
+    -> FreePool=     FreePool0, V0=V % we can't free it yet
     ;  FreePool=[Reg|FreePool0], % otherwise we put it back in the pool.
        del_assoc(Reg, V0, _, V)
     )}.
@@ -722,26 +722,31 @@ def_compile(Def, E, Si, So, FP0, FP) -->
     append(Body, E, Eo)},
     thun_compile(Eo, Si, So, FP0, FP).
 
+
+% swap (et. al.) doesn't change register refs nor introspect values
+% so we can delegate its effect to the semantic relation.
+non_alloc(swap).
+non_alloc(rollup).
+non_alloc(rolldown).
+
 % Functions delegate to a per-function compilation relation.
 
 func_compile(+, E, [A, B|S], So, FP0, FP) --> !,
     % If either register A or B is only used once we can reuse it.
-    ( {reg_used_once(B, FP0)} -> [add(B, A, B)], free_reg(A, FP0, FP3), {Si=[B|S]}
-    ; {reg_used_once(A, FP0)} -> [add(A, A, B)], free_reg(B, FP0, FP3), {Si=[A|S]}
-    ;  get_reg(R, FP0, FP1),     [add(R, A, B)],
-      free_reg(A, FP1, FP2),
-      free_reg(B, FP2, FP3),
+    ( {reg_used_once(B, FP0)} -> [add(B, A, B)], free_reg(A, FP0, FP4), {Si=[B|S]}
+    ; {reg_used_once(A, FP0)} -> [add(A, A, B)], free_reg(B, FP0, FP4), {Si=[A|S]}
+    ;   get_reg(R, FP0, FP1),    [add(R, A, B)],
+      assoc_reg(R, int(_), FP1, FP2),
+       free_reg(A, FP2, FP3),
+       free_reg(B, FP3, FP4),
       {Si=[R|S]}
     ),
     % Update value in the context?
-    thun_compile(E, Si, So, FP3, FP).
+    thun_compile(E, Si, So, FP4, FP).
 
 func_compile(dup, E, [A|S], So, FP0, FP) --> !,
     add_ref(A, FP0, FP1),
     thun_compile(E, [A, A|S], So, FP1, FP).
-
-func_compile(swap, E, [A, B|S], So, FP0, FP) --> !,
-    thun_compile(  E, [B, A|S], So, FP0, FP).
 
 func_compile(pop, E, [A|S], So, FP0, FP) --> !,
     free_reg(A, FP0, FP1),
@@ -749,6 +754,10 @@ func_compile(pop, E, [A|S], So, FP0, FP) --> !,
 
 func_compile(cons, E, [List, Item|S], So, FP0, FP) --> !,
     % allocate a cons cell
+    thun_compile(E, S, So, FP0, FP).
+
+func_compile(Func, E, Si, So, FP0, FP) --> 
+    { non_alloc(Func), !, func(Func, Si, S) },
     thun_compile(E, S, So, FP0, FP).
 
 func_compile(_Func, E, Si, So, FP0, FP) -->
