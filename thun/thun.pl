@@ -610,16 +610,19 @@ func(fn, [list([int(G), int(F), int(D), int(B)])|A], [int(C)|A]) :-
 
 TODO: genrec, fix points.
 
+
+
+
  ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗██╗     ███████╗██████╗ 
 ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██║██║     ██╔════╝██╔══██╗
 ██║     ██║   ██║██╔████╔██║██████╔╝██║██║     █████╗  ██████╔╝
 ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██║██║     ██╔══╝  ██╔══██╗
 ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║███████╗███████╗██║  ██║
  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
-  _         __  __         _    _                       _     
- | |_ ___  |  \/  |__ _ __| |_ (_)_ _  ___   __ ___  __| |___ 
- |  _/ _ \ | |\/| / _` / _| ' \| | ' \/ -_) / _/ _ \/ _` / -_)
-  \__\___/ |_|  |_\__,_\__|_||_|_|_||_\___| \__\___/\__,_\___|
+  _         __  __         _    _             ___         _     
+ | |_ ___  |  \/  |__ _ __| |_ (_)_ _  ___   / __|___  __| |___ 
+ |  _/ _ \ | |\/| / _` / _| ' \| | ' \/ -_) | (__/ _ \/ _` / -_)
+  \__\___/ |_|  |_\__,_\__|_||_|_|_||_\___|  \___\___/\__,_\___|
                                                               
 This is an experimental compiler from Joy expressions to machine code.
 
@@ -653,10 +656,12 @@ reggy(FreePool, References)
 
 */
 
+appears_only_once(Term, List) :- append(_, [Term|Tail], List), !, \+ member(Term, Tail).
+
+reg_used_once(Reg, reggy(_, References)) :- appears_only_once(Reg, References).
+
 get_reggy([], _, _) :- writeln('Out of Registers'), fail.
 get_reggy([Reg|FreePool], Reg, FreePool).
-
-
 
 get_reg(Reg, reggy(FreePool0, References), reggy(FreePool, [Reg|References])) --> [],
     {get_reggy(FreePool0, Reg, FreePool)}.
@@ -712,13 +717,26 @@ def_compile(Def, E, Si, So, FP0, FP) -->
 % Functions delegate to a per-function compilation relation.
 
 func_compile(+, E, [A, B|S], So, FP0, FP) --> !,
-    [add(B, A, B)],
-    free_reg(A, FP0, FP1),
-    thun_compile(E, [B|S], So, FP1, FP).
+    % If either register A or B is only used once we can reuse it.
+    ( {reg_used_once(B, FP0)} -> [add(B, A, B)], free_reg(A, FP0, FP3), {Si=[B|S]}
+    ; {reg_used_once(A, FP0)} -> [add(A, A, B)], free_reg(B, FP0, FP3), {Si=[A|S]}
+    ;  get_reg(R, FP0, FP1),     [add(R, A, B)],
+      free_reg(A, FP1, FP2),
+      free_reg(B, FP2, FP3),
+      {Si=[R|S]}
+    ),
+    thun_compile(E, Si, So, FP3, FP).
 
 func_compile(dup, E, [A|S], So, FP0, FP) --> !,
     add_ref(A, FP0, FP1),
     thun_compile(E, [A, A|S], So, FP1, FP).
+
+func_compile(swap, E, [A, B|S], So, FP0, FP) --> !,
+    thun_compile(  E, [B, A|S], So, FP0, FP).
+
+func_compile(pop, E, [A|S], So, FP0, FP) --> !,
+    free_reg(A, FP0, FP1),
+    thun_compile(E, S, So, FP1, FP).
 
 
 func_compile(_Func, E, Si, So, FP0, FP) -->
@@ -732,9 +750,14 @@ combo_compile(_Combo, E, Si, So, FP0, FP) -->
     thun_compile(Eo, S, So, FP0, FP).
 
 compiler(InputString, MachineCode, StackIn, StackOut) :-
-    reset_gensym(r),
     phrase(joy_parse(Expression), InputString), !,
     phrase(thun_compile(Expression, StackIn, StackOut), MachineCode, []).
+
+
+show_compiler(InputString, StackIn, StackOut) :-
+    phrase(joy_parse(Expression), InputString), !,
+    phrase(thun_compile(Expression, StackIn, StackOut), MachineCode, []),
+    maplist(portray_clause, MachineCode).
 
 
 /* 
