@@ -652,54 +652,62 @@ and then checking if a register is ready for reclaimation is just
 member/3.  Or you can just keep a reference count for each register...
 Would it be useful to put CLP(FD) constraints on the ref counts?
 
-reggy(FreePool, References)
+reggy(FreePool, References, ValueMap)
 
 */
 
+encode_list(List, FP, FP, Addr) --> [],
+    {addr(list(List))=Addr}.
+
 appears_only_once(Term, List) :- append(_, [Term|Tail], List), !, \+ member(Term, Tail).
 
-reg_used_once(Reg, reggy(_, References)) :- appears_only_once(Reg, References).
+reg_used_once(Reg, reggy(_, References, _)) :- appears_only_once(Reg, References).
 
 get_reggy([], _, _) :- writeln('Out of Registers'), fail.
 get_reggy([Reg|FreePool], Reg, FreePool).
 
-get_reg(Reg, reggy(FreePool0, References), reggy(FreePool, [Reg|References])) --> [],
+get_reg(Reg, reggy(FreePool0, References, V), reggy(FreePool, [Reg|References], V)) --> [],
     {get_reggy(FreePool0, Reg, FreePool)}.
 
-free_reg(Reg, reggy(FreePool0, References0), reggy(FreePool, References)) --> [],
+free_reg(Reg, reggy(FreePool0, References0, V0), reggy(FreePool, References, V)) --> [],
     { select(Reg, References0, References),
     (  member(Reg, References)  % If reg is still in use
     -> FreePool=     FreePool0  % we can't free it yet
-    ;  FreePool=[Reg|FreePool0] % otherwise we put it back in the pool.
+    ;  FreePool=[Reg|FreePool0], % otherwise we put it back in the pool.
+       del_assoc(Reg, V0, _, V)
     )}.
 
-add_ref(Reg, reggy(FreePool, References), reggy(FreePool, [Reg|References])) --> [].
+add_ref(Reg, reggy(FreePool, References, V), reggy(FreePool, [Reg|References], V)) --> [].
 
-assoc_reg(_, _, _) --> [].
+assoc_reg(Reg, Value, reggy(FreePool, References, V0), reggy(FreePool, References, V)) --> [],
+    {put_assoc(Reg, V0, Value, V)}.
 
-thun_compile(E, Si, So) -->
-    {FP=reggy([r0, r1, r2, r3,
+thun_compile(E, Si, So, FP) -->
+    {empty_assoc(V),
+     FP0=reggy([r0, r1, r2, r3,
                r4, r5, r6, r7,
                r8, r9, rA, rB,
-               rC, rD, rE, rF], [])},
-    thun_compile(E, Si, So, FP, _).
+               rC, rD, rE, rF], [], V)},
+    thun_compile(E, Si, So, FP0, FP).
 
 thun_compile([], S, S, FP, FP) --> [].
 thun_compile([Term|Rest], Si, So, FP0, FP1) --> thun_compile(Term, Rest, Si, So, FP0, FP1).
 
 thun_compile(int(I), E, Si, So, FP0, FP) -->
     [mov_imm(R, int(I))],
-    get_reg(R, FP0, FP1), assoc_reg(R, int(I), _),
-    thun_compile(E, [R|Si], So, FP1, FP).
+    get_reg(R, FP0, FP1), assoc_reg(R, int(I), FP1, FP2),
+    thun_compile(E, [R|Si], So, FP2, FP).
 
 thun_compile(bool(B), E, Si, So, FP0, FP) -->
-    get_reg(R, FP0, FP1), assoc_reg(R, bool(B), _),
-    thun_compile(E, [R|Si], So, FP1, FP).
+    get_reg(R, FP0, FP1), assoc_reg(R, bool(B), FP1, FP2),
+    thun_compile(E, [R|Si], So, FP2, FP).
 
 thun_compile(list(L), E, Si, So, FP0, FP) -->
-    % encode_list(_), ???
-    get_reg(R, FP0, FP1), assoc_reg(R, list(L), _),
-    thun_compile(E, [R|Si], So, FP1, FP).
+    encode_list(L, FP0, FP1, Addr),
+    get_reg(R, FP1, FP2),
+    [load_imm(R, Addr)],
+    assoc_reg(R, Addr, FP2, FP3),
+    thun_compile(E, [R|Si], So, FP3, FP).
 
 thun_compile(symbol(Name), E, Si, So, FP0, FP) -->   {def(Name, _)}, !,         def_compile(Name, E, Si, So, FP0, FP).
 thun_compile(symbol(Name), E, Si, So, FP0, FP) -->  {func(Name, _, _)}, !,     func_compile(Name, E, Si, So, FP0, FP).
@@ -725,6 +733,7 @@ func_compile(+, E, [A, B|S], So, FP0, FP) --> !,
       free_reg(B, FP2, FP3),
       {Si=[R|S]}
     ),
+    % Update value in the context?
     thun_compile(E, Si, So, FP3, FP).
 
 func_compile(dup, E, [A|S], So, FP0, FP) --> !,
@@ -751,13 +760,15 @@ combo_compile(_Combo, E, Si, So, FP0, FP) -->
 
 compiler(InputString, MachineCode, StackIn, StackOut) :-
     phrase(joy_parse(Expression), InputString), !,
-    phrase(thun_compile(Expression, StackIn, StackOut), MachineCode, []).
+    phrase(thun_compile(Expression, StackIn, StackOut, _), MachineCode, []).
 
 
 show_compiler(InputString, StackIn, StackOut) :-
     phrase(joy_parse(Expression), InputString), !,
-    phrase(thun_compile(Expression, StackIn, StackOut), MachineCode, []),
-    maplist(portray_clause, MachineCode).
+    phrase(thun_compile(Expression, StackIn, StackOut, reggy(_, _, V)), MachineCode, []),
+    maplist(portray_clause, MachineCode),
+    assoc_to_list(V, VP),
+    portray_clause(VP).
 
 
 /* 
