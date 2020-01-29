@@ -747,6 +747,9 @@ func_compile(pop, E, [A|S], So, FP0, FP) --> !,
     free_reg(A, FP0, FP1),
     thun_compile(E, S, So, FP1, FP).
 
+func_compile(cons, E, [List, Item|S], So, FP0, FP) --> !,
+    % allocate a cons cell
+    thun_compile(E, S, So, FP0, FP).
 
 func_compile(_Func, E, Si, So, FP0, FP) -->
     % look up function, compile it...
