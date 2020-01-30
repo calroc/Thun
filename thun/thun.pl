@@ -156,22 +156,36 @@ thun(bool(C), [A|B], D, E) :- thun(A, B, [bool(C)|D], E).
 thun(list(A),    [], B, [list(A)|B]).
 thun(list(C), [A|B], D, E) :- thun(A, B, [list(C)|D], E).
 
-% I hand-wrote def/3 cases here.
+% Partial reduction for func/3 cases works.
+
+thun(symbol(A),    [], B, C) :- func(A, B, C).
+thun(symbol(A), [C|D], B, F) :- func(A, B, E), thun(C, D, E, F).
+
+ % Combinators look ok too.
+
+thun(symbol(A), D, B, C) :- combo(A, B, C, D, []).
+thun(symbol(A), C, B, G) :- combo(A, B, F, C, [D|E]), thun(D, E, F, G).
+
+% I think the order of these two rules should be reversed because
+% it will be pretty rare for a combinator to result in a null
+% expression and we don't want to process combo/5 twice just to
+% notice that, eh?  Swap the rules and add green cuts after combo/5
+% and that should make it more efficient.
+%
+% Neither functions nor definitions can affect the expression so we
+% don't need to do similar gardening to those rules.  The unification
+% of the head clauses will distinguish the cases for them.
+
+% Definitions don't work though (See "Partial Reducer" section below.)
+% I hand-wrote the def/3 cases here.  (Maybe if append/3 was reduced?)
+
 thun(symbol(B),     [],  A,  D) :- def(B, [DH|DE]), thun(DH, DE, A, D).
 thun(symbol(A), [H|E0], Si, So) :- def(A, [DH|DE]),
      append(DE, [H|E0], E), /* ................. */ thun(DH, E, Si, So).
 
-% Partial reduction for func/3 cases works too,
-thun(symbol(A),    [], B, C) :- func(A, B, C).
-thun(symbol(A), [C|D], B, F) :- func(A, B, E), thun(C, D, E, F).
-
-% ...but Combo gets all messed up.
-% thun(symbol(A), D, B, C) :- combo(A, B, C, D, []).
-% thun(symbol(A), C, B, G) :- combo(A, B, F, C, [D|E]), thun(D, E, F, G).
-
-thun(symbol(Combo), Ei, Si, So) :- combo(Combo, Si, S, Ei, Eo), thun(Eo, S, So).
 
 % Some error handling.
+
 thun(symbol(Unknown), _, _, _) :-
     \+ def(Unknown, _),
     \+ func(Unknown, _, _),
@@ -392,8 +406,8 @@ words(Words) :-
  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
   _         ___         _           
  | |_ ___  | _ \_ _ ___| |___  __ _ 
- |  _/ _ \ |  _/ '_/ _ \ / _ \/ _` |
-  \__\___/ |_| |_| \___/_\___/\__, |
+ |  _/ _ \ |  _/ '_/ _ \ | _ \/ _` |
+  \__\___/ |_| |_| \___/_|___/\__, |
                               |___/ 
 
 This is an experimental compiler from Joy expressions to Prolog code.
@@ -623,7 +637,49 @@ TODO: genrec, fix points.
  | |_ ___  |  \/  |__ _ __| |_ (_)_ _  ___   / __|___  __| |___ 
  |  _/ _ \ | |\/| / _` / _| ' \| | ' \/ -_) | (__/ _ \/ _` / -_)
   \__\___/ |_|  |_\__,_\__|_||_|_|_||_\___|  \___\___/\__,_\___|
-                                                              
+
+Options for getting machine code out of Joy (in Prolog) code?
+
+1) Translate Joy to Factor and delegate to Factor's native code
+generation.
+
+2) Use e.g. GNU Prolog to compile the Prolog code of Joy.
+
+3) Translate to:
+
+    3a) LLVM IR.
+    
+    3b) Some subset of C.
+
+    3c) Python for Cython.
+
+    3d) WASM?  Something else...?
+
+But those all rely on a big pile of OPC (Other Ppl's Code).  WHich brings
+me to...
+
+4) Oberon RISC CPU machine code.  The one I really want to do.  I have an
+assembler for it, there are emulators and FPGA incarnations, and it's
+small and clean.
+
+    4a) Prolog machine description of the RISC chip.
+
+    4b) How to actually compile Joy to asm?  There is a wealth of
+    available information and research to draw on, but most of it is in
+    the context of cenventional languages.  Static Joy code presents few
+    problems but the dynamic nature of most Joy programs does, I think.
+    (I.e. a lot of Joy code starts by constructing some other Joy code
+    and running it.  It remains to be seen how much of a challenge that
+    will be.  In the limit, you need Prolog at runtime to JIT compile.)
+
+    4c) Self-hosting requires Prolog-in-Joy.
+
+
+ ___ ___ ___  ___   __  __         _    _             ___        _     
+| _ |_ _/ __|/ __| |  \/  |__ _ __| |_ (_)_ _  ___   / __|___ __| |___ 
+|   /| |\__ | (__  | |\/| / _` / _| ' \| | ' \/ -_) | (__/ _ / _` / -_)
+|_|_|___|___/\___| |_|  |_\__,_\__|_||_|_|_||_\___|  \___\___\__,_\___|
+
 This is an experimental compiler from Joy expressions to machine code.
 
 One interesting twist is that Joy doesn't mention variables, just the
@@ -646,7 +702,7 @@ the Joy stack?
 Reference counting for registers?  Can it be avoided?  When you "free" a
 register you can just check the stack to see if it's still in there and,
 if not, release it back to the free pool.  You can amortize that w/o
-keeping a counter by keeping a linear list of registars alongside the
+keeping a counter by keeping a linear list of registers alongside the
 stack and pushing and popping registers from it as they are used/free'd
 and then checking if a register is ready for reclaimation is just
 member/3.  Or you can just keep a reference count for each register...
@@ -739,7 +795,7 @@ func_compile(+, E, [A, B|S], So, FP0, FP) --> !,
       assoc_reg(R, int(_), FP1, FP2),
        free_reg(A, FP2, FP3),
        free_reg(B, FP3, FP4),
-      {Si=[R|S]}
+      {Si=[R|S]}   % Can all this be simplified by freeing first?
     ),
     % Update value in the context?
     thun_compile(E, Si, So, FP4, FP).
@@ -765,10 +821,12 @@ func_compile(_Func, E, Si, So, FP0, FP) -->
     {Si = S},
     thun_compile(E, S, So, FP0, FP).
 
+
 combo_compile(_Combo, E, Si, So, FP0, FP) -->
     % look up combinator, compile it...
     {Si = S, E = Eo},
     thun_compile(Eo, S, So, FP0, FP).
+
 
 compiler(InputString, MachineCode, StackIn, StackOut) :-
     phrase(joy_parse(Expression), InputString), !,
@@ -994,6 +1052,9 @@ preduce(   (A, B),    Residue ) :- !, preduce(A, Pa), preduce(B, Pb), combine(Pa
 % preduce(        A,          B ) :- should_fold(A, B), !.
 preduce(        A,    Residue ) :- should_unfold(A), !, clause(A, B), preduce(B, Residue).
 preduce(        A,          A ).
+
+% As {*,1} and {+,0} so we have {(,),true}.  Whassisname?  Monoid or something...
+%    {*,0}     {+,Inf}          {(,),fail}...
 
 combine(true, B, B) :- !.
 combine(A, true, A) :- !.
