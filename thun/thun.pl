@@ -24,8 +24,22 @@
     You should have received a copy of the GNU General Public License
     along with Thun.  If not see <http://www.gnu.org/licenses/>.
 
+(Big fonts are from Figlet "ANSI Shadow" http://www.patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=formatter
+ and "Small".)
 
-(Big fonts are from Figlet ANSI Shadow http://www.patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=formatter )
+Table of Contents
+    Parser & Grammar
+    Semantics
+        Functions
+        Combinators
+        Definitions
+    Compiler
+        to Prolog
+        to Machine Code
+    Meta-Programming
+        Expand/Contract Definitions
+        Formatter
+        Partial Reducer
 
  */
 
@@ -171,7 +185,9 @@ thun(symbol(A), C, B, G) :- combo(A, B, F, C, [D|E]), thun(D, E, F, G).
 % expression and we don't want to process combo/5 twice just to
 % notice that, eh?  Swap the rules and add green cuts after combo/5
 % and that should make it more efficient.
-%
+
+% Ach!  THe "green" cuts would mess up multi-rule combinators!  D'oh!
+
 % Neither functions nor definitions can affect the expression so we
 % don't need to do similar gardening to those rules.  The unification
 % of the head clauses will distinguish the cases for them.
@@ -788,17 +804,13 @@ non_alloc(rolldown).
 % Functions delegate to a per-function compilation relation.
 
 func_compile(+, E, [A, B|S], So, FP0, FP) --> !,
-    % If either register A or B is only used once we can reuse it.
-    ( {reg_used_once(B, FP0)} -> [add(B, A, B)], free_reg(A, FP0, FP4), {Si=[B|S]}
-    ; {reg_used_once(A, FP0)} -> [add(A, A, B)], free_reg(B, FP0, FP4), {Si=[A|S]}
-    ;   get_reg(R, FP0, FP1),    [add(R, A, B)],
-      assoc_reg(R, int(_), FP1, FP2),
-       free_reg(A, FP2, FP3),
-       free_reg(B, FP3, FP4),
-      {Si=[R|S]}   % Can all this be simplified by freeing first?
-    ),
+    free_reg(A, FP0, FP1),
+    free_reg(B, FP1, FP2),
+    get_reg(R, FP2, FP3),
+    assoc_reg(R, int(_), FP3, FP4),
+    [add(R, A, B)],
     % Update value in the context?
-    thun_compile(E, Si, So, FP4, FP).
+    thun_compile(E, [R|S], So, FP4, FP).
 
 func_compile(dup, E, [A|S], So, FP0, FP) --> !,
     add_ref(A, FP0, FP1),
@@ -810,10 +822,11 @@ func_compile(pop, E, [A|S], So, FP0, FP) --> !,
 
 func_compile(cons, E, [List, Item|S], So, FP0, FP) --> !,
     % allocate a cons cell
+    % https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-33.html#%_sec_5.3
     thun_compile(E, S, So, FP0, FP).
 
-func_compile(Func, E, Si, So, FP0, FP) --> 
-    { non_alloc(Func), !, func(Func, Si, S) },
+func_compile(Func, E, Si, So, FP0, FP) --> { non_alloc(Func), !,
+    func(Func, Si, S) },
     thun_compile(E, S, So, FP0, FP).
 
 func_compile(_Func, E, Si, So, FP0, FP) -->
@@ -932,6 +945,21 @@ add(r1, r2, r1).
 
 
 Fun!
+
+- - - -
+
+Test that returning registers before asking for new ones
+does reuse registers that are unused and preserve registers
+that are still in use.
+
+?- show_compiler(`1 dup 2 + swap 3 +`, StackIn, StackOut).
+mov_imm(r0, int(1)).
+mov_imm(r1, int(2)).
+add(r1, r1, r0).
+mov_imm(r2, int(3)).
+add(r0, r2, r0).
+[r0-int(_), r1-int(_)].
+StackOut = [r0, r1|StackIn] .
 
 
 
