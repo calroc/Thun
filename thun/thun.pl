@@ -731,10 +731,6 @@ reggy(FreePool, References, ValueMap)
 encode_list(List, FP, FP, Addr) --> [],
     {addr(list(List))=Addr}.
 
-appears_only_once(Term, List) :- append(_, [Term|Tail], List), !, \+ member(Term, Tail).
-
-reg_used_once(Reg, reggy(_, References, _)) :- appears_only_once(Reg, References).
-
 get_reggy([], _, _) :- writeln('Out of Registers'), fail.
 get_reggy([Reg|FreePool], Reg, FreePool).
 
