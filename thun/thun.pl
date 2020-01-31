@@ -72,9 +72,6 @@ joy(InputString, StackIn, StackOut) :-
 ██║   ██║██╔══██╗██╔══██║██║╚██╔╝██║██║╚██╔╝██║██╔══██║██╔══██╗
 ╚██████╔╝██║  ██║██║  ██║██║ ╚═╝ ██║██║ ╚═╝ ██║██║  ██║██║  ██║
  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
-                                                               
-
-
 
 The grammar of Joy is very simple.  A Joy expression is zero or more Joy
 terms separated by blanks, and terms can be either integers, Booleans,
@@ -170,27 +167,30 @@ thun(bool(C), [A|B], D, E) :- thun(A, B, [bool(C)|D], E).
 thun(list(A),    [], B, [list(A)|B]).
 thun(list(C), [A|B], D, E) :- thun(A, B, [list(C)|D], E).
 
-% Partial reduction for func/3 cases works.
+% Partial reduction works for func/3 cases.
 
 thun(symbol(A),    [], B, C) :- func(A, B, C).
 thun(symbol(A), [C|D], B, F) :- func(A, B, E), thun(C, D, E, F).
 
- % Combinators look ok too.
+% Combinators look ok too.
 
-thun(symbol(A), D, B, C) :- combo(A, B, C, D, []).
-thun(symbol(A), C, B, G) :- combo(A, B, F, C, [D|E]), thun(D, E, F, G).
+% thun(symbol(A), D, B, C) :- combo(A, B, C, D, []).
+% thun(symbol(A), C, B, G) :- combo(A, B, F, C, [D|E]), thun(D, E, F, G).
 
-% I think the order of these two rules should be reversed because
-% it will be pretty rare for a combinator to result in a null
-% expression and we don't want to process combo/5 twice just to
-% notice that, eh?  Swap the rules and add green cuts after combo/5
-% and that should make it more efficient.
+% However, in this case, I think the original version will be more
+% efficient.
 
-% Ach!  THe "green" cuts would mess up multi-rule combinators!  D'oh!
+thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
 
-% Neither functions nor definitions can affect the expression so we
-% don't need to do similar gardening to those rules.  The unification
-% of the head clauses will distinguish the cases for them.
+% In the reduced rules Prolog will redo all the work of the combo/5
+% predicate on backtracking through the second rule.  It will try combo/5,
+% which usually won't end in Eo=[] so the first rule fails, then it will
+% try combo/5 again in the second rule.  In this form, after combo/5 has
+% completed Prolog has computed Eo and can index on it for thun/3.
+%
+% Neither functions nor definitions can affect the expression so this
+% doesn't apply to those rules.  The unification of the head clauses will
+% distinguish the cases for them.
 
 % Definitions don't work though (See "Partial Reducer" section below.)
 % I hand-wrote the def/3 cases here.  (Maybe if append/3 was reduced?)
@@ -1104,9 +1104,9 @@ thunder([  % Source code for thun/4.
     (thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So)),
     (thun(bool(B), E, Si, So) :- thun(E, [bool(B)|Si], So)),
     (thun(list(L), E, Si, So) :- thun(E, [list(L)|Si], So)),
-    (thun(symbol(Def),   E, Si, So) :- def(Def, Body), append(Body, E, [T|Eo]), thun(T, Eo, Si, So)),
-    (thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So)),
-    (thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So))
+    % (thun(symbol(Def),   E, Si, So) :- def(Def, Body), append(Body, E, [T|Eo]), thun(T, Eo, Si, So)),
+    (thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So))
+    % (thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So))
 ]).
 
 /*
