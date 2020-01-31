@@ -195,8 +195,8 @@ thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
 % Definitions don't work though (See "Partial Reducer" section below.)
 % I hand-wrote the def/3 cases here.  (Maybe if append/3 was reduced?)
 
-thun(symbol(B),     [],  A,  D) :- def(B, [DH|DE]), thun(DH, DE, A, D).
-thun(symbol(A), [H|E0], Si, So) :- def(A, [DH|DE]),
+thun(symbol(D),     [], Si, So) :- def(D, [DH| E]), thun(DH, E, Si, So).
+thun(symbol(D), [H|E0], Si, So) :- def(D, [DH|DE]),
      append(DE, [H|E0], E), /* ................. */ thun(DH, E, Si, So).
 
 
@@ -1104,7 +1104,7 @@ thunder([  % Source code for thun/4.
     (thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So)),
     (thun(bool(B), E, Si, So) :- thun(E, [bool(B)|Si], So)),
     (thun(list(L), E, Si, So) :- thun(E, [list(L)|Si], So)),
-    % (thun(symbol(Def),   E, Si, So) :- def(Def, Body), append(Body, E, [T|Eo]), thun(T, Eo, Si, So)),
+    % (thun(symbol(Def),   E, Si, So) :- def(Def, [Head|Body]), append(Body, E, Eo), thun(Head, Eo, Si, So)),
     (thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So))
     % (thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So))
 ]).
