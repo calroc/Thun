@@ -128,7 +128,30 @@ chars([Ch])      --> char(Ch).
 char(Ch) --> [Ch], {Ch \== 91, Ch \== 93, code_type(Ch, graph)}.
 
 
-/*
+/* Here is an example of Joy code:
+
+    [   [[abs] ii <=]
+        [
+            [<>] [pop !-] ||
+        ] &&
+    ]
+    [[    !-] [[++]] [[--]] ifte dip]
+    [[pop !-]  [--]   [++]  ifte    ]
+    ifte
+
+It probably seems unreadable but with a little familiarity it becomes
+just as legible as any other notation.  This function accepts two
+integers on the stack and increments or decrements one of them such that
+the new pair of numbers is the next coordinate pair in a square spiral
+(like that used to construct an Ulam Spiral).  It is adapted from the
+code in the answer here:
+
+https://stackoverflow.com/questions/398299/looping-in-a-spiral/31864777#31864777
+
+It can be used with the x combinator to make a kind of generator for
+spiral square coordinates.
+
+
 
 ███████╗███████╗███╗   ███╗ █████╗ ███╗   ██╗████████╗██╗ ██████╗███████╗
 ██╔════╝██╔════╝████╗ ████║██╔══██╗████╗  ██║╚══██╔══╝██║██╔════╝██╔════╝
@@ -137,24 +160,37 @@ char(Ch) --> [Ch], {Ch \== 91, Ch \== 93, code_type(Ch, graph)}.
 ███████║███████╗██║ ╚═╝ ██║██║  ██║██║ ╚████║   ██║   ██║╚██████╗███████║
 ╚══════╝╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝ ╚═════╝╚══════╝
 
+The fundamental Joy relation involves an expression and two stacks.  One
+stack serves as input and the other as output.
 
-thun(Expression, InputStack, OutputStack)
+    thun(Expression, InputStack, OutputStack)
 
-*/
+The null expression (denoted by an empty Prolog list) is effectively an
+identity function and serves as the end-of-processing marker.  As a
+matter of efficiency (of Prolog) the thun/3 predicate picks off the first
+term of the expression (if any) and passes it to thun/4 which can then
+take advantage of Prolog indexing on the first term of a predicate. */
 
 thun([], S, S).
 thun([Term|E], Si, So) :- thun(Term, E, Si, So).
 
-/*  Original code.
+/* The thun/4 predicate was originally written in terms of the thun/3
+predicate, which was very elegant, but prevented (I assume but have not
+checked) tail-call recursion.  In order to alleviate this, partial
+reduction is used to generate the actual thun/4 rules, see below.
 
-    thun( int(I), E, Si, So) :- thun(E, [ int(I)|Si], So).
-    thun(bool(B), E, Si, So) :- thun(E, [bool(B)|Si], So).
-    thun(list(L), E, Si, So) :- thun(E, [list(L)|Si], So).
-    thun(symbol(Def),   E, Si, So) :- def(Def, Body), append(Body, E, Eo), thun(Eo, Si, So).
-    thun(symbol(Func),  E, Si, So) :- func(Func, Si, S), thun(E, S, So).
-    thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
+Original thun/4 code:
 
-Partial reduction is used to generate the actual thun/4 rules, see below. */
+thun(int(I),        E, Si, So) :- thun(E, [ int(I)|Si], So).
+thun(bool(B),       E, Si, So) :- thun(E, [bool(B)|Si], So).
+thun(list(L),       E, Si, So) :- thun(E, [list(L)|Si], So).
+thun(symbol(Def),   E, Si, So) :- def(Def, Body), append(Body, E, Eo), thun(Eo, Si, So).
+thun(symbol(Func),  E, Si, So) :- func(Func, Si, S),                   thun(E,  S,  So).
+thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo),          thun(Eo, S,  So).
+
+Integers, Boolean values, and lists are put onto the stack, symbols are
+dispatched to one of three kinds of processing: functions, combinators
+and definitions (see "defs.txt".) */
 
 % Literals turn out okay.
 
@@ -189,16 +225,20 @@ thun(symbol(Combo), E, Si, So) :- combo(Combo, Si, S, E, Eo), thun(Eo, S, So).
 % completed Prolog has computed Eo and can index on it for thun/3.
 %
 % Neither functions nor definitions can affect the expression so this
-% doesn't apply to those rules.  The unification of the head clauses will
-% distinguish the cases for them.
+% consideration doesn't apply to those rules.  The unification of the head
+% clauses will distinguish the cases for them.
 
 % Definitions don't work though (See "Partial Reducer" section below.)
-% I hand-wrote the def/3 cases here.  (Maybe if append/3 was reduced?)
+% I hand-wrote the def/3 cases here.
 
 thun(symbol(D),     [], Si, So) :- def(D, [DH| E]), thun(DH, E, Si, So).
 thun(symbol(D), [H|E0], Si, So) :- def(D, [DH|DE]),
      append(DE, [H|E0], E), /* ................. */ thun(DH, E, Si, So).
 
+% Partial reduction has been the subject of a great deal of research and
+% I'm sure there's a way to make definitions work, but it's beyond the
+% scope of the project at the moment.  It works well enough as-is that I'm
+% happy to manually write out two rules by hand.
 
 % Some error handling.
 
@@ -283,7 +323,7 @@ func( * ,  [int(A), int(B)|S], [int(C)|S]) :- C #= A * B.
 func( / ,  [int(A), int(B)|S], [int(C)|S]) :- C #= B div A.
 func('%',  [int(A), int(B)|S], [int(C)|S]) :- C #= B mod A.
 
-func('/%', [int(A), int(B)|S], [int(C), int(D)|S]) :- C #= A div B, D #= A mod B.
+func('/%', [int(A), int(B)|S], [int(C), int(D)|S]) :- C #= B div A, D #= B mod A.
 func( pm , [int(A), int(B)|S], [int(C), int(D)|S]) :- C #= A + B,   D #= B - A.
 
 func(>,  [int(A), int(B)|S], [T|S]) :- B #> A #<==> R, r_truth(R, T).
@@ -1077,7 +1117,7 @@ preduce(   (A, B),    Residue ) :- !, preduce(A, Pa), preduce(B, Pb), combine(Pa
 preduce(        A,    Residue ) :- should_unfold(A), !, clause(A, B), preduce(B, Residue).
 preduce(        A,          A ).
 
-% As {*,1} and {+,0} so we have {(,),true}.  Whassisname?  Monoid or something...
+% As {*,1} and {+,0} so we have {(,),true}.  Whatsitsname?  Monoid or something...
 %    {*,0}     {+,Inf}          {(,),fail}...
 
 combine(true, B, B) :- !.
