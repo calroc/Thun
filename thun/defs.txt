@@ -1,6 +1,10 @@
 -- 1 -
 ? dup bool
+&& [nullary] cons [nullary [false]] dip branch
 ++ 1 +
+|| [nullary] cons [nullary] dip [true] branch
+!- 0 >=
+abs dup 0 < [] [neg] branch
 anamorphism [pop []] swap [dip swons] genrec
 app1 grba infrst
 app2 [grba swap grba swap] dip [infrst] cons ii
@@ -57,6 +61,7 @@ second rest first
 shift uncons [swons] dip
 shunt [swons] step
 size 0 swap [pop ++] step
+spiral_next [[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
 split_at [drop] [take] clop
 sqr dup *
 step_zero 0 roll> step
