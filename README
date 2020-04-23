@@ -1,10 +1,10 @@
 ﻿
 
-            Thun
+                Thun
 
-  A dialect of Joy in Python.
+  Dialects of Joy in Python and Prolog.
 
-           v0.2.0
+               v0.3.0
 
 
 --------------------------------------------------
@@ -33,37 +33,10 @@ Thun.  If not see <http://www.gnu.org/licenses/>.
 §.1 Introduction
 
 Joy is a programming language created by Manfred von Thun that is easy to
-use and understand and has many other nice properties.  This Python
-package implements an interpreter for a dialect of Joy that attempts to
+use and understand and has many other nice properties.  This project 
+implements Python and Prolog interpreters for dialects that attempts to
 stay very close to the spirit of Joy but does not precisely match the
-behaviour of the original version(s) written in C.  The main difference
-between Thun and the originals, other than being written in Python, is
-that it works by the "Continuation-Passing Style".
-
-As I study Joy I find that it is very aptly named.  It is clear, concise,
-and ameniable to advanced techniques for constructing bug-free software.
-
-Developed by Manfred von Thun, don't know much about him, not much on the
-web about Joy and von Thun (Von Thun?) See references below.
-
-Because it has desirable properties (concise, highly factored) the
-programming process changes, the ratio of designing to writing code
-shifts in favor of design.  The documentation becomes extensive while the
-code shrinks to stable bodies of small well-factored incantations that
-are highly expressive, much like mathematical papers consist of large
-bodies of exposition interlaced with mathematical formula that concisely
-and precisely express the meaning of the text.
-
-The time and attention of the programmer shifts from thinking about the
-language to thinking in the language, and the development process feels
-more like deriving mathematical truths than like writing ad-hoc
-solutions.
-
-I hope that this package is useful in the sense that it provides an
-additional joy interpreter (the binary in the archive from La Trobe seems
-to run just fine on my modern Linux machine!)  But I also hope that you
-can read and understand the Python code and play with the implementation
-itself.
+behaviour of the original version written in C.
 
 The best source (no pun intended) for learning about Joy is the
 information made available at the website of La Trobe University (see the
@@ -180,14 +153,13 @@ TODO:
 §.4.6 Refactoring
 
 
-
 §.5 This Implementation
 
 Run with:
 
     python -m joy
 
-joypy
+Thun
  |-- COPYING - license
  |-- README - this file
  |
@@ -207,6 +179,10 @@ joypy
  |   `-- utils
  |       |-- pretty_print.py - convert Joy datastructures to text
  |       `-- stack.py - work with stacks
+ |
+ |-- thun - Experimental Prolog Code
+ |   |-- compiler.pl - A start on a compiler for Prof. Wirth's RISC CPU
+ |   `-- thun.pl - An interpreter in the Logical Paradigm, compiler.
  |
  `-- setup.py
 

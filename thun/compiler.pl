@@ -1,6 +1,6 @@
-﻿/*
+/*
 
-Copyright © 2018-2019 Simon Forman
+Copyright © 2018 Simon Forman
 
 This file is part of Thun
 
@@ -16,27 +16,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with Thun.  If not see <http://www.gnu.org/licenses/>.
-
-The Joy interpreter that this implements is pretty crude.  the only types
-are 16-bit integers and linked lists.  The lists are 32-bit words divided
-into two 16-bit fields.  The high half is the node value and the low half
-points directly (not offset) to the next cell, zero terminates the list.
-
-The expression is expected to be already written in RAM as a linked list at
-the time the mainloop starts.  As yet there is no support for actually doing
-this.  Both the new stack and expression cells are written to the same heap
-intermixed.  The stack and expression pointers never decrease, the whole
-history of the computation is recorded in RAM.  If the computation of the
-expression overruns the end of RAM (or 16-bits whichever comes first) the
-machine crashes.
-
-At the moment, functions are recognized by setting high bit, but I don't
-think I remembered to set the bits during compilation, so it won't work
-at all right now.  Er...  Boo.  Anyhow, the whole thing is very crude and
-not at all what I am hoping eventually to build.
-
-But it's a start, and I feel good about emitting machine code (even if the
-program doesn't do anything useful yet.)
 
 */
 :- use_module(library(assoc)).
@@ -57,87 +36,23 @@ do :- Program = [
 compile_program(Program, Binary),
 write_binary('joy_asm.bin', Binary).
 
+% phrase(pass0(Program, AST), [], _),
+% write_canonical(AST),
+% phrase(⟐(AST), IR),
+% write_canonical(IR),
+% phrase(linker(IR), ASM),
+% write_canonical(ASM).
 
-compile_program(Program, Binary) :-
-    phrase((init, ⦾(Program, IR)), [], [Context]),
-    phrase(⟐(IR), ASM),
-    phrase(linker(ASM), EnumeratedASM),
-    foo(Context),
-    phrase(asm(EnumeratedASM), Binary).
+pass0(Code, Program) --> init, ⦾(Code, Program).
 
-foo(Context) :-
-    get_assoc(dictionary, Context, D),
-    assoc_to_list(D, Dictionary),
-    portray_clause(Dictionary).
-
-
-/*
-
-This first stage ⦾//2 converts the Joy description into a kind of intermediate
-representation that models the Joy interpreter on top of the machine but doesn't
-actually use assembly instructions.  It also manages the named registers and
-memory locations so thet don't appear in the program.
-
-The idea here is to extract the low-level "primitives" needed to define the Joy
-interpreter to make it easier to think about (and maybe eventually retarget other
-CPUs.)
-
- */
+init, [Context] -->
+    {empty_assoc(C), empty_assoc(Dictionary),
+     put_assoc(dictionary, C, Dictionary, Context)}.
 
 ⦾([], []) --> [].
 
-⦾([ヲ|Terms], Ts) -->  % Preamble.
-    % Initialize context/state/symbol table.
-    set(dict_ptr, 11),  % Reg 11 is a pointer used during func lookup.
-    set(dict_top, 12),  % Reg 12 points to top of dictionary.
-    set(dict, 0),  % Address of top of dict during compilation.
-    set(done, _DONE),  % DONE label (logic variable.)
-    set(expr, 4),  % Reg 4 points to expression.
-    set(halt, _HALT),  % HALT label (logic variable.)
-    set(main, _MAIN),  % MAIN label (logic variable.)
-    set(reset, _Reset),  % Reset label (logic variable.)
-    set(sp, 2),  % Reg 2 points to just under top of stack.
-    set(temp0, 6),  % Reg 6 is a temp var.
-    set(temp1, 7),  % Reg 7 is a temp var.
-    set(temp2, 8),  % Reg 8 is a temp var.
-    set(temp3, 9),  % Reg 9 is a temp var.
-    set(term, 5),  % Reg 4 holds current term.
-    set(tos, 3),  % Reg 3 holds Top of Stack.
-    ⦾(Terms, Ts).
-
-⦾([ヵ|Terms], [  % Initialization.
-    jump(Over),  % Oberon bootloader writes MemLim to RAM[12] and
-    asm(allocate(_, 16)),  % stackOrg to RAM[24], we don't need these
-    label(Over),  % but they must not be allowed to corrupt our code.
-    set_reg_const(0, 0),  % zero out the root cell.
-    write_ram(0, 0),
-    set_reg_const(SP, 0x1000),
-    set_reg_const(EXPR, 0x500),
-    set_reg_label(DICT_TOP, LastWord),
-    set_reg_const(TOS, 0),
-    set_reg_const(TERM, 0),
-    asm(store_word(TOS, SP, 0))  % RAM[SP] := 0
-    |Ts]) -->
-    get([dict_top, DICT_TOP, expr, EXPR, sp, SP, term, TERM, tos, TOS]),
-    ⦾(Terms, Ts), get(dict, LastWord).
-
-⦾([メ|Terms], [  % Mainloop.
-    label(MAIN),
-    if_zero(EXPR, HALT),
-    deref(EXPR),
-    split_word(TERM, EXPR),
-    if_literal(TERM, PUSH),
-    lookup(DICT_PTR, DICT_TOP, TERM, HALT),  % Jump to command or if not found halt.
-    label(PUSH), push(TOS, TERM, SP),  % stack = TERM, stack
-    label(DONE), write_ram(SP, TOS),   % RAM[SP] := TOS
-    jump(MAIN)
-    |Ts]) -->
-    get([dict_ptr, DICT_PTR, dict_top, DICT_TOP, done, DONE, expr, EXPR,
-         halt, HALT, main, MAIN, sp, SP, term, TERM, tos, TOS]),
-    ⦾(Terms, Ts).
-
 ⦾([Body, ≡(NameAtom)|Terms], [defi(Name, B, Prev, I, SP, TOS)|Ts]) -->
-    get(dict, Prev), set(dict, Name), get([sp, SP, tos, TOS]),
+    get(dict, Prev), set(dict, Name), get(sp, SP), get(tos, TOS),
     inscribe(NameAtom, Name), ⦾(Terms, Ts), lookup(i, I), lookup(Body, B).
 
 ⦾([Body, ヮ(NameAtom)|Terms], [definition(Name, DONE, B, Prev)|Ts]) -->
@@ -153,6 +68,48 @@ CPUs.)
 
 ⦾([P, B, ヱ|Terms], [repeat_until(Predicate, Body)|Ts]) -->
     ⦾([P, B, Terms], [Predicate, Body, Ts]).
+
+⦾([ヲ|Terms], Ts) -->  % Preamble.
+    set(dict, 0), set(done, _DONE),
+    set(temp0, 6), set(temp1, 7),
+    set(temp2, 8), set(temp3, 9),
+    set(tos, 3), set(sp, 2), set(expr, 4), set(term, 5),
+    set(dict_top, 12), set(dict_ptr, 11),
+    set(halt, _HALT), set(main, _MAIN), set(reset, _Reset),
+    ⦾(Terms, Ts).
+
+⦾([ヵ|Terms], [  % Initialization.
+    jump(Over),  % Oberon bootloader writes MemLim to RAM[12] and
+    asm(allocate(_, 16)),  % stackOrg to RAM[24], we don't need these
+    label(Over),  % but they must not be allowed to corrupt our code.
+    set_reg_const(0, 0),  % zero out the root cell.
+    write_ram(0, 0),
+    set_reg_const(SP, 0x1000),
+    set_reg_const(EXPR, 0x500),
+    set_reg_label(DICT_TOP, LastWord),
+    set_reg_const(TOS, 0),
+    set_reg_const(TERM, 0),
+    asm(store_word(TOS, SP, 0))  % RAM[SP] := 0
+    |Ts]) -->
+    get(dict_top, DICT_TOP), get(expr, EXPR),
+    get(sp, SP), get(term, TERM), get(tos, TOS),
+    ⦾(Terms, Ts), get(dict, LastWord).
+
+⦾([メ|Terms], [  % Mainloop.
+    label(MAIN),
+    if_zero(EXPR, HALT),
+    deref(EXPR),
+    split_word(TERM, EXPR),
+    if_literal(TERM, PUSH),
+    lookup(DICT_PTR, DICT_TOP, TERM, HALT),  % Jump to command or if not found halt.
+    label(PUSH), push(TOS, TERM, SP),  % stack = TERM, stack
+    label(DONE), write_ram(SP, TOS),   % RAM[SP] := TOS
+    jump(MAIN)
+    |Ts]) -->
+    get(done, DONE), get(main, MAIN), get(halt, HALT),
+    get(dict_ptr, DICT_PTR), get(dict_top, DICT_TOP), get(expr, EXPR),
+    get(sp, SP), get(term, TERM), get(tos, TOS),
+    ⦾(Terms, Ts).
 
 ⦾([Term|Terms], [T|Ts]) --> ⦾(Term, T), ⦾(Terms, Ts).
 
@@ -185,23 +142,6 @@ CPUs.)
 ⦾(ナ, low_half(TEMP0, TOS))     --> get(temp0, TEMP0), get(tos, TOS).
 ⦾(ヶ, low_half(TOS, SP))        --> get(sp, SP), get(tos, TOS).
 
-
-/* 
-
-Context (state) manipulation for the ⦾//2 relation.
-
-Association lists are used to keep a kind of symbol table as well as a dictionary
-of name atoms to address logic variables for defined Joy functions.
-
-*/
-
-init, [Context] -->
-    {empty_assoc(C), empty_assoc(Dictionary),
-     put_assoc(dictionary, C, Dictionary, Context)}.
-
-get([]) --> !.
-get([Key, Value|Ts]) --> !, get(Key, Value), get(Ts).
-
 get(Key, Value) --> state(Context), {get_assoc(Key, Context, Value)}.
 set(Key, Value) --> state(ContextIn, ContextOut),
     {put_assoc(Key, ContextIn, Value, ContextOut)}.
@@ -218,14 +158,6 @@ lookup(NameAtom, Label) --> state(Context),
 
 state(S), [S] --> [S].
 state(S0, S), [S] --> [S0].
-
-
-/*
-
-This second stage ⟐//1 converts the intermediate representation to assembly
-language.
-
-*/
 
 ⟐([]) --> [].
 ⟐([Term|Terms]) --> ⟐(Term), ⟐(Terms).
@@ -338,57 +270,46 @@ language.
 
 ⟐(pop(Reg, TOS)) --> ⟐([split_word(Reg, TOS), deref(TOS)]).
 
-
-/* 
-
-Support for ⟐//1 second stage.
-
-The dexpr//2 DCG establishes a sequence of labeled expr_cell/2 pseudo-assembly
-memory locations as a linked list that encodes a Prolog list of Joy function
-labels comprising e.g. the body of some Joy definition.
-
-*/
-
 dexpr([], 0) --> [].
 dexpr([Func|Rest], ThisCell) -->
     [label(ThisCell), expr_cell(Func, NextCell)],
     dexpr(Rest, NextCell).
-
-/*
-
-The add_label/3 relation is a meta-logical construct that accepts a comparision
-predicate (e.g. if_zero/2) and "patches" it by adding the Label logic variable
-to the end.
-
-*/
 
 add_label(CmpIn, Label, CmpOut) :-
     CmpIn =.. F,
     append(F, [Label], G),
     CmpOut =.. G.
 
-/*
-
-Two simple masking predicates.
-
-*/
-
 high_half_word(I, HighHalf) :- HighHalf is I >> 16 /\ 0xFFFF.
 low_half_word( I,  LowHalf) :-  LowHalf is I       /\ 0xFFFF.
 
+compile_program(Program, Binary) :-
+    phrase(pass0(Program, AST), [], _),
+    phrase(⟐(AST), IR),
+    phrase(linker(IR), ASM),
+    phrase(asm(ASM), Binary).
 
 /*
 
+| o._ |  _ ._ 
+|_|| ||<(/_|  
+
 Linker
 
-*/
+Logical variables for addresses are unified with the actual locations and
+each instruction is paired with its address.
 
-linker(ASM) --> enumerate_asm(ASM, 0, _).
+linker//1 unparses a list of the "IR" that ⟐//1 emits and in turn emits a
+list of (Address, Instruction) pairs for assembly instructions.
+
+ */
+
+linker(IntermediateRepresentation) --> enumerate_asm(IntermediateRepresentation, 0, _).
 
 enumerate_asm(                [], N, N) --> !, [].
 enumerate_asm(      [Term|Terms], N, M) --> !, enumerate_asm(Term, N, O), enumerate_asm(Terms, O, M).
 enumerate_asm(   label(N)       , N, N) --> !, [].
-enumerate_asm(allocate(N, Bytes), N, M) --> !, {Bits is 8 * Bytes}, [skip(Bits)], {align(N, Bytes, M)}.
+enumerate_asm(allocate(N, Bytes), N, M) --> !, [skip(Bits)], {align(N, Bytes, M), Bits is 8 * Bytes}.
 enumerate_asm(             Instr, N, M) -->    [(Z, Instr)], {align(N, 0, Z), align(Z, 4, M)}.
 
 align(_, Bytes, _) :- (Bytes < 0 -> write('Align negative number? No!')), !, fail.
@@ -396,12 +317,19 @@ align(N,     1, M) :- !, M is N + 1.
 align(N, Bytes, M) :- N mod 4 =:= 0, !, M is N + Bytes.
 align(N, Bytes, M) :- Padding is 4 - (N mod 4), M is N + Bytes + Padding.
 
-
 /*
+
+ /\  _ _ _ ._ _ |_ | _ ._ 
+/--\_>_>(/_| | ||_)|(/_|  
 
 Assembler
 
-*/
+The asm//1 DCG unparses a list of (Address, Instruction) pairs into a list
+of 0 or 1 ints representing the binary bits of the machine code.  The actual
+work is done by asm//2 which uses instruction_format_Fn//n DCGs to generate
+the bits.
+
+ */
 
 asm([]) --> !, [].
 asm([      skip(Bits)|Rest]) --> !, skip(Bits),          asm(Rest).
@@ -538,7 +466,18 @@ asm(N, vs_offset(Label))      --> instruction_format_F3b(0, vs, Label, N).
 asm(_, vs_link(C))            --> instruction_format_F3a(1, vs, C).
 asm(N, vs_link_offset(Label)) --> instruction_format_F3b(1, vs, Label, N).
 
-% This is the core of the assembler where the instruction formats are specified.
+/* 
+___                          _                  
+ | ._  __|_._   __|_o _ ._  |__ ._._ _  _._|_ _ 
+_|_| |_> |_||_|(_ |_|(_)| | |(_)| | | |(_| |__> 
+
+This is the core of the assembler where the instruction formats are
+specified.  Each one is a 32-bit word.
+
+The various jump-to-offset instructions use the addresses to compute the
+jump offsets.  Offsets and immediate values are converted to binary.
+
+ */
 
 instruction_format_F0(U,    A, B, Op, C ) --> [0, 0, U, 0], reg(A), reg(B), operation(Op), skip(12), reg(C).
 instruction_format_F1(U, V, A, B, Op, Im) --> [0, 1, U, V], reg(A), reg(B), operation(Op), immediate(Im).
@@ -620,6 +559,19 @@ invert([], []).
 invert([1|Tail], [0|Lait]) :- invert(Tail, Lait).
 invert([0|Tail], [1|Lait]) :- invert(Tail, Lait).
 
+
+/*
+ _                                  
+|_)o._  _.._  |\ |   ._ _ |_  _ .__ 
+|_)|| |(_||\/ | \||_|| | ||_)(/_|_> 
+           /
+
+binary_number(ListOfBits, Integer)
+
+twos_compliment(ListOfBits, Integer, NumberOfBits)
+
+ */
+
 twos_compliment(Bits, Number, Width) :-
     X is abs(Number),
     binary_number(B, X),
@@ -651,8 +603,8 @@ canonical_binary_number([1|Bits], Number):-
     canonical_binary_number(Bits1, Number1),
     Number is Number1 + 2 ^ Pow.
 
-binary_number(   Bits , Number) :- canonical_binary_number(Bits, Number).
 binary_number([0|Bits], Number) :-           binary_number(Bits, Number).
+binary_number(   Bits , Number) :- canonical_binary_number(Bits, Number).
 
 
 % Helper code to write the list of bits as a binary file.
@@ -668,8 +620,7 @@ for_serial(Binary, Ser) :-
 
 write_binary(Name, Binary) :-
     open(Name, write, Stream, [type(binary)]),
-    for_serial(Binary, Ser),
-    phrase(write_binary_(Stream), Ser),
+    phrase(write_binary_(Stream), Binary),
     close(Stream).
 
 write_binary_(Stream) -->
