@@ -142,7 +142,7 @@ class StackDisplayWorld(World):
     self.repo.stage([self.relative_STACK_FN])
     commit_id = self.repo.do_commit(
       'message',
-      committer='Simon Forman <forman.simon@gmail.com>',
+      committer=b'Simon Forman <forman.simon@gmail.com>',
       )
     _log.info('commit %s', commit_id)
 
