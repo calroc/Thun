@@ -17,7 +17,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>. 
 #
+from __future__ import print_function
 from logging import getLogger, addLevelName
+from functools import reduce
 
 _log = getLogger(__name__)
 addLevelName(15, 'hmm')
@@ -721,20 +723,20 @@ def combinator_effect(number, *expect):
 def show(DEFS):
   for name, stack_effect_comment in sorted(DEFS.iteritems()):
     t = ' *'[compilable(stack_effect_comment)]
-    print name, '=', doc_from_stack_effect(*stack_effect_comment), t
+    print(name, '=', doc_from_stack_effect(*stack_effect_comment), t)
 
 
 def generate_library_code(DEFS, f=None):
   if f is None:
     import sys
     f = sys.stdout
-  print >> f, '# GENERATED FILE. DO NOT EDIT.\n'
+  print('# GENERATED FILE. DO NOT EDIT.\n', file=f)
   for name, stack_effect_comment in sorted(DEFS.iteritems()):
     if not compilable(stack_effect_comment):
       continue
-    print >> f
-    print >> f, compile_(name, stack_effect_comment)
-    print >> f
+    print(file=f)
+    print(compile_(name, stack_effect_comment), file=f)
+    print(file=f)
 
 
 def poly_combinator_effect(number, effect_funcs, *expect):

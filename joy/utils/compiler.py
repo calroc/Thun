@@ -10,9 +10,11 @@ functions, during inference?  Could I write out better code that way?
 
 In any event, I am proceeding with this sort of ad hoc way for now.
 '''
+from __future__ import print_function
 from joy.parser import text_to_expression, Symbol
 from joy.utils.stack import concat, iter_stack, list_to_stack
 from joy.library import SimpleFunctionWrapper, YIN_STACK_EFFECTS
+from functools import reduce
 
 
 def import_yin():
@@ -29,7 +31,7 @@ class InfiniteStack(tuple):
             n = n + 1 if m is None else m
 
     _NAMES = _names()
-    _NAMES.next()
+    next(_NAMES)
 
     names = _NAMES.next
     reset = lambda _, _n=_NAMES: _n.send(-1)
@@ -82,7 +84,7 @@ def code_gen(code):
 
 def coalesce_pops(code):
     code.sort(key=lambda p: p[0] != 'pop')  # All pops to the front.
-    try: index = (i for i, t in enumerate(code) if t[0] != 'pop').next()
+    try: index = next((i for i, t in enumerate(code) if t[0] != 'pop'))
     except StopIteration: return
     code[:index] = [tuple(['pop'] + [t for _, t in code[:index][::-1]])]
 
@@ -216,21 +218,21 @@ for name in '''
 '''
 
 for name in sorted(D):
-    print name,
+    print(name, end=' ')
 ##    print compile_yinyang(name, name)
-print '-' * 100
+print('-' * 100)
 
 
-print compile_yinyang('mul_', 'mul')
-print compile_yinyang('pop', 'pop')
-print compile_yinyang('ppm', 'popop mul')
-print compile_yinyang('sqr', 'dup mul')
-print compile_yinyang('foo', 'dup 23 sub mul')
-print compile_yinyang('four_mul', 'mul mul mul mul')
-print compile_yinyang('baz', 'mul dup sub dup')
-print compile_yinyang('to_the_fifth_power', 'dup dup mul dup mul mul')
-print compile_yinyang('dup3', 'dup dup dup')
-print compile_yinyang('df2m', 'dup first_two mul')
-print compile_yinyang('sqr_first', 'uncons swap dup mul swons')
-print compile_yinyang('0BAD',      'uncons      dup mul')
-print compile_yinyang('uncons', 'uncons')
+print(compile_yinyang('mul_', 'mul'))
+print(compile_yinyang('pop', 'pop'))
+print(compile_yinyang('ppm', 'popop mul'))
+print(compile_yinyang('sqr', 'dup mul'))
+print(compile_yinyang('foo', 'dup 23 sub mul'))
+print(compile_yinyang('four_mul', 'mul mul mul mul'))
+print(compile_yinyang('baz', 'mul dup sub dup'))
+print(compile_yinyang('to_the_fifth_power', 'dup dup mul dup mul mul'))
+print(compile_yinyang('dup3', 'dup dup dup'))
+print(compile_yinyang('df2m', 'dup first_two mul'))
+print(compile_yinyang('sqr_first', 'uncons swap dup mul swons'))
+print(compile_yinyang('0BAD',      'uncons      dup mul'))
+print(compile_yinyang('uncons', 'uncons'))

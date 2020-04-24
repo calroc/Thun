@@ -23,6 +23,7 @@ functions.  Its main export is a Python function initialize() that
 returns a dictionary of Joy functions suitable for use with the joy()
 function.
 '''
+from __future__ import print_function
 from logging import getLogger
 
 _log = getLogger(__name__)
