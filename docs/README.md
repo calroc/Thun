@@ -17,6 +17,13 @@ This starts it using the `virtualenv` version of Python so `joy` will be availab
 
 I find I have to include `--ip=0.0.0.0` to workaround a bug where it tries to bind to an IPv6 address, YMMV.
 
+Clean up when you're done:
+
+    deactivate 
+    rm -rf venv
+
+
+
 ## Table of Contents
 
 - 1. Basic Use of Joy in a Notebook
