@@ -10,21 +10,22 @@
 --------------------------------------------------
 
 
-Copyright © 2014-2019 Simon Forman
+Copyright © 2014-2020 Simon Forman
 
 This file is part of Thun
 
 Thun is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version.
+Foundation, either version 3 of the License, or (at your option) any
+later version.
 
 Thun is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
 
-You should have received a copy of the GNU General Public License along with
-Thun.  If not see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along
+with Thun.  If not see <http://www.gnu.org/licenses/>.
 
 
 --------------------------------------------------
@@ -57,14 +58,29 @@ Or if you have downloaded the source, from the top directory:
 
     python ./setup.py install
 
-Or you can run the package from the top directory.  To start a crude REPL:
+Or you can run the package directly from the top directory.
+
+To start a crude REPL:
 
     python -m joy
 
 
 §.3 Documentation
 
+§.3.1 Jupyter Notebooks
+
 The docs/ folder contains Jupyter notebooks, ... TODO
+
+§.3.2 Sphinx Docs
+
+Some of the documentation is in the form of ReST files
+
+§.3.3 Building the Docs
+
+Building the documentation is a little tricky at the moment.  It involves
+a makefile that uses nbconvert to generate ReST files from some of the
+notebooks, copies those to the sphinx source dir, then builds the HTML
+output using sphinx.
 
 
 §.4 Basics of Joy
