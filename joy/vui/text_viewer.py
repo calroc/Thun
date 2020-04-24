@@ -24,6 +24,10 @@ Text Viewer
 
 '''
 from __future__ import print_function
+from __future__ import division
+from builtins import object, range, str, zip
+from past.builtins import basestring
+from past.utils import old_div
 import string
 import pygame
 from joy.utils.stack import expression_to_string
@@ -96,8 +100,8 @@ class Font(object):
                     i = self.LOOKUP.index(ch)
                 except ValueError:
                     # render a lil box...
-                    r = (x + 1, self.line_h / 2 - 3,
-                         self.char_w - 2, self.line_h / 2)
+                    r = (x + 1, old_div(self.line_h, 2) - 3,
+                         self.char_w - 2, old_div(self.line_h, 2))
                     pygame.draw.rect(surface, FG, r, 1)
                 else:
                     iy, ix = divmod(i, 26)
@@ -217,8 +221,8 @@ class TextViewer(MenuViewer):
         self.grow_rect = pygame.rect.Rect(1, 1, w, h)
 
         self.body_surface = surface.subsurface(self.body_rect)
-        self.line_w = self.body_rect.w / FONT.char_w + 1
-        self.h_in_lines = self.body_rect.h / FONT.line_h - 1
+        self.line_w = old_div(self.body_rect.w, FONT.char_w) + 1
+        self.h_in_lines = old_div(self.body_rect.h, FONT.line_h) - 1
         self.command_rect = self.command = None
         self._sel_start = self._sel_end = None
 
@@ -249,7 +253,7 @@ class TextViewer(MenuViewer):
 
     def draw_body(self):
         MenuViewer.draw_body(self)
-        ys = xrange(0, self.body_rect.height, FONT.line_h)
+        ys = range(0, self.body_rect.height, FONT.line_h)
         ls = self.lines[self.at_line:self.at_line + self.h_in_lines + 2]
         for y, line in zip(ys, ls):
             self.draw_line(y, line)
@@ -310,7 +314,7 @@ class TextViewer(MenuViewer):
             return
         r = self.command_rect = pygame.Rect(
             word_start * FONT.char_w, # x
-            y / FONT.line_h * FONT.line_h, # y
+            old_div(y, FONT.line_h) * FONT.line_h, # y
             len(word) * FONT.char_w, # w
             FONT.line_h # h
             )
@@ -334,7 +338,7 @@ class TextViewer(MenuViewer):
         Given screen coordinates return the line, row, and column of the
         character there.
         '''
-        row = self.at_line + y / FONT.line_h
+        row = self.at_line + old_div(y, FONT.line_h)
         try:
             line = self.lines[row]
         except IndexError:
@@ -342,7 +346,7 @@ class TextViewer(MenuViewer):
             line = self.lines[row]
             column = len(line)
         else:
-            column = min(x / FONT.char_w, len(line))
+            column = min(old_div(x, FONT.char_w), len(line))
         return line, column, row
 
     # Event Processing

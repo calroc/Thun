@@ -27,6 +27,7 @@ stack) to the git repo in the ``JOY_HOME`` directory.
 
 '''
 from __future__ import print_function
+from builtins import object
 import os, pickle, traceback
 from collections import Counter
 from dulwich.errors import NotGitRepository

@@ -29,6 +29,7 @@ a mainloop class that manages the, uh, main loop (the PyGame event queue.)
 
 '''
 from __future__ import print_function
+from builtins import object, str, range
 from sys import stderr
 from traceback import format_exc
 import pygame

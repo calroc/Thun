@@ -29,7 +29,9 @@ file, so you can just do, e.g.:
 
 '''
 from __future__ import print_function
-import base64, os, StringIO, zipfile
+from future import standard_library
+standard_library.install_aliases()
+import base64, os, io, zipfile
 
 
 def initialize(joy_home):
@@ -37,7 +39,7 @@ def initialize(joy_home):
 
 
 def create_data(from_dir='./default_joy_home'):
-    f = StringIO.StringIO()
+    f = io.StringIO()
     z = zipfile.ZipFile(f, mode='w')
     for fn in os.listdir(from_dir):
         from_fn = os.path.join(from_dir, fn)
@@ -46,7 +48,7 @@ def create_data(from_dir='./default_joy_home'):
     return base64.encodestring(f.getvalue())
 
 
-Z = zipfile.ZipFile(StringIO.StringIO(base64.decodestring('''\
+Z = zipfile.ZipFile(io.StringIO(base64.decodestring('''\
 UEsDBBQAAAAAAORmeE794BlRfgMAAH4DAAAPAAAAZGVmaW5pdGlvbnMudHh0c2VlX3N0YWNrID09
 IGdvb2Rfdmlld2VyX2xvY2F0aW9uIG9wZW5fc3RhY2sNCnNlZV9yZXNvdXJjZXMgPT0gbGlzdF9y
 ZXNvdXJjZXMgZ29vZF92aWV3ZXJfbG9jYXRpb24gb3Blbl92aWV3ZXINCm9wZW5fcmVzb3VyY2Vf

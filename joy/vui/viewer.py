@@ -24,6 +24,9 @@ Viewer
 
 '''
 from __future__ import print_function
+from __future__ import division
+from builtins import chr, object
+from past.utils import old_div
 import pygame
 from joy.vui.core import BACKGROUND, FOREGROUND
 
@@ -242,5 +245,5 @@ class SomeViewer(MenuViewer):
 def draw_a(surface, color=FOREGROUND, blend=False):
     w, h = surface.get_width() - 2, surface.get_height() - 2
     pygame.draw.aalines(surface, color, False, (
-        (1, h), (w / 2, 1), (w, h), (1, h / 2)
+        (1, h), (old_div(w, 2), 1), (w, h), (1, old_div(h, 2))
         ), blend)

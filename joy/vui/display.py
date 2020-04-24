@@ -30,6 +30,9 @@ There is a Display object that manages a pygame surface and N vertical
 tracks each of which manages zero or more viewers.
 '''
 from __future__ import print_function
+from __future__ import division
+from builtins import next, object
+from past.utils import old_div
 from copy import copy
 from sys import stderr
 from traceback import format_exc
@@ -80,7 +83,7 @@ class Display(object):
         if not track_ratios: track_ratios = 1, 4
         x, total = 0, sum(track_ratios)
         for ratio in track_ratios[:-1]:
-            track_width = self.w * ratio / total
+            track_width = old_div(self.w * ratio, total)
             assert track_width >= 10  # minimum width 10 pixels
             self._open_track(x, track_width)
             x += track_width
@@ -307,6 +310,8 @@ class Display(object):
         elif event.type == pygame.KEYDOWN:
             self.focused_viewer.key_down(
                 self, event.unicode, event.key, event.mod)
+                # This is not UnicodeType.  TODO does this need to be fixed?
+                # self, event.str, event.key, event.mod)
 
     def _mouse_event(self, event):
         V, x, y = self.at(*event.pos)

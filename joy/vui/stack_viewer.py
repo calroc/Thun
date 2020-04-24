@@ -23,6 +23,7 @@ Stack Viewer
 =================
 
 '''
+from builtins import map, str
 from joy.utils.stack import expression_to_string, iter_stack
 from joy.vui import core, text_viewer
 
@@ -37,7 +38,6 @@ def fsi(item):
     elif isinstance(item, str):
         res = '"%s"' % item
     else:
-        assert not isinstance(item, unicode), repr(item)
         res = str(item)
     if len(res) > MAX_WIDTH:
         return res[:MAX_WIDTH - 3] + '...'
@@ -61,7 +61,7 @@ class StackViewer(text_viewer.TextViewer):
         self.stack_holder = om.thing
 
     def _update(self):
-        self.lines[:] = map(fsi, iter_stack(self.stack_holder[0])) or ['']
+        self.lines[:] = list(map(fsi, iter_stack(self.stack_holder[0]))) or ['']
 
     def focus(self, display):
         self._attach(display)

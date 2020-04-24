@@ -26,6 +26,10 @@ Pulls everything together.
 
 '''
 from __future__ import print_function
+from __future__ import division
+from past.builtins import execfile
+from builtins import object
+from past.utils import old_div
 import os, sys, traceback
 import pygame
 from joy.library import initialize, DefinitionWrapper, SimpleFunctionWrapper
@@ -102,8 +106,8 @@ def init_context(screen, clock, pt):
         *((144 - 89, 144, 89) if FULLSCREEN else (89, 144))
         )
     log = d.init_text(pt, 0, 0, 'log.txt')
-    tho = d.init_text(pt, 0, d.h / 3, 'menu.txt')
-    t = d.init_text(pt, d.w / 2, 0, 'scratch.txt')
+    tho = d.init_text(pt, 0, old_div(d.h, 3), 'menu.txt')
+    t = d.init_text(pt, old_div(d.w, 2), 0, 'scratch.txt')
     loop = core.TheLoop(d, clock)
     stack_id, stack_holder = pt.open('stack.pickle')
     world = core.World(stack_id, stack_holder, D, d.broadcast, log)
