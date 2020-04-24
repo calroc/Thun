@@ -75,8 +75,8 @@ from .utils.types import (
   )
 
 
-_SYM_NUMS = count().__next__
-_COMB_NUMS = count().__next__
+_SYM_NUMS = lambda: next(count())
+_COMB_NUMS = lambda: next(count())
 
 
 _R = list(range(10))
