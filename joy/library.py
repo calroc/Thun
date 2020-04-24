@@ -41,7 +41,11 @@ import operator, math
 
 from .parser import text_to_expression, Symbol
 from .utils.stack import expression_to_string, list_to_stack, iter_stack, pick, concat
-from .utils.brutal_hackery import rename_code_object
+import sys
+if sys.version_info.major < 3:
+  from .utils.brutal_hackery import rename_code_object
+else:
+  rename_code_object = lambda _: lambda f: f
 
 from .utils import generated_library as genlib
 from .utils.types import (
