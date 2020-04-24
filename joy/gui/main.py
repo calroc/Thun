@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
 ('''\
 Joypy - Copyright © 2018 Simon Forman
 '''
@@ -10,6 +7,9 @@ Joypy - Copyright © 2018 Simon Forman
 ' This is free software, and you are welcome to redistribute it under certain conditions;'
 ' right-click "sharing" for details.'
 ' Right-click on these commands to see docs on UI commands: key_bindings mouse_bindings')
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
 import logging, os, pickle, sys
 from textwrap import dedent
 from configparser import RawConfigParser
