@@ -24,6 +24,10 @@ returns a dictionary of Joy functions suitable for use with the joy()
 function.
 '''
 from __future__ import print_function
+from builtins import map
+from builtins import zip
+from builtins import range
+from builtins import object
 from logging import getLogger
 
 _log = getLogger(__name__)
@@ -67,24 +71,24 @@ from .utils.types import (
   )
 
 
-_SYM_NUMS = count().next
-_COMB_NUMS = count().next
+_SYM_NUMS = count().__next__
+_COMB_NUMS = count().__next__
 
 
-_R = range(10)
-A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = map(AnyJoyType, _R)
-B = b0, b1, b2, b3, b4, b5, b6, b7, b8, b9 = map(BooleanJoyType, _R)
-N = n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = map(NumberJoyType, _R)
-S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = map(StackJoyType, _R)
-F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = map(FloatJoyType, _R)
-I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = map(IntJoyType, _R)
-T = t0, t1, t2, t3, t4, t5, t6, t7, t8, t9 = map(TextJoyType, _R)
+_R = list(range(10))
+A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = list(map(AnyJoyType, _R))
+B = b0, b1, b2, b3, b4, b5, b6, b7, b8, b9 = list(map(BooleanJoyType, _R))
+N = n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = list(map(NumberJoyType, _R))
+S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = list(map(StackJoyType, _R))
+F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = list(map(FloatJoyType, _R))
+I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = list(map(IntJoyType, _R))
+T = t0, t1, t2, t3, t4, t5, t6, t7, t8, t9 = list(map(TextJoyType, _R))
 
 
-_R = range(1, 11)
-As = map(AnyStarJoyType, _R)
-Ns = map(NumberStarJoyType, _R)
-Ss = map(StackStarJoyType, _R)
+_R = list(range(1, 11))
+As = list(map(AnyStarJoyType, _R))
+Ns = list(map(NumberStarJoyType, _R))
+Ss = list(map(StackStarJoyType, _R))
 
 
 sec0 = stack_effect(t1)()

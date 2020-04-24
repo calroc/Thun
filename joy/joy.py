@@ -24,10 +24,7 @@ match the behaviour of the original version(s) written in C.
 
 '''
 from __future__ import print_function
-try:
-  input = raw_input
-except NameError:
-  pass
+from builtins import input
 from traceback import print_exc, format_exc
 from .parser import text_to_expression, ParseError, Symbol
 from .utils.stack import stack_to_string
@@ -101,7 +98,7 @@ def repl(stack=(), dictionary=None):
       print(stack_to_string(stack), '<-top')
       print()
       try:
-        text = input('joy? ')
+        text = eval(input('joy? '))
       except (EOFError, KeyboardInterrupt):
         break
       viewer = TracePrinter()
