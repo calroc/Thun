@@ -2,17 +2,20 @@
 
 All of the notebooks are also available as HTML and Markdown files (generated using nbconvert) so you can view them without running Jupyter.
 
-In order to run the [Jupyter Notebooks](https://jupyter.org/index.html) you need Jupyter (obviously) and you should install `Joypy`.  Here's an example using `virtualenv` from the `joypy/` directory:
+In order to run the [Jupyter Notebooks](https://jupyter.org/index.html) you need Jupyter (obviously) and you should install `Joypy`.  Here's an example using `virtualenv` from the project directory:
 
-    virtualenv --system-site-packages <DIRNAME>
-    . ./<DIRNAME>/bin/activate
+    virtualenv --system-site-packages venv
+    source ./venv/bin/activate
+    pip install notebook
     python ./setup.py install
 
 Once that's done you should be able to start Jupyter Notebook server with, e.g.:
 
-    python -n notebook
+    python -m notebook --ip=0.0.0.0
 
 This starts it using the `virtualenv` version of Python so `joy` will be available.  Navigate to the `joypy/docs` directory and the notebooks should be able to import the `notebook_preamble.py` file.
+
+I find I have to include `--ip=0.0.0.0` to workaround a bug where it tries to bind to an IPv6 address, YMMV.
 
 ## Table of Contents
 
