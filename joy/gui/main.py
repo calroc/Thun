@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
 ('''\
 Joypy - Copyright © 2018 Simon Forman
 '''
@@ -10,7 +12,7 @@ Joypy - Copyright © 2018 Simon Forman
 ' Right-click on these commands to see docs on UI commands: key_bindings mouse_bindings')
 import logging, os, pickle, sys
 from textwrap import dedent
-from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 
 from joy.gui.utils import init_home, argparser, FileFaker
 
@@ -60,7 +62,7 @@ def commands():
       'F4 - Paste item on top of stack to insertion cursor.',
       'Shift-F4 - Pop and paste top of stack to insertion cursor.',
       ]
-    for key, command in GLOBAL_COMMANDS.iteritems():
+    for key, command in GLOBAL_COMMANDS.items():
       commands.append('%s - %s' % (key.lstrip('<').rstrip('>'), command))
     print('\n'.join([''] + sorted(commands)))
     return args

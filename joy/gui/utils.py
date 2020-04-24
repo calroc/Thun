@@ -1,4 +1,5 @@
 from __future__ import print_function
+from builtins import object
 import argparse, os, sys
 from os import listdir, mkdir
 from os.path import abspath, exists, expanduser, isfile, join

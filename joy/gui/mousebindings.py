@@ -20,10 +20,11 @@
 
 
 #Do-nothing event handler.
+from builtins import object
 nothing = lambda event: None
 
 
-class MouseBindingsMixin:
+class MouseBindingsMixin(object):
   """TextViewerWidget mixin class to provide mouse bindings."""
 
   def __init__(self):

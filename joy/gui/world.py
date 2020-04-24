@@ -18,6 +18,7 @@
 #    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
 #
 from __future__ import print_function
+from builtins import object
 from logging import getLogger
 
 _log = getLogger(__name__)

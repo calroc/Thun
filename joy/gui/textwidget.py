@@ -35,6 +35,10 @@ The GUI
 
 '''
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str, map, object
+from past.builtins import basestring
 try:
   import tkinter as tk
   from tkinter.font import families, Font
@@ -85,7 +89,7 @@ TEXT_BINDINGS = {
   }
 
 
-class SavingMixin:
+class SavingMixin(object):
 
   def __init__(self, saver=None, filename=None, save_delay=2000):
     self.saver = self._saver if saver is None else saver
