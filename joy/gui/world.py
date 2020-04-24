@@ -17,6 +17,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
 #
+from __future__ import print_function
 from logging import getLogger
 
 _log = getLogger(__name__)
@@ -57,14 +58,14 @@ class World(object):
 
   def do_opendoc(self, name):
     if is_numerical(name):
-      print 'The number', name
+      print('The number', name)
     else:
       try:
         word = self.dictionary[name]
       except KeyError:
-        print repr(name), '???'
+        print(repr(name), '???')
       else:
-        print getdoc(word)
+        print(getdoc(word))
     self.print_stack()
 
   def pop(self):
@@ -99,7 +100,7 @@ class World(object):
       self.check_cache.clear()
 
   def has(self, name):
-    return self.dictionary.has_key(name)
+    return name in self.dictionary
 
   def save(self):
     pass
@@ -125,15 +126,15 @@ class StackDisplayWorld(World):
     command = command.strip()
     if self.has(command) and self.check(command) == False:  # not in {True, None}:
       return
-    print '\njoy?', command
+    print('\njoy?', command)
     super(StackDisplayWorld, self).interpret(command)
 
   def print_stack(self):
-    print '\n%s <-' % stack_to_string(self.stack)
+    print('\n%s <-' % stack_to_string(self.stack))
 
   def save(self):
     with open(self.filename, 'wb') as f:
-      os.chmod(self.filename, 0600)
+      os.chmod(self.filename, 0o600)
       pickle.dump(self.stack, f)
       f.flush()
       os.fsync(f.fileno())

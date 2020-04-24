@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 ('''\
 Joypy - Copyright © 2018 Simon Forman
 '''
@@ -61,12 +62,12 @@ def commands():
       ]
     for key, command in GLOBAL_COMMANDS.iteritems():
       commands.append('%s - %s' % (key.lstrip('<').rstrip('>'), command))
-    print '\n'.join([''] + sorted(commands))
+    print('\n'.join([''] + sorted(commands)))
     return args
 
 
   def mouse_bindings(*args):
-    print dedent('''
+    print(dedent('''
       Mouse button chords (to cancel a chord, click the third mouse button.)
 
       Left - Point, sweep selection
@@ -80,13 +81,13 @@ def commands():
       Right - Execute command word under mouse cursor
       Right-Left - Print docs of command word under mouse cursor
       Right-Middle - Lookup word (kinda useless now)
-      ''')
+      '''))
     return args
 
 
   def reset_log(*args):
     log.delete('0.0', tk.END)
-    print __doc__
+    print(__doc__)
     return args
 
 

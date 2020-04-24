@@ -120,7 +120,7 @@ class SavingMixin:
     if not self.filename:
       return
     with open(self.filename, 'w') as f:
-      os.chmod(self.filename, 0600)
+      os.chmod(self.filename, 0o600)
       f.write(text.encode('UTF_8'))
       f.flush()
       os.fsync(f.fileno())

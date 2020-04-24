@@ -1,3 +1,4 @@
+from __future__ import print_function
 import argparse, os, sys
 from os import listdir, mkdir
 from os.path import abspath, exists, expanduser, isfile, join
@@ -25,10 +26,10 @@ def home_dir(path):
 
   if not exists(fullpath):
     if path == DEFAULT_JOY_HOME:
-      print 'Creating JOY_HOME', repr(fullpath)
-      mkdir(fullpath, 0700)
+      print('Creating JOY_HOME', repr(fullpath))
+      mkdir(fullpath, 0o700)
     else:
-      print >> sys.stderr, repr(fullpath), "doesn't exist."
+      print(repr(fullpath), "doesn't exist.", file=sys.stderr)
       raise ValueError(path)
 
   return fullpath
@@ -42,16 +43,16 @@ def init_home(fullpath):
   try:
     repo = Repo(fullpath)
   except NotGitRepository:
-    print >> sys.stderr, repr(fullpath), "no repository"
+    print(repr(fullpath), "no repository", file=sys.stderr)
 
     if listdir(fullpath):
-      print >> sys.stderr, repr(fullpath), "has contents\nQUIT."
+      print(repr(fullpath), "has contents\nQUIT.", file=sys.stderr)
       sys.exit(2)
 
-    print 'Initializing repository in', fullpath
+    print('Initializing repository in', fullpath)
     repo = init_repo(fullpath)
 
-  print 'Using repository in', fullpath
+  print('Using repository in', fullpath)
   return repo
 
 
