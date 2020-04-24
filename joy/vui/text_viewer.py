@@ -23,6 +23,7 @@ Text Viewer
 =================
 
 '''
+from __future__ import print_function
 import string
 import pygame
 from joy.utils.stack import expression_to_string
@@ -415,7 +416,7 @@ class TextViewer(MenuViewer):
             self._printable_key(uch, mod, line, i)
             modified = True
         else:
-            print '%r %i %s' % (uch, key, bin(mod))
+            print('%r %i %s' % (uch, key, bin(mod)))
 
         if modified:
             # The selection is fragile.

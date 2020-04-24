@@ -28,6 +28,7 @@ file, so you can just do, e.g.:
     init_joy_home.initialize(JOY_HOME)
 
 '''
+from __future__ import print_function
 import base64, os, StringIO, zipfile
 
 
@@ -272,4 +273,4 @@ c3RhY2sucGlja2xlUEsFBgAAAAAGAAYAUwEAACcwAAAAAA==''')))
 
 
 if __name__ == '__main__':
-    print create_data()
+    print(create_data())

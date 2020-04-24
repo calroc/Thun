@@ -23,6 +23,7 @@ Viewer
 =================
 
 '''
+from __future__ import print_function
 import pygame
 from joy.vui.core import BACKGROUND, FOREGROUND
 
@@ -227,7 +228,7 @@ class SomeViewer(MenuViewer):
 
     def key_down(self, display, uch, key, mod):
         try:
-            print chr(key),
+            print(chr(key), end=' ')
         except ValueError:
             pass
 

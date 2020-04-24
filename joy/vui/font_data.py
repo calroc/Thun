@@ -17,6 +17,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
+from __future__ import print_function
 from StringIO import StringIO
 import base64, zlib
 
@@ -183,4 +184,4 @@ lnalXc/9SsNb2vUirzS8pV0v8gJv/w/2vRht''')))
 
 
 if __name__ == '__main__':
-    print create()
+    print(create())

@@ -29,6 +29,7 @@ Refer to Chapter 4 of the Project Oberon book for more information.
 There is a Display object that manages a pygame surface and N vertical
 tracks each of which manages zero or more viewers.
 '''
+from __future__ import print_function
 from copy import copy
 from sys import stderr
 from traceback import format_exc
@@ -283,14 +284,14 @@ class Display(object):
             elif event.type in MOUSE_EVENTS:
                 self._mouse_event(event)
             else:
-                print >> stderr, (
+                print((
                     'received event %s Use pygame.event.set_allowed().'
                     % pygame.event.event_name(event.type)
-                    )
+                    ), file=stderr)
         # Catch all exceptions and open a viewer.
         except:
             err = format_exc()
-            print >> stderr, err # To be safe just print it right away.
+            print(err, file=stderr) # To be safe just print it right away.
             open_viewer_on_string(self, err, self.broadcast)
 
     def _keyboard_event(self, event):

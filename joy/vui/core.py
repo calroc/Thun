@@ -28,6 +28,7 @@ passing, a "world" class that holds the main context for the system, and
 a mainloop class that manages the, uh, main loop (the PyGame event queue.)
 
 '''
+from __future__ import print_function
 from sys import stderr
 from traceback import format_exc
 import pygame
@@ -172,7 +173,7 @@ class World(object):
         try:
             return stack_to_string(self.stack_holder[0])
         except:
-            print >> stderr, format_exc()
+            print(format_exc(), file=stderr)
             return str(self.stack_holder[0])
 
 
@@ -250,8 +251,8 @@ class TheLoop(object):
         except:
             traceback = format_exc()
             self.remove_task(task_event_id)
-            print >> stderr, traceback
-            print >> stderr, 'TASK removed due to ERROR', task
+            print(traceback, file=stderr)
+            print('TASK removed due to ERROR', task, file=stderr)
             open_viewer_on_string(self, traceback, self.display.broadcast)
 
     def loop(self):

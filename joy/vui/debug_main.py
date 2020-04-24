@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import sys, traceback
 
 # To enable "hot" reloading in the IDLE shell.
@@ -7,7 +8,7 @@ for name in 'core main display viewer text_viewer stack_viewer persist_task'.spl
     except KeyError:
         pass
 
-import main
+from . import main
 
 try:
     A = A # (screen, clock, pt), three things that we DON'T want to recreate

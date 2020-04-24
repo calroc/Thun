@@ -25,6 +25,7 @@ Main Module
 Pulls everything together.
 
 '''
+from __future__ import print_function
 import os, sys, traceback
 import pygame
 from joy.library import initialize, DefinitionWrapper, SimpleFunctionWrapper
@@ -67,9 +68,9 @@ def init():
     * Create the PersistTask
 
     '''
-    print 'Initializing Pygame...'
+    print('Initializing Pygame...')
     pygame.init()
-    print 'Creating window...'
+    print('Creating window...')
     if FULLSCREEN:
         screen = pygame.display.set_mode()
     else:
@@ -159,7 +160,7 @@ def main(screen, clock, pt):
     def evaluate(stack):
         '''Evaluate the Python code text on the top of the stack.'''
         code, stack = stack
-        exec code in name_space.copy()
+        exec(code, name_space.copy())
         return stack
 
     name_space['D']['evaluate'] = evaluate

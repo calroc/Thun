@@ -26,6 +26,7 @@ This module deals with persisting the "resources" (text files and the
 stack) to the git repo in the ``JOY_HOME`` directory.
 
 '''
+from __future__ import print_function
 import os, pickle, traceback
 from collections import Counter
 from dulwich.errors import NotGitRepository
@@ -42,7 +43,7 @@ def open_repo(repo_dir=None, initialize=False):
     exception is raised, otherwise ``git init`` is effected in the dir.
     '''
     if not os.path.exists(repo_dir):
-        os.makedirs(repo_dir, 0700)
+        os.makedirs(repo_dir, 0o700)
         return init_repo(repo_dir)
     try:
         return Repo(repo_dir)
@@ -95,14 +96,14 @@ class Resource(object):
 
     def _to_file(self, f):
         for line in self.thing:
-            print >> f, line
+            print(line, file=f)
 
     def persist(self, repo):
         '''
         Save the lines to the file and stage the file in the repo.
         '''
         with open(self.filename, 'w') as f:
-            os.chmod(self.filename, 0600)
+            os.chmod(self.filename, 0o600)
             self._to_file(f)
             f.flush()
             os.fsync(f.fileno())
@@ -266,7 +267,7 @@ if __name__ == '__main__':
     pt = PersistTask(JOY_HOME)
     content_id, thing = pt.open('stack.pickle')
     pt.persist(content_id)
-    print pt.counter
+    print(pt.counter)
     mm = core.ModifyMessage(None, None, content_id=content_id)
     pt.handle(mm)
-    print pt.counter
+    print(pt.counter)
