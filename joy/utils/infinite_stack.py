@@ -11,7 +11,7 @@ def _names():
 
 class InfiniteStack(tuple):
 
-  names = _names().__next__
+  names = lambda n=_names(): next(n)
 
   def __iter__(self):
     if not self:

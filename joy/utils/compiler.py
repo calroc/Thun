@@ -36,8 +36,8 @@ class InfiniteStack(tuple):
     _NAMES = _names()
     next(_NAMES)
 
-    names = _NAMES.__next__
-    reset = lambda _, _n=_NAMES: _n.send(-1)
+    names = lambda: next(_NAMES)
+    reset = lambda _self, _n=_NAMES: _n.send(-1)
 
     def __init__(self, code):
         self.reset()
