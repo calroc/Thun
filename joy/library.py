@@ -212,43 +212,43 @@ def yin_functions():
 
 
 definitions = ('''\
-ii == [dip] dupdip i
-of == swap at
-product == 1 swap [*] step
-flatten == [] swap [concat] step
-quoted == [unit] dip
-unquoted == [i] dip
-enstacken == stack [clear] dip
 ? == dup truthy
-disenstacken == ? [uncons ?] loop pop
-dinfrirst == dip infra first
-nullary == [stack] dinfrirst
-unary == nullary popd
-binary == nullary [popop] dip
-ternary == unary [popop] dip
-pam == [i] map
-run == [] swap infra
-sqr == dup mul
-size == 0 swap [pop ++] step
-fork == [i] app2
-cleave == fork [popd] dip
-average == [sum 1.0 *] [size] cleave /
-gcd == 1 [tuck modulus dup 0 >] loop pop
-least_fraction == dup [gcd] infra [div] concat map
 *fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
 *fraction0 == concat [[swap] dip * [*] dip] infra
-down_to_zero == [0 >] [dup --] while
-range_to_zero == unit [down_to_zero] infra
 anamorphism == [pop []] swap [dip swons] genrec
-range == [0 <=] [1 - dup] anamorphism
-while == swap [nullary] cons dup dipd concat loop
-dupdipd == dup dipd
-primrec == [i] genrec
-step_zero == 0 roll> step
+average == [sum 1.0 *] [size] cleave /
+binary == nullary [popop] dip
+cleave == fork [popd] dip
 codireco == cons dip rest cons
-make_generator == [codireco] ccons
+dinfrirst == dip infra first
+disenstacken == ? [uncons ?] loop pop
+down_to_zero == [0 >] [dup --] while
+dupdipd == dup dipd
+enstacken == stack [clear] dip
+flatten == [] swap [concat] step
+fork == [i] app2
+gcd == 1 [tuck modulus dup 0 >] loop pop
 ifte == [nullary not] dipd branch
+ii == [dip] dupdip i
+least_fraction == dup [gcd] infra [div] concat map
+make_generator == [codireco] ccons
+nullary == [stack] dinfrirst
+of == swap at
+pam == [i] map
+primrec == [i] genrec
+product == 1 swap [*] step
+quoted == [unit] dip
+range == [0 <=] [1 - dup] anamorphism
+range_to_zero == unit [down_to_zero] infra
+run == [] swap infra
+size == 0 swap [pop ++] step
+sqr == dup mul
+step_zero == 0 roll> step
 swoncat == swap concat
+ternary == unary [popop] dip
+unary == nullary popd
+unquoted == [i] dip
+while == swap [nullary] cons dup dipd concat loop
 '''
 #
 #
