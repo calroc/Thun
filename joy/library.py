@@ -248,6 +248,7 @@ step_zero == 0 roll> step
 codireco == cons dip rest cons
 make_generator == [codireco] ccons
 ifte == [nullary not] dipd branch
+swoncat == swap concat
 '''
 #
 #
@@ -262,7 +263,6 @@ ifte == [nullary not] dipd branch
 ##second == rest first
 ##third == rest rest first
 ##swons == swap cons
-##swoncat == swap concat
 
 ##Zipper
 ##z-down == [] swap uncons swap
