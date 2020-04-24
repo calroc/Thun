@@ -21,49 +21,49 @@ from functools import reduce
 
 
 def import_yin():
-    from joy.utils.generated_library import *
-    return locals()
+	from joy.utils.generated_library import *
+	return locals()
 
 
 class InfiniteStack(tuple):
 
-    def _names():
-        n = 0
-        while True:
-            m = yield Symbol('a' + str(n))
-            n = n + 1 if m is None else m
+	def _names():
+		n = 0
+		while True:
+			m = yield Symbol('a' + str(n))
+			n = n + 1 if m is None else m
 
-    _NAMES = _names()
-    next(_NAMES)
+	_NAMES = _names()
+	next(_NAMES)
 
-    names = lambda: next(_NAMES)
-    reset = lambda _self, _n=_NAMES: _n.send(-1)
+	names = lambda: next(_NAMES)
+	reset = lambda _self, _n=_NAMES: _n.send(-1)
 
-    def __init__(self, code):
-        self.reset()
-        self.code = code
+	def __init__(self, code):
+		self.reset()
+		self.code = code
 
-    def __iter__(self):
-        if not self:
-            new_var = self.names()
-            self.code.append(('pop', new_var))
-            return iter((new_var, self))
+	def __iter__(self):
+		if not self:
+			new_var = self.names()
+			self.code.append(('pop', new_var))
+			return iter((new_var, self))
 
 
 def I(expression):
-    code = []
-    stack = InfiniteStack(code)
+	code = []
+	stack = InfiniteStack(code)
 
-    while expression:
-        term, expression = expression
-        if isinstance(term, Symbol):
-            func = D[term]
-            stack, expression, _ = func(stack, expression, code)
-        else:
-            stack = term, stack
+	while expression:
+		term, expression = expression
+		if isinstance(term, Symbol):
+			func = D[term]
+			stack, expression, _ = func(stack, expression, code)
+		else:
+			stack = term, stack
 
-    code.append(tuple(['ret'] + list(iter_stack(stack))))
-    return code
+	code.append(tuple(['ret'] + list(iter_stack(stack))))
+	return code
 
 
 strtup = lambda a, b: '(%s, %s)' % (b, a)
@@ -71,123 +71,123 @@ strstk = lambda rest: reduce(strtup, rest, 'stack')
 
 
 def code_gen(code):
-    #for p in code: print p
-    coalesce_pops(code)
-    lines = []
-    emit = lines.append
-    for t in code:
-        tag, rest = t[0], t[1:]
-        if tag == 'pop': emit(strstk(rest) + ' = stack')
-        elif tag == 'call': emit('%s = %s%s' % rest)
-        elif tag == 'ret': emit('return ' + strstk(rest[::-1]))
-        else:
-            raise ValueError(tag)
-    return '\n'.join('    ' + line for line in lines)
+	#for p in code: print p
+	coalesce_pops(code)
+	lines = []
+	emit = lines.append
+	for t in code:
+		tag, rest = t[0], t[1:]
+		if tag == 'pop': emit(strstk(rest) + ' = stack')
+		elif tag == 'call': emit('%s = %s%s' % rest)
+		elif tag == 'ret': emit('return ' + strstk(rest[::-1]))
+		else:
+			raise ValueError(tag)
+	return '\n'.join('    ' + line for line in lines)
 
 
 def coalesce_pops(code):
-    code.sort(key=lambda p: p[0] != 'pop')  # All pops to the front.
-    try: index = next((i for i, t in enumerate(code) if t[0] != 'pop'))
-    except StopIteration: return
-    code[:index] = [tuple(['pop'] + [t for _, t in code[:index][::-1]])]
+	code.sort(key=lambda p: p[0] != 'pop')  # All pops to the front.
+	try: index = next((i for i, t in enumerate(code) if t[0] != 'pop'))
+	except StopIteration: return
+	code[:index] = [tuple(['pop'] + [t for _, t in code[:index][::-1]])]
 
 
 def compile_yinyang(name, text):
-    return '''
+	return '''
 def %s(stack):
 %s
 ''' % (name, code_gen(I(text_to_expression(text))))
 
 
 def q():
-    memo = {}
-    def bar(type_var):
-        try:
-            res = memo[type_var]
-        except KeyError:
-            res = memo[type_var] = InfiniteStack.names()
-        return res
-    return bar
+	memo = {}
+	def bar(type_var):
+		try:
+			res = memo[type_var]
+		except KeyError:
+			res = memo[type_var] = InfiniteStack.names()
+		return res
+	return bar
 
 
 def type_vars_to_labels(thing, map_):
-    if not thing:
-        return thing
-    if not isinstance(thing, tuple):
-        return map_(thing)
-    return tuple(type_vars_to_labels(inner, map_) for inner in thing)
+	if not thing:
+		return thing
+	if not isinstance(thing, tuple):
+		return map_(thing)
+	return tuple(type_vars_to_labels(inner, map_) for inner in thing)
 
 
 def remap_inputs(in_, stack, code):
-    map_ = q()
-    while in_:
-        term, in_ = in_
-        arg0, stack = stack
-        term = type_vars_to_labels(term, map_)
-        code.append(('call', term, '', arg0))
-    return stack, map_
+	map_ = q()
+	while in_:
+		term, in_ = in_
+		arg0, stack = stack
+		term = type_vars_to_labels(term, map_)
+		code.append(('call', term, '', arg0))
+	return stack, map_
 
 
 class BinaryBuiltin(object):
 
-    def __init__(self, name):
-        self.name = name
+	def __init__(self, name):
+		self.name = name
 
-    def __call__(self, stack, expression, code):
-        in1, (in0, stack) = stack
-        out = InfiniteStack.names()
-        code.append(('call', out, self.name, (in0, in1)))
-        return (out, stack), expression, code
+	def __call__(self, stack, expression, code):
+		in1, (in0, stack) = stack
+		out = InfiniteStack.names()
+		code.append(('call', out, self.name, (in0, in1)))
+		return (out, stack), expression, code
 
 
 YIN = import_yin()
 
 
 D = {
-    name: SimpleFunctionWrapper(YIN[name])
-    for name in '''
-        ccons
-        cons
-        dup
-        dupd
-        dupdd
-        over
-        pop
-        popd
-        popdd
-        popop
-        popopd
-        popopdd
-        rolldown
-        rollup
-        swap
-        swons
-        tuck
-        unit
-        '''.split()
-    }
+	name: SimpleFunctionWrapper(YIN[name])
+	for name in '''
+		ccons
+		cons
+		dup
+		dupd
+		dupdd
+		over
+		pop
+		popd
+		popdd
+		popop
+		popopd
+		popopdd
+		rolldown
+		rollup
+		swap
+		swons
+		tuck
+		unit
+		'''.split()
+	}
 
 
 for name in '''
-    first
-    first_two
-    fourth
-    rest
-    rrest
-    second
-    third
-    uncons
-    unswons
-    '''.split():
+	first
+	first_two
+	fourth
+	rest
+	rrest
+	second
+	third
+	uncons
+	unswons
+	'''.split():
 
-    def foo(stack, expression, code, name=name):
-        in_, out = YIN_STACK_EFFECTS[name]
-        stack, map_ = remap_inputs(in_, stack, code)
-        out = type_vars_to_labels(out, map_)
-        return concat(out, stack), expression, code
+	def foo(stack, expression, code, name=name):
+		in_, out = YIN_STACK_EFFECTS[name]
+		stack, map_ = remap_inputs(in_, stack, code)
+		out = type_vars_to_labels(out, map_)
+		return concat(out, stack), expression, code
 
-    foo.__name__ = name
-    D[name] = foo
+	foo.__name__ = name
+	D[name] = foo
 
 
 for name in '''
@@ -210,18 +210,18 @@ for name in '''
   sub
   truediv
   '''.split():
-    D[name.rstrip('-')] = BinaryBuiltin(name)
+	D[name.rstrip('-')] = BinaryBuiltin(name)
 
 
 '''
-        stack
-        stuncons
-        stununcons
-        swaack
+		stack
+		stuncons
+		stununcons
+		swaack
 '''
 
 for name in sorted(D):
-    print(name, end=' ')
+	print(name, end=' ')
 ##    print compile_yinyang(name, name)
 print('-' * 100)
 

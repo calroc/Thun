@@ -16,17 +16,17 @@ import base64, os, io, zipfile
 
 
 def initialize(joy_home):
-    Z.extractall(joy_home)
+	Z.extractall(joy_home)
 
 
 def create_data(from_dir='./default_joy_home'):
-    f = io.StringIO()
-    z = zipfile.ZipFile(f, mode='w')
-    for fn in os.listdir(from_dir):
-        from_fn = os.path.join(from_dir, fn)
-        z.write(from_fn, fn)
-    z.close()
-    return base64.encodestring(f.getvalue())
+	f = io.StringIO()
+	z = zipfile.ZipFile(f, mode='w')
+	for fn in os.listdir(from_dir):
+		from_fn = os.path.join(from_dir, fn)
+		z.write(from_fn, fn)
+	z.close()
+	return base64.encodestring(f.getvalue())
 
 
 Z = zipfile.ZipFile(io.StringIO(base64.decodestring('''\
@@ -103,4 +103,4 @@ AAAAAAAAAAAAtIH2BgAAZGVmaW5pdGlvbnMudHh0UEsFBgAAAAAFAAUAHgEAAF0OAAAAAA==''')))
 
 
 if __name__ == '__main__':
-    print(create_data())
+	print(create_data())

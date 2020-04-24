@@ -54,43 +54,43 @@ function name!  Hopefully they will discover this documentation.
 
 
 def rename_code_object(new_name):
-  '''
-  If you want to wrap a function in another function and have the wrapped
-  function's name show up in the traceback when an exception occurs in
-  the wrapper function, you must do this brutal hackery to change the
-  func.__code__.co_name attribute.  Just functools.wraps() is not enough.
+	'''
+	If you want to wrap a function in another function and have the wrapped
+	function's name show up in the traceback when an exception occurs in
+	the wrapper function, you must do this brutal hackery to change the
+	func.__code__.co_name attribute.  Just functools.wraps() is not enough.
 
-  See:
+	See:
 
-  https://stackoverflow.com/questions/29919804/function-decorated-using-functools-wraps-raises-typeerror-with-the-name-of-the-w
+	https://stackoverflow.com/questions/29919804/function-decorated-using-functools-wraps-raises-typeerror-with-the-name-of-the-w
 
-  https://stackoverflow.com/questions/29488327/changing-the-name-of-a-generator/29488561#29488561
+	https://stackoverflow.com/questions/29488327/changing-the-name-of-a-generator/29488561#29488561
 
-  I'm just glad it's possible.
-  '''
-  def inner(func):
-    name = new_name + ':' + func.__name__
-    code_object = func.__code__
-    return type(func)(
-      type(code_object)(
-          code_object.co_argcount,
-          code_object.co_nlocals,
-          code_object.co_stacksize,
-          code_object.co_flags,
-          code_object.co_code,
-          code_object.co_consts,
-          code_object.co_names,
-          code_object.co_varnames,
-          code_object.co_filename,
-          name,
-          code_object.co_firstlineno,
-          code_object.co_lnotab,
-          code_object.co_freevars,
-          code_object.co_cellvars
-          ),
-      func.__globals__,
-      name,
-      func.__defaults__,
-      func.__closure__
-      )
-  return inner
+	I'm just glad it's possible.
+	'''
+	def inner(func):
+		name = new_name + ':' + func.__name__
+		code_object = func.__code__
+		return type(func)(
+			type(code_object)(
+					code_object.co_argcount,
+					code_object.co_nlocals,
+					code_object.co_stacksize,
+					code_object.co_flags,
+					code_object.co_code,
+					code_object.co_consts,
+					code_object.co_names,
+					code_object.co_varnames,
+					code_object.co_filename,
+					name,
+					code_object.co_firstlineno,
+					code_object.co_lnotab,
+					code_object.co_freevars,
+					code_object.co_cellvars
+					),
+			func.__globals__,
+			name,
+			func.__defaults__,
+			func.__closure__
+			)
+	return inner

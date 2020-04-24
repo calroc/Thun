@@ -25,9 +25,9 @@ import base64, zlib
 
 
 def create(fn='Iosevka12.BMP'):
-    with open(fn, 'rb') as f:
-        data = f.read()
-    return base64.encodestring(zlib.compress(data))
+	with open(fn, 'rb') as f:
+		data = f.read()
+	return base64.encodestring(zlib.compress(data))
 
 
 data = StringIO(zlib.decompress(base64.decodestring('''\
@@ -186,4 +186,4 @@ lnalXc/9SsNb2vUirzS8pV0v8gJv/w/2vRht''')))
 
 
 if __name__ == '__main__':
-    print(create())
+	print(create())

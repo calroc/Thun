@@ -23,25 +23,25 @@ from textwrap import dedent
 
 
 setup(
-  name='Thun',
-  version='0.2.0',
-  description='Python Implementation of Joy',
-  long_description=dedent('''\
-    Joy is a programming language created by Manfred von Thun that is easy to
-    use and understand and has many other nice properties.  This Python
-    package implements an interpreter for a dialect of Joy that attempts to
-    stay very close to the spirit of Joy but does not precisely match the
-    behaviour of the original version written in C.'''),
-  author='Simon Forman',
-  author_email='forman.simon@gmail.com',
-  url='https://joypy.osdn.io',
-  license='GPLv3+',
-  packages=['joy', 'joy.utils', 'joy.gui', 'joy.vui'],
-  classifiers=[
-    'Development Status :: 4 - Beta',
-    'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-    'Programming Language :: Python :: 2.7',
-    'Programming Language :: Other',
-    'Topic :: Software Development :: Interpreters',
-    ],
-  )
+	name='Thun',
+	version='0.2.0',
+	description='Python Implementation of Joy',
+	long_description=dedent('''\
+		Joy is a programming language created by Manfred von Thun that is easy to
+		use and understand and has many other nice properties.  This Python
+		package implements an interpreter for a dialect of Joy that attempts to
+		stay very close to the spirit of Joy but does not precisely match the
+		behaviour of the original version written in C.'''),
+	author='Simon Forman',
+	author_email='forman.simon@gmail.com',
+	url='https://joypy.osdn.io',
+	license='GPLv3+',
+	packages=['joy', 'joy.utils', 'joy.gui', 'joy.vui'],
+	classifiers=[
+		'Development Status :: 4 - Beta',
+		'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+		'Programming Language :: Python :: 2.7',
+		'Programming Language :: Other',
+		'Topic :: Software Development :: Interpreters',
+		],
+	)

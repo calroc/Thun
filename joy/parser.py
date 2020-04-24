@@ -51,74 +51,74 @@ BLANKS = r'\s+'
 
 
 class Symbol(str):
-  '''A string class that represents Joy function names.'''
-  __repr__ = str.__str__
+	'''A string class that represents Joy function names.'''
+	__repr__ = str.__str__
 
 
 def text_to_expression(text):
-  '''Convert a string to a Joy expression.
+	'''Convert a string to a Joy expression.
 
-  When supplied with a string this function returns a Python datastructure
-  that represents the Joy datastructure described by the text expression.
-  Any unbalanced square brackets will raise a ParseError.
+	When supplied with a string this function returns a Python datastructure
+	that represents the Joy datastructure described by the text expression.
+	Any unbalanced square brackets will raise a ParseError.
 
-  :param str text: Text to convert.
-  :rtype: stack
-  :raises ParseError: if the parse fails.
-  '''
-  return _parse(_tokenize(text))
+	:param str text: Text to convert.
+	:rtype: stack
+	:raises ParseError: if the parse fails.
+	'''
+	return _parse(_tokenize(text))
 
 
 class ParseError(ValueError):
-  '''Raised when there is a error while parsing text.'''
+	'''Raised when there is a error while parsing text.'''
 
 
 def _tokenize(text):
-  '''Convert a text into a stream of tokens.
+	'''Convert a text into a stream of tokens.
 
-  Converts function names to Symbols.
+	Converts function names to Symbols.
 
-  Raise ParseError (with some of the failing text) if the scan fails.
-  '''
-  tokens, rest = _scanner.scan(text)
-  if rest:
-    raise ParseError(
-      'Scan failed at position %i, %r'
-      % (len(text) - len(rest), rest[:10])
-      )
-  return tokens
+	Raise ParseError (with some of the failing text) if the scan fails.
+	'''
+	tokens, rest = _scanner.scan(text)
+	if rest:
+		raise ParseError(
+			'Scan failed at position %i, %r'
+			% (len(text) - len(rest), rest[:10])
+			)
+	return tokens
 
 
 def _parse(tokens):
-  '''
-  Return a stack/list expression of the tokens.
-  '''
-  frame = []
-  stack = []
-  for tok in tokens:
-    if tok == '[':
-      stack.append(frame)
-      frame = []
-      stack[-1].append(frame)
-    elif tok == ']':
-      try:
-        frame = stack.pop()
-      except IndexError:
-        raise ParseError('Extra closing bracket.')
-      frame[-1] = list_to_stack(frame[-1])
-    else:
-      frame.append(tok)
-  if stack:
-    raise ParseError('Unclosed bracket.')
-  return list_to_stack(frame)
+	'''
+	Return a stack/list expression of the tokens.
+	'''
+	frame = []
+	stack = []
+	for tok in tokens:
+		if tok == '[':
+			stack.append(frame)
+			frame = []
+			stack[-1].append(frame)
+		elif tok == ']':
+			try:
+				frame = stack.pop()
+			except IndexError:
+				raise ParseError('Extra closing bracket.')
+			frame[-1] = list_to_stack(frame[-1])
+		else:
+			frame.append(tok)
+	if stack:
+		raise ParseError('Unclosed bracket.')
+	return list_to_stack(frame)
 
 
 _scanner = Scanner([
-  (FLOAT, lambda _, token: float(token)),
-  (INT, lambda _, token: int(token)),
-  (SYMBOL, lambda _, token: Symbol(token)),
-  (BRACKETS, lambda _, token: token),
-  (STRING_DOUBLE_QUOTED, lambda _, token: token[1:-1].replace('\\"', '"')),
-  (STRING_SINGLE_QUOTED, lambda _, token: token[1:-1].replace("\\'", "'")),
-  (BLANKS, None),
-  ])
+	(FLOAT, lambda _, token: float(token)),
+	(INT, lambda _, token: int(token)),
+	(SYMBOL, lambda _, token: Symbol(token)),
+	(BRACKETS, lambda _, token: token),
+	(STRING_DOUBLE_QUOTED, lambda _, token: token[1:-1].replace('\\"', '"')),
+	(STRING_SINGLE_QUOTED, lambda _, token: token[1:-1].replace("\\'", "'")),
+	(BLANKS, None),
+	])
