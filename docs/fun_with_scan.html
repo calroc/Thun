@@ -11773,7 +11773,7 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">DefinitionWrapper</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
@@ -11789,6 +11789,7 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="On-&quot;Two-Exercises-Found-in-a-Book-on-Algorithmics&quot;">On "Two Exercises Found in a Book on Algorithmics"<a class="anchor-link" href="#On-&quot;Two-Exercises-Found-in-a-Book-on-Algorithmics&quot;">&#182;</a></h1><p>Bird &amp; Meertens</p>
+<p><a href="https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.694.2614">PDF paper available here</a></p>
 
 </div>
 </div>
@@ -11806,7 +11807,7 @@ div#notebook {
 <blockquote><p>The problem is to find some definition of <code>scan</code> as a reduction.  In other words, we have to find some function <code>f</code> and an operator <code>⨂</code> so that</p>
 </blockquote>
 
-<pre><code>⨂\x = f(a)⨂f(b)⨂...⨂f(z)</code></pre>
+<pre><code>⨁\x = f(a)⨂f(b)⨂...⨂f(z)</code></pre>
 
 </div>
 </div>
@@ -11941,7 +11942,7 @@ scan == [size 1 &lt;=] [pop []] [[[F] infra] dupdip first] [dip swons] genrec</c
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] [size 1 &lt;=] [pop []] [[[+] infra] dupdip first] [dip swons] genrec&#39;</span><span class="p">)</span>
@@ -11981,7 +11982,7 @@ scan == [size 1 &lt;=] [pop []] [[[F] infra] dupdip first] [dip swons] genrec</c
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] [size 1 &lt;=] [[]] [[[+] infra] dupdip first] [dip swons] genrec&#39;</span><span class="p">)</span>
@@ -12021,7 +12022,7 @@ scan == [size 1 &lt;=] [pop []] [[[F] infra] dupdip first] [dip swons] genrec</c
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] [size 1 &lt;=] [] [[[+] infra] dupdip first] [dip swons] genrec&#39;</span><span class="p">)</span>
@@ -12076,7 +12077,7 @@ scan == [size 1 &lt;=] [pop []] [[[F] infra] dupdip first] [dip swons] genrec</c
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;scan == [infra] cons [dupdip first] cons [size 1 &lt;=] [] roll&lt; [dip swons] genrec&#39;</span><span class="p">)</span>
@@ -12089,7 +12090,7 @@ scan == [size 1 &lt;=] [pop []] [[[F] infra] dupdip first] [dip swons] genrec</c
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] [+] scan&#39;</span><span class="p">)</span>
@@ -12120,7 +12121,7 @@ scan == [size 1 &lt;=] [pop []] [[[F] infra] dupdip first] [dip swons] genrec</c
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] [*] scan&#39;</span><span class="p">)</span>
@@ -12151,7 +12152,7 @@ scan == [size 1 &lt;=] [pop []] [[[F] infra] dupdip first] [dip swons] genrec</c
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4 5 6 7] [neg +] scan&#39;</span><span class="p">)</span>

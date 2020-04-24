@@ -8,6 +8,9 @@ On "Two Exercises Found in a Book on Algorithmics"
 
 Bird & Meertens
 
+`PDF paper available
+here <https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.694.2614>`__
+
 Define ``scan`` in terms of a reduction.
 ----------------------------------------
 
@@ -29,7 +32,7 @@ Define ``scan`` in terms of a reduction.
 
 ::
 
-    ⨂\x = f(a)⨂f(b)⨂...⨂f(z)
+    ⨁\x = f(a)⨂f(b)⨂...⨂f(z)
 
 Designing the Recursive Function
 --------------------------------

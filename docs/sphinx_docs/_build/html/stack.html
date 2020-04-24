@@ -59,7 +59,7 @@ form of a stack with one or more items on it:</p>
 means we can directly “unpack” the expected arguments to a Joy function.</p>
 <p>For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dup</span><span class="p">((</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">)):</span>
-  <span class="k">return</span> <span class="n">head</span><span class="p">,</span> <span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">head</span><span class="p">,</span> <span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We replace the argument “stack” by the expected structure of the stack,
@@ -71,8 +71,8 @@ where they would be redundant.)</p>
 web page, doesn’t handle tuples in the function parameters.  And in Python 3, this
 syntax was removed entirely.  Instead you would have to write:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dup</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-  <span class="n">head</span><span class="p">,</span> <span class="n">tail</span> <span class="o">=</span> <span class="n">stack</span>
-  <span class="k">return</span> <span class="n">head</span><span class="p">,</span> <span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">)</span>
+        <span class="n">head</span><span class="p">,</span> <span class="n">tail</span> <span class="o">=</span> <span class="n">stack</span>
+        <span class="k">return</span> <span class="n">head</span><span class="p">,</span> <span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We have two very simple functions, one to build up a stack from a Python
@@ -168,21 +168,21 @@ won’t work because <code class="docutils literal notranslate"><span class="pre
 
 <dl class="function">
 <dt id="joy.utils.stack.pick">
-<code class="descclassname">joy.utils.stack.</code><code class="descname">pick</code><span class="sig-paren">(</span><em>s</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#pick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.pick" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">joy.utils.stack.</code><code class="descname">pick</code><span class="sig-paren">(</span><em>stack</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#pick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.pick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the nth item on the stack.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>s</strong> (<em>stack</em>) – A stack.</li>
+<li><strong>stack</strong> (<em>stack</em>) – A stack.</li>
 <li><strong>n</strong> (<em>int</em>) – An index into the stack.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first simple">
 <li><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">n</span></code> is less than zero.</li>
-<li><strong>IndexError</strong> – if <code class="docutils literal notranslate"><span class="pre">n</span></code> is equal to or greater than the length of <code class="docutils literal notranslate"><span class="pre">s</span></code>.</li>
+<li><strong>IndexError</strong> – if <code class="docutils literal notranslate"><span class="pre">n</span></code> is equal to or greater than the length of <code class="docutils literal notranslate"><span class="pre">stack</span></code>.</li>
 </ul>
 </td>
 </tr>

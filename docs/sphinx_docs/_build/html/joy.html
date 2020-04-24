@@ -42,11 +42,13 @@ match the behaviour of the original version(s) written in C.</p>
 <dl class="function">
 <dt id="joy.joy.joy">
 <code class="descclassname">joy.joy.</code><code class="descname">joy</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em>, <em>viewer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/joy.html#joy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.joy.joy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluate the Joy expression on the stack.</p>
-<p>The basic joy() function is quite straightforward.  It iterates through a
-sequence of terms which are either literals (strings, numbers, sequences)
-or functions.  Literals are put onto the stack and functions are
-executed.</p>
+<dd><p>Evaluate a Joy expression on a stack.</p>
+<p>This function iterates through a sequence of terms which are either
+literals (strings, numbers, sequences of terms) or function symbols.
+Literals are put onto the stack and functions are looked up in the
+disctionary and executed.</p>
+<p>The viewer is a function that is called with the stack and expression
+on every iteration, its return value is ignored.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

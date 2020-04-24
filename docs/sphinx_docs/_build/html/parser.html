@@ -43,10 +43,14 @@ expression as well as a single Symbol class and a single Exception type.</p>
 by the fact that they are not Symbol objects.</p>
 <p>A crude grammar:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span> <span class="o">=</span> <span class="n">term</span><span class="o">*</span>
-<span class="n">term</span> <span class="o">=</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">string</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span> <span class="n">joy</span> <span class="s1">&#39;]&#39;</span> <span class="o">|</span> <span class="n">function</span>
+<span class="n">term</span> <span class="o">=</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">string</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span> <span class="n">joy</span> <span class="s1">&#39;]&#39;</span> <span class="o">|</span> <span class="n">symbol</span>
 </pre></div>
 </div>
-<p>A Joy expression is a sequence of zero or more terms</p>
+<p>A Joy expression is a sequence of zero or more terms.  A term is a
+literal value (integer, float, string, or Joy expression) or a function
+symbol.  Function symbols are unquoted strings and cannot contain square
+brackets.   Terms must be separated by blanks, which can be omitted
+around square brackets.</p>
 <dl class="exception">
 <dt id="joy.parser.ParseError">
 <em class="property">exception </em><code class="descclassname">joy.parser.</code><code class="descname">ParseError</code><a class="reference internal" href="_modules/joy/parser.html#ParseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.parser.ParseError" title="Permalink to this definition">¶</a></dt>

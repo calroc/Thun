@@ -8,6 +8,8 @@ from notebook_preamble import D, DefinitionWrapper, J, V, define
 
 Bird & Meertens
 
+[PDF paper available here](https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.694.2614)
+
 ## Define `scan` in terms of a reduction.
 
 > Problem I. The reduction operator `/` of APL takes some binary operator `⨁` on its left and a vector `x` of values on its right. The meaning of `⨁/x` for `x = [a b ... z]` is the value `a⨁b⨁...⨁z`.  For this to be well-defined in the absence of brackets, the operation `⨁` has to be associative.  Now there is another operator `\` of APL called `scan`.  Its effect is closely related to reduction in that we have:
@@ -16,7 +18,7 @@ Bird & Meertens
 
 > The problem is to find some definition of `scan` as a reduction.  In other words, we have to find some function `f` and an operator `⨂` so that
 
-    ⨂\x = f(a)⨂f(b)⨂...⨂f(z)
+    ⨁\x = f(a)⨂f(b)⨂...⨂f(z)
 
 ## Designing the Recursive Function
 Ignoring the exact requirements (finding `f` and `⨂`) can we implement `scan` as a hylomorphism in Joy?

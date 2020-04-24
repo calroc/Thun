@@ -73,62 +73,63 @@
 <span class="c1"># (Kinda clunky and hacky.  This should be swapped out in favor of much</span>
 <span class="c1"># smarter stuff.)</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">object</span>
 <span class="kn">from</span> <span class="nn">traceback</span> <span class="k">import</span> <span class="n">print_exc</span>
 <span class="kn">from</span> <span class="nn">.stack</span> <span class="k">import</span> <span class="n">expression_to_string</span><span class="p">,</span> <span class="n">stack_to_string</span>
 
 
 <div class="viewcode-block" id="TracePrinter"><a class="viewcode-back" href="../../../pretty.html#joy.utils.pretty_print.TracePrinter">[docs]</a><span class="k">class</span> <span class="nc">TracePrinter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  This is what does the formatting.  You instantiate it and pass the ``viewer()``</span>
-<span class="sd">  method to the :py:func:`joy.joy.joy` function, then print it to see the</span>
-<span class="sd">  trace.</span>
-<span class="sd">  &#39;&#39;&#39;</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	This is what does the formatting.  You instantiate it and pass the ``viewer()``</span>
+<span class="sd">	method to the :py:func:`joy.joy.joy` function, then print it to see the</span>
+<span class="sd">	trace.</span>
+<span class="sd">	&#39;&#39;&#39;</span>
 
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="TracePrinter.viewer"><a class="viewcode-back" href="../../../pretty.html#joy.utils.pretty_print.TracePrinter.viewer">[docs]</a>  <span class="k">def</span> <span class="nf">viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Record the current stack and expression in the TracePrinter&#39;s history.</span>
-<span class="sd">    Pass this method as the ``viewer`` argument to the :py:func:`joy.joy.joy` function.</span>
+<div class="viewcode-block" id="TracePrinter.viewer"><a class="viewcode-back" href="../../../pretty.html#joy.utils.pretty_print.TracePrinter.viewer">[docs]</a>	<span class="k">def</span> <span class="nf">viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">		Record the current stack and expression in the TracePrinter&#39;s history.</span>
+<span class="sd">		Pass this method as the ``viewer`` argument to the :py:func:`joy.joy.joy` function.</span>
 
-<span class="sd">    :param stack quote: A stack.</span>
-<span class="sd">    :param stack expression: A stack.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">))</span></div>
+<span class="sd">		:param stack quote: A stack.</span>
+<span class="sd">		:param stack expression: A stack.</span>
+<span class="sd">		&#39;&#39;&#39;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">))</span></div>
 
-  <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">go</span><span class="p">())</span>
+	<span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">go</span><span class="p">())</span>
 
-<div class="viewcode-block" id="TracePrinter.go"><a class="viewcode-back" href="../../../pretty.html#joy.utils.pretty_print.TracePrinter.go">[docs]</a>  <span class="k">def</span> <span class="nf">go</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Return a list of strings, one for each entry in the history, prefixed</span>
-<span class="sd">    with enough spaces to align all the interpreter dots.</span>
+<div class="viewcode-block" id="TracePrinter.go"><a class="viewcode-back" href="../../../pretty.html#joy.utils.pretty_print.TracePrinter.go">[docs]</a>	<span class="k">def</span> <span class="nf">go</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">		Return a list of strings, one for each entry in the history, prefixed</span>
+<span class="sd">		with enough spaces to align all the interpreter dots.</span>
 
-<span class="sd">    This method is called internally by the ``__str__()`` method.</span>
+<span class="sd">		This method is called internally by the ``__str__()`` method.</span>
 
-<span class="sd">    :rtype: list(str)</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">max_stack_length</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">:</span>
-      <span class="n">stack</span> <span class="o">=</span> <span class="n">stack_to_string</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
-      <span class="n">expression</span> <span class="o">=</span> <span class="n">expression_to_string</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
-      <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
-      <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">max_stack_length</span><span class="p">:</span>
-        <span class="n">max_stack_length</span> <span class="o">=</span> <span class="n">n</span>
-      <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> . </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">)))</span>
-    <span class="k">return</span> <span class="p">[</span>  <span class="c1"># Prefix spaces to line up &#39;.&#39;s.</span>
-      <span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_stack_length</span> <span class="o">-</span> <span class="n">length</span><span class="p">)</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
-      <span class="k">for</span> <span class="n">length</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span>
-      <span class="p">]</span></div>
+<span class="sd">		:rtype: list(str)</span>
+<span class="sd">		&#39;&#39;&#39;</span>
+		<span class="n">max_stack_length</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">:</span>
+			<span class="n">stack</span> <span class="o">=</span> <span class="n">stack_to_string</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
+			<span class="n">expression</span> <span class="o">=</span> <span class="n">expression_to_string</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+			<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">max_stack_length</span><span class="p">:</span>
+				<span class="n">max_stack_length</span> <span class="o">=</span> <span class="n">n</span>
+			<span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> . </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">)))</span>
+		<span class="k">return</span> <span class="p">[</span>  <span class="c1"># Prefix spaces to line up &#39;.&#39;s.</span>
+			<span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_stack_length</span> <span class="o">-</span> <span class="n">length</span><span class="p">)</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">length</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span>
+			<span class="p">]</span></div>
 
-  <span class="k">def</span> <span class="nf">print_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-      <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-      <span class="n">print_exc</span><span class="p">()</span>
-      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Exception while printing viewer.&#39;</span><span class="p">)</span></div>
+	<span class="k">def</span> <span class="nf">print_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="n">print_exc</span><span class="p">()</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Exception while printing viewer.&#39;</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

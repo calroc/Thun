@@ -59,90 +59,102 @@
 
 <span class="sd">A crude grammar::</span>
 
-<span class="sd">  joy = term*</span>
-<span class="sd">  term = int | float | string | &#39;[&#39; joy &#39;]&#39; | function</span>
+<span class="sd">    joy = term*</span>
+<span class="sd">    term = int | float | string | &#39;[&#39; joy &#39;]&#39; | symbol</span>
 
-<span class="sd">A Joy expression is a sequence of zero or more terms</span>
-
+<span class="sd">A Joy expression is a sequence of zero or more terms.  A term is a</span>
+<span class="sd">literal value (integer, float, string, or Joy expression) or a function</span>
+<span class="sd">symbol.  Function symbols are unquoted strings and cannot contain square</span>
+<span class="sd">brackets.   Terms must be separated by blanks, which can be omitted</span>
+<span class="sd">around square brackets.</span>
 
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="c1">#TODO: explain the details of float lits and strings.</span>
 <span class="kn">from</span> <span class="nn">re</span> <span class="k">import</span> <span class="n">Scanner</span>
 <span class="kn">from</span> <span class="nn">.utils.stack</span> <span class="k">import</span> <span class="n">list_to_stack</span>
 
 
+<span class="c1">#TODO: explain the details of float lits and strings.</span>
+<span class="n">FLOAT</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;-?\d+\.\d*&#39;</span>
+<span class="n">INT</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;-?\d+&#39;</span>
+<span class="n">SYMBOL</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;[•\w!@$%^&amp;*()_+&lt;&gt;?|\/;:`~,.=-]+&#39;</span>
+<span class="n">BRACKETS</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\[|\]&#39;</span>
+<span class="n">STRING_DOUBLE_QUOTED</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&quot;(?:[^&quot;</span><span class="se">\\</span><span class="s1">]|</span><span class="se">\\</span><span class="s1">.)*&quot;&#39;</span>
+<span class="n">STRING_SINGLE_QUOTED</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&#39;(?:[^&#39;</span><span class="se">\\</span><span class="s2">]|</span><span class="se">\\</span><span class="s2">.)*&#39;&quot;</span>
+<span class="n">BLANKS</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\s+&#39;</span>
+
+
 <div class="viewcode-block" id="Symbol"><a class="viewcode-back" href="../../parser.html#joy.parser.Symbol">[docs]</a><span class="k">class</span> <span class="nc">Symbol</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;A string class that represents Joy function names.&#39;&#39;&#39;</span>
-  <span class="fm">__repr__</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="fm">__str__</span></div>
+	<span class="sd">&#39;&#39;&#39;A string class that represents Joy function names.&#39;&#39;&#39;</span>
+	<span class="fm">__repr__</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="fm">__str__</span></div>
 
 
 <div class="viewcode-block" id="text_to_expression"><a class="viewcode-back" href="../../parser.html#joy.parser.text_to_expression">[docs]</a><span class="k">def</span> <span class="nf">text_to_expression</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Convert a string to a Joy expression.</span>
+	<span class="sd">&#39;&#39;&#39;Convert a string to a Joy expression.</span>
 
-<span class="sd">  When supplied with a string this function returns a Python datastructure</span>
-<span class="sd">  that represents the Joy datastructure described by the text expression.</span>
-<span class="sd">  Any unbalanced square brackets will raise a ParseError.</span>
+<span class="sd">	When supplied with a string this function returns a Python datastructure</span>
+<span class="sd">	that represents the Joy datastructure described by the text expression.</span>
+<span class="sd">	Any unbalanced square brackets will raise a ParseError.</span>
 
-<span class="sd">  :param str text: Text to convert.</span>
-<span class="sd">  :rtype: stack</span>
-<span class="sd">  :raises ParseError: if the parse fails.</span>
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="k">return</span> <span class="n">_parse</span><span class="p">(</span><span class="n">_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
+<span class="sd">	:param str text: Text to convert.</span>
+<span class="sd">	:rtype: stack</span>
+<span class="sd">	:raises ParseError: if the parse fails.</span>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="k">return</span> <span class="n">_parse</span><span class="p">(</span><span class="n">_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="ParseError"><a class="viewcode-back" href="../../parser.html#joy.parser.ParseError">[docs]</a><span class="k">class</span> <span class="nc">ParseError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Raised when there is a error while parsing text.&#39;&#39;&#39;</span></div>
+	<span class="sd">&#39;&#39;&#39;Raised when there is a error while parsing text.&#39;&#39;&#39;</span></div>
 
 
 <span class="k">def</span> <span class="nf">_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Convert a text into a stream of tokens.</span>
+	<span class="sd">&#39;&#39;&#39;Convert a text into a stream of tokens.</span>
 
-<span class="sd">  Converts function names to Symbols.</span>
+<span class="sd">	Converts function names to Symbols.</span>
 
-<span class="sd">  Raise ParseError (with some of the failing text) if the scan fails.</span>
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="n">tokens</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">_scanner</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">rest</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span>
-      <span class="s1">&#39;Scan failed at position </span><span class="si">%i</span><span class="s1">, </span><span class="si">%r</span><span class="s1">&#39;</span>
-      <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">rest</span><span class="p">),</span> <span class="n">rest</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
-      <span class="p">)</span>
-  <span class="k">return</span> <span class="n">tokens</span>
+<span class="sd">	Raise ParseError (with some of the failing text) if the scan fails.</span>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="n">tokens</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">_scanner</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">rest</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span>
+			<span class="s1">&#39;Scan failed at position </span><span class="si">%i</span><span class="s1">, </span><span class="si">%r</span><span class="s1">&#39;</span>
+			<span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">rest</span><span class="p">),</span> <span class="n">rest</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+			<span class="p">)</span>
+	<span class="k">return</span> <span class="n">tokens</span>
 
 
 <span class="k">def</span> <span class="nf">_parse</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  Return a stack/list expression of the tokens.</span>
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="n">frame</span> <span class="o">=</span> <span class="p">[]</span>
-  <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
-  <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">tok</span> <span class="o">==</span> <span class="s1">&#39;[&#39;</span><span class="p">:</span>
-      <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-      <span class="n">frame</span> <span class="o">=</span> <span class="p">[]</span>
-      <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">tok</span> <span class="o">==</span> <span class="s1">&#39;]&#39;</span><span class="p">:</span>
-      <span class="k">try</span><span class="p">:</span>
-        <span class="n">frame</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-      <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s1">&#39;Extra closing bracket.&#39;</span><span class="p">)</span>
-      <span class="n">frame</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">list_to_stack</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
-      <span class="n">frame</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">stack</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s1">&#39;Unclosed bracket.&#39;</span><span class="p">)</span>
-  <span class="k">return</span> <span class="n">list_to_stack</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	Return a stack/list expression of the tokens.</span>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="n">frame</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">tok</span> <span class="o">==</span> <span class="s1">&#39;[&#39;</span><span class="p">:</span>
+			<span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+			<span class="n">frame</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">tok</span> <span class="o">==</span> <span class="s1">&#39;]&#39;</span><span class="p">:</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="n">frame</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+			<span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s1">&#39;Extra closing bracket.&#39;</span><span class="p">)</span>
+			<span class="n">frame</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">list_to_stack</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">frame</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">stack</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s1">&#39;Unclosed bracket.&#39;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">list_to_stack</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
 
 
 <span class="n">_scanner</span> <span class="o">=</span> <span class="n">Scanner</span><span class="p">([</span>
-  <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;-?\d+\.\d*&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">)),</span>
-  <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;-?\d+&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">token</span><span class="p">)),</span>
-  <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[•\w!@$%^&amp;*()_+&lt;&gt;?|\/;:`~,.=-]+&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">token</span><span class="p">)),</span>
-  <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\[|\]&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">token</span><span class="p">),</span>
-  <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;(?:[^&quot;</span><span class="se">\\</span><span class="s1">]|</span><span class="se">\\</span><span class="s1">.)*&quot;&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)),</span>
-  <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&#39;(?:[^&#39;</span><span class="se">\\</span><span class="s2">]|</span><span class="se">\\</span><span class="s2">.)*&#39;&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)),</span>
-  <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-  <span class="p">])</span>
+	<span class="p">(</span><span class="n">FLOAT</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">token</span><span class="p">)),</span>
+	<span class="p">(</span><span class="n">INT</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">token</span><span class="p">)),</span>
+	<span class="p">(</span><span class="n">SYMBOL</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">token</span><span class="p">)),</span>
+	<span class="p">(</span><span class="n">BRACKETS</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">token</span><span class="p">),</span>
+	<span class="p">(</span><span class="n">STRING_DOUBLE_QUOTED</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)),</span>
+	<span class="p">(</span><span class="n">STRING_SINGLE_QUOTED</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">token</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)),</span>
+	<span class="p">(</span><span class="n">BLANKS</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+	<span class="p">])</span>
 </pre></div>
 
           </div>

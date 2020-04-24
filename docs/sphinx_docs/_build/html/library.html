@@ -52,7 +52,7 @@ function.</p>
 <dd><p>Provide implementation of defined functions, and some helper methods.</p>
 <dl class="classmethod">
 <dt id="joy.library.DefinitionWrapper.add_def">
-<em class="property">classmethod </em><code class="descname">add_def</code><span class="sig-paren">(</span><em>definition</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#DefinitionWrapper.add_def"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.DefinitionWrapper.add_def" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">add_def</code><span class="sig-paren">(</span><em>definition</em>, <em>dictionary</em>, <em>fail_fails=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#DefinitionWrapper.add_def"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.DefinitionWrapper.add_def" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the definition to the dictionary.</p>
 </dd></dl>
 
@@ -104,9 +104,9 @@ if it’s in the dict.  Aliases for functions not in the dict are ignored.</p>
 <dd><p>Given a quoted program on TOS and anything as the second stack item run
 the program and replace the two args with the first result of the
 program.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="o">...</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">app1</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                       <span class="o">...</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">app1</span>
 <span class="o">-----------------------------------</span>
-   <span class="o">...</span> <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
+               <span class="o">...</span> <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -115,10 +115,10 @@ program.</p>
 <dt id="joy.library.app2">
 <code class="descclassname">joy.library.</code><code class="descname">app2</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#app2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.app2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Like app1 with two items.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>       <span class="o">...</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">app2</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                               <span class="o">...</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">app2</span>
 <span class="o">-----------------------------------</span>
-   <span class="o">...</span> <span class="p">[</span><span class="n">y</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
-       <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>   <span class="n">infra</span> <span class="n">first</span>
+               <span class="o">...</span> <span class="p">[</span><span class="n">y</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
+                               <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>   <span class="n">infra</span> <span class="n">first</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -127,11 +127,11 @@ program.</p>
 <dt id="joy.library.app3">
 <code class="descclassname">joy.library.</code><code class="descname">app3</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#app3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.app3" title="Permalink to this definition">¶</a></dt>
 <dd><p>Like app1 with three items.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>       <span class="o">...</span> <span class="n">z</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">app3</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                               <span class="o">...</span> <span class="n">z</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">app3</span>
 <span class="o">-----------------------------------</span>
-   <span class="o">...</span> <span class="p">[</span><span class="n">z</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
-       <span class="p">[</span><span class="n">y</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>   <span class="n">infra</span> <span class="n">first</span>
-       <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>   <span class="n">infra</span> <span class="n">first</span>
+               <span class="o">...</span> <span class="p">[</span><span class="n">z</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
+                               <span class="p">[</span><span class="n">y</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>   <span class="n">infra</span> <span class="n">first</span>
+                               <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>   <span class="n">infra</span> <span class="n">first</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -154,13 +154,13 @@ program.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">branch</span> <span class="o">==</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">choice</span> <span class="n">i</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="kc">False</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="n">branch</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>               <span class="kc">False</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="n">branch</span>
 <span class="o">--------------------------</span>
-          <span class="n">F</span>
+                                        <span class="n">F</span>
 
-   <span class="kc">True</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="n">branch</span>
+               <span class="kc">True</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="n">branch</span>
 <span class="o">-------------------------</span>
-             <span class="n">T</span>
+                                                       <span class="n">T</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -169,14 +169,14 @@ program.</p>
 <dt id="joy.library.choice">
 <code class="descclassname">joy.library.</code><code class="descname">choice</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.choice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use a Boolean value to select one of two items.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">A</span> <span class="n">B</span> <span class="kc">False</span> <span class="n">choice</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>               <span class="n">A</span> <span class="n">B</span> <span class="kc">False</span> <span class="n">choice</span>
 <span class="o">----------------------</span>
-          <span class="n">A</span>
+                                        <span class="n">A</span>
 
 
-   <span class="n">A</span> <span class="n">B</span> <span class="kc">True</span> <span class="n">choice</span>
+               <span class="n">A</span> <span class="n">B</span> <span class="kc">True</span> <span class="n">choice</span>
 <span class="o">---------------------</span>
-          <span class="n">B</span>
+                                        <span class="n">B</span>
 </pre></div>
 </div>
 <p>Currently Python semantics are used to evaluate the “truthiness” of the
@@ -189,7 +189,7 @@ Boolean value (so empty string, zero, etc. are counted as false, etc.)</p>
 <dd><p>Clear everything from the stack.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">clear</span> <span class="o">==</span> <span class="n">stack</span> <span class="p">[</span><span class="n">pop</span> <span class="n">stack</span><span class="p">]</span> <span class="n">loop</span>
 
-   <span class="o">...</span> <span class="n">clear</span>
+         <span class="o">...</span> <span class="n">clear</span>
 <span class="o">---------------</span>
 </pre></div>
 </div>
@@ -200,17 +200,17 @@ Boolean value (so empty string, zero, etc. are counted as false, etc.)</p>
 <code class="descclassname">joy.library.</code><code class="descname">cmp_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#cmp_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.cmp_" title="Permalink to this definition">¶</a></dt>
 <dd><p>cmp takes two values and three quoted programs on the stack and runs
 one of the three depending on the results of comparing the two values:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">L</span><span class="p">]</span> <span class="nb">cmp</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">L</span><span class="p">]</span> <span class="nb">cmp</span>
 <span class="o">-------------------------</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span>
-        <span class="n">G</span>
+                                <span class="n">G</span>
 
-   <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">L</span><span class="p">]</span> <span class="nb">cmp</span>
+         <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">L</span><span class="p">]</span> <span class="nb">cmp</span>
 <span class="o">-------------------------</span> <span class="n">a</span> <span class="o">=</span> <span class="n">b</span>
-            <span class="n">E</span>
+                                                <span class="n">E</span>
 
-   <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">L</span><span class="p">]</span> <span class="nb">cmp</span>
+         <span class="n">a</span> <span class="n">b</span> <span class="p">[</span><span class="n">G</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">L</span><span class="p">]</span> <span class="nb">cmp</span>
 <span class="o">-------------------------</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
-                <span class="n">L</span>
+                                                                <span class="n">L</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -219,9 +219,9 @@ one of the three depending on the results of comparing the two values:</p>
 <dt id="joy.library.concat_">
 <code class="descclassname">joy.library.</code><code class="descname">concat_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#concat_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.concat_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatinate the two lists on the top of the stack.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">d</span> <span class="n">e</span> <span class="n">f</span><span class="p">]</span> <span class="n">concat</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">d</span> <span class="n">e</span> <span class="n">f</span><span class="p">]</span> <span class="n">concat</span>
 <span class="o">----------------------------</span>
-       <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span> <span class="n">e</span> <span class="n">f</span><span class="p">]</span>
+                         <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span> <span class="n">e</span> <span class="n">f</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -235,9 +235,9 @@ default quote.  Each condition clause should contain a quoted predicate
 followed by the function expression to run if that predicate returns
 true.  If no predicates return true the default function runs.</p>
 <p>It works by rewriting into a chain of nested <cite>ifte</cite> expressions, e.g.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="p">[[[</span><span class="n">B0</span><span class="p">]</span> <span class="n">T0</span><span class="p">]</span> <span class="p">[[</span><span class="n">B1</span><span class="p">]</span> <span class="n">T1</span><span class="p">]</span> <span class="p">[</span><span class="n">D</span><span class="p">]]</span> <span class="n">cond</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                        <span class="p">[[[</span><span class="n">B0</span><span class="p">]</span> <span class="n">T0</span><span class="p">]</span> <span class="p">[[</span><span class="n">B1</span><span class="p">]</span> <span class="n">T1</span><span class="p">]</span> <span class="p">[</span><span class="n">D</span><span class="p">]]</span> <span class="n">cond</span>
 <span class="o">-----------------------------------------</span>
-   <span class="p">[</span><span class="n">B0</span><span class="p">]</span> <span class="p">[</span><span class="n">T0</span><span class="p">]</span> <span class="p">[[</span><span class="n">B1</span><span class="p">]</span> <span class="p">[</span><span class="n">T1</span><span class="p">]</span> <span class="p">[</span><span class="n">D</span><span class="p">]</span> <span class="n">ifte</span><span class="p">]</span> <span class="n">ifte</span>
+         <span class="p">[</span><span class="n">B0</span><span class="p">]</span> <span class="p">[</span><span class="n">T0</span><span class="p">]</span> <span class="p">[[</span><span class="n">B1</span><span class="p">]</span> <span class="p">[</span><span class="n">T1</span><span class="p">]</span> <span class="p">[</span><span class="n">D</span><span class="p">]</span> <span class="n">ifte</span><span class="p">]</span> <span class="n">ifte</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -248,9 +248,9 @@ true.  If no predicates return true the default function runs.</p>
 <dd><p>The dip combinator expects a quoted program on the stack and below it
 some item, it hoists the item into the expression and runs the program
 on the rest of the stack.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="o">...</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span>
 <span class="o">-------------------</span>
-     <span class="o">...</span> <span class="n">Q</span> <span class="n">x</span>
+                 <span class="o">...</span> <span class="n">Q</span> <span class="n">x</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -259,9 +259,9 @@ on the rest of the stack.</p>
 <dt id="joy.library.dipd">
 <code class="descclassname">joy.library.</code><code class="descname">dipd</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dipd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dipd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Like dip but expects two items.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="o">...</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span>
 <span class="o">---------------------</span>
-     <span class="o">...</span> <span class="n">Q</span> <span class="n">y</span> <span class="n">x</span>
+                 <span class="o">...</span> <span class="n">Q</span> <span class="n">y</span> <span class="n">x</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -270,9 +270,9 @@ on the rest of the stack.</p>
 <dt id="joy.library.dipdd">
 <code class="descclassname">joy.library.</code><code class="descname">dipdd</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#dipdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.dipdd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Like dip but expects three items.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="n">z</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="o">...</span> <span class="n">z</span> <span class="n">y</span> <span class="n">x</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dip</span>
 <span class="o">-----------------------</span>
-     <span class="o">...</span> <span class="n">Q</span> <span class="n">z</span> <span class="n">y</span> <span class="n">x</span>
+                 <span class="o">...</span> <span class="n">Q</span> <span class="n">z</span> <span class="n">y</span> <span class="n">x</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -287,14 +287,20 @@ on the rest of the stack.</p>
 <dl class="function">
 <dt id="joy.library.drop">
 <code class="descclassname">joy.library.</code><code class="descname">drop</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#drop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.drop" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">drop</span> <span class="o">==</span> <span class="p">[</span><span class="n">rest</span><span class="p">]</span> <span class="n">times</span>
+<dd><blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">drop</span> <span class="o">==</span> <span class="p">[</span><span class="n">rest</span><span class="p">]</span> <span class="n">times</span>
 </pre></div>
 </div>
 <p>Expects an integer and a quote on the stack and returns the quote with
 n items removed off the top.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">2</span> <span class="n">drop</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">2</span> <span class="n">drop</span>
 <span class="o">----------------------</span>
-       <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span>
+                         <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Stack effect:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="n">i1</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -323,9 +329,9 @@ This is the largest integral value &lt;= x.</p>
 <dt id="joy.library.genrec">
 <code class="descclassname">joy.library.</code><code class="descname">genrec</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#genrec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.genrec" title="Permalink to this definition">¶</a></dt>
 <dd><p>General Recursion Combinator.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                      <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="n">rec1</span><span class="p">]</span> <span class="p">[</span><span class="n">rec2</span><span class="p">]</span> <span class="n">genrec</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                                                        <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="n">rec1</span><span class="p">]</span> <span class="p">[</span><span class="n">rec2</span><span class="p">]</span> <span class="n">genrec</span>
 <span class="o">---------------------------------------------------------------------</span>
-   <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="n">rec1</span> <span class="p">[[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="n">rec1</span><span class="p">]</span> <span class="p">[</span><span class="n">rec2</span><span class="p">]</span> <span class="n">genrec</span><span class="p">]</span> <span class="n">rec2</span><span class="p">]</span> <span class="n">ifte</span>
+         <span class="p">[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="n">rec1</span> <span class="p">[[</span><span class="k">if</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="n">rec1</span><span class="p">]</span> <span class="p">[</span><span class="n">rec2</span><span class="p">]</span> <span class="n">genrec</span><span class="p">]</span> <span class="n">rec2</span><span class="p">]</span> <span class="n">ifte</span>
 </pre></div>
 </div>
 <p>From “Recursion Theory and Joy” (j05cmp.html) by Manfred von Thun:
@@ -355,13 +361,13 @@ have to do to apply the quoted [F] in the proper way.  In effect, the
 genrec combinator turns into an ifte combinator with a quoted copy of
 the original definition in the else-part:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span><span class="p">]</span>   <span class="p">[</span><span class="n">R2</span><span class="p">]</span> <span class="n">genrec</span>
-  <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">R2</span><span class="p">]</span> <span class="n">ifte</span>
+        <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R1</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">R2</span><span class="p">]</span> <span class="n">ifte</span>
 </pre></div>
 </div>
 <p>Primitive recursive functions are those where R2 == i.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">P</span> <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R</span><span class="p">]</span> <span class="n">primrec</span>
-  <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="n">i</span><span class="p">]</span> <span class="n">ifte</span>
-  <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R</span> <span class="n">P</span><span class="p">]</span> <span class="n">ifte</span>
+        <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="n">i</span><span class="p">]</span> <span class="n">ifte</span>
+        <span class="o">==</span> <span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">R</span> <span class="n">P</span><span class="p">]</span> <span class="n">ifte</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -369,14 +375,20 @@ the original definition in the else-part:</p>
 <dl class="function">
 <dt id="joy.library.getitem">
 <code class="descclassname">joy.library.</code><code class="descname">getitem</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#getitem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.getitem" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">getitem</span> <span class="o">==</span> <span class="n">drop</span> <span class="n">first</span>
+<dd><blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">getitem</span> <span class="o">==</span> <span class="n">drop</span> <span class="n">first</span>
 </pre></div>
 </div>
 <p>Expects an integer and a quote on the stack and returns the item at the
 nth position in the quote counting from 0.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">0</span> <span class="n">getitem</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">0</span> <span class="n">getitem</span>
 <span class="o">-------------------------</span>
-            <span class="n">a</span>
+                                                <span class="n">a</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Stack effect:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="n">i1</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -392,9 +404,9 @@ nth position in the quote counting from 0.</p>
 <code class="descclassname">joy.library.</code><code class="descname">i</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#i"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.i" title="Permalink to this definition">¶</a></dt>
 <dd><p>The i combinator expects a quoted program on the stack and unpacks it
 onto the pending expression for evaluation.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">i</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">i</span>
 <span class="o">-----------</span>
-    <span class="n">Q</span>
+                <span class="n">Q</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -406,13 +418,19 @@ onto the pending expression for evaluation.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="joy.library.infer_">
+<code class="descclassname">joy.library.</code><code class="descname">infer_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#infer_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.infer_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to infer the stack effect of a Joy expression.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="joy.library.infra">
 <code class="descclassname">joy.library.</code><code class="descname">infra</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#infra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.infra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accept a quoted program and a list on the stack and run the program
-with the list as its stack.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span>
+with the list as its stack.  Does not affect the rest of the stack.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="o">...</span> <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span>
 <span class="o">-----------------------------</span>
-   <span class="n">c</span> <span class="n">b</span> <span class="n">a</span> <span class="o">.</span> <span class="n">Q</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">swaack</span>
+         <span class="n">c</span> <span class="n">b</span> <span class="n">a</span> <span class="o">.</span> <span class="n">Q</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="n">swaack</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -430,16 +448,34 @@ with the list as its stack.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="joy.library.inscribe_">
+<code class="descclassname">joy.library.</code><code class="descname">inscribe_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#inscribe_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.inscribe_" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Create a new Joy function definition in the Joy dictionary.  A
+definition is given as a string with a name followed by a double
+equal sign then one or more Joy functions, the body. for example:</p>
+<blockquote>
+<div>sqr == dup mul</div></blockquote>
+<p>If you want the definition to persist over restarts, enter it into
+the definitions.txt resource.</p>
+</div></blockquote>
+<p>Stack effect:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">t1</span> <span class="o">--</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="joy.library.loop">
 <code class="descclassname">joy.library.</code><code class="descname">loop</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#loop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.loop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Basic loop combinator.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="kc">True</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="o">...</span> <span class="kc">True</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
 <span class="o">-----------------------</span>
-      <span class="o">...</span> <span class="n">Q</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
+                        <span class="o">...</span> <span class="n">Q</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
 
-   <span class="o">...</span> <span class="kc">False</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
+         <span class="o">...</span> <span class="kc">False</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">loop</span>
 <span class="o">------------------------</span>
-          <span class="o">...</span>
+                                        <span class="o">...</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -448,19 +484,27 @@ with the list as its stack.</p>
 <dt id="joy.library.map_">
 <code class="descclassname">joy.library.</code><code class="descname">map_</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#map_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.map_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the quoted program on TOS on the items in the list under it, push a
-new list with the results (in place of the program and original list.</p>
+new list with the results in place of the program and original list.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="joy.library.max_">
 <code class="descclassname">joy.library.</code><code class="descname">max_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#max_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.max_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a list find the maximum.</p>
+<dd><p>Given a list find the maximum.
+Stack effect:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">n2</span><span class="o">*</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">n0</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="joy.library.min_">
 <code class="descclassname">joy.library.</code><code class="descname">min_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#min_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.min_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a list find the minimum.</p>
+<dd><p>Given a list find the minimum.
+Stack effect:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">n2</span><span class="o">*</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">n0</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -473,9 +517,9 @@ new list with the results (in place of the program and original list.</p>
 <dt id="joy.library.pm">
 <code class="descclassname">joy.library.</code><code class="descname">pm</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#pm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.pm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plus or minus</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">a</span> <span class="n">b</span> <span class="n">pm</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="n">a</span> <span class="n">b</span> <span class="n">pm</span>
 <span class="o">-------------</span>
-   <span class="n">a</span><span class="o">+</span><span class="n">b</span> <span class="n">a</span><span class="o">-</span><span class="n">b</span>
+         <span class="n">a</span><span class="o">+</span><span class="n">b</span> <span class="n">a</span><span class="o">-</span><span class="n">b</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -483,7 +527,11 @@ new list with the results (in place of the program and original list.</p>
 <dl class="function">
 <dt id="joy.library.pred">
 <code class="descclassname">joy.library.</code><code class="descname">pred</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#pred"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.pred" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decrement TOS.</p>
+<dd><p>Decrement TOS.
+Stack effect:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -491,9 +539,9 @@ new list with the results (in place of the program and original list.</p>
 <code class="descclassname">joy.library.</code><code class="descname">remove</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Expects an item on the stack and a quote under it and removes that item
 from the the quote.  The item is only removed once.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]</span> <span class="mi">1</span> <span class="n">remove</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]</span> <span class="mi">1</span> <span class="n">remove</span>
 <span class="o">------------------------</span>
-        <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]</span>
+                                <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -511,14 +559,14 @@ from the the quote.  The item is only removed once.</p>
 <dt id="joy.library.select">
 <code class="descclassname">joy.library.</code><code class="descname">select</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.select" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use a Boolean value to select one of two items from a sequence.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">A</span> <span class="n">B</span><span class="p">]</span> <span class="kc">False</span> <span class="n">select</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>               <span class="p">[</span><span class="n">A</span> <span class="n">B</span><span class="p">]</span> <span class="kc">False</span> <span class="n">select</span>
 <span class="o">------------------------</span>
-           <span class="n">A</span>
+                                               <span class="n">A</span>
 
 
-   <span class="p">[</span><span class="n">A</span> <span class="n">B</span><span class="p">]</span> <span class="kc">True</span> <span class="n">select</span>
+               <span class="p">[</span><span class="n">A</span> <span class="n">B</span><span class="p">]</span> <span class="kc">True</span> <span class="n">select</span>
 <span class="o">-----------------------</span>
-          <span class="n">B</span>
+                                        <span class="n">B</span>
 </pre></div>
 </div>
 <p>The sequence can contain more than two items but not fewer.
@@ -538,9 +586,9 @@ Boolean value (so empty string, zero, etc. are counted as false, etc.)</p>
 <dd><p>Like concat but reverses the top list into the second.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shunt</span> <span class="o">==</span> <span class="p">[</span><span class="n">swons</span><span class="p">]</span> <span class="n">step</span> <span class="o">==</span> <span class="n">reverse</span> <span class="n">swap</span> <span class="n">concat</span>
 
-   <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">d</span> <span class="n">e</span> <span class="n">f</span><span class="p">]</span> <span class="n">shunt</span>
+         <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">d</span> <span class="n">e</span> <span class="n">f</span><span class="p">]</span> <span class="n">shunt</span>
 <span class="o">---------------------------</span>
-     <span class="p">[</span><span class="n">f</span> <span class="n">e</span> <span class="n">d</span> <span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> 
+                 <span class="p">[</span><span class="n">f</span> <span class="n">e</span> <span class="n">d</span> <span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> 
 </pre></div>
 </div>
 </dd></dl>
@@ -562,19 +610,19 @@ Negative numbers return complex roots.</p>
 <dt id="joy.library.step">
 <code class="descclassname">joy.library.</code><code class="descname">step</code><span class="sig-paren">(</span><em>S</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a quoted program on each item in a sequence.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="o">...</span> <span class="p">[]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span>
-   <span class="o">-----------------------</span>
-             <span class="o">...</span> <span class="o">.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                        <span class="o">...</span> <span class="p">[]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span>
+         <span class="o">-----------------------</span>
+                                                 <span class="o">...</span> <span class="o">.</span>
 
 
-     <span class="o">...</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span>
-  <span class="o">------------------------</span>
-           <span class="o">...</span> <span class="n">a</span> <span class="o">.</span> <span class="n">Q</span>
+                 <span class="o">...</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span>
+        <span class="o">------------------------</span>
+                                         <span class="o">...</span> <span class="n">a</span> <span class="o">.</span> <span class="n">Q</span>
 
 
-   <span class="o">...</span> <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span>
+         <span class="o">...</span> <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">step</span>
 <span class="o">----------------------------------------</span>
-             <span class="o">...</span> <span class="n">a</span> <span class="o">.</span> <span class="n">Q</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">step</span>
+                                                 <span class="o">...</span> <span class="n">a</span> <span class="o">.</span> <span class="n">Q</span> <span class="p">[</span><span class="n">b</span> <span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">step</span>
 </pre></div>
 </div>
 <p>The step combinator executes the quotation on each member of the list
@@ -584,25 +632,40 @@ on top of the stack.</p>
 <dl class="function">
 <dt id="joy.library.succ">
 <code class="descclassname">joy.library.</code><code class="descname">succ</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#succ"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.succ" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment TOS.</p>
+<dd><p>Increment TOS.
+Stack effect:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="joy.library.sum_">
 <code class="descclassname">joy.library.</code><code class="descname">sum_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#sum_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.sum_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a quoted sequence of numbers return the sum.</p>
-<p>sum == 0 swap [+] step</p>
+<blockquote>
+<div>sum == 0 swap [+] step</div></blockquote>
+<p>Stack effect:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">n2</span><span class="o">*</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">n0</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="joy.library.take">
 <code class="descclassname">joy.library.</code><code class="descname">take</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#take"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.take" title="Permalink to this definition">¶</a></dt>
-<dd><p>Expects an integer and a quote on the stack and returns the quote with
+<dd><blockquote>
+<div><p>Expects an integer and a quote on the stack and returns the quote with
 just the top n items in reverse order (because that’s easier and you can
 use reverse if needed.)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">2</span> <span class="n">take</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">2</span> <span class="n">take</span>
 <span class="o">----------------------</span>
-       <span class="p">[</span><span class="n">b</span> <span class="n">a</span><span class="p">]</span>
+                         <span class="p">[</span><span class="n">b</span> <span class="n">a</span><span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Stack effect:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="n">i1</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -611,19 +674,19 @@ use reverse if needed.)</p>
 <dt id="joy.library.times">
 <code class="descclassname">joy.library.</code><code class="descname">times</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#times"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.times" title="Permalink to this definition">¶</a></dt>
 <dd><p>times == [– dip] cons [swap] infra [0 &gt;] swap while pop</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">...</span> <span class="n">n</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">times</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="o">...</span> <span class="n">n</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">times</span>
 <span class="o">---------------------</span>  <span class="n">w</span><span class="o">/</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span>
-         <span class="o">...</span> <span class="o">.</span>
+                                 <span class="o">...</span> <span class="o">.</span>
 
 
-   <span class="o">...</span> <span class="mi">1</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">times</span>
+         <span class="o">...</span> <span class="mi">1</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">times</span>
 <span class="o">---------------------------------</span>
-         <span class="o">...</span> <span class="o">.</span> <span class="n">Q</span>
+                                 <span class="o">...</span> <span class="o">.</span> <span class="n">Q</span>
 
 
-   <span class="o">...</span> <span class="n">n</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">times</span>
+         <span class="o">...</span> <span class="n">n</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">times</span>
 <span class="o">---------------------------------</span>  <span class="n">w</span><span class="o">/</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
-         <span class="o">...</span> <span class="o">.</span> <span class="n">Q</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">times</span>
+                                 <span class="o">...</span> <span class="o">.</span> <span class="n">Q</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">times</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -669,6 +732,15 @@ the stack discarding the rest of the stack.</p>
 <span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">x</span> <span class="o">=</span> <span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>  <span class="n">Q</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="function">
+<dt id="joy.library.yin_functions">
+<code class="descclassname">joy.library.</code><code class="descname">yin_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#yin_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.yin_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict of named stack effects.</p>
+<p>“Yin” functions are those that only rearrange items in stacks and
+can be defined completely by their stack effects.  This means they
+can be auto-compiled.</p>
 </dd></dl>
 
 <dl class="function">

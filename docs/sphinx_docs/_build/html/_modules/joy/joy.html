@@ -57,10 +57,7 @@
 
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-<span class="k">try</span><span class="p">:</span>
-  <span class="nb">input</span> <span class="o">=</span> <span class="n">raw_input</span>
-<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-  <span class="k">pass</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">input</span>
 <span class="kn">from</span> <span class="nn">traceback</span> <span class="k">import</span> <span class="n">print_exc</span><span class="p">,</span> <span class="n">format_exc</span>
 <span class="kn">from</span> <span class="nn">.parser</span> <span class="k">import</span> <span class="n">text_to_expression</span><span class="p">,</span> <span class="n">ParseError</span><span class="p">,</span> <span class="n">Symbol</span>
 <span class="kn">from</span> <span class="nn">.utils.stack</span> <span class="k">import</span> <span class="n">stack_to_string</span>
@@ -68,86 +65,89 @@
 
 
 <div class="viewcode-block" id="joy"><a class="viewcode-back" href="../../joy.html#joy.joy.joy">[docs]</a><span class="k">def</span> <span class="nf">joy</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Evaluate the Joy expression on the stack.</span>
-<span class="sd">  </span>
-<span class="sd">  The basic joy() function is quite straightforward.  It iterates through a</span>
-<span class="sd">  sequence of terms which are either literals (strings, numbers, sequences)</span>
-<span class="sd">  or functions.  Literals are put onto the stack and functions are</span>
-<span class="sd">  executed.</span>
+	<span class="sd">&#39;&#39;&#39;Evaluate a Joy expression on a stack.</span>
 
-<span class="sd">  :param stack stack: The stack.</span>
-<span class="sd">  :param stack expression: The expression to evaluate.</span>
-<span class="sd">  :param dict dictionary: A ``dict`` mapping names to Joy functions.</span>
-<span class="sd">  :param function viewer: Optional viewer function.</span>
-<span class="sd">  :rtype: (stack, (), dictionary)</span>
+<span class="sd">	This function iterates through a sequence of terms which are either</span>
+<span class="sd">	literals (strings, numbers, sequences of terms) or function symbols.</span>
+<span class="sd">	Literals are put onto the stack and functions are looked up in the</span>
+<span class="sd">	disctionary and executed.</span>
 
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="k">while</span> <span class="n">expression</span><span class="p">:</span>
+<span class="sd">	The viewer is a function that is called with the stack and expression</span>
+<span class="sd">	on every iteration, its return value is ignored.</span>
 
-    <span class="k">if</span> <span class="n">viewer</span><span class="p">:</span> <span class="n">viewer</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
+<span class="sd">	:param stack stack: The stack.</span>
+<span class="sd">	:param stack expression: The expression to evaluate.</span>
+<span class="sd">	:param dict dictionary: A ``dict`` mapping names to Joy functions.</span>
+<span class="sd">	:param function viewer: Optional viewer function.</span>
+<span class="sd">	:rtype: (stack, (), dictionary)</span>
 
-    <span class="n">term</span><span class="p">,</span> <span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">):</span>
-      <span class="n">term</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">term</span><span class="p">]</span>
-      <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span> <span class="o">=</span> <span class="n">term</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-      <span class="n">stack</span> <span class="o">=</span> <span class="n">term</span><span class="p">,</span> <span class="n">stack</span>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="k">while</span> <span class="n">expression</span><span class="p">:</span>
 
-  <span class="k">if</span> <span class="n">viewer</span><span class="p">:</span> <span class="n">viewer</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
-  <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
+		<span class="k">if</span> <span class="n">viewer</span><span class="p">:</span> <span class="n">viewer</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
+
+		<span class="n">term</span><span class="p">,</span> <span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">):</span>
+			<span class="n">term</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">term</span><span class="p">]</span>
+			<span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span> <span class="o">=</span> <span class="n">term</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">stack</span> <span class="o">=</span> <span class="n">term</span><span class="p">,</span> <span class="n">stack</span>
+
+	<span class="k">if</span> <span class="n">viewer</span><span class="p">:</span> <span class="n">viewer</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
 
 
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../joy.html#joy.joy.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  Return the stack resulting from running the Joy code text on the stack.</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	Return the stack resulting from running the Joy code text on the stack.</span>
 
-<span class="sd">  :param str text: Joy code.</span>
-<span class="sd">  :param stack stack: The stack.</span>
-<span class="sd">  :param dict dictionary: A ``dict`` mapping names to Joy functions.</span>
-<span class="sd">  :param function viewer: Optional viewer function.</span>
-<span class="sd">  :rtype: (stack, (), dictionary)</span>
+<span class="sd">	:param str text: Joy code.</span>
+<span class="sd">	:param stack stack: The stack.</span>
+<span class="sd">	:param dict dictionary: A ``dict`` mapping names to Joy functions.</span>
+<span class="sd">	:param function viewer: Optional viewer function.</span>
+<span class="sd">	:rtype: (stack, (), dictionary)</span>
 
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="n">expression</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-  <span class="k">return</span> <span class="n">joy</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">viewer</span><span class="p">)</span></div>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="n">expression</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">joy</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">viewer</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="repl"><a class="viewcode-back" href="../../joy.html#joy.joy.repl">[docs]</a><span class="k">def</span> <span class="nf">repl</span><span class="p">(</span><span class="n">stack</span><span class="o">=</span><span class="p">(),</span> <span class="n">dictionary</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">  Read-Evaluate-Print Loop</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	Read-Evaluate-Print Loop</span>
 
-<span class="sd">  Accept input and run it on the stack, loop.</span>
+<span class="sd">	Accept input and run it on the stack, loop.</span>
 
-<span class="sd">  :param stack stack: The stack.</span>
-<span class="sd">  :param dict dictionary: A ``dict`` mapping names to Joy functions.</span>
-<span class="sd">  :rtype: stack</span>
+<span class="sd">	:param stack stack: The stack.</span>
+<span class="sd">	:param dict dictionary: A ``dict`` mapping names to Joy functions.</span>
+<span class="sd">	:rtype: stack</span>
 
-<span class="sd">  &#39;&#39;&#39;</span>
-  <span class="k">if</span> <span class="n">dictionary</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">dictionary</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="k">try</span><span class="p">:</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-      <span class="nb">print</span><span class="p">()</span>
-      <span class="nb">print</span><span class="p">(</span><span class="n">stack_to_string</span><span class="p">(</span><span class="n">stack</span><span class="p">),</span> <span class="s1">&#39;&lt;-top&#39;</span><span class="p">)</span>
-      <span class="nb">print</span><span class="p">()</span>
-      <span class="k">try</span><span class="p">:</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;joy? &#39;</span><span class="p">)</span>
-      <span class="k">except</span> <span class="p">(</span><span class="ne">EOFError</span><span class="p">,</span> <span class="ne">KeyboardInterrupt</span><span class="p">):</span>
-        <span class="k">break</span>
-      <span class="n">viewer</span> <span class="o">=</span> <span class="n">TracePrinter</span><span class="p">()</span>
-      <span class="k">try</span><span class="p">:</span>
-        <span class="n">stack</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">dictionary</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">viewer</span><span class="o">.</span><span class="n">viewer</span><span class="p">)</span>
-      <span class="k">except</span><span class="p">:</span>
-        <span class="n">exc</span> <span class="o">=</span> <span class="n">format_exc</span><span class="p">()</span> <span class="c1"># Capture the exception.</span>
-        <span class="n">viewer</span><span class="o">.</span><span class="n">print_</span><span class="p">()</span> <span class="c1"># Print the Joy trace.</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">73</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span> <span class="c1"># Print the original exception.</span>
-      <span class="k">else</span><span class="p">:</span>
-        <span class="n">viewer</span><span class="o">.</span><span class="n">print_</span><span class="p">()</span>
-  <span class="k">except</span><span class="p">:</span>
-    <span class="n">print_exc</span><span class="p">()</span>
-  <span class="nb">print</span><span class="p">()</span>
-  <span class="k">return</span> <span class="n">stack</span></div>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="k">if</span> <span class="n">dictionary</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">()</span>
+			<span class="nb">print</span><span class="p">(</span><span class="n">stack_to_string</span><span class="p">(</span><span class="n">stack</span><span class="p">),</span> <span class="s1">&#39;&lt;-top&#39;</span><span class="p">)</span>
+			<span class="nb">print</span><span class="p">()</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="n">text</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;joy? &#39;</span><span class="p">)</span>
+			<span class="k">except</span> <span class="p">(</span><span class="ne">EOFError</span><span class="p">,</span> <span class="ne">KeyboardInterrupt</span><span class="p">):</span>
+				<span class="k">break</span>
+			<span class="n">viewer</span> <span class="o">=</span> <span class="n">TracePrinter</span><span class="p">()</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="n">stack</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">dictionary</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">viewer</span><span class="o">.</span><span class="n">viewer</span><span class="p">)</span>
+			<span class="k">except</span><span class="p">:</span>
+				<span class="n">exc</span> <span class="o">=</span> <span class="n">format_exc</span><span class="p">()</span> <span class="c1"># Capture the exception.</span>
+				<span class="n">viewer</span><span class="o">.</span><span class="n">print_</span><span class="p">()</span> <span class="c1"># Print the Joy trace.</span>
+				<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">73</span><span class="p">)</span>
+				<span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span> <span class="c1"># Print the original exception.</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">viewer</span><span class="o">.</span><span class="n">print_</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="n">print_exc</span><span class="p">()</span>
+	<span class="nb">print</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">stack</span></div>
 </pre></div>
 
           </div>
