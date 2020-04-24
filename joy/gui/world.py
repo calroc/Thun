@@ -148,5 +148,5 @@ class StackDisplayWorld(World):
 
   def load_stack(self):
     if os.path.exists(self.filename):
-      with open(self.filename) as f:
+      with open(self.filename, 'rb') as f:
         return pickle.load(f)
