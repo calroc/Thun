@@ -175,21 +175,21 @@ def concat(quote, expression):
 
 
 
-def pick(s, n):
+def pick(stack, n):
   '''
   Return the nth item on the stack.
 
-  :param stack s: A stack.
+  :param stack stack: A stack.
   :param int n: An index into the stack.
   :raises ValueError: if ``n`` is less than zero.
-  :raises IndexError: if ``n`` is equal to or greater than the length of ``s``.
+  :raises IndexError: if ``n`` is equal to or greater than the length of ``stack``.
   :rtype: whatever
   '''
   if n < 0:
     raise ValueError
   while True:
     try:
-      item, s = s
+      item, stack = stack
     except ValueError:
       raise IndexError
     n -= 1
