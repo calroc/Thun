@@ -121,7 +121,7 @@ class PickledResource(Resource):
         return [pickle.load(f)]
 
     def _to_file(self, f):
-        pickle.dump(self.thing[0], f)
+        pickle.dump(self.thing[0], f, protocol=2)
 
 
 class PersistTask(object):

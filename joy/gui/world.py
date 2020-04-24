@@ -136,7 +136,7 @@ class StackDisplayWorld(World):
   def save(self):
     with open(self.filename, 'wb') as f:
       os.chmod(self.filename, 0o600)
-      pickle.dump(self.stack, f)
+      pickle.dump(self.stack, f, protocol=2)
       f.flush()
       os.fsync(f.fileno())
     self.repo.stage([self.relative_STACK_FN])
