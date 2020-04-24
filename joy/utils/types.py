@@ -18,6 +18,10 @@
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>. 
 #
 from __future__ import print_function
+from builtins import str
+from builtins import map
+from past.builtins import basestring
+from builtins import object
 from logging import getLogger, addLevelName
 from functools import reduce
 
@@ -25,7 +29,7 @@ _log = getLogger(__name__)
 addLevelName(15, 'hmm')
 
 from collections import Counter
-from itertools import imap, chain, product
+from itertools import chain, product
 from inspect import stack as inspect_stack
 from joy.utils.stack import (
   concat,
@@ -41,7 +45,7 @@ class AnyJoyType(object):
   Joy type variable.  Represents any Joy value.
   '''
 
-  accept = tuple, int, float, long, complex, str, unicode, bool, Symbol
+  accept = tuple, int, float, int, complex, str, bool, Symbol
   prefix = 'a'
 
   def __init__(self, number):
@@ -81,7 +85,7 @@ class BooleanJoyType(AnyJoyType):
 
 
 class NumberJoyType(AnyJoyType):
-  accept = bool, int, float, long, complex
+  accept = bool, int, float, complex
   prefix = 'n'
 
 
@@ -105,7 +109,7 @@ class StackJoyType(AnyJoyType):
   accept = tuple
   prefix = 's'
 
-  def __nonzero__(self):
+  def __bool__(self):
     # Imitate () at the end of cons list.
     return False
 
@@ -453,7 +457,7 @@ def compilable(f):
   Return True if a stack effect represents a function that can be
   automatically compiled (to Python), False otherwise.
   '''
-  return isinstance(f, tuple) and all(imap(compilable, f)) or _stacky(f)
+  return isinstance(f, tuple) and all(map(compilable, f)) or _stacky(f)
 
 
 def doc_from_stack_effect(inputs, outputs=('??', ())):
@@ -721,7 +725,7 @@ def combinator_effect(number, *expect):
 
 
 def show(DEFS):
-  for name, stack_effect_comment in sorted(DEFS.iteritems()):
+  for name, stack_effect_comment in sorted(DEFS.items()):
     t = ' *'[compilable(stack_effect_comment)]
     print(name, '=', doc_from_stack_effect(*stack_effect_comment), t)
 
@@ -731,7 +735,7 @@ def generate_library_code(DEFS, f=None):
     import sys
     f = sys.stdout
   print('# GENERATED FILE. DO NOT EDIT.\n', file=f)
-  for name, stack_effect_comment in sorted(DEFS.iteritems()):
+  for name, stack_effect_comment in sorted(DEFS.items()):
     if not compilable(stack_effect_comment):
       continue
     print(file=f)

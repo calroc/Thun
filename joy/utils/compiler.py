@@ -11,6 +11,9 @@ functions, during inference?  Could I write out better code that way?
 In any event, I am proceeding with this sort of ad hoc way for now.
 '''
 from __future__ import print_function
+from builtins import next
+from builtins import str
+from builtins import object
 from joy.parser import text_to_expression, Symbol
 from joy.utils.stack import concat, iter_stack, list_to_stack
 from joy.library import SimpleFunctionWrapper, YIN_STACK_EFFECTS
@@ -33,7 +36,7 @@ class InfiniteStack(tuple):
     _NAMES = _names()
     next(_NAMES)
 
-    names = _NAMES.next
+    names = _NAMES.__next__
     reset = lambda _, _n=_NAMES: _n.send(-1)
 
     def __init__(self, code):

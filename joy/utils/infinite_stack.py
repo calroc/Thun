@@ -1,3 +1,4 @@
+from builtins import str
 from joy.parser import Symbol
 
 
@@ -10,7 +11,7 @@ def _names():
 
 class InfiniteStack(tuple):
 
-  names = _names().next
+  names = _names().__next__
 
   def __iter__(self):
     if not self:
