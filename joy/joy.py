@@ -98,7 +98,7 @@ def repl(stack=(), dictionary=None):
       print(stack_to_string(stack), '<-top')
       print()
       try:
-        text = eval(input('joy? '))
+        text = input('joy? ')
       except (EOFError, KeyboardInterrupt):
         break
       viewer = TracePrinter()
