@@ -302,7 +302,6 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 
   def run_command(self, command):
     '''Given a string run it on the stack, report errors.'''
-    command = command.encode('utf_8')
     try:
       self.world.interpret(command)
     except SystemExit:
