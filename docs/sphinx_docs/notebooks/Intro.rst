@@ -224,7 +224,7 @@ Many of the functions are defined in Python, like ``dip``:
     def dip(stack, expression, dictionary):
       (quote, (x, stack)) = stack
       expression = x, expression
-      return stack, pushback(quote, expression), dictionary
+      return stack, concat(quote, expression), dictionary
     
 
 Some functions are defined in equations in terms of other functions.
