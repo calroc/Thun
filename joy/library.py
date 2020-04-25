@@ -72,6 +72,16 @@ from .utils.types import (
 	)
 
 
+HELP_TEMPLATE = '''\
+
+==== Help on %s ====
+
+%s
+
+---- end (%s)
+'''
+
+
 _SYM_NUMS = lambda c=count(): next(c)
 _COMB_NUMS = lambda c=count(): next(c)
 
@@ -890,7 +900,7 @@ def help_(S, expression, dictionary):
 	'''Accepts a quoted symbol on the top of the stack and prints its docs.'''
 	((symbol, _), stack) = S
 	word = dictionary[symbol]
-	print(getdoc(word))
+	print(HELP_TEMPLATE % (symbol, getdoc(word), symbol))
 	return stack, expression, dictionary
 
 

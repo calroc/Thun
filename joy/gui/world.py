@@ -27,6 +27,7 @@ import os, pickle, sys
 from inspect import getdoc
 
 from joy.joy import run
+from joy.library import HELP_TEMPLATE
 from joy.parser import Symbol
 from joy.utils.stack import stack_to_string
 from joy.utils.types import type_check
@@ -59,14 +60,15 @@ class World(object):
 
 	def do_opendoc(self, name):
 		if is_numerical(name):
-			print('The number', name)
+			doc = 'The number ' + str(name)
 		else:
 			try:
 				word = self.dictionary[name]
 			except KeyError:
-				print(repr(name), '???')
+				doc = 'Unknown: ' + repr(name)
 			else:
-				print(getdoc(word))
+				doc = getdoc(word)
+		print(HELP_TEMPLATE % (name, doc, name))
 		self.print_stack()
 
 	def pop(self):
