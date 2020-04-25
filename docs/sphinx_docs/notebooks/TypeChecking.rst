@@ -14,7 +14,7 @@ Type Checking
 
 .. code:: ipython2
 
-    from joy.utils.polytypes import (
+    from joy.utils.types import (
         doc_from_stack_effect, 
         infer,
         reify,

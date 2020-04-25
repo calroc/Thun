@@ -2394,7 +2394,7 @@ def _log_it(e, F):
 ```
 
 #### Work in Progress
-And that brings us to current Work-In-Progress.  The mixed-mode inferencer/interpreter `infer()` function seems to work well.  There are details I should document, and the rest of the code in the "polytypes" module (FIXME link to its docs here!) should be explained...  There is cruft to convert the definitions in `DEFS` to the new `SymbolJoyType` objects, and some combinators.  Here is an example of output from the current code :
+And that brings us to current Work-In-Progress.  The mixed-mode inferencer/interpreter `infer()` function seems to work well.  There are details I should document, and the rest of the code in the `types` module (FIXME link to its docs here!) should be explained...  There is cruft to convert the definitions in `DEFS` to the new `SymbolJoyType` objects, and some combinators.  Here is an example of output from the current code :
 
 
 ```python
@@ -2411,6 +2411,22 @@ print '-' * 40
 for fi, fo in h:
     print doc_from_stack_effect(fi, fo)
 ```
+
+
+    ---------------------------------------------------------------------------
+
+    ZeroDivisionError                         Traceback (most recent call last)
+
+    <ipython-input-1-9a9d60354c35> in <module>()
+    ----> 1 1/0  # (Don't try to run this cell!  It's not going to work.  This is "read only" code heh..)
+          2 
+          3 logging.basicConfig(format='%(message)s', stream=sys.stdout, level=logging.INFO)
+          4 
+          5 globals().update(FUNCTIONS)
+
+
+    ZeroDivisionError: integer division or modulo by zero
+
 
 The numbers at the start of the lines are the current depth of the Python call stack.  They're followed by the current computed stack effect (initialized to `ID`) then the pending expression (the inference of the stack effect of which is the whole object of the current example.)
 
@@ -2474,7 +2490,7 @@ Work remains to be done:
 
 ## Appendix: Joy in the Logical Paradigm
 
-For *type checking* to work the type label classes have to be modified to let `T >= t` succeed, where e.g. `T` is `IntJoyType` and `t` is `int`.  If you do that you can take advantage of the *logical relational* nature of the stack effect comments to "compute in reverse" as it were.  There's a working demo of this at the end of the `polytypes` module.  But if you're interested in all that you should just use Prolog!
+For *type checking* to work the type label classes have to be modified to let `T >= t` succeed, where e.g. `T` is `IntJoyType` and `t` is `int`.  If you do that you can take advantage of the *logical relational* nature of the stack effect comments to "compute in reverse" as it were.  There's a working demo of this at the end of the `types` module.  But if you're interested in all that you should just use Prolog!
 
 Anyhow, type *checking* is a few easy steps away.
 

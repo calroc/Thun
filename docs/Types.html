@@ -16627,14 +16627,14 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Work-in-Progress">Work in Progress<a class="anchor-link" href="#Work-in-Progress">&#182;</a></h4><p>And that brings us to current Work-In-Progress.  The mixed-mode inferencer/interpreter <code>infer()</code> function seems to work well.  There are details I should document, and the rest of the code in the "polytypes" module (FIXME link to its docs here!) should be explained...  There is cruft to convert the definitions in <code>DEFS</code> to the new <code>SymbolJoyType</code> objects, and some combinators.  Here is an example of output from the current code :</p>
+<h4 id="Work-in-Progress">Work in Progress<a class="anchor-link" href="#Work-in-Progress">&#182;</a></h4><p>And that brings us to current Work-In-Progress.  The mixed-mode inferencer/interpreter <code>infer()</code> function seems to work well.  There are details I should document, and the rest of the code in the <code>types</code> module (FIXME link to its docs here!) should be explained...  There is cruft to convert the definitions in <code>DEFS</code> to the new <code>SymbolJoyType</code> objects, and some combinators.  Here is an example of output from the current code :</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="mi">1</span><span class="o">/</span><span class="mi">0</span>  <span class="c1"># (Don&#39;t try to run this cell!  It&#39;s not going to work.  This is &quot;read only&quot; code heh..)</span>
@@ -16652,6 +16652,33 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ZeroDivisionError</span>                         Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-1-9a9d60354c35&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">/</span><span class="ansi-cyan-fg">0</span>  <span class="ansi-red-fg"># (Don&#39;t try to run this cell!  It&#39;s not going to work.  This is &#34;read only&#34; code heh..)</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> 
+<span class="ansi-green-intense-fg ansi-bold">      3</span> logging<span class="ansi-blue-fg">.</span>basicConfig<span class="ansi-blue-fg">(</span>format<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;%(message)s&#39;</span><span class="ansi-blue-fg">,</span> stream<span class="ansi-blue-fg">=</span>sys<span class="ansi-blue-fg">.</span>stdout<span class="ansi-blue-fg">,</span> level<span class="ansi-blue-fg">=</span>logging<span class="ansi-blue-fg">.</span>INFO<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span> 
+<span class="ansi-green-intense-fg ansi-bold">      5</span> globals<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>update<span class="ansi-blue-fg">(</span>FUNCTIONS<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">ZeroDivisionError</span>: integer division or modulo by zero</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -16744,7 +16771,7 @@ uncons = ([a1 .1.] -- a1 [.1.])
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Appendix:-Joy-in-the-Logical-Paradigm">Appendix: Joy in the Logical Paradigm<a class="anchor-link" href="#Appendix:-Joy-in-the-Logical-Paradigm">&#182;</a></h2><p>For <em>type checking</em> to work the type label classes have to be modified to let <code>T &gt;= t</code> succeed, where e.g. <code>T</code> is <code>IntJoyType</code> and <code>t</code> is <code>int</code>.  If you do that you can take advantage of the <em>logical relational</em> nature of the stack effect comments to "compute in reverse" as it were.  There's a working demo of this at the end of the <code>polytypes</code> module.  But if you're interested in all that you should just use Prolog!</p>
+<h2 id="Appendix:-Joy-in-the-Logical-Paradigm">Appendix: Joy in the Logical Paradigm<a class="anchor-link" href="#Appendix:-Joy-in-the-Logical-Paradigm">&#182;</a></h2><p>For <em>type checking</em> to work the type label classes have to be modified to let <code>T &gt;= t</code> succeed, where e.g. <code>T</code> is <code>IntJoyType</code> and <code>t</code> is <code>int</code>.  If you do that you can take advantage of the <em>logical relational</em> nature of the stack effect comments to "compute in reverse" as it were.  There's a working demo of this at the end of the <code>types</code> module.  But if you're interested in all that you should just use Prolog!</p>
 <p>Anyhow, type <em>checking</em> is a few easy steps away.</p>
 
 </div>

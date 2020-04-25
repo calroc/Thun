@@ -2243,9 +2243,9 @@ modification to the call structure of <code class="docutils literal notranslate"
 <h4>Work in Progress<a class="headerlink" href="#work-in-progress" title="Permalink to this headline">¶</a></h4>
 <p>And that brings us to current Work-In-Progress. The mixed-mode
 inferencer/interpreter <code class="docutils literal notranslate"><span class="pre">infer()</span></code> function seems to work well. There
-are details I should document, and the rest of the code in the
-“polytypes” module (FIXME link to its docs here!) should be explained…
-There is cruft to convert the definitions in <code class="docutils literal notranslate"><span class="pre">DEFS</span></code> to the new
+are details I should document, and the rest of the code in the <code class="docutils literal notranslate"><span class="pre">types</span></code>
+module (FIXME link to its docs here!) should be explained… There is
+cruft to convert the definitions in <code class="docutils literal notranslate"><span class="pre">DEFS</span></code> to the new
 <code class="docutils literal notranslate"><span class="pre">SymbolJoyType</span></code> objects, and some combinators. Here is an example of
 output from the current code :</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="o">/</span><span class="mi">0</span>  <span class="c1"># (Don&#39;t try to run this cell!  It&#39;s not going to work.  This is &quot;read only&quot; code heh..)</span>
@@ -2260,6 +2260,21 @@ output from the current code :</p>
 
 <span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="ow">in</span> <span class="n">h</span><span class="p">:</span>
     <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---------------------------------------------------------------------------</span>
+
+<span class="ne">ZeroDivisionError</span>                         <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">9</span><span class="n">a9d60354c35</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="o">----&gt;</span> <span class="mi">1</span> <span class="mi">1</span><span class="o">/</span><span class="mi">0</span>  <span class="c1"># (Don&#39;t try to run this cell!  It&#39;s not going to work.  This is &quot;read only&quot; code heh..)</span>
+      <span class="mi">2</span>
+      <span class="mi">3</span> <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+      <span class="mi">4</span>
+      <span class="mi">5</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">FUNCTIONS</span><span class="p">)</span>
+
+
+<span class="ne">ZeroDivisionError</span><span class="p">:</span> <span class="n">integer</span> <span class="n">division</span> <span class="ow">or</span> <span class="n">modulo</span> <span class="n">by</span> <span class="n">zero</span>
 </pre></div>
 </div>
 <p>The numbers at the start of the lines are the current depth of the
@@ -2340,9 +2355,8 @@ does, but now I have to come back and describe here what I did.</li>
 to let <code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">&gt;=</span> <span class="pre">t</span></code> succeed, where e.g. <code class="docutils literal notranslate"><span class="pre">T</span></code> is <code class="docutils literal notranslate"><span class="pre">IntJoyType</span></code> and <code class="docutils literal notranslate"><span class="pre">t</span></code>
 is <code class="docutils literal notranslate"><span class="pre">int</span></code>. If you do that you can take advantage of the <em>logical
 relational</em> nature of the stack effect comments to “compute in reverse”
-as it were. There’s a working demo of this at the end of the
-<code class="docutils literal notranslate"><span class="pre">polytypes</span></code> module. But if you’re interested in all that you should
-just use Prolog!</p>
+as it were. There’s a working demo of this at the end of the <code class="docutils literal notranslate"><span class="pre">types</span></code>
+module. But if you’re interested in all that you should just use Prolog!</p>
 <p>Anyhow, type <em>checking</em> is a few easy steps away.</p>
 <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_ge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">(</span><span class="nb">issubclass</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>

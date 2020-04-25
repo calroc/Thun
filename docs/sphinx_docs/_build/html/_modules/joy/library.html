@@ -105,6 +105,16 @@
 	<span class="p">)</span>
 
 
+<span class="n">HELP_TEMPLATE</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+
+<span class="s1">==== Help on </span><span class="si">%s</span><span class="s1"> ====</span>
+
+<span class="si">%s</span><span class="s1"></span>
+
+<span class="s1">---- end (</span><span class="si">%s</span><span class="s1">)</span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+
 <span class="n">_SYM_NUMS</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">c</span><span class="o">=</span><span class="n">count</span><span class="p">():</span> <span class="nb">next</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 <span class="n">_COMB_NUMS</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">c</span><span class="o">=</span><span class="n">count</span><span class="p">():</span> <span class="nb">next</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
@@ -923,7 +933,7 @@
 	<span class="sd">&#39;&#39;&#39;Accepts a quoted symbol on the top of the stack and prints its docs.&#39;&#39;&#39;</span>
 	<span class="p">((</span><span class="n">symbol</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">S</span>
 	<span class="n">word</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span>
-	<span class="nb">print</span><span class="p">(</span><span class="n">getdoc</span><span class="p">(</span><span class="n">word</span><span class="p">))</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">HELP_TEMPLATE</span> <span class="o">%</span> <span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">getdoc</span><span class="p">(</span><span class="n">word</span><span class="p">),</span> <span class="n">symbol</span><span class="p">))</span>
 	<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
 
 
