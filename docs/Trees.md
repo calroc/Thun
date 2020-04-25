@@ -584,7 +584,7 @@ The definition is a little longer but, I think, more elegant and easier to under
 
 ```python
 from joy.library import FunctionWrapper
-from joy.utils.stack import pushback
+from joy.utils.stack import concat
 from notebook_preamble import D
 
 
@@ -607,7 +607,7 @@ def cmp_(stack, expression, dictionary):
                         L
     '''
     L, (E, (G, (b, (a, stack)))) = stack
-    expression = pushback(G if a > b else L if a < b else E, expression)
+    expression = concat(G if a > b else L if a < b else E, expression)
     return stack, expression, dictionary
 
 

@@ -245,42 +245,43 @@
 
 
 <span class="n">definitions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
-<span class="s1">ii == [dip] dupdip i</span>
-<span class="s1">of == swap at</span>
-<span class="s1">product == 1 swap [*] step</span>
-<span class="s1">flatten == [] swap [concat] step</span>
-<span class="s1">quoted == [unit] dip</span>
-<span class="s1">unquoted == [i] dip</span>
-<span class="s1">enstacken == stack [clear] dip</span>
 <span class="s1">? == dup truthy</span>
-<span class="s1">disenstacken == ? [uncons ?] loop pop</span>
-<span class="s1">dinfrirst == dip infra first</span>
-<span class="s1">nullary == [stack] dinfrirst</span>
-<span class="s1">unary == nullary popd</span>
-<span class="s1">binary == nullary [popop] dip</span>
-<span class="s1">ternary == unary [popop] dip</span>
-<span class="s1">pam == [i] map</span>
-<span class="s1">run == [] swap infra</span>
-<span class="s1">sqr == dup mul</span>
-<span class="s1">size == 0 swap [pop ++] step</span>
-<span class="s1">fork == [i] app2</span>
-<span class="s1">cleave == fork [popd] dip</span>
-<span class="s1">average == [sum 1.0 *] [size] cleave /</span>
-<span class="s1">gcd == 1 [tuck modulus dup 0 &gt;] loop pop</span>
-<span class="s1">least_fraction == dup [gcd] infra [div] concat map</span>
 <span class="s1">*fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons</span>
 <span class="s1">*fraction0 == concat [[swap] dip * [*] dip] infra</span>
-<span class="s1">down_to_zero == [0 &gt;] [dup --] while</span>
-<span class="s1">range_to_zero == unit [down_to_zero] infra</span>
 <span class="s1">anamorphism == [pop []] swap [dip swons] genrec</span>
-<span class="s1">range == [0 &lt;=] [1 - dup] anamorphism</span>
-<span class="s1">while == swap [nullary] cons dup dipd concat loop</span>
-<span class="s1">dupdipd == dup dipd</span>
-<span class="s1">primrec == [i] genrec</span>
-<span class="s1">step_zero == 0 roll&gt; step</span>
+<span class="s1">average == [sum 1.0 *] [size] cleave /</span>
+<span class="s1">binary == nullary [popop] dip</span>
+<span class="s1">cleave == fork [popd] dip</span>
 <span class="s1">codireco == cons dip rest cons</span>
-<span class="s1">make_generator == [codireco] ccons</span>
+<span class="s1">dinfrirst == dip infra first</span>
+<span class="s1">disenstacken == ? [uncons ?] loop pop</span>
+<span class="s1">down_to_zero == [0 &gt;] [dup --] while</span>
+<span class="s1">dupdipd == dup dipd</span>
+<span class="s1">enstacken == stack [clear] dip</span>
+<span class="s1">flatten == [] swap [concat] step</span>
+<span class="s1">fork == [i] app2</span>
+<span class="s1">gcd == 1 [tuck modulus dup 0 &gt;] loop pop</span>
 <span class="s1">ifte == [nullary not] dipd branch</span>
+<span class="s1">ii == [dip] dupdip i</span>
+<span class="s1">least_fraction == dup [gcd] infra [div] concat map</span>
+<span class="s1">make_generator == [codireco] ccons</span>
+<span class="s1">nullary == [stack] dinfrirst</span>
+<span class="s1">of == swap at</span>
+<span class="s1">pam == [i] map</span>
+<span class="s1">primrec == [i] genrec</span>
+<span class="s1">product == 1 swap [*] step</span>
+<span class="s1">quoted == [unit] dip</span>
+<span class="s1">range == [0 &lt;=] [1 - dup] anamorphism</span>
+<span class="s1">range_to_zero == unit [down_to_zero] infra</span>
+<span class="s1">run == [] swap infra</span>
+<span class="s1">size == 0 swap [pop ++] step</span>
+<span class="s1">sqr == dup mul</span>
+<span class="s1">step_zero == 0 roll&gt; step</span>
+<span class="s1">swoncat == swap concat</span>
+<span class="s1">ternary == unary [popop] dip</span>
+<span class="s1">unary == nullary popd</span>
+<span class="s1">unquoted == [i] dip</span>
+<span class="s1">while == swap [nullary] cons dup dipd concat loop</span>
 <span class="s1">&#39;&#39;&#39;</span>
 <span class="c1">#</span>
 <span class="c1">#</span>
@@ -295,7 +296,6 @@
 <span class="c1">##second == rest first</span>
 <span class="c1">##third == rest rest first</span>
 <span class="c1">##swons == swap cons</span>
-<span class="c1">##swoncat == swap concat</span>
 
 <span class="c1">##Zipper</span>
 <span class="c1">##z-down == [] swap uncons swap</span>
