@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
-from distutils.core import setup
+from setuptools import setup
 from textwrap import dedent
 
 
@@ -44,4 +44,8 @@ setup(
 		'Programming Language :: Other',
 		'Topic :: Software Development :: Interpreters',
 		],
+	install_requires=[
+		'dulwich',
+		'future',
+		]
 	)
