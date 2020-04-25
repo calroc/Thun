@@ -2,8 +2,9 @@
 
 TESTDIR = ./test00
 VERSION = 0.2.0
+WEBSERVER = sforman@shell.osdn.net
 
-.PHONY: clean sdist test docs
+.PHONY: clean sdist test docs upload-docs
 
 
 clean:
@@ -30,3 +31,6 @@ test: sdist
 docs:
 	cd ./docs && make && make mov && cd ./sphinx_docs && make html
 
+upload-docs: docs
+	ssh $(WEBSERVER) /home/users/s/sf/sforman/backup-and-remove-htdocs
+	rsync -rv --progress ./docs/sphinx_docs/_build/html/ $(WEBSERVER):/home/groups/j/jo/joypy/htdocs/
