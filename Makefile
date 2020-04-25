@@ -28,5 +28,5 @@ test: sdist
 
 
 docs:
-	cd ./docs && make
+	cd ./docs && make && make mov && cd ./sphinx_docs && make html
 
