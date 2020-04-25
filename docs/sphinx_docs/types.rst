@@ -2,14 +2,21 @@
 Type Inference of Joy Expressions
 =================================
 
-Two kinds of type inference are provided, a simple inferencer that can handle functions that have a single stack effect (aka "type signature") and that can generate Python code for a limited subset of those functions, and a more complex inferencer/interpreter hybrid that can infer the stack effects of most Joy expressions, including multiple stack effects, unbounded sequences of values, and combinators (if enough information is available.)
+Two kinds of type inference are provided, a simple inferencer that can
+handle functions that have a single stack effect (aka "type signature")
+and that can generate Python code for a limited subset of those
+functions, and a more complex inferencer/interpreter hybrid that can
+infer the stack effects of most Joy expressions, including multiple stack
+effects, unbounded sequences of values, and combinators (if enough
+information is available.)
 
 
 ``joy.utils.types``
 -------------------
 
 
-Curently (asterix after name indicates a function that can be auto-compiled to Python)::
+Curently (asterix after name indicates a function that can be
+auto-compiled to Python)::
 
     _Tree_add_Ee = ([a4 a5 ...1] a3 a2 a1 -- [a2 a3 ...1]) *
     _Tree_delete_R0 = ([a2 ...1] a1 -- [a2 ...1] a2 a1 a1) *
@@ -77,10 +84,19 @@ Curently (asterix after name indicates a function that can be auto-compiled to P
    :members:
 
 
-``joy.utils.polytypes``
--------------------------
 
-Example output of the ``infer()`` function.  The first number on each line is the depth of the Python stack.  It goes down when the function backtracks.  The next thing on each line is the currently-computed stack effect so far.  It starts with the empty "identity function" and proceeds through the expression, which is the rest of each line.  The function acts like an interpreter but instead of executing the terms of the expression it composes them, but for combinators it *does* execute them, using the output side of the stack effect as the stack.  This seems to work fine.  With proper definitions for the behavior of the combinators that can have more than one effect (like ``branch`` or ``loop``) the ``infer()`` function seems to be able to handle anything I throw at it so far.
+Example output of the ``infer()`` function.  The first number on each
+line is the depth of the Python stack.  It goes down when the function
+backtracks.  The next thing on each line is the currently-computed stack
+effect so far.  It starts with the empty "identity function" and proceeds
+through the expression, which is the rest of each line.  The function
+acts like an interpreter but instead of executing the terms of the
+expression it composes them, but for combinators it *does* execute them,
+using the output side of the stack effect as the stack.  This seems to
+work fine.  With proper definitions for the behavior of the combinators
+that can have more than one effect (like ``branch`` or ``loop``) the
+``infer()`` function seems to be able to handle anything I throw at it so
+far.
 
 ::
 
@@ -134,8 +150,4 @@ Here's another example (implementing ``ifte``) using some combinators::
     (f1 i1 -- f2)
     (i2 i1 -- f1)
     (i2 i1 -- i3)
-
-.. automodule:: joy.utils.polytypes
-   :members:
-
 
