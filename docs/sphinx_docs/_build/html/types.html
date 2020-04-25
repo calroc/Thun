@@ -34,10 +34,17 @@
             
   <div class="section" id="type-inference-of-joy-expressions">
 <h1>Type Inference of Joy Expressions<a class="headerlink" href="#type-inference-of-joy-expressions" title="Permalink to this headline">¶</a></h1>
-<p>Two kinds of type inference are provided, a simple inferencer that can handle functions that have a single stack effect (aka “type signature”) and that can generate Python code for a limited subset of those functions, and a more complex inferencer/interpreter hybrid that can infer the stack effects of most Joy expressions, including multiple stack effects, unbounded sequences of values, and combinators (if enough information is available.)</p>
+<p>Two kinds of type inference are provided, a simple inferencer that can
+handle functions that have a single stack effect (aka “type signature”)
+and that can generate Python code for a limited subset of those
+functions, and a more complex inferencer/interpreter hybrid that can
+infer the stack effects of most Joy expressions, including multiple stack
+effects, unbounded sequences of values, and combinators (if enough
+information is available.)</p>
 <div class="section" id="joy-utils-types">
 <h2><code class="docutils literal notranslate"><span class="pre">joy.utils.types</span></code><a class="headerlink" href="#joy-utils-types" title="Permalink to this headline">¶</a></h2>
-<p>Curently (asterix after name indicates a function that can be auto-compiled to Python):</p>
+<p>Curently (asterix after name indicates a function that can be
+auto-compiled to Python):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_Tree_add_Ee</span> <span class="o">=</span> <span class="p">([</span><span class="n">a4</span> <span class="n">a5</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a2</span> <span class="n">a3</span> <span class="o">...</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span>
 <span class="n">_Tree_delete_R0</span> <span class="o">=</span> <span class="p">([</span><span class="n">a2</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a2</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a2</span> <span class="n">a1</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
 <span class="n">_Tree_delete_clear_stuff</span> <span class="o">=</span> <span class="p">(</span><span class="n">a3</span> <span class="n">a2</span> <span class="p">[</span><span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span>
@@ -308,10 +315,18 @@ the FUNCTIONS dict yet.)</p>
 <dd><p>Return a substitution dict representing a unifier for u and v.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="joy-utils-polytypes">
-<h2><code class="docutils literal notranslate"><span class="pre">joy.utils.polytypes</span></code><a class="headerlink" href="#joy-utils-polytypes" title="Permalink to this headline">¶</a></h2>
-<p>Example output of the <code class="docutils literal notranslate"><span class="pre">infer()</span></code> function.  The first number on each line is the depth of the Python stack.  It goes down when the function backtracks.  The next thing on each line is the currently-computed stack effect so far.  It starts with the empty “identity function” and proceeds through the expression, which is the rest of each line.  The function acts like an interpreter but instead of executing the terms of the expression it composes them, but for combinators it <em>does</em> execute them, using the output side of the stack effect as the stack.  This seems to work fine.  With proper definitions for the behavior of the combinators that can have more than one effect (like <code class="docutils literal notranslate"><span class="pre">branch</span></code> or <code class="docutils literal notranslate"><span class="pre">loop</span></code>) the <code class="docutils literal notranslate"><span class="pre">infer()</span></code> function seems to be able to handle anything I throw at it so far.</p>
+<p>Example output of the <code class="docutils literal notranslate"><span class="pre">infer()</span></code> function.  The first number on each
+line is the depth of the Python stack.  It goes down when the function
+backtracks.  The next thing on each line is the currently-computed stack
+effect so far.  It starts with the empty “identity function” and proceeds
+through the expression, which is the rest of each line.  The function
+acts like an interpreter but instead of executing the terms of the
+expression it composes them, but for combinators it <em>does</em> execute them,
+using the output side of the stack effect as the stack.  This seems to
+work fine.  With proper definitions for the behavior of the combinators
+that can have more than one effect (like <code class="docutils literal notranslate"><span class="pre">branch</span></code> or <code class="docutils literal notranslate"><span class="pre">loop</span></code>) the
+<code class="docutils literal notranslate"><span class="pre">infer()</span></code> function seems to be able to handle anything I throw at it so
+far.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  7 (--) ∘ pop swap rolldown rest rest cons cons
  10 (a1 --) ∘ swap rolldown rest rest cons cons
  13 (a3 a2 a1 -- a2 a3) ∘ rolldown rest rest cons cons
@@ -376,7 +391,6 @@ the FUNCTIONS dict yet.)</p>
   <ul>
 <li><a class="reference internal" href="#">Type Inference of Joy Expressions</a><ul>
 <li><a class="reference internal" href="#joy-utils-types"><code class="docutils literal notranslate"><span class="pre">joy.utils.types</span></code></a></li>
-<li><a class="reference internal" href="#joy-utils-polytypes"><code class="docutils literal notranslate"><span class="pre">joy.utils.polytypes</span></code></a></li>
 </ul>
 </li>
 </ul>
