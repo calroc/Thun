@@ -82,6 +82,11 @@ a makefile that uses nbconvert to generate ReST files from some of the
 notebooks, copies those to the sphinx source dir, then builds the HTML
 output using sphinx.
 
+Get the dependencies for (re)building the docs:
+
+    pip install Thun[build-docs]
+    make docs
+
 
 §.4 Basics of Joy
 

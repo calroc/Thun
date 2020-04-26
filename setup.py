@@ -47,5 +47,12 @@ setup(
 	install_requires=[
 		'dulwich',
 		'future',
-		]
+		],
+    extras_require={
+        "build-docs":  [
+			"sphinx",
+			"ipython",
+			"nbconvert",
+			],
+	    }
 	)
