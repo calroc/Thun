@@ -426,7 +426,7 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 		return 'break'
 
 	def init(self, title, filename, repo_relative_filename, repo, font):
-		self.winfo_toplevel().title(title)
+		self.set_window_title(title)
 		if os.path.exists(filename):
 			with open(filename) as f:
 				data = f.read()
@@ -439,6 +439,9 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 		self.repo_relative_filename = repo_relative_filename
 		self.repo = repo
 		self['font'] = font  # See below.
+
+	def set_window_title(self, title):
+		self.winfo_toplevel().title(title)
 
 	def reset(self):
 		if os.path.exists(self.filename):

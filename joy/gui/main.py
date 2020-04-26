@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# This is a script, the module namespace is used as a kind of singleton
+# for organizing the moving parts of the system.  I forget why I didn't
+# use a more typical class.
+#
+# This docstring doubles as the log header that the system prints when
+# the log is reset.
+
 ('''\
 Joypy - Copyright © 2018 Simon Forman
 '''
@@ -7,6 +15,7 @@ Joypy - Copyright © 2018 Simon Forman
 ' This is free software, and you are welcome to redistribute it under certain conditions;'
 ' right-click "sharing" for details.'
 ' Right-click on these commands to see docs on UI commands: key_bindings mouse_bindings')
+
 from __future__ import print_function
 from future import standard_library
 standard_library.install_aliases()
@@ -16,10 +25,16 @@ from configparser import RawConfigParser
 
 from joy.gui.utils import init_home, argparser, FileFaker
 
+
+VIEWER_DEFAULTS = dict(width=80, height=25)
+
+
 args = argparser.parse_args()
 JOY_HOME = args.joy_home
 repo = init_home(JOY_HOME)
+homed = lambda fn: os.path.join(JOY_HOME, fn)
 
+# Set up logging before doing anything else.
 
 _log = logging.getLogger(__name__)
 logging.basicConfig(
@@ -29,6 +44,7 @@ logging.basicConfig(
 	)
 _log.info('Starting with JOY_HOME=%s', JOY_HOME)
 
+# Now that logging is set up, continue loading the system.
 
 from joy.gui.textwidget import TextViewerWidget, tk, get_font
 from joy.gui.world import StackDisplayWorld
@@ -37,7 +53,8 @@ from joy.utils.stack import stack_to_string
 
 
 cp = RawConfigParser()
-cp.optionxform = str  # Don't mess with uppercase.
+# Don't mess with uppercase.  We need it for Tk event binding.
+cp.optionxform = str
 with open(os.path.join(args.joy_home, 'thun.config')) as f:
 	cp.readfp(f)
 
@@ -52,6 +69,11 @@ def repo_relative_path(path):
 		)
 
 def commands():
+	'''
+	We define a bunch of meta-interpreter command functions here and
+	return them in a dictionary.  They have all the contents of this
+	module in their scope so they can e.g. modify the log viewer window.
+	'''
 	# pylint: disable=unused-variable
 
 	def key_bindings(*args):
@@ -108,26 +130,37 @@ def commands():
 	return locals()
 
 
-STACK_FN = os.path.join(JOY_HOME, 'stack.pickle')
+# Identify the system core files.
+DEFS_FN = homed('definitions.txt')
+JOY_FN = homed('scratch.txt')
+LOG_FN = homed('log.txt')
+STACK_FN = homed('stack.pickle')
 REL_STACK_FN = repo_relative_path(STACK_FN)
-JOY_FN = os.path.join(JOY_HOME, 'scratch.txt')
-LOG_FN = os.path.join(JOY_HOME, 'log.txt')
+
+# Initialize the Joy dictionary.
 D = initialize()
 D.update(commands())
-DefinitionWrapper.load_definitions(os.path.join(JOY_HOME, 'definitions.txt'), D)
+DefinitionWrapper.load_definitions(DEFS_FN, D)
+
 world = StackDisplayWorld(repo, STACK_FN, REL_STACK_FN, dictionary=D)
-defaults = dict(width=80, height=25)
-t = TextViewerWidget(world, **defaults)
+
+t = TextViewerWidget(world, **VIEWER_DEFAULTS)
+
 log_window = tk.Toplevel()
+# Make it so that you can't actually close the log window, if you try it
+# will just "withdraw" (which is like minifying but without a entry in
+# the taskbar or icon or whatever.)
 log_window.protocol("WM_DELETE_WINDOW", log_window.withdraw)
-log = TextViewerWidget(world, log_window, **defaults)
+log = TextViewerWidget(world, log_window, **VIEWER_DEFAULTS)
+
 FONT = get_font('Iosevka', size=14)  # Requires Tk root already set up.
+
 log.init('Log', LOG_FN, repo_relative_path(LOG_FN), repo, FONT)
 t.init('Joy - ' + JOY_HOME, JOY_FN, repo_relative_path(JOY_FN), repo, FONT)
+
 for event, command in GLOBAL_COMMANDS.items():
 	callback = lambda _, _command=command: world.interpret(_command)
-	t.bind(event, callback)
-	log.bind(event, callback)
+	t.bind_all(event, callback)
 
 
 def main():
