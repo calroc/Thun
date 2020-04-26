@@ -71,6 +71,7 @@ def init_repo(repo_dir):
 
 
 argparser = argparse.ArgumentParser(
+	prog='joy.gui',
 	description='Experimental Brutalist UI for Joy.',
 	)
 

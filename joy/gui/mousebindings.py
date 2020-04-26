@@ -17,10 +17,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
 #
+from builtins import object
 
 
 #Do-nothing event handler.
-from builtins import object
 nothing = lambda event: None
 
 

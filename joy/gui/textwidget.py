@@ -189,7 +189,7 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 		#Turn on undo, but don't override a passed-in setting.
 		kw.setdefault('undo', True)
 
-#        kw.setdefault('bg', 'white')
+        # kw.setdefault('bg', 'white')
 		kw.setdefault('wrap', 'word')
 		kw.setdefault('font', 'arial 12')
 
@@ -219,7 +219,7 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 			callback = callback_finder(self)
 			self.bind(event_sequence, callback)
 
-##        T.protocol("WM_DELETE_WINDOW", self.on_close)
+        ## T.protocol("WM_DELETE_WINDOW", self.on_close)
 
 	def find_command_in_line(self, line, index):
 		'''
