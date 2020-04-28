@@ -134,7 +134,7 @@ ALIASES = (
 	('mul', ['*']),
 	('floordiv', ['/floor', '//']),
 	('floor', ['round']),
-	('truediv', ['/']),
+	('truediv', ['/', 'div']),
 	('mod', ['%', 'rem', 'remainder', 'modulus']),
 	('eq', ['=']),
 	('ge', ['>=']),
