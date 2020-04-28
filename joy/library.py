@@ -231,7 +231,7 @@ binary == nullary [popop] dip
 cleave == fork [popd] dip
 codireco == cons dip rest cons
 dinfrirst == dip infra first
-disenstacken == ? [uncons ?] loop pop
+unstack == ? [uncons ?] loop pop
 down_to_zero == [0 >] [dup --] while
 dupdipd == dup dipd
 enstacken == stack [clear] dip
@@ -661,9 +661,9 @@ def clear(stack):
 
 @inscribe
 @SimpleFunctionWrapper
-def unstack(stack):
+def disenstacken(stack):
 	'''
-	The unstack operator expects a list on top of the stack and makes that
+	The disenstacken operator expects a list on top of the stack and makes that
 	the stack discarding the rest of the stack.
 	'''
 	return stack[0]
@@ -1614,7 +1614,6 @@ for name in ('''
 
 ##  product == 1 swap [*] step
 ##  flatten == [] swap [concat] step
-##  disenstacken == ? [uncons ?] loop pop
 ##  pam == [i] map
 ##  size == 0 swap [pop ++] step
 ##  fork == [i] app2

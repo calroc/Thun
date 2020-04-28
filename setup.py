@@ -49,10 +49,10 @@ setup(
 		'future',
 		],
     extras_require={
-        "build-docs":  [
-			"sphinx",
-			"ipython",
-			"nbconvert",
+        'build-docs':  [
+			'sphinx',
+			'ipython',
+			'nbconvert',
 			],
 	    }
 	)
