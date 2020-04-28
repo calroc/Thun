@@ -1,4 +1,3 @@
-
 .. code:: ipython2
 
     from notebook_preamble import D, J, V, define
@@ -468,6 +467,7 @@ Compare:
             [a 1 c d] . 
 
 
+
 Working with Yang Functions
 ---------------------------
 
@@ -508,6 +508,8 @@ Then we would want something like this:
     
 
 
+
+
 How about...
 
 .. code:: ipython2
@@ -542,6 +544,7 @@ How about...
     
 
 
+
 .. code:: ipython2
 
     stack_effects = infer_string('tuck')
@@ -552,6 +555,7 @@ How about...
 .. parsed-literal::
 
     (a2 a1 -- a1 a2 a1)
+
 
 
 Compiling Yin~Yang Functions
@@ -785,4 +789,8 @@ A few functions to try it with...
         stack = (a47, stack)
         return stack
     
+
+
+
+
 

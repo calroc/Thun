@@ -1,5 +1,3 @@
-
-
 ```python
 from notebook_preamble import D, DefinitionWrapper, J, V, define
 ```

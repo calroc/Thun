@@ -1,5 +1,3 @@
-
-
 ```python
 from notebook_preamble import J, V, define
 ```
@@ -116,3 +114,8 @@ V('-5 1 4 quadratic')
                                              4.0 [1.0] . first
                                                4.0 1.0 . 
 
+
+
+```python
+
+```

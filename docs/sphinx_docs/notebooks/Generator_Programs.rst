@@ -1,4 +1,3 @@
-
 Using ``x`` to Generate Values
 ==============================
 

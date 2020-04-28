@@ -1,4 +1,3 @@
-
 # The Four Fundamental Operations of Definite Action
 
 All definite actions (computer program) can be defined by four fundamental patterns of combination:

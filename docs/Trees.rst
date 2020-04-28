@@ -1,4 +1,3 @@
-
 Treating Trees
 ==============
 
@@ -2019,7 +2018,7 @@ Let's reexamine:
     left BTree-iter-order key value F right BTree-iter-order
 
 
-    [key value left right] disenstacken swap
+    [key value left right] unstack swap
      key value left right               swap
      key value right left
 
@@ -2036,11 +2035,11 @@ So:
 
 ::
 
-    R0 == disenstacken swap
+    R0 == unstack swap
     R1 == [cons dipdd [F] dip] dupdip i
 
     [key value left right] R0                [BTree-iter-order] R1
-    [key value left right] disenstacken swap [BTree-iter-order] [cons dipdd [F] dip] dupdip i
+    [key value left right] unstack swap [BTree-iter-order] [cons dipdd [F] dip] dupdip i
      key value right left                    [BTree-iter-order] [cons dipdd [F] dip] dupdip i
 
      key value right left [BTree-iter-order] cons dipdd [F] dip [BTree-iter-order] i
@@ -2050,7 +2049,7 @@ So:
      left BTree-iter-order key value F right                     BTree-iter-order
 
 
-    BTree-iter-order == [not] [pop] [disenstacken swap] [[cons dipdd [F] dip] dupdip i] genrec
+    BTree-iter-order == [not] [pop] [unstack swap] [[cons dipdd [F] dip] dupdip i] genrec
 
 Refactor ``cons cons``
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -2166,8 +2165,8 @@ can do better?
 
 ::
 
-    [key value left right]              [F] [BTree-iter] [disenstacken] dipd
-    [key value left right] disenstacken [F] [BTree-iter]
+    [key value left right]              [F] [BTree-iter] [unstack] dipd
+    [key value left right] unstack [F] [BTree-iter]
      key value left right               [F] [BTree-iter]
 
     key value left right [F] [BTree-iter] R1.1
@@ -2180,8 +2179,8 @@ Hmm...
     key value left right [BTree-iter] [F] [BTree-iter] 
 
 
-    [key value left right]                          [F] [BTree-iter] [disenstacken [roll>] dip] dipd
-    [key value left right] disenstacken [roll>] dip [F] [BTree-iter]
+    [key value left right]                          [F] [BTree-iter] [unstack [roll>] dip] dipd
+    [key value left right] unstack [roll>] dip [F] [BTree-iter]
      key value left right               [roll>] dip [F] [BTree-iter]
      key value left roll> right                     [F] [BTree-iter]
      left key value right                           [F] [BTree-iter]
@@ -2208,3 +2207,15 @@ because lookup happens at evaluation, not parsing. E.g.:
     B == ... A ...
 
 That's fine. Circular datastructures can't be made though.
+
+
+
+
+
+
+
+
+
+
+
+

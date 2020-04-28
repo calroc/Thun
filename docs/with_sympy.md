@@ -1,4 +1,3 @@
-
 # Symbolic Evaluation with SymPy
 
 
@@ -552,6 +551,11 @@ We can already generate:
     ---------------------------------
 
 This is pretty old stuff...  (E.g. from 1999, M. Anton Ertl [Compilation of Stack-Based Languages](http://www.complang.tuwien.ac.at/projects/rafts.html) he goes a lot further for Forth.)
+
+
+```python
+
+```
 
 ## "A Transformation Based Approach to Semantics-Directed Code Generation"
 
@@ -1205,6 +1209,11 @@ eval(hylomorphism([])(5)(lambda n: n == 0)(lambda n: (n-1, n-1)))(lambda a: lamb
 
 
 ```python
+
+```
+
+
+```python
 hylomorphism(0)([1, 2, 3])(lambda n: not n)(lambda n: (n[0], n[1:]))
 ```
 
@@ -1216,6 +1225,21 @@ hylomorphism([])([1, 2, 3])(lambda n: not n)(lambda n: (n[1:], n[1:]))
 
 ```python
 eval(hylomorphism([])([1, 2, 3])(lambda n: not n)(lambda n: (n[1:], n[1:])))(lambda a: lambda b: [a] + b)
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
 ```
 
 

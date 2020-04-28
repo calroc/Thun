@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Type Inference of Joy Expressions &#8212; Thun 0.2.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Essays about Programming in Joy" href="notebooks/index.html" />
@@ -30,6 +29,8 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="type-inference-of-joy-expressions">
@@ -107,26 +108,37 @@ auto-compiled to Python):</p>
 <span class="n">unswons</span> <span class="o">=</span> <span class="p">([</span><span class="n">a1</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a1</span><span class="p">)</span> <span class="o">*</span>
 </pre></div>
 </div>
-<span class="target" id="module-joy.utils.types"></span><dl class="class">
+<span class="target" id="module-joy.utils.types"></span><dl class="py class">
 <dt id="joy.utils.types.AnyJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">AnyJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#AnyJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.AnyJoyType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">AnyJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#AnyJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.AnyJoyType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Joy type variable.  Represents any Joy value.</p>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
+<dt id="joy.utils.types.AnyStarJoyType">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">AnyStarJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#AnyStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.AnyStarJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="joy.utils.types.AnyStarJoyType.kind">
+<code class="sig-name descname">kind</code><a class="headerlink" href="#joy.utils.types.AnyStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#joy.utils.types.AnyJoyType" title="joy.utils.types.AnyJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnyJoyType</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="joy.utils.types.BooleanJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">BooleanJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#BooleanJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.BooleanJoyType" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">BooleanJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#BooleanJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.BooleanJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
 <dt id="joy.utils.types.BooleanJoyType.accept">
-<code class="descname">accept</code><a class="headerlink" href="#joy.utils.types.BooleanJoyType.accept" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__builtin__.bool</span></code></p>
+<code class="sig-name descname">accept</code><a class="headerlink" href="#joy.utils.types.BooleanJoyType.accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.bool</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="joy.utils.types.CombinatorJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">CombinatorJoyType</code><span class="sig-paren">(</span><em>name</em>, <em>sec</em>, <em>number</em>, <em>expect=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#CombinatorJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.CombinatorJoyType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">CombinatorJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">sec</span></em>, <em class="sig-param"><span class="n">number</span></em>, <em class="sig-param"><span class="n">expect</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#CombinatorJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.CombinatorJoyType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represent combinators.</p>
 <p>These type variables carry Joy functions that implement the
 behaviour of Joy combinators and they can appear in expressions.
@@ -136,44 +148,67 @@ combinators themselves.</p>
 guard against being used on invalid types.</p>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="joy.utils.types.FloatJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">FloatJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#FloatJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.FloatJoyType" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">FloatJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#FloatJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.FloatJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
 <dt id="joy.utils.types.FloatJoyType.accept">
-<code class="descname">accept</code><a class="headerlink" href="#joy.utils.types.FloatJoyType.accept" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__builtin__.float</span></code></p>
+<code class="sig-name descname">accept</code><a class="headerlink" href="#joy.utils.types.FloatJoyType.accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.float</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
+<dt id="joy.utils.types.FloatStarJoyType">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">FloatStarJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#FloatStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.FloatStarJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="joy.utils.types.FloatStarJoyType.kind">
+<code class="sig-name descname">kind</code><a class="headerlink" href="#joy.utils.types.FloatStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#joy.utils.types.FloatJoyType" title="joy.utils.types.FloatJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">FloatJoyType</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="joy.utils.types.FunctionJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">FunctionJoyType</code><span class="sig-paren">(</span><em>name</em>, <em>sec</em>, <em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#FunctionJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.FunctionJoyType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">FunctionJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">sec</span></em>, <em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#FunctionJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.FunctionJoyType" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="joy.utils.types.IntJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">IntJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#IntJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.IntJoyType" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">IntJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#IntJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.IntJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
 <dt id="joy.utils.types.IntJoyType.accept">
-<code class="descname">accept</code><a class="headerlink" href="#joy.utils.types.IntJoyType.accept" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__builtin__.int</span></code></p>
+<code class="sig-name descname">accept</code><a class="headerlink" href="#joy.utils.types.IntJoyType.accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.int</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="exception">
+<dl class="py class">
+<dt id="joy.utils.types.IntStarJoyType">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">IntStarJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#IntStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.IntStarJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="joy.utils.types.IntStarJoyType.kind">
+<code class="sig-name descname">kind</code><a class="headerlink" href="#joy.utils.types.IntStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#joy.utils.types.IntJoyType" title="joy.utils.types.IntJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntJoyType</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
 <dt id="joy.utils.types.JoyTypeError">
-<em class="property">exception </em><code class="descclassname">joy.utils.types.</code><code class="descname">JoyTypeError</code><a class="reference internal" href="_modules/joy/utils/types.html#JoyTypeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.JoyTypeError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">JoyTypeError</code><a class="reference internal" href="_modules/joy/utils/types.html#JoyTypeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.JoyTypeError" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="joy.utils.types.KleeneStar">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">KleeneStar</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#KleeneStar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.KleeneStar" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">KleeneStar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#KleeneStar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.KleeneStar" title="Permalink to this definition">¶</a></dt>
 <dd><p>A sequence of zero or more <cite>AnyJoyType</cite> variables would be:</p>
 <blockquote>
-<div>A*</div></blockquote>
+<div><p>A*</p>
+</div></blockquote>
 <p>The <cite>A*</cite> works by splitting the universe into two alternate histories:</p>
 <blockquote>
 <div><p>A* → ∅</p>
@@ -183,85 +218,118 @@ guard against being used on invalid types.</p>
 it turns into an <cite>AnyJoyType</cite> variable followed by itself again.</p>
 <p>We have to return all universes (represented by their substitution
 dicts, the “unifiers”) that don’t lead to type conflicts.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="joy.utils.types.KleeneStar.kind">
-<code class="descname">kind</code><a class="headerlink" href="#joy.utils.types.KleeneStar.kind" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">kind</code><a class="headerlink" href="#joy.utils.types.KleeneStar.kind" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <a class="reference internal" href="#joy.utils.types.AnyJoyType" title="joy.utils.types.AnyJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnyJoyType</span></code></a></p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="joy.utils.types.NumberJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">NumberJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#NumberJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.NumberJoyType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">NumberJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#NumberJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.NumberJoyType" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
+<dl class="py class">
+<dt id="joy.utils.types.NumberStarJoyType">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">NumberStarJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#NumberStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.NumberStarJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="joy.utils.types.NumberStarJoyType.kind">
+<code class="sig-name descname">kind</code><a class="headerlink" href="#joy.utils.types.NumberStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#joy.utils.types.NumberJoyType" title="joy.utils.types.NumberJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">NumberJoyType</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="joy.utils.types.StackJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">StackJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#StackJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.StackJoyType" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">StackJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#StackJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.StackJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
 <dt id="joy.utils.types.StackJoyType.accept">
-<code class="descname">accept</code><a class="headerlink" href="#joy.utils.types.StackJoyType.accept" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__builtin__.tuple</span></code></p>
+<code class="sig-name descname">accept</code><a class="headerlink" href="#joy.utils.types.StackJoyType.accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.tuple</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
+<dt id="joy.utils.types.StackStarJoyType">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">StackStarJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#StackStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.StackStarJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="joy.utils.types.StackStarJoyType.kind">
+<code class="sig-name descname">kind</code><a class="headerlink" href="#joy.utils.types.StackStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#joy.utils.types.StackJoyType" title="joy.utils.types.StackJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">StackJoyType</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="joy.utils.types.SymbolJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">SymbolJoyType</code><span class="sig-paren">(</span><em>name</em>, <em>sec</em>, <em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#SymbolJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.SymbolJoyType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">SymbolJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">sec</span></em>, <em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#SymbolJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.SymbolJoyType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represent non-combinator functions.</p>
 <p>These type variables carry the stack effect comments and can
 appear in expressions (as in quoted programs.)</p>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="joy.utils.types.TextJoyType">
-<em class="property">class </em><code class="descclassname">joy.utils.types.</code><code class="descname">TextJoyType</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#TextJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.TextJoyType" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">TextJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#TextJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.TextJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
 <dt id="joy.utils.types.TextJoyType.accept">
-<code class="descname">accept</code><a class="headerlink" href="#joy.utils.types.TextJoyType.accept" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__builtin__.basestring</span></code></p>
+<code class="sig-name descname">accept</code><a class="headerlink" href="#joy.utils.types.TextJoyType.accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">past.types.basestring.basestring</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py class">
+<dt id="joy.utils.types.TextStarJoyType">
+<em class="property">class </em><code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">TextStarJoyType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#TextStarJoyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.TextStarJoyType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="joy.utils.types.TextStarJoyType.kind">
+<code class="sig-name descname">kind</code><a class="headerlink" href="#joy.utils.types.TextStarJoyType.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#joy.utils.types.TextJoyType" title="joy.utils.types.TextJoyType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TextJoyType</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
 <dt id="joy.utils.types.compilable">
-<code class="descclassname">joy.utils.types.</code><code class="descname">compilable</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#compilable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.compilable" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">compilable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#compilable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.compilable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if a stack effect represents a function that can be
 automatically compiled (to Python), False otherwise.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.compile_">
-<code class="descclassname">joy.utils.types.</code><code class="descname">compile_</code><span class="sig-paren">(</span><em>name</em>, <em>f</em>, <em>doc=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#compile_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.compile_" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">compile_</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">doc</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#compile_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.compile_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a string of Python code implementing the function described
 by the stack effect.  If no doc string is passed doc_from_stack_effect()
 is used to generate one.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.compose">
-<code class="descclassname">joy.utils.types.</code><code class="descname">compose</code><span class="sig-paren">(</span><em>*functions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.compose" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">compose</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">functions</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.compose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the stack effect of the composition of some of stack effects.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.delabel">
-<code class="descclassname">joy.utils.types.</code><code class="descname">delabel</code><span class="sig-paren">(</span><em>f</em>, <em>seen=None</em>, <em>c=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#delabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.delabel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">delabel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">seen</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#delabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.delabel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fix up type variable numbers after relabel().</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.doc_from_stack_effect">
-<code class="descclassname">joy.utils.types.</code><code class="descname">doc_from_stack_effect</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs=('??'</em>, <em>())</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#doc_from_stack_effect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.doc_from_stack_effect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">doc_from_stack_effect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em>, <em class="sig-param"><span class="n">outputs</span><span class="o">=</span><span class="default_value">'??', ()</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#doc_from_stack_effect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.doc_from_stack_effect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a crude string representation of a stack effect.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.infer">
-<code class="descclassname">joy.utils.types.</code><code class="descname">infer</code><span class="sig-paren">(</span><em>*expression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#infer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.infer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">infer</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">expression</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#infer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.infer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of stack effects for a Joy expression.</p>
 <p>For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span> <span class="n">infer</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">rolldown</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">cons</span><span class="p">,</span> <span class="n">cons</span><span class="p">)</span>
@@ -275,43 +343,43 @@ is used to generate one.</p>
 </div>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.meta_compose">
-<code class="descclassname">joy.utils.types.</code><code class="descname">meta_compose</code><span class="sig-paren">(</span><em>F</em>, <em>G</em>, <em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#meta_compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.meta_compose" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">meta_compose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">F</span></em>, <em class="sig-param"><span class="n">G</span></em>, <em class="sig-param"><span class="n">e</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#meta_compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.meta_compose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Yield the stack effects of the composition of two lists of stack
 effects.  An expression is carried along and updated and yielded.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.poly_compose">
-<code class="descclassname">joy.utils.types.</code><code class="descname">poly_compose</code><span class="sig-paren">(</span><em>f</em>, <em>g</em>, <em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#poly_compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.poly_compose" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">poly_compose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">g</span></em>, <em class="sig-param"><span class="n">e</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#poly_compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.poly_compose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Yield the stack effects of the composition of two stack effects.  An
 expression is carried along and updated and yielded.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.reify">
-<code class="descclassname">joy.utils.types.</code><code class="descname">reify</code><span class="sig-paren">(</span><em>meaning</em>, <em>name</em>, <em>seen=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#reify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.reify" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">reify</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">meaning</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">seen</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#reify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.reify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply substitution dict to term, returning new term.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.relabel">
-<code class="descclassname">joy.utils.types.</code><code class="descname">relabel</code><span class="sig-paren">(</span><em>left</em>, <em>right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#relabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.relabel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">relabel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">left</span></em>, <em class="sig-param"><span class="n">right</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#relabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.relabel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Re-number type variables to avoid collisions between stack effects.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.type_check">
-<code class="descclassname">joy.utils.types.</code><code class="descname">type_check</code><span class="sig-paren">(</span><em>name</em>, <em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#type_check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.type_check" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">type_check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">stack</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#type_check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.type_check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trinary predicate.  True if named function type-checks, False if it
 fails, None if it’s indeterminate (because I haven’t entered it into
 the FUNCTIONS dict yet.)</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.types.uni_unify">
-<code class="descclassname">joy.utils.types.</code><code class="descname">uni_unify</code><span class="sig-paren">(</span><em>u</em>, <em>v</em>, <em>s=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#uni_unify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.uni_unify" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.types.</code><code class="sig-name descname">uni_unify</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">s</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/types.html#uni_unify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.types.uni_unify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a substitution dict representing a unifier for u and v.</p>
 </dd></dl>
 
@@ -383,17 +451,36 @@ far.</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Type Inference of Joy Expressions</a><ul>
-<li><a class="reference internal" href="#joy-utils-types"><code class="docutils literal notranslate"><span class="pre">joy.utils.types</span></code></a></li>
+<h1 class="logo"><a href="index.html">Thun</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Intro.html">Thun: Joy in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="joy.html">Joy Interpreter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Stack or Quote or Sequence or List…</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parser.html">Parsing Text into Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pretty.html">Tracing Joy Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lib.html">Functions Grouped by, er, Function with Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Type Inference of Joy Expressions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#joy-utils-types"><code class="docutils literal notranslate"><span class="pre">joy.utils.types</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Essays about Programming in Joy</a></li>
 </ul>
+
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -403,25 +490,24 @@ far.</p>
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/types.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -432,7 +518,7 @@ far.</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.2.
     </div>
 
   </body>

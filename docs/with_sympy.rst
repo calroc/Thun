@@ -1,4 +1,3 @@
-
 Symbolic Evaluation with SymPy
 ==============================
 
@@ -608,6 +607,7 @@ This is pretty old stuff... (E.g. from 1999, M. Anton Ertl `Compilation
 of Stack-Based
 Languages <http://www.complang.tuwien.ac.at/projects/rafts.html>`__ he
 goes a lot further for Forth.)
+
 
 "A Transformation Based Approach to Semantics-Directed Code Generation"
 -----------------------------------------------------------------------
@@ -1261,6 +1261,7 @@ quoted
 
     eval(hylomorphism([])(5)(lambda n: n == 0)(lambda n: (n-1, n-1)))(lambda a: lambda b: [a] + b)
 
+
 .. code:: ipython2
 
     hylomorphism(0)([1, 2, 3])(lambda n: not n)(lambda n: (n[0], n[1:]))
@@ -1272,6 +1273,9 @@ quoted
 .. code:: ipython2
 
     eval(hylomorphism([])([1, 2, 3])(lambda n: not n)(lambda n: (n[1:], n[1:])))(lambda a: lambda b: [a] + b)
+
+
+
 
 .. code:: ipython2
 

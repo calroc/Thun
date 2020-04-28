@@ -1,4 +1,3 @@
-
 .. code:: ipython2
 
     from notebook_preamble import J, V, define
@@ -155,4 +154,5 @@ get the results. This is pretty typical of Joy code.
                                              1.0 [4.0] . swaack first
                                              4.0 [1.0] . first
                                                4.0 1.0 . 
+
 

@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Thun: Joy in Python &#8212; Thun 0.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Joy Interpreter" href="../joy.html" />
@@ -30,6 +29,8 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="thun-joy-in-python">
@@ -38,10 +39,10 @@
 model and method of Joy. Python seems like a great implementation
 language for Joy for several reasons.</p>
 <ul class="simple">
-<li>We can lean on the Python immutable types for our basic semantics and types: ints, floats, strings, and tuples, which enforces functional purity.</li>
-<li>We get garbage collection for free.</li>
-<li>Compilation via Cython.</li>
-<li>Python is a “glue language” with loads of libraries which we can wrap in Joy functions.</li>
+<li><p>We can lean on the Python immutable types for our basic semantics and types: ints, floats, strings, and tuples, which enforces functional purity.</p></li>
+<li><p>We get garbage collection for free.</p></li>
+<li><p>Compilation via Cython.</p></li>
+<li><p>Python is a “glue language” with loads of libraries which we can wrap in Joy functions.</p></li>
 </ul>
 <div class="section" id="read-eval-print-loop-repl">
 <h2><a class="reference external" href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">Read-Eval-Print Loop (REPL)</a><a class="headerlink" href="#read-eval-print-loop-repl" title="Permalink to this headline">¶</a></h2>
@@ -149,19 +150,19 @@ like that.</p>
 </div>
 <div class="section" id="examples">
 <h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5&#39;</span><span class="p">)</span>  <span class="c1"># A simple sequence.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5&#39;</span><span class="p">)</span>  <span class="c1"># A simple sequence.</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">())))))</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[1 2 3] 4 5&#39;</span><span class="p">)</span>  <span class="c1"># Three items, the first is a list with three items</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[1 2 3] 4 5&#39;</span><span class="p">)</span>  <span class="c1"># Three items, the first is a list with three items</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">()))),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">())))</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;1 23 [&quot;four&quot; [-5.0] cons] 8888&#39;</span><span class="p">)</span>  <span class="c1"># A mixed bag. cons is</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;1 23 [&quot;four&quot; [-5.0] cons] 8888&#39;</span><span class="p">)</span>  <span class="c1"># A mixed bag. cons is</span>
                                                                  <span class="c1"># a Symbol, no lookup at</span>
                                                                  <span class="c1"># parse-time.  Haiku docs.</span>
 </pre></div>
@@ -169,13 +170,13 @@ like that.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="p">((</span><span class="s1">&#39;four&#39;</span><span class="p">,</span> <span class="p">((</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="p">()),</span> <span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="p">()))),</span> <span class="p">(</span><span class="mi">8888</span><span class="p">,</span> <span class="p">()))))</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[][][][][]&#39;</span><span class="p">)</span>  <span class="c1"># Five empty lists.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[][][][][]&#39;</span><span class="p">)</span>  <span class="c1"># Five empty lists.</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((),</span> <span class="p">((),</span> <span class="p">((),</span> <span class="p">((),</span> <span class="p">((),</span> <span class="p">())))))</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[[[[[]]]]]&#39;</span><span class="p">)</span>  <span class="c1"># Five nested lists.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[[[[[]]]]]&#39;</span><span class="p">)</span>  <span class="c1"># Five nested lists.</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((((((),</span> <span class="p">()),</span> <span class="p">()),</span> <span class="p">()),</span> <span class="p">()),</span> <span class="p">())</span>
@@ -191,7 +192,7 @@ the Joy system. There are simple functions such as addition <code class="docutil
 <code class="docutils literal notranslate"><span class="pre">+</span></code>, the library module supports aliases), and combinators which
 provide control-flow and higher-order operations.</p>
 <p>Many of the functions are defined in Python, like <code class="docutils literal notranslate"><span class="pre">dip</span></code>:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">dip</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">dip</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dip</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
@@ -204,11 +205,10 @@ provide control-flow and higher-order operations.</p>
 When the interpreter executes a definition function that function just
 pushes its body expression onto the pending expression (the
 continuation) and returns control to the interpreter.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">definitions</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">definitions</span>
 </pre></div>
 </div>
-<pre class="literal-block">
-second == rest first
+<pre class="literal-block">second == rest first
 third == rest rest first
 product == 1 swap [*] step
 swons == swap cons
@@ -241,8 +241,7 @@ anamorphism == [pop []] swap [dip swons] genrec
 range == [0 &lt;=] [1 - dup] anamorphism
 while == swap [nullary] cons dup dipd concat loop
 dudipd == dup dipd
-primrec == [i] genrec
-</pre>
+primrec == [i] genrec</pre>
 <p>Currently, there’s no function to add new definitions to the dictionary
 from “within” Joy code itself. Adding new definitions remains a
 meta-interpreter action. You have to do it yourself, in Python, and wash
@@ -291,37 +290,41 @@ developing structured processes.</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Thun: Joy in Python</a><ul>
-<li><a class="reference internal" href="#read-eval-print-loop-repl">Read-Eval-Print Loop (REPL)</a></li>
-<li><a class="reference internal" href="#the-stack">The Stack</a></li>
-<li><a class="reference internal" href="#purely-functional-datastructures">Purely Functional Datastructures</a></li>
-<li><a class="reference internal" href="#the-joy-function">The <code class="docutils literal notranslate"><span class="pre">joy()</span></code> function</a><ul>
-<li><a class="reference internal" href="#an-interpreter">An Interpreter</a></li>
-<li><a class="reference internal" href="#continuation-passing-style">Continuation-Passing Style</a></li>
-<li><a class="reference internal" href="#view-function">View function</a></li>
-<li><a class="reference internal" href="#the-traceprinter">The <code class="docutils literal notranslate"><span class="pre">TracePrinter</span></code>.</a></li>
+<h1 class="logo"><a href="../index.html">Thun</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Thun: Joy in Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-eval-print-loop-repl">Read-Eval-Print Loop (REPL)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-stack">The Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#purely-functional-datastructures">Purely Functional Datastructures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-joy-function">The <code class="docutils literal notranslate"><span class="pre">joy()</span></code> function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parser">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#library">Library</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#parser">Parser</a><ul>
-<li><a class="reference internal" href="#symbols">Symbols</a></li>
-<li><a class="reference internal" href="#token-regular-expressions">Token Regular Expressions</a></li>
-<li><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joy.html">Joy Interpreter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack.html">Stack or Quote or Sequence or List…</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parser.html">Parsing Text into Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pretty.html">Tracing Joy Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lib.html">Functions Grouped by, er, Function with Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../types.html">Type Inference of Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Essays about Programming in Joy</a></li>
 </ul>
-</li>
-<li><a class="reference internal" href="#library">Library</a><ul>
-<li><a class="reference internal" href="#there-should-be-only-one">“There should be only one.”</a></li>
-<li><a class="reference internal" href="#literary-code-library">Literary Code Library</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -331,25 +334,24 @@ developing structured processes.</p>
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/notebooks/Intro.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -360,7 +362,7 @@ developing structured processes.</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.2.
     </div>
 
   </body>

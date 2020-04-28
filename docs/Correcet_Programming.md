@@ -1,4 +1,3 @@
-
 # ~~Cerrect~~
 
 # ~~Corroct~~
@@ -3632,6 +3631,21 @@ each_way(E, 'a0')
 
 
 ```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
 each_way(E, 'WRITE')
 ```
 
@@ -3677,6 +3691,11 @@ simplify(each_way(E, 'WRITE'), with_mark='WRITE')
     (((((addr_0 addr_1 addr_2) RAM_7_0) (RAM_6_0 addr_0 addr_1 addr_2)) (READ)) (READ a0))
 
 
+
+
+```python
+
+```
 
 , Sorting Networks for routing, more basic functions.
 
@@ -4038,6 +4057,36 @@ But it's only about 1/9th of size of the previous version (which was 9261.)
 len(str(sum3))
 ```
 
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
 Let's simplify the first one manually just for fun:
 
     (((((())) (())) ((()))))
@@ -4052,10 +4101,30 @@ Sure enough, it reduces to Mark after just a few applications of the rule `(()) 
 
 
 ```python
+
+```
+
+
+```python
 C = F((a, b))
 for form in (A, B, C):
     arth = reify(form, env)
     print form, u'⟶', arth, u'⟶', value_of(arth)
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
 ```
 
 
@@ -4088,6 +4157,26 @@ print a, F(c), Aac
 print a, Aa
 Aac = simplify(Aa, {c})
 print a, c, Aac
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
 ```
 
 
@@ -4150,6 +4239,11 @@ s7 = sum7
 
 
 ```python
+
+```
+
+
+```python
 def super_simple(form):
     return to_fixed_point(form, simplify)
 ```
@@ -4173,8 +4267,43 @@ s7 = sum7
 
 
 ```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
 print ' '.join(name[:2] for name in sorted(R))
 for _ in range(20):
     print format_env(R), '=', b_register(R)
     R.update(cycle(P, R))
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
 ```

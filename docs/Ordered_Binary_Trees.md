@@ -1,4 +1,3 @@
-
 # Treating Trees I: Ordered Binary Trees
 
 Although any expression in Joy can be considered to describe a [tree](https://en.wikipedia.org/wiki/Tree_structure) with the quotes as compound nodes and the non-quote values as leaf nodes, in this page I want to talk about [ordered binary trees](https://en.wikipedia.org/wiki/Binary_search_tree) and how to make and use them.

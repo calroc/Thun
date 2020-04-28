@@ -1,4 +1,3 @@
-
 # The Blissful Elegance of Typing Joy
 
 This notebook presents a simple type inferencer for Joy code.  It can infer the stack effect of most Joy expressions.  It's built largely by means of existing ideas and research.  (A great overview of the existing knowledge is a talk ["Type Inference in Stack-Based Programming Languages"](http://prl.ccs.neu.edu/blog/2017/03/10/type-inference-in-stack-based-programming-languages/) given by Rob Kleffner on or about 2017-03-10 as part of a course on the history of programming languages.)
@@ -1732,6 +1731,31 @@ print compile_('Q', Q)
 
 
 ```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
 unstack = (S[1], S[0]), S[1]
 enstacken = S[0], (S[0], S[1])
 ```
@@ -1779,6 +1803,11 @@ C(cons, unstack)
     ((s1, (a1, s2)), (a1, s1))
 
 
+
+
+```python
+
+```
 
 ## Part VI: Multiple Stack Effects
 ...
@@ -2120,6 +2149,11 @@ def compose(f, g):
         raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
     for result in s:
         yield update(result, (f_in, g_out))
+
+```
+
+
+```python
 
 ```
 

@@ -1,4 +1,3 @@
-
 .. code:: ipython2
 
     from notebook_preamble import D, DefinitionWrapper, J, V, define
@@ -335,3 +334,4 @@ Or:
        a [b c] [F] step
 
 To limit ``F`` to working on pairs of terms from its domain.
+

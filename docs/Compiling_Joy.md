@@ -1,5 +1,3 @@
-
-
 ```python
 from notebook_preamble import D, J, V, define
 ```
@@ -418,6 +416,11 @@ V('[a b c d] 1 2 [f] Ee')
             [a 1 c d] . 
 
 
+
+```python
+
+```
+
 ## Working with Yang Functions
 
 Consider the compiled code of `dup`:
@@ -457,6 +460,16 @@ def sqr(stack):
 
 ```
 
+
+```python
+
+```
+
+
+```python
+
+```
+
 How about...
 
 
@@ -492,6 +505,11 @@ def foo(stack):
 
 
 ```python
+
+```
+
+
+```python
 stack_effects = infer_string('tuck')
 for fi, fo in stack_effects:
     print doc_from_stack_effect(fi, fo)
@@ -499,6 +517,11 @@ for fi, fo in stack_effects:
 
     (a2 a1 -- a1 a2 a1)
 
+
+
+```python
+
+```
 
 ## Compiling Yin~Yang Functions
 
@@ -722,3 +745,23 @@ print compile_yinyang('to_the_fifth_power', e)
         return stack
     
 
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```

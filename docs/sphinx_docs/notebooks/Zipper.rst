@@ -1,4 +1,3 @@
-
 Traversing Datastructures with Zippers
 ======================================
 
@@ -351,3 +350,4 @@ from the subject datastructure:
 
     [ n [ n [ n n x ...
     i d i d i d d Bingo!
+

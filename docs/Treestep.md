@@ -1,4 +1,3 @@
-
 # Treating Trees II: `treestep`
 Let's consider a tree structure, similar to one described ["Why functional programming matters" by John Hughes](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf), that consists of a node value followed by zero or more child trees.  (The asterisk is meant to indicate the [Kleene star](https://en.wikipedia.org/wiki/Kleene_star).)
 

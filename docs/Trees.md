@@ -1,4 +1,3 @@
-
 # Treating Trees
 Although any expression in Joy can be considered to describe a [tree](https://en.wikipedia.org/wiki/Tree_structure) with the quotes as compound nodes and the non-quote values as leaf nodes, in this page I want to talk about [ordered binary trees](https://en.wikipedia.org/wiki/Binary_search_tree) and how to make and use them.
 
@@ -1540,7 +1539,7 @@ Let's reexamine:
     left BTree-iter-order key value F right BTree-iter-order
 
 
-    [key value left right] disenstacken swap
+    [key value left right] unstack swap
      key value left right               swap
      key value right left
 
@@ -1555,11 +1554,11 @@ Let's reexamine:
 
 So:
 
-    R0 == disenstacken swap
+    R0 == unstack swap
     R1 == [cons dipdd [F] dip] dupdip i
 
     [key value left right] R0                [BTree-iter-order] R1
-    [key value left right] disenstacken swap [BTree-iter-order] [cons dipdd [F] dip] dupdip i
+    [key value left right] unstack swap [BTree-iter-order] [cons dipdd [F] dip] dupdip i
      key value right left                    [BTree-iter-order] [cons dipdd [F] dip] dupdip i
 
      key value right left [BTree-iter-order] cons dipdd [F] dip [BTree-iter-order] i
@@ -1569,7 +1568,7 @@ So:
      left BTree-iter-order key value F right                     BTree-iter-order
 
 
-    BTree-iter-order == [not] [pop] [disenstacken swap] [[cons dipdd [F] dip] dupdip i] genrec
+    BTree-iter-order == [not] [pop] [unstack swap] [[cons dipdd [F] dip] dupdip i] genrec
 
 #### Refactor `cons cons`
     cons2 == cons cons
@@ -1639,8 +1638,8 @@ For pre- and post-order we can use the `step` trick:
 
 We worked out one scheme for ?in-order? traversal above, but maybe we can do better?
 
-    [key value left right]              [F] [BTree-iter] [disenstacken] dipd
-    [key value left right] disenstacken [F] [BTree-iter]
+    [key value left right]              [F] [BTree-iter] [unstack] dipd
+    [key value left right] unstack [F] [BTree-iter]
      key value left right               [F] [BTree-iter]
 
     key value left right [F] [BTree-iter] R1.1
@@ -1651,8 +1650,8 @@ Hmm...
     key value left right [BTree-iter] [F] [BTree-iter] 
 
 
-    [key value left right]                          [F] [BTree-iter] [disenstacken [roll>] dip] dipd
-    [key value left right] disenstacken [roll>] dip [F] [BTree-iter]
+    [key value left right]                          [F] [BTree-iter] [unstack [roll>] dip] dipd
+    [key value left right] unstack [roll>] dip [F] [BTree-iter]
      key value left right               [roll>] dip [F] [BTree-iter]
      key value left roll> right                     [F] [BTree-iter]
      left key value right                           [F] [BTree-iter]
@@ -1674,3 +1673,63 @@ If I understand it correctly, the "Bananas..." paper talks about a way to build 
 That's fine.  Circular datastructures can't be made though.
 
 
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+
+```

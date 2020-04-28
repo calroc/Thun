@@ -1,4 +1,3 @@
-
 Cf. `"Bananas, Lenses, & Barbed
 Wire" <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.125>`__
 

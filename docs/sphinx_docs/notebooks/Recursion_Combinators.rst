@@ -1,4 +1,3 @@
-
 .. code:: ipython2
 
     from notebook_preamble import D, DefinitionWrapper, J, V, define

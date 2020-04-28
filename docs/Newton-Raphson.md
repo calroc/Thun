@@ -1,4 +1,3 @@
-
 # [Newton's method](https://en.wikipedia.org/wiki/Newton%27s_method)
 Let's use the Newton-Raphson method for finding the root of an equation to write a function that can compute the square root of a number.
 

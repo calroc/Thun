@@ -1,4 +1,3 @@
-
 Advent of Code 2017
 ===================
 
@@ -202,6 +201,7 @@ Now we can define our main program and evaluate it on the examples.
     total_matches == 0 swap [i [=] [pop +] [popop] ifte] step
 
         AoC2017.1 == pair_up total_matches
+
 
 Now the paired digit is "halfway" round.
 

@@ -1,4 +1,3 @@
-
 # Advent of Code 2017
 
 ## December 1st
@@ -157,6 +156,11 @@ J('[9 1 2 1 2 1 2 9] AoC2017.1')
     total_matches == 0 swap [i [=] [pop +] [popop] ifte] step
 
         AoC2017.1 == pair_up total_matches
+
+
+```python
+
+```
 
 Now the paired digit is "halfway" round.
 

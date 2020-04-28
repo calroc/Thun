@@ -1,4 +1,3 @@
-
 Preamble
 ~~~~~~~~
 
@@ -151,4 +150,5 @@ Here's a longer trace.
      3 0 False [tuck modulus dup 0 >] . loop pop
                                   3 0 . pop
                                     3 . 
+
 

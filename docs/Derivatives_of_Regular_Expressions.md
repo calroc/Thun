@@ -1,4 +1,3 @@
-
 # ∂RE
 
 ## Brzozowski's Derivatives of Regular Expressions
@@ -813,4 +812,6 @@ We have a loop or "fixed point".
 hmm...
 
     j = (01)*
+
+
 

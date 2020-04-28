@@ -1,4 +1,3 @@
-
 The Four Fundamental Operations of Definite Action
 ==================================================
 

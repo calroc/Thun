@@ -1,4 +1,3 @@
-
 [STRIKEOUT:Cerrect]
 ===================
 
@@ -3968,6 +3967,9 @@ on the -per-location-predicate.
 
 
 
+
+
+
 .. code:: ipython2
 
     each_way(E, 'WRITE')
@@ -4017,6 +4019,7 @@ on the -per-location-predicate.
 .. parsed-literal::
 
     (((((addr_0 addr_1 addr_2) RAM_7_0) (RAM_6_0 addr_0 addr_1 addr_2)) (READ)) (READ a0))
+
 
 
 
@@ -4454,6 +4457,12 @@ But it's only about 1/9th of size of the previous version (which was
 
     len(str(sum3))
 
+
+
+
+
+
+
 Let's simplify the first one manually just for fun:
 
 ::
@@ -4473,12 +4482,16 @@ original expression:
       (( ) )( )
             ( )
 
+
 .. code:: ipython2
 
     C = F((a, b))
     for form in (A, B, C):
         arth = reify(form, env)
         print form, u'⟶', arth, u'⟶', value_of(arth)
+
+
+
 
 .. code:: ipython2
 
@@ -4507,6 +4520,10 @@ original expression:
     print a, Aa
     Aac = simplify(Aa, {c})
     print a, c, Aac
+
+
+
+
 
 .. code:: ipython2
 
@@ -4560,6 +4577,7 @@ Let's try using ``each_way()`` with the most common names in the form.
     #    print len(str(s7))
 
 
+
 .. code:: ipython2
 
     def super_simple(form):
@@ -4580,9 +4598,16 @@ Let's try using ``each_way()`` with the most common names in the form.
     #    print len(str(s7))
 
 
+
+
+
 .. code:: ipython2
 
     print ' '.join(name[:2] for name in sorted(R))
     for _ in range(20):
         print format_env(R), '=', b_register(R)
         R.update(cycle(P, R))
+
+
+
+

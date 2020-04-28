@@ -1,4 +1,3 @@
-
 Treating Trees I: Ordered Binary Trees
 ======================================
 

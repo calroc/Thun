@@ -1,4 +1,3 @@
-
 The Blissful Elegance of Typing Joy
 ===================================
 
@@ -2049,6 +2048,11 @@ comments are now already in the form needed for the Python code:
         return (((a2, (a1, s1)), s2), ((a2, (a1, s1)), s2))
 
 
+
+
+
+
+
 .. code:: ipython2
 
     unstack = (S[1], S[0]), S[1]
@@ -2104,6 +2108,7 @@ comments are now already in the form needed for the Python code:
 .. parsed-literal::
 
     ((s1, (a1, s2)), (a1, s1))
+
 
 
 
@@ -2493,6 +2498,7 @@ This function has to be modified to yield multiple results.
             raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
         for result in s:
             yield update(result, (f_in, g_out))
+
 
 
 .. code:: ipython2
