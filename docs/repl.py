@@ -68,7 +68,7 @@ treestep == swap [map] swoncat [TS1 [TS0] dip] dip genrec
 
 Q == [tuck / + 2 /] unary
 eps == [sqr - abs] nullary
-K == [<] [popop swap pop] [popd [Q eps] dip] primrec
+K == [<] [popop swap pop] [popd [Q eps] dip] tailrec
 
 
 
@@ -77,7 +77,7 @@ incr_value == [[popd incr_at] unary] dip
 add_value == [+] cons dipd
 incr_step_count == [++] dip
 
-F == [popop 5 >=] [roll< popop] [get_value incr_value add_value incr_step_count] primrec
+F == [popop 5 >=] [roll< popop] [get_value incr_value add_value incr_step_count] tailrec
 
 G == [first % not] [first /] [rest [not] [popop 0]] [ifte] genrec
 

@@ -245,7 +245,7 @@ make_generator == [codireco] ccons
 nullary == [stack] dinfrirst
 of == swap at
 pam == [i] map
-primrec == [i] genrec
+tailrec == [i] genrec
 product == 1 swap [*] step
 quoted == [unit] dip
 range == [0 <=] [1 - dup] anamorphism
@@ -1067,7 +1067,7 @@ def genrec(stack, expression, dictionary):
 	Primitive recursive functions are those where R2 == i.
 	::
 
-			P == [I] [T] [R] primrec
+			P == [I] [T] [R] tailrec
 				== [I] [T] [R [P] i] ifte
 				== [I] [T] [R P] ifte
 
@@ -1423,7 +1423,7 @@ def times(stack, expression, dictionary):
 # --------------------------------------
 #    [P] nullary [Q [P] nullary] loop
 
-#   while == [pop i not] [popop] [dudipd] primrec
+#   while == [pop i not] [popop] [dudipd] tailrec
 
 #def while_(S, expression, dictionary):
 #  '''[if] [body] while'''
@@ -1629,7 +1629,7 @@ for name in ('''
 ##  range == [0 <=] [1 - dup] anamorphism
 ##  while == swap [nullary] cons dup dipd concat loop
 ##  dupdipd == dup dipd
-##  primrec == [i] genrec
+##  tailrec == [i] genrec
 ##  step_zero == 0 roll> step
 ##  codireco == cons dip rest cons
 ##  make_generator == [codireco] ccons
