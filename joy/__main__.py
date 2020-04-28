@@ -20,6 +20,8 @@
 from __future__ import print_function
 from .library import initialize
 from .joy import repl
+from .utils import pretty_print  # Inscribe trace command.
+
 
 print('''\
 Thun - Copyright © 2017 Simon Forman

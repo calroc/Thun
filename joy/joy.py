@@ -28,7 +28,6 @@ from builtins import input
 from traceback import print_exc, format_exc
 from .parser import text_to_expression, ParseError, Symbol
 from .utils.stack import stack_to_string
-from .utils.pretty_print import TracePrinter
 
 
 def joy(stack, expression, dictionary, viewer=None):
@@ -101,16 +100,11 @@ def repl(stack=(), dictionary=None):
 				text = input('joy? ')
 			except (EOFError, KeyboardInterrupt):
 				break
-			viewer = TracePrinter()
 			try:
-				stack, _, dictionary = run(text, stack, dictionary, viewer.viewer)
+				stack, _, dictionary = run(text, stack, dictionary)
 			except:
 				exc = format_exc() # Capture the exception.
-				viewer.print_() # Print the Joy trace.
-				print('-' * 73)
 				print(exc) # Print the original exception.
-			else:
-				viewer.print_()
 	except:
 		print_exc()
 	print()

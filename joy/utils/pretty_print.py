@@ -43,6 +43,35 @@ from __future__ import print_function
 from builtins import object
 from traceback import print_exc
 from .stack import expression_to_string, stack_to_string
+from ..joy import joy
+from ..library import inscribe, FunctionWrapper
+
+
+@inscribe
+@FunctionWrapper
+def trace(stack, expression, dictionary):
+	'''Evaluate a Joy expression on a stack and print a trace.
+
+	This function is just like the `i` combinator but it also prints a
+	trace of the evaluation
+
+	:param stack stack: The stack.
+	:param stack expression: The expression to evaluate.
+	:param dict dictionary: A ``dict`` mapping names to Joy functions.
+	:rtype: (stack, (), dictionary)
+
+	'''
+	tp = TracePrinter()
+	quote, stack = stack
+	try:
+		s, _, d = joy(stack, quote, dictionary, tp.viewer)
+	except:
+		tp.print_()
+		print('-' * 73)
+		raise
+	else:
+		tp.print_()
+	return s, expression, d
 
 
 class TracePrinter(object):
