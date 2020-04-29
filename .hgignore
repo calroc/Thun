@@ -10,3 +10,4 @@ venv
 build
 Thun.egg-info
 dist
+__pycache__
