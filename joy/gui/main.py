@@ -46,7 +46,7 @@ _log.info('Starting with JOY_HOME=%s', JOY_HOME)
 
 # Now that logging is set up, continue loading the system.
 
-from joy.gui.textwidget import TextViewerWidget, tk, get_font
+from joy.gui.textwidget import TextViewerWidget, tk, get_font, make_main_window
 from joy.gui.world import StackDisplayWorld
 from joy.library import initialize, DefinitionWrapper
 from joy.utils.stack import stack_to_string
@@ -116,8 +116,8 @@ def commands():
 
 
 	def show_log(*args):
-		log_window.wm_deiconify()
-		log_window.update()
+		# log_window.wm_deiconify()
+		# log_window.update()
 		return args
 
 
@@ -144,14 +144,7 @@ DefinitionWrapper.load_definitions(DEFS_FN, D)
 
 world = StackDisplayWorld(repo, STACK_FN, REL_STACK_FN, dictionary=D)
 
-t = TextViewerWidget(world, **VIEWER_DEFAULTS)
-
-log_window = tk.Toplevel()
-# Make it so that you can't actually close the log window, if you try it
-# will just "withdraw" (which is like minifying but without a entry in
-# the taskbar or icon or whatever.)
-log_window.protocol("WM_DELETE_WINDOW", log_window.withdraw)
-log = TextViewerWidget(world, log_window, **VIEWER_DEFAULTS)
+top, t, log = make_main_window(world)
 
 FONT = get_font('Iosevka', size=14)  # Requires Tk root already set up.
 
