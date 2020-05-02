@@ -6,7 +6,7 @@
 Thun |release| Documentation
 ============================
 
-Thun is dialect of Joy written in Python 2.
+Thun is dialect of Joy written in Python.
 
 `Joy`_ is a programming language created by Manfred von Thun that is easy to
 use and understand and has many other nice properties.  This Python
