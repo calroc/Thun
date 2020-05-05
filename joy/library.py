@@ -914,16 +914,17 @@ def help_(S, expression, dictionary):
 # could change the word in the dictionary to use different semantics.
 S_choice = Symbol('choice')
 S_first = Symbol('first')
-S_getitem = Symbol('getitem')
 S_genrec = Symbol('genrec')
-S_loop = Symbol('loop')
+S_getitem = Symbol('getitem')
 S_i = Symbol('i')
 S_ifte = Symbol('ifte')
 S_infra = Symbol('infra')
+S_loop = Symbol('loop')
 S_pop = Symbol('pop')
+S_primrec = Symbol('primrec')
 S_step = Symbol('step')
-S_times = Symbol('times')
 S_swaack = Symbol('swaack')
+S_times = Symbol('times')
 
 
 @inscribe
@@ -1025,9 +1026,9 @@ def genrec(stack, expression, dictionary):
 	General Recursion Combinator.
 	::
 
-													[if] [then] [rec1] [rec2] genrec
-		---------------------------------------------------------------------
-			 [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte
+	                          [if] [then] [rec1] [rec2] genrec
+	    ---------------------------------------------------------------------
+	       [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte
 
 	From "Recursion Theory and Joy" (j05cmp.html) by Manfred von Thun:
 	"The genrec combinator takes four program parameters in addition to
@@ -1062,14 +1063,14 @@ def genrec(stack, expression, dictionary):
 	::
 
 			F == [I] [T] [R1]   [R2] genrec
-				== [I] [T] [R1 [F] R2] ifte
+			  == [I] [T] [R1 [F] R2] ifte
 
 	Primitive recursive functions are those where R2 == i.
 	::
 
 			P == [I] [T] [R] tailrec
-				== [I] [T] [R [P] i] ifte
-				== [I] [T] [R P] ifte
+			  == [I] [T] [R [P] i] ifte
+			  == [I] [T] [R P] ifte
 
 	'''
 	(rec2, (rec1, stack)) = stack
@@ -1102,6 +1103,49 @@ def map_(S, expression, dictionary):
 		batch = (s, (quote, (S_infra, (S_first, batch))))
 	stack = (batch, ((), stack))
 	return stack, (S_infra, expression), dictionary
+
+
+@inscribe
+@FunctionWrapper
+def primrec(stack, expression, dictionary):
+	'''
+	From the "Overview of the language JOY":
+
+	> The primrec combinator expects two quoted programs in addition to a
+	data parameter. For an integer data parameter it works like this: If
+	the data parameter is zero, then the first quotation has to produce
+	the value to be returned. If the data parameter is positive then the
+	second has to combine the data parameter with the result of applying
+	the function to its predecessor.
+
+	5  [1]  [*]  primrec
+
+	> Then primrec tests whether the top element on the stack (initially
+	the 5) is equal to zero. If it is, it pops it off and executes one of
+	the quotations, the [1] which leaves 1 on the stack as the result.
+	Otherwise it pushes a decremented copy of the top element and
+	recurses. On the way back from the recursion it uses the other
+	quotation, [*], to multiply what is now a factorial on top of the
+	stack by the second element on the stack.
+
+		n [Base] [Recur] primrec
+
+	   0 [Base] [Recur] primrec
+	------------------------------
+	      Base
+
+	   n [Base] [Recur] primrec
+	------------------------------------------ n > 0
+	   n (n-1) [Base] [Recur] primrec Recur
+
+	'''
+	recur, (base, (n, stack)) = stack
+	if n <= 0:
+		expression = concat(base, expression)
+	else:
+		expression = S_primrec, concat(recur, expression)
+		stack = recur, (base, (n - 1, (n, stack)))
+	return stack, expression, dictionary
 
 
 #def cleave(S, expression, dictionary):
