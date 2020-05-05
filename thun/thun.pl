@@ -372,6 +372,15 @@ combo(genrec, [R1, R0, Then, If|S],
               [  Else, Then, If|S], E, [ifte|E]) :-
     append(R0, [[If, Then, R0, R1, symbol(genrec)]|R1], Else).
 
+combo(primrec, [list(_), list(B), int(N)|S], S, E, Eo) :-
+    N #=< 0,
+    append(B, E, Eo).
+combo(primrec, [list(R), list(B), int(N)        |S],
+               [list(R), list(B), int(M), int(N)|S], E, Eo) :-
+    N #> 0,
+    M #= N - 1,
+    append([symbol(primrec)|R], E, Eo).
+
 /*
 This is a crude but servicable implementation of the map combinator.
 
