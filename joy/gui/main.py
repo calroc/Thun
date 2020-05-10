@@ -122,6 +122,12 @@ def commands():
 		return args
 
 
+	def show_stack(*args):
+		stack_window.wm_deiconify()
+		stack_window.update()
+		return args
+
+
 	def grand_reset(s, e, d):
 		stack = world.load_stack() or ()
 		log.reset()
