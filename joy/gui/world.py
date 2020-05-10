@@ -29,7 +29,7 @@ from inspect import getdoc
 from joy.joy import run
 from joy.library import HELP_TEMPLATE
 from joy.parser import Symbol
-from joy.utils.stack import iter_stack, stack_to_string
+from joy.utils.stack import stack_to_string
 from joy.utils.types import type_check
 from .utils import is_numerical
 
@@ -160,10 +160,10 @@ class StackWorld(StackDisplayWorld):
 
 	def set_viewer(self, viewer):
 		self.viewer = viewer
+		self.viewer.update_stack(self.stack)
 
 	def print_stack(self):
 		StackDisplayWorld.print_stack(self)
 		if self.viewer:
-			self.viewer.stack = list(iter_stack(self.stack))
-			self.viewer._update()
+			self.viewer.update_stack(self.stack)
 

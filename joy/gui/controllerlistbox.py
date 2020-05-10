@@ -20,7 +20,7 @@
 '''
 from Tkinter import Listbox, SINGLE
 from Tkdnd import dnd_start
-from joy.utils.stack import list_to_stack
+from joy.utils.stack import iter_stack, list_to_stack
 
 
 class SourceWrapper:
@@ -136,6 +136,10 @@ class StackListbox(ControllerListbox):
     def _update(self):
         self.delete(0, 'end')
         self.insert(0, *self.stack)
+
+    def update_stack(self, stack):
+        self.stack = list(iter_stack(stack))
+        self._update()
 
     def dnd_commit(self, source, event):
         ControllerListbox.dnd_commit(self, source, event)
