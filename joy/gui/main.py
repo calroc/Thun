@@ -47,7 +47,8 @@ _log.info('Starting with JOY_HOME=%s', JOY_HOME)
 # Now that logging is set up, continue loading the system.
 
 from joy.gui.textwidget import TextViewerWidget, tk, get_font
-from joy.gui.world import StackDisplayWorld
+from joy.gui.world import StackWorld
+from joy.gui.controllerlistbox import StackListbox
 from joy.library import initialize, DefinitionWrapper
 from joy.utils.stack import stack_to_string
 
@@ -142,7 +143,7 @@ D = initialize()
 D.update(commands())
 DefinitionWrapper.load_definitions(DEFS_FN, D)
 
-world = StackDisplayWorld(repo, STACK_FN, REL_STACK_FN, dictionary=D)
+world = StackWorld(repo, STACK_FN, REL_STACK_FN, dictionary=D)
 
 t = TextViewerWidget(world, **VIEWER_DEFAULTS)
 
@@ -154,6 +155,14 @@ log_window.protocol("WM_DELETE_WINDOW", log_window.withdraw)
 log = TextViewerWidget(world, log_window, **VIEWER_DEFAULTS)
 
 FONT = get_font('Iosevka', size=14)  # Requires Tk root already set up.
+
+stack_window = tk.Toplevel()
+stack_window.title("Stack")
+stack_window.protocol("WM_DELETE_WINDOW", log_window.withdraw)
+stack_viewer = StackListbox(world, stack_window, items=[])
+stack_viewer.pack(expand=True, fill=tk.BOTH)
+world.set_viewer(stack_viewer)
+
 
 log.init('Log', LOG_FN, repo_relative_path(LOG_FN), repo, FONT)
 t.init('Joy - ' + JOY_HOME, JOY_FN, repo_relative_path(JOY_FN), repo, FONT)

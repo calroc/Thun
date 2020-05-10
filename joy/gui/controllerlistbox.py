@@ -20,6 +20,7 @@
 '''
 from Tkinter import Listbox, SINGLE
 from Tkdnd import dnd_start
+from joy.utils.stack import list_to_stack
 
 
 class SourceWrapper:
@@ -28,7 +29,7 @@ class SourceWrapper:
     '''
     def __init__(self, source, widget, index=None):
         '''
-        source is the object being dragged, widget is the container thats
+        source is the object being dragged, widget is the container that's
         initialing the drag operation, and index s thu index of the item
         in the widget's model object (which presumably is a ListModel
         containing the source object.)
@@ -125,3 +126,18 @@ class ControllerListbox(DraggyListbox):
         finally:
             self.clear()
 
+
+class StackListbox(ControllerListbox):
+
+    def __init__(self, world, master=None, **kw):
+        ControllerListbox.__init__(self, master, **kw)
+        self.world = world
+
+    def _update(self):
+        self.delete(0, 'end')
+        self.insert(0, *self.stack)
+
+    def dnd_commit(self, source, event):
+        ControllerListbox.dnd_commit(self, source, event)
+        self._update()
+        self.world.stack = list_to_stack(self.stack)
