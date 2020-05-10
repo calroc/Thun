@@ -426,6 +426,7 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 		return 'break'
 
 	def init(self, title, filename, repo_relative_filename, repo, font):
+		self.set_window_title(title)
 		if os.path.exists(filename):
 			with open(filename) as f:
 				data = f.read()
@@ -433,6 +434,7 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 			# Prevent this from triggering a git commit.
 			self.update()
 			self._cancelSave()
+		self.pack(expand=True, fill=tk.BOTH)
 		self.filename = filename
 		self.repo_relative_filename = repo_relative_filename
 		self.repo = repo
@@ -470,15 +472,3 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 
 		T.pack(expand=1, fill=tk.BOTH)
 		T.see(tk.END)
-
-
-def make_main_window(world):
-	m = tk.PanedWindow(orient=tk.HORIZONTAL)
-	m.winfo_toplevel().title('Thun')
-	m.pack(fill=tk.BOTH, expand=True)
-	H = 45
-	t = TextViewerWidget(world, m, width=128, height=H)
-	log = TextViewerWidget(world, m, width=73, height=H)
-	m.add(log)
-	m.add(t)
-	return m, t, log
