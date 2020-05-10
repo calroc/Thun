@@ -159,7 +159,7 @@ FONT = get_font('Iosevka', size=14)  # Requires Tk root already set up.
 stack_window = tk.Toplevel()
 stack_window.title("Stack")
 stack_window.protocol("WM_DELETE_WINDOW", log_window.withdraw)
-stack_viewer = StackListbox(world, stack_window, items=[])
+stack_viewer = StackListbox(world, stack_window, items=[], font=FONT)
 stack_viewer.pack(expand=True, fill=tk.BOTH)
 world.set_viewer(stack_viewer)
 
