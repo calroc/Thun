@@ -129,7 +129,8 @@ class StackDisplayWorld(World):
 		command = command.strip()
 		if self.has(command) and self.check(command) == False:  # not in {True, None}:
 			return
-		print('\njoy?', command)
+		# print('\njoy?', command)
+		print(command)
 		super(StackDisplayWorld, self).interpret(command)
 
 	def print_stack(self):
@@ -163,7 +164,7 @@ class StackWorld(StackDisplayWorld):
 		self.viewer.update_stack(self.stack)
 
 	def print_stack(self):
-		StackDisplayWorld.print_stack(self)
+		# StackDisplayWorld.print_stack(self)
 		if self.viewer:
 			self.viewer.update_stack(self.stack)
 
