@@ -25,8 +25,8 @@ values from (at least) one end.
 
 There is no "Stack" Python class, instead we use the  `cons list`_, a 
 venerable two-tuple recursive sequence datastructure, where the
-empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the recursive
-form of a stack with one or more items on it::
+empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the
+recursive form of a stack with one or more items on it::
 
     stack := () | (item, stack)
 
