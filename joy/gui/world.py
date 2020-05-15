@@ -130,8 +130,11 @@ class StackDisplayWorld(World):
 		if self.has(command) and self.check(command) == False:  # not in {True, None}:
 			return
 		# print('\njoy?', command)
-		print(command)
+		self.print_command(command)
 		super(StackDisplayWorld, self).interpret(command)
+
+	def print_command(self, command):
+		print(command)
 
 	def print_stack(self):
 		print('\n%s <-' % stack_to_string(self.stack))
@@ -164,7 +167,7 @@ class StackWorld(StackDisplayWorld):
 		self.viewer.update_stack(self.stack)
 
 	def print_stack(self):
-		# StackDisplayWorld.print_stack(self)
+		print('%s . ' % stack_to_string(self.stack), end='')
 		if self.viewer:
 			self.viewer.update_stack(self.stack)
 

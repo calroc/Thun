@@ -102,6 +102,7 @@ Ns = list(map(NumberStarJoyType, _R))
 Ss = list(map(StackStarJoyType, _R))
 
 
+# "sec": stack effect comment, like in Forth.
 sec0 = stack_effect(t1)()
 sec1 = stack_effect(s0, i1)(s1)
 sec2 = stack_effect(s0, i1)(a1)
@@ -113,6 +114,7 @@ sec_unary_logic = stack_effect(a1)(b1)
 sec_unary_math = stack_effect(n1)(n2)
 sec_Ns_math = stack_effect((Ns[1], s1),)(n0)
 
+# This is the main dict we're building.
 _dictionary = {}
 
 
