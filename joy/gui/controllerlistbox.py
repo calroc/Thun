@@ -18,12 +18,15 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 '''
-from Tkinter import Listbox, SINGLE
-from Tkdnd import dnd_start
+from future import standard_library
+standard_library.install_aliases()
+from builtins import map, object, str
+from tkinter import Listbox, SINGLE
+from tkinter.dnd import dnd_start
 from joy.utils.stack import iter_stack, list_to_stack, expression_to_string
 
 
-class SourceWrapper:
+class SourceWrapper(object):
     '''
     Helper object for drag and drop.
     '''
