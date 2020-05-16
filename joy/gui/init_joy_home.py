@@ -29,7 +29,7 @@ def create_data(from_dir='./default_joy_home'):
 	return base64.encodestring(f.getvalue())
 
 
-Z = zipfile.ZipFile(io.BytesIO(base64.decodestring('''\
+Z = zipfile.ZipFile(io.BytesIO(base64.decodestring(b'''\
 UEsDBBQAAAAAAJKh9Uw/yHAgFQQAABUEAAALAAAAc2NyYXRjaC50eHRyZXNldF9sb2cgd29yZHMg
 bW91c2VfYmluZGluZ3Mga2V5X2JpbmRpbmdzCgpTdGFjayBDaGF0dGVyCgogZHVwIGR1cGQgZHVw
 ZGQgb3ZlciB0dWNrCiBwb3AgcG9wZCBwb3BkZCBwb3BvcCBwb3BvcGQgcG9wb3BkZAogc3dhcCBy

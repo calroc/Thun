@@ -8,7 +8,7 @@ from dulwich.errors import NotGitRepository
 from dulwich.repo import Repo
 
 
-COMMITTER = 'Joy <auto-commit@example.com>'
+COMMITTER = b'Joy <auto-commit@example.com>'
 DEFAULT_JOY_HOME = expanduser(join('~', '.joypy'))
 
 
@@ -66,7 +66,7 @@ def init_repo(repo_dir):
 	import joy.gui.init_joy_home
 	joy.gui.init_joy_home.initialize(repo_dir)
 	repo.stage([fn for fn in listdir(repo_dir) if isfile(join(repo_dir, fn))])
-	repo.do_commit('Initial commit.', committer=COMMITTER)
+	repo.do_commit(b'Initial commit.', committer=COMMITTER)
 	return repo
 
 
