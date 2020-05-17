@@ -224,43 +224,43 @@ def yin_functions():
 
 
 definitions = ('''\
-? == dup truthy
-*fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
-*fraction0 == concat [[swap] dip * [*] dip] infra
-anamorphism == [pop []] swap [dip swons] genrec
-average == [sum 1.0 *] [size] cleave /
-binary == nullary [popop] dip
-cleave == fork [popd] dip
-codireco == cons dip rest cons
-dinfrirst == dip infra first
-unstack == ? [uncons ?] loop pop
-down_to_zero == [0 >] [dup --] while
-dupdipd == dup dipd
-enstacken == stack [clear] dip
-flatten == [] swap [concat] step
-fork == [i] app2
-gcd == 1 [tuck modulus dup 0 >] loop pop
-ifte == [nullary not] dipd branch
-ii == [dip] dupdip i
-least_fraction == dup [gcd] infra [div] concat map
-make_generator == [codireco] ccons
-nullary == [stack] dinfrirst
-of == swap at
-pam == [i] map
-tailrec == [i] genrec
-product == 1 swap [*] step
-quoted == [unit] dip
-range == [0 <=] [1 - dup] anamorphism
-range_to_zero == unit [down_to_zero] infra
-run == [] swap infra
-size == 0 swap [pop ++] step
-sqr == dup mul
-step_zero == 0 roll> step
-swoncat == swap concat
-ternary == unary [popop] dip
-unary == nullary popd
-unquoted == [i] dip
-while == swap [nullary] cons dup dipd concat loop
+? dup truthy
+*fraction [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
+*fraction0 concat [[swap] dip * [*] dip] infra
+anamorphism [pop []] swap [dip swons] genrec
+average [sum 1.0 *] [size] cleave /
+binary nullary [popop] dip
+cleave fork [popd] dip
+codireco cons dip rest cons
+dinfrirst dip infra first
+unstack ? [uncons ?] loop pop
+down_to_zero [0 >] [dup --] while
+dupdipd dup dipd
+enstacken stack [clear] dip
+flatten [] swap [concat] step
+fork [i] app2
+gcd 1 [tuck modulus dup 0 >] loop pop
+ifte [nullary not] dipd branch
+ii [dip] dupdip i
+least_fraction dup [gcd] infra [div] concat map
+make_generator [codireco] ccons
+nullary [stack] dinfrirst
+of swap at
+pam [i] map
+tailrec [i] genrec
+product 1 swap [*] step
+quoted [unit] dip
+range [0 <=] [1 - dup] anamorphism
+range_to_zero unit [down_to_zero] infra
+run [] swap infra
+size 0 swap [pop ++] step
+sqr dup mul
+step_zero 0 roll> step
+swoncat swap concat
+ternary unary [popop] dip
+unary nullary popd
+unquoted [i] dip
+while swap [nullary] cons dup dipd concat loop
 '''
 #
 #
@@ -376,10 +376,7 @@ class DefinitionWrapper(object):
 		Given some text describing a Joy function definition parse it and
 		return a DefinitionWrapper.
 		'''
-		name, proper, body_text = (n.strip() for n in defi.partition('=='))
-		if not proper:
-			raise ValueError('Definition %r failed' % (defi,))
-		return class_(name, body_text)
+		return class_(*(n.strip() for n in defi.split(maxsplit=1)))
 
 	@classmethod
 	def add_definitions(class_, defs, dictionary):
@@ -408,7 +405,11 @@ class DefinitionWrapper(object):
 
 
 def _text_to_defs(text):
-	return (line.strip() for line in text.splitlines() if '==' in line)
+	return (
+		line.strip()
+		for line in text.splitlines()
+		if not line.startswith('#')
+		)
 
 
 #
