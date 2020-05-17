@@ -1,5 +1,5 @@
-Cf. `"Bananas, Lenses, & Barbed
-Wire" <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.125>`__
+Cf. `“Bananas, Lenses, & Barbed
+Wire” <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.125>`__
 
 `Hylomorphism <https://en.wikipedia.org/wiki/Hylomorphism_%28computer_science%29>`__
 ====================================================================================
@@ -13,8 +13,8 @@ means of:
 -  A combiner ``F :: (B, B) -> B``
 -  A predicate ``P :: A -> Bool`` to detect the base case
 -  A base case value ``c :: B``
--  Recursive calls (zero or more); it has a "call stack in the form of a
-   cons list".
+-  Recursive calls (zero or more); it has a “call stack in the form of a
+   cons list”.
 
 It may be helpful to see this function implemented in imperative Python
 code.
@@ -37,7 +37,7 @@ code.
 Finding `Triangular Numbers <https://en.wikipedia.org/wiki/Triangular_number>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As a concrete example let's use a function that, given a positive
+As a concrete example let’s use a function that, given a positive
 integer, returns the sum of all positive integers less than that one.
 (In this case the types A and B are both ``int``.) ### With ``range()``
 and ``sum()``
@@ -110,7 +110,7 @@ As a hylomorphism
 If you were to run the above code in a debugger and check out the call
 stack you would find that the variable ``b`` in each call to ``H()`` is
 storing the intermediate values as ``H()`` recurses. This is what was
-meant by "call stack in the form of a cons list".
+meant by “call stack in the form of a cons list”.
 
 Joy Preamble
 ~~~~~~~~~~~~
@@ -127,7 +127,7 @@ hylomorphism combinator ``H`` from constituent parts.
 
 ::
 
-    H == c [F] [P] [G] hylomorphism
+   H == c [F] [P] [G] hylomorphism
 
 The function ``H`` is recursive, so we start with ``ifte`` and set the
 else-part to some function ``J`` that will contain a quoted copy of
@@ -136,37 +136,37 @@ with the base case value ``c``.)
 
 ::
 
-    H == [P] [pop c] [J] ifte
+   H == [P] [pop c] [J] ifte
 
 The else-part ``J`` gets just the argument ``a`` on the stack.
 
 ::
 
-    a J
-    a G              The first thing to do is use the generator G
-    aa b             which produces b and a new aa
-    aa b [H] dip     we recur with H on the new aa
-    aa H b F         and run F on the result.
+   a J
+   a G              The first thing to do is use the generator G
+   aa b             which produces b and a new aa
+   aa b [H] dip     we recur with H on the new aa
+   aa H b F         and run F on the result.
 
 This gives us a definition for ``J``.
 
 ::
 
-    J == G [H] dip F
+   J == G [H] dip F
 
 Plug it in and convert to genrec.
 
 ::
 
-    H == [P] [pop c] [G [H] dip F] ifte
-    H == [P] [pop c] [G]   [dip F] genrec
+   H == [P] [pop c] [G [H] dip F] ifte
+   H == [P] [pop c] [G]   [dip F] genrec
 
 This is the form of a hylomorphism in Joy, which nicely illustrates that
 it is a simple specialization of the general recursion combinator.
 
 ::
 
-    H == [P] [pop c] [G] [dip F] genrec
+   H == [P] [pop c] [G] [dip F] genrec
 
 Derivation of ``hylomorphism``
 ------------------------------
@@ -176,10 +176,10 @@ arguments out of the pieces given to the ``hylomorphism`` combinator.
 
 ::
 
-    H == [P] [pop c]              [G]                  [dip F] genrec
-         [P] [c]    [pop] swoncat [G]        [F] [dip] swoncat genrec
-         [P] c unit [pop] swoncat [G]        [F] [dip] swoncat genrec
-         [P] c [G] [F] [unit [pop] swoncat] dipd [dip] swoncat genrec
+   H == [P] [pop c]              [G]                  [dip F] genrec
+        [P] [c]    [pop] swoncat [G]        [F] [dip] swoncat genrec
+        [P] c unit [pop] swoncat [G]        [F] [dip] swoncat genrec
+        [P] c [G] [F] [unit [pop] swoncat] dipd [dip] swoncat genrec
 
 Working in reverse: - Use ``swoncat`` twice to decouple ``[c]`` and
 ``[F]``. - Use ``unit`` to dequote ``c``. - Use ``dipd`` to untangle
@@ -190,7 +190,7 @@ the left so we have a definition for ``hylomorphism``:
 
 ::
 
-    hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec
+   hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec
 
 The order of parameters is different than the one we started with but
 that hardly matters, you can rearrange them or just supply them in the
@@ -198,7 +198,7 @@ expected order.
 
 ::
 
-    [P] c [G] [F] hylomorphism == H
+   [P] c [G] [F] hylomorphism == H
 
 .. code:: ipython2
 
@@ -369,39 +369,39 @@ An anamorphism can be defined as a hylomorphism that uses ``[]`` for
 
 ::
 
-    [P] [G] anamorphism == [P] [] [G] [swons] hylomorphism == A
+   [P] [G] anamorphism == [P] [] [G] [swons] hylomorphism == A
 
 This allows us to define an anamorphism combinator in terms of the
 hylomorphism combinator.
 
 ::
 
-    [] swap [swons] hylomorphism == anamorphism
+   [] swap [swons] hylomorphism == anamorphism
 
-Partial evaluation gives us a "pre-cooked" form.
+Partial evaluation gives us a “pre-cooked” form.
 
 ::
 
-    [P] [G] . anamorphism
-    [P] [G] . [] swap [swons] hylomorphism
-    [P] [G] [] . swap [swons] hylomorphism
-    [P] [] [G] . [swons] hylomorphism
-    [P] [] [G] [swons] . hylomorphism
-    [P] [] [G] [swons] . [unit [pop] swoncat] dipd [dip] swoncat genrec
-    [P] [] [G] [swons] [unit [pop] swoncat] . dipd [dip] swoncat genrec
-    [P] [] . unit [pop] swoncat [G] [swons] [dip] swoncat genrec
-    [P] [[]] [pop] . swoncat [G] [swons] [dip] swoncat genrec
-    [P] [pop []] [G] [swons] [dip] . swoncat genrec
+   [P] [G] . anamorphism
+   [P] [G] . [] swap [swons] hylomorphism
+   [P] [G] [] . swap [swons] hylomorphism
+   [P] [] [G] . [swons] hylomorphism
+   [P] [] [G] [swons] . hylomorphism
+   [P] [] [G] [swons] . [unit [pop] swoncat] dipd [dip] swoncat genrec
+   [P] [] [G] [swons] [unit [pop] swoncat] . dipd [dip] swoncat genrec
+   [P] [] . unit [pop] swoncat [G] [swons] [dip] swoncat genrec
+   [P] [[]] [pop] . swoncat [G] [swons] [dip] swoncat genrec
+   [P] [pop []] [G] [swons] [dip] . swoncat genrec
 
-    [P] [pop []] [G] [dip swons] genrec
+   [P] [pop []] [G] [dip swons] genrec
 
 (We could also have just substituted for ``c`` and ``F`` in the
 definition of ``H``.)
 
 ::
 
-    H == [P] [pop c ] [G] [dip F    ] genrec
-    A == [P] [pop []] [G] [dip swons] genrec
+   H == [P] [pop c ] [G] [dip F    ] genrec
+   A == [P] [pop []] [G] [dip swons] genrec
 
 The partial evaluation is overkill in this case but it serves as a
 reminder that this sort of program specialization can, in many cases, be
@@ -411,20 +411,20 @@ Untangle ``[G]`` from ``[pop []]`` using ``swap``.
 
 ::
 
-    [P] [G] [pop []] swap [dip swons] genrec
+   [P] [G] [pop []] swap [dip swons] genrec
 
 All of the arguments to ``anamorphism`` are to the left, so we have a
 definition for it.
 
 ::
 
-    anamorphism == [pop []] swap [dip swons] genrec
+   anamorphism == [pop []] swap [dip swons] genrec
 
 An example of an anamorphism is the range function.
 
 ::
 
-    range == [0 <=] [1 - dup] anamorphism
+   range == [0 <=] [1 - dup] anamorphism
 
 Catamorphism
 ============
@@ -434,48 +434,48 @@ A catamorphism can be defined as a hylomorphism that uses
 
 ::
 
-    c [F] catamorphism == [[] =] c [uncons swap] [F] hylomorphism == C
+   c [F] catamorphism == [[] =] c [uncons swap] [F] hylomorphism == C
 
 This allows us to define a ``catamorphism`` combinator in terms of the
 ``hylomorphism`` combinator.
 
 ::
 
-    [[] =] roll> [uncons swap] swap hylomorphism == catamorphism
+   [[] =] roll> [uncons swap] swap hylomorphism == catamorphism
 
-Partial evaluation doesn't help much.
+Partial evaluation doesn’t help much.
 
 ::
 
-    c [F] . catamorphism
-    c [F] . [[] =] roll> [uncons swap] swap hylomorphism
-    c [F] [[] =] . roll> [uncons swap] swap hylomorphism
-    [[] =] c [F] [uncons swap] . swap hylomorphism
-    [[] =] c [uncons swap] [F] . hylomorphism
-    [[] =] c [uncons swap] [F] [unit [pop] swoncat] . dipd [dip] swoncat genrec
-    [[] =] c . unit [pop] swoncat [uncons swap] [F] [dip] swoncat genrec
-    [[] =] [c] [pop] . swoncat [uncons swap] [F] [dip] swoncat genrec
-    [[] =] [pop c] [uncons swap] [F] [dip] . swoncat genrec
-    [[] =] [pop c] [uncons swap] [dip F] genrec
+   c [F] . catamorphism
+   c [F] . [[] =] roll> [uncons swap] swap hylomorphism
+   c [F] [[] =] . roll> [uncons swap] swap hylomorphism
+   [[] =] c [F] [uncons swap] . swap hylomorphism
+   [[] =] c [uncons swap] [F] . hylomorphism
+   [[] =] c [uncons swap] [F] [unit [pop] swoncat] . dipd [dip] swoncat genrec
+   [[] =] c . unit [pop] swoncat [uncons swap] [F] [dip] swoncat genrec
+   [[] =] [c] [pop] . swoncat [uncons swap] [F] [dip] swoncat genrec
+   [[] =] [pop c] [uncons swap] [F] [dip] . swoncat genrec
+   [[] =] [pop c] [uncons swap] [dip F] genrec
 
 Because the arguments to catamorphism have to be prepared (unlike the
 arguments to anamorphism, which only need to be rearranged slightly)
-there isn't much point to "pre-cooking" the definition.
+there isn’t much point to “pre-cooking” the definition.
 
 ::
 
-    catamorphism == [[] =] roll> [uncons swap] swap hylomorphism
+   catamorphism == [[] =] roll> [uncons swap] swap hylomorphism
 
 An example of a catamorphism is the sum function.
 
 ::
 
-    sum == 0 [+] catamorphism
+   sum == 0 [+] catamorphism
 
-"Fusion Law" for catas (UNFINISHED!!!)
+“Fusion Law” for catas (UNFINISHED!!!)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I'm not sure exactly how to translate the "Fusion Law" for catamorphisms
+I’m not sure exactly how to translate the “Fusion Law” for catamorphisms
 into Joy.
 
 I know that a ``map`` composed with a cata can be expressed as a new
@@ -483,95 +483,95 @@ cata:
 
 ::
 
-    [F] map b [B] cata == b [F B] cata
+   [F] map b [B] cata == b [F B] cata
 
-But this isn't the one described in "Bananas...". That's more like:
+But this isn’t the one described in “Bananas…”. That’s more like:
 
 A cata composed with some function can be expressed as some other cata:
 
 ::
 
-    b [B] catamorphism F == c [C] catamorphism
+   b [B] catamorphism F == c [C] catamorphism
 
 Given:
 
 ::
 
-    b F == c
+   b F == c
 
-    ...
+   ...
 
-    B F == [F] dip C
+   B F == [F] dip C
 
-    ...
+   ...
 
-    b[B]cata F == c[C]cata
+   b[B]cata F == c[C]cata
 
-    F(B(head, tail)) == C(head, F(tail))
+   F(B(head, tail)) == C(head, F(tail))
 
-    1 [2 3] B F         1 [2 3] F C
+   1 [2 3] B F         1 [2 3] F C
 
 
-    b F == c
-    B F == F C
+   b F == c
+   B F == F C
 
-    b [B] catamorphism F == c [C] catamorphism
-    b [B] catamorphism F == b F [C] catamorphism
+   b [B] catamorphism F == c [C] catamorphism
+   b [B] catamorphism F == b F [C] catamorphism
 
-    ...
+   ...
 
 Or maybe,
 
 ::
 
-    [F] map b [B] cata == c [C] cata     ???
+   [F] map b [B] cata == c [C] cata     ???
 
-    [F] map b [B] cata == b [F B] cata    I think this is generally true, unless F consumes stack items
-                                            instead of just transforming TOS.  Of course, there's always [F] unary.
-    b [F] unary [[F] unary B] cata
+   [F] map b [B] cata == b [F B] cata    I think this is generally true, unless F consumes stack items
+                                           instead of just transforming TOS.  Of course, there's always [F] unary.
+   b [F] unary [[F] unary B] cata
 
-    [10 *] map 0 swap [+] step == 0 swap [10 * +] step
+   [10 *] map 0 swap [+] step == 0 swap [10 * +] step
 
 For example:
 
 ::
 
-    F == 10 *
-    b == 0
-    B == +
-    c == 0
-    C == F +
+   F == 10 *
+   b == 0
+   B == +
+   c == 0
+   C == F +
 
-    b F    == c
-    0 10 * == 0
+   b F    == c
+   0 10 * == 0
 
-    B F    == [F]    dip C
-    + 10 * == [10 *] dip F +
-    + 10 * == [10 *] dip 10 * +
+   B F    == [F]    dip C
+   + 10 * == [10 *] dip F +
+   + 10 * == [10 *] dip 10 * +
 
-    n m + 10 * == 10(n+m)
+   n m + 10 * == 10(n+m)
 
-    n m [10 *] dip 10 * +
-    n 10 * m 10 * +
-    10n m 10 * +
-    10n 10m +
-    10n+10m
+   n m [10 *] dip 10 * +
+   n 10 * m 10 * +
+   10n m 10 * +
+   10n 10m +
+   10n+10m
 
-    10n+10m = 10(n+m)
+   10n+10m = 10(n+m)
 
 Ergo:
 
 ::
 
-    0 [+] catamorphism 10 * == 0 [10 * +] catamorphism
+   0 [+] catamorphism 10 * == 0 [10 * +] catamorphism
 
 The ``step`` combinator will usually be better to use than ``catamorphism``.
 ----------------------------------------------------------------------------
 
 ::
 
-    sum == 0 swap [+] step
-    sum == 0 [+] catamorphism
+   sum == 0 swap [+] step
+   sum == 0 [+] catamorphism
 
 anamorphism catamorphism == hylomorphism
 ========================================
@@ -582,26 +582,26 @@ An anamorphism followed by (composed with) a catamorphism is a
 hylomorphism, with the advantage that the hylomorphism does not create
 the intermediate list structure. The values are stored in either the
 call stack, for those implementations that use one, or in the pending
-expression ("continuation") for the Joypy interpreter. They still have
+expression (“continuation”) for the Joypy interpreter. They still have
 to be somewhere, converting from an anamorphism and catamorphism to a
 hylomorphism just prevents using additional storage and doing additional
 processing.
 
 ::
 
-        range == [0 <=] [1 - dup] anamorphism
-          sum == 0 [+] catamorphism
+       range == [0 <=] [1 - dup] anamorphism
+         sum == 0 [+] catamorphism
 
-    range sum == [0 <=] [1 - dup] anamorphism 0 [+] catamorphism
-              == [0 <=] 0 [1 - dup] [+] hylomorphism
+   range sum == [0 <=] [1 - dup] anamorphism 0 [+] catamorphism
+             == [0 <=] 0 [1 - dup] [+] hylomorphism
 
 We can let the ``hylomorphism`` combinator build ``range_sum`` for us or
 just substitute ourselves.
 
 ::
 
-            H == [P]    [pop c] [G]       [dip F] genrec
-    range_sum == [0 <=] [pop 0] [1 - dup] [dip +] genrec
+           H == [P]    [pop c] [G]       [dip F] genrec
+   range_sum == [0 <=] [pop 0] [1 - dup] [dip +] genrec
 
 .. code:: ipython2
 
@@ -1394,9 +1394,9 @@ A paramorphism ``P :: B -> A`` is a recursion combinator that uses
 
 ::
 
-    n swap [P] [pop] [[F] dupdip G] primrec
+   n swap [P] [pop] [[F] dupdip G] primrec
 
-With - ``n :: A`` is the "identity" for ``F`` (like 1 for
+With - ``n :: A`` is the “identity” for ``F`` (like 1 for
 multiplication, 0 for addition) - ``F :: (A, B) -> A`` - ``G :: B -> B``
 generates the next ``B`` value. - and lastly ``P :: B -> Bool`` detects
 the end of the series.
@@ -1405,10 +1405,10 @@ For Factorial function (types ``A`` and ``B`` are both integer):
 
 ::
 
-    n == 1
-    F == *
-    G == --
-    P == 1 <=
+   n == 1
+   F == *
+   G == --
+   P == 1 <=
 
 .. code:: ipython2
 
@@ -1418,23 +1418,23 @@ Try it with input 3 (omitting evaluation of predicate):
 
 ::
 
-    3 1 swap [1 <=] [pop] [[*] dupdip --] primrec
-    1 3      [1 <=] [pop] [[*] dupdip --] primrec
+   3 1 swap [1 <=] [pop] [[*] dupdip --] primrec
+   1 3      [1 <=] [pop] [[*] dupdip --] primrec
 
-    1 3 [*] dupdip --
-    1 3  * 3      --
-    3      3      --
-    3      2
+   1 3 [*] dupdip --
+   1 3  * 3      --
+   3      3      --
+   3      2
 
-    3 2 [*] dupdip --
-    3 2  *  2      --
-    6       2      --
-    6       1
+   3 2 [*] dupdip --
+   3 2  *  2      --
+   6       2      --
+   6       1
 
-    6 1 [1 <=] [pop] [[*] dupdip --] primrec
+   6 1 [1 <=] [pop] [[*] dupdip --] primrec
 
-    6 1 pop
-    6
+   6 1 pop
+   6
 
 .. code:: ipython2
 
@@ -1451,15 +1451,15 @@ Derive ``paramorphism`` from the form above.
 
 ::
 
-    n swap [P] [pop] [[F] dupdip G] primrec
+   n swap [P] [pop] [[F] dupdip G] primrec
 
-    n swap [P]       [pop]     [[F] dupdip G]                  primrec
-    n [P] [swap] dip [pop]     [[F] dupdip G]                  primrec
-    n [P] [[F] dupdip G]                [[swap] dip [pop]] dip primrec
-    n [P] [F] [dupdip G]           cons [[swap] dip [pop]] dip primrec
-    n [P] [F] [G] [dupdip] swoncat cons [[swap] dip [pop]] dip primrec
+   n swap [P]       [pop]     [[F] dupdip G]                  primrec
+   n [P] [swap] dip [pop]     [[F] dupdip G]                  primrec
+   n [P] [[F] dupdip G]                [[swap] dip [pop]] dip primrec
+   n [P] [F] [dupdip G]           cons [[swap] dip [pop]] dip primrec
+   n [P] [F] [G] [dupdip] swoncat cons [[swap] dip [pop]] dip primrec
 
-    paramorphism == [dupdip] swoncat cons [[swap] dip [pop]] dip primrec
+   paramorphism == [dupdip] swoncat cons [[swap] dip [pop]] dip primrec
 
 .. code:: ipython2
 
@@ -1479,24 +1479,24 @@ Derive ``paramorphism`` from the form above.
 ``tails``
 =========
 
-An example of a paramorphism for lists given in the `"Bananas..."
+An example of a paramorphism for lists given in the `“Bananas…”
 paper <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.125>`__
-is ``tails`` which returns the list of "tails" of a list.
+is ``tails`` which returns the list of “tails” of a list.
 
 ::
 
-    [1 2 3] tails == [[] [3] [2 3]]
+   [1 2 3] tails == [[] [3] [2 3]]
 
 Using ``paramorphism`` we would write:
 
 ::
 
-    n == []
-    F == rest swons
-    G == rest
-    P == not
+   n == []
+   F == rest swons
+   G == rest
+   P == not
 
-    tails == [] [not] [rest swons] [rest] paramorphism
+   tails == [] [not] [rest swons] [rest] paramorphism
 
 .. code:: ipython2
 
@@ -1539,22 +1539,22 @@ Right before the recursion begins we have:
 
 ::
 
-    [] [1 2 3] [not] [pop] [[rest swons] dupdip rest] primrec
+   [] [1 2 3] [not] [pop] [[rest swons] dupdip rest] primrec
 
 But we might prefer to factor ``rest`` in the quote:
 
 ::
 
-    [] [1 2 3] [not] [pop] [rest [swons] dupdip] primrec
+   [] [1 2 3] [not] [pop] [rest [swons] dupdip] primrec
 
-There's no way to do that with the ``paramorphism`` combinator as
+There’s no way to do that with the ``paramorphism`` combinator as
 defined. We would have to write and use a slightly different recursion
-combinator that accepted an additional "preprocessor" function ``[H]``
+combinator that accepted an additional “preprocessor” function ``[H]``
 and built:
 
 ::
 
-    n swap [P] [pop] [H [F] dupdip G] primrec
+   n swap [P] [pop] [H [F] dupdip G] primrec
 
 Or just write it out manually. This is yet another place where the
 *sufficiently smart compiler* will one day automatically refactor the
@@ -1564,7 +1564,7 @@ and ``[G]`` for common prefix and extracted it.
 Patterns of Recursion
 =====================
 
-Our story so far...
+Our story so far…
 
 -  A combiner ``F :: (B, B) -> B``
 -  A predicate ``P :: A -> Bool`` to detect the base case
@@ -1575,22 +1575,22 @@ Hylo-, Ana-, Cata-
 
 ::
 
-    w/ G :: A -> (A, B)
+   w/ G :: A -> (A, B)
 
-    H == [P   ] [pop c ] [G          ] [dip F    ] genrec
-    A == [P   ] [pop []] [G          ] [dip swons] genrec
-    C == [[] =] [pop c ] [uncons swap] [dip F    ] genrec
+   H == [P   ] [pop c ] [G          ] [dip F    ] genrec
+   A == [P   ] [pop []] [G          ] [dip swons] genrec
+   C == [[] =] [pop c ] [uncons swap] [dip F    ] genrec
 
 Para-, ?-, ?-
 ~~~~~~~~~~~~~
 
 ::
 
-    w/ G :: B -> B
+   w/ G :: B -> B
 
-    P == c  swap [P   ] [pop] [[F    ] dupdip G          ] primrec
-    ? == [] swap [P   ] [pop] [[swons] dupdip G          ] primrec
-    ? == c  swap [[] =] [pop] [[F    ] dupdip uncons swap] primrec
+   P == c  swap [P   ] [pop] [[F    ] dupdip G          ] primrec
+   ? == [] swap [P   ] [pop] [[swons] dupdip G          ] primrec
+   ? == c  swap [[] =] [pop] [[F    ] dupdip uncons swap] primrec
 
 Four Generalizations
 ====================
@@ -1598,54 +1598,54 @@ Four Generalizations
 There are at least four kinds of recursive combinator, depending on two
 choices. The first choice is whether the combiner function should be
 evaluated during the recursion or pushed into the pending expression to
-be "collapsed" at the end. The second choice is whether the combiner
+be “collapsed” at the end. The second choice is whether the combiner
 needs to operate on the current value of the datastructure or the
-generator's output.
+generator’s output.
 
 ::
 
-    H ==        [P] [pop c] [G             ] [dip F] genrec
-    H == c swap [P] [pop]   [G [F]    dip  ] [i]     genrec
-    H ==        [P] [pop c] [  [G] dupdip  ] [dip F] genrec
-    H == c swap [P] [pop]   [  [F] dupdip G] [i]     genrec
+   H ==        [P] [pop c] [G             ] [dip F] genrec
+   H == c swap [P] [pop]   [G [F]    dip  ] [i]     genrec
+   H ==        [P] [pop c] [  [G] dupdip  ] [dip F] genrec
+   H == c swap [P] [pop]   [  [F] dupdip G] [i]     genrec
 
 Consider:
 
 ::
 
-    ... a G [H] dip F                w/ a G == a' b
-    ... c a G [F] dip H                 a G == b  a'
-    ... a [G] dupdip [H] dip F          a G == a'
-    ... c a [F] dupdip G H              a G == a'
+   ... a G [H] dip F                w/ a G == a' b
+   ... c a G [F] dip H                 a G == b  a'
+   ... a [G] dupdip [H] dip F          a G == a'
+   ... c a [F] dupdip G H              a G == a'
 
 1
 ~
 
 ::
 
-    H == [P] [pop c] [G] [dip F] genrec
+   H == [P] [pop c] [G] [dip F] genrec
 
 Iterate n times.
 
 ::
 
-    ... a [P] [pop c] [G] [dip F] genrec
-    ... a  G [H] dip F
-    ... a' b [H] dip F
-    ... a' H b F
-    ... a'  G [H] dip F b F
-    ... a'' b [H] dip F b F
-    ... a'' H b F b F
-    ... a''  G [H] dip F b F b F
-    ... a''' b [H] dip F b F b F
-    ... a''' H b F b F b F
-    ... a''' pop c b F b F b F
-    ... c b F b F b F
+   ... a [P] [pop c] [G] [dip F] genrec
+   ... a  G [H] dip F
+   ... a' b [H] dip F
+   ... a' H b F
+   ... a'  G [H] dip F b F
+   ... a'' b [H] dip F b F
+   ... a'' H b F b F
+   ... a''  G [H] dip F b F b F
+   ... a''' b [H] dip F b F b F
+   ... a''' H b F b F b F
+   ... a''' pop c b F b F b F
+   ... c b F b F b F
 
 This form builds up a continuation that contains the intermediate
 results along with the pending combiner functions. When the base case is
 reached the last term is replaced by the identity value c and the
-continuation "collapses" into the final result.
+continuation “collapses” into the final result.
 
 2
 ~
@@ -1658,21 +1658,21 @@ reverse order.
 
 ::
 
-    H == c swap [P] [pop] [G [F] dip] primrec
+   H == c swap [P] [pop] [G [F] dip] primrec
 
-    ... c a G [F] dip H
-    ... c b a' [F] dip H
-    ... c b F a' H
-    ... c b F a' G [F] dip H
-    ... c b F b a'' [F] dip H
-    ... c b F b F a'' H
-    ... c b F b F a'' G [F] dip H
-    ... c b F b F b a''' [F] dip H
-    ... c b F b F b F a''' H
-    ... c b F b F b F a''' pop
-    ... c b F b F b F
+   ... c a G [F] dip H
+   ... c b a' [F] dip H
+   ... c b F a' H
+   ... c b F a' G [F] dip H
+   ... c b F b a'' [F] dip H
+   ... c b F b F a'' H
+   ... c b F b F a'' G [F] dip H
+   ... c b F b F b a''' [F] dip H
+   ... c b F b F b F a''' H
+   ... c b F b F b F a''' pop
+   ... c b F b F b F
 
-The end line here is the same as for above, but only because we didn't
+The end line here is the same as for above, but only because we didn’t
 evaluate ``F`` when it normally would have been.
 
 3
@@ -1684,22 +1684,22 @@ one item instead of two (the b is instead the duplicate of a.)
 
 ::
 
-    H == [P] [pop c] [[G] dupdip] [dip F] genrec
+   H == [P] [pop c] [[G] dupdip] [dip F] genrec
 
-    ... a [G] dupdip [H] dip F
-    ... a  G a       [H] dip F
-    ... a'   a       [H] dip F
-    ... a' H a F
-    ... a' [G] dupdip [H] dip F a F
-    ... a'  G  a'     [H] dip F a F
-    ... a''    a'     [H] dip F a F
-    ... a'' H  a' F a F
-    ... a'' [G] dupdip [H] dip F a' F a F
-    ... a''  G  a''    [H] dip F a' F a F
-    ... a'''    a''    [H] dip F a' F a F
-    ... a''' H  a'' F a' F a F
-    ... a''' pop c  a'' F a' F a F
-    ...          c  a'' F a' F a F
+   ... a [G] dupdip [H] dip F
+   ... a  G a       [H] dip F
+   ... a'   a       [H] dip F
+   ... a' H a F
+   ... a' [G] dupdip [H] dip F a F
+   ... a'  G  a'     [H] dip F a F
+   ... a''    a'     [H] dip F a F
+   ... a'' H  a' F a F
+   ... a'' [G] dupdip [H] dip F a' F a F
+   ... a''  G  a''    [H] dip F a' F a F
+   ... a'''    a''    [H] dip F a' F a F
+   ... a''' H  a'' F a' F a F
+   ... a''' pop c  a'' F a' F a F
+   ...          c  a'' F a' F a F
 
 4
 ~
@@ -1709,21 +1709,21 @@ and the combiner needs to work on the current item, this is the form:
 
 ::
 
-    W == c swap [P] [pop] [[F] dupdip G] primrec
+   W == c swap [P] [pop] [[F] dupdip G] primrec
 
-    ... a c swap [P] [pop] [[F] dupdip G] primrec
-    ... c a [P] [pop] [[F] dupdip G] primrec
-    ... c a [F] dupdip G W
-    ... c a  F a G W
-    ... c a  F a'  W
-    ... c a  F a'  [F] dupdip G W
-    ... c a  F a'   F  a'     G W
-    ... c a  F a'   F  a''      W
-    ... c a  F a'   F  a''      [F] dupdip G W
-    ... c a  F a'   F  a''       F  a''    G W
-    ... c a  F a'   F  a''       F  a'''     W
-    ... c a  F a'   F  a''       F  a'''     pop
-    ... c a  F a'   F  a''       F
+   ... a c swap [P] [pop] [[F] dupdip G] primrec
+   ... c a [P] [pop] [[F] dupdip G] primrec
+   ... c a [F] dupdip G W
+   ... c a  F a G W
+   ... c a  F a'  W
+   ... c a  F a'  [F] dupdip G W
+   ... c a  F a'   F  a'     G W
+   ... c a  F a'   F  a''      W
+   ... c a  F a'   F  a''      [F] dupdip G W
+   ... c a  F a'   F  a''       F  a''    G W
+   ... c a  F a'   F  a''       F  a'''     W
+   ... c a  F a'   F  a''       F  a'''     pop
+   ... c a  F a'   F  a''       F
 
 Each of the four variations above can be specialized to ana- and
 catamorphic forms.
@@ -1761,7 +1761,7 @@ catamorphic forms.
 
 ::
 
-    H == [P   ] [pop c ] [G          ] [dip F    ] genrec
+   H == [P   ] [pop c ] [G          ] [dip F    ] genrec
 
 .. code:: ipython2
 
@@ -2092,15 +2092,15 @@ Appendix - Fun with Symbols
 
 ::
 
-    |[ (c, F), (G, P) ]| == (|c, F|) • [(G, P)]
+   |[ (c, F), (G, P) ]| == (|c, F|) • [(G, P)]
 
-`"Bananas, Lenses, & Barbed
-Wire" <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.125>`__
+`“Bananas, Lenses, & Barbed
+Wire” <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.125>`__
 
 ::
 
-    (|...|)  [(...)]  [<...>]
+   (|...|)  [(...)]  [<...>]
 
 I think they are having slightly too much fun with the symbols.
 
-"Too much is always better than not enough."
+“Too much is always better than not enough.”

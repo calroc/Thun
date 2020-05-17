@@ -9,7 +9,7 @@ Given a Joy program like:
 
 ::
 
-    sqr == dup mul
+   sqr == dup mul
 
 .. code:: ipython2
 
@@ -58,7 +58,7 @@ The simplest thing would be to compose the functions from the library:
     529 . 
 
 
-It's simple to write a function to emit this kind of crude "compiled"
+It’s simple to write a function to emit this kind of crude “compiled”
 code.
 
 .. code:: ipython2
@@ -96,7 +96,7 @@ But what about literals?
 
 ::
 
-    quoted == [unit] dip
+   quoted == [unit] dip
 
 .. code:: ipython2
 
@@ -126,10 +126,10 @@ Compiling Yin Functions
 
 Call-chaining results in code that does too much work. For functions
 that operate on stacks and only rearrange values, what I like to call
-"Yin Functions", we can do better.
+“Yin Functions”, we can do better.
 
-We can infer the stack effects of these functions (or "expressions" or
-"programs") automatically, and the stack effects completely define the
+We can infer the stack effects of these functions (or “expressions” or
+“programs”) automatically, and the stack effects completely define the
 semantics of the functions, so we can directly write out a two-line
 Python function for them. This is already implemented in the
 ``joy.utils.types.compile_()`` function.
@@ -162,7 +162,7 @@ loop.
     source = compile_('foo', stack_effects[0])
 
 All Yin functions can be described in Python as a tuple-unpacking (or
-"-destructuring") of the stack datastructure followed by building up the
+“-destructuring”) of the stack datastructure followed by building up the
 new stack structure.
 
 .. code:: ipython2
@@ -205,16 +205,16 @@ new stack structure.
 Compiling from Stack Effects
 ----------------------------
 
-There are times when you're deriving a Joy program when you have a stack
+There are times when you’re deriving a Joy program when you have a stack
 effect for a Yin function and you need to define it. For example, in the
 Ordered Binary Trees notebook there is a point where we must derive a
 function ``Ee``:
 
 ::
 
-       [key old_value left right] new_value key [Tree-add] Ee
-    ------------------------------------------------------------
-       [key new_value left right]
+      [key old_value left right] new_value key [Tree-add] Ee
+   ------------------------------------------------------------
+      [key new_value left right]
 
 While it is not hard to come up with this function manually, there is no
 necessity. This function can be defined (in Python) directly from its
@@ -222,11 +222,11 @@ stack effect:
 
 ::
 
-       [a b c d] e a [f] Ee
-    --------------------------
-       [a e c d]
+      [a b c d] e a [f] Ee
+   --------------------------
+      [a e c d]
 
-(I haven't yet implemented a simple interface for this yet. What follow
+(I haven’t yet implemented a simple interface for this yet. What follow
 is an exploration of how to do it.)
 
 .. code:: ipython2
@@ -373,7 +373,7 @@ Now we can omit ``a3`` and ``a4`` if we like:
     stack_effect = eval('(((a1, (a2, s1)), (a5, (a6, (a7, s0)))), ((a1, (a5, s1)), s0))', tv)
 
 The ``right`` and ``left`` parts of the ordered binary tree node are
-subsumed in the tail of the node's stack/list.
+subsumed in the tail of the node’s stack/list.
 
 .. code:: ipython2
 
@@ -404,7 +404,7 @@ subsumed in the tail of the node's stack/list.
       return ((a1, (a5, s1)), s0)
 
 
-Oops! The input stack is backwards...
+Oops! The input stack is backwards…
 
 .. code:: ipython2
 
@@ -443,9 +443,9 @@ Compare:
 
 ::
 
-       [key old_value left right] new_value key [Tree-add] Ee
-    ------------------------------------------------------------
-       [key new_value left right]
+      [key old_value left right] new_value key [Tree-add] Ee
+   ------------------------------------------------------------
+      [key new_value left right]
 
 .. code:: ipython2
 
@@ -510,7 +510,7 @@ Then we would want something like this:
 
 
 
-How about...
+How about…
 
 .. code:: ipython2
 
@@ -561,7 +561,7 @@ How about...
 Compiling Yin~Yang Functions
 ----------------------------
 
-First, we need a source of Python identifiers. I'm going to reuse
+First, we need a source of Python identifiers. I’m going to reuse
 ``Symbol`` class for this.
 
 .. code:: ipython2
@@ -579,7 +579,7 @@ First, we need a source of Python identifiers. I'm going to reuse
     names = _names().next
 
 Now we need an object that represents a Yang function that accepts two
-args and return one result (we'll implement other kinds a little later.)
+args and return one result (we’ll implement other kinds a little later.)
 
 .. code:: ipython2
 
@@ -594,7 +594,7 @@ args and return one result (we'll implement other kinds a little later.)
             code.append(('call', out, self.name, (in0, in1)))
             return (out, stack), expression, code
 
-A crude "interpreter" that translates expressions of args and Yin and
+A crude “interpreter” that translates expressions of args and Yin and
 Yang functions into a kind of simple dataflow graph.
 
 .. code:: ipython2
@@ -676,7 +676,7 @@ Something to convert the graph into Python code.
     ''' % (name, code_gen(I((), expression, [])))
 
 
-A few functions to try it with...
+A few functions to try it with…
 
 .. code:: ipython2
 
@@ -706,7 +706,7 @@ A few functions to try it with...
       def import_yin():
 
 
-... and there we are.
+… and there we are.
 
 .. code:: ipython2
 

@@ -1,18 +1,19 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Joy Interpreter &#8212; Thun 0.3.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Stack or Quote or Sequence or List…" href="stack.html" />
@@ -29,8 +30,6 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="section" id="joy-interpreter">
@@ -40,9 +39,9 @@
 <p>This module implements an interpreter for a dialect of Joy that
 attempts to stay very close to the spirit of Joy but does not precisely
 match the behaviour of the original version(s) written in C.</p>
-<dl class="py function">
+<dl class="function">
 <dt id="joy.joy.joy">
-<code class="sig-prename descclassname">joy.joy.</code><code class="sig-name descname">joy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stack</span></em>, <em class="sig-param"><span class="n">expression</span></em>, <em class="sig-param"><span class="n">dictionary</span></em>, <em class="sig-param"><span class="n">viewer</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/joy.html#joy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.joy.joy" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">joy.joy.</code><code class="descname">joy</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em>, <em>viewer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/joy.html#joy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.joy.joy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate a Joy expression on a stack.</p>
 <p>This function iterates through a sequence of terms which are either
 literals (strings, numbers, sequences of terms) or function symbols.
@@ -50,56 +49,68 @@ Literals are put onto the stack and functions are looked up in the
 disctionary and executed.</p>
 <p>The viewer is a function that is called with the stack and expression
 on every iteration, its return value is ignored.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>stack</strong> (<em>stack</em>) – The stack.</p></li>
-<li><p><strong>expression</strong> (<em>stack</em>) – The expression to evaluate.</p></li>
-<li><p><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</p></li>
-<li><p><strong>viewer</strong> (<em>function</em>) – Optional viewer function.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stack</strong> (<em>stack</em>) – The stack.</li>
+<li><strong>expression</strong> (<em>stack</em>) – The expression to evaluate.</li>
+<li><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</li>
+<li><strong>viewer</strong> (<em>function</em>) – Optional viewer function.</li>
 </ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>(stack, (), dictionary)</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(stack, (), dictionary)</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="joy.joy.repl">
-<code class="sig-prename descclassname">joy.joy.</code><code class="sig-name descname">repl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stack</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">dictionary</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/joy.html#repl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.joy.repl" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">joy.joy.</code><code class="descname">repl</code><span class="sig-paren">(</span><em>stack=()</em>, <em>dictionary=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/joy.html#repl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.joy.repl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read-Evaluate-Print Loop</p>
 <p>Accept input and run it on the stack, loop.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>stack</strong> (<em>stack</em>) – The stack.</p></li>
-<li><p><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stack</strong> (<em>stack</em>) – The stack.</li>
+<li><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</li>
 </ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>stack</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">stack</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="joy.joy.run">
-<code class="sig-prename descclassname">joy.joy.</code><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">stack</span></em>, <em class="sig-param"><span class="n">dictionary</span></em>, <em class="sig-param"><span class="n">viewer</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/joy.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.joy.run" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">joy.joy.</code><code class="descname">run</code><span class="sig-paren">(</span><em>text</em>, <em>stack</em>, <em>dictionary</em>, <em>viewer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/joy.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.joy.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the stack resulting from running the Joy code text on the stack.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> (<em>str</em>) – Joy code.</p></li>
-<li><p><strong>stack</strong> (<em>stack</em>) – The stack.</p></li>
-<li><p><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</p></li>
-<li><p><strong>viewer</strong> (<em>function</em>) – Optional viewer function.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<em>str</em>) – Joy code.</li>
+<li><strong>stack</strong> (<em>stack</em>) – The stack.</li>
+<li><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</li>
+<li><strong>viewer</strong> (<em>function</em>) – Optional viewer function.</li>
 </ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>(stack, (), dictionary)</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(stack, (), dictionary)</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -107,36 +118,17 @@ on every iteration, its return value is ignored.</p>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">Thun</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="notebooks/Intro.html">Thun: Joy in Python</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Joy Interpreter</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-joy.joy"><code class="docutils literal notranslate"><span class="pre">joy.joy</span></code></a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Joy Interpreter</a><ul>
+<li><a class="reference internal" href="#module-joy.joy"><code class="docutils literal notranslate"><span class="pre">joy.joy</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="stack.html">Stack or Quote or Sequence or List…</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parser.html">Parsing Text into Joy Expressions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pretty.html">Tracing Joy Execution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="library.html">Function Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lib.html">Functions Grouped by, er, Function with Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="types.html">Type Inference of Joy Expressions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Essays about Programming in Joy</a></li>
 </ul>
-
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -146,24 +138,25 @@ on every iteration, its return value is ignored.</p>
   </ul></li>
 </ul>
 </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/joy.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -174,7 +167,7 @@ on every iteration, its return value is ignored.</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
     </div>
 
   </body>

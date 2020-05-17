@@ -22,8 +22,8 @@ that you start by running the package:
 
 ::
 
-    $ python -m joy
-    Joypy - Copyright © 2017 Simon Forman
+    $ python3 -m joy
+    Thun - Copyright © 2017 Simon Forman
     This program comes with ABSOLUTELY NO WARRANTY; for details type "warranty".
     This is free software, and you are welcome to redistribute it
     under certain conditions; type "sharing" for details.
@@ -31,7 +31,7 @@ that you start by running the package:
     docs for a word.
 
 
-     <-top
+    <-top
 
     joy? _
 
@@ -40,7 +40,14 @@ You can enter Joy notation at the prompt and a :doc:`trace of evaluation <../pre
 be printed followed by the stack and prompt again::
 
     joy? 23 sqr 18 +
-           . 23 sqr 18 +
+
+    547 <-top
+
+    joy? 
+
+There is a `trace` combinator::
+
+    joy? 23 [sqr 18 +] trace
         23 . sqr 18 +
         23 . dup mul 18 +
      23 23 . mul 18 +

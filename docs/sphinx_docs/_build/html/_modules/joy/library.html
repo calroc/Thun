@@ -1,18 +1,19 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>joy.library &#8212; Thun 0.3.0 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -27,8 +28,6 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <h1>Source code for joy.library</h1><div class="highlight"><pre>
@@ -57,29 +56,29 @@
 <span class="sd">returns a dictionary of Joy functions suitable for use with the joy()</span>
 <span class="sd">function.</span>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">map</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="nb">range</span><span class="p">,</span> <span class="nb">zip</span>
-<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">map</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="nb">range</span><span class="p">,</span> <span class="nb">zip</span>
+<span class="kn">from</span> <span class="nn">logging</span> <span class="k">import</span> <span class="n">getLogger</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading library.&#39;</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getdoc</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
-<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getmembers</span><span class="p">,</span> <span class="n">isfunction</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">getdoc</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">count</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">getmembers</span><span class="p">,</span> <span class="n">isfunction</span>
 <span class="kn">import</span> <span class="nn">operator</span><span class="o">,</span> <span class="nn">math</span>
 
-<span class="kn">from</span> <span class="nn">.parser</span> <span class="kn">import</span> <span class="n">text_to_expression</span><span class="p">,</span> <span class="n">Symbol</span>
-<span class="kn">from</span> <span class="nn">.utils.stack</span> <span class="kn">import</span> <span class="n">expression_to_string</span><span class="p">,</span> <span class="n">list_to_stack</span><span class="p">,</span> <span class="n">iter_stack</span><span class="p">,</span> <span class="n">pick</span><span class="p">,</span> <span class="n">concat</span>
+<span class="kn">from</span> <span class="nn">.parser</span> <span class="k">import</span> <span class="n">text_to_expression</span><span class="p">,</span> <span class="n">Symbol</span>
+<span class="kn">from</span> <span class="nn">.utils.stack</span> <span class="k">import</span> <span class="n">expression_to_string</span><span class="p">,</span> <span class="n">list_to_stack</span><span class="p">,</span> <span class="n">iter_stack</span><span class="p">,</span> <span class="n">pick</span><span class="p">,</span> <span class="n">concat</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-	<span class="kn">from</span> <span class="nn">.utils.brutal_hackery</span> <span class="kn">import</span> <span class="n">rename_code_object</span>
+	<span class="kn">from</span> <span class="nn">.utils.brutal_hackery</span> <span class="k">import</span> <span class="n">rename_code_object</span>
 <span class="k">else</span><span class="p">:</span>
 	<span class="n">rename_code_object</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span>
 
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">generated_library</span> <span class="k">as</span> <span class="n">genlib</span>
-<span class="kn">from</span> <span class="nn">.utils.types</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">generated_library</span> <span class="k">as</span> <span class="n">genlib</span>
+<span class="kn">from</span> <span class="nn">.utils.types</span> <span class="k">import</span> <span class="p">(</span>
 	<span class="n">compose</span><span class="p">,</span>
 	<span class="n">ef</span><span class="p">,</span>
 	<span class="n">stack_effect</span><span class="p">,</span>
@@ -136,6 +135,7 @@
 <span class="n">Ss</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">StackStarJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
 
 
+<span class="c1"># &quot;sec&quot;: stack effect comment, like in Forth.</span>
 <span class="n">sec0</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">t1</span><span class="p">)()</span>
 <span class="n">sec1</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">i1</span><span class="p">)(</span><span class="n">s1</span><span class="p">)</span>
 <span class="n">sec2</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">i1</span><span class="p">)(</span><span class="n">a1</span><span class="p">)</span>
@@ -147,6 +147,7 @@
 <span class="n">sec_unary_math</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">n1</span><span class="p">)(</span><span class="n">n2</span><span class="p">)</span>
 <span class="n">sec_Ns_math</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">((</span><span class="n">Ns</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">s1</span><span class="p">),)(</span><span class="n">n0</span><span class="p">)</span>
 
+<span class="c1"># This is the main dict we&#39;re building.</span>
 <span class="n">_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
 
 
@@ -256,43 +257,43 @@
 
 
 <span class="n">definitions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
-<span class="s1">? == dup truthy</span>
-<span class="s1">*fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons</span>
-<span class="s1">*fraction0 == concat [[swap] dip * [*] dip] infra</span>
-<span class="s1">anamorphism == [pop []] swap [dip swons] genrec</span>
-<span class="s1">average == [sum 1.0 *] [size] cleave /</span>
-<span class="s1">binary == nullary [popop] dip</span>
-<span class="s1">cleave == fork [popd] dip</span>
-<span class="s1">codireco == cons dip rest cons</span>
-<span class="s1">dinfrirst == dip infra first</span>
-<span class="s1">unstack == ? [uncons ?] loop pop</span>
-<span class="s1">down_to_zero == [0 &gt;] [dup --] while</span>
-<span class="s1">dupdipd == dup dipd</span>
-<span class="s1">enstacken == stack [clear] dip</span>
-<span class="s1">flatten == [] swap [concat] step</span>
-<span class="s1">fork == [i] app2</span>
-<span class="s1">gcd == 1 [tuck modulus dup 0 &gt;] loop pop</span>
-<span class="s1">ifte == [nullary not] dipd branch</span>
-<span class="s1">ii == [dip] dupdip i</span>
-<span class="s1">least_fraction == dup [gcd] infra [div] concat map</span>
-<span class="s1">make_generator == [codireco] ccons</span>
-<span class="s1">nullary == [stack] dinfrirst</span>
-<span class="s1">of == swap at</span>
-<span class="s1">pam == [i] map</span>
-<span class="s1">tailrec == [i] genrec</span>
-<span class="s1">product == 1 swap [*] step</span>
-<span class="s1">quoted == [unit] dip</span>
-<span class="s1">range == [0 &lt;=] [1 - dup] anamorphism</span>
-<span class="s1">range_to_zero == unit [down_to_zero] infra</span>
-<span class="s1">run == [] swap infra</span>
-<span class="s1">size == 0 swap [pop ++] step</span>
-<span class="s1">sqr == dup mul</span>
-<span class="s1">step_zero == 0 roll&gt; step</span>
-<span class="s1">swoncat == swap concat</span>
-<span class="s1">ternary == unary [popop] dip</span>
-<span class="s1">unary == nullary popd</span>
-<span class="s1">unquoted == [i] dip</span>
-<span class="s1">while == swap [nullary] cons dup dipd concat loop</span>
+<span class="s1">? dup truthy</span>
+<span class="s1">*fraction [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons</span>
+<span class="s1">*fraction0 concat [[swap] dip * [*] dip] infra</span>
+<span class="s1">anamorphism [pop []] swap [dip swons] genrec</span>
+<span class="s1">average [sum 1.0 *] [size] cleave /</span>
+<span class="s1">binary nullary [popop] dip</span>
+<span class="s1">cleave fork [popd] dip</span>
+<span class="s1">codireco cons dip rest cons</span>
+<span class="s1">dinfrirst dip infra first</span>
+<span class="s1">unstack ? [uncons ?] loop pop</span>
+<span class="s1">down_to_zero [0 &gt;] [dup --] while</span>
+<span class="s1">dupdipd dup dipd</span>
+<span class="s1">enstacken stack [clear] dip</span>
+<span class="s1">flatten [] swap [concat] step</span>
+<span class="s1">fork [i] app2</span>
+<span class="s1">gcd 1 [tuck modulus dup 0 &gt;] loop pop</span>
+<span class="s1">ifte [nullary not] dipd branch</span>
+<span class="s1">ii [dip] dupdip i</span>
+<span class="s1">least_fraction dup [gcd] infra [div] concat map</span>
+<span class="s1">make_generator [codireco] ccons</span>
+<span class="s1">nullary [stack] dinfrirst</span>
+<span class="s1">of swap at</span>
+<span class="s1">pam [i] map</span>
+<span class="s1">tailrec [i] genrec</span>
+<span class="s1">product 1 swap [*] step</span>
+<span class="s1">quoted [unit] dip</span>
+<span class="s1">range [0 &lt;=] [1 - dup] anamorphism</span>
+<span class="s1">range_to_zero unit [down_to_zero] infra</span>
+<span class="s1">run [] swap infra</span>
+<span class="s1">size 0 swap [pop ++] step</span>
+<span class="s1">sqr dup mul</span>
+<span class="s1">step_zero 0 roll&gt; step</span>
+<span class="s1">swoncat swap concat</span>
+<span class="s1">ternary unary [popop] dip</span>
+<span class="s1">unary nullary popd</span>
+<span class="s1">unquoted [i] dip</span>
+<span class="s1">while swap [nullary] cons dup dipd concat loop</span>
 <span class="s1">&#39;&#39;&#39;</span>
 <span class="c1">#</span>
 <span class="c1">#</span>
@@ -389,14 +390,14 @@
 <span class="sd">	Provide implementation of defined functions, and some helper methods.</span>
 <span class="sd">	&#39;&#39;&#39;</span>
 
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">body_text</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">body_text</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">name</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="n">body_text</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_body</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">iter_stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">))</span>
 		<span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">doc</span> <span class="ow">or</span> <span class="n">body_text</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span> <span class="o">=</span> <span class="kc">None</span>
 
-	<span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="p">:</span>
 			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">)</span>  <span class="c1"># pylint: disable=E1102</span>
 		<span class="n">expression</span> <span class="o">=</span> <span class="n">list_to_stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_body</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
@@ -408,10 +409,7 @@
 <span class="sd">		Given some text describing a Joy function definition parse it and</span>
 <span class="sd">		return a DefinitionWrapper.</span>
 <span class="sd">		&#39;&#39;&#39;</span>
-		<span class="n">name</span><span class="p">,</span> <span class="n">proper</span><span class="p">,</span> <span class="n">body_text</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">defi</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;==&#39;</span><span class="p">))</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">proper</span><span class="p">:</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Definition </span><span class="si">%r</span><span class="s1"> failed&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">defi</span><span class="p">,))</span>
-		<span class="k">return</span> <span class="n">class_</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">body_text</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="n">class_</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">defi</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="DefinitionWrapper.add_definitions"><a class="viewcode-back" href="../../library.html#joy.library.DefinitionWrapper.add_definitions">[docs]</a>	<span class="nd">@classmethod</span>
 	<span class="k">def</span> <span class="nf">add_definitions</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="n">defs</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
@@ -440,7 +438,11 @@
 
 
 <span class="k">def</span> <span class="nf">_text_to_defs</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-	<span class="k">return</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="s1">&#39;==&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
+	<span class="k">return</span> <span class="p">(</span>
+		<span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+		<span class="p">)</span>
 
 
 <span class="c1">#</span>
@@ -948,16 +950,17 @@
 <span class="c1"># could change the word in the dictionary to use different semantics.</span>
 <span class="n">S_choice</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;choice&#39;</span><span class="p">)</span>
 <span class="n">S_first</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
-<span class="n">S_getitem</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;getitem&#39;</span><span class="p">)</span>
 <span class="n">S_genrec</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;genrec&#39;</span><span class="p">)</span>
-<span class="n">S_loop</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;loop&#39;</span><span class="p">)</span>
+<span class="n">S_getitem</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;getitem&#39;</span><span class="p">)</span>
 <span class="n">S_i</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
 <span class="n">S_ifte</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;ifte&#39;</span><span class="p">)</span>
 <span class="n">S_infra</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;infra&#39;</span><span class="p">)</span>
+<span class="n">S_loop</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;loop&#39;</span><span class="p">)</span>
 <span class="n">S_pop</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;pop&#39;</span><span class="p">)</span>
+<span class="n">S_primrec</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;primrec&#39;</span><span class="p">)</span>
 <span class="n">S_step</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;step&#39;</span><span class="p">)</span>
-<span class="n">S_times</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;times&#39;</span><span class="p">)</span>
 <span class="n">S_swaack</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;swaack&#39;</span><span class="p">)</span>
+<span class="n">S_times</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;times&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="i"><a class="viewcode-back" href="../../library.html#joy.library.i">[docs]</a><span class="nd">@inscribe</span>
@@ -1059,9 +1062,9 @@
 <span class="sd">	General Recursion Combinator.</span>
 <span class="sd">	::</span>
 
-<span class="sd">													[if] [then] [rec1] [rec2] genrec</span>
-<span class="sd">		---------------------------------------------------------------------</span>
-<span class="sd">			 [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte</span>
+<span class="sd">	                          [if] [then] [rec1] [rec2] genrec</span>
+<span class="sd">	    ---------------------------------------------------------------------</span>
+<span class="sd">	       [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte</span>
 
 <span class="sd">	From &quot;Recursion Theory and Joy&quot; (j05cmp.html) by Manfred von Thun:</span>
 <span class="sd">	&quot;The genrec combinator takes four program parameters in addition to</span>
@@ -1096,14 +1099,14 @@
 <span class="sd">	::</span>
 
 <span class="sd">			F == [I] [T] [R1]   [R2] genrec</span>
-<span class="sd">				== [I] [T] [R1 [F] R2] ifte</span>
+<span class="sd">			  == [I] [T] [R1 [F] R2] ifte</span>
 
 <span class="sd">	Primitive recursive functions are those where R2 == i.</span>
 <span class="sd">	::</span>
 
 <span class="sd">			P == [I] [T] [R] tailrec</span>
-<span class="sd">				== [I] [T] [R [P] i] ifte</span>
-<span class="sd">				== [I] [T] [R P] ifte</span>
+<span class="sd">			  == [I] [T] [R [P] i] ifte</span>
+<span class="sd">			  == [I] [T] [R P] ifte</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">rec2</span><span class="p">,</span> <span class="p">(</span><span class="n">rec1</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
@@ -1136,6 +1139,49 @@
 		<span class="n">batch</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">S_infra</span><span class="p">,</span> <span class="p">(</span><span class="n">S_first</span><span class="p">,</span> <span class="n">batch</span><span class="p">))))</span>
 	<span class="n">stack</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="p">((),</span> <span class="n">stack</span><span class="p">))</span>
 	<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="p">(</span><span class="n">S_infra</span><span class="p">,</span> <span class="n">expression</span><span class="p">),</span> <span class="n">dictionary</span></div>
+
+
+<div class="viewcode-block" id="primrec"><a class="viewcode-back" href="../../library.html#joy.library.primrec">[docs]</a><span class="nd">@inscribe</span>
+<span class="nd">@FunctionWrapper</span>
+<span class="k">def</span> <span class="nf">primrec</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	From the &quot;Overview of the language JOY&quot;:</span>
+
+<span class="sd">	&gt; The primrec combinator expects two quoted programs in addition to a</span>
+<span class="sd">	data parameter. For an integer data parameter it works like this: If</span>
+<span class="sd">	the data parameter is zero, then the first quotation has to produce</span>
+<span class="sd">	the value to be returned. If the data parameter is positive then the</span>
+<span class="sd">	second has to combine the data parameter with the result of applying</span>
+<span class="sd">	the function to its predecessor.</span>
+
+<span class="sd">	5  [1]  [*]  primrec</span>
+
+<span class="sd">	&gt; Then primrec tests whether the top element on the stack (initially</span>
+<span class="sd">	the 5) is equal to zero. If it is, it pops it off and executes one of</span>
+<span class="sd">	the quotations, the [1] which leaves 1 on the stack as the result.</span>
+<span class="sd">	Otherwise it pushes a decremented copy of the top element and</span>
+<span class="sd">	recurses. On the way back from the recursion it uses the other</span>
+<span class="sd">	quotation, [*], to multiply what is now a factorial on top of the</span>
+<span class="sd">	stack by the second element on the stack.</span>
+
+<span class="sd">		n [Base] [Recur] primrec</span>
+
+<span class="sd">	   0 [Base] [Recur] primrec</span>
+<span class="sd">	------------------------------</span>
+<span class="sd">	      Base</span>
+
+<span class="sd">	   n [Base] [Recur] primrec</span>
+<span class="sd">	------------------------------------------ n &gt; 0</span>
+<span class="sd">	   n (n-1) [Base] [Recur] primrec Recur</span>
+
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="n">recur</span><span class="p">,</span> <span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
+	<span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="n">expression</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">expression</span> <span class="o">=</span> <span class="n">S_primrec</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">recur</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
+		<span class="n">stack</span> <span class="o">=</span> <span class="n">recur</span><span class="p">,</span> <span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span>
+	<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
 
 
 <span class="c1">#def cleave(S, expression, dictionary):</span>
@@ -1671,34 +1717,10 @@
 </pre></div>
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Thun</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Intro.html">Thun: Joy in Python</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../joy.html">Joy Interpreter</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../stack.html">Stack or Quote or Sequence or List…</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parser.html">Parsing Text into Joy Expressions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../pretty.html">Tracing Joy Execution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../library.html">Function Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../lib.html">Functions Grouped by, er, Function with Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../types.html">Type Inference of Joy Expressions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Essays about Programming in Joy</a></li>
-</ul>
-
-<div class="relations">
+        <div class="sphinxsidebarwrapper"><div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
@@ -1708,23 +1730,17 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1735,7 +1751,7 @@
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
     </div>
 
   </body>

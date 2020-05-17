@@ -1,14 +1,14 @@
 Traversing Datastructures with Zippers
 ======================================
 
-This notebook is about using the "zipper" with joy datastructures. See
+This notebook is about using the “zipper” with joy datastructures. See
 the `Zipper wikipedia
 entry <https://en.wikipedia.org/wiki/Zipper_%28data_structure%29>`__ or
-the original paper: `"FUNCTIONAL PEARL The Zipper" by Gérard
+the original paper: `“FUNCTIONAL PEARL The Zipper” by Gérard
 Huet <https://www.st.cs.uni-saarland.de/edu/seminare/2005/advanced-fp/docs/huet-zipper.pdf>`__
 
 Given a datastructure on the stack we can navigate through it, modify
-it, and rebuild it using the "zipper" technique.
+it, and rebuild it using the “zipper” technique.
 
 .. code:: ipython2
 
@@ -17,10 +17,9 @@ it, and rebuild it using the "zipper" technique.
 Trees
 -----
 
-In Joypy there aren't any complex datastructures, just ints, floats,
+In Joypy there aren’t any complex datastructures, just ints, floats,
 strings, Symbols (strings that are names of functions) and sequences
-(aka lists, aka quoted literals, aka aggregates, etc...), but we can
-build
+(aka lists, aka quoted literals, aka aggregates, etc…), but we can build
 `trees <https://en.wikipedia.org/wiki/Tree_%28data_structure%29>`__ out
 of sequences.
 
@@ -45,12 +44,12 @@ In Joy we can do this with the following words:
 
 ::
 
-    z-down == [] swap uncons swap
-    z-up == swons swap shunt
-    z-right == [swons] cons dip uncons swap
-    z-left == swons [uncons swap] dip swap
+   z-down == [] swap uncons swap
+   z-up == swons swap shunt
+   z-right == [swons] cons dip uncons swap
+   z-left == swons [uncons swap] dip swap
 
-Let's use them to change 25 into 625. The first time a word is used I
+Let’s use them to change 25 into 625. The first time a word is used I
 show the trace so you can see how it works. If we were going to use
 these a lot it would make sense to write Python versions for efficiency,
 but see below.
@@ -208,8 +207,8 @@ but see below.
 ``dip`` and ``infra``
 ---------------------
 
-In Joy we have the ``dip`` and ``infra`` combinators which can "target"
-or "address" any particular item in a Joy tree structure.
+In Joy we have the ``dip`` and ``infra`` combinators which can “target”
+or “address” any particular item in a Joy tree structure.
 
 .. code:: ipython2
 
@@ -247,8 +246,8 @@ or "address" any particular item in a Joy tree structure.
                                             [1 [2 [3 4 625 6] 7] 8] . 
 
 
-If you read the trace carefully you'll see that about half of it is the
-``dip`` and ``infra`` combinators de-quoting programs and "digging" into
+If you read the trace carefully you’ll see that about half of it is the
+``dip`` and ``infra`` combinators de-quoting programs and “digging” into
 the subject datastructure. Instead of maintaining temporary results on
 the stack they are pushed into the pending expression (continuation).
 When ``sqr`` has run the rest of the pending expression rebuilds the
@@ -264,12 +263,12 @@ been embedded in a nested series of quoted programs, e.g.:
 
 ::
 
-       [...] [Q] [dip dip infra dip infra dip infra] Z
-    -------------------------------------------------------------
-       [...] [[[[[[[Q] dip] dip] infra] dip] infra] dip] infra
-       
+      [...] [Q] [dip dip infra dip infra dip infra] Z
+   -------------------------------------------------------------
+      [...] [[[[[[[Q] dip] dip] infra] dip] infra] dip] infra
+      
 
-The ``Z`` function isn't hard to make.
+The ``Z`` function isn’t hard to make.
 
 .. code:: ipython2
 
@@ -333,21 +332,21 @@ a string made from only two characters.
 
 ::
 
-       [...] [Q] 'ddididi' Zstr
-    -------------------------------------------------------------
-       [...] [[[[[[[Q] dip] dip] infra] dip] infra] dip] infra
+      [...] [Q] 'ddididi' Zstr
+   -------------------------------------------------------------
+      [...] [[[[[[[Q] dip] dip] infra] dip] infra] dip] infra
 
 The string can be considered a name or address for an item in the
 subject datastructure.
 
-Determining the right "path" for an item in a tree.
+Determining the right “path” for an item in a tree.
 ---------------------------------------------------
 
-It's easy to read off (in reverse) the right sequence of "d" and "i"
+It’s easy to read off (in reverse) the right sequence of “d” and “i”
 from the subject datastructure:
 
 ::
 
-    [ n [ n [ n n x ...
-    i d i d i d d Bingo!
+   [ n [ n [ n n x ...
+   i d i d i d d Bingo!
 

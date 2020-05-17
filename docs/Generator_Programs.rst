@@ -11,51 +11,51 @@ Consider the ``x`` combinator:
 
 ::
 
-    x == dup i
+   x == dup i
 
 We can apply it to a quoted program consisting of some value ``a`` and
 some function ``B``:
 
 ::
 
-    [a B] x
-    [a B] a B
+   [a B] x
+   [a B] a B
 
 Let ``B`` function ``swap`` the ``a`` with the quote and run some
 function ``C`` on it to generate a new value ``b``:
 
 ::
 
-    B == swap [C] dip
+   B == swap [C] dip
 
-    [a B] a B
-    [a B] a swap [C] dip
-    a [a B]      [C] dip
-    a C [a B]
-    b [a B]
+   [a B] a B
+   [a B] a swap [C] dip
+   a [a B]      [C] dip
+   a C [a B]
+   b [a B]
 
 Now discard the quoted ``a`` with ``rest`` then ``cons`` ``b``:
 
 ::
 
-    b [a B] rest cons
-    b [B]        cons
-    [b B]
+   b [a B] rest cons
+   b [B]        cons
+   [b B]
 
 Altogether, this is the definition of ``B``:
 
 ::
 
-    B == swap [C] dip rest cons
+   B == swap [C] dip rest cons
 
-We can make a generator for the Natural numbers (0, 1, 2, ...) by using
+We can make a generator for the Natural numbers (0, 1, 2, …) by using
 ``0`` for ``a`` and ``[dup ++]`` for ``[C]``:
 
 ::
 
-    [0 swap [dup ++] dip rest cons]
+   [0 swap [dup ++] dip rest cons]
 
-Let's try it:
+Let’s try it:
 
 .. code:: ipython2
 
@@ -128,32 +128,32 @@ our quoted program:
 
 ::
 
-             a [C] G
-    -------------------------
-       [a swap [C] direco]
+            a [C] G
+   -------------------------
+      [a swap [C] direco]
 
 Working in reverse:
 
 ::
 
-    [a swap   [C] direco] cons
-    a [swap   [C] direco] concat
-    a [swap] [[C] direco] swap
-    a [[C] direco] [swap]
-    a [C] [direco] cons [swap]
+   [a swap   [C] direco] cons
+   a [swap   [C] direco] concat
+   a [swap] [[C] direco] swap
+   a [[C] direco] [swap]
+   a [C] [direco] cons [swap]
 
 Reading from the bottom up:
 
 ::
 
-    G == [direco] cons [swap] swap concat cons
-    G == [direco] cons [swap] swoncat cons
+   G == [direco] cons [swap] swap concat cons
+   G == [direco] cons [swap] swoncat cons
 
 .. code:: ipython2
 
     define('G == [direco] cons [swap] swoncat cons')
 
-Let's try it out:
+Let’s try it out:
 
 .. code:: ipython2
 
@@ -208,20 +208,20 @@ Generating Multiples of Three and Five
 --------------------------------------
 
 Look at the treatment of the Project Euler Problem One in the
-"Developing a Program" notebook and you'll see that we might be
+“Developing a Program” notebook and you’ll see that we might be
 interested in generating an endless cycle of:
 
 ::
 
-    3 2 1 3 1 2 3
+   3 2 1 3 1 2 3
 
 To do this we want to encode the numbers as pairs of bits in a single
 int:
 
 ::
 
-        3  2  1  3  1  2  3
-    0b 11 10 01 11 01 10 11 == 14811
+       3  2  1  3  1  2  3
+   0b 11 10 01 11 01 10 11 == 14811
 
 And pick them off by masking with 3 (binary 11) and then shifting the
 int right two bits.
@@ -250,7 +250,7 @@ int right two bits.
                3 3702 . 
 
 
-If we plug ``14811`` and ``[PE1.1]`` into our generator form...
+If we plug ``14811`` and ``[PE1.1]`` into our generator form…
 
 .. code:: ipython2
 
@@ -262,8 +262,7 @@ If we plug ``14811`` and ``[PE1.1]`` into our generator form...
     [14811 swap [PE1.1] direco]
 
 
-...we get a generator that works for seven cycles before it reaches
-zero:
+…we get a generator that works for seven cycles before it reaches zero:
 
 .. code:: ipython2
 
@@ -306,15 +305,15 @@ if so.
 
 
 (It would be more efficient to reset the int every seven cycles but
-that's a little beyond the scope of this article. This solution does
-extra work, but not much, and we're not using it "in production" as they
+that’s a little beyond the scope of this article. This solution does
+extra work, but not much, and we’re not using it “in production” as they
 say.)
 
 Run 466 times
 ~~~~~~~~~~~~~
 
 In the PE1 problem we are asked to sum all the multiples of three and
-five less than 1000. It's worked out that we need to use all seven
+five less than 1000. It’s worked out that we need to use all seven
 numbers sixty-six times and then four more.
 
 .. code:: ipython2
@@ -375,76 +374,76 @@ Consider:
 
 ::
 
-    [b a F] x
-    [b a F] b a F
+   [b a F] x
+   [b a F] b a F
 
 The obvious first thing to do is just add ``b`` and ``a``:
 
 ::
 
-    [b a F] b a +
-    [b a F] b+a
+   [b a F] b a +
+   [b a F] b+a
 
 From here we want to arrive at:
 
 ::
 
-    b [b+a b F]
+   b [b+a b F]
 
-Let's start with ``swons``:
+Let’s start with ``swons``:
 
 ::
 
-    [b a F] b+a swons
-    [b+a b a F]
+   [b a F] b+a swons
+   [b+a b a F]
 
 Considering this quote as a stack:
 
 ::
 
-    F a b b+a
+   F a b b+a
 
 We want to get it to:
 
 ::
 
-    F b b+a b
+   F b b+a b
 
 So:
 
 ::
 
-    F a b b+a popdd over
-    F b b+a b
+   F a b b+a popdd over
+   F b b+a b
 
 And therefore:
 
 ::
 
-    [b+a b a F] [popdd over] infra
-    [b b+a b F]
+   [b+a b a F] [popdd over] infra
+   [b b+a b F]
 
 But we can just use ``cons`` to carry ``b+a`` into the quote:
 
 ::
 
-    [b a F] b+a [popdd over] cons infra
-    [b a F] [b+a popdd over]      infra
-    [b b+a b F]
+   [b a F] b+a [popdd over] cons infra
+   [b a F] [b+a popdd over]      infra
+   [b b+a b F]
 
 Lastly:
 
 ::
 
-    [b b+a b F] uncons
-    b [b+a b F]
+   [b b+a b F] uncons
+   b [b+a b F]
 
 Putting it all together:
 
 ::
 
-    F == + [popdd over] cons infra uncons
-    fib_gen == [1 1 F]
+   F == + [popdd over] cons infra uncons
+   fib_gen == [1 1 F]
 
 .. code:: ipython2
 
@@ -467,8 +466,8 @@ Putting it all together:
 Project Euler Problem Two
 -------------------------
 
-    By considering the terms in the Fibonacci sequence whose values do
-    not exceed four million, find the sum of the even-valued terms.
+   By considering the terms in the Fibonacci sequence whose values do
+   not exceed four million, find the sum of the even-valued terms.
 
 Now that we have a generator for the Fibonacci sequence, we need a
 function that adds a term in the sequence to a sum if it is even, and
@@ -479,13 +478,13 @@ function that adds a term in the sequence to a sum if it is even, and
     define('PE2.1 == dup 2 % [+] [pop] branch')
 
 And a predicate function that detects when the terms in the series
-"exceed four million".
+“exceed four million”.
 
 .. code:: ipython2
 
     define('>4M == 4000000 >')
 
-Now it's straightforward to define ``PE2`` as a recursive function that
+Now it’s straightforward to define ``PE2`` as a recursive function that
 generates terms in the Fibonacci sequence until they exceed four million
 and sums the even ones.
 
@@ -503,18 +502,18 @@ and sums the even ones.
     4613732
 
 
-Here's the collected program definitions:
+Here’s the collected program definitions:
 
 ::
 
-    fib == + swons [popdd over] infra uncons
-    fib_gen == [1 1 fib]
+   fib == + swons [popdd over] infra uncons
+   fib_gen == [1 1 fib]
 
-    even == dup 2 %
-    >4M == 4000000 >
+   even == dup 2 %
+   >4M == 4000000 >
 
-    PE2.1 == even [+] [pop] branch
-    PE2 == 0 fib_gen x [pop >4M] [popop] [[PE2.1] dip x] primrec
+   PE2.1 == even [+] [pop] branch
+   PE2 == 0 fib_gen x [pop >4M] [popop] [[PE2.1] dip x] primrec
 
 Even-valued Fibonacci Terms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -523,16 +522,16 @@ Using ``o`` for odd and ``e`` for even:
 
 ::
 
-    o + o = e
-    e + e = e
-    o + e = o
+   o + o = e
+   e + e = e
+   o + e = o
 
 So the Fibonacci sequence considered in terms of just parity would be:
 
 ::
 
-    o o e o o e o o e o o e o o e o o e
-    1 1 2 3 5 8 . . .
+   o o e o o e o o e o o e o o e o o e
+   1 1 2 3 5 8 . . .
 
 Every third term is even.
 

@@ -376,7 +376,7 @@ class DefinitionWrapper(object):
 		Given some text describing a Joy function definition parse it and
 		return a DefinitionWrapper.
 		'''
-		return class_(*(n.strip() for n in defi.split(maxsplit=1)))
+		return class_(*(n.strip() for n in defi.split(None, 1)))
 
 	@classmethod
 	def add_definitions(class_, defs, dictionary):

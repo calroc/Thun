@@ -22,18 +22,18 @@ that you start by running the package:
 
 ::
 
-    $ python -m joy
-    Joypy - Copyright © 2017 Simon Forman
-    This program comes with ABSOLUTELY NO WARRANTY; for details type "warranty".
-    This is free software, and you are welcome to redistribute it
-    under certain conditions; type "sharing" for details.
-    Type "words" to see a list of all words, and "[<name>] help" to print the
-    docs for a word.
+   $ python -m joy
+   Joypy - Copyright © 2017 Simon Forman
+   This program comes with ABSOLUTELY NO WARRANTY; for details type "warranty".
+   This is free software, and you are welcome to redistribute it
+   under certain conditions; type "sharing" for details.
+   Type "words" to see a list of all words, and "[<name>] help" to print the
+   docs for a word.
 
 
-     <-top
+    <-top
 
-    joy? _
+   joy? _
 
 The ``<-top`` marker points to the top of the (initially empty) stack.
 You can enter Joy notation at the prompt and a `trace of
@@ -42,18 +42,18 @@ and prompt again:
 
 ::
 
-    joy? 23 sqr 18 +
-           . 23 sqr 18 +
-        23 . sqr 18 +
-        23 . dup mul 18 +
-     23 23 . mul 18 +
-       529 . 18 +
-    529 18 . +
-       547 . 
+   joy? 23 sqr 18 +
+          . 23 sqr 18 +
+       23 . sqr 18 +
+       23 . dup mul 18 +
+    23 23 . mul 18 +
+      529 . 18 +
+   529 18 . +
+      547 . 
 
-    547 <-top
+   547 <-top
 
-    joy? 
+   joy? 
 
 Stacks (aka list, quote, sequence, etc.)
 ========================================
@@ -103,8 +103,8 @@ Purely Functional Datastructures.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Because Joy lists are made out of Python tuples they are immutable, so
-all Joy datastructures are *`purely
-functional <https://en.wikipedia.org/wiki/Purely_functional_data_structure>`__*.
+all Joy datastructures are `purely
+functional <https://en.wikipedia.org/wiki/Purely_functional_data_structure>`__.
 
 The ``joy()`` function.
 =======================
@@ -119,8 +119,8 @@ looks up in the dictionary.
 
 Each function is passed the stack, expression, and dictionary and
 returns them. Whatever the function returns becomes the new stack,
-expression, and dictionary. (The dictionary is passed to enable e.g.
-writing words that let you enter new words into the dictionary at
+expression, and dictionary. (The dictionary is passed to enable
+e.g. writing words that let you enter new words into the dictionary at
 runtime, which nothing does yet and may be a bad idea, and the ``help``
 command.)
 
@@ -133,7 +133,7 @@ command.)
 View function
 ~~~~~~~~~~~~~
 
-The ``joy()`` function accepts a "viewer" function which it calls on
+The ``joy()`` function accepts a “viewer” function which it calls on
 each iteration passing the current stack and expression just before
 evaluation. This can be used for tracing, breakpoints, retrying after
 exceptions, or interrupting an evaluation and saving to disk or sending
@@ -147,7 +147,7 @@ A ``viewer`` records each step of the evaluation of a Joy program. The
 ``TracePrinter`` has a facility for printing out a trace of the
 evaluation, one line per step. Each step is aligned to the current
 interpreter position, signified by a period separating the stack on the
-left from the pending expression ("continuation") on the right.
+left from the pending expression (“continuation”) on the right.
 
 `Continuation-Passing Style <https://en.wikipedia.org/wiki/Continuation-passing_style>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -191,7 +191,7 @@ Parser
 
 The parser is extremely simple, the undocumented ``re.Scanner`` class
 does most of the tokenizing work and then you just build the tuple
-structure out of the tokens. There's no Abstract Syntax Tree or anything
+structure out of the tokens. There’s no Abstract Syntax Tree or anything
 like that.
 
 .. code:: ipython2
@@ -226,7 +226,7 @@ like that.
     
 
 
-That's pretty much all there is to it.
+That’s pretty much all there is to it.
 
 .. code:: ipython2
 
@@ -298,7 +298,7 @@ That's pretty much all there is to it.
 Library
 =======
 
-The Joy library of functions (aka commands, or "words" after Forth
+The Joy library of functions (aka commands, or “words” after Forth
 usage) encapsulates all the actual functionality (no pun intended) of
 the Joy system. There are simple functions such as addition ``add`` (or
 ``+``, the library module supports aliases), and combinators which
@@ -398,42 +398,42 @@ continuation) and returns control to the interpreter.
     
 
 
-Currently, there's no function to add new definitions to the dictionary
-from "within" Joy code itself. Adding new definitions remains a
+Currently, there’s no function to add new definitions to the dictionary
+from “within” Joy code itself. Adding new definitions remains a
 meta-interpreter action. You have to do it yourself, in Python, and wash
 your hands afterward.
 
 It would be simple enough to define one, but it would open the door to
 *name binding* and break the idea that all state is captured in the
-stack and expression. There's an implicit *standard dictionary* that
+stack and expression. There’s an implicit *standard dictionary* that
 defines the actual semantics of the syntactic stack and expression
 datastructures (which only contain symbols, not the actual functions.
 Pickle some and see for yourself.)
 
-"There should be only one."
+“There should be only one.”
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Which brings me to talking about one of my hopes and dreams for this
-notation: "There should be only one." What I mean is that there should
+notation: “There should be only one.” What I mean is that there should
 be one universal standard dictionary of commands, and all bespoke work
 done in a UI for purposes takes place by direct interaction and macros.
 There would be a *Grand Refactoring* biannually (two years, not six
-months, that's semi-annually) where any new definitions factored out of
+months, that’s semi-annually) where any new definitions factored out of
 the usage and macros of the previous time, along with new algorithms and
-such, were entered into the dictionary and posted to e.g. IPFS.
+such, were entered into the dictionary and posted to e.g. IPFS.
 
 Code should not burgeon wildly, as it does today. The variety of code
 should map more-or-less to the well-factored variety of human
-computably-solvable problems. There shouldn't be dozens of chat apps, JS
-frameworks, programming languages. It's a waste of time, a `fractal
-"thundering herd"
+computably-solvable problems. There shouldn’t be dozens of chat apps, JS
+frameworks, programming languages. It’s a waste of time, a `fractal
+“thundering herd”
 attack <https://en.wikipedia.org/wiki/Thundering_herd_problem>`__ on
 human mentality.
 
 Literary Code Library
 ^^^^^^^^^^^^^^^^^^^^^
 
-If you read over the other notebooks you'll see that developing code in
+If you read over the other notebooks you’ll see that developing code in
 Joy is a lot like doing simple mathematics, and the descriptions of the
 code resemble math papers. The code also works the first time, no bugs.
 If you have any experience programming at all, you are probably

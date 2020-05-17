@@ -1,18 +1,19 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Replacing Functions in the Dictionary &#8212; Thun 0.3.0 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Recursion Combinators" href="Recursion_Combinators.html" />
@@ -29,8 +30,6 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="section" id="replacing-functions-in-the-dictionary">
@@ -38,16 +37,16 @@
 <p>For now, there is no way to define new functions from within the Joy
 language. All functions (and the interpreter) all accept and return a
 dictionary parameter (in addition to the stack and expression) so that
-we can implement e.g. a function that adds new functions to the
+we can implement e.g.&nbsp;a function that adds new functions to the
 dictionary. However, there’s no function that does that. Adding a new
 function to the dictionary is a meta-interpreter action, you have to do
 it in Python, not Joy.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span>
 </pre></div>
 </div>
 <div class="section" id="a-long-trace">
 <h2>A long trace<a class="headerlink" href="#a-long-trace" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[23 18] average&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[23 18] average&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                  <span class="o">.</span> <span class="p">[</span><span class="mi">23</span> <span class="mi">18</span><span class="p">]</span> <span class="n">average</span>
@@ -105,8 +104,8 @@ it in Python, not Joy.</p>
 <p>An efficient <code class="docutils literal notranslate"><span class="pre">sum</span></code> function is already in the library. But for
 <code class="docutils literal notranslate"><span class="pre">size</span></code> we can use a “compiled” version hand-written in Python to speed
 up evaluation and make the trace more readable.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">SimpleFunctionWrapper</span>
-<span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">iter_stack</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="k">import</span> <span class="n">SimpleFunctionWrapper</span>
+<span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="k">import</span> <span class="n">iter_stack</span>
 
 
 <span class="nd">@SimpleFunctionWrapper</span>
@@ -121,14 +120,14 @@ up evaluation and make the trace more readable.</p>
 </div>
 <p>Now we replace the old version in the dictionary with the new version,
 and re-evaluate the expression.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">D</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">size</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">D</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">size</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="a-shorter-trace">
 <h2>A shorter trace<a class="headerlink" href="#a-shorter-trace" title="Permalink to this headline">¶</a></h2>
 <p>You can see that <code class="docutils literal notranslate"><span class="pre">size</span></code> now executes in a single step.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[23 18] average&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[23 18] average&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                  <span class="o">.</span> <span class="p">[</span><span class="mi">23</span> <span class="mi">18</span><span class="p">]</span> <span class="n">average</span>
@@ -167,50 +166,19 @@ and re-evaluate the expression.</p>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Thun</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Intro.html">Thun: Joy in Python</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../joy.html">Joy Interpreter</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../stack.html">Stack or Quote or Sequence or List…</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../parser.html">Parsing Text into Joy Expressions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../pretty.html">Tracing Joy Execution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../library.html">Function Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../lib.html">Functions Grouped by, er, Function with Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../types.html">Type Inference of Joy Expressions</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Essays about Programming in Joy</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="Developing.html">Developing a Program in Joy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Quadratic.html">Quadratic formula</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Replacing Functions in the Dictionary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Recursion_Combinators.html">Recursion Combinators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Ordered_Binary_Trees.html">Treating Trees I: Ordered Binary Trees</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Treestep.html">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Generator_Programs.html">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Newton-Raphson.html">Newton’s method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Zipper.html">Traversing Datastructures with Zippers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Types.html">The Blissful Elegance of Typing Joy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeChecking.html">Type Checking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="NoUpdates.html">No Updates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Categorical.html">Categorical Programming</a></li>
-<li class="toctree-l2"><a class="reference internal" href="The_Four_Operations.html">The Four Fundamental Operations of Definite Action</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html">∂RE</a></li>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Replacing Functions in the Dictionary</a><ul>
+<li><a class="reference internal" href="#a-long-trace">A long trace</a></li>
+<li><a class="reference internal" href="#replacing-size-with-a-python-version">Replacing <code class="docutils literal notranslate"><span class="pre">size</span></code> with a Python version</a></li>
+<li><a class="reference internal" href="#a-shorter-trace">A shorter trace</a></li>
 </ul>
 </li>
 </ul>
-
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -222,24 +190,25 @@ and re-evaluate the expression.</p>
   </ul></li>
 </ul>
 </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notebooks/Replacing.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -250,7 +219,7 @@ and re-evaluate the expression.</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
     </div>
 
   </body>
