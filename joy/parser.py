@@ -41,7 +41,7 @@ from .utils.stack import list_to_stack
 
 
 #TODO: explain the details of float lits and strings.
-FLOAT = r'-?\d+\.\d*'
+FLOAT = r'-?\d+\.\d*(e(-|\+)\d+)+'
 INT = r'-?\d+'
 SYMBOL = r'[•\w!@$%^&*()_+<>?|\/;:`~,.=-]+'
 BRACKETS = r'\[|\]'
