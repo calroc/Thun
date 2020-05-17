@@ -167,7 +167,7 @@ class StackWorld(StackDisplayWorld):
 		self.viewer.update_stack(self.stack)
 
 	def print_stack(self):
-		print('%s . ' % stack_to_string(self.stack), end='')
+		print(stack_to_string(self.stack), '•', end=' ')
 		if self.viewer:
 			self.viewer.update_stack(self.stack)
 
