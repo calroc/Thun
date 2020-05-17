@@ -20,12 +20,14 @@ from __future__ import print_function
 from future import standard_library
 standard_library.install_aliases()
 import logging, os, pickle, sys
+from datetime import datetime
 from textwrap import dedent
 from configparser import RawConfigParser
 
 from joy.gui.utils import init_home, argparser, FileFaker
 
 
+DATETIME_FORMAT = "Thun • %B %d %a • %I:%M %p"
 VIEWER_DEFAULTS = dict(width=80, height=25)
 
 
@@ -112,6 +114,11 @@ def commands():
 
 	def reset_log(*args):
 		log.delete('0.0', tk.END)
+		print(datetime.now().strftime(DATETIME_FORMAT))
+		return args
+
+
+	def Thun(*args):
 		print(__doc__)
 		return args
 
