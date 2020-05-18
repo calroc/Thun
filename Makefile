@@ -1,7 +1,7 @@
 # My make-fu style is old and tired.  I just want to have a few helper commands.
 
 TESTDIR = ./test00
-VERSION = 0.2.0
+VERSION = 0.4.0
 WEBSERVER = sforman@shell.osdn.net
 
 .PHONY: clean sdist test docs upload-docs
@@ -12,7 +12,7 @@ clean:
 	find . -name '*.pyc' | xargs $(RM)
 
 sdist:
-	python ./setup.py sdist
+	python ./setup.py sdist bdist_wheel
 
 joy/utils/generated_library.py: joy/utils/types.py
 	python -c 'import joy.utils.types ; joy.utils.types.generate_library_code()' > $@
