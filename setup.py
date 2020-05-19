@@ -40,15 +40,15 @@ setup(
 	classifiers=[
 		'Development Status :: 4 - Beta',
 		'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-        'Programming Language :: Python :: 3',
+		'Programming Language :: Python :: 3',
 		'Programming Language :: Other',
 		'Topic :: Software Development :: Interpreters',
 		],
-    extras_require={
-        'build-docs':  [
+	extras_require={
+		'build-docs':  [
 			'sphinx',
 			'ipython',
 			'nbconvert',
 			],
-	    }
+		}
 	)
