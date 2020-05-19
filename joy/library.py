@@ -569,7 +569,7 @@ def concat_(S):
 		----------------------------
 					 [a b c d e f]
 
-'''
+	'''
 	(tos, (second, stack)) = S
 	return concat(second, tos), stack
 
