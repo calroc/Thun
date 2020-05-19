@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#    Copyright © 2014, 2015, 2017, 2018 Simon Forman
+#    Copyright © 2014-2020 Simon Forman
 #
 #    This file is part of Thun
 #
@@ -23,9 +23,7 @@ functions.  Its main export is a Python function initialize() that
 returns a dictionary of Joy functions suitable for use with the joy()
 function.
 '''
-from __future__ import print_function
 from builtins import map, object, range, zip
-from logging import getLogger
 
 from inspect import getdoc
 from functools import wraps
@@ -34,8 +32,14 @@ from inspect import getmembers, isfunction
 import operator, math
 
 from .parser import text_to_expression, Symbol
-from .utils.stack import expression_to_string, list_to_stack, iter_stack, pick, concat
 from .utils import generated_library as genlib
+from .utils.stack import (
+	concat,
+	expression_to_string,
+	iter_stack,
+	list_to_stack,
+	pick,
+	)
 
 
 HELP_TEMPLATE = '''\
@@ -141,6 +145,7 @@ size 0 swap [pop ++] step
 sqr dup mul
 step_zero 0 roll> step
 swoncat swap concat
+tailrec [i] genrec
 ternary unary [popop] dip
 unary nullary popd
 unquoted [i] dip
@@ -719,15 +724,15 @@ def words(stack, expression, dictionary):
 def sharing(stack, expression, dictionary):
 	'''Print redistribution information.'''
 	print("You may convey verbatim copies of the Program's source code as"
-				' you receive it, in any medium, provided that you conspicuously'
-				' and appropriately publish on each copy an appropriate copyright'
-				' notice; keep intact all notices stating that this License and'
-				' any non-permissive terms added in accord with section 7 apply'
-				' to the code; keep intact all notices of the absence of any'
-				' warranty; and give all recipients a copy of this License along'
-				' with the Program.'
-				' You should have received a copy of the GNU General Public License'
-				' along with Thun.  If not see <http://www.gnu.org/licenses/>.')
+	' you receive it, in any medium, provided that you conspicuously'
+	' and appropriately publish on each copy an appropriate copyright'
+	' notice; keep intact all notices stating that this License and'
+	' any non-permissive terms added in accord with section 7 apply'
+	' to the code; keep intact all notices of the absence of any'
+	' warranty; and give all recipients a copy of this License along'
+	' with the Program.'
+	' You should have received a copy of the GNU General Public License'
+	' along with Thun.  If not see <http://www.gnu.org/licenses/>.')
 	return stack, expression, dictionary
 
 
@@ -736,14 +741,14 @@ def sharing(stack, expression, dictionary):
 def warranty(stack, expression, dictionary):
 	'''Print warranty information.'''
 	print('THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY'
-				' APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE'
-				' COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM'
-				' "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR'
-				' IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES'
-				' OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE'
-				' ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS'
-				' WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE'
-				' COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.')
+	' APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE'
+	' COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM'
+	' "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR'
+	' IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES'
+	' OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE'
+	' ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS'
+	' WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE'
+	' COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.')
 	return stack, expression, dictionary
 
 
@@ -886,7 +891,6 @@ def infra(stack, expression, dictionary):
 
 
 @inscribe
-#@combinator_effect(_COMB_NUMS(), s7, s6, s5, s4)
 @FunctionWrapper
 def genrec(stack, expression, dictionary):
 	'''
@@ -954,12 +958,12 @@ def map_(S, expression, dictionary):
 	Run the quoted program on TOS on the items in the list under it, push a
 	new list with the results in place of the program and original list.
 	'''
-#  (quote, (aggregate, stack)) = S
-#  results = list_to_stack([
-#    joy((term, stack), quote, dictionary)[0][0]
-#    for term in iter_stack(aggregate)
-#    ])
-#  return (results, stack), expression, dictionary
+	# (quote, (aggregate, stack)) = S
+	# results = list_to_stack([
+	# joy((term, stack), quote, dictionary)[0][0]
+	# for term in iter_stack(aggregate)
+	# ])
+	# return (results, stack), expression, dictionary
 	(quote, (aggregate, stack)) = S
 	if not aggregate:
 		return (aggregate, stack), expression, dictionary
@@ -1028,18 +1032,6 @@ def primrec(stack, expression, dictionary):
 #  return (q, (p, stack)), expression, dictionary
 
 
-def branch_true(stack, expression, dictionary):
-	# pylint: disable=unused-variable
-	(then, (else_, (flag, stack))) = stack
-	return stack, concat(then, expression), dictionary
-
-
-def branch_false(stack, expression, dictionary):
-	# pylint: disable=unused-variable
-	(then, (else_, (flag, stack))) = stack
-	return stack, concat(else_, expression), dictionary
-
-
 @inscribe
 @FunctionWrapper
 def branch(stack, expression, dictionary):
@@ -1063,9 +1055,6 @@ def branch(stack, expression, dictionary):
 	'''
 	(then, (else_, (flag, stack))) = stack
 	return stack, concat(then if flag else else_, expression), dictionary
-
-
-#FUNCTIONS['branch'] = CombinatorJoyType('branch', [branch_true, branch_false], 100)
 
 
 ##@inscribe
@@ -1432,27 +1421,3 @@ add_aliases(_dictionary, ALIASES)
 
 
 DefinitionWrapper.add_definitions(definitions, _dictionary)
-
-
-##  product == 1 swap [*] step
-##  flatten == [] swap [concat] step
-##  pam == [i] map
-##  size == 0 swap [pop ++] step
-##  fork == [i] app2
-##  cleave == fork [popd] dip
-##  average == [sum 1.0 *] [size] cleave /
-##  gcd == 1 [tuck modulus dup 0 >] loop pop
-##  least_fraction == dup [gcd] infra [div] concat map
-##  *fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
-##  *fraction0 == concat [[swap] dip * [*] dip] infra
-##  down_to_zero == [0 >] [dup --] while
-##  range_to_zero == unit [down_to_zero] infra
-##  anamorphism == [pop []] swap [dip swons] genrec
-##  range == [0 <=] [1 - dup] anamorphism
-##  while == swap [nullary] cons dup dipd concat loop
-##  dupdipd == dup dipd
-##  tailrec == [i] genrec
-##  step_zero == 0 roll> step
-##  codireco == cons dip rest cons
-##  make_generator == [codireco] ccons
-##  ifte == [nullary not] dipd branch
