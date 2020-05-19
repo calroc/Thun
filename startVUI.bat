@@ -1,1 +1,1 @@
-python -m joy.vui
+python -m xerblin.vui

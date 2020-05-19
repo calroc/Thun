@@ -1,1 +1,1 @@
-python -m joy.gui
+python -m xerblin.gui

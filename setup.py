@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#    Copyright © 2014, 2015, 2017, 2019 Simon Forman
+#    Copyright © 2020 Simon Forman
 #
 #    This file is part of Thun
 #
@@ -23,37 +23,26 @@ from textwrap import dedent
 
 
 setup(
-	name='Thun',
-	version='0.4.0',
-	description='Python Implementation of Joy',
-	long_description=dedent('''\
-		Joy is a programming language created by Manfred von Thun that is easy to
-		use and understand and has many other nice properties.  This Python
-		package implements an interpreter for a dialect of Joy that attempts to
-		stay very close to the spirit of Joy but does not precisely match the
-		behaviour of the original version written in C.'''),
+	name='Xerblin',
+	version='0.1.0',
+	description='GUI for Joy',
+	long_description='Experimental GUI for the Joy programming language.',
 	author='Simon Forman',
-	author_email='forman.simon@gmail.com',
+	author_email='sforman@hushmail.com',
 	url='https://joypy.osdn.io',
 	license='GPLv3+',
-	packages=['joy', 'joy.utils', 'joy.gui', 'joy.vui'],
+	packages=['xerblin', 'xerblin.gui', 'xerblin.vui'],
 	classifiers=[
 		'Development Status :: 4 - Beta',
 		'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-		'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
 		'Programming Language :: Other',
 		'Topic :: Software Development :: Interpreters',
 		],
 	install_requires=[
+		'Thun',
 		'dulwich',
 		'future',
 		],
-    extras_require={
-        'build-docs':  [
-			'sphinx',
-			'ipython',
-			'nbconvert',
-			],
-	    }
+    extras_require={'build-docs': ['sphinx']}
 	)

@@ -4,7 +4,7 @@ TESTDIR = ./test00
 VERSION = 0.4.0
 WEBSERVER = sforman@shell.osdn.net
 
-.PHONY: clean sdist test docs upload-docs
+.PHONY: clean sdist test
 
 
 clean:
@@ -13,9 +13,6 @@ clean:
 
 sdist:
 	python ./setup.py sdist bdist_wheel
-
-joy/utils/generated_library.py: joy/utils/types.py
-	python -c 'import joy.utils.types ; joy.utils.types.generate_library_code()' > $@
 
 
 # In order to support testing the code as installed
@@ -26,11 +23,3 @@ test: sdist
 	. $(TESTDIR)/bin/activate && \
 		pip install --no-cache-dir --no-index ./dist/Thun-$(VERSION).tar.gz
 	echo "Type: source $(TESTDIR)/bin/activate"
-
-
-docs:
-	cd ./docs && make && make mov && cd ./sphinx_docs && make html
-
-upload-docs: docs
-	ssh $(WEBSERVER) /home/users/s/sf/sforman/backup-and-remove-htdocs
-	rsync -rv --progress ./docs/sphinx_docs/_build/html/ $(WEBSERVER):/home/groups/j/jo/joypy/htdocs/
