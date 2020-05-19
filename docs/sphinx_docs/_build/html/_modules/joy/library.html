@@ -33,7 +33,7 @@
   <h1>Source code for joy.library</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1">#</span>
-<span class="c1">#    Copyright © 2014, 2015, 2017, 2018 Simon Forman</span>
+<span class="c1">#    Copyright © 2014-2020 Simon Forman</span>
 <span class="c1">#</span>
 <span class="c1">#    This file is part of Thun</span>
 <span class="c1">#</span>
@@ -56,12 +56,7 @@
 <span class="sd">returns a dictionary of Joy functions suitable for use with the joy()</span>
 <span class="sd">function.</span>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">map</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="nb">range</span><span class="p">,</span> <span class="nb">zip</span>
-<span class="kn">from</span> <span class="nn">logging</span> <span class="k">import</span> <span class="n">getLogger</span>
-
-<span class="n">_log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-<span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading library.&#39;</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">getdoc</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
@@ -70,38 +65,13 @@
 <span class="kn">import</span> <span class="nn">operator</span><span class="o">,</span> <span class="nn">math</span>
 
 <span class="kn">from</span> <span class="nn">.parser</span> <span class="k">import</span> <span class="n">text_to_expression</span><span class="p">,</span> <span class="n">Symbol</span>
-<span class="kn">from</span> <span class="nn">.utils.stack</span> <span class="k">import</span> <span class="n">expression_to_string</span><span class="p">,</span> <span class="n">list_to_stack</span><span class="p">,</span> <span class="n">iter_stack</span><span class="p">,</span> <span class="n">pick</span><span class="p">,</span> <span class="n">concat</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-	<span class="kn">from</span> <span class="nn">.utils.brutal_hackery</span> <span class="k">import</span> <span class="n">rename_code_object</span>
-<span class="k">else</span><span class="p">:</span>
-	<span class="n">rename_code_object</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span>
-
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">generated_library</span> <span class="k">as</span> <span class="n">genlib</span>
-<span class="kn">from</span> <span class="nn">.utils.types</span> <span class="k">import</span> <span class="p">(</span>
-	<span class="n">compose</span><span class="p">,</span>
-	<span class="n">ef</span><span class="p">,</span>
-	<span class="n">stack_effect</span><span class="p">,</span>
-	<span class="n">AnyJoyType</span><span class="p">,</span>
-	<span class="n">AnyStarJoyType</span><span class="p">,</span>
-	<span class="n">BooleanJoyType</span><span class="p">,</span>
-	<span class="n">NumberJoyType</span><span class="p">,</span>
-	<span class="n">NumberStarJoyType</span><span class="p">,</span>
-	<span class="n">StackJoyType</span><span class="p">,</span>
-	<span class="n">StackStarJoyType</span><span class="p">,</span>
-	<span class="n">FloatJoyType</span><span class="p">,</span>
-	<span class="n">IntJoyType</span><span class="p">,</span>
-	<span class="n">SymbolJoyType</span><span class="p">,</span>
-	<span class="n">CombinatorJoyType</span><span class="p">,</span>
-	<span class="n">TextJoyType</span><span class="p">,</span>
-	<span class="n">_functions</span><span class="p">,</span>
-	<span class="n">FUNCTIONS</span><span class="p">,</span>
-	<span class="n">infer</span><span class="p">,</span>
-	<span class="n">infer_expression</span><span class="p">,</span>
-	<span class="n">JoyTypeError</span><span class="p">,</span>
-	<span class="n">combinator_effect</span><span class="p">,</span>
-	<span class="n">poly_combinator_effect</span><span class="p">,</span>
-	<span class="n">doc_from_stack_effect</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.utils.stack</span> <span class="k">import</span> <span class="p">(</span>
+	<span class="n">concat</span><span class="p">,</span>
+	<span class="n">expression_to_string</span><span class="p">,</span>
+	<span class="n">iter_stack</span><span class="p">,</span>
+	<span class="n">list_to_stack</span><span class="p">,</span>
+	<span class="n">pick</span><span class="p">,</span>
 	<span class="p">)</span>
 
 
@@ -114,38 +84,6 @@
 <span class="s1">---- end (</span><span class="si">%s</span><span class="s1">)</span>
 <span class="s1">&#39;&#39;&#39;</span>
 
-
-<span class="n">_SYM_NUMS</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">c</span><span class="o">=</span><span class="n">count</span><span class="p">():</span> <span class="nb">next</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-<span class="n">_COMB_NUMS</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">c</span><span class="o">=</span><span class="n">count</span><span class="p">():</span> <span class="nb">next</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-
-
-<span class="n">_R</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a4</span><span class="p">,</span> <span class="n">a5</span><span class="p">,</span> <span class="n">a6</span><span class="p">,</span> <span class="n">a7</span><span class="p">,</span> <span class="n">a8</span><span class="p">,</span> <span class="n">a9</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">AnyJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
-<span class="n">B</span> <span class="o">=</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">b3</span><span class="p">,</span> <span class="n">b4</span><span class="p">,</span> <span class="n">b5</span><span class="p">,</span> <span class="n">b6</span><span class="p">,</span> <span class="n">b7</span><span class="p">,</span> <span class="n">b8</span><span class="p">,</span> <span class="n">b9</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">BooleanJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
-<span class="n">N</span> <span class="o">=</span> <span class="n">n0</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n3</span><span class="p">,</span> <span class="n">n4</span><span class="p">,</span> <span class="n">n5</span><span class="p">,</span> <span class="n">n6</span><span class="p">,</span> <span class="n">n7</span><span class="p">,</span> <span class="n">n8</span><span class="p">,</span> <span class="n">n9</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">NumberJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
-<span class="n">S</span> <span class="o">=</span> <span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">s3</span><span class="p">,</span> <span class="n">s4</span><span class="p">,</span> <span class="n">s5</span><span class="p">,</span> <span class="n">s6</span><span class="p">,</span> <span class="n">s7</span><span class="p">,</span> <span class="n">s8</span><span class="p">,</span> <span class="n">s9</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">StackJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
-<span class="n">F</span> <span class="o">=</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">,</span> <span class="n">f4</span><span class="p">,</span> <span class="n">f5</span><span class="p">,</span> <span class="n">f6</span><span class="p">,</span> <span class="n">f7</span><span class="p">,</span> <span class="n">f8</span><span class="p">,</span> <span class="n">f9</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">FloatJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
-<span class="n">I</span> <span class="o">=</span> <span class="n">i0</span><span class="p">,</span> <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">,</span> <span class="n">i3</span><span class="p">,</span> <span class="n">i4</span><span class="p">,</span> <span class="n">i5</span><span class="p">,</span> <span class="n">i6</span><span class="p">,</span> <span class="n">i7</span><span class="p">,</span> <span class="n">i8</span><span class="p">,</span> <span class="n">i9</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">IntJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
-<span class="n">T</span> <span class="o">=</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">,</span> <span class="n">t4</span><span class="p">,</span> <span class="n">t5</span><span class="p">,</span> <span class="n">t6</span><span class="p">,</span> <span class="n">t7</span><span class="p">,</span> <span class="n">t8</span><span class="p">,</span> <span class="n">t9</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">TextJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
-
-
-<span class="n">_R</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
-<span class="n">As</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">AnyStarJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
-<span class="n">Ns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">NumberStarJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
-<span class="n">Ss</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">StackStarJoyType</span><span class="p">,</span> <span class="n">_R</span><span class="p">))</span>
-
-
-<span class="c1"># &quot;sec&quot;: stack effect comment, like in Forth.</span>
-<span class="n">sec0</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">t1</span><span class="p">)()</span>
-<span class="n">sec1</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">i1</span><span class="p">)(</span><span class="n">s1</span><span class="p">)</span>
-<span class="n">sec2</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">i1</span><span class="p">)(</span><span class="n">a1</span><span class="p">)</span>
-<span class="n">sec_binary_cmp</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)(</span><span class="n">b1</span><span class="p">)</span>
-<span class="n">sec_binary_ints</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">)(</span><span class="n">i3</span><span class="p">)</span>
-<span class="n">sec_binary_logic</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">)(</span><span class="n">b3</span><span class="p">)</span>
-<span class="n">sec_binary_math</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)(</span><span class="n">n3</span><span class="p">)</span>
-<span class="n">sec_unary_logic</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">a1</span><span class="p">)(</span><span class="n">b1</span><span class="p">)</span>
-<span class="n">sec_unary_math</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">(</span><span class="n">n1</span><span class="p">)(</span><span class="n">n2</span><span class="p">)</span>
-<span class="n">sec_Ns_math</span> <span class="o">=</span> <span class="n">stack_effect</span><span class="p">((</span><span class="n">Ns</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">s1</span><span class="p">),)(</span><span class="n">n0</span><span class="p">)</span>
 
 <span class="c1"># This is the main dict we&#39;re building.</span>
 <span class="n">_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
@@ -168,7 +106,6 @@
 	<span class="p">(</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;truthy&#39;</span><span class="p">]),</span>
 	<span class="p">(</span><span class="s1">&#39;mul&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]),</span>
 	<span class="p">(</span><span class="s1">&#39;floordiv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;/floor&#39;</span><span class="p">,</span> <span class="s1">&#39;//&#39;</span><span class="p">]),</span>
-	<span class="p">(</span><span class="s1">&#39;floor&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;round&#39;</span><span class="p">]),</span>
 	<span class="p">(</span><span class="s1">&#39;truediv&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;div&#39;</span><span class="p">]),</span>
 	<span class="p">(</span><span class="s1">&#39;mod&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;%&#39;</span><span class="p">,</span> <span class="s1">&#39;rem&#39;</span><span class="p">,</span> <span class="s1">&#39;remainder&#39;</span><span class="p">,</span> <span class="s1">&#39;modulus&#39;</span><span class="p">]),</span>
 	<span class="p">(</span><span class="s1">&#39;eq&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;=&#39;</span><span class="p">]),</span>
@@ -206,56 +143,6 @@
 			<span class="n">D</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span></div>
 
 
-<div class="viewcode-block" id="yin_functions"><a class="viewcode-back" href="../../library.html#joy.library.yin_functions">[docs]</a><span class="k">def</span> <span class="nf">yin_functions</span><span class="p">():</span>
-	<span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">	Return a dict of named stack effects.</span>
-
-<span class="sd">	&quot;Yin&quot; functions are those that only rearrange items in stacks and</span>
-<span class="sd">	can be defined completely by their stack effects.  This means they</span>
-<span class="sd">	can be auto-compiled.</span>
-<span class="sd">	&#39;&#39;&#39;</span>
-	<span class="c1"># pylint: disable=unused-variable</span>
-	<span class="n">cons</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s0</span><span class="p">)((</span><span class="n">a1</span><span class="p">,</span> <span class="n">s0</span><span class="p">))</span>
-	<span class="n">ccons</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="n">cons</span><span class="p">)</span>
-	<span class="n">dup</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a1</span><span class="p">)(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span>
-	<span class="n">dupd</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">)(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span>
-	<span class="n">dupdd</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">)(</span><span class="n">a3</span><span class="p">,</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span>
-	<span class="n">first</span> <span class="o">=</span> <span class="n">ef</span><span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">),)(</span><span class="n">a1</span><span class="p">,)</span>
-	<span class="n">over</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">)(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">)</span>
-	<span class="n">pop</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a1</span><span class="p">)()</span>
-	<span class="n">popd</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,)(</span><span class="n">a1</span><span class="p">)</span>
-	<span class="n">popdd</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,)(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,)</span>
-	<span class="n">popop</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,)()</span>
-	<span class="n">popopd</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,)(</span><span class="n">a1</span><span class="p">)</span>
-	<span class="n">popopdd</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a4</span><span class="p">,</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,)(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span>
-	<span class="n">rest</span> <span class="o">=</span> <span class="n">ef</span><span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="n">s0</span><span class="p">),)(</span><span class="n">s0</span><span class="p">,)</span>
-	<span class="n">rolldown</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a3</span><span class="p">)(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span>
-	<span class="n">rollup</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a3</span><span class="p">)(</span><span class="n">a3</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">)</span>
-	<span class="n">rrest</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span>
-	<span class="n">second</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="n">first</span><span class="p">)</span>
-	<span class="n">stack</span> <span class="o">=</span> <span class="n">s0</span><span class="p">,</span> <span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">s0</span><span class="p">)</span>
-	<span class="n">swaack</span> <span class="o">=</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s0</span><span class="p">),</span> <span class="p">(</span><span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">)</span>
-	<span class="n">swap</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">)(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span>
-	<span class="n">swons</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">swap</span><span class="p">,</span> <span class="n">cons</span><span class="p">)</span>
-	<span class="n">third</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
-	<span class="n">tuck</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">)(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span>
-	<span class="n">uncons</span> <span class="o">=</span> <span class="n">ef</span><span class="p">((</span><span class="n">a1</span><span class="p">,</span> <span class="n">s0</span><span class="p">),)(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s0</span><span class="p">)</span>
-	<span class="n">unswons</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">uncons</span><span class="p">,</span> <span class="n">swap</span><span class="p">)</span>
-	<span class="n">stuncons</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">uncons</span><span class="p">)</span>
-	<span class="n">stununcons</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">uncons</span><span class="p">,</span> <span class="n">uncons</span><span class="p">)</span>
-	<span class="n">unit</span> <span class="o">=</span> <span class="n">ef</span><span class="p">(</span><span class="n">a1</span><span class="p">)((</span><span class="n">a1</span><span class="p">,</span> <span class="p">()))</span>
-
-	<span class="n">first_two</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">uncons</span><span class="p">,</span> <span class="n">uncons</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
-	<span class="n">fourth</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="n">third</span><span class="p">)</span>
-
-	<span class="n">_Tree_add_Ee</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">rolldown</span><span class="p">,</span> <span class="n">rrest</span><span class="p">,</span> <span class="n">ccons</span><span class="p">)</span>
-	<span class="n">_Tree_get_E</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">popop</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
-	<span class="n">_Tree_delete_clear_stuff</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">rollup</span><span class="p">,</span> <span class="n">popop</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span>
-	<span class="n">_Tree_delete_R0</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">over</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">dup</span><span class="p">)</span>
-
-	<span class="k">return</span> <span class="nb">locals</span><span class="p">()</span></div>
-
-
 <span class="n">definitions</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
 <span class="s1">? dup truthy</span>
 <span class="s1">*fraction [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons</span>
@@ -290,6 +177,7 @@
 <span class="s1">sqr dup mul</span>
 <span class="s1">step_zero 0 roll&gt; step</span>
 <span class="s1">swoncat swap concat</span>
+<span class="s1">tailrec [i] genrec</span>
 <span class="s1">ternary unary [popop] dip</span>
 <span class="s1">unary nullary popd</span>
 <span class="s1">unquoted [i] dip</span>
@@ -351,7 +239,6 @@
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="nd">@FunctionWrapper</span>
 	<span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-	<span class="nd">@rename_code_object</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 	<span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 		<span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">stack</span><span class="p">),</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span>
 	<span class="k">return</span> <span class="n">inner</span></div>
@@ -363,7 +250,6 @@
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="nd">@FunctionWrapper</span>
 	<span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-	<span class="nd">@rename_code_object</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 	<span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 		<span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
 		<span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
@@ -377,7 +263,6 @@
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="nd">@FunctionWrapper</span>
 	<span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-	<span class="nd">@rename_code_object</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 	<span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 		<span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
 		<span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
@@ -426,7 +311,6 @@
 <span class="sd">		Add the definition to the dictionary.</span>
 <span class="sd">		&#39;&#39;&#39;</span>
 		<span class="n">F</span> <span class="o">=</span> <span class="n">class_</span><span class="o">.</span><span class="n">parse_definition</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>
-		<span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Adding definition </span><span class="si">%s</span><span class="s1"> := </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">expression_to_string</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">body</span><span class="p">))</span>
 		<span class="n">dictionary</span><span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span></div>
 
 	<span class="nd">@classmethod</span>
@@ -451,7 +335,6 @@
 
 
 <div class="viewcode-block" id="inscribe_"><a class="viewcode-back" href="../../library.html#joy.library.inscribe_">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@sec0</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">inscribe_</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -478,18 +361,17 @@
 	<span class="k">return</span> <span class="n">expression</span><span class="p">,</span> <span class="n">stack</span></div>
 
 
-<div class="viewcode-block" id="infer_"><a class="viewcode-back" href="../../library.html#joy.library.infer_">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@SimpleFunctionWrapper</span>
-<span class="k">def</span> <span class="nf">infer_</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-	<span class="sd">&#39;&#39;&#39;Attempt to infer the stack effect of a Joy expression.&#39;&#39;&#39;</span>
-	<span class="n">E</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">stack</span>
-	<span class="n">effects</span> <span class="o">=</span> <span class="n">infer_expression</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
-	<span class="n">e</span> <span class="o">=</span> <span class="n">list_to_stack</span><span class="p">([(</span><span class="n">fi</span><span class="p">,</span> <span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="p">()))</span> <span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="ow">in</span> <span class="n">effects</span><span class="p">])</span>
-	<span class="k">return</span> <span class="n">e</span><span class="p">,</span> <span class="n">stack</span></div>
+<span class="c1"># @inscribe</span>
+<span class="c1"># @SimpleFunctionWrapper</span>
+<span class="c1"># def infer_(stack):</span>
+<span class="c1"># 	&#39;&#39;&#39;Attempt to infer the stack effect of a Joy expression.&#39;&#39;&#39;</span>
+<span class="c1"># 	E, stack = stack</span>
+<span class="c1"># 	effects = infer_expression(E)</span>
+<span class="c1"># 	e = list_to_stack([(fi, (fo, ())) for fi, fo in effects])</span>
+<span class="c1"># 	return e, stack</span>
 
 
 <div class="viewcode-block" id="getitem"><a class="viewcode-back" href="../../library.html#joy.library.getitem">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@sec2</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">getitem</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -511,7 +393,6 @@
 
 
 <div class="viewcode-block" id="drop"><a class="viewcode-back" href="../../library.html#joy.library.drop">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@sec1</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">drop</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -539,7 +420,6 @@
 
 
 <div class="viewcode-block" id="take"><a class="viewcode-back" href="../../library.html#joy.library.take">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@sec1</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">take</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -614,7 +494,6 @@
 
 
 <div class="viewcode-block" id="max_"><a class="viewcode-back" href="../../library.html#joy.library.max_">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@sec_Ns_math</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">max_</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;Given a list find the maximum.&#39;&#39;&#39;</span>
@@ -623,7 +502,6 @@
 
 
 <div class="viewcode-block" id="min_"><a class="viewcode-back" href="../../library.html#joy.library.min_">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@sec_Ns_math</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">min_</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;Given a list find the minimum.&#39;&#39;&#39;</span>
@@ -632,7 +510,6 @@
 
 
 <div class="viewcode-block" id="sum_"><a class="viewcode-back" href="../../library.html#joy.library.sum_">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@sec_Ns_math</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">sum_</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;Given a quoted sequence of numbers return the sum.</span>
@@ -679,7 +556,6 @@
 	<span class="k">return</span> <span class="n">list_to_stack</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">iter_stack</span><span class="p">(</span><span class="n">tos</span><span class="p">))),</span> <span class="n">stack</span></div>
 
 
-<span class="n">_functions</span><span class="p">[</span><span class="s1">&#39;clear&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s0</span><span class="p">,</span> <span class="n">s1</span>
 <div class="viewcode-block" id="clear"><a class="viewcode-back" href="../../library.html#joy.library.clear">[docs]</a><span class="nd">@inscribe</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
@@ -721,7 +597,6 @@
 
 
 <div class="viewcode-block" id="concat_"><a class="viewcode-back" href="../../library.html#joy.library.concat_">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">s7</span><span class="p">,</span> <span class="n">s6</span><span class="p">)</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">concat_</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;Concatinate the two lists on the top of the stack.</span>
@@ -731,7 +606,7 @@
 <span class="sd">		----------------------------</span>
 <span class="sd">					 [a b c d e f]</span>
 
-<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
 	<span class="k">return</span> <span class="n">concat</span><span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">tos</span><span class="p">),</span> <span class="n">stack</span></div>
 
@@ -772,7 +647,6 @@
 
 
 <div class="viewcode-block" id="succ"><a class="viewcode-back" href="../../library.html#joy.library.succ">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@sec_unary_math</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">succ</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;Increment TOS.&#39;&#39;&#39;</span>
@@ -781,7 +655,6 @@
 
 
 <div class="viewcode-block" id="pred"><a class="viewcode-back" href="../../library.html#joy.library.pred">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@sec_unary_math</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">pred</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;Decrement TOS.&#39;&#39;&#39;</span>
@@ -883,15 +756,15 @@
 <span class="k">def</span> <span class="nf">sharing</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;Print redistribution information.&#39;&#39;&#39;</span>
 	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You may convey verbatim copies of the Program&#39;s source code as&quot;</span>
-				<span class="s1">&#39; you receive it, in any medium, provided that you conspicuously&#39;</span>
-				<span class="s1">&#39; and appropriately publish on each copy an appropriate copyright&#39;</span>
-				<span class="s1">&#39; notice; keep intact all notices stating that this License and&#39;</span>
-				<span class="s1">&#39; any non-permissive terms added in accord with section 7 apply&#39;</span>
-				<span class="s1">&#39; to the code; keep intact all notices of the absence of any&#39;</span>
-				<span class="s1">&#39; warranty; and give all recipients a copy of this License along&#39;</span>
-				<span class="s1">&#39; with the Program.&#39;</span>
-				<span class="s1">&#39; You should have received a copy of the GNU General Public License&#39;</span>
-				<span class="s1">&#39; along with Thun.  If not see &lt;http://www.gnu.org/licenses/&gt;.&#39;</span><span class="p">)</span>
+	<span class="s1">&#39; you receive it, in any medium, provided that you conspicuously&#39;</span>
+	<span class="s1">&#39; and appropriately publish on each copy an appropriate copyright&#39;</span>
+	<span class="s1">&#39; notice; keep intact all notices stating that this License and&#39;</span>
+	<span class="s1">&#39; any non-permissive terms added in accord with section 7 apply&#39;</span>
+	<span class="s1">&#39; to the code; keep intact all notices of the absence of any&#39;</span>
+	<span class="s1">&#39; warranty; and give all recipients a copy of this License along&#39;</span>
+	<span class="s1">&#39; with the Program.&#39;</span>
+	<span class="s1">&#39; You should have received a copy of the GNU General Public License&#39;</span>
+	<span class="s1">&#39; along with Thun.  If not see &lt;http://www.gnu.org/licenses/&gt;.&#39;</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
 
 
@@ -900,14 +773,14 @@
 <span class="k">def</span> <span class="nf">warranty</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;Print warranty information.&#39;&#39;&#39;</span>
 	<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY&#39;</span>
-				<span class="s1">&#39; APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE&#39;</span>
-				<span class="s1">&#39; COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM&#39;</span>
-				<span class="s1">&#39; &quot;AS IS&quot; WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR&#39;</span>
-				<span class="s1">&#39; IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES&#39;</span>
-				<span class="s1">&#39; OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE&#39;</span>
-				<span class="s1">&#39; ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS&#39;</span>
-				<span class="s1">&#39; WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE&#39;</span>
-				<span class="s1">&#39; COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.&#39;</span><span class="p">)</span>
+	<span class="s1">&#39; APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE&#39;</span>
+	<span class="s1">&#39; COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM&#39;</span>
+	<span class="s1">&#39; &quot;AS IS&quot; WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR&#39;</span>
+	<span class="s1">&#39; IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES&#39;</span>
+	<span class="s1">&#39; OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE&#39;</span>
+	<span class="s1">&#39; ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS&#39;</span>
+	<span class="s1">&#39; WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE&#39;</span>
+	<span class="s1">&#39; COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.&#39;</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
 
 
@@ -964,7 +837,6 @@
 
 
 <div class="viewcode-block" id="i"><a class="viewcode-back" href="../../library.html#joy.library.i">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">s1</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">i</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -982,7 +854,6 @@
 
 
 <div class="viewcode-block" id="x"><a class="viewcode-back" href="../../library.html#joy.library.x">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">s1</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1000,7 +871,6 @@
 
 
 <div class="viewcode-block" id="b"><a class="viewcode-back" href="../../library.html#joy.library.b">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">s7</span><span class="p">,</span> <span class="n">s6</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">b</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1017,7 +887,6 @@
 
 
 <div class="viewcode-block" id="dupdip"><a class="viewcode-back" href="../../library.html#joy.library.dupdip">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">dupdip</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1037,7 +906,6 @@
 
 
 <div class="viewcode-block" id="infra"><a class="viewcode-back" href="../../library.html#joy.library.infra">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">s7</span><span class="p">,</span> <span class="n">s6</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">infra</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1055,7 +923,6 @@
 
 
 <div class="viewcode-block" id="genrec"><a class="viewcode-back" href="../../library.html#joy.library.genrec">[docs]</a><span class="nd">@inscribe</span>
-<span class="c1">#@combinator_effect(_COMB_NUMS(), s7, s6, s5, s4)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">genrec</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1117,19 +984,18 @@
 
 
 <div class="viewcode-block" id="map_"><a class="viewcode-back" href="../../library.html#joy.library.map_">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">s7</span><span class="p">,</span> <span class="n">s6</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">map_</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">	Run the quoted program on TOS on the items in the list under it, push a</span>
 <span class="sd">	new list with the results in place of the program and original list.</span>
 <span class="sd">	&#39;&#39;&#39;</span>
-<span class="c1">#  (quote, (aggregate, stack)) = S</span>
-<span class="c1">#  results = list_to_stack([</span>
-<span class="c1">#    joy((term, stack), quote, dictionary)[0][0]</span>
-<span class="c1">#    for term in iter_stack(aggregate)</span>
-<span class="c1">#    ])</span>
-<span class="c1">#  return (results, stack), expression, dictionary</span>
+	<span class="c1"># (quote, (aggregate, stack)) = S</span>
+	<span class="c1"># results = list_to_stack([</span>
+	<span class="c1"># joy((term, stack), quote, dictionary)[0][0]</span>
+	<span class="c1"># for term in iter_stack(aggregate)</span>
+	<span class="c1"># ])</span>
+	<span class="c1"># return (results, stack), expression, dictionary</span>
 	<span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">aggregate</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
 	<span class="k">if</span> <span class="ow">not</span> <span class="n">aggregate</span><span class="p">:</span>
 		<span class="k">return</span> <span class="p">(</span><span class="n">aggregate</span><span class="p">,</span> <span class="n">stack</span><span class="p">),</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span>
@@ -1198,20 +1064,7 @@
 <span class="c1">#  return (q, (p, stack)), expression, dictionary</span>
 
 
-<span class="k">def</span> <span class="nf">branch_true</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-	<span class="c1"># pylint: disable=unused-variable</span>
-	<span class="p">(</span><span class="n">then</span><span class="p">,</span> <span class="p">(</span><span class="n">else_</span><span class="p">,</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">stack</span>
-	<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">then</span><span class="p">,</span> <span class="n">expression</span><span class="p">),</span> <span class="n">dictionary</span>
-
-
-<span class="k">def</span> <span class="nf">branch_false</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-	<span class="c1"># pylint: disable=unused-variable</span>
-	<span class="p">(</span><span class="n">then</span><span class="p">,</span> <span class="p">(</span><span class="n">else_</span><span class="p">,</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">stack</span>
-	<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">else_</span><span class="p">,</span> <span class="n">expression</span><span class="p">),</span> <span class="n">dictionary</span>
-
-
 <div class="viewcode-block" id="branch"><a class="viewcode-back" href="../../library.html#joy.library.branch">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@poly_combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="p">[</span><span class="n">branch_true</span><span class="p">,</span> <span class="n">branch_false</span><span class="p">],</span> <span class="n">b1</span><span class="p">,</span> <span class="n">s7</span><span class="p">,</span> <span class="n">s6</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">branch</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1234,9 +1087,6 @@
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">then</span><span class="p">,</span> <span class="p">(</span><span class="n">else_</span><span class="p">,</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">stack</span>
 	<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">then</span> <span class="k">if</span> <span class="n">flag</span> <span class="k">else</span> <span class="n">else_</span><span class="p">,</span> <span class="n">expression</span><span class="p">),</span> <span class="n">dictionary</span></div>
-
-
-<span class="c1">#FUNCTIONS[&#39;branch&#39;] = CombinatorJoyType(&#39;branch&#39;, [branch_true, branch_false], 100)</span>
 
 
 <span class="c1">##@inscribe</span>
@@ -1308,7 +1158,6 @@
 
 
 <div class="viewcode-block" id="dip"><a class="viewcode-back" href="../../library.html#joy.library.dip">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">dip</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1328,7 +1177,6 @@
 
 
 <div class="viewcode-block" id="dipd"><a class="viewcode-back" href="../../library.html#joy.library.dipd">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">dipd</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1346,7 +1194,6 @@
 
 
 <div class="viewcode-block" id="dipdd"><a class="viewcode-back" href="../../library.html#joy.library.dipdd">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">dipdd</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1364,7 +1211,6 @@
 
 
 <div class="viewcode-block" id="app1"><a class="viewcode-back" href="../../library.html#joy.library.app1">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">app1</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1384,7 +1230,6 @@
 
 
 <div class="viewcode-block" id="app2"><a class="viewcode-back" href="../../library.html#joy.library.app2">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">app2</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;Like app1 with two items.</span>
@@ -1405,7 +1250,6 @@
 
 
 <div class="viewcode-block" id="app3"><a class="viewcode-back" href="../../library.html#joy.library.app3">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">s1</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">app3</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;Like app1 with three items.</span>
@@ -1428,7 +1272,6 @@
 
 
 <div class="viewcode-block" id="step"><a class="viewcode-back" href="../../library.html#joy.library.step">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">s7</span><span class="p">,</span> <span class="n">s6</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1464,7 +1307,6 @@
 
 
 <div class="viewcode-block" id="times"><a class="viewcode-back" href="../../library.html#joy.library.times">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">i1</span><span class="p">,</span> <span class="n">s6</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">times</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1513,21 +1355,7 @@
 <span class="c1">#  return stack, expression, dictionary</span>
 
 
-<span class="k">def</span> <span class="nf">loop_true</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-		<span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>  <span class="c1"># pylint: disable=unused-variable</span>
-		<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">S_pop</span><span class="p">,</span> <span class="n">expression</span><span class="p">)),</span> <span class="n">dictionary</span>
-
-<span class="k">def</span> <span class="nf">loop_two_true</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-		<span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>  <span class="c1"># pylint: disable=unused-variable</span>
-		<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">S_pop</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">S_pop</span><span class="p">,</span> <span class="n">expression</span><span class="p">)))),</span> <span class="n">dictionary</span>
-
-<span class="k">def</span> <span class="nf">loop_false</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
-		<span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>  <span class="c1"># pylint: disable=unused-variable</span>
-		<span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span>
-
-
 <div class="viewcode-block" id="loop"><a class="viewcode-back" href="../../library.html#joy.library.loop">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@poly_combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="p">[</span><span class="n">loop_two_true</span><span class="p">,</span> <span class="n">loop_true</span><span class="p">,</span> <span class="n">loop_false</span><span class="p">],</span> <span class="n">b1</span><span class="p">,</span> <span class="n">s6</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">loop</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1550,7 +1378,6 @@
 
 
 <div class="viewcode-block" id="cmp_"><a class="viewcode-back" href="../../library.html#joy.library.cmp_">[docs]</a><span class="nd">@inscribe</span>
-<span class="nd">@combinator_effect</span><span class="p">(</span><span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">s6</span><span class="p">,</span> <span class="n">s7</span><span class="p">,</span> <span class="n">s8</span><span class="p">)</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">cmp_</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
 	<span class="sd">&#39;&#39;&#39;</span>
@@ -1583,137 +1410,50 @@
 
 	<span class="c1">#divmod_ = pm = __(n2, n1), __(n4, n3)</span>
 
-	<span class="n">sec_binary_cmp</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">eq</span><span class="p">)),</span>
-	<span class="n">sec_binary_cmp</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ge</span><span class="p">)),</span>
-	<span class="n">sec_binary_cmp</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">gt</span><span class="p">)),</span>
-	<span class="n">sec_binary_cmp</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">le</span><span class="p">)),</span>
-	<span class="n">sec_binary_cmp</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">lt</span><span class="p">)),</span>
-	<span class="n">sec_binary_cmp</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ne</span><span class="p">)),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">eq</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ge</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">gt</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">le</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">lt</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ne</span><span class="p">),</span>
 
-	<span class="n">sec_binary_ints</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">xor</span><span class="p">)),</span>
-	<span class="n">sec_binary_ints</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">lshift</span><span class="p">)),</span>
-	<span class="n">sec_binary_ints</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">rshift</span><span class="p">)),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">xor</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">lshift</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">rshift</span><span class="p">),</span>
 
-	<span class="n">sec_binary_logic</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">and_</span><span class="p">)),</span>
-	<span class="n">sec_binary_logic</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">or_</span><span class="p">)),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">and_</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">or_</span><span class="p">),</span>
 
-	<span class="n">sec_binary_math</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">add</span><span class="p">)),</span>
-	<span class="n">sec_binary_math</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">floordiv</span><span class="p">)),</span>
-	<span class="n">sec_binary_math</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mod</span><span class="p">)),</span>
-	<span class="n">sec_binary_math</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mul</span><span class="p">)),</span>
-	<span class="n">sec_binary_math</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">pow</span><span class="p">)),</span>
-	<span class="n">sec_binary_math</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">sub</span><span class="p">)),</span>
-	<span class="n">sec_binary_math</span><span class="p">(</span><span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">truediv</span><span class="p">)),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">add</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">floordiv</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mod</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mul</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">pow</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">sub</span><span class="p">),</span>
+	<span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">truediv</span><span class="p">),</span>
 
-	<span class="n">sec_unary_logic</span><span class="p">(</span><span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="nb">bool</span><span class="p">)),</span>
-	<span class="n">sec_unary_logic</span><span class="p">(</span><span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">not_</span><span class="p">)),</span>
+	<span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span>
+	<span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">not_</span><span class="p">),</span>
 
-	<span class="n">sec_unary_math</span><span class="p">(</span><span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="nb">abs</span><span class="p">)),</span>
-	<span class="n">sec_unary_math</span><span class="p">(</span><span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">)),</span>
-	<span class="n">sec_unary_math</span><span class="p">(</span><span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="n">sqrt</span><span class="p">)),</span>
+	<span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="nb">abs</span><span class="p">),</span>
+	<span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">neg</span><span class="p">),</span>
+	<span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="n">sqrt</span><span class="p">),</span>
 
-	<span class="n">stack_effect</span><span class="p">(</span><span class="n">n1</span><span class="p">)(</span><span class="n">i1</span><span class="p">)(</span><span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="n">floor</span><span class="p">)),</span>
+	<span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="n">floor</span><span class="p">),</span>
+	<span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="nb">round</span><span class="p">),</span>
 	<span class="p">):</span>
 	<span class="n">inscribe</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
 <span class="k">del</span> <span class="n">F</span>  <span class="c1"># Otherwise Sphinx autodoc will pick it up.</span>
 
-
-<span class="n">YIN_STACK_EFFECTS</span> <span class="o">=</span> <span class="n">yin_functions</span><span class="p">()</span>
-<span class="n">add_aliases</span><span class="p">(</span><span class="n">YIN_STACK_EFFECTS</span><span class="p">,</span> <span class="n">ALIASES</span><span class="p">)</span>
-
-<span class="c1"># Load the auto-generated primitives into the dictionary.</span>
-<span class="n">_functions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">YIN_STACK_EFFECTS</span><span class="p">)</span>
-<span class="c1"># exec &#39;&#39;&#39;</span>
-
-<span class="c1"># eh = compose(dup, bool)</span>
-<span class="c1"># sqr = compose(dup, mul)</span>
-<span class="c1"># of = compose(swap, at)</span>
-
-<span class="c1"># &#39;&#39;&#39; in dict(compose=compose), _functions</span>
-<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_functions</span><span class="p">):</span>
-	<span class="n">sec</span> <span class="o">=</span> <span class="n">_functions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-	<span class="n">F</span> <span class="o">=</span> <span class="n">FUNCTIONS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">SymbolJoyType</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[</span><span class="n">sec</span><span class="p">],</span> <span class="n">_SYM_NUMS</span><span class="p">())</span>
-	<span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">YIN_STACK_EFFECTS</span><span class="p">:</span>
-		<span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Setting stack effect for Yin function </span><span class="si">%s</span><span class="s1"> := </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">sec</span><span class="p">))</span>
 
 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">primitive</span> <span class="ow">in</span> <span class="n">getmembers</span><span class="p">(</span><span class="n">genlib</span><span class="p">,</span> <span class="n">isfunction</span><span class="p">):</span>
 	<span class="n">inscribe</span><span class="p">(</span><span class="n">SimpleFunctionWrapper</span><span class="p">(</span><span class="n">primitive</span><span class="p">))</span>
 
 
 <span class="n">add_aliases</span><span class="p">(</span><span class="n">_dictionary</span><span class="p">,</span> <span class="n">ALIASES</span><span class="p">)</span>
-<span class="n">add_aliases</span><span class="p">(</span><span class="n">_functions</span><span class="p">,</span> <span class="n">ALIASES</span><span class="p">)</span>
-<span class="n">add_aliases</span><span class="p">(</span><span class="n">FUNCTIONS</span><span class="p">,</span> <span class="n">ALIASES</span><span class="p">)</span>
 
 
 <span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="n">definitions</span><span class="p">,</span> <span class="n">_dictionary</span><span class="p">)</span>
-
-
-<span class="n">EXPECTATIONS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-	<span class="n">ifte</span><span class="o">=</span><span class="p">(</span><span class="n">s7</span><span class="p">,</span> <span class="p">(</span><span class="n">s6</span><span class="p">,</span> <span class="p">(</span><span class="n">s5</span><span class="p">,</span> <span class="n">s4</span><span class="p">))),</span>
-	<span class="n">nullary</span><span class="o">=</span><span class="p">(</span><span class="n">s7</span><span class="p">,</span> <span class="n">s6</span><span class="p">),</span>
-	<span class="n">run</span><span class="o">=</span><span class="p">(</span><span class="n">s7</span><span class="p">,</span> <span class="n">s6</span><span class="p">),</span>
-<span class="p">)</span>
-<span class="n">EXPECTATIONS</span><span class="p">[</span><span class="s1">&#39;while&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">s7</span><span class="p">,</span> <span class="p">(</span><span class="n">s6</span><span class="p">,</span> <span class="n">s5</span><span class="p">))</span>
-
-
-<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">	dinfrirst</span>
-<span class="s1">	nullary</span>
-<span class="s1">	ifte</span>
-<span class="s1">	run</span>
-<span class="s1">	dupdipd codireco</span>
-<span class="s1">	while</span>
-<span class="s1">	&#39;&#39;&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
-	<span class="n">C</span> <span class="o">=</span> <span class="n">_dictionary</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-	<span class="n">expect</span> <span class="o">=</span> <span class="n">EXPECTATIONS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-	<span class="k">if</span> <span class="n">expect</span><span class="p">:</span>
-		<span class="n">sec</span> <span class="o">=</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="n">expect</span><span class="p">)</span>
-		<span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Setting stack EXPECT for combinator </span><span class="si">%s</span><span class="s1"> := </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sec</span><span class="p">)</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;combinator </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-	<span class="n">FUNCTIONS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">CombinatorJoyType</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[</span><span class="n">C</span><span class="p">],</span> <span class="n">_COMB_NUMS</span><span class="p">(),</span> <span class="n">expect</span><span class="p">)</span>
-
-
-<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">	of quoted enstacken ?</span>
-<span class="s1">	unary binary ternary</span>
-<span class="s1">	sqr unquoted</span>
-<span class="s1">	&#39;&#39;&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()):</span>
-	<span class="n">of_</span> <span class="o">=</span> <span class="n">_dictionary</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-	<span class="n">secs</span> <span class="o">=</span> <span class="n">infer_expression</span><span class="p">(</span><span class="n">of_</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
-	<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">secs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">secs</span><span class="p">)</span>
-	<span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-		<span class="s1">&#39;Setting stack effect for definition </span><span class="si">%s</span><span class="s1"> := </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-		<span class="n">name</span><span class="p">,</span>
-		<span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">secs</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-		<span class="p">)</span>
-	<span class="n">FUNCTIONS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">SymbolJoyType</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">infer_expression</span><span class="p">(</span><span class="n">of_</span><span class="o">.</span><span class="n">body</span><span class="p">),</span> <span class="n">_SYM_NUMS</span><span class="p">())</span>
-
-
-<span class="c1">#sec_Ns_math(_dictionary[&#39;product&#39;])</span>
-
-<span class="c1">##  product == 1 swap [*] step</span>
-<span class="c1">##  flatten == [] swap [concat] step</span>
-<span class="c1">##  pam == [i] map</span>
-<span class="c1">##  size == 0 swap [pop ++] step</span>
-<span class="c1">##  fork == [i] app2</span>
-<span class="c1">##  cleave == fork [popd] dip</span>
-<span class="c1">##  average == [sum 1.0 *] [size] cleave /</span>
-<span class="c1">##  gcd == 1 [tuck modulus dup 0 &gt;] loop pop</span>
-<span class="c1">##  least_fraction == dup [gcd] infra [div] concat map</span>
-<span class="c1">##  *fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons</span>
-<span class="c1">##  *fraction0 == concat [[swap] dip * [*] dip] infra</span>
-<span class="c1">##  down_to_zero == [0 &gt;] [dup --] while</span>
-<span class="c1">##  range_to_zero == unit [down_to_zero] infra</span>
-<span class="c1">##  anamorphism == [pop []] swap [dip swons] genrec</span>
-<span class="c1">##  range == [0 &lt;=] [1 - dup] anamorphism</span>
-<span class="c1">##  while == swap [nullary] cons dup dipd concat loop</span>
-<span class="c1">##  dupdipd == dup dipd</span>
-<span class="c1">##  tailrec == [i] genrec</span>
-<span class="c1">##  step_zero == 0 roll&gt; step</span>
-<span class="c1">##  codireco == cons dip rest cons</span>
-<span class="c1">##  make_generator == [codireco] ccons</span>
-<span class="c1">##  ifte == [nullary not] dipd branch</span>
 </pre></div>
 
           </div>

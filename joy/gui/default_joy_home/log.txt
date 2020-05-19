@@ -1,4 +1,0 @@
-Joypy - Copyright © 2018 Simon Forman
-This program comes with ABSOLUTELY NO WARRANTY; for details right-click "warranty". This is free software, and you are welcome to redistribute it under certain conditions; right-click "sharing" for details. Right-click on these commands to see docs on UI commands: key_bindings mouse_bindings
-
- <-

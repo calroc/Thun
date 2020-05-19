@@ -5,7 +5,6 @@
 .vscode
 docs/.ipynb_checkpoints
 test/*
-gnu-prolog/thun
 venv
 build
 Thun.egg-info

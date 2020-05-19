@@ -294,8 +294,7 @@ the stack discarding the rest of the stack.</p>
 <dl class="function">
 <dt id="joy.library.drop">
 <code class="descclassname">joy.library.</code><code class="descname">drop</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#drop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.drop" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">drop</span> <span class="o">==</span> <span class="p">[</span><span class="n">rest</span><span class="p">]</span> <span class="n">times</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">drop</span> <span class="o">==</span> <span class="p">[</span><span class="n">rest</span><span class="p">]</span> <span class="n">times</span>
 </pre></div>
 </div>
 <p>Expects an integer and a quote on the stack and returns the quote with
@@ -303,11 +302,6 @@ n items removed off the top.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">2</span> <span class="n">drop</span>
 <span class="o">----------------------</span>
                          <span class="p">[</span><span class="n">c</span> <span class="n">d</span><span class="p">]</span>
-</pre></div>
-</div>
-</div></blockquote>
-<p>Stack effect:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="n">i1</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -382,8 +376,7 @@ the original definition in the else-part:</p>
 <dl class="function">
 <dt id="joy.library.getitem">
 <code class="descclassname">joy.library.</code><code class="descname">getitem</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#getitem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.getitem" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">getitem</span> <span class="o">==</span> <span class="n">drop</span> <span class="n">first</span>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">getitem</span> <span class="o">==</span> <span class="n">drop</span> <span class="n">first</span>
 </pre></div>
 </div>
 <p>Expects an integer and a quote on the stack and returns the item at the
@@ -391,11 +384,6 @@ nth position in the quote counting from 0.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">0</span> <span class="n">getitem</span>
 <span class="o">-------------------------</span>
                                                 <span class="n">a</span>
-</pre></div>
-</div>
-</div></blockquote>
-<p>Stack effect:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="n">i1</span> <span class="o">--</span> <span class="n">a1</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -425,12 +413,6 @@ onto the pending expression for evaluation.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="joy.library.infer_">
-<code class="descclassname">joy.library.</code><code class="descname">infer_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#infer_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.infer_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempt to infer the stack effect of a Joy expression.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="joy.library.infra">
 <code class="descclassname">joy.library.</code><code class="descname">infra</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#infra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.infra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accept a quoted program and a list on the stack and run the program
@@ -457,19 +439,13 @@ with the list as its stack.  Does not affect the rest of the stack.</p>
 <dl class="function">
 <dt id="joy.library.inscribe_">
 <code class="descclassname">joy.library.</code><code class="descname">inscribe_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#inscribe_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.inscribe_" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a new Joy function definition in the Joy dictionary.  A
+<dd><p>Create a new Joy function definition in the Joy dictionary.  A
 definition is given as a string with a name followed by a double
 equal sign then one or more Joy functions, the body. for example:</p>
 <blockquote>
 <div>sqr == dup mul</div></blockquote>
 <p>If you want the definition to persist over restarts, enter it into
 the definitions.txt resource.</p>
-</div></blockquote>
-<p>Stack effect:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">t1</span> <span class="o">--</span><span class="p">)</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="function">
@@ -497,21 +473,13 @@ new list with the results in place of the program and original list.</p>
 <dl class="function">
 <dt id="joy.library.max_">
 <code class="descclassname">joy.library.</code><code class="descname">max_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#max_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.max_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a list find the maximum.
-Stack effect:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">n2</span><span class="o">*</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">n0</span><span class="p">)</span>
-</pre></div>
-</div>
+<dd><p>Given a list find the maximum.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="joy.library.min_">
 <code class="descclassname">joy.library.</code><code class="descname">min_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#min_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.min_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a list find the minimum.
-Stack effect:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">n2</span><span class="o">*</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">n0</span><span class="p">)</span>
-</pre></div>
-</div>
+<dd><p>Given a list find the minimum.</p>
 </dd></dl>
 
 <dl class="function">
@@ -534,11 +502,7 @@ Stack effect:</p>
 <dl class="function">
 <dt id="joy.library.pred">
 <code class="descclassname">joy.library.</code><code class="descname">pred</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#pred"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.pred" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decrement TOS.
-Stack effect:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
-</pre></div>
-</div>
+<dd><p>Decrement TOS.</p>
 </dd></dl>
 
 <dl class="function">
@@ -673,40 +637,25 @@ on top of the stack.</p>
 <dl class="function">
 <dt id="joy.library.succ">
 <code class="descclassname">joy.library.</code><code class="descname">succ</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#succ"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.succ" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment TOS.
-Stack effect:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">n1</span> <span class="o">--</span> <span class="n">n2</span><span class="p">)</span>
-</pre></div>
-</div>
+<dd><p>Increment TOS.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="joy.library.sum_">
 <code class="descclassname">joy.library.</code><code class="descname">sum_</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#sum_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.sum_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a quoted sequence of numbers return the sum.</p>
-<blockquote>
-<div>sum == 0 swap [+] step</div></blockquote>
-<p>Stack effect:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">n2</span><span class="o">*</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="o">--</span> <span class="n">n0</span><span class="p">)</span>
-</pre></div>
-</div>
+<p>sum == 0 swap [+] step</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="joy.library.take">
 <code class="descclassname">joy.library.</code><code class="descname">take</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#take"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.take" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Expects an integer and a quote on the stack and returns the quote with
+<dd><p>Expects an integer and a quote on the stack and returns the quote with
 just the top n items in reverse order (because that’s easier and you can
 use reverse if needed.)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>         <span class="p">[</span><span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span><span class="p">]</span> <span class="mi">2</span> <span class="n">take</span>
 <span class="o">----------------------</span>
                          <span class="p">[</span><span class="n">b</span> <span class="n">a</span><span class="p">]</span>
-</pre></div>
-</div>
-</div></blockquote>
-<p>Stack effect:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="o">...</span><span class="mi">0</span><span class="p">]</span> <span class="n">i1</span> <span class="o">--</span> <span class="p">[</span><span class="o">...</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -766,15 +715,6 @@ use reverse if needed.)</p>
 <span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">x</span> <span class="o">=</span> <span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>  <span class="n">Q</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="function">
-<dt id="joy.library.yin_functions">
-<code class="descclassname">joy.library.</code><code class="descname">yin_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/library.html#yin_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.library.yin_functions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a dict of named stack effects.</p>
-<p>“Yin” functions are those that only rearrange items in stacks and
-can be defined completely by their stack effects.  This means they
-can be auto-compiled.</p>
 </dd></dl>
 
 <dl class="function">

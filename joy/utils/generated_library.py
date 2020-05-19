@@ -1,4 +1,6 @@
 # GENERATED FILE. DO NOT EDIT.
+# The code that generated these functions is in the repo history
+# at the v0.4.0 tag.
 
 
 def _Tree_add_Ee(stack):
