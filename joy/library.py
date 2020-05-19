@@ -73,7 +73,6 @@ ALIASES = (
 	('bool', ['truthy']),
 	('mul', ['*']),
 	('floordiv', ['/floor', '//']),
-	('floor', ['round']),
 	('truediv', ['/', 'div']),
 	('mod', ['%', 'rem', 'remainder', 'modulus']),
 	('eq', ['=']),
@@ -1408,6 +1407,7 @@ for F in (
 	UnaryBuiltinWrapper(sqrt),
 
 	UnaryBuiltinWrapper(floor),
+	UnaryBuiltinWrapper(round),
 	):
 	inscribe(F)
 del F  # Otherwise Sphinx autodoc will pick it up.
