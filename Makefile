@@ -1,14 +1,14 @@
 # My make-fu style is old and tired.  I just want to have a few helper commands.
 
 TESTDIR = ./test00
-VERSION = 0.4.0
+VERSION = 0.1.0
 WEBSERVER = sforman@shell.osdn.net
 
 .PHONY: clean sdist test
 
 
 clean:
-	$(RM) -r Thun.egg-info/ dist/ build/ __pycache__/ $(TESTDIR)
+	$(RM) -r Xerblin.egg-info/ dist/ build/ __pycache__/ $(TESTDIR)
 	find . -name '*.pyc' | xargs $(RM)
 
 sdist:
@@ -21,5 +21,6 @@ test: sdist
 	$(RM) -r $(TESTDIR)
 	virtualenv --system-site-packages --never-download $(TESTDIR)
 	. $(TESTDIR)/bin/activate && \
-		pip install --no-cache-dir --no-index ./dist/Thun-$(VERSION).tar.gz
+		pip install setuptools && \
+		pip install --no-cache-dir --no-index ./dist/Xerblin-$(VERSION).tar.gz
 	echo "Type: source $(TESTDIR)/bin/activate"
