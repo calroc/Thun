@@ -2,6 +2,11 @@
 Type Inference of Joy Expressions
 =================================
 
+UPDATE: May 2020 - I removed the type inference code in `joy.utils.types`
+but you can find it in the `v0.4.0` tag here:
+https://osdn.net/projects/joypy/scm/hg/Joypy/tags
+
+
 Two kinds of type inference are provided, a simple inferencer that can
 handle functions that have a single stack effect (aka "type signature")
 and that can generate Python code for a limited subset of those
@@ -78,11 +83,6 @@ auto-compiled to Python)::
     uncons = ([a1 ...0] -- a1 [...0]) *
     unit = (a1 -- [a1 ]) *
     unswons = ([a1 ...1] -- [...1] a1) *
-
-
-.. automodule:: joy.utils.types
-   :members:
-
 
 
 Example output of the ``infer()`` function.  The first number on each
