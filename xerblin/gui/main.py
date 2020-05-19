@@ -24,7 +24,7 @@ from datetime import datetime
 from textwrap import dedent
 from configparser import RawConfigParser
 
-from joy.gui.utils import init_home, argparser, FileFaker
+from xerblin.gui.utils import init_home, argparser, FileFaker
 
 
 DATETIME_FORMAT = "Thun • %B %d %a • %I:%M %p"
@@ -48,9 +48,9 @@ _log.info('Starting with JOY_HOME=%s', JOY_HOME)
 
 # Now that logging is set up, continue loading the system.
 
-from joy.gui.textwidget import TextViewerWidget, tk, get_font
-from joy.gui.world import StackWorld
-from joy.gui.controllerlistbox import StackListbox
+from xerblin.gui.textwidget import TextViewerWidget, tk, get_font
+from xerblin.gui.world import StackWorld
+from xerblin.gui.controllerlistbox import StackListbox
 from joy.library import initialize, DefinitionWrapper
 from joy.utils.stack import stack_to_string
 

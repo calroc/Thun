@@ -18,7 +18,7 @@
 #    along with Joypy.  If not see <http://www.gnu.org/licenses/>.
 #
 import sys
-import joy.gui.main
+import xerblin.gui.main
 
 
-sys.exit(joy.gui.main.main())
+sys.exit(xerblin.gui.main.main())

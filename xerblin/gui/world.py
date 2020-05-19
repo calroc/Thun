@@ -30,8 +30,11 @@ from joy.joy import run
 from joy.library import HELP_TEMPLATE
 from joy.parser import Symbol
 from joy.utils.stack import stack_to_string
-from joy.utils.types import type_check
 from .utils import is_numerical
+
+
+def type_check(name, stack):
+	return  # None indicating "I dunno."
 
 
 class World(object):
