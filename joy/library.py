@@ -27,9 +27,6 @@ from __future__ import print_function
 from builtins import map, object, range, zip
 from logging import getLogger
 
-_log = getLogger(__name__)
-_log.info('Loading library.')
-
 from inspect import getdoc
 from functools import wraps
 from itertools import count
@@ -38,38 +35,7 @@ import operator, math
 
 from .parser import text_to_expression, Symbol
 from .utils.stack import expression_to_string, list_to_stack, iter_stack, pick, concat
-import sys
-if sys.version_info.major < 3:
-	from .utils.brutal_hackery import rename_code_object
-else:
-	rename_code_object = lambda _: lambda f: f
-
 from .utils import generated_library as genlib
-from .utils.types import (
-	compose,
-	ef,
-	stack_effect,
-	AnyJoyType,
-	AnyStarJoyType,
-	BooleanJoyType,
-	NumberJoyType,
-	NumberStarJoyType,
-	StackJoyType,
-	StackStarJoyType,
-	FloatJoyType,
-	IntJoyType,
-	SymbolJoyType,
-	CombinatorJoyType,
-	TextJoyType,
-	_functions,
-	FUNCTIONS,
-	infer,
-	infer_expression,
-	JoyTypeError,
-	combinator_effect,
-	poly_combinator_effect,
-	doc_from_stack_effect,
-	)
 
 
 HELP_TEMPLATE = '''\
@@ -81,38 +47,6 @@ HELP_TEMPLATE = '''\
 ---- end (%s)
 '''
 
-
-_SYM_NUMS = lambda c=count(): next(c)
-_COMB_NUMS = lambda c=count(): next(c)
-
-
-_R = list(range(10))
-A = a0, a1, a2, a3, a4, a5, a6, a7, a8, a9 = list(map(AnyJoyType, _R))
-B = b0, b1, b2, b3, b4, b5, b6, b7, b8, b9 = list(map(BooleanJoyType, _R))
-N = n0, n1, n2, n3, n4, n5, n6, n7, n8, n9 = list(map(NumberJoyType, _R))
-S = s0, s1, s2, s3, s4, s5, s6, s7, s8, s9 = list(map(StackJoyType, _R))
-F = f0, f1, f2, f3, f4, f5, f6, f7, f8, f9 = list(map(FloatJoyType, _R))
-I = i0, i1, i2, i3, i4, i5, i6, i7, i8, i9 = list(map(IntJoyType, _R))
-T = t0, t1, t2, t3, t4, t5, t6, t7, t8, t9 = list(map(TextJoyType, _R))
-
-
-_R = list(range(1, 11))
-As = list(map(AnyStarJoyType, _R))
-Ns = list(map(NumberStarJoyType, _R))
-Ss = list(map(StackStarJoyType, _R))
-
-
-# "sec": stack effect comment, like in Forth.
-sec0 = stack_effect(t1)()
-sec1 = stack_effect(s0, i1)(s1)
-sec2 = stack_effect(s0, i1)(a1)
-sec_binary_cmp = stack_effect(n1, n2)(b1)
-sec_binary_ints = stack_effect(i1, i2)(i3)
-sec_binary_logic = stack_effect(b1, b2)(b3)
-sec_binary_math = stack_effect(n1, n2)(n3)
-sec_unary_logic = stack_effect(a1)(b1)
-sec_unary_math = stack_effect(n1)(n2)
-sec_Ns_math = stack_effect((Ns[1], s1),)(n0)
 
 # This is the main dict we're building.
 _dictionary = {}
@@ -171,56 +105,6 @@ def add_aliases(D, A):
 			continue
 		for alias in aliases:
 			D[alias] = F
-
-
-def yin_functions():
-	'''
-	Return a dict of named stack effects.
-
-	"Yin" functions are those that only rearrange items in stacks and
-	can be defined completely by their stack effects.  This means they
-	can be auto-compiled.
-	'''
-	# pylint: disable=unused-variable
-	cons = ef(a1, s0)((a1, s0))
-	ccons = compose(cons, cons)
-	dup = ef(a1)(a1, a1)
-	dupd = ef(a2, a1)(a2, a2, a1)
-	dupdd = ef(a3, a2, a1)(a3, a3, a2, a1)
-	first = ef((a1, s1),)(a1,)
-	over = ef(a2, a1)(a2, a1, a2)
-	pop = ef(a1)()
-	popd = ef(a2, a1,)(a1)
-	popdd = ef(a3, a2, a1,)(a2, a1,)
-	popop = ef(a2, a1,)()
-	popopd = ef(a3, a2, a1,)(a1)
-	popopdd = ef(a4, a3, a2, a1,)(a2, a1)
-	rest = ef((a1, s0),)(s0,)
-	rolldown = ef(a1, a2, a3)(a2, a3, a1)
-	rollup = ef(a1, a2, a3)(a3, a1, a2)
-	rrest = compose(rest, rest)
-	second = compose(rest, first)
-	stack = s0, (s0, s0)
-	swaack = (s1, s0), (s0, s1)
-	swap = ef(a1, a2)(a2, a1)
-	swons = compose(swap, cons)
-	third = compose(rest, second)
-	tuck = ef(a2, a1)(a1, a2, a1)
-	uncons = ef((a1, s0),)(a1, s0)
-	unswons = compose(uncons, swap)
-	stuncons = compose(stack, uncons)
-	stununcons = compose(stack, uncons, uncons)
-	unit = ef(a1)((a1, ()))
-
-	first_two = compose(uncons, uncons, pop)
-	fourth = compose(rest, third)
-
-	_Tree_add_Ee = compose(pop, swap, rolldown, rrest, ccons)
-	_Tree_get_E = compose(popop, second)
-	_Tree_delete_clear_stuff = compose(rollup, popop, rest)
-	_Tree_delete_R0 = compose(over, first, swap, dup)
-
-	return locals()
 
 
 definitions = ('''\
@@ -318,7 +202,6 @@ def SimpleFunctionWrapper(f):
 	'''
 	@FunctionWrapper
 	@wraps(f)
-	@rename_code_object(f.__name__)
 	def inner(stack, expression, dictionary):
 		return f(stack), expression, dictionary
 	return inner
@@ -330,7 +213,6 @@ def BinaryBuiltinWrapper(f):
 	'''
 	@FunctionWrapper
 	@wraps(f)
-	@rename_code_object(f.__name__)
 	def inner(stack, expression, dictionary):
 		(a, (b, stack)) = stack
 		result = f(b, a)
@@ -344,7 +226,6 @@ def UnaryBuiltinWrapper(f):
 	'''
 	@FunctionWrapper
 	@wraps(f)
-	@rename_code_object(f.__name__)
 	def inner(stack, expression, dictionary):
 		(a, stack) = stack
 		result = f(a)
@@ -393,7 +274,6 @@ class DefinitionWrapper(object):
 		Add the definition to the dictionary.
 		'''
 		F = class_.parse_definition(definition)
-		_log.info('Adding definition %s := %s', F.name, expression_to_string(F.body))
 		dictionary[F.name] = F
 
 	@classmethod
@@ -418,7 +298,6 @@ def _text_to_defs(text):
 
 
 @inscribe
-@sec0
 @FunctionWrapper
 def inscribe_(stack, expression, dictionary):
 	'''
@@ -445,18 +324,17 @@ def parse(stack):
 	return expression, stack
 
 
-@inscribe
-@SimpleFunctionWrapper
-def infer_(stack):
-	'''Attempt to infer the stack effect of a Joy expression.'''
-	E, stack = stack
-	effects = infer_expression(E)
-	e = list_to_stack([(fi, (fo, ())) for fi, fo in effects])
-	return e, stack
+# @inscribe
+# @SimpleFunctionWrapper
+# def infer_(stack):
+# 	'''Attempt to infer the stack effect of a Joy expression.'''
+# 	E, stack = stack
+# 	effects = infer_expression(E)
+# 	e = list_to_stack([(fi, (fo, ())) for fi, fo in effects])
+# 	return e, stack
 
 
 @inscribe
-@sec2
 @SimpleFunctionWrapper
 def getitem(stack):
 	'''
@@ -478,7 +356,6 @@ def getitem(stack):
 
 
 @inscribe
-@sec1
 @SimpleFunctionWrapper
 def drop(stack):
 	'''
@@ -506,7 +383,6 @@ def drop(stack):
 
 
 @inscribe
-@sec1
 @SimpleFunctionWrapper
 def take(stack):
 	'''
@@ -581,7 +457,6 @@ def select(stack):
 
 
 @inscribe
-@sec_Ns_math
 @SimpleFunctionWrapper
 def max_(S):
 	'''Given a list find the maximum.'''
@@ -590,7 +465,6 @@ def max_(S):
 
 
 @inscribe
-@sec_Ns_math
 @SimpleFunctionWrapper
 def min_(S):
 	'''Given a list find the minimum.'''
@@ -599,7 +473,6 @@ def min_(S):
 
 
 @inscribe
-@sec_Ns_math
 @SimpleFunctionWrapper
 def sum_(S):
 	'''Given a quoted sequence of numbers return the sum.
@@ -646,7 +519,6 @@ def sort_(S):
 	return list_to_stack(sorted(iter_stack(tos))), stack
 
 
-_functions['clear'] = s0, s1
 @inscribe
 @SimpleFunctionWrapper
 def clear(stack):
@@ -688,7 +560,6 @@ def reverse(S):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), s7, s6)
 @SimpleFunctionWrapper
 def concat_(S):
 	'''Concatinate the two lists on the top of the stack.
@@ -739,7 +610,6 @@ def zip_(S):
 
 
 @inscribe
-@sec_unary_math
 @SimpleFunctionWrapper
 def succ(S):
 	'''Increment TOS.'''
@@ -748,7 +618,6 @@ def succ(S):
 
 
 @inscribe
-@sec_unary_math
 @SimpleFunctionWrapper
 def pred(S):
 	'''Decrement TOS.'''
@@ -931,7 +800,6 @@ S_times = Symbol('times')
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), s1)
 @FunctionWrapper
 def i(stack, expression, dictionary):
 	'''
@@ -949,7 +817,6 @@ def i(stack, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), s1)
 @FunctionWrapper
 def x(stack, expression, dictionary):
 	'''
@@ -967,7 +834,6 @@ def x(stack, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), s7, s6)
 @FunctionWrapper
 def b(stack, expression, dictionary):
 	'''
@@ -984,7 +850,6 @@ def b(stack, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), a1, s1)
 @FunctionWrapper
 def dupdip(stack, expression, dictionary):
 	'''
@@ -1004,7 +869,6 @@ def dupdip(stack, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), s7, s6)
 @FunctionWrapper
 def infra(stack, expression, dictionary):
 	'''
@@ -1084,7 +948,6 @@ def genrec(stack, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), s7, s6)
 @FunctionWrapper
 def map_(S, expression, dictionary):
 	'''
@@ -1178,7 +1041,6 @@ def branch_false(stack, expression, dictionary):
 
 
 @inscribe
-@poly_combinator_effect(_COMB_NUMS(), [branch_true, branch_false], b1, s7, s6)
 @FunctionWrapper
 def branch(stack, expression, dictionary):
 	'''
@@ -1275,7 +1137,6 @@ def _cond(conditions, expression):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), a1, s1)
 @FunctionWrapper
 def dip(stack, expression, dictionary):
 	'''
@@ -1295,7 +1156,6 @@ def dip(stack, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), a2, a1, s1)
 @FunctionWrapper
 def dipd(S, expression, dictionary):
 	'''
@@ -1313,7 +1173,6 @@ def dipd(S, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), a3, a2, a1, s1)
 @FunctionWrapper
 def dipdd(S, expression, dictionary):
 	'''
@@ -1331,7 +1190,6 @@ def dipdd(S, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), a1, s1)
 @FunctionWrapper
 def app1(S, expression, dictionary):
 	'''
@@ -1351,7 +1209,6 @@ def app1(S, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), a2, a1, s1)
 @FunctionWrapper
 def app2(S, expression, dictionary):
 	'''Like app1 with two items.
@@ -1372,7 +1229,6 @@ def app2(S, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), a3, a2, a1, s1)
 @FunctionWrapper
 def app3(S, expression, dictionary):
 	'''Like app1 with three items.
@@ -1395,7 +1251,6 @@ def app3(S, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), s7, s6)
 @FunctionWrapper
 def step(S, expression, dictionary):
 	'''
@@ -1431,7 +1286,6 @@ def step(S, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), i1, s6)
 @FunctionWrapper
 def times(stack, expression, dictionary):
 	'''
@@ -1480,21 +1334,7 @@ def times(stack, expression, dictionary):
 #  return stack, expression, dictionary
 
 
-def loop_true(stack, expression, dictionary):
-		quote, (flag, stack) = stack  # pylint: disable=unused-variable
-		return stack, concat(quote, (S_pop, expression)), dictionary
-
-def loop_two_true(stack, expression, dictionary):
-		quote, (flag, stack) = stack  # pylint: disable=unused-variable
-		return stack, concat(quote, (S_pop, concat(quote, (S_pop, expression)))), dictionary
-
-def loop_false(stack, expression, dictionary):
-		quote, (flag, stack) = stack  # pylint: disable=unused-variable
-		return stack, expression, dictionary
-
-
 @inscribe
-@poly_combinator_effect(_COMB_NUMS(), [loop_two_true, loop_true, loop_false], b1, s6)
 @FunctionWrapper
 def loop(stack, expression, dictionary):
 	'''
@@ -1517,7 +1357,6 @@ def loop(stack, expression, dictionary):
 
 
 @inscribe
-@combinator_effect(_COMB_NUMS(), a1, a2, s6, s7, s8)
 @FunctionWrapper
 def cmp_(stack, expression, dictionary):
 	'''
@@ -1550,114 +1389,50 @@ for F in (
 
 	#divmod_ = pm = __(n2, n1), __(n4, n3)
 
-	sec_binary_cmp(BinaryBuiltinWrapper(operator.eq)),
-	sec_binary_cmp(BinaryBuiltinWrapper(operator.ge)),
-	sec_binary_cmp(BinaryBuiltinWrapper(operator.gt)),
-	sec_binary_cmp(BinaryBuiltinWrapper(operator.le)),
-	sec_binary_cmp(BinaryBuiltinWrapper(operator.lt)),
-	sec_binary_cmp(BinaryBuiltinWrapper(operator.ne)),
+	BinaryBuiltinWrapper(operator.eq),
+	BinaryBuiltinWrapper(operator.ge),
+	BinaryBuiltinWrapper(operator.gt),
+	BinaryBuiltinWrapper(operator.le),
+	BinaryBuiltinWrapper(operator.lt),
+	BinaryBuiltinWrapper(operator.ne),
 
-	sec_binary_ints(BinaryBuiltinWrapper(operator.xor)),
-	sec_binary_ints(BinaryBuiltinWrapper(operator.lshift)),
-	sec_binary_ints(BinaryBuiltinWrapper(operator.rshift)),
+	BinaryBuiltinWrapper(operator.xor),
+	BinaryBuiltinWrapper(operator.lshift),
+	BinaryBuiltinWrapper(operator.rshift),
 
-	sec_binary_logic(BinaryBuiltinWrapper(operator.and_)),
-	sec_binary_logic(BinaryBuiltinWrapper(operator.or_)),
+	BinaryBuiltinWrapper(operator.and_),
+	BinaryBuiltinWrapper(operator.or_),
 
-	sec_binary_math(BinaryBuiltinWrapper(operator.add)),
-	sec_binary_math(BinaryBuiltinWrapper(operator.floordiv)),
-	sec_binary_math(BinaryBuiltinWrapper(operator.mod)),
-	sec_binary_math(BinaryBuiltinWrapper(operator.mul)),
-	sec_binary_math(BinaryBuiltinWrapper(operator.pow)),
-	sec_binary_math(BinaryBuiltinWrapper(operator.sub)),
-	sec_binary_math(BinaryBuiltinWrapper(operator.truediv)),
+	BinaryBuiltinWrapper(operator.add),
+	BinaryBuiltinWrapper(operator.floordiv),
+	BinaryBuiltinWrapper(operator.mod),
+	BinaryBuiltinWrapper(operator.mul),
+	BinaryBuiltinWrapper(operator.pow),
+	BinaryBuiltinWrapper(operator.sub),
+	BinaryBuiltinWrapper(operator.truediv),
 
-	sec_unary_logic(UnaryBuiltinWrapper(bool)),
-	sec_unary_logic(UnaryBuiltinWrapper(operator.not_)),
+	UnaryBuiltinWrapper(bool),
+	UnaryBuiltinWrapper(operator.not_),
 
-	sec_unary_math(UnaryBuiltinWrapper(abs)),
-	sec_unary_math(UnaryBuiltinWrapper(operator.neg)),
-	sec_unary_math(UnaryBuiltinWrapper(sqrt)),
+	UnaryBuiltinWrapper(abs),
+	UnaryBuiltinWrapper(operator.neg),
+	UnaryBuiltinWrapper(sqrt),
 
-	stack_effect(n1)(i1)(UnaryBuiltinWrapper(floor)),
+	UnaryBuiltinWrapper(floor),
 	):
 	inscribe(F)
 del F  # Otherwise Sphinx autodoc will pick it up.
 
-
-YIN_STACK_EFFECTS = yin_functions()
-add_aliases(YIN_STACK_EFFECTS, ALIASES)
-
-# Load the auto-generated primitives into the dictionary.
-_functions.update(YIN_STACK_EFFECTS)
-# exec '''
-
-# eh = compose(dup, bool)
-# sqr = compose(dup, mul)
-# of = compose(swap, at)
-
-# ''' in dict(compose=compose), _functions
-for name in sorted(_functions):
-	sec = _functions[name]
-	F = FUNCTIONS[name] = SymbolJoyType(name, [sec], _SYM_NUMS())
-	if name in YIN_STACK_EFFECTS:
-		_log.info('Setting stack effect for Yin function %s := %s', F.name, doc_from_stack_effect(*sec))
 
 for name, primitive in getmembers(genlib, isfunction):
 	inscribe(SimpleFunctionWrapper(primitive))
 
 
 add_aliases(_dictionary, ALIASES)
-add_aliases(_functions, ALIASES)
-add_aliases(FUNCTIONS, ALIASES)
 
 
 DefinitionWrapper.add_definitions(definitions, _dictionary)
 
-
-EXPECTATIONS = dict(
-	ifte=(s7, (s6, (s5, s4))),
-	nullary=(s7, s6),
-	run=(s7, s6),
-)
-EXPECTATIONS['while'] = (s7, (s6, s5))
-
-
-for name in '''
-	dinfrirst
-	nullary
-	ifte
-	run
-	dupdipd codireco
-	while
-	'''.split():
-	C = _dictionary[name]
-	expect = EXPECTATIONS.get(name)
-	if expect:
-		sec = doc_from_stack_effect(expect)
-		_log.info('Setting stack EXPECT for combinator %s := %s', C.name, sec)
-	else:
-		_log.info('combinator %s', C.name)
-	FUNCTIONS[name] = CombinatorJoyType(name, [C], _COMB_NUMS(), expect)
-
-
-for name in ('''
-	of quoted enstacken ?
-	unary binary ternary
-	sqr unquoted
-	'''.split()):
-	of_ = _dictionary[name]
-	secs = infer_expression(of_.body)
-	assert len(secs) == 1, repr(secs)
-	_log.info(
-		'Setting stack effect for definition %s := %s',
-		name,
-		doc_from_stack_effect(*secs[0]),
-		)
-	FUNCTIONS[name] = SymbolJoyType(name, infer_expression(of_.body), _SYM_NUMS())
-
-
-#sec_Ns_math(_dictionary['product'])
 
 ##  product == 1 swap [*] step
 ##  flatten == [] swap [concat] step
