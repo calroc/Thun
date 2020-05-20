@@ -20,22 +20,21 @@
 '''
 Pretty printing support, e.g.::
 
-    Joy? 23 18 * 99 +
-           . 23 18 mul 99 add
-        23 . 18 mul 99 add
-     23 18 . mul 99 add
-       414 . 99 add
-    414 99 . add
-       513 . 
+    Joy? [23 18 * 99 +] trace
+           • 23 18 mul 99 add
+        23 • 18 mul 99 add
+     23 18 • mul 99 add
+       414 • 99 add
+    414 99 • add
+       513 • 
 
     513 <-top
 
     joy? 
 
-On each line the stack is printed with the top to the right, then a ``.`` to
-represent the current locus of processing, then the pending expression to the
-left.
-
+On each line the stack is printed with the top to the left, then a
+bullet symbol,``•``, to represent the current locus of processing, then
+the pending expression to the right.
 '''
 # (Kinda clunky and hacky.  This should be swapped out in favor of much
 # smarter stuff.)
@@ -114,8 +113,8 @@ class TracePrinter(object):
 			n = len(stack)
 			if n > max_stack_length:
 				max_stack_length = n
-			lines.append((n, '%s . %s' % (stack, expression)))
-		return [  # Prefix spaces to line up '.'s.
+			lines.append((n, '%s • %s' % (stack, expression)))
+		return [  # Prefix spaces to line up '•'s.
 			(' ' * (max_stack_length - length) + line)
 			for length, line in lines
 			]

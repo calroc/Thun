@@ -29,7 +29,7 @@ S = ()
 
 
 def J(text, stack=S, dictionary=D):
-	print stack_to_string(run(text, stack, dictionary)[0])
+	print(stack_to_string(run(text, stack, dictionary)[0]))
 
 
 def V(text, stack=S, dictionary=D):
@@ -39,8 +39,8 @@ def V(text, stack=S, dictionary=D):
 	except:
 		exc = format_exc()
 		tp.print_()
-		print '-' * 73
-		print exc
+		print('-' * 73)
+		print(exc)
 	else:
 		tp.print_()
 

@@ -25,7 +25,7 @@ match the behaviour of the original version(s) written in C.
 '''
 from __future__ import print_function
 from builtins import input
-from traceback import print_exc, format_exc
+from traceback import print_exc
 from .parser import text_to_expression, ParseError, Symbol
 from .utils.stack import stack_to_string
 
@@ -103,8 +103,7 @@ def repl(stack=(), dictionary=None):
 			try:
 				stack, _, dictionary = run(text, stack, dictionary)
 			except:
-				exc = format_exc() # Capture the exception.
-				print(exc) # Print the original exception.
+				print_exc()
 	except:
 		print_exc()
 	print()
