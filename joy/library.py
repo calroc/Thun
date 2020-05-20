@@ -309,7 +309,7 @@ def inscribe_(stack, expression, dictionary):
 	definition is given as a string with a name followed by a double
 	equal sign then one or more Joy functions, the body. for example:
 
-			sqr == dup mul
+		sqr == dup mul
 
 	If you want the definition to persist over restarts, enter it into
 	the definitions.txt resource.
@@ -350,9 +350,9 @@ def getitem(stack):
 	nth position in the quote counting from 0.
 	::
 
-			 [a b c d] 0 getitem
+		   [a b c d] 0 getitem
 		-------------------------
-								a
+		    a
 
 	'''
 	n, (Q, stack) = stack
@@ -371,9 +371,9 @@ def drop(stack):
 	n items removed off the top.
 	::
 
-			 [a b c d] 2 drop
+		   [a b c d] 2 drop
 		----------------------
-					 [c d]
+		       [c d]
 
 	'''
 	n, (Q, stack) = stack
@@ -395,9 +395,9 @@ def take(stack):
 	use reverse if needed.)
 	::
 
-			 [a b c d] 2 take
+		   [a b c d] 2 take
 		----------------------
-					 [b a]
+		       [b a]
 
 	'''
 	n, (Q, stack) = stack
@@ -419,14 +419,14 @@ def choice(stack):
 	Use a Boolean value to select one of two items.
 	::
 
-				A B False choice
-		 ----------------------
-							 A
+		   A B False choice
+		----------------------
+		   A
 
 
-				A B True choice
-		 ---------------------
-							 B
+		   A B True choice
+		---------------------
+		     B
 
 	Currently Python semantics are used to evaluate the "truthiness" of the
 	Boolean value (so empty string, zero, etc. are counted as false, etc.)
@@ -442,14 +442,14 @@ def select(stack):
 	Use a Boolean value to select one of two items from a sequence.
 	::
 
-				[A B] False select
-		 ------------------------
-								A
+		   [A B] False select
+		------------------------
+		    A
 
 
-				[A B] True select
-		 -----------------------
-							 B
+		   [A B] True select
+		-----------------------
+		      B
 
 	The sequence can contain more than two items but not fewer.
 	Currently Python semantics are used to evaluate the "truthiness" of the
@@ -479,9 +479,12 @@ def min_(S):
 @inscribe
 @SimpleFunctionWrapper
 def sum_(S):
-	'''Given a quoted sequence of numbers return the sum.
+	'''
+	Given a quoted sequence of numbers return the sum.
+	::
 
-	sum == 0 swap [+] step
+		sum == 0 swap [+] step
+
 	'''
 	tos, stack = S
 	return sum(iter_stack(tos)), stack
@@ -495,9 +498,9 @@ def remove(S):
 	from the the quote.  The item is only removed once.
 	::
 
-			 [1 2 3 1] 1 remove
+		   [1 2 3 1] 1 remove
 		------------------------
-						[2 3 1]
+		     [2 3 1]
 
 	'''
 	(tos, (second, stack)) = S
@@ -531,7 +534,7 @@ def clear(stack):
 
 		clear == stack [pop stack] loop
 
-			 ... clear
+		   ... clear
 		---------------
 
 	'''
@@ -551,7 +554,8 @@ def disenstacken(stack):
 @inscribe
 @SimpleFunctionWrapper
 def reverse(S):
-	'''Reverse the list on the top of the stack.
+	'''
+	Reverse the list on the top of the stack.
 	::
 
 		reverse == [] swap shunt
@@ -566,12 +570,13 @@ def reverse(S):
 @inscribe
 @SimpleFunctionWrapper
 def concat_(S):
-	'''Concatinate the two lists on the top of the stack.
+	'''
+	Concatinate the two lists on the top of the stack.
 	::
 
-			 [a b c] [d e f] concat
+		   [a b c] [d e f] concat
 		----------------------------
-					 [a b c d e f]
+		       [a b c d e f]
 
 	'''
 	(tos, (second, stack)) = S
@@ -581,14 +586,15 @@ def concat_(S):
 @inscribe
 @SimpleFunctionWrapper
 def shunt(stack):
-	'''Like concat but reverses the top list into the second.
+	'''
+	Like concat but reverses the top list into the second.
 	::
 
 		shunt == [swons] step == reverse swap concat
 
-			 [a b c] [d e f] shunt
+		   [a b c] [d e f] shunt
 		---------------------------
-				 [f e d a b c] 
+		       [f e d a b c] 
 
 	'''
 	(tos, (second, stack)) = stack
@@ -636,9 +642,9 @@ def pm(stack):
 	Plus or minus
 	::
 
-			 a b pm
+		   a b pm
 		-------------
-			 a+b a-b
+		   a+b a-b
 
 	'''
 	a, (b, stack) = stack
@@ -811,9 +817,9 @@ def i(stack, expression, dictionary):
 	onto the pending expression for evaluation.
 	::
 
-			 [Q] i
+		   [Q] i
 		-----------
-				Q
+		    Q
 
 	'''
 	quote, stack = stack
@@ -880,9 +886,9 @@ def infra(stack, expression, dictionary):
 	with the list as its stack.  Does not affect the rest of the stack.
 	::
 
-			 ... [a b c] [Q] . infra
+		   ... [a b c] [Q] . infra
 		-----------------------------
-			 c b a . Q [...] swaack
+		    c b a . Q [...] swaack
 
 	'''
 	(quote, (aggregate, stack)) = stack
@@ -919,12 +925,12 @@ def genrec(stack, expression, dictionary):
 	For example, given a (general recursive) function 'F':
 	::
 
-			F == [I] [T] [R1] [R2] genrec
+		F == [I] [T] [R1] [R2] genrec
 
 	If the [I] if-part fails you must derive R1 and R2 from:
 	::
 
-			... R1 [F] R2
+		... R1 [F] R2
 
 	Just set the stack arguments in front, and figure out what R1 and R2
 	have to do to apply the quoted [F] in the proper way.  In effect, the
@@ -932,15 +938,15 @@ def genrec(stack, expression, dictionary):
 	the original definition in the else-part:
 	::
 
-			F == [I] [T] [R1]   [R2] genrec
-			  == [I] [T] [R1 [F] R2] ifte
+		F == [I] [T] [R1]   [R2] genrec
+		  == [I] [T] [R1 [F] R2] ifte
 
 	Primitive recursive functions are those where R2 == i.
 	::
 
-			P == [I] [T] [R] tailrec
-			  == [I] [T] [R [P] i] ifte
-			  == [I] [T] [R P] ifte
+		P == [I] [T] [R] tailrec
+		  == [I] [T] [R [P] i] ifte
+		  == [I] [T] [R P] ifte
 
 	'''
 	(rec2, (rec1, stack)) = stack
@@ -985,9 +991,9 @@ def primrec(stack, expression, dictionary):
 	the data parameter is zero, then the first quotation has to produce
 	the value to be returned. If the data parameter is positive then the
 	second has to combine the data parameter with the result of applying
-	the function to its predecessor.
+	the function to its predecessor.::
 
-	5  [1]  [*]  primrec
+		5  [1]  [*]  primrec
 
 	> Then primrec tests whether the top element on the stack (initially
 	the 5) is equal to zero. If it is, it pops it off and executes one of
@@ -995,17 +1001,17 @@ def primrec(stack, expression, dictionary):
 	Otherwise it pushes a decremented copy of the top element and
 	recurses. On the way back from the recursion it uses the other
 	quotation, [*], to multiply what is now a factorial on top of the
-	stack by the second element on the stack.
+	stack by the second element on the stack.::
 
 		n [Base] [Recur] primrec
 
-	   0 [Base] [Recur] primrec
-	------------------------------
-	      Base
+		   0 [Base] [Recur] primrec
+		------------------------------
+		      Base
 
-	   n [Base] [Recur] primrec
-	------------------------------------------ n > 0
-	   n (n-1) [Base] [Recur] primrec Recur
+		         n [Base] [Recur] primrec
+		------------------------------------------ n > 0
+		   n (n-1) [Base] [Recur] primrec Recur
 
 	'''
 	recur, (base, (n, stack)) = stack
@@ -1039,17 +1045,17 @@ def branch(stack, expression, dictionary):
 
 	::
 
-			branch == roll< choice i
+		branch == roll< choice i
 
 	::
 
-				False [F] [T] branch
-		 --------------------------
-							 F
+		   False [F] [T] branch
+		--------------------------
+		          F
 
-				True [F] [T] branch
-		 -------------------------
-									T
+		   True [F] [T] branch
+		-------------------------
+		             T
 
 	'''
 	(then, (else_, (flag, stack))) = stack
@@ -1096,9 +1102,9 @@ def cond(stack, expression, dictionary):
 
 	It works by rewriting into a chain of nested `ifte` expressions, e.g.::
 
-						[[[B0] T0] [[B1] T1] [D]] cond
-			-----------------------------------------
-				 [B0] [T0] [[B1] [T1] [D] ifte] ifte
+		      [[[B0] T0] [[B1] T1] [D]] cond
+		-----------------------------------------
+		   [B0] [T0] [[B1] [T1] [D] ifte] ifte
 
 	'''
 	conditions, stack = stack
@@ -1133,9 +1139,9 @@ def dip(stack, expression, dictionary):
 	on the rest of the stack.
 	::
 
-			 ... x [Q] dip
+		   ... x [Q] dip
 		-------------------
-				 ... Q x
+		     ... Q x
 
 	'''
 	(quote, (x, stack)) = stack
@@ -1150,9 +1156,9 @@ def dipd(S, expression, dictionary):
 	Like dip but expects two items.
 	::
 
-			 ... y x [Q] dip
+		   ... y x [Q] dip
 		---------------------
-				 ... Q y x
+		     ... Q y x
 
 	'''
 	(quote, (x, (y, stack))) = S
@@ -1167,9 +1173,9 @@ def dipdd(S, expression, dictionary):
 	Like dip but expects three items.
 	::
 
-			 ... z y x [Q] dip
+		   ... z y x [Q] dip
 		-----------------------
-				 ... Q z y x
+		     ... Q z y x
 
 	'''
 	(quote, (x, (y, (z, stack)))) = S
@@ -1186,9 +1192,10 @@ def app1(S, expression, dictionary):
 	program.
 	::
 
-							... x [Q] . app1
-		 -----------------------------------
-				... [x ...] [Q] . infra first
+		         ... x [Q] . app1
+		-----------------------------------
+		   ... [x ...] [Q] . infra first
+
 	'''
 	(quote, (x, stack)) = S
 	stack = (quote, ((x, stack), stack))
@@ -1202,10 +1209,10 @@ def app2(S, expression, dictionary):
 	'''Like app1 with two items.
 	::
 
-						... y x [Q] . app2
-		 -----------------------------------
-				... [y ...] [Q] . infra first
-						[x ...] [Q]   infra first
+		       ... y x [Q] . app2
+		-----------------------------------
+		   ... [y ...] [Q] . infra first
+		       [x ...] [Q]   infra first
 
 	'''
 	(quote, (x, (y, stack))) = S
@@ -1222,11 +1229,11 @@ def app3(S, expression, dictionary):
 	'''Like app1 with three items.
 	::
 
-						... z y x [Q] . app3
-		 -----------------------------------
-				... [z ...] [Q] . infra first
-						[y ...] [Q]   infra first
-						[x ...] [Q]   infra first
+		     ... z y x [Q] . app3
+		-----------------------------------
+		   ... [z ...] [Q] . infra first
+		       [y ...] [Q]   infra first
+		       [x ...] [Q]   infra first
 
 	'''
 	(quote, (x, (y, (z, stack)))) = S
@@ -1245,19 +1252,19 @@ def step(S, expression, dictionary):
 	Run a quoted program on each item in a sequence.
 	::
 
-					... [] [Q] . step
-			 -----------------------
-								 ... .
+		   ... [] [Q] . step
+		-----------------------
+		          ... .
 
 
-				 ... [a] [Q] . step
-			------------------------
-							 ... a . Q
+		   ... [a] [Q] . step
+		------------------------
+		         ... a . Q
 
 
-			 ... [a b c] [Q] . step
+		   ... [a b c] [Q] . step
 		----------------------------------------
-								 ... a . Q [b c] [Q] step
+		             ... a . Q [b c] [Q] step
 
 	The step combinator executes the quotation on each member of the list
 	on top of the stack.
@@ -1280,19 +1287,19 @@ def times(stack, expression, dictionary):
 	times == [-- dip] cons [swap] infra [0 >] swap while pop
 	::
 
-			 ... n [Q] . times
+		   ... n [Q] . times
 		---------------------  w/ n <= 0
-						 ... .
+		         ... .
 
 
-			 ... 1 [Q] . times
-		---------------------------------
-						 ... . Q
+		   ... 1 [Q] . times
+		-----------------------
+		         ... . Q
 
 
-			 ... n [Q] . times
-		---------------------------------  w/ n > 1
-						 ... . Q (n - 1) [Q] times
+		   ... n [Q] . times
+		-------------------------------------  w/ n > 1
+		         ... . Q (n - 1) [Q] times
 
 	'''
 	# times == [-- dip] cons [swap] infra [0 >] swap while pop
@@ -1329,13 +1336,13 @@ def loop(stack, expression, dictionary):
 	Basic loop combinator.
 	::
 
-			 ... True [Q] loop
+		   ... True [Q] loop
 		-----------------------
-					... Q [Q] loop
+		      ... Q [Q] loop
 
-			 ... False [Q] loop
+		   ... False [Q] loop
 		------------------------
-							...
+		          ...
 
 	'''
 	quote, (flag, stack) = stack
@@ -1352,17 +1359,17 @@ def cmp_(stack, expression, dictionary):
 	one of the three depending on the results of comparing the two values:
 	::
 
-					 a b [G] [E] [L] cmp
-				------------------------- a > b
-								G
+		   a b [G] [E] [L] cmp
+		------------------------- a > b
+		        G
 
-					 a b [G] [E] [L] cmp
-				------------------------- a = b
-										E
+		   a b [G] [E] [L] cmp
+		------------------------- a = b
+		            E
 
-					 a b [G] [E] [L] cmp
-				------------------------- a < b
-												L
+		   a b [G] [E] [L] cmp
+		------------------------- a < b
+		                L
 	'''
 	L, (E, (G, (b, (a, stack)))) = stack
 	expression = concat(G if a > b else L if a < b else E, expression)
