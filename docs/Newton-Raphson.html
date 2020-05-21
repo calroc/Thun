@@ -13088,7 +13088,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
 </pre></div>
 
     </div>
@@ -13167,7 +13167,7 @@ n+1       2 /
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;gsra == 1 swap [over / + 2 /] cons [dup] swoncat make_generator&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;gsra 1 swap [over / + 2 /] cons [dup] swoncat make_generator&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13180,7 +13180,7 @@ n+1       2 /
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 gsra&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 gsra&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13219,7 +13219,7 @@ n+1       2 /
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 gsra 6 [x popd] times first sqr&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 gsra 6 [x popd] times first sqr&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13285,7 +13285,7 @@ abs(a-b)            ε                   &lt;=
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_P == [first - abs] dip &lt;=&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_P [first - abs] dip &lt;=&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13310,7 +13310,7 @@ abs(a-b)            ε                   &lt;=
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_B == roll&lt; popop first&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_B roll&lt; popop first&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13328,7 +13328,7 @@ abs(a-b)            ε                   &lt;=
 <ol>
 <li>Discard a.</li>
 <li>Use <code>x</code> combinator to generate next term from <code>G</code>.</li>
-<li>Run <code>within</code> with <code>i</code> (it is a <code>primrec</code> function.)</li>
+<li>Run <code>within</code> with <code>i</code> (it is a "tail-recursive" function.)</li>
 </ol>
 <p>Pretty straightforward:</p>
 
@@ -13349,7 +13349,7 @@ b [c G] ε within</code></pre>
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_R == [popd x] dip&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_R [popd x] dip&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13373,8 +13373,8 @@ a [b G] ε ...</code></pre>
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;within == x 0.000000001 [_within_P] [_within_B] [_within_R] primrec&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;sqrt == gsra within&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;within x 0.000000001 [_within_P] [_within_B] [_within_R] tailrec&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;sqrt gsra within&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13395,7 +13395,7 @@ a [b G] ε ...</code></pre>
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;36 sqrt&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;36 sqrt&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13426,7 +13426,7 @@ a [b G] ε ...</code></pre>
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 sqrt&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 sqrt&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13465,7 +13465,7 @@ a [b G] ε ...</code></pre>
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="mf">4.795831523312719</span><span class="o">**</span><span class="mi">2</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="mf">4.795831523312719</span><span class="o">**</span><span class="mi">2</span>
 </pre></div>
 
     </div>
@@ -13498,7 +13498,7 @@ a [b G] ε ...</code></pre>
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
 
 <span class="n">sqrt</span><span class="p">(</span><span class="mi">23</span><span class="p">)</span>
 </pre></div>

@@ -137,7 +137,7 @@ And so:
 
 
 ```python
-define('scan == [infra] cons [dupdip first] cons [size 1 <=] [] roll< [dip swons] genrec')
+define('scan [infra] cons [dupdip first] cons [size 1 <=] [] roll< [dip swons] genrec')
 ```
 
 
@@ -232,8 +232,3 @@ Or:
 To limit `F` to working on pairs of terms from its domain.
 
 
-
-
-```python
-
-```

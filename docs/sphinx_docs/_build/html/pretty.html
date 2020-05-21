@@ -37,22 +37,22 @@
 <div class="section" id="module-joy.utils.pretty_print">
 <span id="joy-utils-pretty-print"></span><h2><code class="docutils literal notranslate"><span class="pre">joy.utils.pretty_print</span></code><a class="headerlink" href="#module-joy.utils.pretty_print" title="Permalink to this headline">¶</a></h2>
 <p>Pretty printing support, e.g.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Joy? 23 18 * 99 +
-       . 23 18 mul 99 add
-    23 . 18 mul 99 add
- 23 18 . mul 99 add
-   414 . 99 add
-414 99 . add
-   513 . 
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Joy? [23 18 * 99 +] trace
+       • 23 18 mul 99 add
+    23 • 18 mul 99 add
+ 23 18 • mul 99 add
+   414 • 99 add
+414 99 • add
+   513 • 
 
 513 &lt;-top
 
 joy? 
 </pre></div>
 </div>
-<p>On each line the stack is printed with the top to the right, then a <code class="docutils literal notranslate"><span class="pre">.</span></code> to
-represent the current locus of processing, then the pending expression to the
-left.</p>
+<p>On each line the stack is printed with the top to the left, then a
+bullet symbol,``•<a href="#id1"><span class="problematic" id="id2">``</span></a>, to represent the current locus of processing, then
+the pending expression to the right.</p>
 <dl class="class">
 <dt id="joy.utils.pretty_print.TracePrinter">
 <em class="property">class </em><code class="descclassname">joy.utils.pretty_print.</code><code class="descname">TracePrinter</code><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter" title="Permalink to this definition">¶</a></dt>

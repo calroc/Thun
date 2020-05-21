@@ -13090,7 +13090,7 @@ Find the sum of all the multiples of 3 or 5 below 1000.</code></pre>
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
 </pre></div>
 
     </div>
@@ -13111,7 +13111,7 @@ Find the sum of all the multiples of 3 or 5 below 1000.</code></pre>
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;P == [3 % not] dupdip 5 % not or&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;P [3 % not] dupdip 5 % not or&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13124,7 +13124,7 @@ Find the sum of all the multiples of 3 or 5 below 1000.</code></pre>
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;80 P&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;80 P&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13141,19 +13141,19 @@ Find the sum of all the multiples of 3 or 5 below 1000.</code></pre>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>             . 80 P
-          80 . P
-          80 . [3 % not] dupdip 5 % not or
-80 [3 % not] . dupdip 5 % not or
-          80 . 3 % not 80 5 % not or
-        80 3 . % not 80 5 % not or
-           2 . not 80 5 % not or
-       False . 80 5 % not or
-    False 80 . 5 % not or
-  False 80 5 . % not or
-     False 0 . not or
-  False True . or
-        True . 
+<pre>             • 80 P
+          80 • P
+          80 • [3 % not] dupdip 5 % not or
+80 [3 % not] • dupdip 5 % not or
+          80 • 3 % not 80 5 % not or
+        80 3 • % not 80 5 % not or
+           2 • not 80 5 % not or
+       False • 80 5 % not or
+    False 80 • 5 % not or
+  False 80 5 • % not or
+     False 0 • not or
+  False True • or
+        True • 
 </pre>
 </div>
 </div>
@@ -13219,7 +13219,7 @@ counter to the running sum.  This function will do that:</p>
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.1 == + [+] dupdip&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.1 + [+] dupdip&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13232,7 +13232,7 @@ counter to the running sum.  This function will do that:</p>
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 3 PE1.1&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 3 PE1.1&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13249,16 +13249,16 @@ counter to the running sum.  This function will do that:</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>        . 0 0 3 PE1.1
-      0 . 0 3 PE1.1
-    0 0 . 3 PE1.1
-  0 0 3 . PE1.1
-  0 0 3 . + [+] dupdip
-    0 3 . [+] dupdip
-0 3 [+] . dupdip
-    0 3 . + 3
-      3 . 3
-    3 3 . 
+<pre>        • 0 0 3 PE1.1
+      0 • 0 3 PE1.1
+    0 0 • 3 PE1.1
+  0 0 3 • PE1.1
+  0 0 3 • + [+] dupdip
+    0 3 • [+] dupdip
+0 3 [+] • dupdip
+    0 3 • + 3
+      3 • 3
+    3 3 • 
 </pre>
 </div>
 </div>
@@ -13272,7 +13272,7 @@ counter to the running sum.  This function will do that:</p>
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 [3 2 1 3 1 2 3] [PE1.1] step&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 [3 2 1 3 1 2 3] [PE1.1] step&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13289,79 +13289,79 @@ counter to the running sum.  This function will do that:</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>                            . 0 0 [3 2 1 3 1 2 3] [PE1.1] step
-                          0 . 0 [3 2 1 3 1 2 3] [PE1.1] step
-                        0 0 . [3 2 1 3 1 2 3] [PE1.1] step
-        0 0 [3 2 1 3 1 2 3] . [PE1.1] step
-0 0 [3 2 1 3 1 2 3] [PE1.1] . step
-              0 0 3 [PE1.1] . i [2 1 3 1 2 3] [PE1.1] step
-                      0 0 3 . PE1.1 [2 1 3 1 2 3] [PE1.1] step
-                      0 0 3 . + [+] dupdip [2 1 3 1 2 3] [PE1.1] step
-                        0 3 . [+] dupdip [2 1 3 1 2 3] [PE1.1] step
-                    0 3 [+] . dupdip [2 1 3 1 2 3] [PE1.1] step
-                        0 3 . + 3 [2 1 3 1 2 3] [PE1.1] step
-                          3 . 3 [2 1 3 1 2 3] [PE1.1] step
-                        3 3 . [2 1 3 1 2 3] [PE1.1] step
-          3 3 [2 1 3 1 2 3] . [PE1.1] step
-  3 3 [2 1 3 1 2 3] [PE1.1] . step
-              3 3 2 [PE1.1] . i [1 3 1 2 3] [PE1.1] step
-                      3 3 2 . PE1.1 [1 3 1 2 3] [PE1.1] step
-                      3 3 2 . + [+] dupdip [1 3 1 2 3] [PE1.1] step
-                        3 5 . [+] dupdip [1 3 1 2 3] [PE1.1] step
-                    3 5 [+] . dupdip [1 3 1 2 3] [PE1.1] step
-                        3 5 . + 5 [1 3 1 2 3] [PE1.1] step
-                          8 . 5 [1 3 1 2 3] [PE1.1] step
-                        8 5 . [1 3 1 2 3] [PE1.1] step
-            8 5 [1 3 1 2 3] . [PE1.1] step
-    8 5 [1 3 1 2 3] [PE1.1] . step
-              8 5 1 [PE1.1] . i [3 1 2 3] [PE1.1] step
-                      8 5 1 . PE1.1 [3 1 2 3] [PE1.1] step
-                      8 5 1 . + [+] dupdip [3 1 2 3] [PE1.1] step
-                        8 6 . [+] dupdip [3 1 2 3] [PE1.1] step
-                    8 6 [+] . dupdip [3 1 2 3] [PE1.1] step
-                        8 6 . + 6 [3 1 2 3] [PE1.1] step
-                         14 . 6 [3 1 2 3] [PE1.1] step
-                       14 6 . [3 1 2 3] [PE1.1] step
-             14 6 [3 1 2 3] . [PE1.1] step
-     14 6 [3 1 2 3] [PE1.1] . step
-             14 6 3 [PE1.1] . i [1 2 3] [PE1.1] step
-                     14 6 3 . PE1.1 [1 2 3] [PE1.1] step
-                     14 6 3 . + [+] dupdip [1 2 3] [PE1.1] step
-                       14 9 . [+] dupdip [1 2 3] [PE1.1] step
-                   14 9 [+] . dupdip [1 2 3] [PE1.1] step
-                       14 9 . + 9 [1 2 3] [PE1.1] step
-                         23 . 9 [1 2 3] [PE1.1] step
-                       23 9 . [1 2 3] [PE1.1] step
-               23 9 [1 2 3] . [PE1.1] step
-       23 9 [1 2 3] [PE1.1] . step
-             23 9 1 [PE1.1] . i [2 3] [PE1.1] step
-                     23 9 1 . PE1.1 [2 3] [PE1.1] step
-                     23 9 1 . + [+] dupdip [2 3] [PE1.1] step
-                      23 10 . [+] dupdip [2 3] [PE1.1] step
-                  23 10 [+] . dupdip [2 3] [PE1.1] step
-                      23 10 . + 10 [2 3] [PE1.1] step
-                         33 . 10 [2 3] [PE1.1] step
-                      33 10 . [2 3] [PE1.1] step
-                33 10 [2 3] . [PE1.1] step
-        33 10 [2 3] [PE1.1] . step
-            33 10 2 [PE1.1] . i [3] [PE1.1] step
-                    33 10 2 . PE1.1 [3] [PE1.1] step
-                    33 10 2 . + [+] dupdip [3] [PE1.1] step
-                      33 12 . [+] dupdip [3] [PE1.1] step
-                  33 12 [+] . dupdip [3] [PE1.1] step
-                      33 12 . + 12 [3] [PE1.1] step
-                         45 . 12 [3] [PE1.1] step
-                      45 12 . [3] [PE1.1] step
-                  45 12 [3] . [PE1.1] step
-          45 12 [3] [PE1.1] . step
-            45 12 3 [PE1.1] . i
-                    45 12 3 . PE1.1
-                    45 12 3 . + [+] dupdip
-                      45 15 . [+] dupdip
-                  45 15 [+] . dupdip
-                      45 15 . + 15
-                         60 . 15
-                      60 15 . 
+<pre>                            • 0 0 [3 2 1 3 1 2 3] [PE1.1] step
+                          0 • 0 [3 2 1 3 1 2 3] [PE1.1] step
+                        0 0 • [3 2 1 3 1 2 3] [PE1.1] step
+        0 0 [3 2 1 3 1 2 3] • [PE1.1] step
+0 0 [3 2 1 3 1 2 3] [PE1.1] • step
+              0 0 3 [PE1.1] • i [2 1 3 1 2 3] [PE1.1] step
+                      0 0 3 • PE1.1 [2 1 3 1 2 3] [PE1.1] step
+                      0 0 3 • + [+] dupdip [2 1 3 1 2 3] [PE1.1] step
+                        0 3 • [+] dupdip [2 1 3 1 2 3] [PE1.1] step
+                    0 3 [+] • dupdip [2 1 3 1 2 3] [PE1.1] step
+                        0 3 • + 3 [2 1 3 1 2 3] [PE1.1] step
+                          3 • 3 [2 1 3 1 2 3] [PE1.1] step
+                        3 3 • [2 1 3 1 2 3] [PE1.1] step
+          3 3 [2 1 3 1 2 3] • [PE1.1] step
+  3 3 [2 1 3 1 2 3] [PE1.1] • step
+              3 3 2 [PE1.1] • i [1 3 1 2 3] [PE1.1] step
+                      3 3 2 • PE1.1 [1 3 1 2 3] [PE1.1] step
+                      3 3 2 • + [+] dupdip [1 3 1 2 3] [PE1.1] step
+                        3 5 • [+] dupdip [1 3 1 2 3] [PE1.1] step
+                    3 5 [+] • dupdip [1 3 1 2 3] [PE1.1] step
+                        3 5 • + 5 [1 3 1 2 3] [PE1.1] step
+                          8 • 5 [1 3 1 2 3] [PE1.1] step
+                        8 5 • [1 3 1 2 3] [PE1.1] step
+            8 5 [1 3 1 2 3] • [PE1.1] step
+    8 5 [1 3 1 2 3] [PE1.1] • step
+              8 5 1 [PE1.1] • i [3 1 2 3] [PE1.1] step
+                      8 5 1 • PE1.1 [3 1 2 3] [PE1.1] step
+                      8 5 1 • + [+] dupdip [3 1 2 3] [PE1.1] step
+                        8 6 • [+] dupdip [3 1 2 3] [PE1.1] step
+                    8 6 [+] • dupdip [3 1 2 3] [PE1.1] step
+                        8 6 • + 6 [3 1 2 3] [PE1.1] step
+                         14 • 6 [3 1 2 3] [PE1.1] step
+                       14 6 • [3 1 2 3] [PE1.1] step
+             14 6 [3 1 2 3] • [PE1.1] step
+     14 6 [3 1 2 3] [PE1.1] • step
+             14 6 3 [PE1.1] • i [1 2 3] [PE1.1] step
+                     14 6 3 • PE1.1 [1 2 3] [PE1.1] step
+                     14 6 3 • + [+] dupdip [1 2 3] [PE1.1] step
+                       14 9 • [+] dupdip [1 2 3] [PE1.1] step
+                   14 9 [+] • dupdip [1 2 3] [PE1.1] step
+                       14 9 • + 9 [1 2 3] [PE1.1] step
+                         23 • 9 [1 2 3] [PE1.1] step
+                       23 9 • [1 2 3] [PE1.1] step
+               23 9 [1 2 3] • [PE1.1] step
+       23 9 [1 2 3] [PE1.1] • step
+             23 9 1 [PE1.1] • i [2 3] [PE1.1] step
+                     23 9 1 • PE1.1 [2 3] [PE1.1] step
+                     23 9 1 • + [+] dupdip [2 3] [PE1.1] step
+                      23 10 • [+] dupdip [2 3] [PE1.1] step
+                  23 10 [+] • dupdip [2 3] [PE1.1] step
+                      23 10 • + 10 [2 3] [PE1.1] step
+                         33 • 10 [2 3] [PE1.1] step
+                      33 10 • [2 3] [PE1.1] step
+                33 10 [2 3] • [PE1.1] step
+        33 10 [2 3] [PE1.1] • step
+            33 10 2 [PE1.1] • i [3] [PE1.1] step
+                    33 10 2 • PE1.1 [3] [PE1.1] step
+                    33 10 2 • + [+] dupdip [3] [PE1.1] step
+                      33 12 • [+] dupdip [3] [PE1.1] step
+                  33 12 [+] • dupdip [3] [PE1.1] step
+                      33 12 • + 12 [3] [PE1.1] step
+                         45 • 12 [3] [PE1.1] step
+                      45 12 • [3] [PE1.1] step
+                  45 12 [3] • [PE1.1] step
+          45 12 [3] [PE1.1] • step
+            45 12 3 [PE1.1] • i
+                    45 12 3 • PE1.1
+                    45 12 3 • + [+] dupdip
+                      45 15 • [+] dupdip
+                  45 15 [+] • dupdip
+                      45 15 • + 15
+                         60 • 15
+                      60 15 • 
 </pre>
 </div>
 </div>
@@ -13383,7 +13383,7 @@ counter to the running sum.  This function will do that:</p>
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="mi">1000</span> <span class="o">/</span> <span class="mi">15</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="mi">1000</span> <span class="o">/</span> <span class="mi">15</span>
 </pre></div>
 
     </div>
@@ -13402,7 +13402,7 @@ counter to the running sum.  This function will do that:</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>66</pre>
+<pre>66.66666666666667</pre>
 </div>
 
 </div>
@@ -13416,7 +13416,7 @@ counter to the running sum.  This function will do that:</p>
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="mi">66</span> <span class="o">*</span> <span class="mi">15</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="mi">66</span> <span class="o">*</span> <span class="mi">15</span>
 </pre></div>
 
     </div>
@@ -13449,7 +13449,7 @@ counter to the running sum.  This function will do that:</p>
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="mi">1000</span> <span class="o">-</span> <span class="mi">990</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="mi">1000</span> <span class="o">-</span> <span class="mi">990</span>
 </pre></div>
 
     </div>
@@ -13490,7 +13490,7 @@ counter to the running sum.  This function will do that:</p>
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="mi">999</span> <span class="o">-</span> <span class="mi">990</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="mi">999</span> <span class="o">-</span> <span class="mi">990</span>
 </pre></div>
 
     </div>
@@ -13531,7 +13531,7 @@ counter to the running sum.  This function will do that:</p>
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1 == 0 0 66 [[3 2 1 3 1 2 3] [PE1.1] step] times [3 2 1 3] [PE1.1] step pop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1 0 0 66 [[3 2 1 3 1 2 3] [PE1.1] step] times [3 2 1 3] [PE1.1] step pop&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13544,7 +13544,7 @@ counter to the running sum.  This function will do that:</p>
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13592,7 +13592,7 @@ integer terms from the list.</p>
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="mb">0b11100111011011</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="mb">0b11100111011011</span>
 </pre></div>
 
     </div>
@@ -13625,7 +13625,7 @@ integer terms from the list.</p>
 <div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.2 == [3 &amp; PE1.1] dupdip 2 &gt;&gt;&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.2 [3 &amp; PE1.1] dupdip 2 &gt;&gt;&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13638,7 +13638,7 @@ integer terms from the list.</p>
 <div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 14811 PE1.2&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 14811 PE1.2&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13655,24 +13655,24 @@ integer terms from the list.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>                      . 0 0 14811 PE1.2
-                    0 . 0 14811 PE1.2
-                  0 0 . 14811 PE1.2
-            0 0 14811 . PE1.2
-            0 0 14811 . [3 &amp; PE1.1] dupdip 2 &gt;&gt;
-0 0 14811 [3 &amp; PE1.1] . dupdip 2 &gt;&gt;
-            0 0 14811 . 3 &amp; PE1.1 14811 2 &gt;&gt;
-          0 0 14811 3 . &amp; PE1.1 14811 2 &gt;&gt;
-                0 0 3 . PE1.1 14811 2 &gt;&gt;
-                0 0 3 . + [+] dupdip 14811 2 &gt;&gt;
-                  0 3 . [+] dupdip 14811 2 &gt;&gt;
-              0 3 [+] . dupdip 14811 2 &gt;&gt;
-                  0 3 . + 3 14811 2 &gt;&gt;
-                    3 . 3 14811 2 &gt;&gt;
-                  3 3 . 14811 2 &gt;&gt;
-            3 3 14811 . 2 &gt;&gt;
-          3 3 14811 2 . &gt;&gt;
-             3 3 3702 . 
+<pre>                      • 0 0 14811 PE1.2
+                    0 • 0 14811 PE1.2
+                  0 0 • 14811 PE1.2
+            0 0 14811 • PE1.2
+            0 0 14811 • [3 &amp; PE1.1] dupdip 2 &gt;&gt;
+0 0 14811 [3 &amp; PE1.1] • dupdip 2 &gt;&gt;
+            0 0 14811 • 3 &amp; PE1.1 14811 2 &gt;&gt;
+          0 0 14811 3 • &amp; PE1.1 14811 2 &gt;&gt;
+                0 0 3 • PE1.1 14811 2 &gt;&gt;
+                0 0 3 • + [+] dupdip 14811 2 &gt;&gt;
+                  0 3 • [+] dupdip 14811 2 &gt;&gt;
+              0 3 [+] • dupdip 14811 2 &gt;&gt;
+                  0 3 • + 3 14811 2 &gt;&gt;
+                    3 • 3 14811 2 &gt;&gt;
+                  3 3 • 14811 2 &gt;&gt;
+            3 3 14811 • 2 &gt;&gt;
+          3 3 14811 2 • &gt;&gt;
+             3 3 3702 • 
 </pre>
 </div>
 </div>
@@ -13686,7 +13686,7 @@ integer terms from the list.</p>
 <div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;3 3 3702 PE1.2&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;3 3 3702 PE1.2&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13703,24 +13703,24 @@ integer terms from the list.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>                     . 3 3 3702 PE1.2
-                   3 . 3 3702 PE1.2
-                 3 3 . 3702 PE1.2
-            3 3 3702 . PE1.2
-            3 3 3702 . [3 &amp; PE1.1] dupdip 2 &gt;&gt;
-3 3 3702 [3 &amp; PE1.1] . dupdip 2 &gt;&gt;
-            3 3 3702 . 3 &amp; PE1.1 3702 2 &gt;&gt;
-          3 3 3702 3 . &amp; PE1.1 3702 2 &gt;&gt;
-               3 3 2 . PE1.1 3702 2 &gt;&gt;
-               3 3 2 . + [+] dupdip 3702 2 &gt;&gt;
-                 3 5 . [+] dupdip 3702 2 &gt;&gt;
-             3 5 [+] . dupdip 3702 2 &gt;&gt;
-                 3 5 . + 5 3702 2 &gt;&gt;
-                   8 . 5 3702 2 &gt;&gt;
-                 8 5 . 3702 2 &gt;&gt;
-            8 5 3702 . 2 &gt;&gt;
-          8 5 3702 2 . &gt;&gt;
-             8 5 925 . 
+<pre>                     • 3 3 3702 PE1.2
+                   3 • 3 3702 PE1.2
+                 3 3 • 3702 PE1.2
+            3 3 3702 • PE1.2
+            3 3 3702 • [3 &amp; PE1.1] dupdip 2 &gt;&gt;
+3 3 3702 [3 &amp; PE1.1] • dupdip 2 &gt;&gt;
+            3 3 3702 • 3 &amp; PE1.1 3702 2 &gt;&gt;
+          3 3 3702 3 • &amp; PE1.1 3702 2 &gt;&gt;
+               3 3 2 • PE1.1 3702 2 &gt;&gt;
+               3 3 2 • + [+] dupdip 3702 2 &gt;&gt;
+                 3 5 • [+] dupdip 3702 2 &gt;&gt;
+             3 5 [+] • dupdip 3702 2 &gt;&gt;
+                 3 5 • + 5 3702 2 &gt;&gt;
+                   8 • 5 3702 2 &gt;&gt;
+                 8 5 • 3702 2 &gt;&gt;
+            8 5 3702 • 2 &gt;&gt;
+          8 5 3702 2 • &gt;&gt;
+             8 5 925 • 
 </pre>
 </div>
 </div>
@@ -13734,7 +13734,7 @@ integer terms from the list.</p>
 <div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 14811 7 [PE1.2] times pop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 14811 7 [PE1.2] times pop&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13751,137 +13751,130 @@ integer terms from the list.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>                      . 0 0 14811 7 [PE1.2] times pop
-                    0 . 0 14811 7 [PE1.2] times pop
-                  0 0 . 14811 7 [PE1.2] times pop
-            0 0 14811 . 7 [PE1.2] times pop
-          0 0 14811 7 . [PE1.2] times pop
-  0 0 14811 7 [PE1.2] . times pop
-    0 0 14811 [PE1.2] . i 6 [PE1.2] times pop
-            0 0 14811 . PE1.2 6 [PE1.2] times pop
-            0 0 14811 . [3 &amp; PE1.1] dupdip 2 &gt;&gt; 6 [PE1.2] times pop
-0 0 14811 [3 &amp; PE1.1] . dupdip 2 &gt;&gt; 6 [PE1.2] times pop
-            0 0 14811 . 3 &amp; PE1.1 14811 2 &gt;&gt; 6 [PE1.2] times pop
-          0 0 14811 3 . &amp; PE1.1 14811 2 &gt;&gt; 6 [PE1.2] times pop
-                0 0 3 . PE1.1 14811 2 &gt;&gt; 6 [PE1.2] times pop
-                0 0 3 . + [+] dupdip 14811 2 &gt;&gt; 6 [PE1.2] times pop
-                  0 3 . [+] dupdip 14811 2 &gt;&gt; 6 [PE1.2] times pop
-              0 3 [+] . dupdip 14811 2 &gt;&gt; 6 [PE1.2] times pop
-                  0 3 . + 3 14811 2 &gt;&gt; 6 [PE1.2] times pop
-                    3 . 3 14811 2 &gt;&gt; 6 [PE1.2] times pop
-                  3 3 . 14811 2 &gt;&gt; 6 [PE1.2] times pop
-            3 3 14811 . 2 &gt;&gt; 6 [PE1.2] times pop
-          3 3 14811 2 . &gt;&gt; 6 [PE1.2] times pop
-             3 3 3702 . 6 [PE1.2] times pop
-           3 3 3702 6 . [PE1.2] times pop
-   3 3 3702 6 [PE1.2] . times pop
-     3 3 3702 [PE1.2] . i 5 [PE1.2] times pop
-             3 3 3702 . PE1.2 5 [PE1.2] times pop
-             3 3 3702 . [3 &amp; PE1.1] dupdip 2 &gt;&gt; 5 [PE1.2] times pop
- 3 3 3702 [3 &amp; PE1.1] . dupdip 2 &gt;&gt; 5 [PE1.2] times pop
-             3 3 3702 . 3 &amp; PE1.1 3702 2 &gt;&gt; 5 [PE1.2] times pop
-           3 3 3702 3 . &amp; PE1.1 3702 2 &gt;&gt; 5 [PE1.2] times pop
-                3 3 2 . PE1.1 3702 2 &gt;&gt; 5 [PE1.2] times pop
-                3 3 2 . + [+] dupdip 3702 2 &gt;&gt; 5 [PE1.2] times pop
-                  3 5 . [+] dupdip 3702 2 &gt;&gt; 5 [PE1.2] times pop
-              3 5 [+] . dupdip 3702 2 &gt;&gt; 5 [PE1.2] times pop
-                  3 5 . + 5 3702 2 &gt;&gt; 5 [PE1.2] times pop
-                    8 . 5 3702 2 &gt;&gt; 5 [PE1.2] times pop
-                  8 5 . 3702 2 &gt;&gt; 5 [PE1.2] times pop
-             8 5 3702 . 2 &gt;&gt; 5 [PE1.2] times pop
-           8 5 3702 2 . &gt;&gt; 5 [PE1.2] times pop
-              8 5 925 . 5 [PE1.2] times pop
-            8 5 925 5 . [PE1.2] times pop
-    8 5 925 5 [PE1.2] . times pop
-      8 5 925 [PE1.2] . i 4 [PE1.2] times pop
-              8 5 925 . PE1.2 4 [PE1.2] times pop
-              8 5 925 . [3 &amp; PE1.1] dupdip 2 &gt;&gt; 4 [PE1.2] times pop
-  8 5 925 [3 &amp; PE1.1] . dupdip 2 &gt;&gt; 4 [PE1.2] times pop
-              8 5 925 . 3 &amp; PE1.1 925 2 &gt;&gt; 4 [PE1.2] times pop
-            8 5 925 3 . &amp; PE1.1 925 2 &gt;&gt; 4 [PE1.2] times pop
-                8 5 1 . PE1.1 925 2 &gt;&gt; 4 [PE1.2] times pop
-                8 5 1 . + [+] dupdip 925 2 &gt;&gt; 4 [PE1.2] times pop
-                  8 6 . [+] dupdip 925 2 &gt;&gt; 4 [PE1.2] times pop
-              8 6 [+] . dupdip 925 2 &gt;&gt; 4 [PE1.2] times pop
-                  8 6 . + 6 925 2 &gt;&gt; 4 [PE1.2] times pop
-                   14 . 6 925 2 &gt;&gt; 4 [PE1.2] times pop
-                 14 6 . 925 2 &gt;&gt; 4 [PE1.2] times pop
-             14 6 925 . 2 &gt;&gt; 4 [PE1.2] times pop
-           14 6 925 2 . &gt;&gt; 4 [PE1.2] times pop
-             14 6 231 . 4 [PE1.2] times pop
-           14 6 231 4 . [PE1.2] times pop
-   14 6 231 4 [PE1.2] . times pop
-     14 6 231 [PE1.2] . i 3 [PE1.2] times pop
-             14 6 231 . PE1.2 3 [PE1.2] times pop
-             14 6 231 . [3 &amp; PE1.1] dupdip 2 &gt;&gt; 3 [PE1.2] times pop
- 14 6 231 [3 &amp; PE1.1] . dupdip 2 &gt;&gt; 3 [PE1.2] times pop
-             14 6 231 . 3 &amp; PE1.1 231 2 &gt;&gt; 3 [PE1.2] times pop
-           14 6 231 3 . &amp; PE1.1 231 2 &gt;&gt; 3 [PE1.2] times pop
-               14 6 3 . PE1.1 231 2 &gt;&gt; 3 [PE1.2] times pop
-               14 6 3 . + [+] dupdip 231 2 &gt;&gt; 3 [PE1.2] times pop
-                 14 9 . [+] dupdip 231 2 &gt;&gt; 3 [PE1.2] times pop
-             14 9 [+] . dupdip 231 2 &gt;&gt; 3 [PE1.2] times pop
-                 14 9 . + 9 231 2 &gt;&gt; 3 [PE1.2] times pop
-                   23 . 9 231 2 &gt;&gt; 3 [PE1.2] times pop
-                 23 9 . 231 2 &gt;&gt; 3 [PE1.2] times pop
-             23 9 231 . 2 &gt;&gt; 3 [PE1.2] times pop
-           23 9 231 2 . &gt;&gt; 3 [PE1.2] times pop
-              23 9 57 . 3 [PE1.2] times pop
-            23 9 57 3 . [PE1.2] times pop
-    23 9 57 3 [PE1.2] . times pop
-      23 9 57 [PE1.2] . i 2 [PE1.2] times pop
-              23 9 57 . PE1.2 2 [PE1.2] times pop
-              23 9 57 . [3 &amp; PE1.1] dupdip 2 &gt;&gt; 2 [PE1.2] times pop
-  23 9 57 [3 &amp; PE1.1] . dupdip 2 &gt;&gt; 2 [PE1.2] times pop
-              23 9 57 . 3 &amp; PE1.1 57 2 &gt;&gt; 2 [PE1.2] times pop
-            23 9 57 3 . &amp; PE1.1 57 2 &gt;&gt; 2 [PE1.2] times pop
-               23 9 1 . PE1.1 57 2 &gt;&gt; 2 [PE1.2] times pop
-               23 9 1 . + [+] dupdip 57 2 &gt;&gt; 2 [PE1.2] times pop
-                23 10 . [+] dupdip 57 2 &gt;&gt; 2 [PE1.2] times pop
-            23 10 [+] . dupdip 57 2 &gt;&gt; 2 [PE1.2] times pop
-                23 10 . + 10 57 2 &gt;&gt; 2 [PE1.2] times pop
-                   33 . 10 57 2 &gt;&gt; 2 [PE1.2] times pop
-                33 10 . 57 2 &gt;&gt; 2 [PE1.2] times pop
-             33 10 57 . 2 &gt;&gt; 2 [PE1.2] times pop
-           33 10 57 2 . &gt;&gt; 2 [PE1.2] times pop
-             33 10 14 . 2 [PE1.2] times pop
-           33 10 14 2 . [PE1.2] times pop
-   33 10 14 2 [PE1.2] . times pop
-     33 10 14 [PE1.2] . i 1 [PE1.2] times pop
-             33 10 14 . PE1.2 1 [PE1.2] times pop
-             33 10 14 . [3 &amp; PE1.1] dupdip 2 &gt;&gt; 1 [PE1.2] times pop
- 33 10 14 [3 &amp; PE1.1] . dupdip 2 &gt;&gt; 1 [PE1.2] times pop
-             33 10 14 . 3 &amp; PE1.1 14 2 &gt;&gt; 1 [PE1.2] times pop
-           33 10 14 3 . &amp; PE1.1 14 2 &gt;&gt; 1 [PE1.2] times pop
-              33 10 2 . PE1.1 14 2 &gt;&gt; 1 [PE1.2] times pop
-              33 10 2 . + [+] dupdip 14 2 &gt;&gt; 1 [PE1.2] times pop
-                33 12 . [+] dupdip 14 2 &gt;&gt; 1 [PE1.2] times pop
-            33 12 [+] . dupdip 14 2 &gt;&gt; 1 [PE1.2] times pop
-                33 12 . + 12 14 2 &gt;&gt; 1 [PE1.2] times pop
-                   45 . 12 14 2 &gt;&gt; 1 [PE1.2] times pop
-                45 12 . 14 2 &gt;&gt; 1 [PE1.2] times pop
-             45 12 14 . 2 &gt;&gt; 1 [PE1.2] times pop
-           45 12 14 2 . &gt;&gt; 1 [PE1.2] times pop
-              45 12 3 . 1 [PE1.2] times pop
-            45 12 3 1 . [PE1.2] times pop
-    45 12 3 1 [PE1.2] . times pop
-      45 12 3 [PE1.2] . i pop
-              45 12 3 . PE1.2 pop
-              45 12 3 . [3 &amp; PE1.1] dupdip 2 &gt;&gt; pop
-  45 12 3 [3 &amp; PE1.1] . dupdip 2 &gt;&gt; pop
-              45 12 3 . 3 &amp; PE1.1 3 2 &gt;&gt; pop
-            45 12 3 3 . &amp; PE1.1 3 2 &gt;&gt; pop
-              45 12 3 . PE1.1 3 2 &gt;&gt; pop
-              45 12 3 . + [+] dupdip 3 2 &gt;&gt; pop
-                45 15 . [+] dupdip 3 2 &gt;&gt; pop
-            45 15 [+] . dupdip 3 2 &gt;&gt; pop
-                45 15 . + 15 3 2 &gt;&gt; pop
-                   60 . 15 3 2 &gt;&gt; pop
-                60 15 . 3 2 &gt;&gt; pop
-              60 15 3 . 2 &gt;&gt; pop
-            60 15 3 2 . &gt;&gt; pop
-              60 15 0 . pop
-                60 15 . 
+<pre>                      • 0 0 14811 7 [PE1.2] times pop
+                    0 • 0 14811 7 [PE1.2] times pop
+                  0 0 • 14811 7 [PE1.2] times pop
+            0 0 14811 • 7 [PE1.2] times pop
+          0 0 14811 7 • [PE1.2] times pop
+  0 0 14811 7 [PE1.2] • times pop
+            0 0 14811 • PE1.2 6 [PE1.2] times pop
+            0 0 14811 • [3 &amp; PE1.1] dupdip 2 &gt;&gt; 6 [PE1.2] times pop
+0 0 14811 [3 &amp; PE1.1] • dupdip 2 &gt;&gt; 6 [PE1.2] times pop
+            0 0 14811 • 3 &amp; PE1.1 14811 2 &gt;&gt; 6 [PE1.2] times pop
+          0 0 14811 3 • &amp; PE1.1 14811 2 &gt;&gt; 6 [PE1.2] times pop
+                0 0 3 • PE1.1 14811 2 &gt;&gt; 6 [PE1.2] times pop
+                0 0 3 • + [+] dupdip 14811 2 &gt;&gt; 6 [PE1.2] times pop
+                  0 3 • [+] dupdip 14811 2 &gt;&gt; 6 [PE1.2] times pop
+              0 3 [+] • dupdip 14811 2 &gt;&gt; 6 [PE1.2] times pop
+                  0 3 • + 3 14811 2 &gt;&gt; 6 [PE1.2] times pop
+                    3 • 3 14811 2 &gt;&gt; 6 [PE1.2] times pop
+                  3 3 • 14811 2 &gt;&gt; 6 [PE1.2] times pop
+            3 3 14811 • 2 &gt;&gt; 6 [PE1.2] times pop
+          3 3 14811 2 • &gt;&gt; 6 [PE1.2] times pop
+             3 3 3702 • 6 [PE1.2] times pop
+           3 3 3702 6 • [PE1.2] times pop
+   3 3 3702 6 [PE1.2] • times pop
+             3 3 3702 • PE1.2 5 [PE1.2] times pop
+             3 3 3702 • [3 &amp; PE1.1] dupdip 2 &gt;&gt; 5 [PE1.2] times pop
+ 3 3 3702 [3 &amp; PE1.1] • dupdip 2 &gt;&gt; 5 [PE1.2] times pop
+             3 3 3702 • 3 &amp; PE1.1 3702 2 &gt;&gt; 5 [PE1.2] times pop
+           3 3 3702 3 • &amp; PE1.1 3702 2 &gt;&gt; 5 [PE1.2] times pop
+                3 3 2 • PE1.1 3702 2 &gt;&gt; 5 [PE1.2] times pop
+                3 3 2 • + [+] dupdip 3702 2 &gt;&gt; 5 [PE1.2] times pop
+                  3 5 • [+] dupdip 3702 2 &gt;&gt; 5 [PE1.2] times pop
+              3 5 [+] • dupdip 3702 2 &gt;&gt; 5 [PE1.2] times pop
+                  3 5 • + 5 3702 2 &gt;&gt; 5 [PE1.2] times pop
+                    8 • 5 3702 2 &gt;&gt; 5 [PE1.2] times pop
+                  8 5 • 3702 2 &gt;&gt; 5 [PE1.2] times pop
+             8 5 3702 • 2 &gt;&gt; 5 [PE1.2] times pop
+           8 5 3702 2 • &gt;&gt; 5 [PE1.2] times pop
+              8 5 925 • 5 [PE1.2] times pop
+            8 5 925 5 • [PE1.2] times pop
+    8 5 925 5 [PE1.2] • times pop
+              8 5 925 • PE1.2 4 [PE1.2] times pop
+              8 5 925 • [3 &amp; PE1.1] dupdip 2 &gt;&gt; 4 [PE1.2] times pop
+  8 5 925 [3 &amp; PE1.1] • dupdip 2 &gt;&gt; 4 [PE1.2] times pop
+              8 5 925 • 3 &amp; PE1.1 925 2 &gt;&gt; 4 [PE1.2] times pop
+            8 5 925 3 • &amp; PE1.1 925 2 &gt;&gt; 4 [PE1.2] times pop
+                8 5 1 • PE1.1 925 2 &gt;&gt; 4 [PE1.2] times pop
+                8 5 1 • + [+] dupdip 925 2 &gt;&gt; 4 [PE1.2] times pop
+                  8 6 • [+] dupdip 925 2 &gt;&gt; 4 [PE1.2] times pop
+              8 6 [+] • dupdip 925 2 &gt;&gt; 4 [PE1.2] times pop
+                  8 6 • + 6 925 2 &gt;&gt; 4 [PE1.2] times pop
+                   14 • 6 925 2 &gt;&gt; 4 [PE1.2] times pop
+                 14 6 • 925 2 &gt;&gt; 4 [PE1.2] times pop
+             14 6 925 • 2 &gt;&gt; 4 [PE1.2] times pop
+           14 6 925 2 • &gt;&gt; 4 [PE1.2] times pop
+             14 6 231 • 4 [PE1.2] times pop
+           14 6 231 4 • [PE1.2] times pop
+   14 6 231 4 [PE1.2] • times pop
+             14 6 231 • PE1.2 3 [PE1.2] times pop
+             14 6 231 • [3 &amp; PE1.1] dupdip 2 &gt;&gt; 3 [PE1.2] times pop
+ 14 6 231 [3 &amp; PE1.1] • dupdip 2 &gt;&gt; 3 [PE1.2] times pop
+             14 6 231 • 3 &amp; PE1.1 231 2 &gt;&gt; 3 [PE1.2] times pop
+           14 6 231 3 • &amp; PE1.1 231 2 &gt;&gt; 3 [PE1.2] times pop
+               14 6 3 • PE1.1 231 2 &gt;&gt; 3 [PE1.2] times pop
+               14 6 3 • + [+] dupdip 231 2 &gt;&gt; 3 [PE1.2] times pop
+                 14 9 • [+] dupdip 231 2 &gt;&gt; 3 [PE1.2] times pop
+             14 9 [+] • dupdip 231 2 &gt;&gt; 3 [PE1.2] times pop
+                 14 9 • + 9 231 2 &gt;&gt; 3 [PE1.2] times pop
+                   23 • 9 231 2 &gt;&gt; 3 [PE1.2] times pop
+                 23 9 • 231 2 &gt;&gt; 3 [PE1.2] times pop
+             23 9 231 • 2 &gt;&gt; 3 [PE1.2] times pop
+           23 9 231 2 • &gt;&gt; 3 [PE1.2] times pop
+              23 9 57 • 3 [PE1.2] times pop
+            23 9 57 3 • [PE1.2] times pop
+    23 9 57 3 [PE1.2] • times pop
+              23 9 57 • PE1.2 2 [PE1.2] times pop
+              23 9 57 • [3 &amp; PE1.1] dupdip 2 &gt;&gt; 2 [PE1.2] times pop
+  23 9 57 [3 &amp; PE1.1] • dupdip 2 &gt;&gt; 2 [PE1.2] times pop
+              23 9 57 • 3 &amp; PE1.1 57 2 &gt;&gt; 2 [PE1.2] times pop
+            23 9 57 3 • &amp; PE1.1 57 2 &gt;&gt; 2 [PE1.2] times pop
+               23 9 1 • PE1.1 57 2 &gt;&gt; 2 [PE1.2] times pop
+               23 9 1 • + [+] dupdip 57 2 &gt;&gt; 2 [PE1.2] times pop
+                23 10 • [+] dupdip 57 2 &gt;&gt; 2 [PE1.2] times pop
+            23 10 [+] • dupdip 57 2 &gt;&gt; 2 [PE1.2] times pop
+                23 10 • + 10 57 2 &gt;&gt; 2 [PE1.2] times pop
+                   33 • 10 57 2 &gt;&gt; 2 [PE1.2] times pop
+                33 10 • 57 2 &gt;&gt; 2 [PE1.2] times pop
+             33 10 57 • 2 &gt;&gt; 2 [PE1.2] times pop
+           33 10 57 2 • &gt;&gt; 2 [PE1.2] times pop
+             33 10 14 • 2 [PE1.2] times pop
+           33 10 14 2 • [PE1.2] times pop
+   33 10 14 2 [PE1.2] • times pop
+             33 10 14 • PE1.2 1 [PE1.2] times pop
+             33 10 14 • [3 &amp; PE1.1] dupdip 2 &gt;&gt; 1 [PE1.2] times pop
+ 33 10 14 [3 &amp; PE1.1] • dupdip 2 &gt;&gt; 1 [PE1.2] times pop
+             33 10 14 • 3 &amp; PE1.1 14 2 &gt;&gt; 1 [PE1.2] times pop
+           33 10 14 3 • &amp; PE1.1 14 2 &gt;&gt; 1 [PE1.2] times pop
+              33 10 2 • PE1.1 14 2 &gt;&gt; 1 [PE1.2] times pop
+              33 10 2 • + [+] dupdip 14 2 &gt;&gt; 1 [PE1.2] times pop
+                33 12 • [+] dupdip 14 2 &gt;&gt; 1 [PE1.2] times pop
+            33 12 [+] • dupdip 14 2 &gt;&gt; 1 [PE1.2] times pop
+                33 12 • + 12 14 2 &gt;&gt; 1 [PE1.2] times pop
+                   45 • 12 14 2 &gt;&gt; 1 [PE1.2] times pop
+                45 12 • 14 2 &gt;&gt; 1 [PE1.2] times pop
+             45 12 14 • 2 &gt;&gt; 1 [PE1.2] times pop
+           45 12 14 2 • &gt;&gt; 1 [PE1.2] times pop
+              45 12 3 • 1 [PE1.2] times pop
+            45 12 3 1 • [PE1.2] times pop
+    45 12 3 1 [PE1.2] • times pop
+              45 12 3 • PE1.2 pop
+              45 12 3 • [3 &amp; PE1.1] dupdip 2 &gt;&gt; pop
+  45 12 3 [3 &amp; PE1.1] • dupdip 2 &gt;&gt; pop
+              45 12 3 • 3 &amp; PE1.1 3 2 &gt;&gt; pop
+            45 12 3 3 • &amp; PE1.1 3 2 &gt;&gt; pop
+              45 12 3 • PE1.1 3 2 &gt;&gt; pop
+              45 12 3 • + [+] dupdip 3 2 &gt;&gt; pop
+                45 15 • [+] dupdip 3 2 &gt;&gt; pop
+            45 15 [+] • dupdip 3 2 &gt;&gt; pop
+                45 15 • + 15 3 2 &gt;&gt; pop
+                   60 • 15 3 2 &gt;&gt; pop
+                60 15 • 3 2 &gt;&gt; pop
+              60 15 3 • 2 &gt;&gt; pop
+            60 15 3 2 • &gt;&gt; pop
+              60 15 0 • pop
+                60 15 • 
 </pre>
 </div>
 </div>
@@ -13903,7 +13896,7 @@ integer terms from the list.</p>
 <div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1 == 0 0 66 [14811 7 [PE1.2] times pop] times 14811 4 [PE1.2] times popop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1 0 0 66 [14811 7 [PE1.2] times pop] times 14811 4 [PE1.2] times popop&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13916,7 +13909,7 @@ integer terms from the list.</p>
 <div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13960,7 +13953,7 @@ n 14811 swap [PE1.2] times pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.3 == 14811 swap [PE1.2] times pop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.3 14811 swap [PE1.2] times pop&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13981,7 +13974,7 @@ n 14811 swap [PE1.2] times pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1 0 0 66 [7 PE1.3] times 4 PE1.3 pop&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13994,7 +13987,7 @@ n 14811 swap [PE1.2] times pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14046,7 +14039,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.terms == [0 swap [dup [pop 14811] [] branch [3 &amp;] dupdip 2 &gt;&gt;] dip rest cons]&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.terms [0 swap [dup [pop 14811] [] branch [3 &amp;] dupdip 2 &gt;&gt;] dip rest cons]&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14059,7 +14052,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1.terms 21 [x] times&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1.terms 21 [x] times&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14098,7 +14091,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;7 66 * 4 +&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;7 66 * 4 +&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14136,7 +14129,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1.terms 466 [x] times pop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1.terms 466 [x] times pop&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14174,7 +14167,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[PE1.terms 466 [x] times pop] run sum&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[PE1.terms 466 [x] times pop] run sum&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14213,7 +14206,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 PE1.terms 466 [x [PE1.1] dip] times popop&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 PE1.terms 466 [x [PE1.1] dip] times popop&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14252,7 +14245,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[10 9 8 7 6 5 4 3 2 1] sum&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[10 9 8 7 6 5 4 3 2 1] sum&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14306,7 +14299,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;F == dup ++ * 2 floordiv&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;F dup ++ * 2 floordiv&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14319,7 +14312,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;10 F&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;10 F&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14336,14 +14329,14 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>      . 10 F
-   10 . F
-   10 . dup ++ * 2 floordiv
-10 10 . ++ * 2 floordiv
-10 11 . * 2 floordiv
-  110 . 2 floordiv
-110 2 . floordiv
-   55 . 
+<pre>      • 10 F
+   10 • F
+   10 • dup ++ * 2 floordiv
+10 10 • ++ * 2 floordiv
+10 11 • * 2 floordiv
+  110 • 2 floordiv
+110 2 • floordiv
+   55 • 
 </pre>
 </div>
 </div>
@@ -14376,7 +14369,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14407,7 +14400,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[33]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip [sum] map&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip [sum] map&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14446,7 +14439,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[34]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[ 3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip [sum] map sum&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[ 3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip [sum] map sum&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14490,7 +14483,7 @@ PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[35]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;6945 33 * [993 995 996 999] cons sum&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;6945 33 * [993 995 996 999] cons sum&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>

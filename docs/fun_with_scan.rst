@@ -1,8 +1,8 @@
-.. code:: ipython2
+.. code:: ipython3
 
     from notebook_preamble import D, DefinitionWrapper, J, V, define
 
-On “Two Exercises Found in a Book on Algorithmics”
+On "Two Exercises Found in a Book on Algorithmics"
 ==================================================
 
 Bird & Meertens
@@ -13,27 +13,25 @@ here <https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.694.2614>`__
 Define ``scan`` in terms of a reduction.
 ----------------------------------------
 
-   Problem I. The reduction operator ``/`` of APL takes some binary
-   operator ``⨁`` on its left and a vector ``x`` of values on its right.
-   The meaning of ``⨁/x`` for ``x = [a b ... z]`` is the value
-   ``a⨁b⨁...⨁z``. For this to be well-defined in the absence of
-   brackets, the operation ``⨁`` has to be associative. Now there is
-   another operator ``\`` of APL called ``scan``. Its effect is closely
-   related to reduction in that we have:
+    Problem I. The reduction operator ``/`` of APL takes some binary
+    operator ``⨁`` on its left and a vector ``x`` of values on its
+    right. The meaning of ``⨁/x`` for ``x = [a b ... z]`` is the value
+    ``a⨁b⨁...⨁z``. For this to be well-defined in the absence of
+    brackets, the operation ``⨁`` has to be associative. Now there is
+    another operator ``\`` of APL called ``scan``. Its effect is closely
+    related to reduction in that we have:
 
 ::
 
-   ⨁\x = [a a⨁b a⨁b⨁c ... a⨁b⨁...⨁z]
+    ⨁\x = [a a⨁b a⨁b⨁c ... a⨁b⨁...⨁z]
 
-..
-
-   The problem is to find some definition of ``scan`` as a reduction. In
-   other words, we have to find some function ``f`` and an operator
-   ``⨂`` so that
+    The problem is to find some definition of ``scan`` as a reduction.
+    In other words, we have to find some function ``f`` and an operator
+    ``⨂`` so that
 
 ::
 
-   ⨁\x = f(a)⨂f(b)⨂...⨂f(z)
+    ⨁\x = f(a)⨂f(b)⨂...⨂f(z)
 
 Designing the Recursive Function
 --------------------------------
@@ -52,48 +50,48 @@ instead of two (the b is instead the duplicate of a.)
 
 ::
 
-   H3 == [P] [pop c] [[G] dupdip] [dip F] genrec
+    H3 == [P] [pop c] [[G] dupdip] [dip F] genrec
 
-   ... a [G] dupdip [H3] dip F
-   ... a  G  a      [H3] dip F
-   ... a′    a      [H3] dip F
-   ... a′ H3 a               F
-   ... a′ [G] dupdip [H3] dip F a F
-   ... a′  G  a′     [H3] dip F a F
-   ... a″     a′     [H3] dip F a F
-   ... a″ H3  a′              F a F
-   ... a″ [G] dupdip [H3] dip F a′ F a F
-   ... a″  G    a″   [H3] dip F a′ F a F
-   ... a‴       a″   [H3] dip F a′ F a F
-   ... a‴ H3    a″            F a′ F a F
-   ... a‴ pop c a″ F a′ F a F
-   ...        c a″ F a′ F a F
-   ...        d      a′ F a F
-   ...        d′          a F
-   ...        d″
+    ... a [G] dupdip [H3] dip F
+    ... a  G  a      [H3] dip F
+    ... a′    a      [H3] dip F
+    ... a′ H3 a               F
+    ... a′ [G] dupdip [H3] dip F a F
+    ... a′  G  a′     [H3] dip F a F
+    ... a″     a′     [H3] dip F a F
+    ... a″ H3  a′              F a F
+    ... a″ [G] dupdip [H3] dip F a′ F a F
+    ... a″  G    a″   [H3] dip F a′ F a F
+    ... a‴       a″   [H3] dip F a′ F a F
+    ... a‴ H3    a″            F a′ F a F
+    ... a‴ pop c a″ F a′ F a F
+    ...        c a″ F a′ F a F
+    ...        d      a′ F a F
+    ...        d′          a F
+    ...        d″
 
 Initial Definition
 ~~~~~~~~~~~~~~~~~~
 
-We’re building a list of values so this is an “anamorphism”. (An
+We're building a list of values so this is an "anamorphism". (An
 anamorphism uses ``[]`` for ``c`` and ``swons`` for ``F``.)
 
 ::
 
-   scan == [P] [pop []] [[G] dupdip]      [dip swons] genrec
+    scan == [P] [pop []] [[G] dupdip]      [dip swons] genrec
 
 Convert to ``ifte``:
 
 ::
 
-   scan == [P] [pop []] [[G] dupdip [scan] dip swons] ifte
+    scan == [P] [pop []] [[G] dupdip [scan] dip swons] ifte
 
-On the recursive branch ``[G] dupdip`` doesn’t cut it:
+On the recursive branch ``[G] dupdip`` doesn't cut it:
 
 ::
 
-   [1 2 3] [G] dupdip [scan] dip swons
-   [1 2 3]  G [1 2 3] [scan] dip swons
+    [1 2 3] [G] dupdip [scan] dip swons
+    [1 2 3]  G [1 2 3] [scan] dip swons
 
 Use ``first``
 ~~~~~~~~~~~~~
@@ -103,11 +101,11 @@ use ``first``.
 
 ::
 
-   scan == [P] [pop []] [[G] dupdip first] [dip swons] genrec
+    scan == [P] [pop []] [[G] dupdip first] [dip swons] genrec
 
-   [1 2 3] [G] dupdip first [scan] dip swons
-   [1 2 3]  G [1 2 3] first [scan] dip swons
-   [1 2 3]  G  1            [scan] dip swons
+    [1 2 3] [G] dupdip first [scan] dip swons
+    [1 2 3]  G [1 2 3] first [scan] dip swons
+    [1 2 3]  G  1            [scan] dip swons
 
 ``G`` applies ``⨁``
 ~~~~~~~~~~~~~~~~~~~
@@ -117,10 +115,10 @@ in the list.
 
 ::
 
-   [1 2 3] G
-   [1 2 3] [⨁] infra
-   [1 2 3] [+] infra
-   [3 3]
+    [1 2 3] G
+    [1 2 3] [⨁] infra
+    [1 2 3] [+] infra
+    [3 3]
 
 Predicate ``P``
 ~~~~~~~~~~~~~~~
@@ -130,21 +128,21 @@ less that two items in them:
 
 ::
 
-   P == size 1 <=
+    P == size 1 <=
 
-Let’s see what we’ve got so far:
+Let's see what we've got so far:
 
 ::
 
-   scan == [P        ] [pop []] [[G]         dupdip first] [dip swons] genrec
-   scan == [size 1 <=] [pop []] [[[F] infra] dupdip first] [dip swons] genrec
+    scan == [P        ] [pop []] [[G]         dupdip first] [dip swons] genrec
+    scan == [size 1 <=] [pop []] [[[F] infra] dupdip first] [dip swons] genrec
 
 Handling the Last Term
 ~~~~~~~~~~~~~~~~~~~~~~
 
 This works to a point, but it throws away the last term:
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[1 2 3] [size 1 <=] [pop []] [[[+] infra] dupdip first] [dip swons] genrec')
 
@@ -154,9 +152,9 @@ This works to a point, but it throws away the last term:
     [1 3]
 
 
-Hmm… Let’s take out the ``pop`` for a sec…
+Hmm... Let's take out the ``pop`` for a sec...
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[1 2 3] [size 1 <=] [[]] [[[+] infra] dupdip first] [dip swons] genrec')
 
@@ -167,11 +165,11 @@ Hmm… Let’s take out the ``pop`` for a sec…
 
 
 That leaves the last item in our list, then it puts an empty list on the
-stack and ``swons``\ ’s the new terms onto that. If we leave out that
-empty list, they will be ``swons``\ ’d onto that list that already has
-the last item.
+stack and ``swons``'s the new terms onto that. If we leave out that
+empty list, they will be ``swons``'d onto that list that already has the
+last item.
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[1 2 3] [size 1 <=] [] [[[+] infra] dupdip first] [dip swons] genrec')
 
@@ -188,28 +186,28 @@ So we have:
 
 ::
 
-   [⨁] scan == [size 1 <=] [] [[[⨁] infra] dupdip first] [dip swons] genrec
+    [⨁] scan == [size 1 <=] [] [[[⨁] infra] dupdip first] [dip swons] genrec
 
 Trivially:
 
 ::
 
-    == [size 1 <=] [] [[[⨁] infra] dupdip first]                 [dip swons] genrec
-    == [[[⨁] infra] dupdip first]           [size 1 <=] [] roll< [dip swons] genrec
-    == [[⨁] infra]      [dupdip first] cons [size 1 <=] [] roll< [dip swons] genrec
-    == [⨁] [infra] cons [dupdip first] cons [size 1 <=] [] roll< [dip swons] genrec
+     == [size 1 <=] [] [[[⨁] infra] dupdip first]                 [dip swons] genrec
+     == [[[⨁] infra] dupdip first]           [size 1 <=] [] roll< [dip swons] genrec
+     == [[⨁] infra]      [dupdip first] cons [size 1 <=] [] roll< [dip swons] genrec
+     == [⨁] [infra] cons [dupdip first] cons [size 1 <=] [] roll< [dip swons] genrec
 
 And so:
 
 ::
 
-   scan == [infra] cons [dupdip first] cons [size 1 <=] [] roll< [dip swons] genrec
+    scan == [infra] cons [dupdip first] cons [size 1 <=] [] roll< [dip swons] genrec
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('scan == [infra] cons [dupdip first] cons [size 1 <=] [] roll< [dip swons] genrec')
+    define('scan [infra] cons [dupdip first] cons [size 1 <=] [] roll< [dip swons] genrec')
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[1 2 3 4] [+] scan')
 
@@ -219,7 +217,7 @@ And so:
     [1 3 6 10]
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[1 2 3 4] [*] scan')
 
@@ -229,7 +227,7 @@ And so:
     [1 2 6 24]
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[1 2 3 4 5 6 7] [neg +] scan')
 
@@ -242,24 +240,24 @@ And so:
 Problem 2.
 ----------
 
-   Define a line to be a sequence of characters not containing the
-   newline character. It is easy to define a function ``Unlines`` that
-   converts a non-empty sequence of lines into a sequence of characters
-   by inserting newline characters between every two lines.
+    Define a line to be a sequence of characters not containing the
+    newline character. It is easy to define a function ``Unlines`` that
+    converts a non-empty sequence of lines into a sequence of characters
+    by inserting newline characters between every two lines.
 
-   Since ``Unlines`` is injective, the function ``Lines``, which
-   converts a sequence of characters into a sequence of lines by
-   splitting on newline characters, can be specified as the inverse of
-   ``Unlines``.
+    Since ``Unlines`` is injective, the function ``Lines``, which
+    converts a sequence of characters into a sequence of lines by
+    splitting on newline characters, can be specified as the inverse of
+    ``Unlines``.
 
-   The problem, just as in Problem 1. is to find a definition by
-   reduction of the function ``Lines``.
+    The problem, just as in Problem 1. is to find a definition by
+    reduction of the function ``Lines``.
 
 ::
 
-   Unlines = uncons ['\n' swap + +] step
+    Unlines = uncons ['\n' swap + +] step
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('["hello" "world"] uncons ["\n" swap + +] step')
 
@@ -269,41 +267,41 @@ Problem 2.
     'hello\nworld'
 
 
-Again ignoring the actual task let’s just derive ``Lines``:
+Again ignoring the actual task let's just derive ``Lines``:
 
 ::
 
-      "abc\nefg\nhij" Lines
-   ---------------------------
-       ["abc" "efg" "hij"]
+       "abc\nefg\nhij" Lines
+    ---------------------------
+        ["abc" "efg" "hij"]
 
 Instead of ``P == [size 1 <=]`` we want ``["\n" in]``, and for the
 base-case of a string with no newlines in it we want to use ``unit``:
 
 ::
 
-   Lines == ["\n" in] [unit] [R0]       [dip swons] genrec
-   Lines == ["\n" in] [unit] [R0 [Lines] dip swons] ifte
+    Lines == ["\n" in] [unit] [R0]       [dip swons] genrec
+    Lines == ["\n" in] [unit] [R0 [Lines] dip swons] ifte
 
 Derive ``R0``:
 
 ::
 
-   "a \n b" R0                    [Lines] dip swons
-   "a \n b" split-at-newline swap [Lines] dip swons
-   "a " " b"                 swap [Lines] dip swons
-   " b" "a "                      [Lines] dip swons
-   " b" Lines "a " swons
-   [" b"]     "a " swons
-   ["a " " b"]
+    "a \n b" R0                    [Lines] dip swons
+    "a \n b" split-at-newline swap [Lines] dip swons
+    "a " " b"                 swap [Lines] dip swons
+    " b" "a "                      [Lines] dip swons
+    " b" Lines "a " swons
+    [" b"]     "a " swons
+    ["a " " b"]
 
 So:
 
 ::
 
-   R0 == split-at-newline swap
+    R0 == split-at-newline swap
 
-   Lines == ["\n" in] [unit] [split-at-newline swap] [dip swons] genrec
+    Lines == ["\n" in] [unit] [split-at-newline swap] [dip swons] genrec
 
 Missing the Point?
 ------------------
@@ -313,27 +311,26 @@ properties are discussed. Am I missing the point?
 
 ::
 
-   0 [a b c d] [F] step == 0 [a b] [F] step 0 [c d] [F] step concat
+    0 [a b c d] [F] step == 0 [a b] [F] step 0 [c d] [F] step concat
 
-For associative function ``F`` and a “unit” element for that function,
+For associative function ``F`` and a "unit" element for that function,
 here represented by ``0``.
 
-For functions that don’t have a “unit” we can fake it (the example is
+For functions that don't have a "unit" we can fake it (the example is
 given of infinity for the ``min(a, b)`` function.) We can also use:
 
 ::
 
-   safe_step == [size 1 <=] [] [uncons [F] step] ifte
+    safe_step == [size 1 <=] [] [uncons [F] step] ifte
 
 Or:
 
 ::
 
-   safe_step == [pop size 1 <=] [pop] [[uncons] dip step] ifte
+    safe_step == [pop size 1 <=] [pop] [[uncons] dip step] ifte
 
-      [a b c] [F] safe_step
-   ---------------------------
-      a [b c] [F] step
+       [a b c] [F] safe_step
+    ---------------------------
+       a [b c] [F] step
 
 To limit ``F`` to working on pairs of terms from its domain.
-

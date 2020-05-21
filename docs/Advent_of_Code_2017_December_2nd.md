@@ -35,7 +35,7 @@ This function `F` must get the `max` and `min` of a row of numbers and subtract.
 
 
 ```python
-define('maxmin == [max] [min] cleave')
+define('maxmin [max] [min] cleave')
 ```
 
 
@@ -54,7 +54,7 @@ So:
 
 
 ```python
-define('AoC2017.2 == [maxmin - +] step_zero')
+define('AoC2017.2 [maxmin - +] step_zero')
 ```
 
 
@@ -114,22 +114,22 @@ J('[9 8 5 2] uncons [swap [divmod] cons] dupdip')
 V('[8 5 2] [9 divmod] [uncons swap] dip dup [i not] dip')
 ```
 
-                                          . [8 5 2] [9 divmod] [uncons swap] dip dup [i not] dip
-                                  [8 5 2] . [9 divmod] [uncons swap] dip dup [i not] dip
-                       [8 5 2] [9 divmod] . [uncons swap] dip dup [i not] dip
-         [8 5 2] [9 divmod] [uncons swap] . dip dup [i not] dip
-                                  [8 5 2] . uncons swap [9 divmod] dup [i not] dip
-                                  8 [5 2] . swap [9 divmod] dup [i not] dip
-                                  [5 2] 8 . [9 divmod] dup [i not] dip
-                       [5 2] 8 [9 divmod] . dup [i not] dip
-            [5 2] 8 [9 divmod] [9 divmod] . [i not] dip
-    [5 2] 8 [9 divmod] [9 divmod] [i not] . dip
-                       [5 2] 8 [9 divmod] . i not [9 divmod]
-                                  [5 2] 8 . 9 divmod not [9 divmod]
-                                [5 2] 8 9 . divmod not [9 divmod]
-                                [5 2] 1 1 . not [9 divmod]
-                            [5 2] 1 False . [9 divmod]
-                 [5 2] 1 False [9 divmod] . 
+                                          • [8 5 2] [9 divmod] [uncons swap] dip dup [i not] dip
+                                  [8 5 2] • [9 divmod] [uncons swap] dip dup [i not] dip
+                       [8 5 2] [9 divmod] • [uncons swap] dip dup [i not] dip
+         [8 5 2] [9 divmod] [uncons swap] • dip dup [i not] dip
+                                  [8 5 2] • uncons swap [9 divmod] dup [i not] dip
+                                  8 [5 2] • swap [9 divmod] dup [i not] dip
+                                  [5 2] 8 • [9 divmod] dup [i not] dip
+                       [5 2] 8 [9 divmod] • dup [i not] dip
+            [5 2] 8 [9 divmod] [9 divmod] • [i not] dip
+    [5 2] 8 [9 divmod] [9 divmod] [i not] • dip
+                       [5 2] 8 [9 divmod] • i not [9 divmod]
+                                  [5 2] 8 • 9 divmod not [9 divmod]
+                                [5 2] 8 9 • divmod not [9 divmod]
+                                [5 2] 1 1 • not [9 divmod]
+                            [5 2] 1 False • [9 divmod]
+                 [5 2] 1 False [9 divmod] • 
 
 
 ## Tricky
@@ -293,7 +293,7 @@ This `ifte` guards against empty sequences and returns zero in that case, otherw
 
 
 ```python
-define('G == [first % not] [first /] [rest [not] [popop 0]] [ifte] genrec')
+define('G [first % not] [first /] [rest [not] [popop 0]] [ifte] genrec')
 ```
 
 Now we need a word that uses `G` on each (head, tail) pair of a sequence until it finds a (non-zero) result.  It's going to be designed to work on a stack that has some candidate `n`, a sequence of possible divisors, and a result that is zero to signal to continue (a non-zero value implies that it is the discovered result):
@@ -304,9 +304,9 @@ Now we need a word that uses `G` on each (head, tail) pair of a sequence until i
 
 It applies `G` using `nullary` because if it fails with one candidate it needs the list to get the next one (the list is otherwise consumed by `G`.)
 
-    find-result == [0 >] [roll> popop] [roll< popop uncons [G] nullary] primrec
+    find-result == [0 >] [roll> popop] [roll< popop uncons [G] nullary] tailrec
 
-    n [...] p [0 >] [roll> popop] [roll< popop uncons [G] nullary] primrec
+    n [...] p [0 >] [roll> popop] [roll< popop uncons [G] nullary] tailrec
 
 The base-case is trivial, return the (non-zero) result.  The recursive branch...
 
@@ -320,7 +320,7 @@ The puzzle states that the input is well-formed, meaning that we can expect a re
 
 
 ```python
-define('find-result == [0 >] [roll> popop] [roll< popop uncons [G] nullary] primrec')
+define('find-result [0 >] [roll> popop] [roll< popop uncons [G] nullary] tailrec')
 ```
 
 
@@ -335,14 +335,14 @@ In order to get the thing started, we need to `sort` the list in descending orde
 
 
 ```python
-define('prep-row == sort reverse 0 tuck')
+define('prep-row sort reverse 0 tuck')
 ```
 
 Now we can define our program.
 
 
 ```python
-define('AoC20017.2.extra == [prep-row find-result +] step_zero')
+define('AoC20017.2.extra [prep-row find-result +] step_zero')
 ```
 
 

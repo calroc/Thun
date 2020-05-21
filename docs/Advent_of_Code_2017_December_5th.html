@@ -13178,7 +13178,7 @@ E == roll&lt; popop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
 <span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">SimpleFunctionWrapper</span>
 <span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">list_to_stack</span>
 
@@ -13217,7 +13217,7 @@ E == roll&lt; popop</code></pre>
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 [0 1 2 3 4 5] incr_at&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 [0 1 2 3 4 5] incr_at&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13300,7 +13300,7 @@ R1 == get_value incr_value add_value incr_step_count
 
 F == [P] [T] [R1] primrec
 
-F == [popop !size! &gt;=] [roll&lt; pop] [get_value incr_value add_value incr_step_count] primrec</code></pre>
+F == [popop !size! &gt;=] [roll&lt; pop] [get_value incr_value add_value incr_step_count] tailrec</code></pre>
 
 </div>
 </div>
@@ -13310,17 +13310,17 @@ F == [popop !size! &gt;=] [roll&lt; pop] [get_value incr_value add_value incr_st
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">DefinitionWrapper</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">DefinitionWrapper</span>
 
 
 <span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 
-<span class="s1">      get_value == [roll&lt; at] nullary</span>
-<span class="s1">     incr_value == [[popd incr_at] unary] dip</span>
-<span class="s1">      add_value == [+] cons dipd</span>
-<span class="s1">incr_step_count == [++] dip</span>
+<span class="s1">      get_value [roll&lt; at] nullary</span>
+<span class="s1">     incr_value [[popd incr_at] unary] dip</span>
+<span class="s1">      add_value [+] cons dipd</span>
+<span class="s1">incr_step_count [++] dip</span>
 
-<span class="s1">     AoC2017.5.0 == get_value incr_value add_value incr_step_count</span>
+<span class="s1">     AoC2017.5.0 get_value incr_value add_value incr_step_count</span>
 
 <span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
 </pre></div>
@@ -13335,7 +13335,19 @@ F == [popop !size! &gt;=] [roll&lt; pop] [get_value incr_value add_value incr_st
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;F == [popop 5 &gt;=] [roll&lt; popop] [AoC2017.5.0] primrec&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">DefinitionWrapper</span>
+
+
+<span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+
+<span class="s1">      get_value [roll&lt; at] nullary</span>
+<span class="s1">     incr_value [[popd incr_at] unary] dip</span>
+<span class="s1">      add_value [+] cons dipd</span>
+<span class="s1">incr_step_count [++] dip</span>
+
+<span class="s1">     AoC2017.5.0 get_value incr_value add_value incr_step_count</span>
+
+<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13348,7 +13360,20 @@ F == [popop !size! &gt;=] [roll&lt; pop] [get_value incr_value add_value incr_st
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 [0 3 0 1 -3] F&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;F [popop 5 &gt;=] [roll&lt; popop] [AoC2017.5.0] tailrec&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 [0 3 0 1 -3] F&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13408,17 +13433,17 @@ AoC2017.5.preamble == init-index-and-step-count prepare-predicate</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 
-<span class="s1">init-index-and-step-count == 0 0 roll&lt;</span>
-<span class="s1">        prepare-predicate == dup size [&gt;=] cons [popop] swoncat</span>
+<span class="s1">init-index-and-step-count 0 0 roll&lt;</span>
+<span class="s1">prepare-predicate dup size [&gt;=] cons [popop] swoncat</span>
 
-<span class="s1">       AoC2017.5.preamble == init-index-and-step-count prepare-predicate</span>
+<span class="s1">AoC2017.5.preamble init-index-and-step-count prepare-predicate</span>
 
-<span class="s1">                AoC2017.5 == AoC2017.5.preamble [roll&lt; popop] [AoC2017.5.0] primrec</span>
+<span class="s1">AoC2017.5 AoC2017.5.preamble [roll&lt; popop] [AoC2017.5.0] tailrec</span>
 
 <span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
 </pre></div>
@@ -13430,10 +13455,10 @@ AoC2017.5.preamble == init-index-and-step-count prepare-predicate</code></pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 3 0 1 -3] AoC2017.5&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 3 0 1 -3] AoC2017.5&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>

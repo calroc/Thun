@@ -6,13 +6,13 @@ December 6th
 
 ::
 
-   [0 2 7 0] dup max
+    [0 2 7 0] dup max
 
-.. code:: ipython2
+.. code:: ipython3
 
     from notebook_preamble import D, J, V, define
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[0 2 7 0] dup max')
 
@@ -22,7 +22,7 @@ December 6th
     [0 2 7 0] 7
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     from joy.library import SimpleFunctionWrapper
     from joy.utils.stack import list_to_stack
@@ -57,7 +57,7 @@ December 6th
     
     D['index_of'] = index_of
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[0 2 7 0] 7 index_of')
 
@@ -67,7 +67,7 @@ December 6th
     2
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[0 2 7 0] 23 index_of')
 
@@ -77,18 +77,18 @@ December 6th
     -1
 
 
-Starting at ``index`` distribute ``count`` “blocks” to the “banks” in
+Starting at ``index`` distribute ``count`` "blocks" to the "banks" in
 the sequence.
 
 ::
 
-   [...] count index distribute
-   ----------------------------
-              [...]
+    [...] count index distribute
+    ----------------------------
+               [...]
 
-This seems like it would be a PITA to implement in Joypy…
+This seems like it would be a PITA to implement in Joypy...
 
-.. code:: ipython2
+.. code:: ipython3
 
     from joy.utils.stack import iter_stack, list_to_stack
     
@@ -118,7 +118,7 @@ This seems like it would be a PITA to implement in Joypy…
     
     D['distribute'] = distribute
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[0 2 7 0] dup max [index_of] nullary distribute')
 
@@ -128,7 +128,7 @@ This seems like it would be a PITA to implement in Joypy…
     [2 4 1 2]
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[2 4 1 2] dup max [index_of] nullary distribute')
 
@@ -138,7 +138,7 @@ This seems like it would be a PITA to implement in Joypy…
     [3 1 2 3]
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[3 1 2 3] dup max [index_of] nullary distribute')
 
@@ -148,7 +148,7 @@ This seems like it would be a PITA to implement in Joypy…
     [0 2 3 4]
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[0 2 3 4] dup max [index_of] nullary distribute')
 
@@ -158,7 +158,7 @@ This seems like it would be a PITA to implement in Joypy…
     [1 3 4 1]
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[1 3 4 1] dup max [index_of] nullary distribute')
 
@@ -168,39 +168,39 @@ This seems like it would be a PITA to implement in Joypy…
     [2 4 1 2]
 
 
-Recalling “Generator Programs”
+Recalling "Generator Programs"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-   [a F] x
-   [a F] a F 
+    [a F] x
+    [a F] a F 
 
-   [a F] a swap [C] dip rest cons
-   a   [a F]    [C] dip rest cons
-   a C [a F]            rest cons
-   a C   [F]                 cons
+    [a F] a swap [C] dip rest cons
+    a   [a F]    [C] dip rest cons
+    a C [a F]            rest cons
+    a C   [F]                 cons
 
-   w/ C == dup G
+    w/ C == dup G
 
-   a dup G [F] cons
-   a a   G [F] cons
+    a dup G [F] cons
+    a a   G [F] cons
 
-   w/ G == dup max [index_of] nullary distribute
+    w/ G == dup max [index_of] nullary distribute
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('direco == dip rest cons')
+    define('direco dip rest cons')
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('G == [direco] cons [swap] swoncat cons')
+    define('G [direco] cons [swap] swoncat cons')
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('make_distributor == [dup dup max [index_of] nullary distribute] G')
+    define('make_distributor [dup dup max [index_of] nullary distribute] G')
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[0 2 7 0] make_distributor 6 [x] times pop')
 
@@ -217,63 +217,63 @@ First draft:
 
 ::
 
-   [] [GEN] x [pop index_of 0 >=] [pop size --] [[swons] dip x] primrec
+    [] [GEN] x [pop index_of 0 >=] [pop size --] [[swons] dip x] tailrec
 
 (?)
 
 ::
 
-   []       [GEN] x [pop index_of 0 >=] [pop size --] [[swons] dip x] primrec
-   [] [...] [GEN]   [pop index_of 0 >=] [pop size --] [[swons] dip x] primrec
-   [] [...] [GEN]    pop index_of 0 >=
-   [] [...]              index_of 0 >=
-                               -1 0 >=
-                                False
+    []       [GEN] x [pop index_of 0 >=] [pop size --] [[swons] dip x] tailrec
+    [] [...] [GEN]   [pop index_of 0 >=] [pop size --] [[swons] dip x] tailrec
+    [] [...] [GEN]    pop index_of 0 >=
+    [] [...]              index_of 0 >=
+                                -1 0 >=
+                                 False
 
 Base case
 
 ::
 
-   [] [...] [GEN] [pop index_of 0 >=] [pop size --] [[swons] dip x] primrec
-   [] [...] [GEN]                      pop size --
-   [] [...]                                size --
-   [] [...]                                size --
+    [] [...] [GEN] [pop index_of 0 >=] [pop size --] [[swons] dip x] tailrec
+    [] [...] [GEN]                      pop size --
+    [] [...]                                size --
+    [] [...]                                size --
 
 A mistake, ``popop`` and no need for ``--``
 
 ::
 
-   [] [...] [GEN] popop size
-   []                   size
-   n
+    [] [...] [GEN] popop size
+    []                   size
+    n
 
 Recursive case
 
 ::
 
-   [] [...] [GEN] [pop index_of 0 >=] [popop size] [[swons] dip x] primrec
-   [] [...] [GEN]                                   [swons] dip x  F
-   [] [...] swons [GEN]                                         x  F
-   [[...]]        [GEN]                                         x  F
-   [[...]] [...]  [GEN]                                            F
+    [] [...] [GEN] [pop index_of 0 >=] [popop size] [[swons] dip x] tailrec
+    [] [...] [GEN]                                   [swons] dip x  F
+    [] [...] swons [GEN]                                         x  F
+    [[...]]        [GEN]                                         x  F
+    [[...]] [...]  [GEN]                                            F
 
-   [[...]] [...] [GEN] F
+    [[...]] [...] [GEN] F
 
 What have we learned?
 
 ::
 
-   F == [pop index_of 0 >=] [popop size] [[swons] dip x] primrec
+    F == [pop index_of 0 >=] [popop size] [[swons] dip x] tailrec
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('count_states == [] swap x [pop index_of 0 >=] [popop size] [[swons] dip x] primrec')
+    define('count_states [] swap x [pop index_of 0 >=] [popop size] [[swons] dip x] tailrec')
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('AoC2017.6 == make_distributor count_states')
+    define('AoC2017.6 make_distributor count_states')
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[0 2 7 0] AoC2017.6')
 
@@ -283,7 +283,7 @@ What have we learned?
     5
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[1 1 1] AoC2017.6')
 
@@ -293,7 +293,7 @@ What have we learned?
     4
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[8 0 0 0 0 0] AoC2017.6')
 

@@ -145,7 +145,7 @@ J('3 [0 1 2 3 4 5] incr_at')
 
     F == [P] [T] [R1] primrec
     
-    F == [popop !size! >=] [roll< pop] [get_value incr_value add_value incr_step_count] primrec
+    F == [popop !size! >=] [roll< pop] [get_value incr_value add_value incr_step_count] tailrec
 
 
 ```python
@@ -154,19 +154,36 @@ from joy.library import DefinitionWrapper
 
 DefinitionWrapper.add_definitions('''
 
-      get_value == [roll< at] nullary
-     incr_value == [[popd incr_at] unary] dip
-      add_value == [+] cons dipd
-incr_step_count == [++] dip
+      get_value [roll< at] nullary
+     incr_value [[popd incr_at] unary] dip
+      add_value [+] cons dipd
+incr_step_count [++] dip
 
-     AoC2017.5.0 == get_value incr_value add_value incr_step_count
+     AoC2017.5.0 get_value incr_value add_value incr_step_count
 
 ''', D)
 ```
 
 
 ```python
-define('F == [popop 5 >=] [roll< popop] [AoC2017.5.0] primrec')
+from joy.library import DefinitionWrapper
+
+
+DefinitionWrapper.add_definitions('''
+
+      get_value [roll< at] nullary
+     incr_value [[popd incr_at] unary] dip
+      add_value [+] cons dipd
+incr_step_count [++] dip
+
+     AoC2017.5.0 get_value incr_value add_value incr_step_count
+
+''', D)
+```
+
+
+```python
+define('F [popop 5 >=] [roll< popop] [AoC2017.5.0] tailrec')
 ```
 
 
@@ -207,12 +224,12 @@ So:
 ```python
 DefinitionWrapper.add_definitions('''
 
-init-index-and-step-count == 0 0 roll<
-        prepare-predicate == dup size [>=] cons [popop] swoncat
+init-index-and-step-count 0 0 roll<
+prepare-predicate dup size [>=] cons [popop] swoncat
 
-       AoC2017.5.preamble == init-index-and-step-count prepare-predicate
+AoC2017.5.preamble init-index-and-step-count prepare-predicate
 
-                AoC2017.5 == AoC2017.5.preamble [roll< popop] [AoC2017.5.0] primrec
+AoC2017.5 AoC2017.5.preamble [roll< popop] [AoC2017.5.0] tailrec
 
 ''', D)
 ```

@@ -13079,7 +13079,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
 </pre></div>
 
     </div>
@@ -13102,7 +13102,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 sqr&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 sqr&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13119,11 +13119,11 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>      . 23 sqr
-   23 . sqr
-   23 . dup mul
-23 23 . mul
-  529 . 
+<pre>      • 23 sqr
+   23 • sqr
+   23 • dup mul
+23 23 • mul
+  529 • 
 </pre>
 </div>
 </div>
@@ -13146,7 +13146,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">dup</span><span class="p">,</span> <span class="n">mul</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;dup&#39;</span><span class="p">],</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;mul&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dup</span><span class="p">,</span> <span class="n">mul</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;dup&#39;</span><span class="p">],</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;mul&#39;</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -13159,7 +13159,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">sqr</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">sqr</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">mul</span><span class="p">(</span><span class="o">*</span><span class="n">dup</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">))</span>
 </pre></div>
 
@@ -13173,7 +13173,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">old_sqr</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;sqr&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_sqr</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;sqr&#39;</span><span class="p">]</span>
 <span class="n">D</span><span class="p">[</span><span class="s1">&#39;sqr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sqr</span>
 </pre></div>
 
@@ -13187,7 +13187,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 sqr&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 sqr&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13204,9 +13204,9 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>    . 23 sqr
- 23 . sqr
-529 . 
+<pre>    • 23 sqr
+ 23 • sqr
+529 • 
 </pre>
 </div>
 </div>
@@ -13228,7 +13228,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">compile_joy</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">compile_joy</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
     <span class="n">term</span><span class="p">,</span> <span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span>
     <span class="n">code</span> <span class="o">=</span> <span class="n">term</span> <span class="o">+</span><span class="s1">&#39;(stack, expression, dictionary)&#39;</span>
     <span class="n">format_</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">(*</span><span class="si">%s</span><span class="s1">)&#39;</span>
@@ -13252,10 +13252,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">print</span> <span class="n">compile_joy_definition</span><span class="p">(</span><span class="n">old_sqr</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">compile_joy_definition</span><span class="p">(</span><span class="n">old_sqr</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -13295,10 +13295,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">unit</span><span class="p">,</span> <span class="n">dip</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;unit&#39;</span><span class="p">],</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;dip&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">unit</span><span class="p">,</span> <span class="n">dip</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;unit&#39;</span><span class="p">],</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;dip&#39;</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -13308,10 +13308,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># print compile_joy_definition(D[&#39;quoted&#39;])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># print compile_joy_definition(D[&#39;quoted&#39;])</span>
 <span class="c1"># raises</span>
 <span class="c1"># TypeError: can only concatenate tuple (not &quot;str&quot;) to tuple</span>
 </pre></div>
@@ -13331,10 +13331,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
     <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span> <span class="o">=</span> <span class="n">baz</span><span class="p">(</span><span class="o">*</span><span class="n">bar</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">barp</span><span class="p">(</span><span class="o">*</span><span class="n">lerp</span><span class="p">(</span><span class="o">*</span><span class="n">baq</span><span class="p">((</span><span class="mi">99</span><span class="p">,</span> <span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="n">stack</span><span class="p">)),</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">)))</span>
 </pre></div>
@@ -13363,10 +13363,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.utils.types</span> <span class="kn">import</span> <span class="n">compile_</span><span class="p">,</span> <span class="n">doc_from_stack_effect</span><span class="p">,</span> <span class="n">infer_string</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">joy.utils.types</span> <span class="kn">import</span> <span class="n">compile_</span><span class="p">,</span> <span class="n">doc_from_stack_effect</span><span class="p">,</span> <span class="n">infer_string</span>
 <span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">SimpleFunctionWrapper</span>
 </pre></div>
 
@@ -13374,13 +13374,37 @@ div#notebook {
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ModuleNotFoundError</span>                       Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-14-d5ef3c7560be&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> joy<span class="ansi-blue-fg">.</span>utils<span class="ansi-blue-fg">.</span>types <span class="ansi-green-fg">import</span> compile_<span class="ansi-blue-fg">,</span> doc_from_stack_effect<span class="ansi-blue-fg">,</span> infer_string
+<span class="ansi-green-intense-fg ansi-bold">      2</span> <span class="ansi-green-fg">from</span> joy<span class="ansi-blue-fg">.</span>library <span class="ansi-green-fg">import</span> SimpleFunctionWrapper
+
+<span class="ansi-red-fg">ModuleNotFoundError</span>: No module named &#39;joy.utils.types&#39;</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">stack_effects</span> <span class="o">=</span> <span class="n">infer_string</span><span class="p">(</span><span class="s1">&#39;tuck over dup&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stack_effects</span> <span class="o">=</span> <span class="n">infer_string</span><span class="p">(</span><span class="s1">&#39;tuck over dup&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13398,10 +13422,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="ow">in</span> <span class="n">stack_effects</span><span class="p">:</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="ow">in</span> <span class="n">stack_effects</span><span class="p">:</span>
     <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">)</span>
 </pre></div>
 
@@ -13409,31 +13433,13 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(a2 a1 -- a1 a2 a1 a2 a2)
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">compile_</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="n">stack_effects</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">compile_</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="n">stack_effects</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -13451,49 +13457,23 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">print</span> <span class="n">source</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span> <span class="n">source</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>def foo(stack):
-  &#34;&#34;&#34;
-  ::
-
-  (a2 a1 -- a1 a2 a1 a2 a2)
-
-  &#34;&#34;&#34;
-  (a1, (a2, s1)) = stack
-  return (a2, (a2, (a1, (a2, (a1, s1)))))
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">exec</span> <span class="nb">compile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s1">&#39;__main__&#39;</span><span class="p">,</span> <span class="s1">&#39;single&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">exec</span> <span class="nb">compile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s1">&#39;__main__&#39;</span><span class="p">,</span> <span class="s1">&#39;single&#39;</span><span class="p">)</span>
 
 <span class="n">D</span><span class="p">[</span><span class="s1">&#39;foo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SimpleFunctionWrapper</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
 </pre></div>
@@ -13502,19 +13482,6 @@ div#notebook {
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 18 foo&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -13524,15 +13491,29 @@ div#notebook {
     <div class="prompt"></div>
 
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>               . 23 18 foo
-            23 . 18 foo
-         23 18 . foo
-18 23 18 23 23 . 
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-cyan-fg">  File </span><span class="ansi-green-fg">&#34;&lt;ipython-input-9-1a7e90bf2d7b&gt;&#34;</span><span class="ansi-cyan-fg">, line </span><span class="ansi-green-fg">1</span>
+<span class="ansi-red-fg">    exec compile(source, &#39;__main__&#39;, &#39;single&#39;)</span>
+         ^
+<span class="ansi-red-fg">SyntaxError</span><span class="ansi-red-fg">:</span> invalid syntax
 </pre>
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 18 foo&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -13561,10 +13542,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.parser</span> <span class="kn">import</span> <span class="n">text_to_expression</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">joy.parser</span> <span class="kn">import</span> <span class="n">text_to_expression</span>
 </pre></div>
 
     </div>
@@ -13574,10 +13555,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">Ein</span> <span class="o">=</span> <span class="s1">&#39;[a b c d] e a [f]&#39;</span>  <span class="c1"># The terms should be reversed here but I don&#39;t realize that until later.</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Ein</span> <span class="o">=</span> <span class="s1">&#39;[a b c d] e a [f]&#39;</span>  <span class="c1"># The terms should be reversed here but I don&#39;t realize that until later.</span>
 <span class="n">Eout</span> <span class="o">=</span> <span class="s1">&#39;[a e c d]&#39;</span>
 <span class="n">E</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">] [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">Ein</span><span class="p">,</span> <span class="n">Eout</span><span class="p">)</span>
 
@@ -13588,31 +13569,13 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[[a b c d] e a [f]] [[a e c d]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="n">_</span><span class="p">))</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="n">_</span><span class="p">))</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13622,44 +13585,23 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[22]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(((a, (b, (c, (d, ())))), (e, (a, ((f, ()), ())))),
- ((a, (e, (c, (d, ())))), ()))</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">Ein</span> <span class="o">=</span> <span class="s1">&#39;[a1 a2 a3 a4] a5 a6 a7&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Ein</span> <span class="o">=</span> <span class="s1">&#39;[a1 a2 a3 a4] a5 a6 a7&#39;</span>
 <span class="n">Eout</span> <span class="o">=</span> <span class="s1">&#39;[a1 a5 a3 a4]&#39;</span>
 <span class="n">E</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">] [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">Ein</span><span class="p">,</span> <span class="n">Eout</span><span class="p">)</span>
 
@@ -13670,31 +13612,13 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[[a1 a2 a3 a4] a5 a6 a7] [[a1 a5 a3 a4]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="n">_</span><span class="p">))</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="n">_</span><span class="p">))</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13704,44 +13628,23 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[25]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(((a1, (a2, (a3, (a4, ())))), (a5, (a6, (a7, ())))),
- ((a1, (a5, (a3, (a4, ())))), ()))</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">type_vars</span><span class="p">():</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">type_vars</span><span class="p">():</span>
     <span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a4</span><span class="p">,</span> <span class="n">a5</span><span class="p">,</span> <span class="n">a6</span><span class="p">,</span> <span class="n">a7</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">s1</span>
     <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>
 
@@ -13753,41 +13656,13 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[26]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>{&#39;a1&#39;: a1,
- &#39;a2&#39;: a2,
- &#39;a3&#39;: a3,
- &#39;a4&#39;: a4,
- &#39;a5&#39;: a5,
- &#39;a6&#39;: a6,
- &#39;a7&#39;: a7,
- &#39;s0&#39;: s0,
- &#39;s1&#39;: s1}</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.utils.types</span> <span class="kn">import</span> <span class="n">reify</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">joy.utils.types</span> <span class="kn">import</span> <span class="n">reify</span>
 </pre></div>
 
     </div>
@@ -13797,10 +13672,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">stack_effect</span> <span class="o">=</span> <span class="n">reify</span><span class="p">(</span><span class="n">tv</span><span class="p">,</span> <span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stack_effect</span> <span class="o">=</span> <span class="n">reify</span><span class="p">(</span><span class="n">tv</span><span class="p">,</span> <span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">))</span>
 <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect</span><span class="p">)</span>
 </pre></div>
 
@@ -13808,52 +13683,16 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(... a7 a6 a5 [a1 a2 a3 a4 ] -- ... [a1 a5 a3 a4 ])
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">print</span> <span class="n">stack_effect</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span> <span class="n">stack_effect</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(((a1, (a2, (a3, (a4, ())))), (a5, (a6, (a7, ())))), ((a1, (a5, (a3, (a4, ())))), ()))
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -13868,10 +13707,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">stack_effect</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;(((a1, (a2, (a3, (a4, s1)))), (a5, (a6, (a7, s0)))), ((a1, (a5, (a3, (a4, s1)))), s0))&#39;</span><span class="p">,</span> <span class="n">tv</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stack_effect</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;(((a1, (a2, (a3, (a4, s1)))), (a5, (a6, (a7, s0)))), ((a1, (a5, (a3, (a4, s1)))), s0))&#39;</span><span class="p">,</span> <span class="n">tv</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13889,31 +13728,13 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect</span><span class="p">)</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(a7 a6 a5 [a1 a2 a3 a4 ...1] -- [a1 a5 a3 a4 ...1])
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -13928,10 +13749,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">stack_effect</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;(((a1, (a2, s1)), (a5, (a6, (a7, s0)))), ((a1, (a5, s1)), s0))&#39;</span><span class="p">,</span> <span class="n">tv</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stack_effect</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;(((a1, (a2, s1)), (a5, (a6, (a7, s0)))), ((a1, (a5, s1)), s0))&#39;</span><span class="p">,</span> <span class="n">tv</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13949,71 +13770,27 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect</span><span class="p">)</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(a7 a6 a5 [a1 a2 ...1] -- [a1 a5 ...1])
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">compile_</span><span class="p">(</span><span class="s1">&#39;Ee&#39;</span><span class="p">,</span> <span class="n">stack_effect</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">compile_</span><span class="p">(</span><span class="s1">&#39;Ee&#39;</span><span class="p">,</span> <span class="n">stack_effect</span><span class="p">)</span>
 <span class="nb">print</span> <span class="n">source</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>def Ee(stack):
-  &#34;&#34;&#34;
-  ::
-
-  (a7 a6 a5 [a1 a2 ...1] -- [a1 a5 ...1])
-
-  &#34;&#34;&#34;
-  ((a1, (a2, s1)), (a5, (a6, (a7, s0)))) = stack
-  return ((a1, (a5, s1)), s0)
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -14028,10 +13805,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">stack_effect</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;((a7, (a6, (a5, ((a1, (a2, s1)), s0)))), ((a1, (a5, s1)), s0))&#39;</span><span class="p">,</span> <span class="n">tv</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stack_effect</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;((a7, (a6, (a5, ((a1, (a2, s1)), s0)))), ((a1, (a5, s1)), s0))&#39;</span><span class="p">,</span> <span class="n">tv</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14041,71 +13818,27 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">stack_effect</span><span class="p">)</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>([a1 a2 ...1] a5 a6 a7 -- [a1 a5 ...1])
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">compile_</span><span class="p">(</span><span class="s1">&#39;Ee&#39;</span><span class="p">,</span> <span class="n">stack_effect</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">compile_</span><span class="p">(</span><span class="s1">&#39;Ee&#39;</span><span class="p">,</span> <span class="n">stack_effect</span><span class="p">)</span>
 <span class="nb">print</span> <span class="n">source</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>def Ee(stack):
-  &#34;&#34;&#34;
-  ::
-
-  ([a1 a2 ...1] a5 a6 a7 -- [a1 a5 ...1])
-
-  &#34;&#34;&#34;
-  (a7, (a6, (a5, ((a1, (a2, s1)), s0)))) = stack
-  return ((a1, (a5, s1)), s0)
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -14124,10 +13857,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">eval</span><span class="p">(</span><span class="nb">compile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s1">&#39;__main__&#39;</span><span class="p">,</span> <span class="s1">&#39;single&#39;</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">eval</span><span class="p">(</span><span class="nb">compile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s1">&#39;__main__&#39;</span><span class="p">,</span> <span class="s1">&#39;single&#39;</span><span class="p">))</span>
 <span class="n">D</span><span class="p">[</span><span class="s1">&#39;Ee&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SimpleFunctionWrapper</span><span class="p">(</span><span class="n">Ee</span><span class="p">)</span>
 </pre></div>
 
@@ -14138,36 +13871,13 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[a b c d] 1 2 [f] Ee&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[a b c d] 1 2 [f] Ee&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>                  . [a b c d] 1 2 [f] Ee
-        [a b c d] . 1 2 [f] Ee
-      [a b c d] 1 . 2 [f] Ee
-    [a b c d] 1 2 . [f] Ee
-[a b c d] 1 2 [f] . Ee
-        [a 1 c d] . 
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -14177,7 +13887,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
@@ -14195,10 +13905,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">dup</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">dup</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
     <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s23</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">s23</span><span class="p">))</span>
 </pre></div>
@@ -14218,33 +13928,15 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">stack_effects</span> <span class="o">=</span> <span class="n">infer_string</span><span class="p">(</span><span class="s1">&#39;dup mul&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stack_effects</span> <span class="o">=</span> <span class="n">infer_string</span><span class="p">(</span><span class="s1">&#39;dup mul&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="ow">in</span> <span class="n">stack_effects</span><span class="p">:</span>
     <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">)</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(n1 -- n2)
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -14259,10 +13951,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">sqr</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">sqr</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
     <span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">s23</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
     <span class="n">n2</span> <span class="o">=</span> <span class="n">mul</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n1</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">s23</span><span class="p">)</span>
@@ -14278,7 +13970,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
@@ -14291,7 +13983,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
@@ -14309,10 +14001,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">stack_effects</span> <span class="o">=</span> <span class="n">infer_string</span><span class="p">(</span><span class="s1">&#39;mul mul sub&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stack_effects</span> <span class="o">=</span> <span class="n">infer_string</span><span class="p">(</span><span class="s1">&#39;mul mul sub&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="ow">in</span> <span class="n">stack_effects</span><span class="p">:</span>
     <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">)</span>
 </pre></div>
@@ -14321,31 +14013,13 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(n4 n3 n2 n1 -- n5)
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
     <span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="p">(</span><span class="n">n3</span><span class="p">,</span> <span class="p">(</span><span class="n">n4</span><span class="p">,</span> <span class="n">s23</span><span class="p">))))</span> <span class="o">=</span> <span class="n">stack</span>
     <span class="n">n5</span> <span class="o">=</span> <span class="n">mul</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
     <span class="n">n6</span> <span class="o">=</span> <span class="n">mul</span><span class="p">(</span><span class="n">n5</span><span class="p">,</span> <span class="n">n3</span><span class="p">)</span>
@@ -14371,43 +14045,10 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">stack_effects</span> <span class="o">=</span> <span class="n">infer_string</span><span class="p">(</span><span class="s1">&#39;tuck&#39;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="ow">in</span> <span class="n">stack_effects</span><span class="p">:</span>
-    <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(a2 a1 -- a1 a2 a1)
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -14417,7 +14058,22 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stack_effects</span> <span class="o">=</span> <span class="n">infer_string</span><span class="p">(</span><span class="s1">&#39;tuck&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="ow">in</span> <span class="n">stack_effects</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
@@ -14442,10 +14098,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.parser</span> <span class="kn">import</span> <span class="n">Symbol</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">joy.parser</span> <span class="kn">import</span> <span class="n">Symbol</span>
 </pre></div>
 
     </div>
@@ -14455,10 +14111,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">_names</span><span class="p">():</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_names</span><span class="p">():</span>
     <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;a&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
@@ -14482,10 +14138,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[80]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -14512,10 +14168,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[64]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">I</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">I</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
     <span class="k">while</span> <span class="n">expression</span><span class="p">:</span>
         <span class="n">term</span><span class="p">,</span> <span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span>
         <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">term</span><span class="p">):</span>
@@ -14548,10 +14204,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">strtup</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="s1">&#39;(</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">strtup</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="s1">&#39;(</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
 <span class="n">strstk</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">rest</span><span class="p">:</span> <span class="n">reduce</span><span class="p">(</span><span class="n">strtup</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="s1">&#39;stack&#39;</span><span class="p">)</span>
 
 
@@ -14622,10 +14278,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[69]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">mul</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">(</span><span class="s1">&#39;mul&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mul</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">(</span><span class="s1">&#39;mul&#39;</span><span class="p">)</span>
 <span class="n">sub</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">(</span><span class="s1">&#39;sub&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -14636,10 +14292,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[74]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">import_yin</span><span class="p">():</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">import_yin</span><span class="p">():</span>
     <span class="kn">from</span> <span class="nn">joy.utils.generated_library</span> <span class="kn">import</span> <span class="o">*</span>
     <span class="k">return</span> <span class="nb">locals</span><span class="p">()</span>
 
@@ -14658,25 +14314,6 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>&lt;ipython-input-74-a6ea700b09d9&gt;:1: SyntaxWarning: import * only allowed at module level
-  def import_yin():
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -14688,46 +14325,23 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[75]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">print</span> <span class="n">compile_yinyang</span><span class="p">(</span><span class="s1">&#39;mul_&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">()))))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span> <span class="n">compile_yinyang</span><span class="p">(</span><span class="s1">&#39;mul_&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">()))))</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>def mul_(stack):
-    (a31, (a32, stack)) = stack
-    a33 = mul(a32, a31)
-    stack = (a33, stack)
-    return stack
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[76]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">())))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">())))</span>
 <span class="nb">print</span> <span class="n">compile_yinyang</span><span class="p">(</span><span class="s1">&#39;sqr&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 </pre></div>
 
@@ -14735,36 +14349,13 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>def sqr(stack):
-    (a34, stack) = stack
-    a35 = mul(a34, a34)
-    stack = (a35, stack)
-    return stack
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[77]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">())))))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">())))))</span>
 <span class="nb">print</span> <span class="n">compile_yinyang</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 </pre></div>
 
@@ -14772,37 +14363,13 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>def foo(stack):
-    (a36, (a37, stack)) = stack
-    a38 = sub(a37, a36)
-    a39 = mul(a38, a36)
-    stack = (a39, stack)
-    return stack
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[78]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">()))))))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">()))))))</span>
 <span class="nb">print</span> <span class="n">compile_yinyang</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 </pre></div>
 
@@ -14810,37 +14377,13 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>def bar(stack):
-    (a40, (a41, stack)) = stack
-    a42 = mul(a41, a40)
-    a43 = sub(a42, a42)
-    stack = (a43, (a43, stack))
-    return stack
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[79]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">())))))))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">names</span><span class="p">(),</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="p">())))))))</span>
 <span class="nb">print</span> <span class="n">compile_yinyang</span><span class="p">(</span><span class="s1">&#39;to_the_fifth_power&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 </pre></div>
 
@@ -14848,38 +14391,13 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>def to_the_fifth_power(stack):
-    (a44, stack) = stack
-    a45 = mul(a44, a44)
-    a46 = mul(a45, a45)
-    a47 = mul(a46, a44)
-    stack = (a47, stack)
-    return stack
-
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
@@ -14892,7 +14410,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
@@ -14905,7 +14423,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
@@ -14918,7 +14436,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>

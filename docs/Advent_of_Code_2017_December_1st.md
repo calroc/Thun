@@ -39,7 +39,7 @@ Straightforward (although the order of each pair is reversed, due to the way `zi
 
 
 ```python
-define('pair_up == dup uncons swap unit concat zip')
+define('pair_up dup uncons swap unit concat zip')
 ```
 
 
@@ -86,7 +86,7 @@ And thus:
 
 
 ```python
-define('total_matches == 0 swap [i [=] [pop +] [popop] ifte] step')
+define('total_matches 0 swap [i [=] [pop +] [popop] ifte] step')
 ```
 
 
@@ -109,7 +109,7 @@ Now we can define our main program and evaluate it on the examples.
 
 
 ```python
-define('AoC2017.1 == pair_up total_matches')
+define('AoC2017.1 pair_up total_matches')
 ```
 
 
@@ -186,7 +186,7 @@ J('[1 2 3 4] dup size 2 / [drop] [take reverse] cleave  zip')
 
 
 ```python
-define('AoC2017.1.extra == dup size 2 / [drop] [take reverse] cleave  zip swap pop total_matches 2 *')
+define('AoC2017.1.extra dup size 2 / [drop] [take reverse] cleave  zip swap pop total_matches 2 *')
 ```
 
 

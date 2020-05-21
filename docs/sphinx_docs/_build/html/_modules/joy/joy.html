@@ -58,7 +58,7 @@
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">input</span>
-<span class="kn">from</span> <span class="nn">traceback</span> <span class="k">import</span> <span class="n">print_exc</span><span class="p">,</span> <span class="n">format_exc</span>
+<span class="kn">from</span> <span class="nn">traceback</span> <span class="k">import</span> <span class="n">print_exc</span>
 <span class="kn">from</span> <span class="nn">.parser</span> <span class="k">import</span> <span class="n">text_to_expression</span><span class="p">,</span> <span class="n">ParseError</span><span class="p">,</span> <span class="n">Symbol</span>
 <span class="kn">from</span> <span class="nn">.utils.stack</span> <span class="k">import</span> <span class="n">stack_to_string</span>
 
@@ -136,8 +136,7 @@
 			<span class="k">try</span><span class="p">:</span>
 				<span class="n">stack</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">dictionary</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">stack</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">)</span>
 			<span class="k">except</span><span class="p">:</span>
-				<span class="n">exc</span> <span class="o">=</span> <span class="n">format_exc</span><span class="p">()</span> <span class="c1"># Capture the exception.</span>
-				<span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span> <span class="c1"># Print the original exception.</span>
+				<span class="n">print_exc</span><span class="p">()</span>
 	<span class="k">except</span><span class="p">:</span>
 		<span class="n">print_exc</span><span class="p">()</span>
 	<span class="nb">print</span><span class="p">()</span>

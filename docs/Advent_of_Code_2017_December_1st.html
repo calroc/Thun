@@ -13094,7 +13094,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
 </pre></div>
 
     </div>
@@ -13139,7 +13139,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;pair_up == dup uncons swap unit concat zip&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;pair_up dup uncons swap unit concat zip&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13152,7 +13152,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] pair_up&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] pair_up&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13183,7 +13183,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 2 3] pair_up&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 2 3] pair_up&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13251,7 +13251,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;total_matches == 0 swap [i [=] [pop +] [popop] ifte] step&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;total_matches 0 swap [i [=] [pop +] [popop] ifte] step&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13264,7 +13264,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] pair_up total_matches&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] pair_up total_matches&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13295,7 +13295,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 2 3] pair_up total_matches&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 2 3] pair_up total_matches&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13334,7 +13334,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;AoC2017.1 == pair_up total_matches&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;AoC2017.1 pair_up total_matches&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13347,7 +13347,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 1 2 2] AoC2017.1&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 1 2 2] AoC2017.1&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13378,7 +13378,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 1 1 1] AoC2017.1&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 1 1 1] AoC2017.1&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13409,7 +13409,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] AoC2017.1&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] AoC2017.1&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13440,7 +13440,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[9 1 2 1 2 1 2 9] AoC2017.1&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[9 1 2 1 2 1 2 9] AoC2017.1&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13471,7 +13471,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[9 1 2 1 2 1 2 9] AoC2017.1&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[9 1 2 1 2 1 2 9] AoC2017.1&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13514,7 +13514,7 @@ total_matches == 0 swap [i [=] [pop +] [popop] ifte] step
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
@@ -13537,7 +13537,7 @@ total_matches == 0 swap [i [=] [pop +] [popop] ifte] step
 <div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] dup size 2 / [drop] [take reverse] cleave concat zip&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] dup size 2 / [drop] [take reverse] cleave concat zip&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13576,7 +13576,7 @@ total_matches == 0 swap [i [=] [pop +] [popop] ifte] step
 <div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] dup size 2 / [drop] [take reverse] cleave  zip&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] dup size 2 / [drop] [take reverse] cleave  zip&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13607,7 +13607,7 @@ total_matches == 0 swap [i [=] [pop +] [popop] ifte] step
 <div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;AoC2017.1.extra == dup size 2 / [drop] [take reverse] cleave  zip swap pop total_matches 2 *&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;AoC2017.1.extra dup size 2 / [drop] [take reverse] cleave  zip swap pop total_matches 2 *&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13620,7 +13620,7 @@ total_matches == 0 swap [i [=] [pop +] [popop] ifte] step
 <div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 1 2] AoC2017.1.extra&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 1 2] AoC2017.1.extra&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13651,7 +13651,7 @@ total_matches == 0 swap [i [=] [pop +] [popop] ifte] step
 <div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 2 1] AoC2017.1.extra&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 2 1] AoC2017.1.extra&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13682,7 +13682,7 @@ total_matches == 0 swap [i [=] [pop +] [popop] ifte] step
 <div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4 2 5] AoC2017.1.extra&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4 2 5] AoC2017.1.extra&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>

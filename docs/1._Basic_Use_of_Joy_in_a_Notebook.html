@@ -13087,7 +13087,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">joy.joy</span> <span class="kn">import</span> <span class="n">run</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">joy.joy</span> <span class="kn">import</span> <span class="n">run</span>
 <span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">initialize</span>
 <span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">stack_to_string</span>
 <span class="kn">from</span> <span class="nn">joy.utils.pretty_print</span> <span class="kn">import</span> <span class="n">TracePrinter</span>
@@ -13111,12 +13111,12 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">initialize</span><span class="p">()</span>
 <span class="n">S</span> <span class="o">=</span> <span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">J</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="nb">print</span> <span class="n">stack_to_string</span><span class="p">(</span><span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">D</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stack_to_string</span><span class="p">(</span><span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">D</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
 
 
 <span class="k">def</span> <span class="nf">V</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
@@ -13142,7 +13142,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 18 +&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 18 +&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13173,7 +13173,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;45 30 gcd&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;45 30 gcd&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13212,7 +13212,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 18 +&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 18 +&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13229,10 +13229,10 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>      . 23 18 +
-   23 . 18 +
-23 18 . +
-   41 . 
+<pre>      • 23 18 +
+   23 • 18 +
+23 18 • +
+   41 • 
 </pre>
 </div>
 </div>
@@ -13246,7 +13246,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;45 30 gcd&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;45 30 gcd&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13263,28 +13263,28 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>                                  . 45 30 gcd
-                               45 . 30 gcd
-                            45 30 . gcd
-                            45 30 . 1 [tuck modulus dup 0 &gt;] loop pop
-                          45 30 1 . [tuck modulus dup 0 &gt;] loop pop
-   45 30 1 [tuck modulus dup 0 &gt;] . loop pop
-                            45 30 . tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                         30 45 30 . modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                            30 15 . dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                         30 15 15 . 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                       30 15 15 0 . &gt; [tuck modulus dup 0 &gt;] loop pop
-                       30 15 True . [tuck modulus dup 0 &gt;] loop pop
-30 15 True [tuck modulus dup 0 &gt;] . loop pop
-                            30 15 . tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                         15 30 15 . modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                             15 0 . dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                           15 0 0 . 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                         15 0 0 0 . &gt; [tuck modulus dup 0 &gt;] loop pop
-                       15 0 False . [tuck modulus dup 0 &gt;] loop pop
-15 0 False [tuck modulus dup 0 &gt;] . loop pop
-                             15 0 . pop
-                               15 . 
+<pre>                                  • 45 30 gcd
+                               45 • 30 gcd
+                            45 30 • gcd
+                            45 30 • 1 [tuck modulus dup 0 &gt;] loop pop
+                          45 30 1 • [tuck modulus dup 0 &gt;] loop pop
+   45 30 1 [tuck modulus dup 0 &gt;] • loop pop
+                            45 30 • tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                         30 45 30 • modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                            30 15 • dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                         30 15 15 • 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                       30 15 15 0 • &gt; [tuck modulus dup 0 &gt;] loop pop
+                       30 15 True • [tuck modulus dup 0 &gt;] loop pop
+30 15 True [tuck modulus dup 0 &gt;] • loop pop
+                            30 15 • tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                         15 30 15 • modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                             15 0 • dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                           15 0 0 • 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                         15 0 0 0 • &gt; [tuck modulus dup 0 &gt;] loop pop
+                       15 0 False • [tuck modulus dup 0 &gt;] loop pop
+15 0 False [tuck modulus dup 0 &gt;] • loop pop
+                             15 0 • pop
+                               15 • 
 </pre>
 </div>
 </div>
@@ -13306,7 +13306,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;96 27 gcd&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;96 27 gcd&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13323,59 +13323,46 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>                                  . 96 27 gcd
-                               96 . 27 gcd
-                            96 27 . gcd
-                            96 27 . 1 [tuck modulus dup 0 &gt;] loop pop
-                          96 27 1 . [tuck modulus dup 0 &gt;] loop pop
-   96 27 1 [tuck modulus dup 0 &gt;] . loop pop
-                            96 27 . tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                         27 96 27 . modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                            27 15 . dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                         27 15 15 . 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                       27 15 15 0 . &gt; [tuck modulus dup 0 &gt;] loop pop
-                       27 15 True . [tuck modulus dup 0 &gt;] loop pop
-27 15 True [tuck modulus dup 0 &gt;] . loop pop
-                            27 15 . tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                         15 27 15 . modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                            15 12 . dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                         15 12 12 . 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                       15 12 12 0 . &gt; [tuck modulus dup 0 &gt;] loop pop
-                       15 12 True . [tuck modulus dup 0 &gt;] loop pop
-15 12 True [tuck modulus dup 0 &gt;] . loop pop
-                            15 12 . tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                         12 15 12 . modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                             12 3 . dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                           12 3 3 . 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                         12 3 3 0 . &gt; [tuck modulus dup 0 &gt;] loop pop
-                        12 3 True . [tuck modulus dup 0 &gt;] loop pop
- 12 3 True [tuck modulus dup 0 &gt;] . loop pop
-                             12 3 . tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                           3 12 3 . modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                              3 0 . dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                            3 0 0 . 0 &gt; [tuck modulus dup 0 &gt;] loop pop
-                          3 0 0 0 . &gt; [tuck modulus dup 0 &gt;] loop pop
-                        3 0 False . [tuck modulus dup 0 &gt;] loop pop
- 3 0 False [tuck modulus dup 0 &gt;] . loop pop
-                              3 0 . pop
-                                3 . 
+<pre>                                  • 96 27 gcd
+                               96 • 27 gcd
+                            96 27 • gcd
+                            96 27 • 1 [tuck modulus dup 0 &gt;] loop pop
+                          96 27 1 • [tuck modulus dup 0 &gt;] loop pop
+   96 27 1 [tuck modulus dup 0 &gt;] • loop pop
+                            96 27 • tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                         27 96 27 • modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                            27 15 • dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                         27 15 15 • 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                       27 15 15 0 • &gt; [tuck modulus dup 0 &gt;] loop pop
+                       27 15 True • [tuck modulus dup 0 &gt;] loop pop
+27 15 True [tuck modulus dup 0 &gt;] • loop pop
+                            27 15 • tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                         15 27 15 • modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                            15 12 • dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                         15 12 12 • 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                       15 12 12 0 • &gt; [tuck modulus dup 0 &gt;] loop pop
+                       15 12 True • [tuck modulus dup 0 &gt;] loop pop
+15 12 True [tuck modulus dup 0 &gt;] • loop pop
+                            15 12 • tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                         12 15 12 • modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                             12 3 • dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                           12 3 3 • 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                         12 3 3 0 • &gt; [tuck modulus dup 0 &gt;] loop pop
+                        12 3 True • [tuck modulus dup 0 &gt;] loop pop
+ 12 3 True [tuck modulus dup 0 &gt;] • loop pop
+                             12 3 • tuck modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                           3 12 3 • modulus dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                              3 0 • dup 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                            3 0 0 • 0 &gt; [tuck modulus dup 0 &gt;] loop pop
+                          3 0 0 0 • &gt; [tuck modulus dup 0 &gt;] loop pop
+                        3 0 False • [tuck modulus dup 0 &gt;] loop pop
+ 3 0 False [tuck modulus dup 0 &gt;] • loop pop
+                              3 0 • pop
+                                3 • 
 </pre>
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
-</pre></div>
-
-    </div>
 </div>
 </div>
 

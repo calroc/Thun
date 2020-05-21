@@ -55,7 +55,7 @@ The generator can be written as:
 
 
 ```python
-define('gsra == 1 swap [over / + 2 /] cons [dup] swoncat make_generator')
+define('gsra 1 swap [over / + 2 /] cons [dup] swoncat make_generator')
 ```
 
 
@@ -109,7 +109,7 @@ Using the _output_ `[a G]` of the above generator for square root approximations
 
 
 ```python
-define('_within_P == [first - abs] dip <=')
+define('_within_P [first - abs] dip <=')
 ```
 
 ### Base-Case
@@ -121,7 +121,7 @@ define('_within_P == [first - abs] dip <=')
 
 
 ```python
-define('_within_B == roll< popop first')
+define('_within_B roll< popop first')
 ```
 
 ### Recur
@@ -130,7 +130,7 @@ define('_within_B == roll< popop first')
 
 1. Discard a.
 2. Use `x` combinator to generate next term from `G`.
-3. Run `within` with `i` (it is a `primrec` function.)
+3. Run `within` with `i` (it is a "tail-recursive" function.)
 
 Pretty straightforward:
 
@@ -145,7 +145,7 @@ Pretty straightforward:
 
 
 ```python
-define('_within_R == [popd x] dip')
+define('_within_R [popd x] dip')
 ```
 
 ### Setting up
@@ -157,8 +157,8 @@ The recursive function we have defined so far needs a slight preamble: `x` to pr
 
 
 ```python
-define('within == x 0.000000001 [_within_P] [_within_B] [_within_R] primrec')
-define('sqrt == gsra within')
+define('within x 0.000000001 [_within_P] [_within_B] [_within_R] tailrec')
+define('sqrt gsra within')
 ```
 
 Try it out...

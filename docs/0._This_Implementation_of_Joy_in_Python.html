@@ -13133,14 +13133,81 @@ joy? </code></pre>
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">inspect</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">joy.utils.stack</span>
 
 
-<span class="nb">print</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">stack</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">stack</span><span class="p">))</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>When talking about Joy we use the terms &#34;stack&#34;, &#34;quote&#34;, &#34;sequence&#34;,
+&#34;list&#34;, and others to mean the same thing: a simple linear datatype that
+permits certain operations such as iterating and pushing and popping
+values from (at least) one end.
+
+There is no &#34;Stack&#34; Python class, instead we use the  `cons list`_, a 
+venerable two-tuple recursive sequence datastructure, where the
+empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the
+recursive form of a stack with one or more items on it::
+
+    stack := () | (item, stack)
+
+Putting some numbers onto a stack::
+
+    ()
+    (1, ())
+    (2, (1, ()))
+    (3, (2, (1, ())))
+    ...
+
+Python has very nice &#34;tuple packing and unpacking&#34; in its syntax which
+means we can directly &#34;unpack&#34; the expected arguments to a Joy function.
+
+For example::
+
+        def dup((head, tail)):
+                return head, (head, tail)
+
+We replace the argument &#34;stack&#34; by the expected structure of the stack,
+in this case &#34;(head, tail)&#34;, and Python takes care of unpacking the
+incoming tuple and assigning values to the names.  (Note that Python
+syntax doesn&#39;t require parentheses around tuples used in expressions
+where they would be redundant.)
+
+Unfortunately, the Sphinx documentation generator, which is used to generate this
+web page, doesn&#39;t handle tuples in the function parameters.  And in Python 3, this
+syntax was removed entirely.  Instead you would have to write::
+
+        def dup(stack):
+                head, tail = stack
+                return head, (head, tail)
+
+
+We have two very simple functions, one to build up a stack from a Python
+iterable and another to iterate through a stack and yield its items
+one-by-one in order.  There are also two functions to generate string representations
+of stacks.  They only differ in that one prints the terms in stack from left-to-right while the other prints from right-to-left.  In both functions *internal stacks* are
+printed left-to-right.  These functions are written to support :doc:`../pretty`.
+
+.. _cons list: https://en.wikipedia.org/wiki/Cons#Lists
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -13158,10 +13225,30 @@ joy? </code></pre>
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">list_to_stack</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">list_to_stack</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[2]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(1, (2, (3, ())))</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -13171,10 +13258,30 @@ joy? </code></pre>
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">iter_stack</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">())))))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">iter_stack</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">())))))</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[3]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[1, 2, 3]</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -13192,16 +13299,35 @@ joy? </code></pre>
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">stack</span> <span class="o">=</span> <span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stack</span> <span class="o">=</span> <span class="p">()</span>
 
 <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
     <span class="n">stack</span> <span class="o">=</span> <span class="n">n</span><span class="p">,</span> <span class="n">stack</span>
 
-<span class="nb">print</span> <span class="n">stack</span>
-<span class="nb">print</span> <span class="nb">list</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">iter_stack</span><span class="p">(</span><span class="n">stack</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">iter_stack</span><span class="p">(</span><span class="n">stack</span><span class="p">)))</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(3, (2, (1, ())))
+[3, 2, 1]
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -13228,12 +13354,61 @@ joy? </code></pre>
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">joy.joy</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">joy.joy</span>
 
-<span class="nb">print</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">joy</span><span class="o">.</span><span class="n">joy</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">joy</span><span class="o">.</span><span class="n">joy</span><span class="p">))</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>def joy(stack, expression, dictionary, viewer=None):
+	&#39;&#39;&#39;Evaluate a Joy expression on a stack.
+
+	This function iterates through a sequence of terms which are either
+	literals (strings, numbers, sequences of terms) or function symbols.
+	Literals are put onto the stack and functions are looked up in the
+	disctionary and executed.
+
+	The viewer is a function that is called with the stack and expression
+	on every iteration, its return value is ignored.
+
+	:param stack stack: The stack.
+	:param stack expression: The expression to evaluate.
+	:param dict dictionary: A ``dict`` mapping names to Joy functions.
+	:param function viewer: Optional viewer function.
+	:rtype: (stack, (), dictionary)
+
+	&#39;&#39;&#39;
+	while expression:
+
+		if viewer: viewer(stack, expression)
+
+		term, expression = expression
+		if isinstance(term, Symbol):
+			term = dictionary[term]
+			stack, expression, dictionary = term(stack, expression, dictionary)
+		else:
+			stack = term, stack
+
+	if viewer: viewer(stack, expression)
+	return stack, expression, dictionary
+
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -13274,9 +13449,9 @@ joy? </code></pre>
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">joy.parser</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">joy.parser</span>
 
-<span class="nb">print</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -13330,7 +13505,7 @@ around square brackets.
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">print</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">_parse</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">_parse</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -13391,7 +13566,7 @@ around square brackets.
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5&#39;</span><span class="p">)</span>  <span class="c1"># A simple sequence.</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5&#39;</span><span class="p">)</span>  <span class="c1"># A simple sequence.</span>
 </pre></div>
 
     </div>
@@ -13424,7 +13599,7 @@ around square brackets.
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[1 2 3] 4 5&#39;</span><span class="p">)</span>  <span class="c1"># Three items, the first is a list with three items</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[1 2 3] 4 5&#39;</span><span class="p">)</span>  <span class="c1"># Three items, the first is a list with three items</span>
 </pre></div>
 
     </div>
@@ -13457,7 +13632,7 @@ around square brackets.
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;1 23 [&quot;four&quot; [-5.0] cons] 8888&#39;</span><span class="p">)</span>  <span class="c1"># A mixed bag. cons is</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;1 23 [&quot;four&quot; [-5.0] cons] 8888&#39;</span><span class="p">)</span>  <span class="c1"># A mixed bag. cons is</span>
                                                                  <span class="c1"># a Symbol, no lookup at</span>
                                                                  <span class="c1"># parse-time.  Haiku docs.</span>
 </pre></div>
@@ -13492,7 +13667,7 @@ around square brackets.
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[][][][][]&#39;</span><span class="p">)</span>  <span class="c1"># Five empty lists.</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[][][][][]&#39;</span><span class="p">)</span>  <span class="c1"># Five empty lists.</span>
 </pre></div>
 
     </div>
@@ -13525,7 +13700,7 @@ around square brackets.
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[[[[[]]]]]&#39;</span><span class="p">)</span>  <span class="c1"># Five nested lists.</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[[[[[]]]]]&#39;</span><span class="p">)</span>  <span class="c1"># Five nested lists.</span>
 </pre></div>
 
     </div>
@@ -13566,9 +13741,9 @@ around square brackets.
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">joy.library</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">joy.library</span>
 
-<span class="nb">print</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">initialize</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">initialize</span><span class="p">())))</span>
 </pre></div>
 
     </div>
@@ -13585,7 +13760,7 @@ around square brackets.
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>!= % &amp; * *fraction *fraction0 + ++ - -- / // /floor &lt; &lt;&lt; &lt;= &lt;&gt; = &gt; &gt;= &gt;&gt; ? ^ _Tree_add_Ee _Tree_delete_R0 _Tree_delete_clear_stuff _Tree_get_E abs add anamorphism and app1 app2 app3 at average b binary bool branch ccons choice clear cleave cmp codireco concat cond cons dinfrirst dip dipd dipdd disenstacken divmod down_to_zero drop dup dupd dupdd dupdip dupdipd enstacken eq first first_two flatten floor floordiv fork fourth gcd ge genrec getitem gt help i id ifte ii infer infra inscribe le least_fraction loop lshift lt make_generator map max min mod modulus mul ne neg not nullary of or over pam parse pick pm pop popd popdd popop popopd popopdd pow pred primrec product quoted range range_to_zero rem remainder remove rest reverse roll&lt; roll&gt; rolldown rollup round rrest rshift run second select sharing shunt size sort sqr sqrt stack step step_zero stuncons stununcons sub succ sum swaack swap swoncat swons take ternary third times truediv truthy tuck unary uncons unique unit unquoted unstack unswons void warranty while words x xor zip •
+<pre>!= % &amp; * *fraction *fraction0 + ++ - -- / // /floor &lt; &lt;&lt; &lt;= &lt;&gt; = &gt; &gt;= &gt;&gt; ? ^ _Tree_add_Ee _Tree_delete_R0 _Tree_delete_clear_stuff _Tree_get_E abs add anamorphism and app1 app2 app3 at average b binary bool branch ccons choice clear cleave cmp codireco concat cond cons dinfrirst dip dipd dipdd disenstacken div divmod down_to_zero drop dup dupd dupdd dupdip dupdipd enstacken eq first first_two flatten floor floordiv fork fourth gcd ge genrec getitem gt help i id ifte ii infra inscribe le least_fraction loop lshift lt make_generator map max min mod modulus mul ne neg not nullary of or over pam parse pick pm pop popd popdd popop popopd popopdd pow pred primrec product quoted range range_to_zero rem remainder remove rest reverse roll&lt; roll&gt; rolldown rollup round rrest rshift run second select sharing shunt size sort sqr sqrt stack step step_zero stuncons stununcons sub succ sum swaack swap swoncat swons tailrec take ternary third times truediv truthy tuck unary uncons unique unit unquoted unstack unswons void warranty while words x xor zip •
 </pre>
 </div>
 </div>
@@ -13607,7 +13782,7 @@ around square brackets.
 <div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">print</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">dip</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">dip</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -13625,7 +13800,6 @@ around square brackets.
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>@inscribe
-@combinator_effect(_COMB_NUMS(), a1, s1)
 @FunctionWrapper
 def dip(stack, expression, dictionary):
 	&#39;&#39;&#39;
@@ -13634,9 +13808,9 @@ def dip(stack, expression, dictionary):
 	on the rest of the stack.
 	::
 
-			 ... x [Q] dip
+		   ... x [Q] dip
 		-------------------
-				 ... Q x
+		     ... Q x
 
 	&#39;&#39;&#39;
 	(quote, (x, stack)) = stack
@@ -13664,7 +13838,7 @@ def dip(stack, expression, dictionary):
 <div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="nb">print</span> <span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">definitions</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">definitions</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13681,43 +13855,44 @@ def dip(stack, expression, dictionary):
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>? == dup truthy
-*fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
-*fraction0 == concat [[swap] dip * [*] dip] infra
-anamorphism == [pop []] swap [dip swons] genrec
-average == [sum 1.0 *] [size] cleave /
-binary == nullary [popop] dip
-cleave == fork [popd] dip
-codireco == cons dip rest cons
-dinfrirst == dip infra first
-unstack == ? [uncons ?] loop pop
-down_to_zero == [0 &gt;] [dup --] while
-dupdipd == dup dipd
-enstacken == stack [clear] dip
-flatten == [] swap [concat] step
-fork == [i] app2
-gcd == 1 [tuck modulus dup 0 &gt;] loop pop
-ifte == [nullary not] dipd branch
-ii == [dip] dupdip i
-least_fraction == dup [gcd] infra [div] concat map
-make_generator == [codireco] ccons
-nullary == [stack] dinfrirst
-of == swap at
-pam == [i] map
-primrec == [i] genrec
-product == 1 swap [*] step
-quoted == [unit] dip
-range == [0 &lt;=] [1 - dup] anamorphism
-range_to_zero == unit [down_to_zero] infra
-run == [] swap infra
-size == 0 swap [pop ++] step
-sqr == dup mul
-step_zero == 0 roll&gt; step
-swoncat == swap concat
-ternary == unary [popop] dip
-unary == nullary popd
-unquoted == [i] dip
-while == swap [nullary] cons dup dipd concat loop
+<pre>? dup truthy
+*fraction [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
+*fraction0 concat [[swap] dip * [*] dip] infra
+anamorphism [pop []] swap [dip swons] genrec
+average [sum 1.0 *] [size] cleave /
+binary nullary [popop] dip
+cleave fork [popd] dip
+codireco cons dip rest cons
+dinfrirst dip infra first
+unstack ? [uncons ?] loop pop
+down_to_zero [0 &gt;] [dup --] while
+dupdipd dup dipd
+enstacken stack [clear] dip
+flatten [] swap [concat] step
+fork [i] app2
+gcd 1 [tuck modulus dup 0 &gt;] loop pop
+ifte [nullary not] dipd branch
+ii [dip] dupdip i
+least_fraction dup [gcd] infra [div] concat map
+make_generator [codireco] ccons
+nullary [stack] dinfrirst
+of swap at
+pam [i] map
+tailrec [i] genrec
+product 1 swap [*] step
+quoted [unit] dip
+range [0 &lt;=] [1 - dup] anamorphism
+range_to_zero unit [down_to_zero] infra
+run [] swap infra
+size 0 swap [pop ++] step
+sqr dup mul
+step_zero 0 roll&gt; step
+swoncat swap concat
+tailrec [i] genrec
+ternary unary [popop] dip
+unary nullary popd
+unquoted [i] dip
+while swap [nullary] cons dup dipd concat loop
 
 </pre>
 </div>
@@ -13746,7 +13921,7 @@ while == swap [nullary] cons dup dipd concat loop
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span>  
+<div class=" highlight hl-ipython3"><pre><span></span>  
 </pre></div>
 
     </div>

@@ -105,10 +105,17 @@ Subtract $k$ from the index and take the absolute value:
 
 ```python
 for n in range(2 * k):
-    print abs(n - k),
+    print(abs(n - k),)
 ```
 
-    4 3 2 1 0 1 2 3
+    4
+    3
+    2
+    1
+    0
+    1
+    2
+    3
 
 
 Not quite. Subtract $k - 1$ from the index and take the absolute value:
@@ -116,22 +123,20 @@ Not quite. Subtract $k - 1$ from the index and take the absolute value:
 
 ```python
 for n in range(2 * k):
-    print abs(n - (k - 1)),
+    print(abs(n - (k - 1)), end=' ')
 ```
 
-    3 2 1 0 1 2 3 4
-
+    3 2 1 0 1 2 3 4 
 
 Great, now add $k$...
 
 
 ```python
 for n in range(2 * k):
-    print abs(n - (k - 1)) + k,
+    print(abs(n - (k - 1)) + k, end=' ')
 ```
 
-    7 6 5 4 5 6 7 8
-
+    7 6 5 4 5 6 7 8 
 
 So to write a function that can give us the value of a row at a given index:
 
@@ -146,11 +151,10 @@ def row_value(k, i):
 ```python
 k = 5
 for i in range(2 * k):
-    print row_value(k, i),
+    print(row_value(k, i), end=' ')
 ```
 
-    9 8 7 6 5 6 7 8 9 10
-
+    9 8 7 6 5 6 7 8 9 10 
 
 (I'm leaving out details of how I figured this all out and just giving the relevent bits.  It took a little while to zero in of the aspects of the pattern that were important for the task.)
 
@@ -182,7 +186,7 @@ def rank_and_offset(n):
 
 ```python
 for n in range(2, 51):
-    print n, rank_and_offset(n)
+    print(n, rank_and_offset(n))
 ```
 
     2 (1, 0)
@@ -240,7 +244,7 @@ for n in range(2, 51):
 ```python
 for n in range(2, 51):
     k, i = rank_and_offset(n)
-    print n, row_value(k, i)
+    print(n, row_value(k, i))
 ```
 
     2 1
@@ -394,7 +398,7 @@ E
 
 
 
-$$4 k \left(k + 1\right) + 2$$
+$\displaystyle 4 k \left(k + 1\right) + 2$
 
 
 
@@ -413,7 +417,7 @@ It gives correct answers:
 
 ```python
 for n in (9, 10, 25, 26, 49, 50):
-    print n, rank_of(n)
+    print(n, rank_of(n))
 ```
 
     9 1
@@ -431,14 +435,14 @@ And it runs much faster (at least for large numbers):
 %time rank_of(23000000000000)  # Compare runtime with rank_and_offset()!
 ```
 
-    CPU times: user 68 ms, sys: 8 ms, total: 76 ms
-    Wall time: 73.8 ms
+    CPU times: user 27.8 ms, sys: 5 µs, total: 27.8 ms
+    Wall time: 27.3 ms
 
 
 
 
 
-$$2397916$$
+$\displaystyle 2397916$
 
 
 
@@ -447,14 +451,14 @@ $$2397916$$
 %time rank_and_offset(23000000000000)
 ```
 
-    CPU times: user 308 ms, sys: 0 ns, total: 308 ms
-    Wall time: 306 ms
+    CPU times: user 216 ms, sys: 89 µs, total: 216 ms
+    Wall time: 215 ms
 
 
 
 
 
-$$\left ( 2397916, \quad 223606\right )$$
+$\displaystyle \left( 2397916, \  223606\right)$
 
 
 
@@ -485,7 +489,7 @@ g
 
 
 
-$$- \frac{1}{2} \sqrt{y - 1} - \frac{1}{2}$$
+$\displaystyle - \frac{\sqrt{y - 1}}{2} - \frac{1}{2}$
 
 
 
@@ -497,7 +501,7 @@ f
 
 
 
-$$\frac{1}{2} \sqrt{y - 1} - \frac{1}{2}$$
+$\displaystyle \frac{\sqrt{y - 1}}{2} - \frac{1}{2}$
 
 
 
@@ -511,7 +515,7 @@ floor(f) + 1
 
 
 
-$$\lfloor{\frac{1}{2} \sqrt{y - 1} - \frac{1}{2}}\rfloor + 1$$
+$\displaystyle \left\lfloor{\frac{\sqrt{y - 1}}{2} - \frac{1}{2}}\right\rfloor + 1$
 
 
 
@@ -523,7 +527,7 @@ F = lambdify(y, floor(f) + 1)
 
 ```python
 for n in (9, 10, 25, 26, 49, 50):
-    print n, int(F(n))
+    print(n, int(F(n)))
 ```
 
     9 1
@@ -541,14 +545,14 @@ It's pretty fast.
 %time int(F(23000000000000))  # The clear winner.
 ```
 
-    CPU times: user 0 ns, sys: 0 ns, total: 0 ns
-    Wall time: 11.9 µs
+    CPU times: user 60 µs, sys: 4 µs, total: 64 µs
+    Wall time: 67 µs
 
 
 
 
 
-$$2397916$$
+$\displaystyle 2397916$
 
 
 
@@ -559,7 +563,7 @@ Knowing the equation we could write our own function manually, but the speed is 
 from math import floor as mfloor, sqrt
 
 def mrank_of(n):
-    return int(mfloor(sqrt(23000000000000 - 1) / 2 - 0.5) + 1)
+    return int(mfloor(sqrt(n - 1) / 2 - 0.5) + 1)
 ```
 
 
@@ -567,14 +571,14 @@ def mrank_of(n):
 %time mrank_of(23000000000000)
 ```
 
-    CPU times: user 0 ns, sys: 0 ns, total: 0 ns
-    Wall time: 12.9 µs
+    CPU times: user 7 µs, sys: 1 µs, total: 8 µs
+    Wall time: 10 µs
 
 
 
 
 
-$$2397916$$
+$\displaystyle 2397916$
 
 
 
@@ -598,7 +602,7 @@ offset_of(23000000000000, 2397916)
 
 
 
-$$223606$$
+$\displaystyle 223606$
 
 
 
@@ -632,7 +636,7 @@ aoc20173(23)
 
 
 
-$$2$$
+$\displaystyle 2$
 
 
 
@@ -644,7 +648,7 @@ aoc20173(23000)
 
 
 
-$$105$$
+$\displaystyle 105$
 
 
 
@@ -656,7 +660,7 @@ aoc20173(23000000000000)
 
 
 
-$$4572225$$
+$\displaystyle 4572225$
 
 
 
@@ -665,14 +669,14 @@ $$4572225$$
 %time aoc20173(23000000000000000000000000)  # Fast for large values.
 ```
 
-    CPU times: user 0 ns, sys: 0 ns, total: 0 ns
-    Wall time: 20 µs
+    CPU times: user 22 µs, sys: 2 µs, total: 24 µs
+    Wall time: 26.7 µs
 
 
 
 
 
-$$2690062495969$$
+$\displaystyle 2690062495969$
 
 
 
@@ -698,7 +702,7 @@ The translation is straightforward.
 
 
 ```python
-define('rank_of == -- sqrt 2 / 0.5 - floor ++')
+define('rank_of -- sqrt 2 / 0.5 - floor ++')
 ```
 
 ### `offset_of`
@@ -732,7 +736,7 @@ Ergo:
 
 
 ```python
-define('offset_of == dup 2 * [dup -- 4 * * 2 + -] dip %')
+define('offset_of dup 2 * [dup -- 4 * * 2 + -] dip %')
 ```
 
 ### `row_value`
@@ -752,7 +756,7 @@ define('offset_of == dup 2 * [dup -- 4 * * 2 + -] dip %')
 
 
 ```python
-define('row_value == over -- - abs +')
+define('row_value over -- - abs +')
 ```
 
 ### `aoc2017.3`
@@ -770,7 +774,7 @@ define('row_value == over -- - abs +')
 
 
 ```python
-define('aoc2017.3 == dup rank_of [offset_of] dupdip swap row_value')
+define('aoc2017.3 dup rank_of [offset_of] dupdip swap row_value')
 ```
 
 
@@ -794,45 +798,45 @@ J('23000 aoc2017.3')
 V('23000000000000 aoc2017.3')
 ```
 
-                                                        . 23000000000000 aoc2017.3
-                                         23000000000000 . aoc2017.3
-                                         23000000000000 . dup rank_of [offset_of] dupdip swap row_value
-                          23000000000000 23000000000000 . rank_of [offset_of] dupdip swap row_value
-                          23000000000000 23000000000000 . -- sqrt 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
-                          23000000000000 22999999999999 . sqrt 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
-                       23000000000000 4795831.523312615 . 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
-                     23000000000000 4795831.523312615 2 . / 0.5 - floor ++ [offset_of] dupdip swap row_value
-                      23000000000000 2397915.7616563076 . 0.5 - floor ++ [offset_of] dupdip swap row_value
-                  23000000000000 2397915.7616563076 0.5 . - floor ++ [offset_of] dupdip swap row_value
-                      23000000000000 2397915.2616563076 . floor ++ [offset_of] dupdip swap row_value
-                                 23000000000000 2397915 . ++ [offset_of] dupdip swap row_value
-                                 23000000000000 2397916 . [offset_of] dupdip swap row_value
-                     23000000000000 2397916 [offset_of] . dupdip swap row_value
-                                 23000000000000 2397916 . offset_of 2397916 swap row_value
-                                 23000000000000 2397916 . dup 2 * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
-                         23000000000000 2397916 2397916 . 2 * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
-                       23000000000000 2397916 2397916 2 . * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
-                         23000000000000 2397916 4795832 . [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
-    23000000000000 2397916 4795832 [dup -- 4 * * 2 + -] . dip % 2397916 swap row_value
-                                 23000000000000 2397916 . dup -- 4 * * 2 + - 4795832 % 2397916 swap row_value
-                         23000000000000 2397916 2397916 . -- 4 * * 2 + - 4795832 % 2397916 swap row_value
-                         23000000000000 2397916 2397915 . 4 * * 2 + - 4795832 % 2397916 swap row_value
-                       23000000000000 2397916 2397915 4 . * * 2 + - 4795832 % 2397916 swap row_value
-                         23000000000000 2397916 9591660 . * 2 + - 4795832 % 2397916 swap row_value
-                          23000000000000 22999994980560 . 2 + - 4795832 % 2397916 swap row_value
-                        23000000000000 22999994980560 2 . + - 4795832 % 2397916 swap row_value
-                          23000000000000 22999994980562 . - 4795832 % 2397916 swap row_value
-                                                5019438 . 4795832 % 2397916 swap row_value
-                                        5019438 4795832 . % 2397916 swap row_value
-                                                 223606 . 2397916 swap row_value
-                                         223606 2397916 . swap row_value
-                                         2397916 223606 . row_value
-                                         2397916 223606 . over -- - abs +
-                                 2397916 223606 2397916 . -- - abs +
-                                 2397916 223606 2397915 . - abs +
-                                       2397916 -2174309 . abs +
-                                        2397916 2174309 . +
-                                                4572225 . 
+                                                        • 23000000000000 aoc2017.3
+                                         23000000000000 • aoc2017.3
+                                         23000000000000 • dup rank_of [offset_of] dupdip swap row_value
+                          23000000000000 23000000000000 • rank_of [offset_of] dupdip swap row_value
+                          23000000000000 23000000000000 • -- sqrt 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
+                          23000000000000 22999999999999 • sqrt 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
+                       23000000000000 4795831.523312615 • 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
+                     23000000000000 4795831.523312615 2 • / 0.5 - floor ++ [offset_of] dupdip swap row_value
+                      23000000000000 2397915.7616563076 • 0.5 - floor ++ [offset_of] dupdip swap row_value
+                  23000000000000 2397915.7616563076 0.5 • - floor ++ [offset_of] dupdip swap row_value
+                      23000000000000 2397915.2616563076 • floor ++ [offset_of] dupdip swap row_value
+                                 23000000000000 2397915 • ++ [offset_of] dupdip swap row_value
+                                 23000000000000 2397916 • [offset_of] dupdip swap row_value
+                     23000000000000 2397916 [offset_of] • dupdip swap row_value
+                                 23000000000000 2397916 • offset_of 2397916 swap row_value
+                                 23000000000000 2397916 • dup 2 * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
+                         23000000000000 2397916 2397916 • 2 * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
+                       23000000000000 2397916 2397916 2 • * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
+                         23000000000000 2397916 4795832 • [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
+    23000000000000 2397916 4795832 [dup -- 4 * * 2 + -] • dip % 2397916 swap row_value
+                                 23000000000000 2397916 • dup -- 4 * * 2 + - 4795832 % 2397916 swap row_value
+                         23000000000000 2397916 2397916 • -- 4 * * 2 + - 4795832 % 2397916 swap row_value
+                         23000000000000 2397916 2397915 • 4 * * 2 + - 4795832 % 2397916 swap row_value
+                       23000000000000 2397916 2397915 4 • * * 2 + - 4795832 % 2397916 swap row_value
+                         23000000000000 2397916 9591660 • * 2 + - 4795832 % 2397916 swap row_value
+                          23000000000000 22999994980560 • 2 + - 4795832 % 2397916 swap row_value
+                        23000000000000 22999994980560 2 • + - 4795832 % 2397916 swap row_value
+                          23000000000000 22999994980562 • - 4795832 % 2397916 swap row_value
+                                                5019438 • 4795832 % 2397916 swap row_value
+                                        5019438 4795832 • % 2397916 swap row_value
+                                                 223606 • 2397916 swap row_value
+                                         223606 2397916 • swap row_value
+                                         2397916 223606 • row_value
+                                         2397916 223606 • over -- - abs +
+                                 2397916 223606 2397916 • -- - abs +
+                                 2397916 223606 2397915 • - abs +
+                                       2397916 -2174309 • abs +
+                                        2397916 2174309 • +
+                                                4572225 • 
 
 
       rank_of == -- sqrt 2 / 0.5 - floor ++

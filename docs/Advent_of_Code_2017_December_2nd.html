@@ -13100,7 +13100,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
 </pre></div>
 
     </div>
@@ -13138,7 +13138,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;maxmin == [max] [min] cleave&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;maxmin [max] [min] cleave&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13151,7 +13151,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] maxmin&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] maxmin&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13195,7 +13195,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;AoC2017.2 == [maxmin - +] step_zero&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;AoC2017.2 [maxmin - +] step_zero&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13208,7 +13208,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 
 <span class="s1">[[5 1 9 5]</span>
 <span class="s1"> [7 5 3]</span>
@@ -13267,7 +13267,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 9 2 8] sort reverse&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 9 2 8] sort reverse&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13298,7 +13298,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[9 8 5 2] uncons [swap [divmod] cons] dupdip&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[9 8 5 2] uncons [swap [divmod] cons] dupdip&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13339,7 +13339,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[8 5 2] [9 divmod] [uncons swap] dip dup [i not] dip&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[8 5 2] [9 divmod] [uncons swap] dip dup [i not] dip&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13356,22 +13356,22 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>                                      . [8 5 2] [9 divmod] [uncons swap] dip dup [i not] dip
-                              [8 5 2] . [9 divmod] [uncons swap] dip dup [i not] dip
-                   [8 5 2] [9 divmod] . [uncons swap] dip dup [i not] dip
-     [8 5 2] [9 divmod] [uncons swap] . dip dup [i not] dip
-                              [8 5 2] . uncons swap [9 divmod] dup [i not] dip
-                              8 [5 2] . swap [9 divmod] dup [i not] dip
-                              [5 2] 8 . [9 divmod] dup [i not] dip
-                   [5 2] 8 [9 divmod] . dup [i not] dip
-        [5 2] 8 [9 divmod] [9 divmod] . [i not] dip
-[5 2] 8 [9 divmod] [9 divmod] [i not] . dip
-                   [5 2] 8 [9 divmod] . i not [9 divmod]
-                              [5 2] 8 . 9 divmod not [9 divmod]
-                            [5 2] 8 9 . divmod not [9 divmod]
-                            [5 2] 1 1 . not [9 divmod]
-                        [5 2] 1 False . [9 divmod]
-             [5 2] 1 False [9 divmod] . 
+<pre>                                      • [8 5 2] [9 divmod] [uncons swap] dip dup [i not] dip
+                              [8 5 2] • [9 divmod] [uncons swap] dip dup [i not] dip
+                   [8 5 2] [9 divmod] • [uncons swap] dip dup [i not] dip
+     [8 5 2] [9 divmod] [uncons swap] • dip dup [i not] dip
+                              [8 5 2] • uncons swap [9 divmod] dup [i not] dip
+                              8 [5 2] • swap [9 divmod] dup [i not] dip
+                              [5 2] 8 • [9 divmod] dup [i not] dip
+                   [5 2] 8 [9 divmod] • dup [i not] dip
+        [5 2] 8 [9 divmod] [9 divmod] • [i not] dip
+[5 2] 8 [9 divmod] [9 divmod] [i not] • dip
+                   [5 2] 8 [9 divmod] • i not [9 divmod]
+                              [5 2] 8 • 9 divmod not [9 divmod]
+                            [5 2] 8 9 • divmod not [9 divmod]
+                            [5 2] 1 1 • not [9 divmod]
+                        [5 2] 1 False • [9 divmod]
+             [5 2] 1 False [9 divmod] • 
 </pre>
 </div>
 </div>
@@ -13471,7 +13471,7 @@ uncons tuck uncons roll&gt; Q</code></pre>
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[8 5 3 2] 9 [swap] [% not] [cons] app2 popdd&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[8 5 3 2] 9 [swap] [% not] [cons] app2 popdd&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13604,7 +13604,7 @@ n [...]        [not] [popop 0] [G] ifte
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;G == [first % not] [first /] [rest [not] [popop 0]] [ifte] genrec&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;G [first % not] [first /] [rest [not] [popop 0]] [ifte] genrec&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13624,9 +13624,9 @@ n [...]        [not] [popop 0] [G] ifte
 </code></pre>
 <p>It applies <code>G</code> using <code>nullary</code> because if it fails with one candidate it needs the list to get the next one (the list is otherwise consumed by <code>G</code>.)</p>
 
-<pre><code>find-result == [0 &gt;] [roll&gt; popop] [roll&lt; popop uncons [G] nullary] primrec
+<pre><code>find-result == [0 &gt;] [roll&gt; popop] [roll&lt; popop uncons [G] nullary] tailrec
 
-n [...] p [0 &gt;] [roll&gt; popop] [roll&lt; popop uncons [G] nullary] primrec
+n [...] p [0 &gt;] [roll&gt; popop] [roll&lt; popop uncons [G] nullary] tailrec
 
 </code></pre>
 <p>The base-case is trivial, return the (non-zero) result.  The recursive branch...</p>
@@ -13648,7 +13648,7 @@ m [..] p                                 find-result
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;find-result == [0 &gt;] [roll&gt; popop] [roll&lt; popop uncons [G] nullary] primrec&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;find-result [0 &gt;] [roll&gt; popop] [roll&lt; popop uncons [G] nullary] tailrec&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13658,10 +13658,10 @@ m [..] p                                 find-result
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[11 9 8 7 3 2] 0 tuck find-result&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[11 9 8 7 3 2] 0 tuck find-result&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13697,10 +13697,10 @@ m [..] p                                 find-result
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;prep-row == sort reverse 0 tuck&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;prep-row sort reverse 0 tuck&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13718,10 +13718,10 @@ m [..] p                                 find-result
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;AoC20017.2.extra == [prep-row find-result +] step_zero&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;AoC20017.2.extra [prep-row find-result +] step_zero&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13734,7 +13734,7 @@ m [..] p                                 find-result
 <div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 
 <span class="s1">[[5 9 2 8]</span>
 <span class="s1"> [9 4 7 3]</span>

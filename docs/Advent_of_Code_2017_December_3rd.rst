@@ -13,11 +13,11 @@ example, the first few squares are allocated like this:
 
 ::
 
-   17  16  15  14  13
-   18   5   4   3  12
-   19   6   1   2  11
-   20   7   8   9  10
-   21  22  23---> ...
+    17  16  15  14  13
+    18   5   4   3  12
+    19   6   1   2  11
+    20   7   8   9  10
+    21  22  23---> ...
 
 While this is very space-efficient (no squares are skipped), requested
 data must be carried back to square 1 (the location of the only access
@@ -27,7 +27,7 @@ Distance between the location of the data and square 1.
 
 For example:
 
--  Data from square 1 is carried 0 steps, since it’s at the access port.
+-  Data from square 1 is carried 0 steps, since it's at the access port.
 -  Data from square 12 is carried 3 steps, such as: down, left, left.
 -  Data from square 23 is carried only 2 steps: up twice.
 -  Data from square 1024 must be carried 31 steps.
@@ -39,8 +39,8 @@ Analysis
 ~~~~~~~~
 
 I freely admit that I worked out the program I wanted to write using
-graph paper and some Python doodles. There’s no point in trying to write
-a Joy program until I’m sure I understand the problem well enough.
+graph paper and some Python doodles. There's no point in trying to write
+a Joy program until I'm sure I understand the problem well enough.
 
 The first thing I did was to write a column of numbers from 1 to n (32
 as it happens) and next to them the desired output number, to look for
@@ -48,61 +48,61 @@ patterns directly:
 
 ::
 
-   1  0
-   2  1
-   3  2
-   4  1
-   5  2
-   6  1
-   7  2
-   8  1
-   9  2
-   10 3
-   11 2
-   12 3
-   13 4
-   14 3
-   15 2
-   16 3
-   17 4
-   18 3
-   19 2
-   20 3
-   21 4
-   22 3
-   23 2
-   24 3
-   25 4
-   26 5
-   27 4
-   28 3
-   29 4
-   30 5
-   31 6
-   32 5
+    1  0
+    2  1
+    3  2
+    4  1
+    5  2
+    6  1
+    7  2
+    8  1
+    9  2
+    10 3
+    11 2
+    12 3
+    13 4
+    14 3
+    15 2
+    16 3
+    17 4
+    18 3
+    19 2
+    20 3
+    21 4
+    22 3
+    23 2
+    24 3
+    25 4
+    26 5
+    27 4
+    28 3
+    29 4
+    30 5
+    31 6
+    32 5
 
-There are four groups repeating for a given “rank”, then the pattern
+There are four groups repeating for a given "rank", then the pattern
 enlarges and four groups repeat again, etc.
 
 ::
 
-           1 2
-         3 2 3 4
-       5 4 3 4 5 6
-     7 6 5 4 5 6 7 8
-   9 8 7 6 5 6 7 8 9 10
+            1 2
+          3 2 3 4
+        5 4 3 4 5 6
+      7 6 5 4 5 6 7 8
+    9 8 7 6 5 6 7 8 9 10
 
 Four of this pyramid interlock to tile the plane extending from the
-initial “1” square.
+initial "1" square.
 
 ::
 
-            2   3   |    4  5   |    6  7   |    8  9
-         10 11 12 13|14 15 16 17|18 19 20 21|22 23 24 25
+             2   3   |    4  5   |    6  7   |    8  9
+          10 11 12 13|14 15 16 17|18 19 20 21|22 23 24 25
 
 And so on.
 
-We can figure out the pattern for a row of the pyramid at a given “rank”
+We can figure out the pattern for a row of the pyramid at a given "rank"
 :math:`k`:
 
 :math:`2k - 1, 2k - 2, ..., k, k + 1, k + 2, ..., 2k`
@@ -115,82 +115,86 @@ This shows that the series consists at each place of :math:`k` plus some
 number that begins at :math:`k - 1`, decreases to zero, then increases
 to :math:`k`. Each row has :math:`2k` members.
 
-Let’s figure out how, given an index into a row, we can calculate the
+Let's figure out how, given an index into a row, we can calculate the
 value there. The index will be from 0 to :math:`k - 1`.
 
-Let’s look at an example, with :math:`k = 4`:
+Let's look at an example, with :math:`k = 4`:
 
 ::
 
-   0 1 2 3 4 5 6 7
-   7 6 5 4 5 6 7 8
+    0 1 2 3 4 5 6 7
+    7 6 5 4 5 6 7 8
 
-.. code:: ipython2
+.. code:: ipython3
 
     k = 4
 
 Subtract :math:`k` from the index and take the absolute value:
 
-.. code:: ipython2
+.. code:: ipython3
 
     for n in range(2 * k):
-        print abs(n - k),
+        print(abs(n - k),)
 
 
 .. parsed-literal::
 
-    4 3 2 1 0 1 2 3
+    4
+    3
+    2
+    1
+    0
+    1
+    2
+    3
 
 
 Not quite. Subtract :math:`k - 1` from the index and take the absolute
 value:
 
-.. code:: ipython2
+.. code:: ipython3
 
     for n in range(2 * k):
-        print abs(n - (k - 1)),
+        print(abs(n - (k - 1)), end=' ')
 
 
 .. parsed-literal::
 
-    3 2 1 0 1 2 3 4
+    3 2 1 0 1 2 3 4 
 
+Great, now add :math:`k`...
 
-Great, now add :math:`k`\ …
-
-.. code:: ipython2
+.. code:: ipython3
 
     for n in range(2 * k):
-        print abs(n - (k - 1)) + k,
+        print(abs(n - (k - 1)) + k, end=' ')
 
 
 .. parsed-literal::
 
-    7 6 5 4 5 6 7 8
-
+    7 6 5 4 5 6 7 8 
 
 So to write a function that can give us the value of a row at a given
 index:
 
-.. code:: ipython2
+.. code:: ipython3
 
     def row_value(k, i):
         i %= (2 * k)  # wrap the index at the row boundary.
         return abs(i - (k - 1)) + k
 
-.. code:: ipython2
+.. code:: ipython3
 
     k = 5
     for i in range(2 * k):
-        print row_value(k, i),
+        print(row_value(k, i), end=' ')
 
 
 .. parsed-literal::
 
-    9 8 7 6 5 6 7 8 9 10
+    9 8 7 6 5 6 7 8 9 10 
 
-
-(I’m leaving out details of how I figured this all out and just giving
+(I'm leaving out details of how I figured this all out and just giving
 the relevent bits. It took a little while to zero in of the aspects of
 the pattern that were important for the task.)
 
@@ -209,11 +213,11 @@ initial square we have:
 
 :math:`corner_k = 1 + \sum_{n=1}^k 8n`
 
-I’m not mathematically sophisticated enough to turn this directly into a
-formula (but Sympy is, see below.) I’m going to write a simple Python
+I'm not mathematically sophisticated enough to turn this directly into a
+formula (but Sympy is, see below.) I'm going to write a simple Python
 function to iterate and search:
 
-.. code:: ipython2
+.. code:: ipython3
 
     def rank_and_offset(n):
         assert n >= 2  # Guard the domain.
@@ -228,10 +232,10 @@ function to iterate and search:
             n -= m  # Remove this rank's worth.
             k += 1
 
-.. code:: ipython2
+.. code:: ipython3
 
     for n in range(2, 51):
-        print n, rank_and_offset(n)
+        print(n, rank_and_offset(n))
 
 
 .. parsed-literal::
@@ -287,11 +291,11 @@ function to iterate and search:
     50 (4, 0)
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     for n in range(2, 51):
         k, i = rank_and_offset(n)
-        print n, row_value(k, i)
+        print(n, row_value(k, i))
 
 
 .. parsed-literal::
@@ -350,7 +354,7 @@ function to iterate and search:
 Putting it all together
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: ipython3
 
     def row_value(k, i):
         return abs(i - (k - 1)) + k
@@ -375,7 +379,7 @@ Putting it all together
         k, i = rank_and_offset(n)
         return row_value(k, i)
 
-.. code:: ipython2
+.. code:: ipython3
 
     aoc20173(23)
 
@@ -388,7 +392,7 @@ Putting it all together
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     aoc20173(23000)
 
@@ -401,7 +405,7 @@ Putting it all together
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     aoc20173(23000000000000)
 
@@ -420,17 +424,17 @@ Sympy to the Rescue
 Find the rank for large numbers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Using e.g. Sympy we can find the rank directly by solving for the roots
+Using e.g. Sympy we can find the rank directly by solving for the roots
 of an equation. For large numbers this will (eventually) be faster than
 iterating as ``rank_and_offset()`` does.
 
-.. code:: ipython2
+.. code:: ipython3
 
     from sympy import floor, lambdify, solve, symbols
     from sympy import init_printing
     init_printing() 
 
-.. code:: ipython2
+.. code:: ipython3
 
     k = symbols('k')
 
@@ -444,7 +448,7 @@ and
 
 We want:
 
-.. code:: ipython2
+.. code:: ipython3
 
     E = 2 + 8 * k * (k + 1) / 2  # For the reason for adding 2 see above.
     
@@ -455,13 +459,13 @@ We want:
 
 .. math::
 
-    4 k \left(k + 1\right) + 2
+    \displaystyle 4 k \left(k + 1\right) + 2
 
 
 
-We can write a function to solve for :math:`k` given some :math:`n`\ …
+We can write a function to solve for :math:`k` given some :math:`n`...
 
-.. code:: ipython2
+.. code:: ipython3
 
     def rank_of(n):
         return floor(max(solve(E - n, k))) + 1
@@ -472,15 +476,15 @@ about the larger one we use ``max()`` to select it. It will generally
 not be a nice integer (unless :math:`n` is the number of an end-corner
 of a rank) so we take the ``floor()`` and add 1 to get the integer rank
 of :math:`n`. (Taking the ``ceiling()`` gives off-by-one errors on the
-rank boundaries. I don’t know why. I’m basically like a monkey doing
+rank boundaries. I don't know why. I'm basically like a monkey doing
 math here.) =-D
 
 It gives correct answers:
 
-.. code:: ipython2
+.. code:: ipython3
 
     for n in (9, 10, 25, 26, 49, 50):
-        print n, rank_of(n)
+        print(n, rank_of(n))
 
 
 .. parsed-literal::
@@ -495,46 +499,46 @@ It gives correct answers:
 
 And it runs much faster (at least for large numbers):
 
-.. code:: ipython2
+.. code:: ipython3
 
     %time rank_of(23000000000000)  # Compare runtime with rank_and_offset()!
 
 
 .. parsed-literal::
 
-    CPU times: user 68 ms, sys: 8 ms, total: 76 ms
-    Wall time: 73.8 ms
+    CPU times: user 27.8 ms, sys: 5 µs, total: 27.8 ms
+    Wall time: 27.3 ms
 
 
 
 
 .. math::
 
-    2397916
+    \displaystyle 2397916
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     %time rank_and_offset(23000000000000)
 
 
 .. parsed-literal::
 
-    CPU times: user 308 ms, sys: 0 ns, total: 308 ms
-    Wall time: 306 ms
+    CPU times: user 216 ms, sys: 89 µs, total: 216 ms
+    Wall time: 215 ms
 
 
 
 
 .. math::
 
-    \left ( 2397916, \quad 223606\right )
+    \displaystyle \left( 2397916, \  223606\right)
 
 
 
 After finding the rank you would still have to find the actual value of
-the rank’s first corner and subtract it (plus 2) from the number and
+the rank's first corner and subtract it (plus 2) from the number and
 compute the offset as above and then the final output, but this overhead
 is partially shared by the other method, and overshadowed by the time it
 (the other iterative method) would take for really big inputs.
@@ -542,25 +546,25 @@ is partially shared by the other method, and overshadowed by the time it
 The fun thing to do here would be to graph the actual runtime of both
 methods against each other to find the trade-off point.
 
-It took me a second to realize I could do this…
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+It took me a second to realize I could do this...
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sympy is a *symbolic* math library, and it supports symbolic
 manipulation of equations. I can put in :math:`y` (instead of a value)
 and ask it to solve for :math:`k`.
 
-.. code:: ipython2
+.. code:: ipython3
 
     y = symbols('y')
 
-.. code:: ipython2
+.. code:: ipython3
 
     g, f = solve(E - y, k)
 
 The equation is quadratic so there are two roots, we are interested in
-the greater one…
+the greater one...
 
-.. code:: ipython2
+.. code:: ipython3
 
     g
 
@@ -569,11 +573,11 @@ the greater one…
 
 .. math::
 
-    - \frac{1}{2} \sqrt{y - 1} - \frac{1}{2}
+    \displaystyle - \frac{\sqrt{y - 1}}{2} - \frac{1}{2}
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     f
 
@@ -582,14 +586,14 @@ the greater one…
 
 .. math::
 
-    \frac{1}{2} \sqrt{y - 1} - \frac{1}{2}
+    \displaystyle \frac{\sqrt{y - 1}}{2} - \frac{1}{2}
 
 
 
 Now we can take the ``floor()``, add 1, and ``lambdify()`` the equation
 to get a Python function that calculates the rank directly.
 
-.. code:: ipython2
+.. code:: ipython3
 
     floor(f) + 1
 
@@ -598,18 +602,18 @@ to get a Python function that calculates the rank directly.
 
 .. math::
 
-    \lfloor{\frac{1}{2} \sqrt{y - 1} - \frac{1}{2}}\rfloor + 1
+    \displaystyle \left\lfloor{\frac{\sqrt{y - 1}}{2} - \frac{1}{2}}\right\rfloor + 1
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     F = lambdify(y, floor(f) + 1)
 
-.. code:: ipython2
+.. code:: ipython3
 
     for n in (9, 10, 25, 26, 49, 50):
-        print n, int(F(n))
+        print(n, int(F(n)))
 
 
 .. parsed-literal::
@@ -622,53 +626,53 @@ to get a Python function that calculates the rank directly.
     50 4
 
 
-It’s pretty fast.
+It's pretty fast.
 
-.. code:: ipython2
+.. code:: ipython3
 
     %time int(F(23000000000000))  # The clear winner.
 
 
 .. parsed-literal::
 
-    CPU times: user 0 ns, sys: 0 ns, total: 0 ns
-    Wall time: 11.9 µs
+    CPU times: user 60 µs, sys: 4 µs, total: 64 µs
+    Wall time: 67 µs
 
 
 
 
 .. math::
 
-    2397916
+    \displaystyle 2397916
 
 
 
 Knowing the equation we could write our own function manually, but the
 speed is no better.
 
-.. code:: ipython2
+.. code:: ipython3
 
     from math import floor as mfloor, sqrt
     
     def mrank_of(n):
-        return int(mfloor(sqrt(23000000000000 - 1) / 2 - 0.5) + 1)
+        return int(mfloor(sqrt(n - 1) / 2 - 0.5) + 1)
 
-.. code:: ipython2
+.. code:: ipython3
 
     %time mrank_of(23000000000000)
 
 
 .. parsed-literal::
 
-    CPU times: user 0 ns, sys: 0 ns, total: 0 ns
-    Wall time: 12.9 µs
+    CPU times: user 7 µs, sys: 1 µs, total: 8 µs
+    Wall time: 10 µs
 
 
 
 
 .. math::
 
-    2397916
+    \displaystyle 2397916
 
 
 
@@ -678,19 +682,19 @@ Given :math:`n` and a rank, compute the offset.
 Now that we have a fast way to get the rank, we still need to use it to
 compute the offset into a pyramid row.
 
-.. code:: ipython2
+.. code:: ipython3
 
     def offset_of(n, k):
         return (n - 2 + 4 * k * (k - 1)) % (2 * k)
 
 (Note the sneaky way the sign changes from :math:`k(k + 1)` to
 :math:`k(k - 1)`. This is because we want to subract the
-:math:`(k - 1)`\ th rank’s total places (its own and those of lesser
+:math:`(k - 1)`\ th rank's total places (its own and those of lesser
 rank) from our :math:`n` of rank :math:`k`. Substituting :math:`k - 1`
 for :math:`k` in :math:`k(k + 1)` gives :math:`(k - 1)(k - 1 + 1)`,
 which of course simplifies to :math:`k(k - 1)`.)
 
-.. code:: ipython2
+.. code:: ipython3
 
     offset_of(23000000000000, 2397916)
 
@@ -699,13 +703,13 @@ which of course simplifies to :math:`k(k - 1)`.)
 
 .. math::
 
-    223606
+    \displaystyle 223606
 
 
 
 So, we can compute the rank, then the offset, then the row value.
 
-.. code:: ipython2
+.. code:: ipython3
 
     def rank_of(n):
         return int(mfloor(sqrt(n - 1) / 2 - 0.5) + 1)
@@ -724,7 +728,7 @@ So, we can compute the rank, then the offset, then the row value.
         i = offset_of(n, k)
         return row_value(k, i)
 
-.. code:: ipython2
+.. code:: ipython3
 
     aoc20173(23)
 
@@ -733,11 +737,11 @@ So, we can compute the rank, then the offset, then the row value.
 
 .. math::
 
-    2
+    \displaystyle 2
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     aoc20173(23000)
 
@@ -746,11 +750,11 @@ So, we can compute the rank, then the offset, then the row value.
 
 .. math::
 
-    105
+    \displaystyle 105
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     aoc20173(23000000000000)
 
@@ -759,26 +763,26 @@ So, we can compute the rank, then the offset, then the row value.
 
 .. math::
 
-    4572225
+    \displaystyle 4572225
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     %time aoc20173(23000000000000000000000000)  # Fast for large values.
 
 
 .. parsed-literal::
 
-    CPU times: user 0 ns, sys: 0 ns, total: 0 ns
-    Wall time: 20 µs
+    CPU times: user 22 µs, sys: 2 µs, total: 24 µs
+    Wall time: 26.7 µs
 
 
 
 
 .. math::
 
-    2690062495969
+    \displaystyle 2690062495969
 
 
 
@@ -788,7 +792,7 @@ A Joy Version
 At this point I feel confident that I can implement a concise version of
 this code in Joy. ;-)
 
-.. code:: ipython2
+.. code:: ipython3
 
     from notebook_preamble import J, V, define
 
@@ -797,105 +801,105 @@ this code in Joy. ;-)
 
 ::
 
-      n rank_of
-   ---------------
-         k
+       n rank_of
+    ---------------
+          k
 
 The translation is straightforward.
 
 ::
 
-   int(floor(sqrt(n - 1) / 2 - 0.5) + 1)
+    int(floor(sqrt(n - 1) / 2 - 0.5) + 1)
 
-   rank_of == -- sqrt 2 / 0.5 - floor ++
+    rank_of == -- sqrt 2 / 0.5 - floor ++
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('rank_of == -- sqrt 2 / 0.5 - floor ++')
+    define('rank_of -- sqrt 2 / 0.5 - floor ++')
 
 ``offset_of``
 ~~~~~~~~~~~~~
 
 ::
 
-      n k offset_of
-   -------------------
-            i
+       n k offset_of
+    -------------------
+             i
 
-   (n - 2 + 4 * k * (k - 1)) % (2 * k)
+    (n - 2 + 4 * k * (k - 1)) % (2 * k)
 
-A little tricky…
+A little tricky...
 
 ::
 
-   n k dup 2 *
-   n k k 2 *
-   n k k*2 [Q] dip %
-   n k Q k*2 %
+    n k dup 2 *
+    n k k 2 *
+    n k k*2 [Q] dip %
+    n k Q k*2 %
 
-   n k dup --
-   n k k --
-   n k k-1 4 * * 2 + -
-   n k*k-1*4     2 + -
-   n k*k-1*4+2       -
-   n-k*k-1*4+2
+    n k dup --
+    n k k --
+    n k k-1 4 * * 2 + -
+    n k*k-1*4     2 + -
+    n k*k-1*4+2       -
+    n-k*k-1*4+2
 
-   n-k*k-1*4+2 k*2 %
-   n-k*k-1*4+2%k*2
+    n-k*k-1*4+2 k*2 %
+    n-k*k-1*4+2%k*2
 
 Ergo:
 
 ::
 
-   offset_of == dup 2 * [dup -- 4 * * 2 + -] dip %
+    offset_of == dup 2 * [dup -- 4 * * 2 + -] dip %
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('offset_of == dup 2 * [dup -- 4 * * 2 + -] dip %')
+    define('offset_of dup 2 * [dup -- 4 * * 2 + -] dip %')
 
 ``row_value``
 ~~~~~~~~~~~~~
 
 ::
 
-      k i row_value
-   -------------------
-           n
+       k i row_value
+    -------------------
+            n
 
-   abs(i - (k - 1)) + k
+    abs(i - (k - 1)) + k
 
-   k i over -- - abs +
-   k i k    -- - abs +
-   k i k-1     - abs +
-   k i-k-1       abs +
-   k |i-k-1|         +
-   k+|i-k-1|
+    k i over -- - abs +
+    k i k    -- - abs +
+    k i k-1     - abs +
+    k i-k-1       abs +
+    k |i-k-1|         +
+    k+|i-k-1|
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('row_value == over -- - abs +')
+    define('row_value over -- - abs +')
 
 ``aoc2017.3``
 ~~~~~~~~~~~~~
 
 ::
 
-      n aoc2017.3
-   -----------------
-           m
+       n aoc2017.3
+    -----------------
+            m
 
-   n dup rank_of
-   n k [offset_of] dupdip
-   n k offset_of k
-   i             k swap row_value
-   k i row_value
-   m
+    n dup rank_of
+    n k [offset_of] dupdip
+    n k offset_of k
+    i             k swap row_value
+    k i row_value
+    m
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('aoc2017.3 == dup rank_of [offset_of] dupdip swap row_value')
+    define('aoc2017.3 dup rank_of [offset_of] dupdip swap row_value')
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('23 aoc2017.3')
 
@@ -905,7 +909,7 @@ Ergo:
     2
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('23000 aoc2017.3')
 
@@ -915,58 +919,58 @@ Ergo:
     105
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     V('23000000000000 aoc2017.3')
 
 
 .. parsed-literal::
 
-                                                        . 23000000000000 aoc2017.3
-                                         23000000000000 . aoc2017.3
-                                         23000000000000 . dup rank_of [offset_of] dupdip swap row_value
-                          23000000000000 23000000000000 . rank_of [offset_of] dupdip swap row_value
-                          23000000000000 23000000000000 . -- sqrt 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
-                          23000000000000 22999999999999 . sqrt 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
-                       23000000000000 4795831.523312615 . 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
-                     23000000000000 4795831.523312615 2 . / 0.5 - floor ++ [offset_of] dupdip swap row_value
-                      23000000000000 2397915.7616563076 . 0.5 - floor ++ [offset_of] dupdip swap row_value
-                  23000000000000 2397915.7616563076 0.5 . - floor ++ [offset_of] dupdip swap row_value
-                      23000000000000 2397915.2616563076 . floor ++ [offset_of] dupdip swap row_value
-                                 23000000000000 2397915 . ++ [offset_of] dupdip swap row_value
-                                 23000000000000 2397916 . [offset_of] dupdip swap row_value
-                     23000000000000 2397916 [offset_of] . dupdip swap row_value
-                                 23000000000000 2397916 . offset_of 2397916 swap row_value
-                                 23000000000000 2397916 . dup 2 * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
-                         23000000000000 2397916 2397916 . 2 * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
-                       23000000000000 2397916 2397916 2 . * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
-                         23000000000000 2397916 4795832 . [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
-    23000000000000 2397916 4795832 [dup -- 4 * * 2 + -] . dip % 2397916 swap row_value
-                                 23000000000000 2397916 . dup -- 4 * * 2 + - 4795832 % 2397916 swap row_value
-                         23000000000000 2397916 2397916 . -- 4 * * 2 + - 4795832 % 2397916 swap row_value
-                         23000000000000 2397916 2397915 . 4 * * 2 + - 4795832 % 2397916 swap row_value
-                       23000000000000 2397916 2397915 4 . * * 2 + - 4795832 % 2397916 swap row_value
-                         23000000000000 2397916 9591660 . * 2 + - 4795832 % 2397916 swap row_value
-                          23000000000000 22999994980560 . 2 + - 4795832 % 2397916 swap row_value
-                        23000000000000 22999994980560 2 . + - 4795832 % 2397916 swap row_value
-                          23000000000000 22999994980562 . - 4795832 % 2397916 swap row_value
-                                                5019438 . 4795832 % 2397916 swap row_value
-                                        5019438 4795832 . % 2397916 swap row_value
-                                                 223606 . 2397916 swap row_value
-                                         223606 2397916 . swap row_value
-                                         2397916 223606 . row_value
-                                         2397916 223606 . over -- - abs +
-                                 2397916 223606 2397916 . -- - abs +
-                                 2397916 223606 2397915 . - abs +
-                                       2397916 -2174309 . abs +
-                                        2397916 2174309 . +
-                                                4572225 . 
+                                                        • 23000000000000 aoc2017.3
+                                         23000000000000 • aoc2017.3
+                                         23000000000000 • dup rank_of [offset_of] dupdip swap row_value
+                          23000000000000 23000000000000 • rank_of [offset_of] dupdip swap row_value
+                          23000000000000 23000000000000 • -- sqrt 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
+                          23000000000000 22999999999999 • sqrt 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
+                       23000000000000 4795831.523312615 • 2 / 0.5 - floor ++ [offset_of] dupdip swap row_value
+                     23000000000000 4795831.523312615 2 • / 0.5 - floor ++ [offset_of] dupdip swap row_value
+                      23000000000000 2397915.7616563076 • 0.5 - floor ++ [offset_of] dupdip swap row_value
+                  23000000000000 2397915.7616563076 0.5 • - floor ++ [offset_of] dupdip swap row_value
+                      23000000000000 2397915.2616563076 • floor ++ [offset_of] dupdip swap row_value
+                                 23000000000000 2397915 • ++ [offset_of] dupdip swap row_value
+                                 23000000000000 2397916 • [offset_of] dupdip swap row_value
+                     23000000000000 2397916 [offset_of] • dupdip swap row_value
+                                 23000000000000 2397916 • offset_of 2397916 swap row_value
+                                 23000000000000 2397916 • dup 2 * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
+                         23000000000000 2397916 2397916 • 2 * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
+                       23000000000000 2397916 2397916 2 • * [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
+                         23000000000000 2397916 4795832 • [dup -- 4 * * 2 + -] dip % 2397916 swap row_value
+    23000000000000 2397916 4795832 [dup -- 4 * * 2 + -] • dip % 2397916 swap row_value
+                                 23000000000000 2397916 • dup -- 4 * * 2 + - 4795832 % 2397916 swap row_value
+                         23000000000000 2397916 2397916 • -- 4 * * 2 + - 4795832 % 2397916 swap row_value
+                         23000000000000 2397916 2397915 • 4 * * 2 + - 4795832 % 2397916 swap row_value
+                       23000000000000 2397916 2397915 4 • * * 2 + - 4795832 % 2397916 swap row_value
+                         23000000000000 2397916 9591660 • * 2 + - 4795832 % 2397916 swap row_value
+                          23000000000000 22999994980560 • 2 + - 4795832 % 2397916 swap row_value
+                        23000000000000 22999994980560 2 • + - 4795832 % 2397916 swap row_value
+                          23000000000000 22999994980562 • - 4795832 % 2397916 swap row_value
+                                                5019438 • 4795832 % 2397916 swap row_value
+                                        5019438 4795832 • % 2397916 swap row_value
+                                                 223606 • 2397916 swap row_value
+                                         223606 2397916 • swap row_value
+                                         2397916 223606 • row_value
+                                         2397916 223606 • over -- - abs +
+                                 2397916 223606 2397916 • -- - abs +
+                                 2397916 223606 2397915 • - abs +
+                                       2397916 -2174309 • abs +
+                                        2397916 2174309 • +
+                                                4572225 • 
 
 
 ::
 
-     rank_of == -- sqrt 2 / 0.5 - floor ++
-   offset_of == dup 2 * [dup -- 4 * * 2 + -] dip %
-   row_value == over -- - abs +
+      rank_of == -- sqrt 2 / 0.5 - floor ++
+    offset_of == dup 2 * [dup -- 4 * * 2 + -] dip %
+    row_value == over -- - abs +
 
-   aoc2017.3 == dup rank_of [offset_of] dupdip swap row_value
+    aoc2017.3 == dup rank_of [offset_of] dupdip swap row_value

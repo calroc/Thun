@@ -13,11 +13,11 @@ Given a Joy program like:
 V('23 sqr')
 ```
 
-          . 23 sqr
-       23 . sqr
-       23 . dup mul
-    23 23 . mul
-      529 . 
+          • 23 sqr
+       23 • sqr
+       23 • dup mul
+    23 23 • mul
+      529 • 
 
 
 How would we go about compiling this code (to Python for now)?
@@ -47,9 +47,9 @@ D['sqr'] = sqr
 V('23 sqr')
 ```
 
-        . 23 sqr
-     23 . sqr
-    529 . 
+        • 23 sqr
+     23 • sqr
+    529 • 
 
 
 It's simple to write a function to emit this kind of crude "compiled" code.
@@ -76,7 +76,7 @@ def compile_joy_definition(defi):
 
 
 ```python
-print compile_joy_definition(old_sqr)
+print(compile_joy_definition(old_sqr))
 ```
 
     def sqr(stack, expression, dictionary):
@@ -123,6 +123,19 @@ from joy.library import SimpleFunctionWrapper
 ```
 
 
+    ---------------------------------------------------------------------------
+
+    ModuleNotFoundError                       Traceback (most recent call last)
+
+    <ipython-input-14-d5ef3c7560be> in <module>
+    ----> 1 from joy.utils.types import compile_, doc_from_stack_effect, infer_string
+          2 from joy.library import SimpleFunctionWrapper
+
+
+    ModuleNotFoundError: No module named 'joy.utils.types'
+
+
+
 ```python
 stack_effects = infer_string('tuck over dup')
 ```
@@ -134,9 +147,6 @@ Yin functions have only a single stack effect, they do not branch or loop.
 for fi, fo in stack_effects:
     print doc_from_stack_effect(fi, fo)
 ```
-
-    (a2 a1 -- a1 a2 a1 a2 a2)
-
 
 
 ```python
@@ -150,17 +160,6 @@ All Yin functions can be described in Python as a tuple-unpacking (or "-destruct
 print source
 ```
 
-    def foo(stack):
-      """
-      ::
-    
-      (a2 a1 -- a1 a2 a1 a2 a2)
-    
-      """
-      (a1, (a2, s1)) = stack
-      return (a2, (a2, (a1, (a2, (a1, s1)))))
-
-
 
 ```python
 exec compile(source, '__main__', 'single')
@@ -169,15 +168,17 @@ D['foo'] = SimpleFunctionWrapper(foo)
 ```
 
 
+      File "<ipython-input-9-1a7e90bf2d7b>", line 1
+        exec compile(source, '__main__', 'single')
+             ^
+    SyntaxError: invalid syntax
+
+
+
+
 ```python
 V('23 18 foo')
 ```
-
-                   . 23 18 foo
-                23 . 18 foo
-             23 18 . foo
-    18 23 18 23 23 . 
-
 
 ## Compiling from Stack Effects
 
@@ -209,9 +210,6 @@ E = '[%s] [%s]' % (Ein, Eout)
 print E
 ```
 
-    [[a b c d] e a [f]] [[a e c d]]
-
-
 
 ```python
 (fi, (fo, _)) = text_to_expression(E)
@@ -221,14 +219,6 @@ print E
 ```python
 fi, fo
 ```
-
-
-
-
-    (((a, (b, (c, (d, ())))), (e, (a, ((f, ()), ())))),
-     ((a, (e, (c, (d, ())))), ()))
-
-
 
 
 ```python
@@ -239,9 +229,6 @@ E = '[%s] [%s]' % (Ein, Eout)
 print E
 ```
 
-    [[a1 a2 a3 a4] a5 a6 a7] [[a1 a5 a3 a4]]
-
-
 
 ```python
 (fi, (fo, _)) = text_to_expression(E)
@@ -251,14 +238,6 @@ print E
 ```python
 fi, fo
 ```
-
-
-
-
-    (((a1, (a2, (a3, (a4, ())))), (a5, (a6, (a7, ())))),
-     ((a1, (a5, (a3, (a4, ())))), ()))
-
-
 
 
 ```python
@@ -271,21 +250,6 @@ tv
 ```
 
 
-
-
-    {'a1': a1,
-     'a2': a2,
-     'a3': a3,
-     'a4': a4,
-     'a5': a5,
-     'a6': a6,
-     'a7': a7,
-     's0': s0,
-     's1': s1}
-
-
-
-
 ```python
 from joy.utils.types import reify
 ```
@@ -296,16 +260,10 @@ stack_effect = reify(tv, (fi, fo))
 print doc_from_stack_effect(*stack_effect)
 ```
 
-    (... a7 a6 a5 [a1 a2 a3 a4 ] -- ... [a1 a5 a3 a4 ])
-
-
 
 ```python
 print stack_effect
 ```
-
-    (((a1, (a2, (a3, (a4, ())))), (a5, (a6, (a7, ())))), ((a1, (a5, (a3, (a4, ())))), ()))
-
 
 Almost, but what we really want is something like this:
 
@@ -321,9 +279,6 @@ Note the change of `()` to `JoyStackType` type variables.
 print doc_from_stack_effect(*stack_effect)
 ```
 
-    (a7 a6 a5 [a1 a2 a3 a4 ...1] -- [a1 a5 a3 a4 ...1])
-
-
 Now we can omit `a3` and `a4` if we like:
 
 
@@ -338,25 +293,11 @@ The `right` and `left` parts of the ordered binary tree node are subsumed in the
 print doc_from_stack_effect(*stack_effect)
 ```
 
-    (a7 a6 a5 [a1 a2 ...1] -- [a1 a5 ...1])
-
-
 
 ```python
 source = compile_('Ee', stack_effect)
 print source
 ```
-
-    def Ee(stack):
-      """
-      ::
-    
-      (a7 a6 a5 [a1 a2 ...1] -- [a1 a5 ...1])
-    
-      """
-      ((a1, (a2, s1)), (a5, (a6, (a7, s0)))) = stack
-      return ((a1, (a5, s1)), s0)
-
 
 Oops!  The input stack is backwards...
 
@@ -370,25 +311,11 @@ stack_effect = eval('((a7, (a6, (a5, ((a1, (a2, s1)), s0)))), ((a1, (a5, s1)), s
 print doc_from_stack_effect(*stack_effect)
 ```
 
-    ([a1 a2 ...1] a5 a6 a7 -- [a1 a5 ...1])
-
-
 
 ```python
 source = compile_('Ee', stack_effect)
 print source
 ```
-
-    def Ee(stack):
-      """
-      ::
-    
-      ([a1 a2 ...1] a5 a6 a7 -- [a1 a5 ...1])
-    
-      """
-      (a7, (a6, (a5, ((a1, (a2, s1)), s0)))) = stack
-      return ((a1, (a5, s1)), s0)
-
 
 Compare:
 
@@ -407,14 +334,6 @@ D['Ee'] = SimpleFunctionWrapper(Ee)
 ```python
 V('[a b c d] 1 2 [f] Ee')
 ```
-
-                      . [a b c d] 1 2 [f] Ee
-            [a b c d] . 1 2 [f] Ee
-          [a b c d] 1 . 2 [f] Ee
-        [a b c d] 1 2 . [f] Ee
-    [a b c d] 1 2 [f] . Ee
-            [a 1 c d] . 
-
 
 
 ```python
@@ -443,9 +362,6 @@ stack_effects = infer_string('dup mul')
 for fi, fo in stack_effects:
     print doc_from_stack_effect(fi, fo)
 ```
-
-    (n1 -- n2)
-
 
 Then we would want something like this:
 
@@ -479,9 +395,6 @@ for fi, fo in stack_effects:
     print doc_from_stack_effect(fi, fo)
 ```
 
-    (n4 n3 n2 n1 -- n5)
-
-
 
 ```python
 
@@ -514,9 +427,6 @@ stack_effects = infer_string('tuck')
 for fi, fo in stack_effects:
     print doc_from_stack_effect(fi, fo)
 ```
-
-    (a2 a1 -- a1 a2 a1)
-
 
 
 ```python
@@ -667,10 +577,6 @@ dup = yin_dict['dup']
 #    return (n, (n, stack)), expression
 ```
 
-    <ipython-input-74-a6ea700b09d9>:1: SyntaxWarning: import * only allowed at module level
-      def import_yin():
-
-
 ... and there we are.
 
 
@@ -678,27 +584,11 @@ dup = yin_dict['dup']
 print compile_yinyang('mul_', (names(), (names(), (mul, ()))))
 ```
 
-    def mul_(stack):
-        (a31, (a32, stack)) = stack
-        a33 = mul(a32, a31)
-        stack = (a33, stack)
-        return stack
-    
-
-
 
 ```python
 e = (names(), (dup, (mul, ())))
 print compile_yinyang('sqr', e)
 ```
-
-    def sqr(stack):
-        (a34, stack) = stack
-        a35 = mul(a34, a34)
-        stack = (a35, stack)
-        return stack
-    
-
 
 
 ```python
@@ -706,45 +596,17 @@ e = (names(), (dup, (names(), (sub, (mul, ())))))
 print compile_yinyang('foo', e)
 ```
 
-    def foo(stack):
-        (a36, (a37, stack)) = stack
-        a38 = sub(a37, a36)
-        a39 = mul(a38, a36)
-        stack = (a39, stack)
-        return stack
-    
-
-
 
 ```python
 e = (names(), (names(), (mul, (dup, (sub, (dup, ()))))))
 print compile_yinyang('bar', e)
 ```
 
-    def bar(stack):
-        (a40, (a41, stack)) = stack
-        a42 = mul(a41, a40)
-        a43 = sub(a42, a42)
-        stack = (a43, (a43, stack))
-        return stack
-    
-
-
 
 ```python
 e = (names(), (dup, (dup, (mul, (dup, (mul, (mul, ())))))))
 print compile_yinyang('to_the_fifth_power', e)
 ```
-
-    def to_the_fifth_power(stack):
-        (a44, stack) = stack
-        a45 = mul(a44, a44)
-        a46 = mul(a45, a45)
-        a47 = mul(a46, a44)
-        stack = (a47, stack)
-        return stack
-    
-
 
 
 ```python

@@ -12,54 +12,60 @@ For example:
 -  aa bb cc dd aa is not valid - the word aa appears more than once.
 -  aa bb cc dd aaa is valid - aa and aaa count as different words.
 
-The system’s full passphrase list is available as your puzzle input. How
+The system's full passphrase list is available as your puzzle input. How
 many passphrases are valid?
 
-.. code:: ipython2
+.. code:: ipython3
 
     from notebook_preamble import J, V, define
 
-I’ll assume the input is a Joy sequence of sequences of integers.
+I'll assume the input is a Joy sequence of sequences of integers.
 
 ::
 
-   [[5 1 9 5]
-    [7 5 4 3]
-    [2 4 6 8]]
+    [[5 1 9 5]
+     [7 5 4 3]
+     [2 4 6 8]]
 
 So, obviously, the initial form will be a ``step`` function:
 
 ::
 
-   AoC2017.4 == 0 swap [F +] step
+    AoC2017.4 == 0 swap [F +] step
 
 ::
 
-   F == [size] [unique size] cleave =
+    F == [size] [unique size] cleave =
 
 The ``step_zero`` combinator includes the ``0 swap`` that would normally
 open one of these definitions:
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('[step_zero] help')
 
 
 .. parsed-literal::
 
+    
+    ==== Help on step_zero ====
+    
     0 roll> step
+    
+    ---- end (step_zero)
+    
     
 
 
 ::
 
-   AoC2017.4 == [F +] step_zero
+    AoC2017.4 == [F +] step_zero
 
-.. code:: ipython2
+.. code:: ipython3
 
-    define('AoC2017.4 == [[size] [unique size] cleave = +] step_zero')
+    define('AoC2017.4 [[size] [unique size] cleave = +] step_zero')
 
-.. code:: ipython2
+.. code:: ipython3
 
     J('''
     

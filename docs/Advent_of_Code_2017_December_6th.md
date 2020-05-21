@@ -169,17 +169,17 @@ J('[1 3 4 1] dup max [index_of] nullary distribute')
 
 
 ```python
-define('direco == dip rest cons')
+define('direco dip rest cons')
 ```
 
 
 ```python
-define('G == [direco] cons [swap] swoncat cons')
+define('G [direco] cons [swap] swoncat cons')
 ```
 
 
 ```python
-define('make_distributor == [dup dup max [index_of] nullary distribute] G')
+define('make_distributor [dup dup max [index_of] nullary distribute] G')
 ```
 
 
@@ -193,12 +193,12 @@ J('[0 2 7 0] make_distributor 6 [x] times pop')
 ### A function to drive a generator and count how many states before a repeat.
 First draft:
 
-    [] [GEN] x [pop index_of 0 >=] [pop size --] [[swons] dip x] primrec
+    [] [GEN] x [pop index_of 0 >=] [pop size --] [[swons] dip x] tailrec
 
 (?)
 
-    []       [GEN] x [pop index_of 0 >=] [pop size --] [[swons] dip x] primrec
-    [] [...] [GEN]   [pop index_of 0 >=] [pop size --] [[swons] dip x] primrec
+    []       [GEN] x [pop index_of 0 >=] [pop size --] [[swons] dip x] tailrec
+    [] [...] [GEN]   [pop index_of 0 >=] [pop size --] [[swons] dip x] tailrec
     [] [...] [GEN]    pop index_of 0 >=
     [] [...]              index_of 0 >=
                                 -1 0 >=
@@ -206,7 +206,7 @@ First draft:
 
 Base case
 
-    [] [...] [GEN] [pop index_of 0 >=] [pop size --] [[swons] dip x] primrec
+    [] [...] [GEN] [pop index_of 0 >=] [pop size --] [[swons] dip x] tailrec
     [] [...] [GEN]                      pop size --
     [] [...]                                size --
     [] [...]                                size --
@@ -219,7 +219,7 @@ A mistake, `popop` and no need for `--`
 
 Recursive case
 
-    [] [...] [GEN] [pop index_of 0 >=] [popop size] [[swons] dip x] primrec
+    [] [...] [GEN] [pop index_of 0 >=] [popop size] [[swons] dip x] tailrec
     [] [...] [GEN]                                   [swons] dip x  F
     [] [...] swons [GEN]                                         x  F
     [[...]]        [GEN]                                         x  F
@@ -229,16 +229,16 @@ Recursive case
 
 What have we learned?
 
-    F == [pop index_of 0 >=] [popop size] [[swons] dip x] primrec
+    F == [pop index_of 0 >=] [popop size] [[swons] dip x] tailrec
 
 
 ```python
-define('count_states == [] swap x [pop index_of 0 >=] [popop size] [[swons] dip x] primrec')
+define('count_states [] swap x [pop index_of 0 >=] [popop size] [[swons] dip x] tailrec')
 ```
 
 
 ```python
-define('AoC2017.6 == make_distributor count_states')
+define('AoC2017.6 make_distributor count_states')
 ```
 
 

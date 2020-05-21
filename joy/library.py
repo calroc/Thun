@@ -23,12 +23,9 @@ functions.  Its main export is a Python function initialize() that
 returns a dictionary of Joy functions suitable for use with the joy()
 function.
 '''
-from builtins import map, object, range, zip
-
-from inspect import getdoc
+from inspect import getdoc, getmembers, isfunction
 from functools import wraps
 from itertools import count
-from inspect import getmembers, isfunction
 import operator, math
 
 from .parser import text_to_expression, Symbol
@@ -292,7 +289,7 @@ def _text_to_defs(text):
 	return (
 		line.strip()
 		for line in text.splitlines()
-		if not line.startswith('#')
+		if line and not line.startswith('#')
 		)
 
 

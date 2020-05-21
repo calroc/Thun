@@ -37,7 +37,13 @@ The `step_zero` combinator includes the `0 swap` that would normally open one of
 J('[step_zero] help')
 ```
 
+    
+    ==== Help on step_zero ====
+    
     0 roll> step
+    
+    ---- end (step_zero)
+    
     
 
 
@@ -45,7 +51,7 @@ J('[step_zero] help')
 
 
 ```python
-define('AoC2017.4 == [[size] [unique size] cleave = +] step_zero')
+define('AoC2017.4 [[size] [unique size] cleave = +] step_zero')
 ```
 
 

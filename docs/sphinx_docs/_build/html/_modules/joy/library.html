@@ -56,12 +56,9 @@
 <span class="sd">returns a dictionary of Joy functions suitable for use with the joy()</span>
 <span class="sd">function.</span>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">map</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="nb">range</span><span class="p">,</span> <span class="nb">zip</span>
-
-<span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">getdoc</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">getdoc</span><span class="p">,</span> <span class="n">getmembers</span><span class="p">,</span> <span class="n">isfunction</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">count</span>
-<span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">getmembers</span><span class="p">,</span> <span class="n">isfunction</span>
 <span class="kn">import</span> <span class="nn">operator</span><span class="o">,</span> <span class="nn">math</span>
 
 <span class="kn">from</span> <span class="nn">.parser</span> <span class="k">import</span> <span class="n">text_to_expression</span><span class="p">,</span> <span class="n">Symbol</span>
@@ -325,7 +322,7 @@
 	<span class="k">return</span> <span class="p">(</span>
 		<span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
 		<span class="p">)</span>
 
 
@@ -342,7 +339,7 @@
 <span class="sd">	definition is given as a string with a name followed by a double</span>
 <span class="sd">	equal sign then one or more Joy functions, the body. for example:</span>
 
-<span class="sd">			sqr == dup mul</span>
+<span class="sd">		sqr == dup mul</span>
 
 <span class="sd">	If you want the definition to persist over restarts, enter it into</span>
 <span class="sd">	the definitions.txt resource.</span>
@@ -383,9 +380,9 @@
 <span class="sd">	nth position in the quote counting from 0.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 [a b c d] 0 getitem</span>
+<span class="sd">		   [a b c d] 0 getitem</span>
 <span class="sd">		-------------------------</span>
-<span class="sd">								a</span>
+<span class="sd">		    a</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
@@ -404,9 +401,9 @@
 <span class="sd">	n items removed off the top.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 [a b c d] 2 drop</span>
+<span class="sd">		   [a b c d] 2 drop</span>
 <span class="sd">		----------------------</span>
-<span class="sd">					 [c d]</span>
+<span class="sd">		       [c d]</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
@@ -428,9 +425,9 @@
 <span class="sd">	use reverse if needed.)</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 [a b c d] 2 take</span>
+<span class="sd">		   [a b c d] 2 take</span>
 <span class="sd">		----------------------</span>
-<span class="sd">					 [b a]</span>
+<span class="sd">		       [b a]</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
@@ -452,14 +449,14 @@
 <span class="sd">	Use a Boolean value to select one of two items.</span>
 <span class="sd">	::</span>
 
-<span class="sd">				A B False choice</span>
-<span class="sd">		 ----------------------</span>
-<span class="sd">							 A</span>
+<span class="sd">		   A B False choice</span>
+<span class="sd">		----------------------</span>
+<span class="sd">		   A</span>
 
 
-<span class="sd">				A B True choice</span>
-<span class="sd">		 ---------------------</span>
-<span class="sd">							 B</span>
+<span class="sd">		   A B True choice</span>
+<span class="sd">		---------------------</span>
+<span class="sd">		     B</span>
 
 <span class="sd">	Currently Python semantics are used to evaluate the &quot;truthiness&quot; of the</span>
 <span class="sd">	Boolean value (so empty string, zero, etc. are counted as false, etc.)</span>
@@ -475,14 +472,14 @@
 <span class="sd">	Use a Boolean value to select one of two items from a sequence.</span>
 <span class="sd">	::</span>
 
-<span class="sd">				[A B] False select</span>
-<span class="sd">		 ------------------------</span>
-<span class="sd">								A</span>
+<span class="sd">		   [A B] False select</span>
+<span class="sd">		------------------------</span>
+<span class="sd">		    A</span>
 
 
-<span class="sd">				[A B] True select</span>
-<span class="sd">		 -----------------------</span>
-<span class="sd">							 B</span>
+<span class="sd">		   [A B] True select</span>
+<span class="sd">		-----------------------</span>
+<span class="sd">		      B</span>
 
 <span class="sd">	The sequence can contain more than two items but not fewer.</span>
 <span class="sd">	Currently Python semantics are used to evaluate the &quot;truthiness&quot; of the</span>
@@ -512,9 +509,12 @@
 <div class="viewcode-block" id="sum_"><a class="viewcode-back" href="../../library.html#joy.library.sum_">[docs]</a><span class="nd">@inscribe</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">sum_</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-	<span class="sd">&#39;&#39;&#39;Given a quoted sequence of numbers return the sum.</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	Given a quoted sequence of numbers return the sum.</span>
+<span class="sd">	::</span>
 
-<span class="sd">	sum == 0 swap [+] step</span>
+<span class="sd">		sum == 0 swap [+] step</span>
+
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="n">tos</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">S</span>
 	<span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">iter_stack</span><span class="p">(</span><span class="n">tos</span><span class="p">)),</span> <span class="n">stack</span></div>
@@ -528,9 +528,9 @@
 <span class="sd">	from the the quote.  The item is only removed once.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 [1 2 3 1] 1 remove</span>
+<span class="sd">		   [1 2 3 1] 1 remove</span>
 <span class="sd">		------------------------</span>
-<span class="sd">						[2 3 1]</span>
+<span class="sd">		     [2 3 1]</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
@@ -564,7 +564,7 @@
 
 <span class="sd">		clear == stack [pop stack] loop</span>
 
-<span class="sd">			 ... clear</span>
+<span class="sd">		   ... clear</span>
 <span class="sd">		---------------</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
@@ -584,7 +584,8 @@
 <div class="viewcode-block" id="reverse"><a class="viewcode-back" href="../../library.html#joy.library.reverse">[docs]</a><span class="nd">@inscribe</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-	<span class="sd">&#39;&#39;&#39;Reverse the list on the top of the stack.</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	Reverse the list on the top of the stack.</span>
 <span class="sd">	::</span>
 
 <span class="sd">		reverse == [] swap shunt</span>
@@ -599,12 +600,13 @@
 <div class="viewcode-block" id="concat_"><a class="viewcode-back" href="../../library.html#joy.library.concat_">[docs]</a><span class="nd">@inscribe</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">concat_</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
-	<span class="sd">&#39;&#39;&#39;Concatinate the two lists on the top of the stack.</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	Concatinate the two lists on the top of the stack.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 [a b c] [d e f] concat</span>
+<span class="sd">		   [a b c] [d e f] concat</span>
 <span class="sd">		----------------------------</span>
-<span class="sd">					 [a b c d e f]</span>
+<span class="sd">		       [a b c d e f]</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
@@ -614,14 +616,15 @@
 <div class="viewcode-block" id="shunt"><a class="viewcode-back" href="../../library.html#joy.library.shunt">[docs]</a><span class="nd">@inscribe</span>
 <span class="nd">@SimpleFunctionWrapper</span>
 <span class="k">def</span> <span class="nf">shunt</span><span class="p">(</span><span class="n">stack</span><span class="p">):</span>
-	<span class="sd">&#39;&#39;&#39;Like concat but reverses the top list into the second.</span>
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">	Like concat but reverses the top list into the second.</span>
 <span class="sd">	::</span>
 
 <span class="sd">		shunt == [swons] step == reverse swap concat</span>
 
-<span class="sd">			 [a b c] [d e f] shunt</span>
+<span class="sd">		   [a b c] [d e f] shunt</span>
 <span class="sd">		---------------------------</span>
-<span class="sd">				 [f e d a b c] </span>
+<span class="sd">		       [f e d a b c] </span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
@@ -669,9 +672,9 @@
 <span class="sd">	Plus or minus</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 a b pm</span>
+<span class="sd">		   a b pm</span>
 <span class="sd">		-------------</span>
-<span class="sd">			 a+b a-b</span>
+<span class="sd">		   a+b a-b</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
@@ -844,9 +847,9 @@
 <span class="sd">	onto the pending expression for evaluation.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 [Q] i</span>
+<span class="sd">		   [Q] i</span>
 <span class="sd">		-----------</span>
-<span class="sd">				Q</span>
+<span class="sd">		    Q</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="n">quote</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">stack</span>
@@ -913,9 +916,9 @@
 <span class="sd">	with the list as its stack.  Does not affect the rest of the stack.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 ... [a b c] [Q] . infra</span>
+<span class="sd">		   ... [a b c] [Q] . infra</span>
 <span class="sd">		-----------------------------</span>
-<span class="sd">			 c b a . Q [...] swaack</span>
+<span class="sd">		    c b a . Q [...] swaack</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">aggregate</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
@@ -952,12 +955,12 @@
 <span class="sd">	For example, given a (general recursive) function &#39;F&#39;:</span>
 <span class="sd">	::</span>
 
-<span class="sd">			F == [I] [T] [R1] [R2] genrec</span>
+<span class="sd">		F == [I] [T] [R1] [R2] genrec</span>
 
 <span class="sd">	If the [I] if-part fails you must derive R1 and R2 from:</span>
 <span class="sd">	::</span>
 
-<span class="sd">			... R1 [F] R2</span>
+<span class="sd">		... R1 [F] R2</span>
 
 <span class="sd">	Just set the stack arguments in front, and figure out what R1 and R2</span>
 <span class="sd">	have to do to apply the quoted [F] in the proper way.  In effect, the</span>
@@ -965,15 +968,15 @@
 <span class="sd">	the original definition in the else-part:</span>
 <span class="sd">	::</span>
 
-<span class="sd">			F == [I] [T] [R1]   [R2] genrec</span>
-<span class="sd">			  == [I] [T] [R1 [F] R2] ifte</span>
+<span class="sd">		F == [I] [T] [R1]   [R2] genrec</span>
+<span class="sd">		  == [I] [T] [R1 [F] R2] ifte</span>
 
 <span class="sd">	Primitive recursive functions are those where R2 == i.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			P == [I] [T] [R] tailrec</span>
-<span class="sd">			  == [I] [T] [R [P] i] ifte</span>
-<span class="sd">			  == [I] [T] [R P] ifte</span>
+<span class="sd">		P == [I] [T] [R] tailrec</span>
+<span class="sd">		  == [I] [T] [R [P] i] ifte</span>
+<span class="sd">		  == [I] [T] [R P] ifte</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">rec2</span><span class="p">,</span> <span class="p">(</span><span class="n">rec1</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
@@ -1018,9 +1021,9 @@
 <span class="sd">	the data parameter is zero, then the first quotation has to produce</span>
 <span class="sd">	the value to be returned. If the data parameter is positive then the</span>
 <span class="sd">	second has to combine the data parameter with the result of applying</span>
-<span class="sd">	the function to its predecessor.</span>
+<span class="sd">	the function to its predecessor.::</span>
 
-<span class="sd">	5  [1]  [*]  primrec</span>
+<span class="sd">		5  [1]  [*]  primrec</span>
 
 <span class="sd">	&gt; Then primrec tests whether the top element on the stack (initially</span>
 <span class="sd">	the 5) is equal to zero. If it is, it pops it off and executes one of</span>
@@ -1028,17 +1031,17 @@
 <span class="sd">	Otherwise it pushes a decremented copy of the top element and</span>
 <span class="sd">	recurses. On the way back from the recursion it uses the other</span>
 <span class="sd">	quotation, [*], to multiply what is now a factorial on top of the</span>
-<span class="sd">	stack by the second element on the stack.</span>
+<span class="sd">	stack by the second element on the stack.::</span>
 
 <span class="sd">		n [Base] [Recur] primrec</span>
 
-<span class="sd">	   0 [Base] [Recur] primrec</span>
-<span class="sd">	------------------------------</span>
-<span class="sd">	      Base</span>
+<span class="sd">		   0 [Base] [Recur] primrec</span>
+<span class="sd">		------------------------------</span>
+<span class="sd">		      Base</span>
 
-<span class="sd">	   n [Base] [Recur] primrec</span>
-<span class="sd">	------------------------------------------ n &gt; 0</span>
-<span class="sd">	   n (n-1) [Base] [Recur] primrec Recur</span>
+<span class="sd">		         n [Base] [Recur] primrec</span>
+<span class="sd">		------------------------------------------ n &gt; 0</span>
+<span class="sd">		   n (n-1) [Base] [Recur] primrec Recur</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="n">recur</span><span class="p">,</span> <span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
@@ -1072,17 +1075,17 @@
 
 <span class="sd">	::</span>
 
-<span class="sd">			branch == roll&lt; choice i</span>
+<span class="sd">		branch == roll&lt; choice i</span>
 
 <span class="sd">	::</span>
 
-<span class="sd">				False [F] [T] branch</span>
-<span class="sd">		 --------------------------</span>
-<span class="sd">							 F</span>
+<span class="sd">		   False [F] [T] branch</span>
+<span class="sd">		--------------------------</span>
+<span class="sd">		          F</span>
 
-<span class="sd">				True [F] [T] branch</span>
-<span class="sd">		 -------------------------</span>
-<span class="sd">									T</span>
+<span class="sd">		   True [F] [T] branch</span>
+<span class="sd">		-------------------------</span>
+<span class="sd">		             T</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">then</span><span class="p">,</span> <span class="p">(</span><span class="n">else_</span><span class="p">,</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">stack</span>
@@ -1129,9 +1132,9 @@
 
 <span class="sd">	It works by rewriting into a chain of nested `ifte` expressions, e.g.::</span>
 
-<span class="sd">						[[[B0] T0] [[B1] T1] [D]] cond</span>
-<span class="sd">			-----------------------------------------</span>
-<span class="sd">				 [B0] [T0] [[B1] [T1] [D] ifte] ifte</span>
+<span class="sd">		      [[[B0] T0] [[B1] T1] [D]] cond</span>
+<span class="sd">		-----------------------------------------</span>
+<span class="sd">		   [B0] [T0] [[B1] [T1] [D] ifte] ifte</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="n">conditions</span><span class="p">,</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">stack</span>
@@ -1166,9 +1169,9 @@
 <span class="sd">	on the rest of the stack.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 ... x [Q] dip</span>
+<span class="sd">		   ... x [Q] dip</span>
 <span class="sd">		-------------------</span>
-<span class="sd">				 ... Q x</span>
+<span class="sd">		     ... Q x</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
@@ -1183,9 +1186,9 @@
 <span class="sd">	Like dip but expects two items.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 ... y x [Q] dip</span>
+<span class="sd">		   ... y x [Q] dip</span>
 <span class="sd">		---------------------</span>
-<span class="sd">				 ... Q y x</span>
+<span class="sd">		     ... Q y x</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">S</span>
@@ -1200,9 +1203,9 @@
 <span class="sd">	Like dip but expects three items.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 ... z y x [Q] dip</span>
+<span class="sd">		   ... z y x [Q] dip</span>
 <span class="sd">		-----------------------</span>
-<span class="sd">				 ... Q z y x</span>
+<span class="sd">		     ... Q z y x</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">stack</span><span class="p">))))</span> <span class="o">=</span> <span class="n">S</span>
@@ -1219,9 +1222,10 @@
 <span class="sd">	program.</span>
 <span class="sd">	::</span>
 
-<span class="sd">							... x [Q] . app1</span>
-<span class="sd">		 -----------------------------------</span>
-<span class="sd">				... [x ...] [Q] . infra first</span>
+<span class="sd">		         ... x [Q] . app1</span>
+<span class="sd">		-----------------------------------</span>
+<span class="sd">		   ... [x ...] [Q] . infra first</span>
+
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
 	<span class="n">stack</span> <span class="o">=</span> <span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">stack</span><span class="p">),</span> <span class="n">stack</span><span class="p">))</span>
@@ -1235,10 +1239,10 @@
 	<span class="sd">&#39;&#39;&#39;Like app1 with two items.</span>
 <span class="sd">	::</span>
 
-<span class="sd">						... y x [Q] . app2</span>
-<span class="sd">		 -----------------------------------</span>
-<span class="sd">				... [y ...] [Q] . infra first</span>
-<span class="sd">						[x ...] [Q]   infra first</span>
+<span class="sd">		       ... y x [Q] . app2</span>
+<span class="sd">		-----------------------------------</span>
+<span class="sd">		   ... [y ...] [Q] . infra first</span>
+<span class="sd">		       [x ...] [Q]   infra first</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">S</span>
@@ -1255,11 +1259,11 @@
 	<span class="sd">&#39;&#39;&#39;Like app1 with three items.</span>
 <span class="sd">	::</span>
 
-<span class="sd">						... z y x [Q] . app3</span>
-<span class="sd">		 -----------------------------------</span>
-<span class="sd">				... [z ...] [Q] . infra first</span>
-<span class="sd">						[y ...] [Q]   infra first</span>
-<span class="sd">						[x ...] [Q]   infra first</span>
+<span class="sd">		     ... z y x [Q] . app3</span>
+<span class="sd">		-----------------------------------</span>
+<span class="sd">		   ... [z ...] [Q] . infra first</span>
+<span class="sd">		       [y ...] [Q]   infra first</span>
+<span class="sd">		       [x ...] [Q]   infra first</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">stack</span><span class="p">))))</span> <span class="o">=</span> <span class="n">S</span>
@@ -1278,19 +1282,19 @@
 <span class="sd">	Run a quoted program on each item in a sequence.</span>
 <span class="sd">	::</span>
 
-<span class="sd">					... [] [Q] . step</span>
-<span class="sd">			 -----------------------</span>
-<span class="sd">								 ... .</span>
+<span class="sd">		   ... [] [Q] . step</span>
+<span class="sd">		-----------------------</span>
+<span class="sd">		          ... .</span>
 
 
-<span class="sd">				 ... [a] [Q] . step</span>
-<span class="sd">			------------------------</span>
-<span class="sd">							 ... a . Q</span>
+<span class="sd">		   ... [a] [Q] . step</span>
+<span class="sd">		------------------------</span>
+<span class="sd">		         ... a . Q</span>
 
 
-<span class="sd">			 ... [a b c] [Q] . step</span>
+<span class="sd">		   ... [a b c] [Q] . step</span>
 <span class="sd">		----------------------------------------</span>
-<span class="sd">								 ... a . Q [b c] [Q] step</span>
+<span class="sd">		             ... a . Q [b c] [Q] step</span>
 
 <span class="sd">	The step combinator executes the quotation on each member of the list</span>
 <span class="sd">	on top of the stack.</span>
@@ -1313,19 +1317,19 @@
 <span class="sd">	times == [-- dip] cons [swap] infra [0 &gt;] swap while pop</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 ... n [Q] . times</span>
+<span class="sd">		   ... n [Q] . times</span>
 <span class="sd">		---------------------  w/ n &lt;= 0</span>
-<span class="sd">						 ... .</span>
+<span class="sd">		         ... .</span>
 
 
-<span class="sd">			 ... 1 [Q] . times</span>
-<span class="sd">		---------------------------------</span>
-<span class="sd">						 ... . Q</span>
+<span class="sd">		   ... 1 [Q] . times</span>
+<span class="sd">		-----------------------</span>
+<span class="sd">		         ... . Q</span>
 
 
-<span class="sd">			 ... n [Q] . times</span>
-<span class="sd">		---------------------------------  w/ n &gt; 1</span>
-<span class="sd">						 ... . Q (n - 1) [Q] times</span>
+<span class="sd">		   ... n [Q] . times</span>
+<span class="sd">		-------------------------------------  w/ n &gt; 1</span>
+<span class="sd">		         ... . Q (n - 1) [Q] times</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="c1"># times == [-- dip] cons [swap] infra [0 &gt;] swap while pop</span>
@@ -1362,13 +1366,13 @@
 <span class="sd">	Basic loop combinator.</span>
 <span class="sd">	::</span>
 
-<span class="sd">			 ... True [Q] loop</span>
+<span class="sd">		   ... True [Q] loop</span>
 <span class="sd">		-----------------------</span>
-<span class="sd">					... Q [Q] loop</span>
+<span class="sd">		      ... Q [Q] loop</span>
 
-<span class="sd">			 ... False [Q] loop</span>
+<span class="sd">		   ... False [Q] loop</span>
 <span class="sd">		------------------------</span>
-<span class="sd">							...</span>
+<span class="sd">		          ...</span>
 
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
@@ -1385,17 +1389,17 @@
 <span class="sd">	one of the three depending on the results of comparing the two values:</span>
 <span class="sd">	::</span>
 
-<span class="sd">					 a b [G] [E] [L] cmp</span>
-<span class="sd">				------------------------- a &gt; b</span>
-<span class="sd">								G</span>
+<span class="sd">		   a b [G] [E] [L] cmp</span>
+<span class="sd">		------------------------- a &gt; b</span>
+<span class="sd">		        G</span>
 
-<span class="sd">					 a b [G] [E] [L] cmp</span>
-<span class="sd">				------------------------- a = b</span>
-<span class="sd">										E</span>
+<span class="sd">		   a b [G] [E] [L] cmp</span>
+<span class="sd">		------------------------- a = b</span>
+<span class="sd">		            E</span>
 
-<span class="sd">					 a b [G] [E] [L] cmp</span>
-<span class="sd">				------------------------- a &lt; b</span>
-<span class="sd">												L</span>
+<span class="sd">		   a b [G] [E] [L] cmp</span>
+<span class="sd">		------------------------- a &lt; b</span>
+<span class="sd">		                L</span>
 <span class="sd">	&#39;&#39;&#39;</span>
 	<span class="n">L</span><span class="p">,</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">stack</span><span class="p">))))</span> <span class="o">=</span> <span class="n">stack</span>
 	<span class="n">expression</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="n">G</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">L</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">E</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>

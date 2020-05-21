@@ -22,18 +22,18 @@ that you start by running the package:
 
 ::
 
-   $ python -m joy
-   Joypy - Copyright © 2017 Simon Forman
-   This program comes with ABSOLUTELY NO WARRANTY; for details type "warranty".
-   This is free software, and you are welcome to redistribute it
-   under certain conditions; type "sharing" for details.
-   Type "words" to see a list of all words, and "[<name>] help" to print the
-   docs for a word.
+    $ python -m joy
+    Joypy - Copyright © 2017 Simon Forman
+    This program comes with ABSOLUTELY NO WARRANTY; for details type "warranty".
+    This is free software, and you are welcome to redistribute it
+    under certain conditions; type "sharing" for details.
+    Type "words" to see a list of all words, and "[<name>] help" to print the
+    docs for a word.
 
 
-    <-top
+     <-top
 
-   joy? _
+    joy? _
 
 The ``<-top`` marker points to the top of the (initially empty) stack.
 You can enter Joy notation at the prompt and a `trace of
@@ -42,18 +42,18 @@ and prompt again:
 
 ::
 
-   joy? 23 sqr 18 +
-          . 23 sqr 18 +
-       23 . sqr 18 +
-       23 . dup mul 18 +
-    23 23 . mul 18 +
-      529 . 18 +
-   529 18 . +
-      547 . 
+    joy? 23 sqr 18 +
+           . 23 sqr 18 +
+        23 . sqr 18 +
+        23 . dup mul 18 +
+     23 23 . mul 18 +
+       529 . 18 +
+    529 18 . +
+       547 . 
 
-   547 <-top
+    547 <-top
 
-   joy? 
+    joy? 
 
 Stacks (aka list, quote, sequence, etc.)
 ========================================
@@ -65,13 +65,68 @@ both the stack and the expression. It is a `cons
 list <https://en.wikipedia.org/wiki/Cons#Lists>`__ made from Python
 tuples.
 
-.. code:: ipython2
+.. code:: ipython3
 
     import inspect
     import joy.utils.stack
     
     
-    print inspect.getdoc(joy.utils.stack)
+    print(inspect.getdoc(joy.utils.stack))
+
+
+.. parsed-literal::
+
+    When talking about Joy we use the terms "stack", "quote", "sequence",
+    "list", and others to mean the same thing: a simple linear datatype that
+    permits certain operations such as iterating and pushing and popping
+    values from (at least) one end.
+    
+    There is no "Stack" Python class, instead we use the  `cons list`_, a 
+    venerable two-tuple recursive sequence datastructure, where the
+    empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the
+    recursive form of a stack with one or more items on it::
+    
+        stack := () | (item, stack)
+    
+    Putting some numbers onto a stack::
+    
+        ()
+        (1, ())
+        (2, (1, ()))
+        (3, (2, (1, ())))
+        ...
+    
+    Python has very nice "tuple packing and unpacking" in its syntax which
+    means we can directly "unpack" the expected arguments to a Joy function.
+    
+    For example::
+    
+            def dup((head, tail)):
+                    return head, (head, tail)
+    
+    We replace the argument "stack" by the expected structure of the stack,
+    in this case "(head, tail)", and Python takes care of unpacking the
+    incoming tuple and assigning values to the names.  (Note that Python
+    syntax doesn't require parentheses around tuples used in expressions
+    where they would be redundant.)
+    
+    Unfortunately, the Sphinx documentation generator, which is used to generate this
+    web page, doesn't handle tuples in the function parameters.  And in Python 3, this
+    syntax was removed entirely.  Instead you would have to write::
+    
+            def dup(stack):
+                    head, tail = stack
+                    return head, (head, tail)
+    
+    
+    We have two very simple functions, one to build up a stack from a Python
+    iterable and another to iterate through a stack and yield its items
+    one-by-one in order.  There are also two functions to generate string representations
+    of stacks.  They only differ in that one prints the terms in stack from left-to-right while the other prints from right-to-left.  In both functions *internal stacks* are
+    printed left-to-right.  These functions are written to support :doc:`../pretty`.
+    
+    .. _cons list: https://en.wikipedia.org/wiki/Cons#Lists
+
 
 The utility functions maintain order.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -79,32 +134,57 @@ The utility functions maintain order.
 The 0th item in the list will be on the top of the stack and *vise
 versa*.
 
-.. code:: ipython2
+.. code:: ipython3
 
     joy.utils.stack.list_to_stack([1, 2, 3])
 
-.. code:: ipython2
+
+
+
+.. parsed-literal::
+
+    (1, (2, (3, ())))
+
+
+
+.. code:: ipython3
 
     list(joy.utils.stack.iter_stack((1, (2, (3, ())))))
 
+
+
+
+.. parsed-literal::
+
+    [1, 2, 3]
+
+
+
 This requires reversing the sequence (or iterating backwards) otherwise:
 
-.. code:: ipython2
+.. code:: ipython3
 
     stack = ()
     
     for n in [1, 2, 3]:
         stack = n, stack
     
-    print stack
-    print list(joy.utils.stack.iter_stack(stack))
+    print(stack)
+    print(list(joy.utils.stack.iter_stack(stack)))
+
+
+.. parsed-literal::
+
+    (3, (2, (1, ())))
+    [3, 2, 1]
+
 
 Purely Functional Datastructures.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Because Joy lists are made out of Python tuples they are immutable, so
-all Joy datastructures are `purely
-functional <https://en.wikipedia.org/wiki/Purely_functional_data_structure>`__.
+all Joy datastructures are *`purely
+functional <https://en.wikipedia.org/wiki/Purely_functional_data_structure>`__*.
 
 The ``joy()`` function.
 =======================
@@ -119,21 +199,58 @@ looks up in the dictionary.
 
 Each function is passed the stack, expression, and dictionary and
 returns them. Whatever the function returns becomes the new stack,
-expression, and dictionary. (The dictionary is passed to enable
-e.g. writing words that let you enter new words into the dictionary at
+expression, and dictionary. (The dictionary is passed to enable e.g.
+writing words that let you enter new words into the dictionary at
 runtime, which nothing does yet and may be a bad idea, and the ``help``
 command.)
 
-.. code:: ipython2
+.. code:: ipython3
 
     import joy.joy
     
-    print inspect.getsource(joy.joy.joy)
+    print(inspect.getsource(joy.joy.joy))
+
+
+.. parsed-literal::
+
+    def joy(stack, expression, dictionary, viewer=None):
+    	'''Evaluate a Joy expression on a stack.
+    
+    	This function iterates through a sequence of terms which are either
+    	literals (strings, numbers, sequences of terms) or function symbols.
+    	Literals are put onto the stack and functions are looked up in the
+    	disctionary and executed.
+    
+    	The viewer is a function that is called with the stack and expression
+    	on every iteration, its return value is ignored.
+    
+    	:param stack stack: The stack.
+    	:param stack expression: The expression to evaluate.
+    	:param dict dictionary: A ``dict`` mapping names to Joy functions.
+    	:param function viewer: Optional viewer function.
+    	:rtype: (stack, (), dictionary)
+    
+    	'''
+    	while expression:
+    
+    		if viewer: viewer(stack, expression)
+    
+    		term, expression = expression
+    		if isinstance(term, Symbol):
+    			term = dictionary[term]
+    			stack, expression, dictionary = term(stack, expression, dictionary)
+    		else:
+    			stack = term, stack
+    
+    	if viewer: viewer(stack, expression)
+    	return stack, expression, dictionary
+    
+
 
 View function
 ~~~~~~~~~~~~~
 
-The ``joy()`` function accepts a “viewer” function which it calls on
+The ``joy()`` function accepts a "viewer" function which it calls on
 each iteration passing the current stack and expression just before
 evaluation. This can be used for tracing, breakpoints, retrying after
 exceptions, or interrupting an evaluation and saving to disk or sending
@@ -147,7 +264,7 @@ A ``viewer`` records each step of the evaluation of a Joy program. The
 ``TracePrinter`` has a facility for printing out a trace of the
 evaluation, one line per step. Each step is aligned to the current
 interpreter position, signified by a period separating the stack on the
-left from the pending expression (“continuation”) on the right.
+left from the pending expression ("continuation") on the right.
 
 `Continuation-Passing Style <https://en.wikipedia.org/wiki/Continuation-passing_style>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -162,11 +279,11 @@ modifying the expression rather than making recursive calls to the
 Parser
 ======
 
-.. code:: ipython2
+.. code:: ipython3
 
     import joy.parser
     
-    print inspect.getdoc(joy.parser)
+    print(inspect.getdoc(joy.parser))
 
 
 .. parsed-literal::
@@ -191,12 +308,12 @@ Parser
 
 The parser is extremely simple, the undocumented ``re.Scanner`` class
 does most of the tokenizing work and then you just build the tuple
-structure out of the tokens. There’s no Abstract Syntax Tree or anything
+structure out of the tokens. There's no Abstract Syntax Tree or anything
 like that.
 
-.. code:: ipython2
+.. code:: ipython3
 
-    print inspect.getsource(joy.parser._parse)
+    print(inspect.getsource(joy.parser._parse))
 
 
 .. parsed-literal::
@@ -226,9 +343,9 @@ like that.
     
 
 
-That’s pretty much all there is to it.
+That's pretty much all there is to it.
 
-.. code:: ipython2
+.. code:: ipython3
 
     joy.parser.text_to_expression('1 2 3 4 5')  # A simple sequence.
 
@@ -241,7 +358,7 @@ That’s pretty much all there is to it.
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     joy.parser.text_to_expression('[1 2 3] 4 5')  # Three items, the first is a list with three items
 
@@ -254,7 +371,7 @@ That’s pretty much all there is to it.
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     joy.parser.text_to_expression('1 23 ["four" [-5.0] cons] 8888')  # A mixed bag. cons is
                                                                      # a Symbol, no lookup at
@@ -269,7 +386,7 @@ That’s pretty much all there is to it.
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     joy.parser.text_to_expression('[][][][][]')  # Five empty lists.
 
@@ -282,7 +399,7 @@ That’s pretty much all there is to it.
 
 
 
-.. code:: ipython2
+.. code:: ipython3
 
     joy.parser.text_to_expression('[[[[[]]]]]')  # Five nested lists.
 
@@ -298,35 +415,34 @@ That’s pretty much all there is to it.
 Library
 =======
 
-The Joy library of functions (aka commands, or “words” after Forth
+The Joy library of functions (aka commands, or "words" after Forth
 usage) encapsulates all the actual functionality (no pun intended) of
 the Joy system. There are simple functions such as addition ``add`` (or
 ``+``, the library module supports aliases), and combinators which
 provide control-flow and higher-order operations.
 
-.. code:: ipython2
+.. code:: ipython3
 
     import joy.library
     
-    print ' '.join(sorted(joy.library.initialize()))
+    print(' '.join(sorted(joy.library.initialize())))
 
 
 .. parsed-literal::
 
-    != % & * *fraction *fraction0 + ++ - -- / // /floor < << <= <> = > >= >> ? ^ _Tree_add_Ee _Tree_delete_R0 _Tree_delete_clear_stuff _Tree_get_E abs add anamorphism and app1 app2 app3 at average b binary bool branch ccons choice clear cleave cmp codireco concat cond cons dinfrirst dip dipd dipdd disenstacken divmod down_to_zero drop dup dupd dupdd dupdip dupdipd enstacken eq first first_two flatten floor floordiv fork fourth gcd ge genrec getitem gt help i id ifte ii infer infra inscribe le least_fraction loop lshift lt make_generator map max min mod modulus mul ne neg not nullary of or over pam parse pick pm pop popd popdd popop popopd popopdd pow pred primrec product quoted range range_to_zero rem remainder remove rest reverse roll< roll> rolldown rollup round rrest rshift run second select sharing shunt size sort sqr sqrt stack step step_zero stuncons stununcons sub succ sum swaack swap swoncat swons take ternary third times truediv truthy tuck unary uncons unique unit unquoted unstack unswons void warranty while words x xor zip •
+    != % & * *fraction *fraction0 + ++ - -- / // /floor < << <= <> = > >= >> ? ^ _Tree_add_Ee _Tree_delete_R0 _Tree_delete_clear_stuff _Tree_get_E abs add anamorphism and app1 app2 app3 at average b binary bool branch ccons choice clear cleave cmp codireco concat cond cons dinfrirst dip dipd dipdd disenstacken div divmod down_to_zero drop dup dupd dupdd dupdip dupdipd enstacken eq first first_two flatten floor floordiv fork fourth gcd ge genrec getitem gt help i id ifte ii infra inscribe le least_fraction loop lshift lt make_generator map max min mod modulus mul ne neg not nullary of or over pam parse pick pm pop popd popdd popop popopd popopdd pow pred primrec product quoted range range_to_zero rem remainder remove rest reverse roll< roll> rolldown rollup round rrest rshift run second select sharing shunt size sort sqr sqrt stack step step_zero stuncons stununcons sub succ sum swaack swap swoncat swons tailrec take ternary third times truediv truthy tuck unary uncons unique unit unquoted unstack unswons void warranty while words x xor zip •
 
 
 Many of the functions are defined in Python, like ``dip``:
 
-.. code:: ipython2
+.. code:: ipython3
 
-    print inspect.getsource(joy.library.dip)
+    print(inspect.getsource(joy.library.dip))
 
 
 .. parsed-literal::
 
     @inscribe
-    @combinator_effect(_COMB_NUMS(), a1, s1)
     @FunctionWrapper
     def dip(stack, expression, dictionary):
     	'''
@@ -335,9 +451,9 @@ Many of the functions are defined in Python, like ``dip``:
     	on the rest of the stack.
     	::
     
-    			 ... x [Q] dip
+    		   ... x [Q] dip
     		-------------------
-    				 ... Q x
+    		     ... Q x
     
     	'''
     	(quote, (x, stack)) = stack
@@ -351,89 +467,90 @@ When the interpreter executes a definition function that function just
 pushes its body expression onto the pending expression (the
 continuation) and returns control to the interpreter.
 
-.. code:: ipython2
+.. code:: ipython3
 
-    print joy.library.definitions
+    print(joy.library.definitions)
 
 
 .. parsed-literal::
 
-    ? == dup truthy
-    *fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
-    *fraction0 == concat [[swap] dip * [*] dip] infra
-    anamorphism == [pop []] swap [dip swons] genrec
-    average == [sum 1.0 *] [size] cleave /
-    binary == nullary [popop] dip
-    cleave == fork [popd] dip
-    codireco == cons dip rest cons
-    dinfrirst == dip infra first
-    unstack == ? [uncons ?] loop pop
-    down_to_zero == [0 >] [dup --] while
-    dupdipd == dup dipd
-    enstacken == stack [clear] dip
-    flatten == [] swap [concat] step
-    fork == [i] app2
-    gcd == 1 [tuck modulus dup 0 >] loop pop
-    ifte == [nullary not] dipd branch
-    ii == [dip] dupdip i
-    least_fraction == dup [gcd] infra [div] concat map
-    make_generator == [codireco] ccons
-    nullary == [stack] dinfrirst
-    of == swap at
-    pam == [i] map
-    primrec == [i] genrec
-    product == 1 swap [*] step
-    quoted == [unit] dip
-    range == [0 <=] [1 - dup] anamorphism
-    range_to_zero == unit [down_to_zero] infra
-    run == [] swap infra
-    size == 0 swap [pop ++] step
-    sqr == dup mul
-    step_zero == 0 roll> step
-    swoncat == swap concat
-    ternary == unary [popop] dip
-    unary == nullary popd
-    unquoted == [i] dip
-    while == swap [nullary] cons dup dipd concat loop
+    ? dup truthy
+    *fraction [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
+    *fraction0 concat [[swap] dip * [*] dip] infra
+    anamorphism [pop []] swap [dip swons] genrec
+    average [sum 1.0 *] [size] cleave /
+    binary nullary [popop] dip
+    cleave fork [popd] dip
+    codireco cons dip rest cons
+    dinfrirst dip infra first
+    unstack ? [uncons ?] loop pop
+    down_to_zero [0 >] [dup --] while
+    dupdipd dup dipd
+    enstacken stack [clear] dip
+    flatten [] swap [concat] step
+    fork [i] app2
+    gcd 1 [tuck modulus dup 0 >] loop pop
+    ifte [nullary not] dipd branch
+    ii [dip] dupdip i
+    least_fraction dup [gcd] infra [div] concat map
+    make_generator [codireco] ccons
+    nullary [stack] dinfrirst
+    of swap at
+    pam [i] map
+    tailrec [i] genrec
+    product 1 swap [*] step
+    quoted [unit] dip
+    range [0 <=] [1 - dup] anamorphism
+    range_to_zero unit [down_to_zero] infra
+    run [] swap infra
+    size 0 swap [pop ++] step
+    sqr dup mul
+    step_zero 0 roll> step
+    swoncat swap concat
+    tailrec [i] genrec
+    ternary unary [popop] dip
+    unary nullary popd
+    unquoted [i] dip
+    while swap [nullary] cons dup dipd concat loop
     
 
 
-Currently, there’s no function to add new definitions to the dictionary
-from “within” Joy code itself. Adding new definitions remains a
+Currently, there's no function to add new definitions to the dictionary
+from "within" Joy code itself. Adding new definitions remains a
 meta-interpreter action. You have to do it yourself, in Python, and wash
 your hands afterward.
 
 It would be simple enough to define one, but it would open the door to
 *name binding* and break the idea that all state is captured in the
-stack and expression. There’s an implicit *standard dictionary* that
+stack and expression. There's an implicit *standard dictionary* that
 defines the actual semantics of the syntactic stack and expression
 datastructures (which only contain symbols, not the actual functions.
 Pickle some and see for yourself.)
 
-“There should be only one.”
+"There should be only one."
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Which brings me to talking about one of my hopes and dreams for this
-notation: “There should be only one.” What I mean is that there should
+notation: "There should be only one." What I mean is that there should
 be one universal standard dictionary of commands, and all bespoke work
 done in a UI for purposes takes place by direct interaction and macros.
 There would be a *Grand Refactoring* biannually (two years, not six
-months, that’s semi-annually) where any new definitions factored out of
+months, that's semi-annually) where any new definitions factored out of
 the usage and macros of the previous time, along with new algorithms and
-such, were entered into the dictionary and posted to e.g. IPFS.
+such, were entered into the dictionary and posted to e.g. IPFS.
 
 Code should not burgeon wildly, as it does today. The variety of code
 should map more-or-less to the well-factored variety of human
-computably-solvable problems. There shouldn’t be dozens of chat apps, JS
-frameworks, programming languages. It’s a waste of time, a `fractal
-“thundering herd”
+computably-solvable problems. There shouldn't be dozens of chat apps, JS
+frameworks, programming languages. It's a waste of time, a `fractal
+"thundering herd"
 attack <https://en.wikipedia.org/wiki/Thundering_herd_problem>`__ on
 human mentality.
 
 Literary Code Library
 ^^^^^^^^^^^^^^^^^^^^^
 
-If you read over the other notebooks you’ll see that developing code in
+If you read over the other notebooks you'll see that developing code in
 Joy is a lot like doing simple mathematics, and the descriptions of the
 code resemble math papers. The code also works the first time, no bugs.
 If you have any experience programming at all, you are probably
