@@ -8,8 +8,8 @@ WEBSERVER = sforman@shell.osdn.net
 
 
 clean:
-	$(RM) -r Xerblin.egg-info/ dist/ build/ __pycache__/ $(TESTDIR)
-	find . -name '*.pyc' | xargs $(RM)
+	$(RM) -rv Xerblin.egg-info/ dist/ build/ $(TESTDIR)
+	find . -name __pycache__ | xargs $(RM) -rv
 
 sdist:
 	python ./setup.py sdist bdist_wheel
