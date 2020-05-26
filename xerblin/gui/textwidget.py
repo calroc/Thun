@@ -18,19 +18,20 @@
 #    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
 #
 '''
-
+Text Viewer
+===========================================================
 
 A Graphical User Interface for a dialect of Joy in Python.
 
 
 The GUI
 
-	History
-	Structure
-	Commands
-		Mouse Chords
-		Keyboard
-	Output from Joy
+- History
+- Structure
+- Commands
+    - Mouse Chords
+    - Keyboard
+- Output from Joy
 
 
 '''
@@ -90,6 +91,9 @@ TEXT_BINDINGS = {
 
 
 class SavingMixin(object):
+	'''
+	Notice changes and save the text.
+	'''
 
 	def __init__(self, saver=None, filename=None, save_delay=2000):
 		self.saver = self._saver if saver is None else saver
@@ -168,10 +172,10 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 	it act as a Xerblin Text Viewer.
 	"""
 
-	#This is a regular expression for finding commands in the text.
+	#: This is a regular expression for finding commands in the text.
 	command_re = regular_expression(r'[-a-zA-Z0-9_\\~/.:!@#$%&*?=+<>]+')
 
-	#These are the config tags for command text when it's highlighted.
+	#: These are the config tags for command text when it's highlighted.
 	command_tags = dict(
 		#underline = 1,
 		#bgstipple = "gray50",
@@ -275,7 +279,7 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 			*extra_tags)
 
 	def highlight_command(self, from_, to, *extra_tags):
-		'''Apply command style from from_ to to.'''
+		'''Apply command style from ``from`` to ``to``.'''
 		cmdstart = self.index(from_)
 		cmdend = self.index(to)
 		self.tag_add('command', cmdstart, cmdend)

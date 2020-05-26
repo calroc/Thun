@@ -8,6 +8,6 @@ test/*
 gnu-prolog/thun
 venv
 build
-Thun.egg-info
+Xerblin.egg-info
 dist
 __pycache__

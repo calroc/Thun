@@ -10,6 +10,8 @@ Welcome to Xerblin's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   main
+   textwidget
 
 
 Indices and tables
