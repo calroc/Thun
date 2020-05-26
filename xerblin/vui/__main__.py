@@ -18,7 +18,7 @@
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
 
-import joy.vui.main
+import xerblin.vui.main
 
 
-joy.vui.main.main(*joy.vui.main.init())
+xerblin.vui.main.main(*xerblin.vui.main.init())
