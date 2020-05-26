@@ -34,6 +34,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
+    'sphinx.ext.imgmath',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
 ]
@@ -46,6 +47,8 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = 'colorful'
 
 # -- Options for HTML output -------------------------------------------------
 
