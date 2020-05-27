@@ -43,10 +43,9 @@ def type_check(name, stack):
 
 class World:
 
-	def __init__(self, stack=(), dictionary=None, text_widget=None):
+	def __init__(self, stack=(), dictionary=None):
 		self.stack = stack
 		self.dictionary = dictionary or {}
-		self.text_widget = text_widget
 		self.check_cache = {}
 
 	def check(self, name):
@@ -116,19 +115,15 @@ class World:
 		pass
 
 	def print_stack(self):
-		stack_out_index = self.text_widget.search('<' 'STACK', 1.0)
-		if stack_out_index:
-			self.text_widget.see(stack_out_index)
-			s = stack_to_string(self.stack) + '\n'
-			self.text_widget.insert(stack_out_index, s)
+		pass
 
 
 class StackDisplayWorld(World):
 
-	def __init__(self, repo, filename, rel_filename, dictionary=None, text_widget=None):
+	def __init__(self, repo, filename, rel_filename, dictionary=None):
 		self.filename = filename
 		stack = self.load_stack() or ()
-		World.__init__(self, stack, dictionary, text_widget)
+		World.__init__(self, stack, dictionary)
 		self.repo = repo
 		self.relative_STACK_FN = rel_filename
 

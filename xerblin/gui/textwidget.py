@@ -58,12 +58,12 @@ from .utils import is_numerical
 from .world import World
 
 
-def make_gui(dictionary):
-	t = TextViewerWidget(World(dictionary=dictionary))
-	t['font'] = get_font()
-	t._root().title('Joy')
-	t.pack(expand=True, fill=tk.BOTH)
-	return t
+# def make_gui(dictionary):
+# 	t = TextViewerWidget(World(dictionary=dictionary))
+# 	t['font'] = get_font()
+# 	t._root().title('Joy')
+# 	t.pack(expand=True, fill=tk.BOTH)
+# 	return t
 
 
 def get_font(family='EB Garamond', size=14):
@@ -187,8 +187,6 @@ class TextViewerWidget(tk.Text, MouseBindingsMixin, SavingMixin):
 	def __init__(self, world, master=None, **kw):
 
 		self.world = world
-		if self.world.text_widget is None:
-			self.world.text_widget = self
 
 		#Turn on undo, but don't override a passed-in setting.
 		kw.setdefault('undo', True)
