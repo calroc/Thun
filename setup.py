@@ -31,10 +31,11 @@ setup(
 	url='https://joypy.osdn.io',
 	license='GPLv3+',
 	packages=['xerblin', 'xerblin.gui', 'xerblin.vui'],
+	scripts = ['scripts/xerblin'],
 	classifiers=[
 		'Development Status :: 4 - Beta',
 		'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-        'Programming Language :: Python :: 3',
+		'Programming Language :: Python :: 3',
 		'Programming Language :: Other',
 		'Topic :: Software Development :: Interpreters',
 		],
@@ -43,5 +44,5 @@ setup(
 		'dulwich',
 		'future',
 		],
-    extras_require={'build-docs': ['sphinx']}
+	extras_require={'build-docs': ['sphinx']}
 	)

@@ -1,6 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
+#    Copyright © 2018-2020 Simon Forman
+#
+#    This file is part of Xerblin.
+#
+#    Xerblin is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Xerblin is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Xerblin.  If not see <http://www.gnu.org/licenses/>.
+#
+#
 # This is a script, the module namespace is used as a kind of singleton
 # for organizing the moving parts of the system.
 #
@@ -8,7 +26,7 @@
 # It's a two-line string broken up into chunks so you can read it in the
 # source without wrapping.  In the Text widgets it will be wrapped.)
 ('''\
-Joypy - Copyright © 2018 Simon Forman
+Xerblin - Copyright © 2018 Simon Forman
 '''
 'This program comes with ABSOLUTELY NO WARRANTY; for details right-click "warranty".'
 ' This is free software, and you are welcome to redistribute it under certain conditions;'
@@ -42,7 +60,7 @@ cp = RawConfigParser()
 # Don't mess with uppercase.  We need it for Tk event binding.
 cp.optionxform = str
 with open(os.path.join(args.joy_home, 'thun.config')) as f:
-	cp.readfp(f)
+	cp.read_file(f)
 
 
 GLOBAL_COMMANDS = dict(cp.items('key bindings'))
