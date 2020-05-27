@@ -10,7 +10,7 @@ Welcome to Xerblin's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   main
+   world
    textwidget
 
 
