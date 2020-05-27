@@ -17,12 +17,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with joy.py.  If not see <http://www.gnu.org/licenses/>.
 #
-from __future__ import print_function
-from builtins import object
-from logging import getLogger
-
-_log = getLogger(__name__)
-
 import os, pickle, sys
 from inspect import getdoc
 
@@ -37,7 +31,7 @@ def type_check(name, stack):
 	return  # None indicating "I dunno."
 
 
-class World(object):
+class World:
 
 	def __init__(self, stack=(), dictionary=None, text_widget=None):
 		self.stack = stack
@@ -149,11 +143,10 @@ class StackDisplayWorld(World):
 			f.flush()
 			os.fsync(f.fileno())
 		self.repo.stage([self.relative_STACK_FN])
-		commit_id = self.repo.do_commit(
+		self.repo.do_commit(
 			b'auto-save',
 			committer=b'thun-auto-save <nobody@example.com>',
 			)
-		_log.info('commit %s', commit_id)
 
 	def load_stack(self):
 		if os.path.exists(self.filename):

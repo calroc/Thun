@@ -16,18 +16,20 @@ Joypy - Copyright © 2018 Simon Forman
 ' right-click "sharing" for details.'
 ' Right-click on these commands to see docs on UI commands: key_bindings mouse_bindings')
 
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
 import logging, os, pickle, sys
 from datetime import datetime
 from textwrap import dedent
 from configparser import RawConfigParser
 
 from xerblin.gui.utils import init_home, argparser, FileFaker
+from xerblin.gui.textwidget import TextViewerWidget, tk, get_font
+from xerblin.gui.world import StackWorld
+from xerblin.gui.controllerlistbox import StackListbox
+from joy.library import initialize, DefinitionWrapper
+from joy.utils.stack import stack_to_string
 
 
-DATETIME_FORMAT = "Thun • %B %d %a • %I:%M %p"
+DATETIME_FORMAT = 'Thun • %B %d %a • %I:%M %p'
 VIEWER_DEFAULTS = dict(width=80, height=25)
 
 
@@ -35,24 +37,6 @@ args = argparser.parse_args()
 JOY_HOME = args.joy_home
 repo = init_home(JOY_HOME)
 homed = lambda fn: os.path.join(JOY_HOME, fn)
-
-# Set up logging before doing anything else.
-
-_log = logging.getLogger(__name__)
-logging.basicConfig(
-	format='%(asctime)-15s %(levelname)s %(name)s %(message)s',
-	filename=os.path.join(JOY_HOME, 'thun.log'),
-	level=logging.INFO,
-	)
-_log.info('Starting with JOY_HOME=%s', JOY_HOME)
-
-# Now that logging is set up, continue loading the system.
-
-from xerblin.gui.textwidget import TextViewerWidget, tk, get_font
-from xerblin.gui.world import StackWorld
-from xerblin.gui.controllerlistbox import StackListbox
-from joy.library import initialize, DefinitionWrapper
-from joy.utils.stack import stack_to_string
 
 
 cp = RawConfigParser()
