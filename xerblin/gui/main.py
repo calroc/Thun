@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 #
 # This is a script, the module namespace is used as a kind of singleton
-# for organizing the moving parts of the system.  I forget why I didn't
-# use a more typical class.
+# for organizing the moving parts of the system.
 #
-# This docstring doubles as the log header that the system prints when
-# the log is reset.
-
+# (The docstring doubles as a header that the system prints, see below.
+# It's a two-line string broken up into chunks so you can read it in the
+# source without wrapping.  In the Text widgets it will be wrapped.)
 ('''\
 Joypy - Copyright © 2018 Simon Forman
 '''
@@ -54,6 +53,7 @@ def repo_relative_path(path):
 		path,
 		os.path.commonprefix((repo.controldir(), path))
 		)
+
 
 def commands():
 	'''
@@ -144,18 +144,18 @@ world = StackWorld(repo, STACK_FN, REL_STACK_FN, dictionary=D)
 
 t = TextViewerWidget(world, **VIEWER_DEFAULTS)
 
-log_window = tk.Toplevel()
-# Make it so that you can't actually close the log window, if you try it
-# will just "withdraw" (which is like minifying but without a entry in
-# the taskbar or icon or whatever.)
-log_window.protocol("WM_DELETE_WINDOW", log_window.withdraw)
+# Make it so that you can't actually close the log and stack viewers, if
+# you try it will just "withdraw" (which is like minifying but without a
+# entry in the taskbar or icon or whatever.)
+w = lambda T: T.protocol("WM_DELETE_WINDOW", T.withdraw)
+
+log_window = tk.Toplevel() ; w(log_window)
 log = TextViewerWidget(world, log_window, **VIEWER_DEFAULTS)
 
 FONT = get_font('Iosevka', size=14)  # Requires Tk root already set up.
 
-stack_window = tk.Toplevel()
+stack_window = tk.Toplevel() ; w(stack_window)
 stack_window.title("Stack")
-stack_window.protocol("WM_DELETE_WINDOW", log_window.withdraw)
 stack_viewer = StackListbox(world, stack_window, items=[], font=FONT)
 stack_viewer.pack(expand=True, fill=tk.BOTH)
 world.set_viewer(stack_viewer)

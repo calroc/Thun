@@ -19,7 +19,6 @@
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
 from setuptools import setup
-from textwrap import dedent
 
 
 setup(
