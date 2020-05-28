@@ -1,12 +1,37 @@
+# -*- coding: utf-8 -*-
+#
+#    Copyright © 2014-2020 Simon Forman
+#
+#    This file is part of Xerblin.
+#
+#    Xerblin is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Xerblin is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Xerblin.  If not see <http://www.gnu.org/licenses/>.
+#
 '''
+
+Home Directory Initialization
+===========================================================
+
 Utility module to help with setting up the initial contents of the
 JOY_HOME directory.
 
 These contents are kept in this Python module as a base64-encoded zip
-file, so you can just do, e.g.:
+file, so you can just do, e.g.::
 
-    import init_joy_home
-    init_joy_home.initialize(JOY_HOME)
+
+	import init_joy_home
+	init_joy_home.initialize(JOY_HOME)
+
 
 '''
 from __future__ import print_function

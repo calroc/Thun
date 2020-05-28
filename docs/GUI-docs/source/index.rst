@@ -124,9 +124,12 @@ Modules
 .. toctree::
    :maxdepth: 2
 
+   controllerlistbox
+   mousebindings
    textwidget
    utils
    world
+   init_joy_home
 
 
 Indices and tables
