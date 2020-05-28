@@ -1,7 +1,5 @@
 .. Xerblin documentation master file, created by
    sphinx-quickstart on Mon May 25 20:33:57 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 Xerblin Documentation
 ===================================
@@ -126,8 +124,9 @@ Modules
 .. toctree::
    :maxdepth: 2
 
-   world
    textwidget
+   utils
+   world
 
 
 Indices and tables
