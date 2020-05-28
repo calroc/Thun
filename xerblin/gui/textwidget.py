@@ -21,17 +21,6 @@
 Text Viewer
 ===========================================================
 
-A Graphical User Interface for a dialect of Joy in Python.
-
-
-The GUI
-
-- History
-- Structure
-- Commands
-    - Mouse Chords
-    - Keyboard
-- Output from Joy
 
 
 '''
