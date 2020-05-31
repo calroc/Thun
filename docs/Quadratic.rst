@@ -10,9 +10,9 @@ Cf.
 
 ::
 
-      -b ± sqrt(b^2 - 4 * a * c)
-   --------------------------------
-               2 * a
+       -b ± sqrt(b^2 - 4 * a * c)
+    --------------------------------
+                2 * a
 
 :math:`\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}`
 
@@ -28,21 +28,21 @@ a definition without them.
 
 ::
 
-   b neg
+    b neg
 
 ``sqrt(b^2 - 4 * a * c)``
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-   b sqr 4 a c * * - sqrt
+    b sqr 4 a c * * - sqrt
 
 ``/2a``
 ~~~~~~~
 
 ::
 
-   a 2 * /
+    a 2 * /
 
 ``±``
 ~~~~~
@@ -52,14 +52,14 @@ replaces them with their sum and difference.
 
 ::
 
-   pm == [+] [-] cleave popdd
+    pm == [+] [-] cleave popdd
 
 Putting Them Together
 ~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-   b neg b sqr 4 a c * * - sqrt pm a 2 * [/] cons app2
+    b neg b sqr 4 a c * * - sqrt pm a 2 * [/] cons app2
 
 We use ``app2`` to compute both roots by using a quoted program
 ``[2a /]`` built with ``cons``.
@@ -72,20 +72,20 @@ the variables:
 
 ::
 
-   b             neg  b      sqr 4 a c   * * - sqrt pm a    2 * [/] cons app2
-   b            [neg] dupdip sqr 4 a c   * * - sqrt pm a    2 * [/] cons app2
-   b a c       [[neg] dupdip sqr 4] dipd * * - sqrt pm a    2 * [/] cons app2
-   b a c a    [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
-   b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
+    b             neg  b      sqr 4 a c   * * - sqrt pm a    2 * [/] cons app2
+    b            [neg] dupdip sqr 4 a c   * * - sqrt pm a    2 * [/] cons app2
+    b a c       [[neg] dupdip sqr 4] dipd * * - sqrt pm a    2 * [/] cons app2
+    b a c a    [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
+    b a c over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
 
-The three arguments are to the left, so we can “chop off” everything to
-the right and say it’s the definition of the ``quadratic`` function:
+The three arguments are to the left, so we can "chop off" everything to
+the right and say it's the definition of the ``quadratic`` function:
 
 .. code:: ipython2
 
     define('quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2')
 
-Let’s try it out:
+Let's try it out:
 
 .. code:: ipython2
 

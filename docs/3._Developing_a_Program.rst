@@ -1,17 +1,17 @@
-`Project Euler, first problem: “Multiples of 3 and 5” <https://projecteuler.net/problem=1>`__
+`Project Euler, first problem: "Multiples of 3 and 5" <https://projecteuler.net/problem=1>`__
 =============================================================================================
 
 ::
 
-   If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
+    If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
 
-   Find the sum of all the multiples of 3 or 5 below 1000.
+    Find the sum of all the multiples of 3 or 5 below 1000.
 
 .. code:: ipython2
 
     from notebook_preamble import J, V, define
 
-Let’s create a predicate that returns ``True`` if a number is a multiple
+Let's create a predicate that returns ``True`` if a number is a multiple
 of 3 or 5 and ``False`` otherwise.
 
 .. code:: ipython2
@@ -44,7 +44,7 @@ Given the predicate function ``P`` a suitable program is:
 
 ::
 
-   PE1 == 1000 range [P] filter sum
+    PE1 == 1000 range [P] filter sum
 
 This function generates a list of the integers from 0 to 999, filters
 that list by ``P``, and then sums the result.
@@ -68,22 +68,22 @@ Consider the first few terms in the series:
 
 ::
 
-   3 5 6 9 10 12 15 18 20 21 ...
+    3 5 6 9 10 12 15 18 20 21 ...
 
 Subtract each number from the one after it (subtracting 0 from 3):
 
 ::
 
-   3 5 6 9 10 12 15 18 20 21 24 25 27 30 ...
-   0 3 5 6  9 10 12 15 18 20 21 24 25 27 ...
-   -------------------------------------------
-   3 2 1 3  1  2  3  3  2  1  3  1  2  3 ...
+    3 5 6 9 10 12 15 18 20 21 24 25 27 30 ...
+    0 3 5 6  9 10 12 15 18 20 21 24 25 27 ...
+    -------------------------------------------
+    3 2 1 3  1  2  3  3  2  1  3  1  2  3 ...
 
 You get this lovely repeating palindromic sequence:
 
 ::
 
-   3 2 1 3 1 2 3
+    3 2 1 3 1 2 3
 
 To make a counter that increments by factors of 3 and 5 you just add
 these differences to the counter one-by-one in a loop.
@@ -95,7 +95,7 @@ the counter to the running sum. This function will do that:
 
 ::
 
-   PE1.1 == + [+] dupdip
+    PE1.1 == + [+] dupdip
 
 .. code:: ipython2
 
@@ -276,8 +276,8 @@ get to 990 and then the first four numbers 3 2 1 3 to get to 999.
     233168
 
 
-This form uses no extra storage and produces no unused summands. It’s
-good but there’s one more trick we can apply. The list of seven terms
+This form uses no extra storage and produces no unused summands. It's
+good but there's one more trick we can apply. The list of seven terms
 takes up at least seven bytes. But notice that all of the terms are less
 than four, and so each can fit in just two bits. We could store all
 seven terms in just fourteen bits and use masking and shifts to pick out
@@ -286,8 +286,8 @@ integer terms from the list.
 
 ::
 
-       3  2  1  3  1  2  3
-   0b 11 10 01 11 01 10 11 == 14811
+        3  2  1  3  1  2  3
+    0b 11 10 01 11 01 10 11 == 14811
 
 .. code:: ipython2
 
@@ -516,14 +516,14 @@ And so we have at last:
     233168
 
 
-Let’s refactor.
+Let's refactor.
 
 ::
 
-     14811 7 [PE1.2] times pop
-     14811 4 [PE1.2] times pop
-     14811 n [PE1.2] times pop
-   n 14811 swap [PE1.2] times pop
+      14811 7 [PE1.2] times pop
+      14811 4 [PE1.2] times pop
+      14811 n [PE1.2] times pop
+    n 14811 swap [PE1.2] times pop
 
 .. code:: ipython2
 
@@ -545,21 +545,21 @@ Now we can simplify the definition above:
     233168
 
 
-Here’s our joy program all in one place. It doesn’t make so much sense,
+Here's our joy program all in one place. It doesn't make so much sense,
 but if you have read through the above description of how it was derived
-I hope it’s clear.
+I hope it's clear.
 
 ::
 
-   PE1.1 == + [+] dupdip
-   PE1.2 == [3 & PE1.1] dupdip 2 >>
-   PE1.3 == 14811 swap [PE1.2] times pop
-   PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop
+    PE1.1 == + [+] dupdip
+    PE1.2 == [3 & PE1.1] dupdip 2 >>
+    PE1.3 == 14811 swap [PE1.2] times pop
+    PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop
 
 Generator Version
 =================
 
-It’s a little clunky iterating sixty-six times though the seven numbers
+It's a little clunky iterating sixty-six times though the seven numbers
 then four more. In the *Generator Programs* notebook we derive a
 generator that can be repeatedly driven by the ``x`` combinator to
 produce a stream of the seven numbers repeating over and over again.
@@ -591,8 +591,8 @@ terms to reach up to but not over one thousand.
     466
 
 
-Here they are…
-~~~~~~~~~~~~~~
+Here they are...
+~~~~~~~~~~~~~~~~
 
 .. code:: ipython2
 
@@ -604,8 +604,8 @@ Here they are…
     3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3
 
 
-…and they do sum to 999.
-~~~~~~~~~~~~~~~~~~~~~~~~
+...and they do sum to 999.
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: ipython2
 
@@ -618,7 +618,7 @@ Here they are…
 
 
 Now we can use ``PE1.1`` to accumulate the terms as we go, and then
-``pop`` the generator and the counter from the stack when we’re done,
+``pop`` the generator and the counter from the stack when we're done,
 leaving just the sum.
 
 .. code:: ipython2
@@ -652,21 +652,21 @@ Instead of summing them,
 
 ::
 
-     10  9  8  7  6
-   +  1  2  3  4  5
-   ---- -- -- -- --
-     11 11 11 11 11
-     
-     11 * 5 = 55
+      10  9  8  7  6
+    +  1  2  3  4  5
+    ---- -- -- -- --
+      11 11 11 11 11
+      
+      11 * 5 = 55
 
 From the above example we can deduce that the sum of the first N
 positive integers is:
 
 ::
 
-   (N + 1) * N / 2 
+    (N + 1) * N / 2 
 
-(The formula also works for odd values of N, I’ll leave that to you if
+(The formula also works for odd values of N, I'll leave that to you if
 you want to work it out or you can take my word for it.)
 
 .. code:: ipython2
@@ -695,20 +695,20 @@ Generalizing to Blocks of Terms
 
 We can apply the same reasoning to the PE1 problem.
 
-Between 0 and 990 inclusive there are sixty-six “blocks” of seven terms
+Between 0 and 990 inclusive there are sixty-six "blocks" of seven terms
 each, starting with:
 
 ::
 
-   [3 5 6 9 10 12 15]
+    [3 5 6 9 10 12 15]
 
 And ending with:
 
 ::
 
-   [978 980 981 984 985 987 990]
+    [978 980 981 984 985 987 990]
 
-If we reverse one of these two blocks and sum pairs…
+If we reverse one of these two blocks and sum pairs...
 
 .. code:: ipython2
 
@@ -749,9 +749,9 @@ additional unpaired terms between 990 and 1000:
 
 ::
 
-   993 995 996 999
+    993 995 996 999
 
-So we can give the “sum of all the multiples of 3 or 5 below 1000” like
+So we can give the "sum of all the multiples of 3 or 5 below 1000" like
 so:
 
 .. code:: ipython2
@@ -764,7 +764,7 @@ so:
     233168
 
 
-It’s worth noting, I think, that this same reasoning holds for any two
+It's worth noting, I think, that this same reasoning holds for any two
 numbers :math:`n` and :math:`m` the multiples of which we hope to sum.
 The multiples would have a cycle of differences of length :math:`k` and
 so we could compute the sum of :math:`Nk` multiples as above.
@@ -774,14 +774,14 @@ interval spanning the least common multiple of :math:`n` and :math:`m`:
 
 ::
 
-   |   |   |   |   |   |   |   |
-   |      |      |      |      |
+    |   |   |   |   |   |   |   |
+    |      |      |      |      |
 
 Here we have 4 and 7, and you can read off the sequence of differences
 directly from the diagram: 4 3 1 4 2 2 4 1 3 4.
 
 Geometrically, the actual values of :math:`n` and :math:`m` and their
-*lcm* don’t matter, the pattern they make will always be symmetrical
+*lcm* don't matter, the pattern they make will always be symmetrical
 around its midpoint. The same reasoning holds for multiples of more than
 two numbers.
 
@@ -793,6 +793,6 @@ is just:
 
 ::
 
-   PE1 == 233168
+    PE1 == 233168
 
 Fin.

@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Stack or Quote or Sequence or List… &#8212; Thun 0.4.0 documentation</title>
+    <meta charset="utf-8" />
+    <title>Stack or Quote or Sequence or List… &#8212; Thun 0.4.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Parsing Text into Joy Expressions" href="parser.html" />
@@ -30,6 +29,8 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="stack-or-quote-or-sequence-or-list">
@@ -44,7 +45,7 @@ values from (at least) one end.</p>
 venerable two-tuple recursive sequence datastructure, where the
 empty tuple <code class="docutils literal notranslate"><span class="pre">()</span></code> is the empty stack and <code class="docutils literal notranslate"><span class="pre">(head,</span> <span class="pre">rest)</span></code> gives the
 recursive form of a stack with one or more items on it:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stack</span> <span class="p">:</span><span class="o">=</span> <span class="p">()</span> <span class="o">|</span> <span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stack</span> <span class="o">:=</span> <span class="p">()</span> <span class="o">|</span> <span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Putting some numbers onto a stack:</p>
@@ -80,137 +81,119 @@ iterable and another to iterate through a stack and yield its items
 one-by-one in order.  There are also two functions to generate string representations
 of stacks.  They only differ in that one prints the terms in stack from left-to-right while the other prints from right-to-left.  In both functions <em>internal stacks</em> are
 printed left-to-right.  These functions are written to support <a class="reference internal" href="pretty.html"><span class="doc">Tracing Joy Execution</span></a>.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.stack.concat">
-<code class="descclassname">joy.utils.stack.</code><code class="descname">concat</code><span class="sig-paren">(</span><em>quote</em>, <em>expression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#concat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.concat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.stack.</code><code class="sig-name descname">concat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">quote</span></em>, <em class="sig-param"><span class="n">expression</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#concat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.concat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatinate quote onto expression.</p>
 <p>In joy [1 2] [3 4] would become [1 2 3 4].</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>quote</strong> (<em>stack</em>) – A stack.</li>
-<li><strong>expression</strong> (<em>stack</em>) – A stack.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quote</strong> (<em>stack</em>) – A stack.</p></li>
+<li><p><strong>expression</strong> (<em>stack</em>) – A stack.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>RuntimeError</strong> – if quote is larger than sys.getrecursionlimit().</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">stack</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – if quote is larger than sys.getrecursionlimit().</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>stack</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.stack.expression_to_string">
-<code class="descclassname">joy.utils.stack.</code><code class="descname">expression_to_string</code><span class="sig-paren">(</span><em>expression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#expression_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.expression_to_string" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.stack.</code><code class="sig-name descname">expression_to_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">expression</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#expression_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.expression_to_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a “pretty print” string for a expression.</p>
 <p>The items are written left-to-right:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="s1">&#39;top second ...&#39;</span>
 </pre></div>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>expression</strong> (<em>stack</em>) – A stack.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>expression</strong> (<em>stack</em>) – A stack.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.stack.iter_stack">
-<code class="descclassname">joy.utils.stack.</code><code class="descname">iter_stack</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#iter_stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.iter_stack" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.stack.</code><code class="sig-name descname">iter_stack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stack</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#iter_stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.iter_stack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate through the items on the stack.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stack</strong> (<em>stack</em>) – A stack.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">iterator</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stack</strong> (<em>stack</em>) – A stack.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>iterator</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.stack.list_to_stack">
-<code class="descclassname">joy.utils.stack.</code><code class="descname">list_to_stack</code><span class="sig-paren">(</span><em>el</em>, <em>stack=()</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#list_to_stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.list_to_stack" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.stack.</code><code class="sig-name descname">list_to_stack</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">el</span></em>, <em class="sig-param"><span class="n">stack</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#list_to_stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.list_to_stack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a Python list (or other sequence) to a Joy stack:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">())))</span>
 </pre></div>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>el</strong> (<em>list</em>) – A Python list or other sequence (iterators and generators
-won’t work because <code class="docutils literal notranslate"><span class="pre">reverse()</span></code> is called on <code class="docutils literal notranslate"><span class="pre">el</span></code>.)</li>
-<li><strong>stack</strong> (<em>stack</em>) – A stack, optional, defaults to the empty stack.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>el</strong> (<em>list</em>) – A Python list or other sequence (iterators and generators
+won’t work because <code class="docutils literal notranslate"><span class="pre">reverse()</span></code> is called on <code class="docutils literal notranslate"><span class="pre">el</span></code>.)</p></li>
+<li><p><strong>stack</strong> (<em>stack</em>) – A stack, optional, defaults to the empty stack.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">stack</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>stack</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.stack.pick">
-<code class="descclassname">joy.utils.stack.</code><code class="descname">pick</code><span class="sig-paren">(</span><em>stack</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#pick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.pick" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.stack.</code><code class="sig-name descname">pick</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stack</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#pick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.pick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the nth item on the stack.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>stack</strong> (<em>stack</em>) – A stack.</li>
-<li><strong>n</strong> (<em>int</em>) – An index into the stack.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stack</strong> (<em>stack</em>) – A stack.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – An index into the stack.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first simple">
-<li><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">n</span></code> is less than zero.</li>
-<li><strong>IndexError</strong> – if <code class="docutils literal notranslate"><span class="pre">n</span></code> is equal to or greater than the length of <code class="docutils literal notranslate"><span class="pre">stack</span></code>.</li>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if <code class="docutils literal notranslate"><span class="pre">n</span></code> is less than zero.</p></li>
+<li><p><strong>IndexError</strong> – if <code class="docutils literal notranslate"><span class="pre">n</span></code> is equal to or greater than the length of <code class="docutils literal notranslate"><span class="pre">stack</span></code>.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">whatever</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>whatever</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="joy.utils.stack.stack_to_string">
-<code class="descclassname">joy.utils.stack.</code><code class="descname">stack_to_string</code><span class="sig-paren">(</span><em>stack</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#stack_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.stack_to_string" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">joy.utils.stack.</code><code class="sig-name descname">stack_to_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stack</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/stack.html#stack_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.stack.stack_to_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a “pretty print” string for a stack.</p>
 <p>The items are written right-to-left:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="s1">&#39;... second top&#39;</span>
 </pre></div>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stack</strong> (<em>stack</em>) – A stack.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stack</strong> (<em>stack</em>) – A stack.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -218,17 +201,36 @@ won’t work because <code class="docutils literal notranslate"><span class="pre
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Stack or Quote or Sequence or List…</a><ul>
-<li><a class="reference internal" href="#module-joy.utils.stack"><code class="docutils literal notranslate"><span class="pre">joy.utils.stack</span></code></a></li>
+<h1 class="logo"><a href="index.html">Thun</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Intro.html">Thun: Joy in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="joy.html">Joy Interpreter</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Stack or Quote or Sequence or List…</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-joy.utils.stack"><code class="docutils literal notranslate"><span class="pre">joy.utils.stack</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="parser.html">Parsing Text into Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pretty.html">Tracing Joy Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lib.html">Functions Grouped by, er, Function with Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="types.html">Type Inference of Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Essays about Programming in Joy</a></li>
 </ul>
+
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -238,25 +240,24 @@ won’t work because <code class="docutils literal notranslate"><span class="pre
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/stack.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -267,7 +268,7 @@ won’t work because <code class="docutils literal notranslate"><span class="pre
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
     </div>
 
   </body>

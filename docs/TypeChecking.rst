@@ -98,7 +98,7 @@ An Example
     (... [3 4 ] 2 1 0 -- ... [1 2 ])
 
 
-Unification Works “in Reverse”
+Unification Works "in Reverse"
 ------------------------------
 
 .. code:: ipython2

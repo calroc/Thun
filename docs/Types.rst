@@ -2,35 +2,35 @@ The Blissful Elegance of Typing Joy
 ===================================
 
 This notebook presents a simple type inferencer for Joy code. It can
-infer the stack effect of most Joy expressions. It’s built largely by
+infer the stack effect of most Joy expressions. It's built largely by
 means of existing ideas and research. (A great overview of the existing
-knowledge is a talk `“Type Inference in Stack-Based Programming
-Languages” <http://prl.ccs.neu.edu/blog/2017/03/10/type-inference-in-stack-based-programming-languages/>`__
+knowledge is a talk `"Type Inference in Stack-Based Programming
+Languages" <http://prl.ccs.neu.edu/blog/2017/03/10/type-inference-in-stack-based-programming-languages/>`__
 given by Rob Kleffner on or about 2017-03-10 as part of a course on the
 history of programming languages.)
 
 The notebook starts with a simple inferencer based on the work of Jaanus
 Pöial which we then progressively elaborate to cover more Joy semantics.
-Along the way we write a simple “compiler” that emits Python code for
+Along the way we write a simple "compiler" that emits Python code for
 what I like to call Yin functions. (Yin functions are those that only
 rearrange values in stacks, as opposed to Yang functions that actually
 work on the values themselves.)
 
-Part I: Pöial’s Rules
+Part I: Pöial's Rules
 ---------------------
 
-`“Typing Tools for Typeless Stack Languages” by Jaanus
+`"Typing Tools for Typeless Stack Languages" by Jaanus
 Pöial <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.212.6026>`__
 
 ::
 
-   @INPROCEEDINGS{Pöial06typingtools,
-       author = {Jaanus Pöial},
-       title = {Typing tools for typeless stack languages},
-       booktitle = {In 23rd Euro-Forth Conference},
-       year = {2006},
-       pages = {40--46}
-   }
+    @INPROCEEDINGS{Pöial06typingtools,
+        author = {Jaanus Pöial},
+        title = {Typing tools for typeless stack languages},
+        booktitle = {In 23rd Euro-Forth Conference},
+        year = {2006},
+        pages = {40--46}
+    }
 
 First Rule
 ~~~~~~~~~~
@@ -40,9 +40,9 @@ stack ``(-- d)``:
 
 ::
 
-      (a -- b)∘(-- d)
-   ---------------------
-        (a -- b d)
+       (a -- b)∘(-- d)
+    ---------------------
+         (a -- b d)
 
 Second Rule
 ~~~~~~~~~~~
@@ -52,9 +52,9 @@ This rule deals with functions that consume items from the stack
 
 ::
 
-      (a --)∘(c -- d)
-   ---------------------
-        (c a -- d)
+       (a --)∘(c -- d)
+    ---------------------
+         (c a -- d)
 
 Third Rule
 ~~~~~~~~~~
@@ -62,84 +62,84 @@ Third Rule
 The third rule is actually two rules. These two rules deal with
 composing functions when the second one will consume one of items the
 first one produces. The two types must be
-`unified <https://en.wikipedia.org/wiki/Robinson's_unification_algorithm>`__
+`*unified* <https://en.wikipedia.org/wiki/Robinson's_unification_algorithm>`__
 or a type conflict declared.
 
 ::
 
-      (a -- b t[i])∘(c u[j] -- d)   t <= u (t is subtype of u)
-   -------------------------------
-      (a -- b     )∘(c      -- d)   t[i] == t[k] == u[j]
-                                            ^
+       (a -- b t[i])∘(c u[j] -- d)   t <= u (t is subtype of u)
+    -------------------------------
+       (a -- b     )∘(c      -- d)   t[i] == t[k] == u[j]
+                                             ^
 
-      (a -- b t[i])∘(c u[j] -- d)   u <= t (u is subtype of t)
-   -------------------------------
-      (a -- b     )∘(c      -- d)   t[i] == u[k] == u[j]
+       (a -- b t[i])∘(c u[j] -- d)   u <= t (u is subtype of t)
+    -------------------------------
+       (a -- b     )∘(c      -- d)   t[i] == u[k] == u[j]
 
-Let’s work through some examples by hand to develop an intuition for the
+Let's work through some examples by hand to develop an intuition for the
 algorithm.
 
-There’s a function in one of the other notebooks.
+There's a function in one of the other notebooks.
 
 ::
 
-   F == pop swap roll< rest rest cons cons
+    F == pop swap roll< rest rest cons cons
 
-It’s all “stack chatter” and list manipulation so we should be able to
+It's all "stack chatter" and list manipulation so we should be able to
 deduce its type.
 
 Stack Effect Comments
 ~~~~~~~~~~~~~~~~~~~~~
 
 Joy function types will be represented by Forth-style stack effect
-comments. I’m going to use numbers instead of names to keep track of the
+comments. I'm going to use numbers instead of names to keep track of the
 stack arguments. (A little bit like `De Bruijn
 index <https://en.wikipedia.org/wiki/De_Bruijn_index>`__, at least it
 reminds me of them):
 
 ::
 
-   pop (1 --)
+    pop (1 --)
 
-   swap (1 2 -- 2 1)
+    swap (1 2 -- 2 1)
 
-   roll< (1 2 3 -- 2 3 1)
+    roll< (1 2 3 -- 2 3 1)
 
-These commands alter the stack but don’t “look at” the values so these
-numbers represent an “Any type”.
+These commands alter the stack but don't "look at" the values so these
+numbers represent an "Any type".
 
 ``pop swap``
 ~~~~~~~~~~~~
 
 ::
 
-   (1 --) (1 2 -- 2 1)
+    (1 --) (1 2 -- 2 1)
 
 Here we encounter a complication. The argument numbers need to be made
-unique among both sides. For this let’s change ``pop`` to use 0:
+unique among both sides. For this let's change ``pop`` to use 0:
 
 ::
 
-   (0 --) (1 2 -- 2 1)
+    (0 --) (1 2 -- 2 1)
 
 Following the second rule:
 
 ::
 
-   (1 2 0 -- 2 1)
+    (1 2 0 -- 2 1)
 
 ``pop∘swap roll<``
 ~~~~~~~~~~~~~~~~~~
 
 ::
 
-   (1 2 0 -- 2 1) (1 2 3 -- 2 3 1)
+    (1 2 0 -- 2 1) (1 2 3 -- 2 3 1)
 
-Let’s re-label them:
+Let's re-label them:
 
 ::
 
-   (1a 2a 0a -- 2a 1a) (1b 2b 3b -- 2b 3b 1b)
+    (1a 2a 0a -- 2a 1a) (1b 2b 3b -- 2b 3b 1b)
 
 Now we follow the rules.
 
@@ -148,41 +148,41 @@ terms in the forms:
 
 ::
 
-   (1a 2a 0a -- 2a 1a) (1b 2b 3b -- 2b 3b 1b)
-                                               w/  {1a: 3b}
-   (3b 2a 0a -- 2a   ) (1b 2b    -- 2b 3b 1b)
-                                               w/  {2a: 2b}
-   (3b 2b 0a --      ) (1b       -- 2b 3b 1b)
+    (1a 2a 0a -- 2a 1a) (1b 2b 3b -- 2b 3b 1b)
+                                                w/  {1a: 3b}
+    (3b 2a 0a -- 2a   ) (1b 2b    -- 2b 3b 1b)
+                                                w/  {2a: 2b}
+    (3b 2b 0a --      ) (1b       -- 2b 3b 1b)
 
 Here we must apply the second rule:
 
 ::
 
-      (3b 2b 0a --) (1b -- 2b 3b 1b)
-   -----------------------------------
-        (1b 3b 2b 0a -- 2b 3b 1b)
+       (3b 2b 0a --) (1b -- 2b 3b 1b)
+    -----------------------------------
+         (1b 3b 2b 0a -- 2b 3b 1b)
 
 Now we de-label the type, uh, labels:
 
 ::
 
-   (1b 3b 2b 0a -- 2b 3b 1b)
+    (1b 3b 2b 0a -- 2b 3b 1b)
 
-   w/ {
-       1b: 1,
-       3b: 2,
-       2b: 3,
-       0a: 0,
-       }
+    w/ {
+        1b: 1,
+        3b: 2,
+        2b: 3,
+        0a: 0,
+        }
 
-   (1 2 3 0 -- 3 2 1)
+    (1 2 3 0 -- 3 2 1)
 
 And now we have the stack effect comment for ``pop∘swap∘roll<``.
 
 Compiling ``pop∘swap∘roll<``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The simplest way to “compile” this function would be something like:
+The simplest way to "compile" this function would be something like:
 
 .. code:: ipython2
 
@@ -196,7 +196,7 @@ Looking ahead for a moment, from the stack effect comment:
 
 ::
 
-   (1 2 3 0 -- 3 2 1)
+    (1 2 3 0 -- 3 2 1)
 
 We should be able to directly write out a Python function like:
 
@@ -207,7 +207,7 @@ We should be able to directly write out a Python function like:
         return (c, (b, (a, stack)))
 
 This eliminates the internal work of the first version. Because this
-function only rearranges the stack and doesn’t do any actual processing
+function only rearranges the stack and doesn't do any actual processing
 on the stack items themselves all the information needed to implement it
 is in the stack effect comment.
 
@@ -218,94 +218,94 @@ These are slightly tricky.
 
 ::
 
-   rest ( [1 ...] -- [...] )
+    rest ( [1 ...] -- [...] )
 
-   cons ( 1 [...] -- [1 ...] )
+    cons ( 1 [...] -- [1 ...] )
 
 ``pop∘swap∘roll< rest``
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-   (1 2 3 0 -- 3 2 1) ([1 ...] -- [...])
+    (1 2 3 0 -- 3 2 1) ([1 ...] -- [...])
 
-Re-label (instead of adding left and right tags I’m just taking the next
+Re-label (instead of adding left and right tags I'm just taking the next
 available index number for the right-side stack effect comment):
 
 ::
 
-   (1 2 3 0 -- 3 2 1) ([4 ...] -- [...])
+    (1 2 3 0 -- 3 2 1) ([4 ...] -- [...])
 
 Unify and update:
 
 ::
 
-   (1       2 3 0 -- 3 2 1) ([4 ...] -- [...])
-                                                w/ {1: [4 ...]}
-   ([4 ...] 2 3 0 -- 3 2  ) (        -- [...])
+    (1       2 3 0 -- 3 2 1) ([4 ...] -- [...])
+                                                 w/ {1: [4 ...]}
+    ([4 ...] 2 3 0 -- 3 2  ) (        -- [...])
 
 Apply the first rule:
 
 ::
 
-      ([4 ...] 2 3 0 -- 3 2) (-- [...])
-   ---------------------------------------
-        ([4 ...] 2 3 0 -- 3 2 [...])
+       ([4 ...] 2 3 0 -- 3 2) (-- [...])
+    ---------------------------------------
+         ([4 ...] 2 3 0 -- 3 2 [...])
 
 And there we are.
 
 ``pop∘swap∘roll<∘rest rest``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let’s do it again.
+Let's do it again.
 
 ::
 
-   ([4 ...] 2 3 0 -- 3 2 [...]) ([1 ...] -- [...])
+    ([4 ...] 2 3 0 -- 3 2 [...]) ([1 ...] -- [...])
 
 Re-label (the tails of the lists on each side each get their own label):
 
 ::
 
-   ([4 .0.] 2 3 0 -- 3 2 [.0.]) ([5 .1.] -- [.1.])
+    ([4 .0.] 2 3 0 -- 3 2 [.0.]) ([5 .1.] -- [.1.])
 
 Unify and update (note the opening square brackets have been omited in
-the substitution dict, this is deliberate and I’ll explain below):
+the substitution dict, this is deliberate and I'll explain below):
 
 ::
 
-   ([4 .0.]   2 3 0 -- 3 2 [.0.]  ) ([5 .1.] -- [.1.])
-                                                       w/ { .0.] : 5 .1.] }
-   ([4 5 .1.] 2 3 0 -- 3 2 [5 .1.]) ([5 .1.] -- [.1.])
+    ([4 .0.]   2 3 0 -- 3 2 [.0.]  ) ([5 .1.] -- [.1.])
+                                                        w/ { .0.] : 5 .1.] }
+    ([4 5 .1.] 2 3 0 -- 3 2 [5 .1.]) ([5 .1.] -- [.1.])
 
 How do we find ``.0.]`` in ``[4 .0.]`` and replace it with ``5 .1.]``
 getting the result ``[4 5 .1.]``? This might seem hard, but because the
-underlying structure of the Joy list is a cons-list in Python it’s
-actually pretty easy. I’ll explain below.
+underlying structure of the Joy list is a cons-list in Python it's
+actually pretty easy. I'll explain below.
 
 Next we unify and find our two terms are the same already: ``[5 .1.]``:
 
 ::
 
-   ([4 5 .1.] 2 3 0 -- 3 2 [5 .1.]) ([5 .1.] -- [.1.])
+    ([4 5 .1.] 2 3 0 -- 3 2 [5 .1.]) ([5 .1.] -- [.1.])
 
 Giving us:
 
 ::
 
-   ([4 5 .1.] 2 3 0 -- 3 2) (-- [.1.])
+    ([4 5 .1.] 2 3 0 -- 3 2) (-- [.1.])
 
 From here we apply the first rule and get:
 
 ::
 
-   ([4 5 .1.] 2 3 0 -- 3 2 [.1.])
+    ([4 5 .1.] 2 3 0 -- 3 2 [.1.])
 
 Cleaning up the labels:
 
 ::
 
-   ([4 5 ...] 2 3 1 -- 3 2 [...])
+    ([4 5 ...] 2 3 1 -- 3 2 [...])
 
 This is the stack effect of ``pop∘swap∘roll<∘rest∘rest``.
 
@@ -314,35 +314,35 @@ This is the stack effect of ``pop∘swap∘roll<∘rest∘rest``.
 
 ::
 
-   ([4 5 ...] 2 3 1 -- 3 2 [...]) (1 [...] -- [1 ...])
+    ([4 5 ...] 2 3 1 -- 3 2 [...]) (1 [...] -- [1 ...])
 
 Re-label:
 
 ::
 
-   ([4 5 .1.] 2 3 1 -- 3 2 [.1.]) (6 [.2.] -- [6 .2.])
+    ([4 5 .1.] 2 3 1 -- 3 2 [.1.]) (6 [.2.] -- [6 .2.])
 
 Unify:
 
 ::
 
-   ([4 5 .1.] 2 3 1 -- 3 2 [.1.]) (6 [.2.] -- [6 .2.])
-                                                        w/ { .1.] : .2.] }
-   ([4 5 .2.] 2 3 1 -- 3 2      ) (6       -- [6 .2.])
-                                                        w/ {2: 6}
-   ([4 5 .2.] 6 3 1 -- 3        ) (        -- [6 .2.])
+    ([4 5 .1.] 2 3 1 -- 3 2 [.1.]) (6 [.2.] -- [6 .2.])
+                                                         w/ { .1.] : .2.] }
+    ([4 5 .2.] 2 3 1 -- 3 2      ) (6       -- [6 .2.])
+                                                         w/ {2: 6}
+    ([4 5 .2.] 6 3 1 -- 3        ) (        -- [6 .2.])
 
 First rule:
 
 ::
 
-   ([4 5 .2.] 6 3 1 -- 3 [6 .2.])
+    ([4 5 .2.] 6 3 1 -- 3 [6 .2.])
 
 Re-label:
 
 ::
 
-   ([4 5 ...] 2 3 1 -- 3 [2 ...])
+    ([4 5 ...] 2 3 1 -- 3 [2 ...])
 
 Done.
 
@@ -353,42 +353,42 @@ One more time.
 
 ::
 
-   ([4 5 ...] 2 3 1 -- 3 [2 ...]) (1 [...] -- [1 ...])
+    ([4 5 ...] 2 3 1 -- 3 [2 ...]) (1 [...] -- [1 ...])
 
 Re-label:
 
 ::
 
-   ([4 5 .1.] 2 3 1 -- 3 [2 .1.]) (6 [.2.] -- [6 .2.])
+    ([4 5 .1.] 2 3 1 -- 3 [2 .1.]) (6 [.2.] -- [6 .2.])
 
 Unify:
 
 ::
 
-   ([4 5 .1.] 2 3 1 -- 3 [2 .1.]) (6 [.2.] -- [6 .2.]  )
-                                                          w/ { .2.] : 2 .1.] }
-   ([4 5 .1.] 2 3 1 -- 3        ) (6       -- [6 2 .1.])
-                                                          w/ {3: 6}
-   ([4 5 .1.] 2 6 1 --          ) (        -- [6 2 .1.])
+    ([4 5 .1.] 2 3 1 -- 3 [2 .1.]) (6 [.2.] -- [6 .2.]  )
+                                                           w/ { .2.] : 2 .1.] }
+    ([4 5 .1.] 2 3 1 -- 3        ) (6       -- [6 2 .1.])
+                                                           w/ {3: 6}
+    ([4 5 .1.] 2 6 1 --          ) (        -- [6 2 .1.])
 
 First or second rule:
 
 ::
 
-   ([4 5 .1.] 2 6 1 -- [6 2 .1.])
+    ([4 5 .1.] 2 6 1 -- [6 2 .1.])
 
 Clean up the labels:
 
 ::
 
-   ([4 5 ...] 2 3 1 -- [3 2 ...])
+    ([4 5 ...] 2 3 1 -- [3 2 ...])
 
 And there you have it, the stack effect for
 ``pop∘swap∘roll<∘rest∘rest∘cons∘cons``.
 
 ::
 
-   ([4 5 ...] 2 3 1 -- [3 2 ...])
+    ([4 5 ...] 2 3 1 -- [3 2 ...])
 
 From this stack effect comment it should be possible to construct the
 following Python code:
@@ -405,7 +405,7 @@ Part II: Implementation
 Representing Stack Effect Comments in Python
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I’m going to use pairs of tuples of type descriptors, which will be
+I'm going to use pairs of tuples of type descriptors, which will be
 integers or tuples of type descriptors:
 
 .. code:: ipython2
@@ -549,7 +549,7 @@ integers or tuples of type descriptors:
 
 At last we put it all together in a function ``C()`` that accepts two
 stack effect comments and returns their composition (or raises and
-exception if they can’t be composed due to type conflicts.)
+exception if they can't be composed due to type conflicts.)
 
 .. code:: ipython2
 
@@ -558,7 +558,7 @@ exception if they can’t be composed due to type conflicts.)
         fg = compose(f, g)
         return delabel(fg)
 
-Let’s try it out.
+Let's try it out.
 
 .. code:: ipython2
 
@@ -629,7 +629,7 @@ Let’s try it out.
 Stack Functions
 ~~~~~~~~~~~~~~~
 
-Here’s that trick to represent functions like ``rest`` and ``cons`` that
+Here's that trick to represent functions like ``rest`` and ``cons`` that
 manipulate stacks. We use a cons-list of tuples and give the tails their
 own numbers. Then everything above already works.
 
@@ -656,20 +656,20 @@ Compare this to the stack effect comment we wrote above:
 
 ::
 
-   ((  (3, 4), 1, 2, 0 ), ( 2, 1,   4  ))
-   (   [4 ...] 2  3  0  --  3  2  [...])
+    ((  (3, 4), 1, 2, 0 ), ( 2, 1,   4  ))
+    (   [4 ...] 2  3  0  --  3  2  [...])
 
 The translation table, if you will, would be:
 
 ::
 
-   {
-   3: 4,
-   4: ...],
-   1: 2,
-   2: 3,
-   0: 0,
-   }
+    {
+    3: 4,
+    4: ...],
+    1: 2,
+    2: 3,
+    0: 0,
+    }
 
 .. code:: ipython2
 
@@ -690,13 +690,13 @@ Compare with the stack effect comment and you can see it works fine:
 
 ::
 
-   ([4 5 ...] 2 3 1 -- [3 2 ...])
-     3 4  5   1 2 0     2 1  5
+    ([4 5 ...] 2 3 1 -- [3 2 ...])
+      3 4  5   1 2 0     2 1  5
 
 Dealing with ``cons`` and ``uncons``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-However, if we try to compose e.g. ``cons`` and ``uncons`` it won’t
+However, if we try to compose e.g. ``cons`` and ``uncons`` it won't
 work:
 
 .. code:: ipython2
@@ -719,7 +719,7 @@ work:
 ``unify()`` version 2
 ^^^^^^^^^^^^^^^^^^^^^
 
-The problem is that the ``unify()`` function as written doesn’t handle
+The problem is that the ``unify()`` function as written doesn't handle
 the case when both terms are tuples. We just have to add a clause to
 deal with this recursively:
 
@@ -797,20 +797,20 @@ stack effect comment tuple, just in the reverse order:
 
 ::
 
-   (_, (d, (c, ((a, (b, S0)), stack))))
+    (_, (d, (c, ((a, (b, S0)), stack))))
 
 Remove the punctuation:
 
 ::
 
-    _   d   c   (a, (b, S0))
+     _   d   c   (a, (b, S0))
 
 Reverse the order and compare:
 
 ::
 
-    (a, (b, S0))   c   d   _
-   ((3, (4, 5 )),  1,  2,  0)
+     (a, (b, S0))   c   d   _
+    ((3, (4, 5 )),  1,  2,  0)
 
 Eh?
 
@@ -833,8 +833,8 @@ is similar to the output stack effect comment tuple:
 
 ::
 
-   ((d, (c, S0)), stack)
-   ((2, (1, 5 )),      )
+    ((d, (c, S0)), stack)
+    ((2, (1, 5 )),      )
 
 This should make it pretty easy to write a Python function that accepts
 the stack effect comment tuples and returns a new Python function
@@ -845,7 +845,7 @@ effect.)
 Python Identifiers
 ~~~~~~~~~~~~~~~~~~
 
-We want to substitute Python identifiers for the integers. I’m going to
+We want to substitute Python identifiers for the integers. I'm going to
 repurpose ``joy.parser.Symbol`` class for this:
 
 .. code:: ipython2
@@ -869,10 +869,10 @@ repurpose ``joy.parser.Symbol`` class for this:
 ``doc_from_stack_effect()``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As a convenience I’ve implemented a function to convert the Python stack
+As a convenience I've implemented a function to convert the Python stack
 effect comment tuples to reasonable text format. There are some details
 in how this code works that related to stuff later in the notebook, so
-you should skip it for now and read it later if you’re interested.
+you should skip it for now and read it later if you're interested.
 
 .. code:: ipython2
 
@@ -974,7 +974,7 @@ Next steps:
 
 
 
-Let’s try it out:
+Let's try it out:
 
 .. code:: ipython2
 
@@ -996,10 +996,10 @@ Let’s try it out:
 
 
 With this, we have a partial Joy compiler that works on the subset of
-Joy functions that manipulate stacks (both what I call “stack chatter”
+Joy functions that manipulate stacks (both what I call "stack chatter"
 and the ones that manipulate stacks on the stack.)
 
-I’m probably going to modify the definition wrapper code to detect
+I'm probably going to modify the definition wrapper code to detect
 definitions that can be compiled by this partial compiler and do it
 automatically. It might be a reasonable idea to detect sequences of
 compilable functions in definitions that have uncompilable functions in
@@ -1106,57 +1106,57 @@ Part IV: Types and Subtypes of Arguments
 ----------------------------------------
 
 So far we have dealt with types of functions, those dealing with simple
-stack manipulation. Let’s extend our machinery to deal with types of
+stack manipulation. Let's extend our machinery to deal with types of
 arguments.
 
-“Number” Type
+"Number" Type
 ~~~~~~~~~~~~~
 
 Consider the definition of ``sqr``:
 
 ::
 
-   sqr == dup mul
+    sqr == dup mul
 
 The ``dup`` function accepts one *anything* and returns two of that:
 
 ::
 
-   dup (1 -- 1 1)
+    dup (1 -- 1 1)
 
-And ``mul`` accepts two “numbers” (we’re ignoring ints vs. floats
-vs. complex, etc., for now) and returns just one:
-
-::
-
-   mul (n n -- n)
-
-So we’re composing:
+And ``mul`` accepts two "numbers" (we're ignoring ints vs. floats vs.
+complex, etc., for now) and returns just one:
 
 ::
 
-   (1 -- 1 1)∘(n n -- n)
+    mul (n n -- n)
+
+So we're composing:
+
+::
+
+    (1 -- 1 1)∘(n n -- n)
 
 The rules say we unify 1 with ``n``:
 
 ::
 
-      (1 -- 1 1)∘(n n -- n)
-   ---------------------------  w/  {1: n}
-      (1 -- 1  )∘(n   -- n)
+       (1 -- 1 1)∘(n n -- n)
+    ---------------------------  w/  {1: n}
+       (1 -- 1  )∘(n   -- n)
 
-This involves detecting that “Any type” arguments can accept “numbers”.
+This involves detecting that "Any type" arguments can accept "numbers".
 If we were composing these functions the other way round this is still
 the case:
 
 ::
 
-      (n n -- n)∘(1 -- 1 1)
-   ---------------------------  w/  {1: n}
-      (n n --  )∘(  -- n n) 
+       (n n -- n)∘(1 -- 1 1)
+    ---------------------------  w/  {1: n}
+       (n n --  )∘(  -- n n) 
 
 The important thing here is that the mapping is going the same way in
-both cases, from the “any” integer to the number
+both cases, from the "any" integer to the number
 
 Distinguishing Numbers
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -1167,40 +1167,40 @@ We should also mind that the number that ``mul`` produces is not
 
 ::
 
-   mul (n2 n1 -- n3)
+    mul (n2 n1 -- n3)
 
 
-      (1  -- 1  1)∘(n2 n1 -- n3)
-   --------------------------------  w/  {1: n2}
-      (n2 -- n2  )∘(n2    -- n3)
+       (1  -- 1  1)∘(n2 n1 -- n3)
+    --------------------------------  w/  {1: n2}
+       (n2 -- n2  )∘(n2    -- n3)
 
 
-      (n2 n1 -- n3)∘(1 -- 1  1 )
-   --------------------------------  w/  {1: n3}
-      (n2 n1 --   )∘(  -- n3 n3) 
+       (n2 n1 -- n3)∘(1 -- 1  1 )
+    --------------------------------  w/  {1: n3}
+       (n2 n1 --   )∘(  -- n3 n3) 
 
 Distinguishing Types
 ~~~~~~~~~~~~~~~~~~~~
 
-So we need separate domains of “any” numbers and “number” numbers, and
+So we need separate domains of "any" numbers and "number" numbers, and
 we need to be able to ask the order of these domains. Now the notes on
 the right side of rule three make more sense, eh?
 
 ::
 
-      (a -- b t[i])∘(c u[j] -- d)   t <= u (t is subtype of u)
-   -------------------------------
-      (a -- b     )∘(c      -- d)   t[i] == t[k] == u[j]
-                                            ^
+       (a -- b t[i])∘(c u[j] -- d)   t <= u (t is subtype of u)
+    -------------------------------
+       (a -- b     )∘(c      -- d)   t[i] == t[k] == u[j]
+                                             ^
 
-      (a -- b t[i])∘(c u[j] -- d)   u <= t (u is subtype of t)
-   -------------------------------
-      (a -- b     )∘(c      -- d)   t[i] == u[k] == u[j]
+       (a -- b t[i])∘(c u[j] -- d)   u <= t (u is subtype of t)
+    -------------------------------
+       (a -- b     )∘(c      -- d)   t[i] == u[k] == u[j]
 
 The indices ``i``, ``k``, and ``j`` are the number part of our labels
 and ``t`` and ``u`` are the domains.
 
-By creative use of Python’s “double underscore” methods we can define a
+By creative use of Python's "double underscore" methods we can define a
 Python class hierarchy of Joy types and use the ``issubclass()`` method
 to establish domain ordering, as well as other handy behaviour that will
 make it fairly easy to reuse most of the code above.
@@ -1255,7 +1255,7 @@ Mess with it a little:
 
     from itertools import permutations
 
-“Any” types can be specialized to numbers and stacks, but not vice
+"Any" types can be specialized to numbers and stacks, but not vice
 versa:
 
 .. code:: ipython2
@@ -1276,7 +1276,7 @@ versa:
 
 Our crude `Numerical
 Tower <https://en.wikipedia.org/wiki/Numerical_tower>`__ of *numbers* >
-*floats* > *integers* works as well (but we’re not going to use it yet):
+*floats* > *integers* works as well (but we're not going to use it yet):
 
 .. code:: ipython2
 
@@ -1359,7 +1359,7 @@ Re-labeling still works fine:
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 The ``delabel()`` function needs an overhaul. It now has to keep track
-of how many labels of each domain it has “seen”.
+of how many labels of each domain it has "seen".
 
 .. code:: ipython2
 
@@ -1634,7 +1634,7 @@ also get the effect of combinators in some limited cases.
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 Because the type labels represent themselves as valid Python identifiers
-the ``compile_()`` function doesn’t need to generate them anymore:
+the ``compile_()`` function doesn't need to generate them anymore:
 
 .. code:: ipython2
 
@@ -1665,7 +1665,7 @@ the ``compile_()`` function doesn’t need to generate them anymore:
         return ((a4, (a3, s1)), stack)
 
 
-But it cannot magically create new functions that involve e.g. math and
+But it cannot magically create new functions that involve e.g. math and
 such. Note that this is *not* a ``sqr`` function implementation:
 
 .. code:: ipython2
@@ -1681,7 +1681,7 @@ such. Note that this is *not* a ``sqr`` function implementation:
         return (n2, stack)
 
 
-(Eventually I should come back around to this becuase it’s not tooo
+(Eventually I should come back around to this becuase it's not tooo
 difficult to exend this code to be able to compile e.g.
 ``n2 = mul(n1, n1)`` for ``mul`` with the right variable names and
 insert it in the right place. It requires a little more support from the
@@ -1743,18 +1743,18 @@ and puts it on itself:
 
 ::
 
-   stack (...     -- ... [...]        )
-   stack (... a   -- ... a [a ...]    )
-   stack (... b a -- ... b a [a b ...])
+    stack (...     -- ... [...]        )
+    stack (... a   -- ... a [a ...]    )
+    stack (... b a -- ... b a [a b ...])
 
 We would like to represent this in Python somehow. To do this we use a
 simple, elegant trick.
 
 ::
 
-   stack         S   -- (         S,           S)
-   stack     (a, S)  -- (     (a, S),      (a, S))
-   stack (a, (b, S)) -- ( (a, (b, S)), (a, (b, S)))
+    stack         S   -- (         S,           S)
+    stack     (a, S)  -- (     (a, S),      (a, S))
+    stack (a, (b, S)) -- ( (a, (b, S)), (a, (b, S)))
 
 Instead of representing the stack effect comments as a single tuple
 (with N items in it) we use the same cons-list structure to hold the
@@ -1763,54 +1763,54 @@ sequence and ``unify()`` the whole comments.
 ``stack∘uncons``
 ~~~~~~~~~~~~~~~~
 
-Let’s try composing ``stack`` and ``uncons``. We want this result:
+Let's try composing ``stack`` and ``uncons``. We want this result:
 
 ::
 
-   stack∘uncons (... a -- ... a a [...])
+    stack∘uncons (... a -- ... a a [...])
 
 The stack effects are:
 
 ::
 
-   stack = S -- (S, S)
+    stack = S -- (S, S)
 
-   uncons = ((a, Z), S) -- (Z, (a, S))
+    uncons = ((a, Z), S) -- (Z, (a, S))
 
 Unifying:
 
 ::
 
-     S    -- (S, S) ∘ ((a, Z), S) -- (Z, (a,   S   ))
-                                                       w/ { S: (a, Z) }
-   (a, Z) --        ∘             -- (Z, (a, (a, Z)))
+      S    -- (S, S) ∘ ((a, Z), S) -- (Z, (a,   S   ))
+                                                        w/ { S: (a, Z) }
+    (a, Z) --        ∘             -- (Z, (a, (a, Z)))
 
 So:
 
 ::
 
-   stack∘uncons == (a, Z) -- (Z, (a, (a, Z)))
+    stack∘uncons == (a, Z) -- (Z, (a, (a, Z)))
 
 It works.
 
 ``stack∘uncons∘uncons``
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Let’s try ``stack∘uncons∘uncons``:
+Let's try ``stack∘uncons∘uncons``:
 
 ::
 
-   (a, S     ) -- (S,      (a, (a, S     ))) ∘ ((b, Z),  S`             ) -- (Z, (b,   S`   ))
+    (a, S     ) -- (S,      (a, (a, S     ))) ∘ ((b, Z),  S`             ) -- (Z, (b,   S`   ))
 
-                                                                                   w/ { S: (b, Z) }
-                                                                                   
-   (a, (b, Z)) -- ((b, Z), (a, (a, (b, Z)))) ∘ ((b, Z),  S`             ) -- (Z, (b,   S`   ))
+                                                                                    w/ { S: (b, Z) }
+                                                                                    
+    (a, (b, Z)) -- ((b, Z), (a, (a, (b, Z)))) ∘ ((b, Z),  S`             ) -- (Z, (b,   S`   ))
 
-                                                                                   w/ { S`: (a, (a, (b, Z))) }
-                                                                                   
-   (a, (b, Z)) -- ((b, Z), (a, (a, (b, Z)))) ∘ ((b, Z), (a, (a, (b, Z)))) -- (Z, (b, (a, (a, (b, Z)))))
+                                                                                    w/ { S`: (a, (a, (b, Z))) }
+                                                                                    
+    (a, (b, Z)) -- ((b, Z), (a, (a, (b, Z)))) ∘ ((b, Z), (a, (a, (b, Z)))) -- (Z, (b, (a, (a, (b, Z)))))
 
-   (a, (b, Z)) -- (Z, (b, (a, (a, (b, Z)))))
+    (a, (b, Z)) -- (Z, (b, (a, (a, (b, Z)))))
 
 It works.
 
@@ -1819,12 +1819,12 @@ It works.
 
 This function has to be modified to use the new datastructures and it is
 no longer recursive, instead recursion happens as part of unification.
-Further, the first and second of Pöial’s rules are now handled
+Further, the first and second of Pöial's rules are now handled
 automatically by the unification algorithm. (One easy way to see this is
 that now an empty stack effect comment is represented by a
-``StackJoyType`` instance which is not “falsey” and so neither of the
-first two rules’ ``if`` clauses will ever be ``True``. Later on I change
-the “truthiness” of ``StackJoyType`` to false to let e.g.
+``StackJoyType`` instance which is not "falsey" and so neither of the
+first two rules' ``if`` clauses will ever be ``True``. Later on I change
+the "truthiness" of ``StackJoyType`` to false to let e.g.
 ``joy.utils.stack.concat`` work with our stack effect comment cons-list
 tuples.)
 
@@ -1837,8 +1837,8 @@ tuples.)
             raise TypeError('Cannot unify %r and %r.' % (f_out, g_in))
         return update(s, (f_in, g_out))
 
-I don’t want to rewrite all the defs myself, so I’ll write a little
-conversion function instead. This is programmer’s laziness.
+I don't want to rewrite all the defs myself, so I'll write a little
+conversion function instead. This is programmer's laziness.
 
 .. code:: ipython2
 
@@ -2115,7 +2115,7 @@ comments are now already in the form needed for the Python code:
 Part VI: Multiple Stack Effects
 -------------------------------
 
-…
+...
 
 .. code:: ipython2
 
@@ -2206,63 +2206,63 @@ Part VI: Multiple Stack Effects
 Representing an Unbounded Sequence of Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We can borrow a trick from `Brzozowski’s Derivatives of Regular
+We can borrow a trick from `Brzozowski's Derivatives of Regular
 Expressions <https://en.wikipedia.org/wiki/Brzozowski_derivative>`__ to
-invent a new type of type variable, a “sequence type” (I think this is
-what they mean in the literature by that term…) or “`Kleene
-Star <https://en.wikipedia.org/wiki/Kleene_star>`__” type. I’m going to
+invent a new type of type variable, a "sequence type" (I think this is
+what they mean in the literature by that term...) or "`Kleene
+Star <https://en.wikipedia.org/wiki/Kleene_star>`__" type. I'm going to
 represent it as a type letter and the asterix, so a sequence of zero or
 more ``AnyJoyType`` variables would be:
 
 ::
 
-   A*
+    A*
 
 The ``A*`` works by splitting the universe into two alternate histories:
 
 ::
 
-   A* -> 0 | A A*
+    A* -> 0 | A A*
 
 The Kleene star variable disappears in one universe, and in the other it
 turns into an ``AnyJoyType`` variable followed by itself again. We have
 to return all universes (represented by their substitution dicts, the
-“unifiers”) that don’t lead to type conflicts.
+"unifiers") that don't lead to type conflicts.
 
 Consider unifying two stacks (the lowercase letters are any type
 variables of the kinds we have defined so far):
 
 ::
 
-   [a A* b .0.] U [c d .1.]
-                             w/ {c: a}
-   [  A* b .0.] U [  d .1.]
+    [a A* b .0.] U [c d .1.]
+                              w/ {c: a}
+    [  A* b .0.] U [  d .1.]
 
 Now we have to split universes to unify ``A*``. In the first universe it
 disappears:
 
 ::
 
-   [b .0.] U [d .1.]
-                      w/ {d: b, .1.: .0.} 
-        [] U []
+    [b .0.] U [d .1.]
+                       w/ {d: b, .1.: .0.} 
+         [] U []
 
 While in the second it spawns an ``A``, which we will label ``e``:
 
 ::
 
-   [e A* b .0.] U [d .1.]
-                           w/ {d: e}
-   [  A* b .0.] U [  .1.]
-                           w/ {.1.: A* b .0.}
-   [  A* b .0.] U [  A* b .0.]
+    [e A* b .0.] U [d .1.]
+                            w/ {d: e}
+    [  A* b .0.] U [  .1.]
+                            w/ {.1.: A* b .0.}
+    [  A* b .0.] U [  A* b .0.]
 
 Giving us two unifiers:
 
 ::
 
-   {c: a,  d: b,  .1.:      .0.}
-   {c: a,  d: e,  .1.: A* b .0.}
+    {c: a,  d: b,  .1.:      .0.}
+    {c: a,  d: e,  .1.: A* b .0.}
 
 .. code:: ipython2
 
@@ -2312,7 +2312,7 @@ Giving us two unifiers:
 ``unify()`` version 4
 ^^^^^^^^^^^^^^^^^^^^^
 
-Can now return multiple results…
+Can now return multiple results...
 
 .. code:: ipython2
 
@@ -2440,11 +2440,11 @@ Can now return multiple results…
 
 ::
 
-   (a1*, s1)       [a1*]       (a1, s2)        [a1]
+    (a1*, s1)       [a1*]       (a1, s2)        [a1]
 
-   (a1*, (a1, s2)) [a1* a1]    (a1, s2)        [a1]
+    (a1*, (a1, s2)) [a1* a1]    (a1, s2)        [a1]
 
-   (a1*, s1)       [a1*]       (a2, (a1*, s1)) [a2 a1*]
+    (a1*, s1)       [a1*]       (a2, (a1*, s1)) [a2 a1*]
 
 .. code:: ipython2
 
@@ -2628,51 +2628,51 @@ Part VII: Typing Combinators
 
 In order to compute the stack effect of combinators you kinda have to
 have the quoted programs they expect available. In the most general
-case, the ``i`` combinator, you can’t say anything about its stack
+case, the ``i`` combinator, you can't say anything about its stack
 effect other than it expects one quote:
 
 ::
 
-   i (... [.1.] -- ... .1.)
+    i (... [.1.] -- ... .1.)
 
 Or
 
 ::
 
-   i (... [A* .1.] -- ... A*)
+    i (... [A* .1.] -- ... A*)
 
 Consider the type of:
 
 ::
 
-   [cons] dip
+    [cons] dip
 
 Obviously it would be:
 
 ::
 
-   (a1 [..1] a2 -- [a1 ..1] a2)
+    (a1 [..1] a2 -- [a1 ..1] a2)
 
 ``dip`` itself could have:
 
 ::
 
-   (a1 [..1] -- ... then what?
+    (a1 [..1] -- ... then what?
 
-Without any information about the contents of the quote we can’t say
+Without any information about the contents of the quote we can't say
 much about the result.
 
 Hybrid Inferencer/Interpreter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I think there’s a way forward. If we convert our list (of terms we are
+I think there's a way forward. If we convert our list (of terms we are
 composing) into a stack structure we can use it as a *Joy expression*,
-then we can treat the *output half* of a function’s stack effect comment
+then we can treat the *output half* of a function's stack effect comment
 as a Joy interpreter stack, and just execute combinators directly. We
 can hybridize the compostition function with an interpreter to evaluate
 combinators, compose non-combinator functions, and put type variables on
 the stack. For combinators like ``branch`` that can have more than one
-stack effect we have to “split universes” again and return both.
+stack effect we have to "split universes" again and return both.
 
 Joy Types for Functions
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -2755,7 +2755,7 @@ effects.
 
 You can also provide an optional stack effect, input-side only, that
 will then be used as an identity function (that accepts and returns
-stacks that match the “guard” stack effect) which will be used to guard
+stacks that match the "guard" stack effect) which will be used to guard
 against type mismatches going into the evaluation of the combinator.
 
 ``infer()``
@@ -2828,7 +2828,7 @@ Work in Progress
 And that brings us to current Work-In-Progress. The mixed-mode
 inferencer/interpreter ``infer()`` function seems to work well. There
 are details I should document, and the rest of the code in the ``types``
-module (FIXME link to its docs here!) should be explained… There is
+module (FIXME link to its docs here!) should be explained... There is
 cruft to convert the definitions in ``DEFS`` to the new
 ``SymbolJoyType`` objects, and some combinators. Here is an example of
 output from the current code :
@@ -2868,7 +2868,7 @@ output from the current code :
 
 
 The numbers at the start of the lines are the current depth of the
-Python call stack. They’re followed by the current computed stack effect
+Python call stack. They're followed by the current computed stack effect
 (initialized to ``ID``) then the pending expression (the inference of
 the stack effect of which is the whole object of the current example.)
 
@@ -2878,47 +2878,47 @@ implementation in action.
 
 ::
 
-     7 (--) ∘ [pred] [mul] [div] [nullary bool] dipd branch
-     8 (-- [pred ...2]) ∘ [mul] [div] [nullary bool] dipd branch
-     9 (-- [pred ...2] [mul ...3]) ∘ [div] [nullary bool] dipd branch
-    10 (-- [pred ...2] [mul ...3] [div ...4]) ∘ [nullary bool] dipd branch
-    11 (-- [pred ...2] [mul ...3] [div ...4] [nullary bool ...5]) ∘ dipd branch
-    15 (-- [pred ...5]) ∘ nullary bool [mul] [div] branch
-    19 (-- [pred ...2]) ∘ [stack] dinfrirst bool [mul] [div] branch
-    20 (-- [pred ...2] [stack ]) ∘ dinfrirst bool [mul] [div] branch
-    22 (-- [pred ...2] [stack ]) ∘ dip infra first bool [mul] [div] branch
-    26 (--) ∘ stack [pred] infra first bool [mul] [div] branch
-    29 (... -- ... [...]) ∘ [pred] infra first bool [mul] [div] branch
-    30 (... -- ... [...] [pred ...1]) ∘ infra first bool [mul] [div] branch
-    34 (--) ∘ pred s1 swaack first bool [mul] [div] branch
-    37 (n1 -- n2) ∘ [n1] swaack first bool [mul] [div] branch
-    38 (... n1 -- ... n2 [n1 ...]) ∘ swaack first bool [mul] [div] branch
-    41 (... n1 -- ... n1 [n2 ...]) ∘ first bool [mul] [div] branch
-    44 (n1 -- n1 n2) ∘ bool [mul] [div] branch
-    47 (n1 -- n1 b1) ∘ [mul] [div] branch
-    48 (n1 -- n1 b1 [mul ...1]) ∘ [div] branch
-    49 (n1 -- n1 b1 [mul ...1] [div ...2]) ∘ branch
-    53 (n1 -- n1) ∘ div
-    56 (f2 f1 -- f3) ∘ 
-    56 (i1 f1 -- f2) ∘ 
-    56 (f1 i1 -- f2) ∘ 
-    56 (i2 i1 -- f1) ∘ 
-    53 (n1 -- n1) ∘ mul
-    56 (f2 f1 -- f3) ∘ 
-    56 (i1 f1 -- f2) ∘ 
-    56 (f1 i1 -- f2) ∘ 
-    56 (i2 i1 -- i3) ∘ 
-   ----------------------------------------
-   (f2 f1 -- f3)
-   (i1 f1 -- f2)
-   (f1 i1 -- f2)
-   (i2 i1 -- f1)
-   (i2 i1 -- i3)
+      7 (--) ∘ [pred] [mul] [div] [nullary bool] dipd branch
+      8 (-- [pred ...2]) ∘ [mul] [div] [nullary bool] dipd branch
+      9 (-- [pred ...2] [mul ...3]) ∘ [div] [nullary bool] dipd branch
+     10 (-- [pred ...2] [mul ...3] [div ...4]) ∘ [nullary bool] dipd branch
+     11 (-- [pred ...2] [mul ...3] [div ...4] [nullary bool ...5]) ∘ dipd branch
+     15 (-- [pred ...5]) ∘ nullary bool [mul] [div] branch
+     19 (-- [pred ...2]) ∘ [stack] dinfrirst bool [mul] [div] branch
+     20 (-- [pred ...2] [stack ]) ∘ dinfrirst bool [mul] [div] branch
+     22 (-- [pred ...2] [stack ]) ∘ dip infra first bool [mul] [div] branch
+     26 (--) ∘ stack [pred] infra first bool [mul] [div] branch
+     29 (... -- ... [...]) ∘ [pred] infra first bool [mul] [div] branch
+     30 (... -- ... [...] [pred ...1]) ∘ infra first bool [mul] [div] branch
+     34 (--) ∘ pred s1 swaack first bool [mul] [div] branch
+     37 (n1 -- n2) ∘ [n1] swaack first bool [mul] [div] branch
+     38 (... n1 -- ... n2 [n1 ...]) ∘ swaack first bool [mul] [div] branch
+     41 (... n1 -- ... n1 [n2 ...]) ∘ first bool [mul] [div] branch
+     44 (n1 -- n1 n2) ∘ bool [mul] [div] branch
+     47 (n1 -- n1 b1) ∘ [mul] [div] branch
+     48 (n1 -- n1 b1 [mul ...1]) ∘ [div] branch
+     49 (n1 -- n1 b1 [mul ...1] [div ...2]) ∘ branch
+     53 (n1 -- n1) ∘ div
+     56 (f2 f1 -- f3) ∘ 
+     56 (i1 f1 -- f2) ∘ 
+     56 (f1 i1 -- f2) ∘ 
+     56 (i2 i1 -- f1) ∘ 
+     53 (n1 -- n1) ∘ mul
+     56 (f2 f1 -- f3) ∘ 
+     56 (i1 f1 -- f2) ∘ 
+     56 (f1 i1 -- f2) ∘ 
+     56 (i2 i1 -- i3) ∘ 
+    ----------------------------------------
+    (f2 f1 -- f3)
+    (i1 f1 -- f2)
+    (f1 i1 -- f2)
+    (i2 i1 -- f1)
+    (i2 i1 -- i3)
 
 Conclusion
 ----------
 
-We built a simple type inferencer, and a kind of crude “compiler” for a
+We built a simple type inferencer, and a kind of crude "compiler" for a
 subset of Joy functions. Then we built a more powerful inferencer that
 actually does some evaluation and explores branching code paths
 
@@ -2927,22 +2927,18 @@ Work remains to be done:
 -  the rest of the library has to be covered
 -  figure out how to deal with ``loop`` and ``genrec``, etc..
 -  extend the types to check values (see the appendix)
--  other kinds of “higher order” type variables, OR, AND, etc..
+-  other kinds of "higher order" type variables, OR, AND, etc..
 -  maybe rewrite in Prolog for great good?
 -  definitions
-
-   -  don’t permit composition of functions that don’t compose
-   -  auto-compile compilable functions
-
+-  don't permit composition of functions that don't compose
+-  auto-compile compilable functions
 -  Compiling more than just the Yin functions.
 -  getting better visibility (than Python debugger.)
 -  DOOOOCS!!!! Lots of docs!
-
-   -  docstrings all around
-   -  improve this notebook (it kinda falls apart at the end
-      narratively. I went off and just started writing code to see if it
-      would work. It does, but now I have to come back and describe here
-      what I did.
+-  docstrings all around
+-  improve this notebook (it kinda falls apart at the end narratively. I
+   went off and just started writing code to see if it would work. It
+   does, but now I have to come back and describe here what I did.
 
 Appendix: Joy in the Logical Paradigm
 -------------------------------------
@@ -2950,9 +2946,9 @@ Appendix: Joy in the Logical Paradigm
 For *type checking* to work the type label classes have to be modified
 to let ``T >= t`` succeed, where e.g. ``T`` is ``IntJoyType`` and ``t``
 is ``int``. If you do that you can take advantage of the *logical
-relational* nature of the stack effect comments to “compute in reverse”
-as it were. There’s a working demo of this at the end of the ``types``
-module. But if you’re interested in all that you should just use Prolog!
+relational* nature of the stack effect comments to "compute in reverse"
+as it were. There's a working demo of this at the end of the ``types``
+module. But if you're interested in all that you should just use Prolog!
 
 Anyhow, type *checking* is a few easy steps away.
 

@@ -58,7 +58,7 @@ A ``viewer`` records each step of the evaluation of a Joy program. The
 ``TracePrinter`` has a facility for printing out a trace of the
 evaluation, one line per step. Each step is aligned to the current
 interpreter position, signified by a period separating the stack on the
-left from the pending expression (“continuation”) on the right. I find
+left from the pending expression ("continuation") on the right. I find
 these traces beautiful, like a kind of art.
 
 .. code:: ipython2
@@ -105,7 +105,7 @@ these traces beautiful, like a kind of art.
                                    15 . 
 
 
-Here’s a longer trace.
+Here's a longer trace.
 
 .. code:: ipython2
 

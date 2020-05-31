@@ -10,10 +10,10 @@ Stack Chatter
 
 This is what I like to call the functions that just rearrange things on
 the stack. (One thing I want to mention is that during a hypothetical
-compilation phase these “stack chatter” words effectively disappear,
+compilation phase these "stack chatter" words effectively disappear,
 because we can map the logical stack locations to registers that remain
 static for the duration of the computation. This remains to be done but
-it’s “off the shelf” technology.)
+it's "off the shelf" technology.)
 
 ``clear``
 ~~~~~~~~~
@@ -139,7 +139,7 @@ they are not, is on the top of both the list and the stack.
 ``roll<`` ``rolldown`` ``roll>`` ``rollup``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The “down” and “up” refer to the movement of two of the top three items
+The "down" and "up" refer to the movement of two of the top three items
 (displacing the third.)
 
 .. code:: ipython2
@@ -474,7 +474,7 @@ List words
 ``swaack``
 ~~~~~~~~~~
 
-“Swap stack” swap the list on the top of the stack for the stack, and
+"Swap stack" swap the list on the top of the stack for the stack, and
 put the old stack on top of the new one. Think of it as a context
 switch. Niether of the lists/stacks change their order.
 
@@ -869,7 +869,7 @@ pow
 ~~~~~~~~~~~~~~~~~~
 
 If we represent fractions as a quoted pair of integers [q d] this word
-reduces them to their … least common factors or whatever.
+reduces them to their ... least common factors or whatever.
 
 .. code:: ipython2
 
@@ -931,7 +931,7 @@ Get the Boolean value of the item on the top of the stack.
 
 ::
 
-   ? == dup truthy
+    ? == dup truthy
 
 .. code:: ipython2
 
@@ -1178,15 +1178,15 @@ function ``[G]``, the ``anamorphism`` combinator creates a sequence.
 
 ::
 
-      n [P] [G] anamorphism
-   ---------------------------
-             [...]
+       n [P] [G] anamorphism
+    ---------------------------
+              [...]
 
 Example, ``range``:
 
 ::
 
-   range == [0 <=] [1 - dup] anamorphism
+    range == [0 <=] [1 - dup] anamorphism
 
 .. code:: ipython2
 
@@ -1226,25 +1226,25 @@ Example, ``range``:
 
 ::
 
-   ... x [P] [Q] cleave
+    ... x [P] [Q] cleave
 
-From the original Joy docs: “The cleave combinator expects two
+From the original Joy docs: "The cleave combinator expects two
 quotations, and below that an item ``x`` It first executes ``[P]``, with
 ``x`` on top, and saves the top result element. Then it executes
 ``[Q]``, again with ``x``, and saves the top result. Finally it restores
 the stack to what it was below ``x`` and pushes the two results P(X) and
-Q(X).”
+Q(X)."
 
 Note that ``P`` and ``Q`` can use items from the stack freely, since the
 stack (below ``x``) is restored. ``cleave`` is a kind of *parallel*
-primitive, and it would make sense to create a version that uses,
-e.g. Python threads or something, to actually run ``P`` and ``Q``
+primitive, and it would make sense to create a version that uses, e.g.
+Python threads or something, to actually run ``P`` and ``Q``
 concurrently. The current implementation of ``cleave`` is a definition
 in terms of ``app2``:
 
 ::
 
-   cleave == [i] app2 [popd] dip
+    cleave == [i] app2 [popd] dip
 
 .. code:: ipython2
 
@@ -1297,7 +1297,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
 
 ::
 
-   n [Q] dupdip == n Q n
+    n [Q] dupdip == n Q n
 
 .. code:: ipython2
 
@@ -1417,7 +1417,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
 
 ::
 
-   [predicate] [then] [else] ifte
+    [predicate] [then] [else] ifte
 
 .. code:: ipython2
 
@@ -1724,7 +1724,7 @@ Run a quoted program enforcing
 
 ::
 
-   [predicate] [body] while
+    [predicate] [body] while
 
 .. code:: ipython2
 
@@ -1784,8 +1784,8 @@ Run a quoted program enforcing
 ``void``
 ========
 
-Implements `Laws of Form
-arithmetic <https://en.wikipedia.org/wiki/Laws_of_Form#The_primary_arithmetic_.28Chapter_4.29>`__
+Implements `**Laws of Form**
+*arithmetic* <https://en.wikipedia.org/wiki/Laws_of_Form#The_primary_arithmetic_.28Chapter_4.29>`__
 over quote-only datastructures (that is, datastructures that consist
 soley of containers, without strings or numbers or anything else.)
 

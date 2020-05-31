@@ -1,69 +1,69 @@
 ∂RE
 ===
 
-Brzozowski’s Derivatives of Regular Expressions
+Brzozowski's Derivatives of Regular Expressions
 -----------------------------------------------
 
 Legend:
 
 ::
 
-   ∧ intersection
-   ∨ union
-   ∘ concatenation (see below)
-   ¬ complement
-   ϕ empty set (aka ∅)
-   λ singleton set containing just the empty string
-   I set of all letters in alphabet
+    ∧ intersection
+    ∨ union
+    ∘ concatenation (see below)
+    ¬ complement
+    ϕ empty set (aka ∅)
+    λ singleton set containing just the empty string
+    I set of all letters in alphabet
 
 Derivative of a set ``R`` of strings and a string ``a``:
 
 ::
 
-   ∂a(R)
+    ∂a(R)
 
-   ∂a(a) → λ
-   ∂a(λ) → ϕ
-   ∂a(ϕ) → ϕ
-   ∂a(¬a) → ϕ
-   ∂a(R*) → ∂a(R)∘R*
-   ∂a(¬R) → ¬∂a(R)
-   ∂a(R∘S) → ∂a(R)∘S ∨ δ(R)∘∂a(S)
-   ∂a(R ∧ S) → ∂a(R) ∧ ∂a(S)
-   ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
+    ∂a(a) → λ
+    ∂a(λ) → ϕ
+    ∂a(ϕ) → ϕ
+    ∂a(¬a) → ϕ
+    ∂a(R*) → ∂a(R)∘R*
+    ∂a(¬R) → ¬∂a(R)
+    ∂a(R∘S) → ∂a(R)∘S ∨ δ(R)∘∂a(S)
+    ∂a(R ∧ S) → ∂a(R) ∧ ∂a(S)
+    ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
 
-   ∂ab(R) = ∂b(∂a(R))
+    ∂ab(R) = ∂b(∂a(R))
 
 Auxiliary predicate function ``δ`` (I call it ``nully``) returns either
 ``λ`` if ``λ ⊆ R`` or ``ϕ`` otherwise:
 
 ::
 
-   δ(a) → ϕ
-   δ(λ) → λ
-   δ(ϕ) → ϕ
-   δ(R*) → λ
-   δ(¬R) δ(R)≟ϕ → λ
-   δ(¬R) δ(R)≟λ → ϕ
-   δ(R∘S) → δ(R) ∧ δ(S)
-   δ(R ∧ S) → δ(R) ∧ δ(S)
-   δ(R ∨ S) → δ(R) ∨ δ(S)
+    δ(a) → ϕ
+    δ(λ) → λ
+    δ(ϕ) → ϕ
+    δ(R*) → λ
+    δ(¬R) δ(R)≟ϕ → λ
+    δ(¬R) δ(R)≟λ → ϕ
+    δ(R∘S) → δ(R) ∧ δ(S)
+    δ(R ∧ S) → δ(R) ∧ δ(S)
+    δ(R ∨ S) → δ(R) ∨ δ(S)
 
-Some rules we will use later for “compaction”:
+Some rules we will use later for "compaction":
 
 ::
 
-   R ∧ ϕ = ϕ ∧ R = ϕ
+    R ∧ ϕ = ϕ ∧ R = ϕ
 
-   R ∧ I = I ∧ R = R
+    R ∧ I = I ∧ R = R
 
-   R ∨ ϕ = ϕ ∨ R = R
+    R ∨ ϕ = ϕ ∨ R = R
 
-   R ∨ I = I ∨ R = I
+    R ∨ I = I ∨ R = I
 
-   R∘ϕ = ϕ∘R = ϕ
+    R∘ϕ = ϕ∘R = ϕ
 
-   R∘λ = λ∘R = R
+    R∘λ = λ∘R = R
 
 Concatination of sets: for two sets A and B the set A∘B is defined as:
 
@@ -71,7 +71,7 @@ Concatination of sets: for two sets A and B the set A∘B is defined as:
 
 E.g.:
 
-{‘a’, ‘b’}∘{‘c’, ‘d’} → {‘ac’, ‘ad’, ‘bc’, ‘bd’}
+{'a', 'b'}∘{'c', 'd'} → {'ac', 'ad', 'bc', 'bd'}
 
 Implementation
 --------------
@@ -94,11 +94,11 @@ The empty set and the set of just the empty string.
 Two-letter Alphabet
 ~~~~~~~~~~~~~~~~~~~
 
-I’m only going to use two symbols (at first) becaase this is enough to
+I'm only going to use two symbols (at first) becaase this is enough to
 illustrate the algorithm and because you can represent any other
 alphabet with two symbols (if you had to.)
 
-I chose the names ``O`` and ``l`` (uppercase “o” and lowercase “L”) to
+I chose the names ``O`` and ``l`` (uppercase "o" and lowercase "L") to
 look like ``0`` and ``1`` (zero and one) respectively.
 
 .. code:: ipython2
@@ -108,18 +108,18 @@ look like ``0`` and ``1`` (zero and one) respectively.
 Representing Regular Expressions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To represent REs in Python I’m going to use tagged tuples. A *regular
+To represent REs in Python I'm going to use tagged tuples. A *regular
 expression* is one of:
 
 ::
 
-   O
-   l
-   (KSTAR, R)
-   (NOT, R)
-   (AND, R, S)
-   (CONS, R, S)
-   (OR, R, S)
+    O
+    l
+    (KSTAR, R)
+    (NOT, R)
+    (AND, R, S)
+    (CONS, R, S)
+    (OR, R, S)
 
 Where ``R`` and ``S`` stand for *regular expressions*.
 
@@ -169,11 +169,11 @@ String Representation of RE Datastructures
 ``I``
 ~~~~~
 
-Match anything. Often spelled “.”
+Match anything. Often spelled "."
 
 ::
 
-   I = (0|1)*
+    I = (0|1)*
 
 .. code:: ipython2
 
@@ -196,8 +196,8 @@ The example expression from Brzozowski:
 
 ::
 
-   (.111.) & (.01 + 11*)'
-      a    &  (b  +  c)'
+    (.111.) & (.01 + 11*)'
+       a    &  (b  +  c)'
 
 Note that it contains one of everything.
 
@@ -221,7 +221,7 @@ Note that it contains one of everything.
 ``nully()``
 ~~~~~~~~~~~
 
-Let’s get that auxiliary predicate function ``δ`` out of the way.
+Let's get that auxiliary predicate function ``δ`` out of the way.
 
 .. code:: ipython2
 
@@ -256,10 +256,10 @@ Let’s get that auxiliary predicate function ``δ`` out of the way.
         r, s = nully(R[1]), nully(R[2])
         return r & s if tag in {AND, CONS} else r | s
 
-No “Compaction”
+No "Compaction"
 ~~~~~~~~~~~~~~~
 
-This is the straightforward version with no “compaction”. It works fine,
+This is the straightforward version with no "compaction". It works fine,
 but does waaaay too much work because the expressions grow each
 derivation.
 
@@ -359,7 +359,7 @@ are *pure* so this is fine.
                 result = self.mem[key] = self.f(key)
             return result
 
-With “Compaction”
+With "Compaction"
 ~~~~~~~~~~~~~~~~~
 
 This version uses the rules above to perform compaction. It keeps the
@@ -409,8 +409,8 @@ expressions from growing too large.
     
         return derv
 
-Let’s try it out…
------------------
+Let's try it out...
+-------------------
 
 (FIXME: redo.)
 
@@ -460,27 +460,27 @@ Should match:
 
 ::
 
-   (.111.) & ((.01 | 11*)')
+    (.111.) & ((.01 | 11*)')
 
-   92 / 122
-   92 / 122
+    92 / 122
+    92 / 122
 
-   (.01     )'
-   (.01 | 1 )'
-   (.01 | ^ )'
-   (.01 | 1*)'
-   (.111.)            & ((.01 | 1 )')
-   (.111. | 11.)      & ((.01 | ^ )')
-   (.111. | 11.)      & ((.01 | 1*)')
-   (.111. | 11. | 1.) & ((.01     )')
-   (.111. | 11. | 1.) & ((.01 | 1*)')
+    (.01     )'
+    (.01 | 1 )'
+    (.01 | ^ )'
+    (.01 | 1*)'
+    (.111.)            & ((.01 | 1 )')
+    (.111. | 11.)      & ((.01 | ^ )')
+    (.111. | 11.)      & ((.01 | 1*)')
+    (.111. | 11. | 1.) & ((.01     )')
+    (.111. | 11. | 1.) & ((.01 | 1*)')
 
 Larger Alphabets
 ----------------
 
-We could parse larger alphabets by defining patterns for e.g. each byte
+We could parse larger alphabets by defining patterns for e.g. each byte
 of the ASCII code. Or we can generalize this code. If you study the code
-above you’ll see that we never use the “set-ness” of the symbols ``O``
+above you'll see that we never use the "set-ness" of the symbols ``O``
 and ``l``. The only time Python set operators (``&`` and ``|``) appear
 is in the ``nully()`` function, and there they operate on (recursively
 computed) outputs of that function, never ``O`` and ``l``.
@@ -489,33 +489,33 @@ What if we try:
 
 ::
 
-   (OR, O, l)
+    (OR, O, l)
 
-   ∂1((OR, O, l))
-                               ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
-   ∂1(O) ∨ ∂1(l)
-                               ∂a(¬a) → ϕ
-   ϕ ∨ ∂1(l)
-                               ∂a(a) → λ
-   ϕ ∨ λ
-                               ϕ ∨ R = R
-   λ
+    ∂1((OR, O, l))
+                                ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
+    ∂1(O) ∨ ∂1(l)
+                                ∂a(¬a) → ϕ
+    ϕ ∨ ∂1(l)
+                                ∂a(a) → λ
+    ϕ ∨ λ
+                                ϕ ∨ R = R
+    λ
 
 And compare it to:
 
 ::
 
-   {'0', '1')
+    {'0', '1')
 
-   ∂1({'0', '1'))
-                               ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
-   ∂1({'0')) ∨ ∂1({'1'))
-                               ∂a(¬a) → ϕ
-   ϕ ∨ ∂1({'1'))
-                               ∂a(a) → λ
-   ϕ ∨ λ
-                               ϕ ∨ R = R
-   λ
+    ∂1({'0', '1'))
+                                ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
+    ∂1({'0')) ∨ ∂1({'1'))
+                                ∂a(¬a) → ϕ
+    ϕ ∨ ∂1({'1'))
+                                ∂a(a) → λ
+    ϕ ∨ λ
+                                ϕ ∨ R = R
+    λ
 
 This suggests that we should be able to alter the functions above to
 detect sets and deal with them appropriately. Exercise for the Reader
@@ -529,9 +529,9 @@ machine transition table.
 
 ::
 
-   .111. & (.01 + 11*)'
+    .111. & (.01 + 11*)'
 
-Says, “Three or more 1’s and not ending in 01 nor composed of all 1’s.”
+Says, "Three or more 1's and not ending in 01 nor composed of all 1's."
 
 .. figure:: attachment:omg.svg
    :alt: omg.svg
@@ -540,32 +540,32 @@ Says, “Three or more 1’s and not ending in 01 nor composed of all 1’s.”
 
 Start at ``a`` and follow the transition arrows according to their
 labels. Accepting states have a double outline. (Graphic generated with
-`Dot from Graphviz <http://www.graphviz.org/>`__.) You’ll see that only
+`Dot from Graphviz <http://www.graphviz.org/>`__.) You'll see that only
 paths that lead to one of the accepting states will match the regular
 expression. All other paths will terminate at one of the non-accepting
 states.
 
-There’s a happy path to ``g`` along 111:
+There's a happy path to ``g`` along 111:
 
 ::
 
-   a→c→e→g
+    a→c→e→g
 
-After you reach ``g`` you’re stuck there eating 1’s until you see a 0,
-which takes you to the ``i→j→i|i→j→h→i`` “trap”. You can’t reach any
+After you reach ``g`` you're stuck there eating 1's until you see a 0,
+which takes you to the ``i→j→i|i→j→h→i`` "trap". You can't reach any
 other states from those two loops.
 
 If you see a 0 before you see 111 you will reach ``b``, which forms
-another “trap” with ``d`` and ``f``. The only way out is another happy
+another "trap" with ``d`` and ``f``. The only way out is another happy
 path along 111 to ``h``:
 
 ::
 
-   b→d→f→h
+    b→d→f→h
 
-Once you have reached ``h`` you can see as many 1’s or as many 0’ in a
-row and still be either still at ``h`` (for 1’s) or move to ``i`` (for
-0’s). If you find yourself at ``i`` you can see as many 0’s, or
+Once you have reached ``h`` you can see as many 1's or as many 0' in a
+row and still be either still at ``h`` (for 1's) or move to ``i`` (for
+0's). If you find yourself at ``i`` you can see as many 0's, or
 repetitions of 10, as there are, but if you see just a 1 you move to
 ``j``.
 
@@ -575,14 +575,14 @@ RE to FSM
 So how do we get the state machine from the regular expression?
 
 It turns out that each RE is effectively a state, and each arrow points
-to the derivative RE in respect to the arrow’s symbol.
+to the derivative RE in respect to the arrow's symbol.
 
 If we label the initial RE ``a``, we can say:
 
 ::
 
-   a --0--> ∂0(a)
-   a --1--> ∂1(a)
+    a --0--> ∂0(a)
+    a --1--> ∂1(a)
 
 And so on, each new unique RE is a new state in the FSM table.
 
@@ -590,18 +590,18 @@ Here are the derived REs at each state:
 
 ::
 
-   a = (.111.) & ((.01 | 11*)')
-   b = (.111.) & ((.01 | 1)')
-   c = (.111. | 11.) & ((.01 | 1*)')
-   d = (.111. | 11.) & ((.01 | ^)')
-   e = (.111. | 11. | 1.) & ((.01 | 1*)')
-   f = (.111. | 11. | 1.) & ((.01)')
-   g = (.01 | 1*)'
-   h = (.01)'
-   i = (.01 | 1)'
-   j = (.01 | ^)'
+    a = (.111.) & ((.01 | 11*)')
+    b = (.111.) & ((.01 | 1)')
+    c = (.111. | 11.) & ((.01 | 1*)')
+    d = (.111. | 11.) & ((.01 | ^)')
+    e = (.111. | 11. | 1.) & ((.01 | 1*)')
+    f = (.111. | 11. | 1.) & ((.01)')
+    g = (.01 | 1*)'
+    h = (.01)'
+    i = (.01 | 1)'
+    j = (.01 | ^)'
 
-You can see the one-way nature of the ``g`` state and the ``hij`` “trap”
+You can see the one-way nature of the ``g`` state and the ``hij`` "trap"
 in the way that the ``.111.`` on the left-hand side of the ``&``
 disappears once it has been matched.
 
@@ -764,16 +764,16 @@ Drive a FSM
 There are *lots* of FSM libraries already. Once you have the state
 transition table they should all be straightforward to use. State
 Machine code is very simple. Just for fun, here is an implementation in
-Python that imitates what “compiled” FSM code might look like in an
-“unrolled” form. Most FSM code uses a little driver loop and a table
+Python that imitates what "compiled" FSM code might look like in an
+"unrolled" form. Most FSM code uses a little driver loop and a table
 datastructure, the code below instead acts like JMP instructions
-(“jump”, or GOTO in higher-level-but-still-low-level languages) to
+("jump", or GOTO in higher-level-but-still-low-level languages) to
 hard-code the information in the table into a little patch of branches.
 
 Trampoline Function
 ^^^^^^^^^^^^^^^^^^^
 
-Python has no GOTO statement but we can fake it with a “trampoline”
+Python has no GOTO statement but we can fake it with a "trampoline"
 function.
 
 .. code:: ipython2
@@ -790,8 +790,8 @@ function.
 Stream Functions
 ^^^^^^^^^^^^^^^^
 
-Little helpers to process the iterator of our data (a “stream” of “1”
-and “0” characters, not bits.)
+Little helpers to process the iterator of our data (a "stream" of "1"
+and "0" characters, not bits.)
 
 .. code:: ipython2
 
@@ -831,7 +831,7 @@ labels.)
 
 Note that the implementations of ``h`` and ``g`` are identical ergo
 ``h = g`` and we could eliminate one in the code but ``h`` is an
-accepting state and ``g`` isn’t.
+accepting state and ``g`` isn't.
 
 .. code:: ipython2
 
@@ -885,7 +885,7 @@ Reversing the Derivatives to Generate Matching Strings
 ------------------------------------------------------
 
 (UNFINISHED) Brzozowski also shewed how to go from the state machine to
-strings and expressions…
+strings and expressions...
 
 Each of these states is just a name for a Brzozowskian RE, and so, other
 than the initial state ``a``, they can can be described in terms of the
@@ -893,54 +893,54 @@ derivative-with-respect-to-N of some other state/RE:
 
 ::
 
-   c = d1(a)
-   b = d0(a)
-   b = d0(c)
-   ...
-   i = d0(j)
-   j = d1(i)
+    c = d1(a)
+    b = d0(a)
+    b = d0(c)
+    ...
+    i = d0(j)
+    j = d1(i)
 
 Consider:
 
 ::
 
-   c = d1(a)
-   b = d0(c)
+    c = d1(a)
+    b = d0(c)
 
 Substituting:
 
 ::
 
-   b = d0(d1(a))
+    b = d0(d1(a))
 
 Unwrapping:
 
 ::
 
-   b = d10(a)
+    b = d10(a)
 
-’’’
+'''
 
 ::
 
-   j = d1(d0(j))
+    j = d1(d0(j))
 
 Unwrapping:
 
 ::
 
-   j = d1(d0(j)) = d01(j)
+    j = d1(d0(j)) = d01(j)
 
-We have a loop or “fixed point”.
-
-::
-
-   j = d01(j) = d0101(j) = d010101(j) = ...
-
-hmm…
+We have a loop or "fixed point".
 
 ::
 
-   j = (01)*
+    j = d01(j) = d0101(j) = d010101(j) = ...
+
+hmm...
+
+::
+
+    j = (01)*
 
 

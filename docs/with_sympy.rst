@@ -20,8 +20,8 @@ Symbolic Evaluation with SymPy
 -------------------------------------------------------------------------------------------
 
 The SymPy package provides a powerful and elegant
-`“thunk” <https://en.wikipedia.org/wiki/Thunk>`__ object that can take
-the place of a numeric value in calculations and “record” the operations
+`"thunk" <https://en.wikipedia.org/wiki/Thunk>`__ object that can take
+the place of a numeric value in calculations and "record" the operations
 performed on it.
 
 We can create some of these objects and put them on the Joy stack:
@@ -34,12 +34,12 @@ If we evaluate the ``quadratic`` program
 
 ::
 
-   over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
+    over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2
 
 The `SypPy
 Symbols <http://docs.sympy.org/latest/modules/core.html#module-sympy.core.symbol>`__
 will become the symbolic expression of the math operations.
-Unfortunately, the library ``sqrt`` function doesn’t work with the SymPy
+Unfortunately, the library ``sqrt`` function doesn't work with the SymPy
 objects:
 
 .. code:: ipython2
@@ -96,8 +96,8 @@ We can pick out that first symbolic expression obect from the Joy stack:
 
 
 
-The Python ``math.sqrt()`` function causes the “can’t convert expression
-to float” exception but ``sympy.sqrt()`` does not:
+The Python ``math.sqrt()`` function causes the "can't convert expression
+to float" exception but ``sympy.sqrt()`` does not:
 
 .. code:: ipython2
 
@@ -155,10 +155,10 @@ Now it works just fine.
 
 At some point I will probably make an optional library of Joy wrappers
 for SymPy functions, and either load it automatically if SymPy
-installation is available or have a CLI switch or something. There’s a
-huge amount of incredibly useful stuff and I don’t see why Joy shouldn’t
+installation is available or have a CLI switch or something. There's a
+huge amount of incredibly useful stuff and I don't see why Joy shouldn't
 expose another interface for using it. (As an example, the symbolic
-expressions can be “lambdafied” into very fast versions, i.e. a function
+expressions can be "lambdafied" into very fast versions, i.e. a function
 that takes ``a``, ``b``, and ``c`` and computes the value of the root
 using just low-level fast code, bypassing Joy and Python. Also, Numpy,
 &c.)
@@ -200,39 +200,39 @@ Translate ``F(u, k)`` to Joy
 
 ::
 
-   u k 1                    # z = 1
-       [pop] [Fw] while     # the while statement
-       popopd               # discard u k, "return" z
+    u k 1                    # z = 1
+        [pop] [Fw] while     # the while statement
+        popopd               # discard u k, "return" z
 
-What’s Fw?
+What's Fw?
 
 ::
 
-   u k z [pop odd] [Ft] [] ifte   # the if statement
-         [2 //] dip               # k = k / 2  floordiv
-         [sqr] dipd               # u = u * u
+    u k z [pop odd] [Ft] [] ifte   # the if statement
+          [2 //] dip               # k = k / 2  floordiv
+          [sqr] dipd               # u = u * u
 
-         [[sqr] dip 2 //] dip     # We can merge last two lines.
+          [[sqr] dip 2 //] dip     # We can merge last two lines.
 
 Helper function Ft (to compute z = z \* u).
 
 ::
 
-      u k z Ft
-   ---------------
-      u k u*z
+       u k z Ft
+    ---------------
+       u k u*z
 
 
-   Ft == [over] dip *
+    Ft == [over] dip *
 
 Putting it together:
 
 ::
 
-   Ft == [over] dip *
-   Fb == [[sqr] dip 2 //] dip
-   Fw == [pop odd] [Ft] [] ifte Fb
-    F == 1 [pop] [Fw] while popopd
+    Ft == [over] dip *
+    Fb == [[sqr] dip 2 //] dip
+    Fw == [pop odd] [Ft] [] ifte Fb
+     F == 1 [pop] [Fw] while popopd
 
 .. code:: ipython2
 
@@ -266,7 +266,7 @@ Try it out:
     32
 
 
-In order to elide the tests let’s define special versions of ``while``
+In order to elide the tests let's define special versions of ``while``
 and ``ifte``:
 
 .. code:: ipython2
@@ -411,7 +411,7 @@ And with a SymPy symbol for the ``u`` argument:
 
 
 
-Let’s try partial evaluation by hand and use a “stronger” thunk.
+Let's try partial evaluation by hand and use a "stronger" thunk.
 
 Caret underscoring indicates terms that form thunks. When an arg is
 unavailable for a computation we just postpone it until the arg becomes
@@ -419,136 +419,136 @@ available and in the meantime treat the pending computation as one unit.
 
 ::
 
-                            u 5 . F
-                            u 5 . 1 [pop] [Fw] while popopd
-                          u 5 1 . [pop] [Fw] while popopd
-                    u 5 1 [pop] . [Fw] while popopd
-               u 5 1 [pop] [Fw] . while popopd
-                          u 5 1 . Fw [pop] [Fw] while popopd
-                          u 5 1 . [pop odd] [Ft] [] ifte Fb [pop] [Fw] while popopd
-                u 5 1 [pop odd] . [Ft] [] ifte Fb [pop] [Fw] while popopd
-           u 5 1 [pop odd] [Ft] . [] ifte Fb [pop] [Fw] while popopd
-        u 5 1 [pop odd] [Ft] [] . ifte Fb [pop] [Fw] while popopd
-                          u 5 1 . Ft Fb [pop] [Fw] while popopd
-                          u 5 1 . [over] dip * Fb [pop] [Fw] while popopd
-                   u 5 1 [over] . dip * Fb [pop] [Fw] while popopd
-                            u 5 . over 1 * Fb [pop] [Fw] while popopd
-                          u 5 u . 1 * Fb [pop] [Fw] while popopd
-                        u 5 u 1 . * Fb [pop] [Fw] while popopd
-                          u 5 u . Fb [pop] [Fw] while popopd
-                          u 5 u . [[sqr] dip 2 //] dip [pop] [Fw] while popopd
-         u 5 u [[sqr] dip 2 //] . dip [pop] [Fw] while popopd
-                            u 5 . [sqr] dip 2 // u [pop] [Fw] while popopd
-                      u 5 [sqr] . dip 2 // u [pop] [Fw] while popopd
-                              u . sqr 5 2 // u [pop] [Fw] while popopd
-                              u . dup mul 5 2 // u [pop] [Fw] while popopd
-                        u dup * . 5 2 // u [pop] [Fw] while popopd
-                        ^^^^^^^
+                             u 5 . F
+                             u 5 . 1 [pop] [Fw] while popopd
+                           u 5 1 . [pop] [Fw] while popopd
+                     u 5 1 [pop] . [Fw] while popopd
+                u 5 1 [pop] [Fw] . while popopd
+                           u 5 1 . Fw [pop] [Fw] while popopd
+                           u 5 1 . [pop odd] [Ft] [] ifte Fb [pop] [Fw] while popopd
+                 u 5 1 [pop odd] . [Ft] [] ifte Fb [pop] [Fw] while popopd
+            u 5 1 [pop odd] [Ft] . [] ifte Fb [pop] [Fw] while popopd
+         u 5 1 [pop odd] [Ft] [] . ifte Fb [pop] [Fw] while popopd
+                           u 5 1 . Ft Fb [pop] [Fw] while popopd
+                           u 5 1 . [over] dip * Fb [pop] [Fw] while popopd
+                    u 5 1 [over] . dip * Fb [pop] [Fw] while popopd
+                             u 5 . over 1 * Fb [pop] [Fw] while popopd
+                           u 5 u . 1 * Fb [pop] [Fw] while popopd
+                         u 5 u 1 . * Fb [pop] [Fw] while popopd
+                           u 5 u . Fb [pop] [Fw] while popopd
+                           u 5 u . [[sqr] dip 2 //] dip [pop] [Fw] while popopd
+          u 5 u [[sqr] dip 2 //] . dip [pop] [Fw] while popopd
+                             u 5 . [sqr] dip 2 // u [pop] [Fw] while popopd
+                       u 5 [sqr] . dip 2 // u [pop] [Fw] while popopd
+                               u . sqr 5 2 // u [pop] [Fw] while popopd
+                               u . dup mul 5 2 // u [pop] [Fw] while popopd
+                         u dup * . 5 2 // u [pop] [Fw] while popopd
+                         ^^^^^^^
 
 ::
 
-            u dup * 2 u [pop] [Fw] . while popopd
-                       u dup * 2 u . Fw [pop] [Fw] while popopd
-                       u dup * 2 u . [pop odd] [Ft] [] ifte Fb [pop] [Fw] while popopd
-             u dup * 2 u [pop odd] . [Ft] [] ifte Fb [pop] [Fw] while popopd
-        u dup * 2 u [pop odd] [Ft] . [] ifte Fb [pop] [Fw] while popopd
-     u dup * 2 u [pop odd] [Ft] [] . ifte Fb [pop] [Fw] while popopd
-                       u dup * 2 u . Fb [pop] [Fw] while popopd
-                       u dup * 2 u . [[sqr] dip 2 //] dip [pop] [Fw] while popopd
-      u dup * 2 u [[sqr] dip 2 //] . dip [pop] [Fw] while popopd
-                         u dup * 2 . [sqr] dip 2 // u [pop] [Fw] while popopd
-                   u dup * 2 [sqr] . dip 2 // u [pop] [Fw] while popopd
-                           u dup * . sqr 2 2 // u [pop] [Fw] while popopd
-                           u dup * . dup mul 2 2 // u [pop] [Fw] while popopd
-                     u dup * dup * . 2 2 // u [pop] [Fw] while popopd
-                     ^^^^^^^^^^^^^
+             u dup * 2 u [pop] [Fw] . while popopd
+                        u dup * 2 u . Fw [pop] [Fw] while popopd
+                        u dup * 2 u . [pop odd] [Ft] [] ifte Fb [pop] [Fw] while popopd
+              u dup * 2 u [pop odd] . [Ft] [] ifte Fb [pop] [Fw] while popopd
+         u dup * 2 u [pop odd] [Ft] . [] ifte Fb [pop] [Fw] while popopd
+      u dup * 2 u [pop odd] [Ft] [] . ifte Fb [pop] [Fw] while popopd
+                        u dup * 2 u . Fb [pop] [Fw] while popopd
+                        u dup * 2 u . [[sqr] dip 2 //] dip [pop] [Fw] while popopd
+       u dup * 2 u [[sqr] dip 2 //] . dip [pop] [Fw] while popopd
+                          u dup * 2 . [sqr] dip 2 // u [pop] [Fw] while popopd
+                    u dup * 2 [sqr] . dip 2 // u [pop] [Fw] while popopd
+                            u dup * . sqr 2 2 // u [pop] [Fw] while popopd
+                            u dup * . dup mul 2 2 // u [pop] [Fw] while popopd
+                      u dup * dup * . 2 2 // u [pop] [Fw] while popopd
+                      ^^^^^^^^^^^^^
 
 w/ ``K == u dup * dup *``
 
 ::
 
-                K 1 u [pop] [Fw] . while popopd
-                           K 1 u . Fw [pop] [Fw] while popopd
-                           K 1 u . [pop odd] [Ft] [] ifte Fb [pop] [Fw] while popopd
-                 K 1 u [pop odd] . [Ft] [] ifte Fb [pop] [Fw] while popopd
-            K 1 u [pop odd] [Ft] . [] ifte Fb [pop] [Fw] while popopd
-         K 1 u [pop odd] [Ft] [] . ifte Fb [pop] [Fw] while popopd
-                           K 1 u . Ft Fb [pop] [Fw] while popopd
-                           K 1 u . [over] dip * Fb [pop] [Fw] while popopd
-                    K 1 u [over] . dip * Fb [pop] [Fw] while popopd
-                             K 1 . over u * Fb [pop] [Fw] while popopd
-                           K 1 K . u * Fb [pop] [Fw] while popopd
-                         K 1 K u . * Fb [pop] [Fw] while popopd
-                       K 1 K u * . Fb [pop] [Fw] while popopd
-                           ^^^^^
+                 K 1 u [pop] [Fw] . while popopd
+                            K 1 u . Fw [pop] [Fw] while popopd
+                            K 1 u . [pop odd] [Ft] [] ifte Fb [pop] [Fw] while popopd
+                  K 1 u [pop odd] . [Ft] [] ifte Fb [pop] [Fw] while popopd
+             K 1 u [pop odd] [Ft] . [] ifte Fb [pop] [Fw] while popopd
+          K 1 u [pop odd] [Ft] [] . ifte Fb [pop] [Fw] while popopd
+                            K 1 u . Ft Fb [pop] [Fw] while popopd
+                            K 1 u . [over] dip * Fb [pop] [Fw] while popopd
+                     K 1 u [over] . dip * Fb [pop] [Fw] while popopd
+                              K 1 . over u * Fb [pop] [Fw] while popopd
+                            K 1 K . u * Fb [pop] [Fw] while popopd
+                          K 1 K u . * Fb [pop] [Fw] while popopd
+                        K 1 K u * . Fb [pop] [Fw] while popopd
+                            ^^^^^
 
 w/ ``L == K u *``
 
 ::
 
-                        K 1 L . Fb [pop] [Fw] while popopd
-                        K 1 L . [[sqr] dip 2 //] dip [pop] [Fw] while popopd
-       K 1 L [[sqr] dip 2 //] . dip [pop] [Fw] while popopd
-                          K 1 . [sqr] dip 2 // L [pop] [Fw] while popopd
-                    K 1 [sqr] . dip 2 // L [pop] [Fw] while popopd
-                            K . sqr 1 2 // L [pop] [Fw] while popopd
-                            K . dup mul 1 2 // L [pop] [Fw] while popopd
-                          K K . mul 1 2 // L [pop] [Fw] while popopd
-                        K K * . 1 2 // L [pop] [Fw] while popopd
-                        ^^^^^
-                        K K * . 1 2 // L [pop] [Fw] while popopd
-                      K K * 1 . 2 // L [pop] [Fw] while popopd
-                    K K * 1 2 . // L [pop] [Fw] while popopd
-                      K K * 0 . L [pop] [Fw] while popopd
-                    K K * 0 L . [pop] [Fw] while popopd
-              K K * 0 L [pop] . [Fw] while popopd
-         K K * 0 L [pop] [Fw] . while popopd
-         ^^^^^
-                    K K * 0 L . popopd
-                            L . 
+                         K 1 L . Fb [pop] [Fw] while popopd
+                         K 1 L . [[sqr] dip 2 //] dip [pop] [Fw] while popopd
+        K 1 L [[sqr] dip 2 //] . dip [pop] [Fw] while popopd
+                           K 1 . [sqr] dip 2 // L [pop] [Fw] while popopd
+                     K 1 [sqr] . dip 2 // L [pop] [Fw] while popopd
+                             K . sqr 1 2 // L [pop] [Fw] while popopd
+                             K . dup mul 1 2 // L [pop] [Fw] while popopd
+                           K K . mul 1 2 // L [pop] [Fw] while popopd
+                         K K * . 1 2 // L [pop] [Fw] while popopd
+                         ^^^^^
+                         K K * . 1 2 // L [pop] [Fw] while popopd
+                       K K * 1 . 2 // L [pop] [Fw] while popopd
+                     K K * 1 2 . // L [pop] [Fw] while popopd
+                       K K * 0 . L [pop] [Fw] while popopd
+                     K K * 0 L . [pop] [Fw] while popopd
+               K K * 0 L [pop] . [Fw] while popopd
+          K K * 0 L [pop] [Fw] . while popopd
+          ^^^^^
+                     K K * 0 L . popopd
+                             L . 
 
 So:
 
 ::
 
-   K == u dup * dup *
-   L == K u *
+    K == u dup * dup *
+    L == K u *
 
-Our result “thunk” would be:
+Our result "thunk" would be:
 
 ::
 
-   u dup * dup * u *
+    u dup * dup * u *
 
 Mechanically, you could do:
 
 ::
 
-   u      dup * dup *  u   *
-   u u   [dup * dup *] dip *
-   u dup [dup * dup *] dip *
+    u      dup * dup *  u   *
+    u u   [dup * dup *] dip *
+    u dup [dup * dup *] dip *
 
 
-   F5 == dup [dup * dup *] dip *
+    F5 == dup [dup * dup *] dip *
 
 But we can swap the two arguments to the final ``*`` to get all mentions
 of ``u`` to the left:
 
 ::
 
-   u u dup * dup * *
+    u u dup * dup * *
 
-Then de-duplicate “u”:
+Then de-duplicate "u":
 
 ::
 
-   u dup dup * dup * *
+    u dup dup * dup * *
 
 To arrive at a startlingly elegant form for F5:
 
 ::
 
-   F5 == dup dup * dup * *
+    F5 == dup dup * dup * *
 
 .. code:: ipython2
 
@@ -581,7 +581,7 @@ To arrive at a startlingly elegant form for F5:
 
 
 
-I’m not sure how to implement these kinds of thunks. I think you have to
+I'm not sure how to implement these kinds of thunks. I think you have to
 have support in the interpreter, or you have to modify all of the
 functions like ``dup`` to check for thunks in their inputs.
 
@@ -589,27 +589,27 @@ Working on the compiler, from this:
 
 ::
 
-   dup dup * dup * *
+    dup dup * dup * *
 
 We can already generate:
 
 ::
 
-   ---------------------------------
-   (a0, stack) = stack
-   a1 = mul(a0, a0)
-   a2 = mul(a1, a1)
-   a3 = mul(a2, a0)
-   stack = (a3, stack)
-   ---------------------------------
+    ---------------------------------
+    (a0, stack) = stack
+    a1 = mul(a0, a0)
+    a2 = mul(a1, a1)
+    a3 = mul(a2, a0)
+    stack = (a3, stack)
+    ---------------------------------
 
-This is pretty old stuff… (E.g. from 1999, M. Anton Ertl `Compilation of
-Stack-Based
+This is pretty old stuff... (E.g. from 1999, M. Anton Ertl `Compilation
+of Stack-Based
 Languages <http://www.complang.tuwien.ac.at/projects/rafts.html>`__ he
 goes a lot further for Forth.)
 
 
-“A Transformation Based Approach to Semantics-Directed Code Generation”
+"A Transformation Based Approach to Semantics-Directed Code Generation"
 -----------------------------------------------------------------------
 
 by Arthur Nunes-Harwitt
@@ -658,13 +658,13 @@ In Joy:
 
 ::
 
-   m == [*] cons
+    m == [*] cons
 
-   3 2 m i
-   3 2 [*] cons i
-   3 [2 *] i
-   3 2 *
-   6
+    3 2 m i
+    3 2 [*] cons i
+    3 [2 *] i
+    3 2 *
+    6
 
 .. code:: ipython2
 
@@ -692,23 +692,23 @@ Original
 
 ::
 
-   p == [0 =] [popop 1] [-- over] [dip *] genrec
+    p == [0 =] [popop 1] [-- over] [dip *] genrec
 
-   b n p
-   b n [0 =] [popop 1] [-- over [p] dip *]
+    b n p
+    b n [0 =] [popop 1] [-- over [p] dip *]
 
-   b n -- over [p] dip *
-   b n-1  over [p] dip *
-   b n-1 b [p] dip *
-   b n-1 p b *
+    b n -- over [p] dip *
+    b n-1  over [p] dip *
+    b n-1 b [p] dip *
+    b n-1 p b *
 
 curried, quoted
 
 ::
 
-                       n p
-   ---------------------------------------------
-      [[n 0 =] [pop 1] [dup n --] [*] genrec]
+                        n p
+    ---------------------------------------------
+       [[n 0 =] [pop 1] [dup n --] [*] genrec]
 
 .. code:: ipython2
 
@@ -737,12 +737,12 @@ curried, quoted
 
 ::
 
-   p == [0 =] [[pop 1]] [ [-- [dup] dip p *] cons ]ifte
+    p == [0 =] [[pop 1]] [ [-- [dup] dip p *] cons ]ifte
 
 
-   3 p
-   3 [-- [dup] dip p *] cons
-   [3 -- [dup] dip p *]
+    3 p
+    3 [-- [dup] dip p *] cons
+    [3 -- [dup] dip p *]
 
 .. code:: ipython2
 
@@ -781,34 +781,34 @@ curried, quoted
 
 ::
 
-   p == [0 =] [pop [pop 1]] [-- p [dupdip *] cons] ifte
+    p == [0 =] [pop [pop 1]] [-- p [dupdip *] cons] ifte
 
 
-   3 p
-   3 -- p [dupdip *] cons
-   2    p [dupdip *] cons
-   2 -- p [dupdip *] cons [dupdip *] cons
-   1    p [dupdip *] cons [dupdip *] cons
-   1 -- p [dupdip *] cons [dupdip *] cons [dupdip *] cons
-   0    p [dupdip *] cons [dupdip *] cons [dupdip *] cons
-   0 pop [pop 1] [dupdip *] cons [dupdip *] cons [dupdip *] cons
-   [pop 1] [dupdip *] cons [dupdip *] cons [dupdip *] cons
-   ...
-   [[[[pop 1] dupdip *] dupdip *] dupdip *]
+    3 p
+    3 -- p [dupdip *] cons
+    2    p [dupdip *] cons
+    2 -- p [dupdip *] cons [dupdip *] cons
+    1    p [dupdip *] cons [dupdip *] cons
+    1 -- p [dupdip *] cons [dupdip *] cons [dupdip *] cons
+    0    p [dupdip *] cons [dupdip *] cons [dupdip *] cons
+    0 pop [pop 1] [dupdip *] cons [dupdip *] cons [dupdip *] cons
+    [pop 1] [dupdip *] cons [dupdip *] cons [dupdip *] cons
+    ...
+    [[[[pop 1] dupdip *] dupdip *] dupdip *]
 
 
-   2 [[[[pop 1] dupdip *] dupdip *] dupdip *] i
-   2  [[[pop 1] dupdip *] dupdip *] dupdip *
-   2   [[pop 1] dupdip *] dupdip *  2 *
-   2    [pop 1] dupdip *  2      *  2 *
-   2     pop 1  2      *  2      *  2 *
-             1  2      *  2      *  2 *
+    2 [[[[pop 1] dupdip *] dupdip *] dupdip *] i
+    2  [[[pop 1] dupdip *] dupdip *] dupdip *
+    2   [[pop 1] dupdip *] dupdip *  2 *
+    2    [pop 1] dupdip *  2      *  2 *
+    2     pop 1  2      *  2      *  2 *
+              1  2      *  2      *  2 *
 
 
 
-   p == [0 =] [pop [pop 1]] [--  p    [dupdip *] cons] ifte
-   p == [0 =] [pop [pop 1]] [-- [p] i [dupdip *] cons] ifte
-   p == [0 =] [pop [pop 1]] [--]   [i [dupdip *] cons] genrec
+    p == [0 =] [pop [pop 1]] [--  p    [dupdip *] cons] ifte
+    p == [0 =] [pop [pop 1]] [-- [p] i [dupdip *] cons] ifte
+    p == [0 =] [pop [pop 1]] [--]   [i [dupdip *] cons] genrec
 
 .. code:: ipython2
 
@@ -861,13 +861,13 @@ From this:
 
 ::
 
-   p == [0 =] [pop pop 1] [-- over] [dip *] genrec
+    p == [0 =] [pop pop 1] [-- over] [dip *] genrec
 
 To this:
 
 ::
 
-   p == [0 =] [pop [pop 1]] [--] [i [dupdip *] cons] genrec
+    p == [0 =] [pop [pop 1]] [--] [i [dupdip *] cons] genrec
 
 Try it with ``F()``:
 --------------------
@@ -966,7 +966,7 @@ Try it with ``F()``:
     print source
     eval(source)(2)
 
-Hmm…
+Hmm...
 
 .. code:: ipython2
 
@@ -1062,81 +1062,81 @@ Hmm…
 
 So that gets pretty good, eh?
 
-But looking back at the definition in Joy, it doesn’t seem easy to
+But looking back at the definition in Joy, it doesn't seem easy to
 directly apply this technique to Joy code:
 
 ::
 
-   Ft == [over] dip *
-   Fb == [[sqr] dip 2 //] dip
-   Fw == [pop odd] [Ft] [] ifte Fb
-    F == 1 [pop] [Fw] while popopd
+    Ft == [over] dip *
+    Fb == [[sqr] dip 2 //] dip
+    Fw == [pop odd] [Ft] [] ifte Fb
+     F == 1 [pop] [Fw] while popopd
 
 But a direct translation of the Python code..?
 
 ::
 
-   F == [
-     [[0 =] [pop 1]]
-     [[1 =] []]
-     [_F.0]
-     ] cond
+    F == [
+      [[0 =] [pop 1]]
+      [[1 =] []]
+      [_F.0]
+      ] cond
 
-   _F.0 == dup 2 // [
-     [[0 =]     [pop 1]]
-     [[pop odd] _F.1]
-     [_F.2]
-     ] cond
+    _F.0 == dup 2 // [
+      [[0 =]     [pop 1]]
+      [[pop odd] _F.1]
+      [_F.2]
+      ] cond
 
-   _F.1 == [1 =] [pop [dup dup * *]] [popd F [dupdip over * *] cons] ifte
-   _F.2 == [1 =] [pop [dup *]]       [popd F [i dup *]         cons] ifte
+    _F.1 == [1 =] [pop [dup dup * *]] [popd F [dupdip over * *] cons] ifte
+    _F.2 == [1 =] [pop [dup *]]       [popd F [i dup *]         cons] ifte
 
 Try it:
 
 ::
 
-   5 F
-   5 [ [[0 =] [pop 1]] [[1 =] []] [_F.0] ] cond
-   5 _F.0
-   5 dup 2 // [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
-   5 5 2 //   [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
+    5 F
+    5 [ [[0 =] [pop 1]] [[1 =] []] [_F.0] ] cond
+    5 _F.0
+    5 dup 2 // [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
+    5 5 2 //   [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
 
-   5 2 [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
-   5 2 _F.1
-   5 2 [1 =] [popop [dup dup * *]] [popd F [dupdip over * *] cons] ifte
-   5 2                              popd F [dupdip over * *] cons
-     2                                   F [dupdip over * *] cons
+    5 2 [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
+    5 2 _F.1
+    5 2 [1 =] [popop [dup dup * *]] [popd F [dupdip over * *] cons] ifte
+    5 2                              popd F [dupdip over * *] cons
+      2                                   F [dupdip over * *] cons
 
-   2 F [dupdip over * *] cons
+    2 F [dupdip over * *] cons
 
-   2 F
-   2 [ [[0 =] [pop 1]] [[1 =] []] [_F.0] ] cond
-   2 _F.0
-   2 dup 2 // [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
-   2 2 2 // [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
-   2 1 [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
-   2 1 _F.2
-   2 1 [1 =] [popop [dup *]] [popd F [i dup *] cons] ifte
-   2 1 popop [dup *]
-   [dup *]
+    2 F
+    2 [ [[0 =] [pop 1]] [[1 =] []] [_F.0] ] cond
+    2 _F.0
+    2 dup 2 // [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
+    2 2 2 // [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
+    2 1 [ [[0 =] [pop 1]] [[pop odd] _F.1] [_F.2] ] cond
+    2 1 _F.2
+    2 1 [1 =] [popop [dup *]] [popd F [i dup *] cons] ifte
+    2 1 popop [dup *]
+    [dup *]
 
 
-   2 F     [dupdip over * *] cons
-   [dup *] [dupdip over * *] cons
-   [[dup *] dupdip over * *]
+    2 F     [dupdip over * *] cons
+    [dup *] [dupdip over * *] cons
+    [[dup *] dupdip over * *]
 
 And here it is in action:
 
 ::
 
-   2 [[dup *] dupdip over * *] i
-   2  [dup *] dupdip over * *
-   2   dup *  2      over * *
-   2   2   *  2      over * *
-   4          2      over * *
-   4          2      4    * *
-   4          8             *
-   32
+    2 [[dup *] dupdip over * *] i
+    2  [dup *] dupdip over * *
+    2   dup *  2      over * *
+    2   2   *  2      over * *
+    4          2      over * *
+    4          2      4    * *
+    4          8             *
+    32
 
 So, it works, but in this case the results of the partial evaluation are
 more elegant.

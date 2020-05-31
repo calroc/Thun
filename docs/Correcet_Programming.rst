@@ -14,8 +14,8 @@ Expressions ○ SAT Solver ○ A Model of Computation
 Introduction
 ============
 
-In 1969 George Spencer-Brown (GSB) published `“Laws of
-Form” <https://en.wikipedia.org/wiki/Laws_of_Form>`__ which presented a
+In 1969 George Spencer-Brown (GSB) published `"Laws of
+Form" <https://en.wikipedia.org/wiki/Laws_of_Form>`__ which presented a
 logical system based on a single action, a distinction, that is both an
 operation and a value. This notebook describes a Python implementation
 that mimics the Laws of Form notation and uses it to develop a model of
@@ -31,21 +31,21 @@ Arithmetic
 
 ::
 
-   (()) =
-   ()() = ()
+    (()) =
+    ()() = ()
 
 Calculus
 ^^^^^^^^
 
 ::
 
-   A((B)) = AB
-   A() = ()
-   A(AB) = A(B)
+    A((B)) = AB
+    A() = ()
+    A(AB) = A(B)
 
 I call these three laws the **Bricken Basis** after `William
 Bricken <http://wbricken.com/>`__ who figured out that the third law is
-complete with the other two. GSB had the first two laws and “Each Way”
+complete with the other two. GSB had the first two laws and "Each Way"
 as the basis. (TODO: Find and include the references for all this.)
 
 (If anything here is unclear read `The Markable
@@ -56,8 +56,8 @@ Python Sets and Strings as Laws of Form Calculus Expressions
 ------------------------------------------------------------
 
 We can use data structures made solely out of Python ``frozenset`` and
-string objects to represent the forms of the Laws of Form notation. I’m
-going to use the terms “expression” and “form” interchangably in this
+string objects to represent the forms of the Laws of Form notation. I'm
+going to use the terms "expression" and "form" interchangably in this
 document.
 
 .. code:: ipython2
@@ -167,7 +167,7 @@ Order is irrelevant, again due to ``frozenset``.
 
 
 
-It’s prefectly okay to create forms out of other forms (not just
+It's prefectly okay to create forms out of other forms (not just
 strings.)
 
 .. code:: ipython2
@@ -266,7 +266,7 @@ Once the forms have been rendered to pure arithmetic we can use the
         return any(not void(i) for i in form)
 
 The ``void()`` function returns a Boolean value (Python ``True`` or
-``False``), for convenience let’s write a function that returns the Mark
+``False``), for convenience let's write a function that returns the Mark
 or Void value of a form.
 
 .. code:: ipython2
@@ -334,7 +334,7 @@ can evaluate an expression containing those names and compute its value.
 
 
 
-This is a bit hard to read, so let’s define a helper function to convert
+This is a bit hard to read, so let's define a helper function to convert
 an environment to a string format.
 
 .. code:: ipython2
@@ -373,7 +373,7 @@ just like a list of the eight three-bit binary numbers.
 Reify the Forms with Each Meaning
 ---------------------------------
 
-Let’s pick one of the expressions and iterate through the environments
+Let's pick one of the expressions and iterate through the environments
 showing the result of reifying that expression in that environment.
 
 .. code:: ipython2
@@ -402,7 +402,7 @@ showing the result of reifying that expression in that environment.
 Truth Table
 -----------
 
-Let’s render the above as a `Truth
+Let's render the above as a `Truth
 Table <https://en.wikipedia.org/wiki/Truth_table>`__.
 
 .. code:: ipython2
@@ -437,17 +437,17 @@ Table <https://en.wikipedia.org/wiki/Truth_table>`__.
 
 This makes it clear that *each expression in Laws of Form calculus is
 describing a digital Boolean circuit*. The names are its inputs and its
-Void/Mark value is its output. Each boundary is a `multi-input NOR
+Void/Mark value is its output. Each boundary is a `multi-input **NOR**
 gate <https://en.wikipedia.org/wiki/Logical_NOR>`__, known as the Peirce
 arrow or Quine dagger (See `Sheffer
 stroke <https://en.wikipedia.org/wiki/Sheffer_stroke>`__ and `NOR
 gate <https://en.wikipedia.org/wiki/NOR_gate>`__.) Instead of two
 Boolean values there is only one value and non-existance.
 
-Let’s build Circuits
+Let's build Circuits
 ====================
 
-In order to work with expressions as digital circuits, let’s define some
+In order to work with expressions as digital circuits, let's define some
 helper functions that will create logic circuits out of simpler forms.
 The names of the functions below reflect the choice of Mark as Boolean
 ``True`` but this is `just a convention <#Appendix:-Duals>`__.
@@ -502,7 +502,7 @@ Some examples:
     ((((((((b) c) ((c) b)))) a) (((((b) c) ((c) b))) (a))))
 
 
-And let’s rewrite the ``truth_table_3()`` function to make it work for
+And let's rewrite the ``truth_table_3()`` function to make it work for
 any number of variables.
 
 .. code:: ipython2
@@ -678,27 +678,27 @@ This is a
 `brute-force <https://en.wikipedia.org/wiki/Brute-force_search>`__
 `SAT <https://en.wikipedia.org/wiki/Boolean_satisfiability_problem>`__
 `solver <https://en.wikipedia.org/wiki/Boolean_satisfiability_problem#Algorithms_for_solving_SAT>`__
-that doesn’t even bother to stop once it’s found a solution.
+that doesn't even bother to stop once it's found a solution.
 
 Expressions from Truth Tables
 -----------------------------
 
 Sometimes we will have a function for which we know the behavior (truth
 table) but not an expression and we want the expression. For example,
-imagine that we didn’t just create the expression for this table:
+imagine that we didn't just create the expression for this table:
 
 ::
 
-    a  b  c | Value
-   ---------+------
-            | 
-         () | 
-      ()    | 
-      () () | ()
-   ()       | 
-   ()    () | ()
-   () ()    | ()
-   () () () | 
+     a  b  c | Value
+    ---------+------
+             | 
+          () | 
+       ()    | 
+       () () | ()
+    ()       | 
+    ()    () | ()
+    () ()    | ()
+    () () () | 
 
 Each Row can be Represented as an Expression
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -708,17 +708,17 @@ each row can be represented as an expression.
 
 ::
 
-            ⟶ ( a   b   c )
-         () ⟶ ( a   b  (c))
-      ()    ⟶ ( a  (b)  c )
-      () () ⟶ ( a  (b) (c))
-   ()       ⟶ ((a)  b   c )
-   ()    () ⟶ ((a)  b  (c))
-   () ()    ⟶ ((a) (b)  c )
-   () () () ⟶ ((a) (b) (c))
+             ⟶ ( a   b   c )
+          () ⟶ ( a   b  (c))
+       ()    ⟶ ( a  (b)  c )
+       () () ⟶ ( a  (b) (c))
+    ()       ⟶ ((a)  b   c )
+    ()    () ⟶ ((a)  b  (c))
+    () ()    ⟶ ((a) (b)  c )
+    () () () ⟶ ((a) (b) (c))
 
 Each of the above expressions will be true (Mark-valued) for only one
-possible combination of the three input variables. For example, let’s
+possible combination of the three input variables. For example, let's
 look at the sixth expression above:
 
 .. code:: ipython2
@@ -743,26 +743,26 @@ look at the sixth expression above:
 
 
 To make an expression that is Mark-valued for just certain rows of the
-table, pick those rows’ expressions,
+table, pick those rows' expressions,
 
 ::
 
-      () () | ( a  (b) (c))
-   ()    () | ((a)  b  (c))
-   () ()    | ((a) (b)  c )
+       () () | ( a  (b) (c))
+    ()    () | ((a)  b  (c))
+    () ()    | ((a) (b)  c )
 
 And write them down as terms in an **OR** expression:
 
 ::
 
-   E = (a(b)(c)) ((a)b(c)) ((a)(b)c)
+    E = (a(b)(c)) ((a)b(c)) ((a)(b)c)
 
 In conventional notation this is called `Disjunctive normal
 form <https://en.wikipedia.org/wiki/Disjunctive_normal_form>`__:
 
 ::
 
-   E = (¬a ∧ b ∧ c) ∨ (a ∧ ¬b ∧ c) ∨ (a ∧ b ∧ ¬c)
+    E = (¬a ∧ b ∧ c) ∨ (a ∧ ¬b ∧ c) ∨ (a ∧ b ∧ ¬c)
 
 Here it is in action:
 
@@ -800,13 +800,13 @@ E1 that has the same truth table, in other words:
 
 ::
 
-   ((((((a) (b)) ((b) (c)) ((c) (a))))) ((((a) (b) (c)))))
+    ((((((a) (b)) ((b) (c)) ((c) (a))))) ((((a) (b) (c)))))
 
 equals
 
 ::
 
-   (((a (b) (c)) ((a) b (c)) ((a) (b) c)))
+    (((a (b) (c)) ((a) b (c)) ((a) (b) c)))
 
 We can demonstrate this equivalence by evaluating the expression formed
 by ``eqiv()`` from these two.
@@ -844,23 +844,23 @@ that the expression is a **tautology**.
 `Half-Bit Adder <https://en.wikipedia.org/wiki/Adder_%28electronics%29#Half_adder>`__
 -------------------------------------------------------------------------------------
 
-If you have two binary digits (“bits”) and you are interested in the
+If you have two binary digits ("bits") and you are interested in the
 (binary) sum of these digits you will need two circuits, one for the
-“ones place” and one for the “twos place” or “carry bit”.
+"ones place" and one for the "twos place" or "carry bit".
 
 Consider:
 
 ::
 
-   a b | c s
-   ----+----
-   0 0 | 0 0
-   0 1 | 0 1
-   1 0 | 0 1
-   1 1 | 1 0
+    a b | c s
+    ----+----
+    0 0 | 0 0
+    0 1 | 0 1
+    1 0 | 0 1
+    1 1 | 1 0
 
-Treating each output column (‘c’ for carry, ‘s’ for sum) as a single
-expression, it’s easy to see that the carry bit is just **AND** and the
+Treating each output column ('c' for carry, 's' for sum) as a single
+expression, it's easy to see that the carry bit is just **AND** and the
 sum bit is just **XOR** of the two input bits.
 
 .. code:: ipython2
@@ -911,36 +911,36 @@ together and a carry bit from the previous addition:
 
 ::
 
-    a  b Cin   Sum Cout
-    0  0  0  |  0  0
-    0  0  1  |  1  0
-    0  1  0  |  1  0
-    0  1  1  |  0  1
-    1  0  0  |  1  0
-    1  0  1  |  0  1
-    1  1  0  |  0  1
-    1  1  1  |  1  1
+     a  b Cin   Sum Cout
+     0  0  0  |  0  0
+     0  0  1  |  1  0
+     0  1  0  |  1  0
+     0  1  1  |  0  1
+     1  0  0  |  1  0
+     1  0  1  |  0  1
+     1  1  0  |  0  1
+     1  1  1  |  1  1
 
 Looking back at our table of three-variable expressions:
 
 ::
 
-            ⟶ ( a   b   c )
-         () ⟶ ( a   b  (c))
-      ()    ⟶ ( a  (b)  c )
-      () () ⟶ ( a  (b) (c))
-   ()       ⟶ ((a)  b   c )
-   ()    () ⟶ ((a)  b  (c))
-   () ()    ⟶ ((a) (b)  c )
-   () () () ⟶ ((a) (b) (c))
+             ⟶ ( a   b   c )
+          () ⟶ ( a   b  (c))
+       ()    ⟶ ( a  (b)  c )
+       () () ⟶ ( a  (b) (c))
+    ()       ⟶ ((a)  b   c )
+    ()    () ⟶ ((a)  b  (c))
+    () ()    ⟶ ((a) (b)  c )
+    () () () ⟶ ((a) (b) (c))
 
 We can easily determine expressions for sum and carry:
 
 ::
 
-   Sum = (a b (c)) (a (b) c) ((a) b c) ((a) (b) (c))
+    Sum = (a b (c)) (a (b) c) ((a) b c) ((a) (b) (c))
 
-   Cout = (a (b) (c)) ((a) b (c)) ((a) (b) c) ((a) (b) (c))
+    Cout = (a (b) (c)) ((a) b (c)) ((a) (b) c) ((a) (b) (c))
 
 .. code:: ipython2
 
@@ -985,7 +985,7 @@ We can easily determine expressions for sum and carry:
     () () () | ()
 
 
-Let’s make a ``full_bit_adder()`` function that can define new
+Let's make a ``full_bit_adder()`` function that can define new
 expressions in terms of variables (or expressions) passed into it.
 
 .. code:: ipython2
@@ -1033,8 +1033,8 @@ article <https://en.wikipedia.org/wiki/Adder_%28electronics%29#Full_adder>`__:
 
 ::
 
-   S = A ⊕ B ⊕ C
-   Cout = (A ⋅ B) + (Cin ⋅ (A ⊕ B))
+    S = A ⊕ B ⊕ C
+    Cout = (A ⋅ B) + (Cin ⋅ (A ⊕ B))
 
 .. code:: ipython2
 
@@ -1122,11 +1122,11 @@ rules of the calculus automatically:
 
 ::
 
-   A((B)) = AB
-   A() = ()
-   A(AB) = A(B)
+    A((B)) = AB
+    A() = ()
+    A(AB) = A(B)
 
-I’m going to specify the behaviour of the desired function in a
+I'm going to specify the behaviour of the desired function in a
 unittest.
 
 .. code:: ipython2
@@ -1136,7 +1136,7 @@ unittest.
 Three Easy Cases
 ~~~~~~~~~~~~~~~~
 
-Let’s deal with three easy cases first: string, the Mark, and the Void.
+Let's deal with three easy cases first: string, the Mark, and the Void.
 The ``simplify()`` function should just return them unchanged.
 
 .. code:: ipython2
@@ -1216,7 +1216,7 @@ Doubly-Wrapped Forms
 ~~~~~~~~~~~~~~~~~~~~
 
 So far, so good. But what about ``((a))``? This should be returned as
-just ``a``. And ``((a b))`` should remain ``((a b))`` because we can’t
+just ``a``. And ``((a b))`` should remain ``((a b))`` because we can't
 represent just ``a b`` as a single Python object, so we have to retain
 the outer pair of containers to hold them without inverting the
 Mark/Void value (if we just used one container.)
@@ -1330,7 +1330,7 @@ Does it work for ``(((a))) = (a)`` and ``((((a)))) = a`` and so on?
 Unwrapping Inner Forms
 ~~~~~~~~~~~~~~~~~~~~~~
 
-But now let’s trick our function, it can’t handle
+But now let's trick our function, it can't handle
 ``(a ((b c))) = (a b c)`` yet. This is going to require an auxiliary
 helper function that is similar to ``simplify()`` but that yields terms
 into an outer context.
@@ -1639,7 +1639,7 @@ So we have ``(()) = --`` and ``()A = ()`` what about ``A(AB) = A(B)``?
 
 
 TODO set up `Hypothesis <http://hypothesis.works/>`__ to generate test
-cases…
+cases...
 
 .. code:: ipython2
 
@@ -1658,14 +1658,14 @@ cases…
     OK
 
 
-`Using “Each-Way” to Simplify Forms <http://www.markability.net/case_analysis.htm>`__
+`Using "Each-Way" to Simplify Forms <http://www.markability.net/case_analysis.htm>`__
 -------------------------------------------------------------------------------------
 
-GSB called this “Each-Way”:
+GSB called this "Each-Way":
 
 ::
 
-   a = ((a b) (a (b)))
+    a = ((a b) (a (b)))
 
 .. code:: ipython2
 
@@ -1683,8 +1683,8 @@ GSB called this “Each-Way”:
     () () | ()
 
 
-The form says, “if b then a else a”. I’ll come back to the
-interpretation of “Each-Way” as an ``if-then-else`` statement later.
+The form says, "if b then a else a". I'll come back to the
+interpretation of "Each-Way" as an ``if-then-else`` statement later.
 
 The thing to note here is that the value for ``a`` can be a whole
 expression which appears twice in the new form: once next to ``b`` and
@@ -1695,20 +1695,20 @@ next to it
 
 ::
 
-   b (...(b c (d ...)))
-   b (...(  c (d ...)))
+    b (...(b c (d ...)))
+    b (...(  c (d ...)))
 
 and in the second case we can change any occurances of ``b`` to the
 Mark.
 
 ::
 
-   (b)(...(b     c (d ...)))
-   (b)((b)(b     c (d ...)))
-   (b)(...(b (b) c (d ...)))
-   (b)(...(b ( ) c (d ...)))
-   (b)(...(  ( )          ))
-   (b)(...                 )
+    (b)(...(b     c (d ...)))
+    (b)((b)(b     c (d ...)))
+    (b)(...(b (b) c (d ...)))
+    (b)(...(b ( ) c (d ...)))
+    (b)(...(  ( )          ))
+    (b)(...                 )
 
 We can send ``(b)`` into the form until it reaches and ``b``, at which
 point ``b(b)`` becomes ``()`` and sweeps out any siblings rendering its
@@ -2004,7 +2004,7 @@ each. Try the following cells with both versions of the ``Sum`` and
     (((((b) a) (b)) c) ((c) a b))
 
 
-Let’s redefine the ``full_bit_adder()`` function with the smallest
+Let's redefine the ``full_bit_adder()`` function with the smallest
 version of each above.
 
 .. code:: ipython2
@@ -2103,8 +2103,8 @@ other two.
 `Davis–Putnam–Logemann–Loveland (DPLL) algorithm <https://en.wikipedia.org/wiki/Davis%E2%80%93Putnam%E2%80%93Logemann%E2%80%93Loveland_algorithm>`__ SAT Solver
 ===============================================================================================================================================================
 
-This is something of an Interlude, we aren’t going to use it below, but
-it’s too cool to omit mention.
+This is something of an Interlude, we aren't going to use it below, but
+it's too cool to omit mention.
 
 We can use the ``simplify()`` function to create a more efficient SAT
 solver along the lines of the DPLL algorithm.
@@ -2113,7 +2113,7 @@ It works by selecting a name from the form, and simplifying the form
 with that name first as ``Void`` then as ``Mark``, then recursing with
 the new form and the next name. If the resulting simplified form becomes
 the ``Mark`` then our choices (of assigning ``Void`` or ``Mark`` to the
-names selected so far) constitute a “solution” to the original form.
+names selected so far) constitute a "solution" to the original form.
 That is, if we ``reify()`` the form with the *environment* returned by
 the ``dpll()`` function the result will be Mark-valued.
 
@@ -2329,7 +2329,7 @@ solutions after the first.
     {'a': (), 'b': ()} ((((((()) ())) (c)) ((())))) = ()
 
 
-Notice that the reified form still has ``c`` in it but that doesn’t
+Notice that the reified form still has ``c`` in it but that doesn't
 prevent the ``simplify()`` function from reducing the form to the Mark.
 This should be the case for all solutions generated by the
 ``dpll_iter()`` function.
@@ -2350,11 +2350,11 @@ The form ``(((a5) a5))`` is Mark-valued:
 
 ::
 
-   (((a5) a5))
-   (((  ) a5))
-   (((  )   ))
-   (         )
-   ()
+    (((a5) a5))
+    (((  ) a5))
+    (((  )   ))
+    (         )
+    ()
 
 .. code:: ipython2
 
@@ -2377,7 +2377,7 @@ Now back to Circuits
 Using the Adder Circuits to Add
 -------------------------------
 
-In order to keep things tractable I’m going to use just four bits rather
+In order to keep things tractable I'm going to use just four bits rather
 than eight.
 
 .. code:: ipython2
@@ -2948,18 +2948,18 @@ arranged to make it (relatively) easy to see the addition.
 A Model of Computation.
 =======================
 
-That was a bit steep, let’s formalize it and make it a little easier to
+That was a bit steep, let's formalize it and make it a little easier to
 work with.
 
-First let’s have a *register* of named values:
+First let's have a *register* of named values:
 
 .. code:: ipython2
 
     R = {name: Void for name in 'Cin a3 a2 a1 a0 b3 b2 b1 b0 Cout'.split()}
 
-Let’s have a *program* of named expressions that give new values when
+Let's have a *program* of named expressions that give new values when
 evaluated in terms of the current values in **R** (this is just the same
-``CIRCUITS``, but feeding back the results into the “b” bits):
+``CIRCUITS``, but feeding back the results into the "b" bits):
 
 .. code:: ipython2
 
@@ -2983,7 +2983,7 @@ the program with the current values in the register.
         rr = make_reify_reducer(register)
         return {bit: rr(expression) for bit, expression in program.iteritems()}
 
-With all the register values at “zero” (Void) nothing happens.
+With all the register values at "zero" (Void) nothing happens.
 
 .. code:: ipython2
 
@@ -3008,7 +3008,7 @@ With all the register values at “zero” (Void) nothing happens.
 
 
 
-Let’s make a nice display function to inspect our little adder computer.
+Let's make a nice display function to inspect our little adder computer.
 
 .. code:: ipython2
 
@@ -3050,7 +3050,7 @@ Let’s make a nice display function to inspect our little adder computer.
     a: 0   b: 0   Cin: 0   Cout: 0  
 
 
-Let’s set one bit to true (Mark-valued in the chosen convention. We
+Let's set one bit to true (Mark-valued in the chosen convention. We
 could have Void be true but we would have to form the circuit
 expressions differently.)
 
@@ -3058,7 +3058,7 @@ expressions differently.)
 
     R['a0'] = Mark
 
-Now let’s count to twenty.
+Now let's count to twenty.
 
 .. code:: ipython2
 
@@ -3092,7 +3092,7 @@ Now let’s count to twenty.
     a: 1   b: 3   Cin: 0   Cout: 0  
 
 
-You can see that at the sixteenth step the “Cout” carry bit is true and
+You can see that at the sixteenth step the "Cout" carry bit is true and
 the count cycles back to zero.
 
 .. code:: ipython2
@@ -3133,12 +3133,12 @@ the count cycles back to zero.
     a: 3   b: 9   Cin: 0   Cout: 0  
 
 
-You can see that the “b” bits are indeed counting by threes: 0, 3, 6, 9,
+You can see that the "b" bits are indeed counting by threes: 0, 3, 6, 9,
 12, 15 & carry, 2, 5, 8, 11, 14 & carry, 1, 4, 7, 10, 13 & carry, 0, 3,
-6, 9, …
+6, 9, ...
 
 This is my basic model for computation: A register, a program, and a
-cycle function. Note that reducing the form on each cycle isn’t
+cycle function. Note that reducing the form on each cycle isn't
 necessary, we can run the cycles and just ``reify()`` without reducing
 and we get new circuits that define bits in terms of the register values
 N cycles in the past.
@@ -3285,7 +3285,7 @@ Simple One-Dimensional Cellular Automaton
 A More Efficient Implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before building larger “computers” I want to switch to a more efficient
+Before building larger "computers" I want to switch to a more efficient
 implementation based on a register as a ``set`` of names that are
 currently Mark-valued, and a ``set_solve()`` function that evaluates a
 form in terms of such a ``set``, and assuming all other names are
@@ -3334,7 +3334,7 @@ Void-valued.
 
 To calculate the new R first collect all the names in R that are not
 mentioned in P (and so cannot be set to Void by it) then add the names
-evaluated by solving P’s expressions with the marks in R.
+evaluated by solving P's expressions with the marks in R.
 
 .. code:: ipython2
 
@@ -3489,8 +3489,8 @@ evaluated by solving P’s expressions with the marks in R.
             return i
         return inner
 
-Each-Way as If… Then…
-~~~~~~~~~~~~~~~~~~~~~
+Each-Way as If... Then...
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: ipython2
 
@@ -3528,21 +3528,21 @@ but if ``a`` is Void-valued the value of the whole form is that of
 
 ::
 
-   w/ a = ()
+    w/ a = ()
 
-   ((( a) b) ( a c))
-   (((()) b) (() c))
-   ((     b) (()  ))
-   ((     b)       )
-          b
+    ((( a) b) ( a c))
+    (((()) b) (() c))
+    ((     b) (()  ))
+    ((     b)       )
+           b
 
-   w/ a =
+    w/ a =
 
-   (((a) b) (a c))
-   ((( ) b) (  c))
-   ((( )  ) (  c))
-   (        (  c))
-               c
+    (((a) b) (a c))
+    ((( ) b) (  c))
+    ((( )  ) (  c))
+    (        (  c))
+                c
 
 Flip-Flops for Memory
 ---------------------
@@ -3572,32 +3572,32 @@ Flip-Flops for Memory
     () () () | 
 
 
-This is a form that can be used in a circuit to “remember” a value.
+This is a form that can be used in a circuit to "remember" a value.
 
 ::
 
-   w/ r = ()
+    w/ r = ()
 
-   ((q s)  r)
-   ((q s) ())
-   (      ())
+    ((q s)  r)
+    ((q s) ())
+    (      ())
 
-   w/ s = (), r = ___
+    w/ s = (), r = ___
 
-   ((q  s) r)
-   ((q ())  )
-   ((  ())  )
-   (        )
+    ((q  s) r)
+    ((q ())  )
+    ((  ())  )
+    (        )
 
-   w/ s = ___, r = ___
+    w/ s = ___, r = ___
 
-   ((q s) r)
-   ((q  )  )
-     q
+    ((q s) r)
+    ((q  )  )
+      q
 
 If both are Void then the form is just ``q``, if ``r`` is Mark then the
 form is Void, otherwise if ``s`` is Mark the form becomes Mark. This is
-called a “flip-flop” circuit, and it comprises a simple machine to
+called a "flip-flop" circuit, and it comprises a simple machine to
 remember one bit.
 
 Consider a simple computer:
@@ -3700,8 +3700,8 @@ Consider a simple computer:
 
 You can see that ``q`` is stable unless ``s`` or ``r`` set or reset it.
 
-Using Flip-Flops and If…Then…Else… to make RAM
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using Flip-Flops and If...Then...Else... to make RAM
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We can use the system we have developed so far to build addressable RAM.
 
@@ -3717,7 +3717,7 @@ We can use the system we have developed so far to build addressable RAM.
 
     P = {}
 
-We’ll assume a single ``WRITE`` bit that sets a RAM location determined
+We'll assume a single ``WRITE`` bit that sets a RAM location determined
 by the ``ADDR`` sub-register to the contents of the ``DATA``
 sub-register.
 
@@ -4039,47 +4039,47 @@ w/ A = ()
 
 ::
 
-     A(AB) = A(B)
-   ()(()B) = ()(B)
-        () = ()
+      A(AB) = A(B)
+    ()(()B) = ()(B)
+         () = ()
 
 w/ A =
 
 ::
 
-     A(AB) = A(B)
-       (B) = (B)
+      A(AB) = A(B)
+        (B) = (B)
 
 Be aware of the recursive nature of this rule:
 
 ::
 
-   A(...(...(A B)))
-   A(.A.(...(A B)))
-   A(.A.(.A.(A B)))
-   A(.A.(.A.(  B)))
-   A(.A.(...(  B)))
-   A(...(...(  B)))
+    A(...(...(A B)))
+    A(.A.(...(A B)))
+    A(.A.(.A.(A B)))
+    A(.A.(.A.(  B)))
+    A(.A.(...(  B)))
+    A(...(...(  B)))
 
 There is this too:
 
 ::
 
-   (A)(...(...(... A B)))
-   (A)((A)(...(... A B)))
-   (A)((A)((A)(... A B)))
-   (A)((A)((A)((A) A B)))
-   (A)((A)((A)(( ) A B)))
-   (A)((A)(...(( )    )))
-   (A)(...(...         ))
+    (A)(...(...(... A B)))
+    (A)((A)(...(... A B)))
+    (A)((A)((A)(... A B)))
+    (A)((A)((A)((A) A B)))
+    (A)((A)((A)(( ) A B)))
+    (A)((A)(...(( )    )))
+    (A)(...(...         ))
 
 Summarized:
 
 ::
 
-   (A)(...(...(...  A )))
-   (A)(...(...(... () )))
-   (A)(...(...         ))
+    (A)(...(...(...  A )))
+    (A)(...(...(... () )))
+    (A)(...(...         ))
 
 Appendix: Reduce String Expressions by Substitution
 ---------------------------------------------------
@@ -4195,7 +4195,7 @@ terms of each other. Note that ``void()`` uses ``any()`` while
 ``mark()`` uses ``all()``. These functions implement a depth-first
 search. If we used versions of ``any()`` and ``all()`` that evaluated
 their arguments in parallel ``void()`` could return after the ``True``
-result while ``mark()`` depends on all terms’s results so its runtime
+result while ``mark()`` depends on all terms's results so its runtime
 will be bound by term with the greatest runtime.
 
 .. code:: ipython2
@@ -4243,22 +4243,22 @@ Consider:
 
 ::
 
-   (A ∧ ¬B) ∨ (C ∧ D)
+    (A ∧ ¬B) ∨ (C ∧ D)
 
-(This reads “(A and not B) or (C and D)” in case you have a hard time
+(This reads "(A and not B) or (C and D)" in case you have a hard time
 remembering what the symbols mean like I do.)
 
 If we choose Mark to be true then the form is:
 
 ::
 
-   ((A) B) ((C)(D))
+    ((A) B) ((C)(D))
 
 If we choose Void to be true then the form is:
 
 ::
 
-   ((A (B)) (C D))
+    ((A (B)) (C D))
 
 As I said above, the notation works the same way either way, so once the
 translation is made you can forget about the Boolean true/false and just
@@ -4273,32 +4273,32 @@ original statement:
 
 ::
 
-   ¬((¬A ∨ B) ∧ (¬C ∨ ¬D))
+    ¬((¬A ∨ B) ∧ (¬C ∨ ¬D))
 
 If we choose Mark to be true then the form is:
 
 ::
 
-   (( ((A) B) ((C)(D)) ))
+    (( ((A) B) ((C)(D)) ))
 
 The outer pair of containers can be deleted leaving the same form as
 above:
 
 ::
 
-   ((A) B) ((C)(D))
+    ((A) B) ((C)(D))
 
 Likewise, if we choose Void to be true then the form is:
 
 ::
 
-   ((((A)) (B)) (((C)) ((D))))
+    ((((A)) (B)) (((C)) ((D))))
 
 Again, A((B)) => AB reduces this form to the same one above:
 
 ::
 
-   ((A (B)) (C D))
+    ((A (B)) (C D))
 
 In the Laws of Form there are no De Morgan Dual statements. If you
 translate a logic statement and its dual into Laws of Form notation they
@@ -4351,7 +4351,7 @@ Misc. Junk
     #    pp.pprint(dict(Counter(yield_variables_of(E))))
     #    print '------'
 
-Rather than manually calling ``standard_form()`` let’s define a function
+Rather than manually calling ``standard_form()`` let's define a function
 that reduces a form to a (hopefully) smaller equivalent form by going
 through all the variables in the form and using ``standard_form()`` with
 each. Along with clean and unwrap we can drive an expression to a fixed
@@ -4441,7 +4441,7 @@ It would be useful and fun to write a simple search algorithm that tried
 different ways to reduce a form to see if it could find particulaly
 compact versions.
 
-Let’s generate the expressions for the next two output bits, and the
+Let's generate the expressions for the next two output bits, and the
 carry bit.
 
 The ``sum3`` bit expression is pretty big.
@@ -4450,7 +4450,7 @@ The ``sum3`` bit expression is pretty big.
 
     sum3
 
-But it’s only about 1/9th of size of the previous version (which was
+But it's only about 1/9th of size of the previous version (which was
 9261.)
 
 .. code:: ipython2
@@ -4463,13 +4463,13 @@ But it’s only about 1/9th of size of the previous version (which was
 
 
 
-Let’s simplify the first one manually just for fun:
+Let's simplify the first one manually just for fun:
 
 ::
 
-   (((((())) (())) ((()))))
-     ((    )     ) (    )
-                   (    )
+    (((((())) (())) ((()))))
+      ((    )     ) (    )
+                    (    )
 
 Sure enough, it reduces to Mark after just a few applications of the
 rule ``(()) = __`` (the underscores indicates the absence of any value,
@@ -4478,9 +4478,9 @@ original expression:
 
 ::
 
-   ((((a)b)(c)))
-     (( ) )( )
-           ( )
+    ((((a)b)(c)))
+      (( ) )( )
+            ( )
 
 
 .. code:: ipython2
@@ -4552,7 +4552,7 @@ expression.
 Once was enough (we should consider adding a call to ``simplify()`` in
 the ``full_bit_adder()`` function.)
 
-Let’s try using ``each_way()`` with the most common names in the form.
+Let's try using ``each_way()`` with the most common names in the form.
 
 .. code:: ipython2
 

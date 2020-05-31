@@ -16,6 +16,7 @@ These essays are adapted from Jupyter notebooks.  I hope to have those hosted so
    Treestep
    Generator_Programs
    Newton-Raphson
+   Square_Spiral
    Zipper
    Types
    TypeChecking

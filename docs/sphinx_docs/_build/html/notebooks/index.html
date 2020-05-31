@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Essays about Programming in Joy &#8212; Thun 0.4.0 documentation</title>
+    <meta charset="utf-8" />
+    <title>Essays about Programming in Joy &#8212; Thun 0.4.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Developing a Program in Joy" href="Developing.html" />
@@ -30,6 +29,8 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="essays-about-programming-in-joy">
@@ -109,6 +110,14 @@
 <li class="toctree-l2"><a class="reference internal" href="Newton-Raphson.html#finding-consecutive-approximations-within-a-tolerance">Finding Consecutive Approximations within a Tolerance</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="Square_Spiral.html">Square Spiral Example Joy Code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Square_Spiral.html#original-form">Original Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Square_Spiral.html#translation-to-joy">Translation to Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Square_Spiral.html#putting-the-pieces-together">Putting the Pieces Together</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Square_Spiral.html#turning-it-into-a-generator-with-x">Turning it into a Generator with <code class="docutils literal notranslate"><span class="pre">x</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Square_Spiral.html#conclusion">Conclusion</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="Zipper.html">Traversing Datastructures with Zippers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Zipper.html#trees">Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Zipper.html#zipper-in-joy">Zipper in Joy</a></li>
@@ -119,7 +128,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Types.html">The Blissful Elegance of Typing Joy</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Types.html#part-i-poials-rules">Part I: Pöial’s Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Types.html#part-i-poial-s-rules">Part I: Pöial’s Rules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Types.html#part-ii-implementation">Part II: Implementation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Types.html#part-iii-compiling-yin-functions">Part III: Compiling Yin Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Types.html#part-iv-types-and-subtypes-of-arguments">Part IV: Types and Subtypes of Arguments</a></li>
@@ -146,9 +155,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html">∂RE</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html#brzozowskis-derivatives-of-regular-expressions">Brzozowski’s Derivatives of Regular Expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html#brzozowski-s-derivatives-of-regular-expressions">Brzozowski’s Derivatives of Regular Expressions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html#implementation">Implementation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html#lets-try-it-out">Let’s try it out…</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html#let-s-try-it-out">Let’s try it out…</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html#larger-alphabets">Larger Alphabets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html#state-machine">State Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html#reversing-the-derivatives-to-generate-matching-strings">Reversing the Derivatives to Generate Matching Strings</a></li>
@@ -160,10 +169,52 @@
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Thun</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Intro.html">Thun: Joy in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joy.html">Joy Interpreter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack.html">Stack or Quote or Sequence or List…</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parser.html">Parsing Text into Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pretty.html">Tracing Joy Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lib.html">Functions Grouped by, er, Function with Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../types.html">Type Inference of Joy Expressions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Essays about Programming in Joy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Developing.html">Developing a Program in Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Quadratic.html">Quadratic formula</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replacing.html">Replacing Functions in the Dictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Recursion_Combinators.html">Recursion Combinators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ordered_Binary_Trees.html">Treating Trees I: Ordered Binary Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Treestep.html">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Generator_Programs.html">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Newton-Raphson.html">Newton’s method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Square_Spiral.html">Square Spiral Example Joy Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Zipper.html">Traversing Datastructures with Zippers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Types.html">The Blissful Elegance of Typing Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeChecking.html">Type Checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NoUpdates.html">No Updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Categorical.html">Categorical Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="The_Four_Operations.html">The Four Fundamental Operations of Definite Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html">∂RE</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
@@ -172,25 +223,24 @@
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/notebooks/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -201,7 +251,7 @@
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
     </div>
 
   </body>
