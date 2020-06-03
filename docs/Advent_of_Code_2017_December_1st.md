@@ -1,8 +1,8 @@
-# Advent of Code 2017
+# Joy Example Code
 
-## December 1st
+A brief example of Joy programming from the [Advent of Code 2017, December 1st puzzle](https://adventofcode.com/2017/day/1).
 
-\[Given\] a sequence of digits (your puzzle input) and find the sum of all digits that match the next digit in the list. The list is circular, so the digit after the last digit is the first digit in the list.
+> Given a sequence of digits (your puzzle input) and find the sum of all digits that match the next digit in the list. The list is circular, so the digit after the last digit is the first digit in the list.
 
 For example:
 
@@ -39,7 +39,7 @@ Straightforward (although the order of each pair is reversed, due to the way `zi
 
 
 ```python
-define('pair_up == dup uncons swap unit concat zip')
+define('pair_up dup uncons swap unit concat zip')
 ```
 
 
@@ -86,7 +86,7 @@ And thus:
 
 
 ```python
-define('total_matches == 0 swap [i [=] [pop +] [popop] ifte] step')
+define('total_matches 0 swap [i [=] [pop +] [popop] ifte] step')
 ```
 
 
@@ -109,7 +109,7 @@ Now we can define our main program and evaluate it on the examples.
 
 
 ```python
-define('AoC2017.1 == pair_up total_matches')
+define('AoC2017.1 pair_up total_matches')
 ```
 
 
@@ -144,23 +144,12 @@ J('[9 1 2 1 2 1 2 9] AoC2017.1')
     9
 
 
-
-```python
-J('[9 1 2 1 2 1 2 9] AoC2017.1')
-```
-
-    9
-
-
           pair_up == dup uncons swap unit concat zip
     total_matches == 0 swap [i [=] [pop +] [popop] ifte] step
 
         AoC2017.1 == pair_up total_matches
 
-
-```python
-
-```
+## Next Part of the Challenge
 
 Now the paired digit is "halfway" round.
 
@@ -186,7 +175,7 @@ J('[1 2 3 4] dup size 2 / [drop] [take reverse] cleave  zip')
 
 
 ```python
-define('AoC2017.1.extra == dup size 2 / [drop] [take reverse] cleave  zip swap pop total_matches 2 *')
+define('AoC2017.1.extra dup size 2 / [drop] [take reverse] cleave  zip swap pop total_matches 2 *')
 ```
 
 

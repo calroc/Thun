@@ -11,6 +11,7 @@ These essays are adapted from Jupyter notebooks.  I hope to have those hosted so
    Developing
    Quadratic
    Replacing
+   Advent_of_Code_2017_December_1st
    Recursion_Combinators
    Ordered_Binary_Trees
    Treestep
