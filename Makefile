@@ -1,7 +1,7 @@
 # My make-fu style is old and tired.  I just want to have a few helper commands.
 
 TESTDIR = ./test00
-VERSION = 0.4.0
+VERSION = 0.4.2
 WEBSERVER = sforman@shell.osdn.net
 
 .PHONY: clean sdist test docs upload-docs

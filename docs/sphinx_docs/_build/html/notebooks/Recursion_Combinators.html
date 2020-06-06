@@ -1,18 +1,19 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>Recursion Combinators &#8212; Thun 0.4.1 documentation</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Recursion Combinators &#8212; Thun 0.4.2 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Treating Trees I: Ordered Binary Trees" href="Ordered_Binary_Trees.html" />
@@ -29,11 +30,9 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
-  <div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">DefinitionWrapper</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+  <div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">DefinitionWrapper</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
 </pre></div>
 </div>
 <div class="section" id="recursion-combinators">
@@ -47,7 +46,7 @@ several generic specializations.</p>
 </div>
 <p>From “Recursion Theory and Joy” (j05cmp.html) by Manfred von Thun:</p>
 <blockquote>
-<div><p>“The genrec combinator takes four program parameters in addition to
+<div>“The genrec combinator takes four program parameters in addition to
 whatever data parameters it needs. Fourth from the top is an
 if-part, followed by a then-part. If the if-part yields true, then
 the then-part is executed and the combinator terminates. The other
@@ -57,8 +56,7 @@ program parameters and the combinator are again pushed onto the
 stack bundled up in a quoted form. Then the rec2-part is executed,
 where it will find the bundled form. Typically it will then execute
 the bundled form, either with i or with app2, or some other
-combinator.”</p>
-</div></blockquote>
+combinator.”</div></blockquote>
 <div class="section" id="designing-recursive-functions">
 <h2>Designing Recursive Functions<a class="headerlink" href="#designing-recursive-functions" title="Permalink to this headline">¶</a></h2>
 <p>The way to design one of these is to fix your base case and test and
@@ -93,16 +91,16 @@ have to do to apply the quoted <code class="docutils literal notranslate"><span 
 is a recursive function <code class="docutils literal notranslate"><span class="pre">H</span> <span class="pre">::</span> <span class="pre">A</span> <span class="pre">-&gt;</span> <span class="pre">C</span></code> that converts a value of type
 <code class="docutils literal notranslate"><span class="pre">A</span></code> into a value of type <code class="docutils literal notranslate"><span class="pre">C</span></code> by means of:</p>
 <ul class="simple">
-<li><p>A generator <code class="docutils literal notranslate"><span class="pre">G</span> <span class="pre">::</span> <span class="pre">A</span> <span class="pre">-&gt;</span> <span class="pre">(B,</span> <span class="pre">A)</span></code></p></li>
-<li><p>A combiner <code class="docutils literal notranslate"><span class="pre">F</span> <span class="pre">::</span> <span class="pre">(B,</span> <span class="pre">C)</span> <span class="pre">-&gt;</span> <span class="pre">C</span></code></p></li>
-<li><p>A predicate <code class="docutils literal notranslate"><span class="pre">P</span> <span class="pre">::</span> <span class="pre">A</span> <span class="pre">-&gt;</span> <span class="pre">Bool</span></code> to detect the base case</p></li>
-<li><p>A base case value <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">::</span> <span class="pre">C</span></code></p></li>
-<li><p>Recursive calls (zero or more); it has a “call stack in the form of a
-cons list”.</p></li>
+<li>A generator <code class="docutils literal notranslate"><span class="pre">G</span> <span class="pre">::</span> <span class="pre">A</span> <span class="pre">-&gt;</span> <span class="pre">(B,</span> <span class="pre">A)</span></code></li>
+<li>A combiner <code class="docutils literal notranslate"><span class="pre">F</span> <span class="pre">::</span> <span class="pre">(B,</span> <span class="pre">C)</span> <span class="pre">-&gt;</span> <span class="pre">C</span></code></li>
+<li>A predicate <code class="docutils literal notranslate"><span class="pre">P</span> <span class="pre">::</span> <span class="pre">A</span> <span class="pre">-&gt;</span> <span class="pre">Bool</span></code> to detect the base case</li>
+<li>A base case value <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">::</span> <span class="pre">C</span></code></li>
+<li>Recursive calls (zero or more); it has a “call stack in the form of a
+cons list”.</li>
 </ul>
 <p>It may be helpful to see this function implemented in imperative Python
 code.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hylomorphism</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hylomorphism</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Return a hylomorphism function H.&#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">H</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
@@ -170,9 +168,9 @@ arguments out of the pieces given to the <code class="docutils literal notransla
 </div>
 <p>Working in reverse:</p>
 <ul class="simple">
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">swoncat</span></code> twice to decouple <code class="docutils literal notranslate"><span class="pre">[c]</span></code> and <code class="docutils literal notranslate"><span class="pre">[F]</span></code>.</p></li>
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">unit</span></code> to dequote <code class="docutils literal notranslate"><span class="pre">c</span></code>.</p></li>
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">dipd</span></code> to untangle <code class="docutils literal notranslate"><span class="pre">[unit</span> <span class="pre">[pop]</span> <span class="pre">swoncat]</span></code> from the givens.</p></li>
+<li>Use <code class="docutils literal notranslate"><span class="pre">swoncat</span></code> twice to decouple <code class="docutils literal notranslate"><span class="pre">[c]</span></code> and <code class="docutils literal notranslate"><span class="pre">[F]</span></code>.</li>
+<li>Use <code class="docutils literal notranslate"><span class="pre">unit</span></code> to dequote <code class="docutils literal notranslate"><span class="pre">c</span></code>.</li>
+<li>Use <code class="docutils literal notranslate"><span class="pre">dipd</span></code> to untangle <code class="docutils literal notranslate"><span class="pre">[unit</span> <span class="pre">[pop]</span> <span class="pre">swoncat]</span></code> from the givens.</li>
 </ul>
 <p>So:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">==</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span> <span class="n">c</span><span class="p">]</span>              <span class="p">[</span><span class="n">G</span><span class="p">]</span>                  <span class="p">[</span><span class="n">dip</span> <span class="n">F</span><span class="p">]</span> <span class="n">genrec</span>
@@ -186,7 +184,7 @@ the left so we have a definition for <code class="docutils literal notranslate">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hylomorphism</span> <span class="o">==</span> <span class="p">[</span><span class="n">unit</span> <span class="p">[</span><span class="n">pop</span><span class="p">]</span> <span class="n">swoncat</span><span class="p">]</span> <span class="n">dipd</span> <span class="p">[</span><span class="n">dip</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="example-finding-triangular-numbers">
@@ -196,22 +194,22 @@ of all positive integers less than that one. (In this case the types
 <code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span></code> and <code class="docutils literal notranslate"><span class="pre">C</span></code> are all <code class="docutils literal notranslate"><span class="pre">int</span></code>.)</p>
 <p>To sum a range of integers from 0 to <em>n</em> - 1:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[P]</span></code> is <code class="docutils literal notranslate"><span class="pre">[1</span> <span class="pre">&lt;=]</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">c</span></code> is <code class="docutils literal notranslate"><span class="pre">0</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[G]</span></code> is <code class="docutils literal notranslate"><span class="pre">[--</span> <span class="pre">dup]</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[F]</span></code> is <code class="docutils literal notranslate"><span class="pre">[+]</span></code></p></li>
+<li><code class="docutils literal notranslate"><span class="pre">[P]</span></code> is <code class="docutils literal notranslate"><span class="pre">[1</span> <span class="pre">&lt;=]</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">c</span></code> is <code class="docutils literal notranslate"><span class="pre">0</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">[G]</span></code> is <code class="docutils literal notranslate"><span class="pre">[--</span> <span class="pre">dup]</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">[F]</span></code> is <code class="docutils literal notranslate"><span class="pre">[+]</span></code></li>
 </ul>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;triangular_number == [1 &lt;=] 0 [-- dup] [+] hylomorphism&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;triangular_number == [1 &lt;=] 0 [-- dup] [+] hylomorphism&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Let’s try it:</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 triangular_number&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 triangular_number&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 1 2 3 4 5 6] [triangular_number] map&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 1 2 3 4 5 6] [triangular_number] map&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">6</span> <span class="mi">10</span> <span class="mi">15</span><span class="p">]</span>
@@ -375,10 +373,10 @@ the list of integers from 0 to <em>n</em> - 1 given <em>n</em>.</p>
    <span class="o">==</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span> <span class="p">[]]</span> <span class="p">[</span><span class="o">--</span> <span class="n">dup</span><span class="p">]</span> <span class="p">[</span><span class="n">dip</span> <span class="n">swons</span><span class="p">]</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;range == [0 &lt;=] [] [-- dup] [swons] hylomorphism&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;range == [0 &lt;=] [] [-- dup] [swons] hylomorphism&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 range&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 range&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">]</span>
@@ -391,10 +389,10 @@ the list of integers from 0 to <em>n</em> - 1 given <em>n</em>.</p>
    <span class="o">==</span> <span class="p">[]</span> <span class="n">swap</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span> <span class="n">dup</span> <span class="p">[</span><span class="n">swons</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">primrec</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;range_reverse == [] swap [0 &lt;=] [pop] [-- dup [swons] dip] primrec&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;range_reverse == [] swap [0 &lt;=] [pop] [-- dup [swons] dip] primrec&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 range_reverse&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 range_reverse&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">]</span>
@@ -407,10 +405,10 @@ the list of integers from 0 to <em>n</em> - 1 given <em>n</em>.</p>
    <span class="o">==</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span> <span class="p">[]]</span> <span class="p">[[</span><span class="o">--</span><span class="p">]</span> <span class="n">dupdip</span><span class="p">]</span> <span class="p">[</span><span class="n">dip</span> <span class="n">swons</span><span class="p">]</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;ranger == [0 &lt;=] [pop []] [[--] dupdip] [dip swons] genrec&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;ranger == [0 &lt;=] [pop []] [[--] dupdip] [dip swons] genrec&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 ranger&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 ranger&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">]</span>
@@ -423,10 +421,10 @@ the list of integers from 0 to <em>n</em> - 1 given <em>n</em>.</p>
    <span class="o">==</span> <span class="p">[]</span> <span class="n">swap</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span><span class="p">]</span> <span class="p">[[</span><span class="n">swons</span><span class="p">]</span> <span class="n">dupdip</span> <span class="o">--</span><span class="p">]</span> <span class="n">primrec</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;ranger_reverse == [] swap [0 &lt;=] [pop] [[swons] dupdip --] primrec&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;ranger_reverse == [] swap [0 &lt;=] [pop] [[swons] dupdip --] primrec&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 ranger_reverse&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 ranger_reverse&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
@@ -447,17 +445,17 @@ and makes some new value.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">==</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="n">c</span> <span class="p">[</span><span class="n">uncons</span> <span class="n">swap</span><span class="p">]</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">hylomorphism</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;swuncons == uncons swap&#39;</span><span class="p">)</span>  <span class="c1"># Awkward name.</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;swuncons == uncons swap&#39;</span><span class="p">)</span>  <span class="c1"># Awkward name.</span>
 </pre></div>
 </div>
 <p>An example of a catamorphism is the sum function.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">sum</span> <span class="o">==</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="mi">0</span> <span class="p">[</span><span class="n">swuncons</span><span class="p">]</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">hylomorphism</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;sum == [not] 0 [swuncons] [+] hylomorphism&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;sum == [not] 0 [swuncons] [+] hylomorphism&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 4 3 2 1] sum&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 4 3 2 1] sum&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">15</span>
@@ -467,7 +465,7 @@ and makes some new value.</p>
 <h3>The <code class="docutils literal notranslate"><span class="pre">step</span></code> combinator<a class="headerlink" href="#the-step-combinator" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">step</span></code> combinator will usually be better to use than
 <code class="docutils literal notranslate"><span class="pre">catamorphism</span></code>.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[step] help&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[step] help&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Run</span> <span class="n">a</span> <span class="n">quoted</span> <span class="n">program</span> <span class="n">on</span> <span class="n">each</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">sequence</span><span class="o">.</span>
@@ -491,10 +489,10 @@ and makes some new value.</p>
 <span class="n">on</span> <span class="n">top</span> <span class="n">of</span> <span class="n">the</span> <span class="n">stack</span><span class="o">.</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;sum == 0 swap [+] step&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;sum == 0 swap [+] step&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 4 3 2 1] sum&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 4 3 2 1] sum&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">15</span>
@@ -515,10 +513,10 @@ and makes some new value.</p>
 <span class="n">P</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&lt;=</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;factorial == 1 swap [1 &lt;=] [pop] [[*] dupdip --] primrec&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;factorial == 1 swap [1 &lt;=] [pop] [[*] dupdip --] primrec&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 factorial&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 factorial&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">120</span>
@@ -547,10 +545,10 @@ pattern <code class="docutils literal notranslate"><span class="pre">H2</span></
 <span class="n">P</span> <span class="o">==</span> <span class="ow">not</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;tails == [] swap [not] [pop] [rest dup [swons] dip] primrec&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;tails == [] swap [not] [pop] [rest dup [swons] dip] primrec&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] tails&#39;</span><span class="p">)</span>
+<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] tails&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[]</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span><span class="p">]]</span>
@@ -594,53 +592,53 @@ Wire”</a></p>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Thun</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Intro.html">Thun: Joy in Python</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../joy.html">Joy Interpreter</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../stack.html">Stack or Quote or Sequence or List…</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../parser.html">Parsing Text into Joy Expressions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../pretty.html">Tracing Joy Execution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../library.html">Function Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../lib.html">Functions Grouped by, er, Function with Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../types.html">Type Inference of Joy Expressions</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Essays about Programming in Joy</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="Developing.html">Developing a Program in Joy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Quadratic.html">Quadratic formula</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Replacing.html">Replacing Functions in the Dictionary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Advent_of_Code_2017_December_1st.html">Joy Example Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Advent_of_Code_2017_December_1st.html#refactor-ftw">Refactor FTW</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Recursion Combinators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Ordered_Binary_Trees.html">Treating Trees I: Ordered Binary Trees</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Treestep.html">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Generator_Programs.html">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Newton-Raphson.html">Newton’s method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Square_Spiral.html">Square Spiral Example Joy Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Zipper.html">Traversing Datastructures with Zippers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Types.html">The Blissful Elegance of Typing Joy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeChecking.html">Type Checking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="NoUpdates.html">No Updates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Categorical.html">Categorical Programming</a></li>
-<li class="toctree-l2"><a class="reference internal" href="The_Four_Operations.html">The Four Fundamental Operations of Definite Action</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html">∂RE</a></li>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Recursion Combinators</a><ul>
+<li><a class="reference internal" href="#designing-recursive-functions">Designing Recursive Functions</a></li>
+<li><a class="reference internal" href="#primitive-recursive-functions">Primitive Recursive Functions</a></li>
+<li><a class="reference internal" href="#hylomorphism">Hylomorphism</a></li>
+<li><a class="reference internal" href="#hylomorphism-in-joy">Hylomorphism in Joy</a></li>
+<li><a class="reference internal" href="#derivation-of-hylomorphism-combinator">Derivation of <code class="docutils literal notranslate"><span class="pre">hylomorphism</span></code> combinator</a><ul>
+<li><a class="reference internal" href="#example-finding-triangular-numbers">Example: Finding Triangular Numbers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#four-specializations">Four Specializations</a><ul>
+<li><a class="reference internal" href="#h1"><code class="docutils literal notranslate"><span class="pre">H1</span></code></a></li>
+<li><a class="reference internal" href="#h2"><code class="docutils literal notranslate"><span class="pre">H2</span></code></a></li>
+<li><a class="reference internal" href="#h3"><code class="docutils literal notranslate"><span class="pre">H3</span></code></a></li>
+<li><a class="reference internal" href="#h4"><code class="docutils literal notranslate"><span class="pre">H4</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#anamorphism">Anamorphism</a><ul>
+<li><a class="reference internal" href="#range-et-al"><code class="docutils literal notranslate"><span class="pre">range</span></code> et. al.</a><ul>
+<li><a class="reference internal" href="#range-with-h1"><code class="docutils literal notranslate"><span class="pre">range</span></code> with <code class="docutils literal notranslate"><span class="pre">H1</span></code></a></li>
+<li><a class="reference internal" href="#range-with-h2"><code class="docutils literal notranslate"><span class="pre">range</span></code> with <code class="docutils literal notranslate"><span class="pre">H2</span></code></a></li>
+<li><a class="reference internal" href="#range-with-h3"><code class="docutils literal notranslate"><span class="pre">range</span></code> with <code class="docutils literal notranslate"><span class="pre">H3</span></code></a></li>
+<li><a class="reference internal" href="#range-with-h4"><code class="docutils literal notranslate"><span class="pre">range</span></code> with <code class="docutils literal notranslate"><span class="pre">H4</span></code></a></li>
 </ul>
 </li>
 </ul>
-
+</li>
+<li><a class="reference internal" href="#catamorphism">Catamorphism</a><ul>
+<li><a class="reference internal" href="#the-step-combinator">The <code class="docutils literal notranslate"><span class="pre">step</span></code> combinator</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#example-factorial-function">Example: Factorial Function</a></li>
+<li><a class="reference internal" href="#example-tails">Example: <code class="docutils literal notranslate"><span class="pre">tails</span></code></a></li>
+<li><a class="reference internal" href="#conclusion-patterns-of-recursion">Conclusion: Patterns of Recursion</a><ul>
+<li><a class="reference internal" href="#hylo-ana-cata">Hylo-, Ana-, Cata-</a></li>
+<li><a class="reference internal" href="#para">Para-, ?-, ?-</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appendix-fun-with-symbols">Appendix: Fun with Symbols</a></li>
+</ul>
+</li>
+</ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -652,24 +650,25 @@ Wire”</a></p>
   </ul></li>
 </ul>
 </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/notebooks/Recursion_Combinators.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -680,7 +679,7 @@ Wire”</a></p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
     </div>
 
   </body>

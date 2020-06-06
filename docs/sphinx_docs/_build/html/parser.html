@@ -1,18 +1,19 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>Parsing Text into Joy Expressions &#8212; Thun 0.4.1 documentation</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Parsing Text into Joy Expressions &#8212; Thun 0.4.2 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Tracing Joy Execution" href="pretty.html" />
@@ -29,8 +30,6 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="section" id="parsing-text-into-joy-expressions">
@@ -52,36 +51,37 @@ literal value (integer, float, string, or Joy expression) or a function
 symbol.  Function symbols are unquoted strings and cannot contain square
 brackets.   Terms must be separated by blanks, which can be omitted
 around square brackets.</p>
-<dl class="py exception">
+<dl class="exception">
 <dt id="joy.parser.ParseError">
-<em class="property">exception </em><code class="sig-prename descclassname">joy.parser.</code><code class="sig-name descname">ParseError</code><a class="reference internal" href="_modules/joy/parser.html#ParseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.parser.ParseError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descclassname">joy.parser.</code><code class="descname">ParseError</code><a class="reference internal" href="_modules/joy/parser.html#ParseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.parser.ParseError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raised when there is a error while parsing text.</p>
 </dd></dl>
 
-<dl class="py class">
+<dl class="class">
 <dt id="joy.parser.Symbol">
-<em class="property">class </em><code class="sig-prename descclassname">joy.parser.</code><code class="sig-name descname">Symbol</code><a class="reference internal" href="_modules/joy/parser.html#Symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.parser.Symbol" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">joy.parser.</code><code class="descname">Symbol</code><a class="reference internal" href="_modules/joy/parser.html#Symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.parser.Symbol" title="Permalink to this definition">¶</a></dt>
 <dd><p>A string class that represents Joy function names.</p>
 </dd></dl>
 
-<dl class="py function">
+<dl class="function">
 <dt id="joy.parser.text_to_expression">
-<code class="sig-prename descclassname">joy.parser.</code><code class="sig-name descname">text_to_expression</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/parser.html#text_to_expression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.parser.text_to_expression" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">joy.parser.</code><code class="descname">text_to_expression</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/parser.html#text_to_expression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.parser.text_to_expression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a string to a Joy expression.</p>
 <p>When supplied with a string this function returns a Python datastructure
 that represents the Joy datastructure described by the text expression.
 Any unbalanced square brackets will raise a ParseError.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Text to convert.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>stack</p>
-</dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#joy.parser.ParseError" title="joy.parser.ParseError"><strong>ParseError</strong></a> – if the parse fails.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – Text to convert.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">stack</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#joy.parser.ParseError" title="joy.parser.ParseError"><strong>ParseError</strong></a> – if the parse fails.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -93,37 +93,18 @@ Any unbalanced square brackets will raise a ParseError.</p>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">Thun</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="notebooks/Intro.html">Thun: Joy in Python</a></li>
-<li class="toctree-l1"><a class="reference internal" href="joy.html">Joy Interpreter</a></li>
-<li class="toctree-l1"><a class="reference internal" href="stack.html">Stack or Quote or Sequence or List…</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Parsing Text into Joy Expressions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-joy.parser"><code class="docutils literal notranslate"><span class="pre">joy.parser</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#parser-internals">Parser Internals</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parsing Text into Joy Expressions</a><ul>
+<li><a class="reference internal" href="#module-joy.parser"><code class="docutils literal notranslate"><span class="pre">joy.parser</span></code></a></li>
+<li><a class="reference internal" href="#parser-internals">Parser Internals</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pretty.html">Tracing Joy Execution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="library.html">Function Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lib.html">Functions Grouped by, er, Function with Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="types.html">Type Inference of Joy Expressions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Essays about Programming in Joy</a></li>
 </ul>
-
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -133,24 +114,25 @@ Any unbalanced square brackets will raise a ParseError.</p>
   </ul></li>
 </ul>
 </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/parser.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -161,7 +143,7 @@ Any unbalanced square brackets will raise a ParseError.</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
     </div>
 
   </body>

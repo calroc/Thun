@@ -219,7 +219,6 @@ def dnd(stack, from_index, to_index):
 	return stack
 
 
-
 def pick(stack, n):
 	'''
 	Return the nth item on the stack.
