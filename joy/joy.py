@@ -40,7 +40,7 @@ def joy(stack, expression, dictionary, viewer=None):
   This function iterates through a sequence of terms which are either
   literals (strings, numbers, sequences of terms) or function symbols.
   Literals are put onto the stack and functions are looked up in the
-  disctionary and executed.
+  dictionary and executed.
 
   The viewer is a function that is called with the stack and expression
   on every iteration, its return value is ignored.
