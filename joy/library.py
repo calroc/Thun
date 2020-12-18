@@ -258,7 +258,19 @@ class DefinitionWrapper(object):
 		Given some text describing a Joy function definition parse it and
 		return a DefinitionWrapper.
 		'''
-		return class_(*(n.strip() for n in defi.split(None, 1)))
+		# At some point I decided that the definitions file should NOT
+		# use '==' to separate the name from the body.  But somehow the
+		# xerblin\gui\default_joy_home\definitions.txt file didn't get
+		# the memo.  Nor did the load_definitions() method.
+		# So I think the simplest way forward at the moment will be to
+		# edit this function to expect '=='.
+
+		name, part, body = defi.partition('==')
+		if part:
+			return class_(name.strip(), body.strip())
+		raise ValueError("No '==' in definition text %r" % (defi,))
+
+		# return class_(*(n.strip() for n in defi.split(None, 1)))
 
 	@classmethod
 	def add_definitions(class_, defs, dictionary):
@@ -289,7 +301,9 @@ def _text_to_defs(text):
 	return (
 		line.strip()
 		for line in text.splitlines()
-		if line and not line.startswith('#')
+		if line
+		   and not line.startswith('#')
+		   and '==' in line
 		)
 
 
