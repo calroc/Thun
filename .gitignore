@@ -1,0 +1,13 @@
+.*\.pyc$
+.*\.swp$
+.eggs
+.hypothesis
+.pytest_cache
+.vscode
+docs/.ipynb_checkpoints
+test/*
+venv
+build
+Thun.egg-info
+dist
+__pycache__

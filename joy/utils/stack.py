@@ -174,6 +174,52 @@ def concat(quote, expression):
 
 
 
+def dnd(stack, from_index, to_index):
+	'''
+	Given a stack and two indices return a rearranged stack.
+	First remove the item at from_index and then insert it at to_index,
+	the second index is relative to the stack after removal of the item
+	at from_index.
+
+	This function reuses all of the items and as much of the stack as it
+	can.  It's meant to be used by remote clients to support drag-n-drop
+	rearranging of the stack from e.g. the StackListbox.
+	'''
+	assert 0 <= from_index
+	assert 0 <= to_index
+	if from_index == to_index:
+		return stack
+	head, n = [], from_index
+	while True:
+		item, stack = stack
+		n -= 1
+		if n < 0:
+			break
+		head.append(item)
+	assert len(head) == from_index
+	# now we have two cases:
+	diff = from_index - to_index
+	if diff < 0:
+		# from < to
+		# so the destination index is still in the stack
+		while diff:
+			h, stack = stack
+			head.append(h)
+			diff += 1
+		stack = item, stack
+		while head:
+			stack = head.pop(), stack
+	else:
+		# from > to
+		# so the destination is in the head list
+		while head:
+			stack = head.pop(), stack
+			from_index -= 1
+			if from_index == to_index:
+				stack = item, stack
+	return stack
+
+
 def pick(stack, n):
 	'''
 	Return the nth item on the stack.
