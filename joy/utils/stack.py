@@ -206,17 +206,15 @@ def dnd(stack, from_index, to_index):
 			h, stack = stack
 			head.append(h)
 			diff += 1
-		stack = item, stack
-		while head:
-			stack = head.pop(), stack
 	else:
 		# from > to
 		# so the destination is in the head list
-		while head:
+		while diff:
 			stack = head.pop(), stack
-			from_index -= 1
-			if from_index == to_index:
-				stack = item, stack
+			diff -= 1
+	stack = item, stack
+	while head:
+		stack = head.pop(), stack
 	return stack
 
 
