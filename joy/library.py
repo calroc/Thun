@@ -108,44 +108,44 @@ def add_aliases(D, A):
 
 
 definitions = ('''\
-? dup truthy
-*fraction [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
-*fraction0 concat [[swap] dip * [*] dip] infra
-anamorphism [pop []] swap [dip swons] genrec
-average [sum 1.0 *] [size] cleave /
-binary nullary [popop] dip
-cleave fork [popd] dip
-codireco cons dip rest cons
-dinfrirst dip infra first
-unstack ? [uncons ?] loop pop
-down_to_zero [0 >] [dup --] while
-dupdipd dup dipd
-enstacken stack [clear] dip
-flatten [] swap [concat] step
-fork [i] app2
-gcd 1 [tuck modulus dup 0 >] loop pop
-ifte [nullary not] dipd branch
-ii [dip] dupdip i
-least_fraction dup [gcd] infra [div] concat map
-make_generator [codireco] ccons
-nullary [stack] dinfrirst
-of swap at
-pam [i] map
-tailrec [i] genrec
-product 1 swap [*] step
-quoted [unit] dip
-range [0 <=] [1 - dup] anamorphism
-range_to_zero unit [down_to_zero] infra
-run [] swap infra
-size 0 swap [pop ++] step
-sqr dup mul
-step_zero 0 roll> step
-swoncat swap concat
-tailrec [i] genrec
-ternary unary [popop] dip
-unary nullary popd
-unquoted [i] dip
-while swap [nullary] cons dup dipd concat loop
+? == dup truthy
+*fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
+*fraction0 == concat [[swap] dip * [*] dip] infra
+anamorphism == [pop []] swap [dip swons] genrec
+average == [sum 1.0 *] [size] cleave /
+binary == nullary [popop] dip
+cleave == fork [popd] dip
+codireco == cons dip rest cons
+dinfrirst == dip infra first
+unstack == ? [uncons ?] loop pop
+down_to_zero == [0 >] [dup --] while
+dupdipd == dup dipd
+enstacken == stack [clear] dip
+flatten == [] swap [concat] step
+fork == [i] app2
+gcd == 1 [tuck modulus dup 0 >] loop pop
+ifte == [nullary not] dipd branch
+ii == [dip] dupdip i
+least_fraction == dup [gcd] infra [div] concat map
+make_generator == [codireco] ccons
+nullary == [stack] dinfrirst
+of == swap at
+pam == [i] map
+tailrec == [i] genrec
+product == 1 swap [*] step
+quoted == [unit] dip
+range == [0 <=] [1 - dup] anamorphism
+range_to_zero == unit [down_to_zero] infra
+run == [] swap infra
+size == 0 swap [pop ++] step
+sqr == dup mul
+step_zero == 0 roll> step
+swoncat == swap concat
+tailrec == [i] genrec
+ternary == unary [popop] dip
+unary == nullary popd
+unquoted == [i] dip
+while == swap [nullary] cons dup dipd concat loop
 '''
 #
 #
