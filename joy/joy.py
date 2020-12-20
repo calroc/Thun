@@ -23,7 +23,6 @@ attempts to stay very close to the spirit of Joy but does not precisely
 match the behaviour of the original version(s) written in C.
 
 '''
-from __future__ import print_function
 from builtins import input
 from traceback import print_exc
 from .parser import text_to_expression, ParseError, Symbol

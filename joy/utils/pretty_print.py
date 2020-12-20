@@ -38,15 +38,12 @@ the pending expression to the right.
 '''
 # (Kinda clunky and hacky.  This should be swapped out in favor of much
 # smarter stuff.)
-from __future__ import print_function
-from builtins import object
 from traceback import print_exc
 from .stack import expression_to_string, stack_to_string
 from ..joy import joy
-from ..library import inscribe, FunctionWrapper
+from ..library import FunctionWrapper
 
 
-@inscribe
 @FunctionWrapper
 def trace(stack, expression, dictionary):
 	'''Evaluate a Joy expression on a stack and print a trace.
@@ -114,10 +111,10 @@ class TracePrinter(object):
 			if n > max_stack_length:
 				max_stack_length = n
 			lines.append((n, '%s • %s' % (stack, expression)))
-		return [  # Prefix spaces to line up '•'s.
-			(' ' * (max_stack_length - length) + line)
-			for length, line in lines
-			]
+		for i in range(len(lines)):  # Prefix spaces to line up '•'s.
+			length, line = lines[i]
+			lines[i] =  (' ' * (max_stack_length - length) + line)
+		return lines
 
 	def print_(self):
 		try:

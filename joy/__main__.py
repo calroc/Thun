@@ -17,12 +17,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
-from __future__ import print_function
-from .library import initialize
+from .library import initialize, inscribe
 from .joy import repl
-from .utils import pretty_print  # Inscribe trace command.
+from .utils.pretty_print import trace
 
 
+inscribe(trace)
 print('''\
 Thun - Copyright © 2017 Simon Forman
 This program comes with ABSOLUTELY NO WARRANTY; for details type "warranty".
