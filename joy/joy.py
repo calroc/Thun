@@ -107,3 +107,25 @@ def repl(stack=(), dictionary=None):
 		print_exc()
 	print()
 	return stack
+
+
+def interp(stack=(), dictionary=None):
+	'''
+	Simple REPL with no extra output, suitable for use in scripts.
+	'''
+	if dictionary is None:
+		dictionary = {}
+	try:
+		while True:
+			try:
+				text = input()
+			except (EOFError, KeyboardInterrupt):
+				break
+			try:
+				stack, _, dictionary = run(text, stack, dictionary)
+			except:
+				print_exc()
+			print(stack_to_string(stack))
+	except:
+		print_exc()
+	return stack

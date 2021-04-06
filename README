@@ -64,6 +64,12 @@ To start a crude REPL:
 
     python -m joy
 
+There is a "quiet" mode for e.g. using joy from a shell script:
+
+    python -m joy -q
+
+This supresses the initial banner output and the prompt text.
+
 
 §.3 Documentation
 

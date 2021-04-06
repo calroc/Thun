@@ -17,13 +17,19 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
+import sys
 from .library import initialize, inscribe
-from .joy import repl
+from .joy import repl, interp
 from .utils.pretty_print import trace
 
 
 inscribe(trace)
-print('''\
+
+if '-q' in sys.argv:
+	j = interp
+else:
+	j = repl
+	print('''\
 Thun - Copyright © 2017 Simon Forman
 This program comes with ABSOLUTELY NO WARRANTY; for details type "warranty".
 This is free software, and you are welcome to redistribute it
@@ -31,4 +37,4 @@ under certain conditions; type "sharing" for details.
 Type "words" to see a list of all words, and "[<name>] help" to print the
 docs for a word.
 ''')
-stack = repl(dictionary=initialize())
+stack = j(dictionary=initialize())
