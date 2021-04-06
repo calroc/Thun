@@ -40,15 +40,16 @@ from re import Scanner
 from .utils.stack import list_to_stack
 
 
-#TODO: explain the details of float lits and strings.
-BOOL = 'true|false'
-FLOAT = r'-?\d+\.\d*(e(-|\+)\d+)?'
-INT = r'-?\d+'
-SYMBOL = r'[•\w!@$%^&*()_+<>?|\/;:`~,.=-]+'
 BRACKETS = r'\[|\]'
-STRING_DOUBLE_QUOTED = r'"(?:[^"\\]|\\.)*"'
-STRING_SINGLE_QUOTED = r"'(?:[^'\\]|\\.)*'"
 BLANKS = r'\s+'
+WORDS = r'[^[\]\s]+'
+
+
+token_scanner = Scanner([
+    (BRACKETS, lambda _, token: token),
+    (BLANKS, None),
+    (WORDS, lambda _, token: token),
+    ])
 
 
 class Symbol(str):
@@ -81,7 +82,7 @@ def _tokenize(text):
 
 	Raise ParseError (with some of the failing text) if the scan fails.
 	'''
-	tokens, rest = _scanner.scan(text)
+	tokens, rest = token_scanner.scan(text)
 	if rest:
 		raise ParseError(
 			'Scan failed at position %i, %r'
@@ -107,20 +108,16 @@ def _parse(tokens):
 			except IndexError:
 				raise ParseError('Extra closing bracket.')
 			frame[-1] = list_to_stack(frame[-1])
+		elif tok == 'true':
+			frame.append(True)
+		elif tok == 'false':
+			frame.append(False)
 		else:
-			frame.append(tok)
+			try:
+				thing = int(tok)
+			except ValueError:
+				thing = Symbol(tok)
+			frame.append(thing)
 	if stack:
 		raise ParseError('Unclosed bracket.')
 	return list_to_stack(frame)
-
-
-_scanner = Scanner([
-	(                BOOL, lambda _, token: token == 'true'),
-	(               FLOAT, lambda _, token: float(token)),
-	(                 INT, lambda _, token: int(token)),
-	(              SYMBOL, lambda _, token: Symbol(token)),
-	(            BRACKETS, lambda _, token: token),
-	(STRING_DOUBLE_QUOTED, lambda _, token: token[1:-1].replace('\\"', '"')),
-	(STRING_SINGLE_QUOTED, lambda _, token: token[1:-1].replace("\\'", "'")),
-	(              BLANKS, None),
-	])

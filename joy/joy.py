@@ -29,6 +29,9 @@ from .parser import text_to_expression, ParseError, Symbol
 from .utils.stack import stack_to_string
 
 
+class UnknownSymbolError(KeyError): pass
+
+
 def joy(stack, expression, dictionary, viewer=None):
 	'''Evaluate a Joy expression on a stack.
 
@@ -53,7 +56,10 @@ def joy(stack, expression, dictionary, viewer=None):
 
 		term, expression = expression
 		if isinstance(term, Symbol):
-			term = dictionary[term]
+			try:
+				term = dictionary[term]
+			except KeyError:
+				raise UnknownSymbolError(term)
 			stack, expression, dictionary = term(stack, expression, dictionary)
 		else:
 			stack = term, stack
@@ -123,6 +129,8 @@ def interp(stack=(), dictionary=None):
 				break
 			try:
 				stack, _, dictionary = run(text, stack, dictionary)
+			except UnknownSymbolError as sym:
+				print('Unknown:', sym)
 			except:
 				print_exc()
 			print(stack_to_string(stack))
