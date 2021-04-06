@@ -41,6 +41,7 @@ from .utils.stack import list_to_stack
 
 
 #TODO: explain the details of float lits and strings.
+BOOL = 'true|false'
 FLOAT = r'-?\d+\.\d*(e(-|\+)\d+)?'
 INT = r'-?\d+'
 SYMBOL = r'[•\w!@$%^&*()_+<>?|\/;:`~,.=-]+'
@@ -114,11 +115,12 @@ def _parse(tokens):
 
 
 _scanner = Scanner([
-	(FLOAT, lambda _, token: float(token)),
-	(INT, lambda _, token: int(token)),
-	(SYMBOL, lambda _, token: Symbol(token)),
-	(BRACKETS, lambda _, token: token),
+	(                BOOL, lambda _, token: token == 'true'),
+	(               FLOAT, lambda _, token: float(token)),
+	(                 INT, lambda _, token: int(token)),
+	(              SYMBOL, lambda _, token: Symbol(token)),
+	(            BRACKETS, lambda _, token: token),
 	(STRING_DOUBLE_QUOTED, lambda _, token: token[1:-1].replace('\\"', '"')),
 	(STRING_SINGLE_QUOTED, lambda _, token: token[1:-1].replace("\\'", "'")),
-	(BLANKS, None),
+	(              BLANKS, None),
 	])
