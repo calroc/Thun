@@ -72,7 +72,6 @@ printed left-to-right.  These functions are written to support :doc:`../pretty`.
 '''
 
 
-from builtins import map
 def list_to_stack(el, stack=()):
 	'''Convert a Python list (or other sequence) to a Joy stack::
 
@@ -129,15 +128,25 @@ def expression_to_string(expression):
 	return _to_string(expression, iter_stack)
 
 
+_JOY_BOOL_LITS = 'false', 'true'
+
+
+def _joy_repr(thing):
+        if isinstance(thing, bool):
+                return _JOY_BOOL_LITS[thing]
+        return repr(thing)
+
+
 def _to_string(stack, f):
-	if not isinstance(stack, tuple): return repr(stack)
+	if not isinstance(stack, tuple): return _joy_repr(stack)
 	if not stack: return ''  # shortcut
 	return ' '.join(map(_s, f(stack)))
 
 
 _s = lambda s: (
-	'[%s]' % expression_to_string(s) if isinstance(s, tuple)
-	else repr(s)
+	'[%s]' % expression_to_string(s)
+        if isinstance(s, tuple)
+	else _joy_repr(s)
 	)
 
 
