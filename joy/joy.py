@@ -27,7 +27,11 @@ from builtins import input
 from traceback import print_exc
 from .parser import text_to_expression, ParseError, Symbol
 from .utils.stack import stack_to_string
-from .library import NotAnIntError, StackUnderflowError
+from .utils.errors import (
+    NotAListError,
+    NotAnIntError,
+    StackUnderflowError,
+    )
 
 
 class UnknownSymbolError(KeyError): pass
@@ -136,6 +140,8 @@ def interp(stack=(), dictionary=None):
                 print('Not enough values on stack.')
             except NotAnIntError:
                 print('Not an integer.')
+            except NotAListError:
+                print('Not a list.')
             except:
                 print_exc()
             print(stack_to_string(stack))

@@ -30,6 +30,7 @@ import operator, math
 
 from .parser import text_to_expression, Symbol
 from .utils import generated_library as genlib
+from .utils.errors import NotAnIntError, StackUnderflowError
 from .utils.stack import (
     concat,
     expression_to_string,
@@ -189,10 +190,6 @@ while == swap [nullary] cons dup dipd concat loop
 )
 
 
-class NotAnIntError(Exception): pass
-class StackUnderflowError(Exception): pass
-
-
 def FunctionWrapper(f):
     '''Set name attribute.'''
     if not f.__doc__:
@@ -223,7 +220,11 @@ def BinaryBuiltinWrapper(f):
             (a, (b, stack)) = stack
         except ValueError:
             raise StackUnderflowError
-        if not isinstance(a, int) or not isinstance(b, int):
+        if (not isinstance(a, int)
+            or not isinstance(b, int)
+            or isinstance(a, bool)  # Because bools are ints in Python.
+            or isinstance(a, bool)
+            ):
             raise NotAnIntError
         result = f(b, a)
         return (result, stack), expression, dictionary
