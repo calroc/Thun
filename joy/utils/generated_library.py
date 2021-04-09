@@ -1,6 +1,7 @@
 # GENERATED FILE. DO NOT EDIT.
 # The code that generated these functions is in the repo history
 # at the v0.4.0 tag.
+from .errors import NotAListError, StackUnderflowError
 
 
 def _Tree_add_Ee(stack):
@@ -65,7 +66,11 @@ def cons(stack):
     (a1 [...0] -- [a1 ...0])
 
   """
-  (s0, (a1, s23)) = stack
+  try: s0, stack = stack
+  except ValueError: raise StackUnderflowError
+  if not isinstance(s0, tuple): raise NotAListError
+  try: a1, s23 = stack
+  except ValueError: raise StackUnderflowError
   return ((a1, s0), s23)
 
 
