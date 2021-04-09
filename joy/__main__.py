@@ -26,10 +26,10 @@ from .utils.pretty_print import trace
 inscribe(trace)
 
 if '-q' in sys.argv:
-	j = interp
+    j = interp
 else:
-	j = repl
-	print('''\
+    j = repl
+    print('''\
 Thun - Copyright © 2017 Simon Forman
 This program comes with ABSOLUTELY NO WARRANTY; for details type "warranty".
 This is free software, and you are welcome to redistribute it

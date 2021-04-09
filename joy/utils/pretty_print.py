@@ -46,79 +46,79 @@ from ..library import FunctionWrapper
 
 @FunctionWrapper
 def trace(stack, expression, dictionary):
-	'''Evaluate a Joy expression on a stack and print a trace.
+    '''Evaluate a Joy expression on a stack and print a trace.
 
-	This function is just like the `i` combinator but it also prints a
-	trace of the evaluation
+    This function is just like the `i` combinator but it also prints a
+    trace of the evaluation
 
-	:param stack stack: The stack.
-	:param stack expression: The expression to evaluate.
-	:param dict dictionary: A ``dict`` mapping names to Joy functions.
-	:rtype: (stack, (), dictionary)
+    :param stack stack: The stack.
+    :param stack expression: The expression to evaluate.
+    :param dict dictionary: A ``dict`` mapping names to Joy functions.
+    :rtype: (stack, (), dictionary)
 
-	'''
-	tp = TracePrinter()
-	quote, stack = stack
-	try:
-		s, _, d = joy(stack, quote, dictionary, tp.viewer)
-	except:
-		tp.print_()
-		print('-' * 73)
-		raise
-	else:
-		tp.print_()
-	return s, expression, d
+    '''
+    tp = TracePrinter()
+    quote, stack = stack
+    try:
+        s, _, d = joy(stack, quote, dictionary, tp.viewer)
+    except:
+        tp.print_()
+        print('-' * 73)
+        raise
+    else:
+        tp.print_()
+    return s, expression, d
 
 
 class TracePrinter(object):
-	'''
-	This is what does the formatting.  You instantiate it and pass the ``viewer()``
-	method to the :py:func:`joy.joy.joy` function, then print it to see the
-	trace.
-	'''
+    '''
+    This is what does the formatting.  You instantiate it and pass the ``viewer()``
+    method to the :py:func:`joy.joy.joy` function, then print it to see the
+    trace.
+    '''
 
-	def __init__(self):
-		self.history = []
+    def __init__(self):
+        self.history = []
 
-	def viewer(self, stack, expression):
-		'''
-		Record the current stack and expression in the TracePrinter's history.
-		Pass this method as the ``viewer`` argument to the :py:func:`joy.joy.joy` function.
+    def viewer(self, stack, expression):
+        '''
+        Record the current stack and expression in the TracePrinter's history.
+        Pass this method as the ``viewer`` argument to the :py:func:`joy.joy.joy` function.
 
-		:param stack quote: A stack.
-		:param stack expression: A stack.
-		'''
-		self.history.append((stack, expression))
+        :param stack quote: A stack.
+        :param stack expression: A stack.
+        '''
+        self.history.append((stack, expression))
 
-	def __str__(self):
-		return '\n'.join(self.go())
+    def __str__(self):
+        return '\n'.join(self.go())
 
-	def go(self):
-		'''
-		Return a list of strings, one for each entry in the history, prefixed
-		with enough spaces to align all the interpreter dots.
+    def go(self):
+        '''
+        Return a list of strings, one for each entry in the history, prefixed
+        with enough spaces to align all the interpreter dots.
 
-		This method is called internally by the ``__str__()`` method.
+        This method is called internally by the ``__str__()`` method.
 
-		:rtype: list(str)
-		'''
-		max_stack_length = 0
-		lines = []
-		for stack, expression in self.history:
-			stack = stack_to_string(stack)
-			expression = expression_to_string(expression)
-			n = len(stack)
-			if n > max_stack_length:
-				max_stack_length = n
-			lines.append((n, '%s • %s' % (stack, expression)))
-		for i in range(len(lines)):  # Prefix spaces to line up '•'s.
-			length, line = lines[i]
-			lines[i] =  (' ' * (max_stack_length - length) + line)
-		return lines
+        :rtype: list(str)
+        '''
+        max_stack_length = 0
+        lines = []
+        for stack, expression in self.history:
+            stack = stack_to_string(stack)
+            expression = expression_to_string(expression)
+            n = len(stack)
+            if n > max_stack_length:
+                max_stack_length = n
+            lines.append((n, '%s • %s' % (stack, expression)))
+        for i in range(len(lines)):  # Prefix spaces to line up '•'s.
+            length, line = lines[i]
+            lines[i] =  (' ' * (max_stack_length - length) + line)
+        return lines
 
-	def print_(self):
-		try:
-			print(self)
-		except:
-			print_exc()
-			print('Exception while printing viewer.')
+    def print_(self):
+        try:
+            print(self)
+        except:
+            print_exc()
+            print('Exception while printing viewer.')
