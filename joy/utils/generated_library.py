@@ -324,7 +324,12 @@ def swaack(stack):
     ([...1] -- [...0])
 
   """
-  (s1, s0) = stack
+  try:
+    (s1, s0) = stack
+  except ValueError:
+    raise StackUnderflowError('Not enough values on stack.')
+  if not isinstance(s1, tuple):
+    raise NotAListError('Not a list.')
   return (s0, s1)
 
 
