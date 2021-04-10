@@ -136,8 +136,8 @@ def interp(stack=(), dictionary=None):
                 stack, _, dictionary = run(text, stack, dictionary)
             except UnknownSymbolError as sym:
                 print('Unknown:', sym)
-            except StackUnderflowError:
-                print('Not enough values on stack.')
+            except StackUnderflowError as e:
+                print(e)  # 'Not enough values on stack.'
             except NotAnIntError:
                 print('Not an integer.')
             except NotAListError as e:

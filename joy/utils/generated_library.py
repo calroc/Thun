@@ -158,7 +158,10 @@ def pop(stack):
     (a1 --)
 
   """
-  (a1, s23) = stack
+  try:
+    (a1, s23) = stack
+  except ValueError:
+    raise StackUnderflowError('Cannot pop empty stack.')
   return s23
 
 
@@ -224,8 +227,17 @@ def rest(stack):
     ([a1 ...0] -- [...0])
 
   """
-  ((a1, s0), s23) = stack
-  return (s0, s23)
+  try:
+    s0, stack = stack
+  except ValueError:
+    raise StackUnderflowError
+  if not isinstance(s0, tuple):
+    raise NotAListError('Not a list.')
+  try:
+    _, s1 = s0
+  except ValueError:
+    raise StackUnderflowError('Cannot take rest of empty list.')
+  return (s1, stack)
 
 
 def rolldown(stack):
