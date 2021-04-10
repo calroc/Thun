@@ -140,8 +140,8 @@ def interp(stack=(), dictionary=None):
                 print('Not enough values on stack.')
             except NotAnIntError:
                 print('Not an integer.')
-            except NotAListError:
-                print('Not a list.')
+            except NotAListError as e:
+                print(e)  # 'Not a list.'
             except:
                 print_exc()
             print(stack_to_string(stack))

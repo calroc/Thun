@@ -30,7 +30,11 @@ import operator, math
 
 from .parser import text_to_expression, Symbol
 from .utils import generated_library as genlib
-from .utils.errors import NotAnIntError, StackUnderflowError
+from .utils.errors import (
+    NotAListError,
+    NotAnIntError,
+    StackUnderflowError,
+    )
 from .utils.stack import (
     concat,
     expression_to_string,
@@ -1371,7 +1375,16 @@ def loop(stack, expression, dictionary):
               ...
 
     '''
-    quote, (flag, stack) = stack
+    try:
+        quote, stack = stack
+    except ValueError:
+        raise StackUnderflowError
+    if not isinstance(quote, tuple):
+        raise NotAListError('Loop body not a list.')
+    try:
+        (flag, stack) = stack
+    except ValueError:
+        raise StackUnderflowError
     if flag:
         expression = concat(quote, (quote, (S_loop, expression)))
     return stack, expression, dictionary
