@@ -70,8 +70,7 @@ ALIASES = (
     ('and', ['&']),
     ('bool', ['truthy']),
     ('mul', ['*']),
-    ('floordiv', ['/floor', '//']),
-    ('truediv', ['/', 'div']),
+    ('floordiv', ['/floor', '//', '/', 'div']),
     ('mod', ['%', 'rem', 'remainder', 'modulus']),
     ('eq', ['=']),
     ('ge', ['>=']),
@@ -1165,7 +1164,10 @@ def dip(stack, expression, dictionary):
              ... Q x
 
     '''
-    (quote, (x, stack)) = stack
+    try:
+        (quote, (x, stack)) = stack
+    except ValueError:
+        raise StackUnderflowError
     expression = (x, expression)
     return stack, concat(quote, expression), dictionary
 
@@ -1425,7 +1427,7 @@ for F in (
     BinaryBuiltinWrapper(operator.mul),
     BinaryBuiltinWrapper(operator.pow),
     BinaryBuiltinWrapper(operator.sub),
-    BinaryBuiltinWrapper(operator.truediv),
+##    BinaryBuiltinWrapper(operator.truediv),
 
     UnaryBuiltinWrapper(bool),
     UnaryBuiltinWrapper(operator.not_),
