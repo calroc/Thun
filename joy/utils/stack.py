@@ -177,7 +177,7 @@ def concat(quote, expression):
     temp = []
     while quote:
         if not isinstance(quote, tuple):
-            raise NotAListError
+            raise NotAListError('Not a list.')
         item, quote = quote
         temp.append(item)
     for item in reversed(temp):

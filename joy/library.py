@@ -222,7 +222,7 @@ def BinaryBuiltinWrapper(f):
         try:
             (a, (b, stack)) = stack
         except ValueError:
-            raise StackUnderflowError
+            raise StackUnderflowError('Not enough values on stack.')
         if (not isinstance(a, int)
             or not isinstance(b, int)
             or isinstance(a, bool)  # Because bools are ints in Python.
@@ -849,7 +849,7 @@ def i(stack, expression, dictionary):
     try:
         quote, stack = stack
     except ValueError:
-        raise StackUnderflowError
+        raise StackUnderflowError('Not enough values on stack.')
     return stack, concat(quote, expression), dictionary
 
 
@@ -1174,7 +1174,7 @@ def dip(stack, expression, dictionary):
     try:
         (quote, (x, stack)) = stack
     except ValueError:
-        raise StackUnderflowError
+        raise StackUnderflowError('Not enough values on stack.')
     expression = (x, expression)
     return stack, concat(quote, expression), dictionary
 
@@ -1378,13 +1378,13 @@ def loop(stack, expression, dictionary):
     try:
         quote, stack = stack
     except ValueError:
-        raise StackUnderflowError
+        raise StackUnderflowError('Not enough values on stack.')
     if not isinstance(quote, tuple):
         raise NotAListError('Loop body not a list.')
     try:
         (flag, stack) = stack
     except ValueError:
-        raise StackUnderflowError
+        raise StackUnderflowError('Not enough values on stack.')
     if flag:
         expression = concat(quote, (quote, (S_loop, expression)))
     return stack, expression, dictionary

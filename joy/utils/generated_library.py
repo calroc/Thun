@@ -67,10 +67,10 @@ def cons(stack):
 
   """
   try: s0, stack = stack
-  except ValueError: raise StackUnderflowError
-  if not isinstance(s0, tuple): raise NotAListError
+  except ValueError: raise StackUnderflowError('Not enough values on stack.')
+  if not isinstance(s0, tuple): raise NotAListError('Not a list.')
   try: a1, s23 = stack
-  except ValueError: raise StackUnderflowError
+  except ValueError: raise StackUnderflowError('Not enough values on stack.')
   return ((a1, s0), s23)
 
 
