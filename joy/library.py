@@ -842,7 +842,10 @@ def i(stack, expression, dictionary):
             Q
 
     '''
-    quote, stack = stack
+    try:
+        quote, stack = stack
+    except ValueError:
+        raise StackUnderflowError
     return stack, concat(quote, expression), dictionary
 
 
