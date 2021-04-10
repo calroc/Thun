@@ -340,7 +340,10 @@ def swap(stack):
     (a1 a2 -- a2 a1)
 
   """
-  (a2, (a1, s23)) = stack
+  try:
+    (a2, (a1, s23)) = stack
+  except ValueError:
+    raise StackUnderflowError('Not enough values on stack.')
   return (a1, (a2, s23))
 
 
