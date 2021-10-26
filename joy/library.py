@@ -424,6 +424,19 @@ def take(stack):
 
 
 @inscribe
+@FunctionWrapper
+def gcd2(stack, expression, dictionary):
+    '''Compiled GCD function.'''
+    (v1, (v2, stack)) = stack
+    tos = True
+    while tos:
+        v3 = v2 % v1
+        tos = v3 > 0
+        (v1, (v2, stack)) = (v3, (v1, stack))
+    return (v2, stack), expression, dictionary
+
+
+@inscribe
 @SimpleFunctionWrapper
 def choice(stack):
 	'''
