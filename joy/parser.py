@@ -101,13 +101,12 @@ def _parse(tokens):
         if tok == '[':
             stack.append(frame)
             frame = []
-            stack[-1].append(frame)
         elif tok == ']':
-            try:
-                frame = stack.pop()
+            v = frame
+            try: frame = stack.pop()
             except IndexError:
                 raise ParseError('Extra closing bracket.')
-            frame[-1] = list_to_stack(frame[-1])
+            frame.append(list_to_stack(v))
         elif tok == 'true':
             frame.append(True)
         elif tok == 'false':
