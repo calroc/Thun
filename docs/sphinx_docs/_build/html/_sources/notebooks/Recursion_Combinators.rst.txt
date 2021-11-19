@@ -391,8 +391,10 @@ values.
 
    A == [P] [] [G] [swons] hylomorphism
 
-``range`` et. al. An example of an anamorphism is the ``range`` function which generates the list of integers from 0 to *n* - 1 given *n*.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``range`` et. al.
+~~~~~~~~~~~~~~~~~
+
+An example of an anamorphism is the ``range`` function which generates the list of integers from 0 to *n* - 1 given *n*.
 
 Each of the above variations can be used to make four slightly different
 ``range`` functions.
