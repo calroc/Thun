@@ -226,7 +226,7 @@ def BinaryBuiltinWrapper(f):
         if (not isinstance(a, int)
             or not isinstance(b, int)
             or isinstance(a, bool)  # Because bools are ints in Python.
-            or isinstance(a, bool)
+            or isinstance(b, bool)
             ):
             raise NotAnIntError
         result = f(b, a)
