@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Tracing Joy Execution &#8212; Thun 0.4.1 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Function Reference" href="library.html" />
@@ -30,11 +29,13 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="tracing-joy-execution">
+  <section id="tracing-joy-execution">
 <h1>Tracing Joy Execution<a class="headerlink" href="#tracing-joy-execution" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-joy.utils.pretty_print">
+<section id="module-joy.utils.pretty_print">
 <span id="joy-utils-pretty-print"></span><h2><code class="docutils literal notranslate"><span class="pre">joy.utils.pretty_print</span></code><a class="headerlink" href="#module-joy.utils.pretty_print" title="Permalink to this headline">¶</a></h2>
 <p>Pretty printing support, e.g.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Joy? [23 18 * 99 +] trace
@@ -53,89 +54,97 @@ joy?
 <p>On each line the stack is printed with the top to the left, then a
 bullet symbol,``•<a href="#id1"><span class="problematic" id="id2">``</span></a>, to represent the current locus of processing, then
 the pending expression to the right.</p>
-<dl class="class">
-<dt id="joy.utils.pretty_print.TracePrinter">
-<em class="property">class </em><code class="descclassname">joy.utils.pretty_print.</code><code class="descname">TracePrinter</code><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="joy.utils.pretty_print.TracePrinter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">joy.utils.pretty_print.</span></span><span class="sig-name descname"><span class="pre">TracePrinter</span></span><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is what does the formatting.  You instantiate it and pass the <code class="docutils literal notranslate"><span class="pre">viewer()</span></code>
 method to the <a class="reference internal" href="joy.html#joy.joy.joy" title="joy.joy.joy"><code class="xref py py-func docutils literal notranslate"><span class="pre">joy.joy.joy()</span></code></a> function, then print it to see the
 trace.</p>
-<dl class="method">
-<dt id="joy.utils.pretty_print.TracePrinter.go">
-<code class="descname">go</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter.go"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter.go" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="joy.utils.pretty_print.TracePrinter.go">
+<span class="sig-name descname"><span class="pre">go</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter.go"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter.go" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of strings, one for each entry in the history, prefixed
 with enough spaces to align all the interpreter dots.</p>
 <p>This method is called internally by the <code class="docutils literal notranslate"><span class="pre">__str__()</span></code> method.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list(str)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list(str)</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="joy.utils.pretty_print.TracePrinter.viewer">
-<code class="descname">viewer</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter.viewer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter.viewer" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="joy.utils.pretty_print.TracePrinter.viewer">
+<span class="sig-name descname"><span class="pre">viewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/pretty_print.html#TracePrinter.viewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#joy.utils.pretty_print.TracePrinter.viewer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Record the current stack and expression in the TracePrinter’s history.
 Pass this method as the <code class="docutils literal notranslate"><span class="pre">viewer</span></code> argument to the <a class="reference internal" href="joy.html#joy.joy.joy" title="joy.joy.joy"><code class="xref py py-func docutils literal notranslate"><span class="pre">joy.joy.joy()</span></code></a> function.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>quote</strong> (<em>stack</em>) – A stack.</li>
-<li><strong>expression</strong> (<em>stack</em>) – A stack.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quote</strong> (<em>stack</em>) – A stack.</p></li>
+<li><p><strong>expression</strong> (<em>stack</em>) – A stack.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="joy.utils.pretty_print.trace">
-<code class="descclassname">joy.utils.pretty_print.</code><code class="descname">trace</code><span class="sig-paren">(</span><em>stack</em>, <em>expression</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/pretty_print.html#trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#joy.utils.pretty_print.trace" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="joy.utils.pretty_print.trace">
+<span class="sig-prename descclassname"><span class="pre">joy.utils.pretty_print.</span></span><span class="sig-name descname"><span class="pre">trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/joy/utils/pretty_print.html#trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#joy.utils.pretty_print.trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate a Joy expression on a stack and print a trace.</p>
 <p>This function is just like the <cite>i</cite> combinator but it also prints a
 trace of the evaluation</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>stack</strong> (<em>stack</em>) – The stack.</li>
-<li><strong>expression</strong> (<em>stack</em>) – The expression to evaluate.</li>
-<li><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stack</strong> (<em>stack</em>) – The stack.</p></li>
+<li><p><strong>expression</strong> (<em>stack</em>) – The expression to evaluate.</p></li>
+<li><p><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(stack, (), dictionary)</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(stack, (), dictionary)</p>
+</dd>
+</dl>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Tracing Joy Execution</a><ul>
-<li><a class="reference internal" href="#module-joy.utils.pretty_print"><code class="docutils literal notranslate"><span class="pre">joy.utils.pretty_print</span></code></a></li>
+<h1 class="logo"><a href="index.html">Thun</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Intro.html">Thun: Joy in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="joy.html">Joy Interpreter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Stack or Quote or Sequence or List…</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parser.html">Parsing Text into Joy Expressions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tracing Joy Execution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-joy.utils.pretty_print"><code class="docutils literal notranslate"><span class="pre">joy.utils.pretty_print</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lib.html">Functions Grouped by, er, Function with Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="types.html">Type Inference of Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Essays about Programming in Joy</a></li>
 </ul>
+
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -145,25 +154,24 @@ trace of the evaluation</p>
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/pretty.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -174,7 +182,7 @@ trace of the evaluation</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
     </div>
 
   </body>

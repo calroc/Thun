@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Using x to Generate Values &#8212; Thun 0.4.1 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Newton’s method" href="Newton-Raphson.html" />
@@ -30,12 +29,14 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="using-x-to-generate-values">
+  <section id="using-x-to-generate-values">
 <h1>Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values<a class="headerlink" href="#using-x-to-generate-values" title="Permalink to this headline">¶</a></h1>
 <p>Cf. jp-reprod.html</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from notebook_preamble import J, V, define
 </pre></div>
 </div>
 <p>Consider the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator:</p>
@@ -75,7 +76,7 @@ function <code class="docutils literal notranslate"><span class="pre">C</span></
 </pre></div>
 </div>
 <p>Let’s try it:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[0 swap [dup ++] dip rest cons] x&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;[0 swap [dup ++] dip rest cons] x&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                           <span class="o">.</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span><span class="p">]</span> <span class="n">x</span>
@@ -94,18 +95,18 @@ function <code class="docutils literal notranslate"><span class="pre">C</span></
 </div>
 <p>After one application of <code class="docutils literal notranslate"><span class="pre">x</span></code> the quoted program contains <code class="docutils literal notranslate"><span class="pre">1</span></code> and
 <code class="docutils literal notranslate"><span class="pre">0</span></code> is below it on the stack.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 swap [dup ++] dip rest cons] x x x x x pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[0 swap [dup ++] dip rest cons] x x x x x pop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span>
 </pre></div>
 </div>
-<div class="section" id="direco">
+<section id="direco">
 <h2><code class="docutils literal notranslate"><span class="pre">direco</span></code><a class="headerlink" href="#direco" title="Permalink to this headline">¶</a></h2>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;direco == dip rest cons&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;direco == dip rest cons&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[0 swap [dup ++] direco] x&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;[0 swap [dup ++] direco] x&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                    <span class="o">.</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="n">x</span>
@@ -123,8 +124,8 @@ function <code class="docutils literal notranslate"><span class="pre">C</span></
          <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span> <span class="o">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="making-generators">
+</section>
+<section id="making-generators">
 <h2>Making Generators<a class="headerlink" href="#making-generators" title="Permalink to this headline">¶</a></h2>
 <p>We want to define a function that accepts <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">[C]</span></code> and builds
 our quoted program:</p>
@@ -146,44 +147,44 @@ our quoted program:</p>
 <span class="n">G</span> <span class="o">==</span> <span class="p">[</span><span class="n">direco</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">swap</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">cons</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;G == [direco] cons [swap] swoncat cons&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;G == [direco] cons [swap] swoncat cons&#39;)
 </pre></div>
 </div>
 <p>Let’s try it out:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 [dup ++] G&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;0 [dup ++] G&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 [dup ++] G x x x pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;0 [dup ++] G x x x pop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span>
 </pre></div>
 </div>
-<div class="section" id="powers-of-2">
+<section id="powers-of-2">
 <h3>Powers of 2<a class="headerlink" href="#powers-of-2" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 [dup 1 &lt;&lt;] G x x x x x x x x x pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 [dup 1 &lt;&lt;] G x x x x x x x x x pop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">8</span> <span class="mi">16</span> <span class="mi">32</span> <span class="mi">64</span> <span class="mi">128</span> <span class="mi">256</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="x-times">
+</section>
+<section id="x-times">
 <h3><code class="docutils literal notranslate"><span class="pre">[x]</span> <span class="pre">times</span></code><a class="headerlink" href="#x-times" title="Permalink to this headline">¶</a></h3>
 <p>If we have one of these quoted programs we can drive it using <code class="docutils literal notranslate"><span class="pre">times</span></code>
 with the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 [dup ++] G 5 [x] times&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 [dup ++] G 5 [x] times&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span> <span class="mi">24</span> <span class="mi">25</span> <span class="mi">26</span> <span class="mi">27</span> <span class="p">[</span><span class="mi">28</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="generating-multiples-of-three-and-five">
+</section>
+</section>
+<section id="generating-multiples-of-three-and-five">
 <h2>Generating Multiples of Three and Five<a class="headerlink" href="#generating-multiples-of-three-and-five" title="Permalink to this headline">¶</a></h2>
 <p>Look at the treatment of the Project Euler Problem One in the
 “Developing a Program” notebook and you’ll see that we might be
@@ -199,10 +200,10 @@ int:</p>
 </div>
 <p>And pick them off by masking with 3 (binary 11) and then shifting the
 int right two bits.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.1 == dup [3 &amp;] dip 2 &gt;&gt;&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE1.1 == dup [3 &amp;] dip 2 &gt;&gt;&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;14811 PE1.1&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;14811 PE1.1&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                  <span class="o">.</span> <span class="mi">14811</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">1</span>
@@ -219,33 +220,33 @@ int right two bits.</p>
 </pre></div>
 </div>
 <p>If we plug <code class="docutils literal notranslate"><span class="pre">14811</span></code> and <code class="docutils literal notranslate"><span class="pre">[PE1.1]</span></code> into our generator form…</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;14811 [PE1.1] G&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;14811 [PE1.1] G&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">14811</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>…we get a generator that works for seven cycles before it reaches zero:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1] direco] 7 [x] times&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[14811 swap [PE1.1] direco] 7 [x] times&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="section" id="reset-at-zero">
+<section id="reset-at-zero">
 <h3>Reset at Zero<a class="headerlink" href="#reset-at-zero" title="Permalink to this headline">¶</a></h3>
 <p>We need a function that checks if the int has reached zero and resets it
 if so.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.1.check == dup [pop 14811] [] branch&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE1.1.check == dup [pop 14811] [] branch&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;14811 [PE1.1.check PE1.1] G&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;14811 [PE1.1.check PE1.1] G&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">14811</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mf">1.</span><span class="n">check</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] direco] 21 [x] times&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[14811 swap [PE1.1.check PE1.1] direco] 21 [x] times&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mf">1.</span><span class="n">check</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
@@ -255,47 +256,47 @@ if so.</p>
 that’s a little beyond the scope of this article. This solution does
 extra work, but not much, and we’re not using it “in production” as they
 say.)</p>
-</div>
-<div class="section" id="run-466-times">
+</section>
+<section id="run-466-times">
 <h3>Run 466 times<a class="headerlink" href="#run-466-times" title="Permalink to this headline">¶</a></h3>
 <p>In the PE1 problem we are asked to sum all the multiples of three and
 five less than 1000. It’s worked out that we need to use all seven
 numbers sixty-six times and then four more.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;7 66 * 4 +&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;7 66 * 4 +&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">466</span>
 </pre></div>
 </div>
 <p>If we drive our generator 466 times and sum the stack we get 999.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">57</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mf">1.</span><span class="n">check</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">direco</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times pop enstacken sum&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times pop enstacken sum&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">999</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="project-euler-problem-one">
+</section>
+</section>
+<section id="project-euler-problem-one">
 <h2>Project Euler Problem One<a class="headerlink" href="#project-euler-problem-one" title="Permalink to this headline">¶</a></h2>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.2 == + dup [+] dip&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE1.2 == + dup [+] dip&#39;)
 </pre></div>
 </div>
 <p>Now we can add <code class="docutils literal notranslate"><span class="pre">PE1.2</span></code> to the quoted program given to <code class="docutils literal notranslate"><span class="pre">G</span></code>.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 0 [PE1.1.check PE1.1] G 466 [x [PE1.2] dip] times popop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;0 0 0 [PE1.1.check PE1.1] G 466 [x [PE1.2] dip] times popop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">233168</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="a-generator-for-the-fibonacci-sequence">
+</section>
+<section id="a-generator-for-the-fibonacci-sequence">
 <h2>A generator for the Fibonacci Sequence.<a class="headerlink" href="#a-generator-for-the-fibonacci-sequence" title="Permalink to this headline">¶</a></h2>
 <p>Consider:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">b</span> <span class="n">a</span> <span class="n">F</span><span class="p">]</span> <span class="n">x</span>
@@ -350,42 +351,43 @@ numbers sixty-six times and then four more.</p>
 <span class="n">fib_gen</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="n">F</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;fib == + [popdd over] cons infra uncons&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;fib == + [popdd over] cons infra uncons&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;fib_gen == [1 1 fib]&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;fib_gen == [1 1 fib]&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;fib_gen 10 [x] times&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;fib_gen 10 [x] times&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">5</span> <span class="mi">8</span> <span class="mi">13</span> <span class="mi">21</span> <span class="mi">34</span> <span class="mi">55</span> <span class="mi">89</span> <span class="p">[</span><span class="mi">144</span> <span class="mi">89</span> <span class="n">fib</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="project-euler-problem-two">
+</section>
+<section id="project-euler-problem-two">
 <h2>Project Euler Problem Two<a class="headerlink" href="#project-euler-problem-two" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div>By considering the terms in the Fibonacci sequence whose values do
-not exceed four million, find the sum of the even-valued terms.</div></blockquote>
+<div><p>By considering the terms in the Fibonacci sequence whose values do
+not exceed four million, find the sum of the even-valued terms.</p>
+</div></blockquote>
 <p>Now that we have a generator for the Fibonacci sequence, we need a
 function that adds a term in the sequence to a sum if it is even, and
 <code class="docutils literal notranslate"><span class="pre">pop</span></code>s it otherwise.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE2.1 == dup 2 % [+] [pop] branch&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE2.1 == dup 2 % [+] [pop] branch&#39;)
 </pre></div>
 </div>
 <p>And a predicate function that detects when the terms in the series
 “exceed four million”.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;&gt;4M == 4000000 &gt;&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;&gt;4M == 4000000 &gt;&#39;)
 </pre></div>
 </div>
 <p>Now it’s straightforward to define <code class="docutils literal notranslate"><span class="pre">PE2</span></code> as a recursive function that
 generates terms in the Fibonacci sequence until they exceed four million
 and sums the even ones.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE2 == 0 fib_gen x [pop &gt;4M] [popop] [[PE2.1] dip x] primrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE2 == 0 fib_gen x [pop &gt;4M] [popop] [[PE2.1] dip x] primrec&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE2&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;PE2&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">4613732</span>
@@ -402,7 +404,7 @@ and sums the even ones.</p>
 <span class="n">PE2</span> <span class="o">==</span> <span class="mi">0</span> <span class="n">fib_gen</span> <span class="n">x</span> <span class="p">[</span><span class="n">pop</span> <span class="o">&gt;</span><span class="mi">4</span><span class="n">M</span><span class="p">]</span> <span class="p">[</span><span class="n">popop</span><span class="p">]</span> <span class="p">[[</span><span class="n">PE2</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">dip</span> <span class="n">x</span><span class="p">]</span> <span class="n">primrec</span>
 </pre></div>
 </div>
-<div class="section" id="even-valued-fibonacci-terms">
+<section id="even-valued-fibonacci-terms">
 <h3>Even-valued Fibonacci Terms<a class="headerlink" href="#even-valued-fibonacci-terms" title="Permalink to this headline">¶</a></h3>
 <p>Using <code class="docutils literal notranslate"><span class="pre">o</span></code> for odd and <code class="docutils literal notranslate"><span class="pre">e</span></code> for even:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">o</span> <span class="o">+</span> <span class="n">o</span> <span class="o">=</span> <span class="n">e</span>
@@ -416,23 +418,23 @@ and sums the even ones.</p>
 </pre></div>
 </div>
 <p>Every third term is even.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 0 fib] x x x&#39;</span><span class="p">)</span>  <span class="c1"># To start the sequence with 1 1 2 3 instead of 1 2 3.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 0 fib] x x x&#39;)  # To start the sequence with 1 1 2 3 instead of 1 2 3.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">2</span> <span class="n">fib</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Drive the generator three times and <code class="docutils literal notranslate"><span class="pre">popop</span></code> the two odd terms.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 0 fib] x x x [popop] dipd&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 0 fib] x x x [popop] dipd&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">2</span> <span class="n">fib</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE2.2 == x x x [popop] dipd&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE2.2 == x x x [popop] dipd&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 0 fib] 10 [PE2.2] times&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 0 fib] 10 [PE2.2] times&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="mi">8</span> <span class="mi">34</span> <span class="mi">144</span> <span class="mi">610</span> <span class="mi">2584</span> <span class="mi">10946</span> <span class="mi">46368</span> <span class="mi">196418</span> <span class="mi">832040</span> <span class="p">[</span><span class="mi">1346269</span> <span class="mi">832040</span> <span class="n">fib</span><span class="p">]</span>
@@ -440,25 +442,25 @@ and sums the even ones.</p>
 </div>
 <p>Replace <code class="docutils literal notranslate"><span class="pre">x</span></code> with our new driver function <code class="docutils literal notranslate"><span class="pre">PE2.2</span></code> and start our
 <code class="docutils literal notranslate"><span class="pre">fib</span></code> generator at <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">0</span></code>.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 [1 0 fib] PE2.2 [pop &gt;4M] [popop] [[PE2.1] dip PE2.2] primrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;0 [1 0 fib] PE2.2 [pop &gt;4M] [popop] [[PE2.1] dip PE2.2] primrec&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">4613732</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="how-to-compile-these">
+</section>
+</section>
+<section id="how-to-compile-these">
 <h2>How to compile these?<a class="headerlink" href="#how-to-compile-these" title="Permalink to this headline">¶</a></h2>
 <p>You would probably start with a special version of <code class="docutils literal notranslate"><span class="pre">G</span></code>, and perhaps
 modifications to the default <code class="docutils literal notranslate"><span class="pre">x</span></code>?</p>
-</div>
-<div class="section" id="an-interesting-variation">
+</section>
+<section id="an-interesting-variation">
 <h2>An Interesting Variation<a class="headerlink" href="#an-interesting-variation" title="Permalink to this headline">¶</a></h2>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;codireco == cons dip rest cons&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;codireco == cons dip rest cons&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[0 [dup ++] codireco] x&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;[0 [dup ++] codireco] x&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                 <span class="o">.</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="n">x</span>
@@ -477,49 +479,64 @@ modifications to the default <code class="docutils literal notranslate"><span cl
          <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;G == [codireco] cons cons&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;G == [codireco] cons cons&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;230 [dup ++] G 5 [x] times pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;230 [dup ++] G 5 [x] times pop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">230</span> <span class="mi">231</span> <span class="mi">232</span> <span class="mi">233</span> <span class="mi">234</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a><ul>
-<li><a class="reference internal" href="#direco"><code class="docutils literal notranslate"><span class="pre">direco</span></code></a></li>
-<li><a class="reference internal" href="#making-generators">Making Generators</a><ul>
-<li><a class="reference internal" href="#powers-of-2">Powers of 2</a></li>
-<li><a class="reference internal" href="#x-times"><code class="docutils literal notranslate"><span class="pre">[x]</span> <span class="pre">times</span></code></a></li>
+<h1 class="logo"><a href="../index.html">Thun</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Intro.html">Thun: Joy in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joy.html">Joy Interpreter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack.html">Stack or Quote or Sequence or List…</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parser.html">Parsing Text into Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pretty.html">Tracing Joy Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lib.html">Functions Grouped by, er, Function with Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../types.html">Type Inference of Joy Expressions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Essays about Programming in Joy</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Developing.html">Developing a Program in Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Quadratic.html">Quadratic formula</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replacing.html">Replacing Functions in the Dictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Recursion_Combinators.html">Recursion Combinators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ordered_Binary_Trees.html">Treating Trees I: Ordered Binary Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Treestep.html">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Newton-Raphson.html">Newton’s method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Zipper.html">Traversing Datastructures with Zippers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Types.html">The Blissful Elegance of Typing Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeChecking.html">Type Checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NoUpdates.html">No Updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Categorical.html">Categorical Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="The_Four_Operations.html">The Four Fundamental Operations of Definite Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html">∂RE</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#generating-multiples-of-three-and-five">Generating Multiples of Three and Five</a><ul>
-<li><a class="reference internal" href="#reset-at-zero">Reset at Zero</a></li>
-<li><a class="reference internal" href="#run-466-times">Run 466 times</a></li>
 </ul>
-</li>
-<li><a class="reference internal" href="#project-euler-problem-one">Project Euler Problem One</a></li>
-<li><a class="reference internal" href="#a-generator-for-the-fibonacci-sequence">A generator for the Fibonacci Sequence.</a></li>
-<li><a class="reference internal" href="#project-euler-problem-two">Project Euler Problem Two</a><ul>
-<li><a class="reference internal" href="#even-valued-fibonacci-terms">Even-valued Fibonacci Terms</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#how-to-compile-these">How to compile these?</a></li>
-<li><a class="reference internal" href="#an-interesting-variation">An Interesting Variation</a></li>
-</ul>
-</li>
-</ul>
+
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -531,25 +548,24 @@ modifications to the default <code class="docutils literal notranslate"><span cl
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/notebooks/Generator_Programs.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -560,7 +576,7 @@ modifications to the default <code class="docutils literal notranslate"><span cl
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
     </div>
 
   </body>

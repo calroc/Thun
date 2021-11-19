@@ -1,19 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Developing a Program in Joy &#8212; Thun 0.4.1 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Quadratic formula" href="Quadratic.html" />
@@ -30,28 +30,30 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="developing-a-program-in-joy">
+  <section id="developing-a-program-in-joy">
 <h1>Developing a Program in Joy<a class="headerlink" href="#developing-a-program-in-joy" title="Permalink to this headline">¶</a></h1>
 <p>As an example of developing a program in Joy let’s take the first problem from the Project Euler website.</p>
-<div class="section" id="project-euler-first-problem-multiples-of-3-and-5">
+<section id="project-euler-first-problem-multiples-of-3-and-5">
 <h2><a class="reference external" href="https://projecteuler.net/problem=1">Project Euler, first problem: “Multiples of 3 and 5”</a><a class="headerlink" href="#project-euler-first-problem-multiples-of-3-and-5" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.</p>
 <p>Find the sum of all the multiples of 3 or 5 below 1000.</p>
 </div></blockquote>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from notebook_preamble import J, V, define
 </pre></div>
 </div>
-<div class="section" id="sum-a-range-filtered-by-a-predicate">
+<section id="sum-a-range-filtered-by-a-predicate">
 <h3>Sum a range filtered by a predicate<a class="headerlink" href="#sum-a-range-filtered-by-a-predicate" title="Permalink to this headline">¶</a></h3>
 <p>Let’s create a predicate that returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if a number is a multiple
 of 3 or 5 and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;P == [3 % not] dupdip 5 % not or&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;P == [3 % not] dupdip 5 % not or&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;80 P&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;80 P&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>             <span class="o">.</span> <span class="mi">80</span> <span class="n">P</span>
@@ -80,8 +82,8 @@ should be; we generate one thousand integers but actually use less than
 half of them. A better solution would be to generate just the multiples
 we want to sum, and to add them as we go rather than storing them and
 and summing them at the end.</p>
-</div>
-<div class="section" id="generate-just-the-multiples">
+</section>
+<section id="generate-just-the-multiples">
 <h3>Generate just the multiples<a class="headerlink" href="#generate-just-the-multiples" title="Permalink to this headline">¶</a></h3>
 <p>At first I had the idea to use two counters and increase them by three
 and five, respectively. This way we only generate the terms that we
@@ -114,10 +116,10 @@ the counter to the running sum. This function will do that:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PE1</span><span class="o">.</span><span class="mi">1</span> <span class="o">==</span> <span class="o">+</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">dupdip</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.1 == + [+] dupdip&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE1.1 == + [+] dupdip&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 3 PE1.1&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;0 0 3 PE1.1&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        <span class="o">.</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">3</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">1</span>
@@ -132,7 +134,7 @@ the counter to the running sum. This function will do that:</p>
     <span class="mi">3</span> <span class="mi">3</span> <span class="o">.</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 [3 2 1 3 1 2 3] [PE1.1] step&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;0 0 [3 2 1 3 1 2 3] [PE1.1] step&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                            <span class="o">.</span> <span class="mi">0</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mi">1</span><span class="p">]</span> <span class="n">step</span>
@@ -212,29 +214,29 @@ the counter to the running sum. This function will do that:</p>
 </div>
 <p>So one <code class="docutils literal notranslate"><span class="pre">step</span></code> through all seven terms brings the counter to 15 and the
 total to 60.</p>
-</div>
-<div class="section" id="how-many-multiples-to-sum">
+</section>
+<section id="how-many-multiples-to-sum">
 <h3>How many multiples to sum?<a class="headerlink" href="#how-many-multiples-to-sum" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1000</span> <span class="o">/</span> <span class="mi">15</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>1000 / 15
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">66</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">66</span> <span class="o">*</span> <span class="mi">15</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>66 * 15
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">990</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1000</span> <span class="o">-</span> <span class="mi">990</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>1000 - 990
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span>
 </pre></div>
 </div>
 <p>We only want the terms <em>less than</em> 1000.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">999</span> <span class="o">-</span> <span class="mi">990</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>999 - 990
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">9</span>
@@ -242,17 +244,17 @@ total to 60.</p>
 </div>
 <p>That means we want to run the full list of numbers sixty-six times to
 get to 990 and then the first four numbers 3 2 1 3 to get to 999.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1 == 0 0 66 [[3 2 1 3 1 2 3] [PE1.1] step] times [3 2 1 3] [PE1.1] step pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE1 == 0 0 66 [[3 2 1 3 1 2 3] [PE1.1] step] times [3 2 1 3] [PE1.1] step pop&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;PE1&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">233168</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="packing-the-terms-into-an-integer">
+</section>
+<section id="packing-the-terms-into-an-integer">
 <h3>Packing the terms into an integer<a class="headerlink" href="#packing-the-terms-into-an-integer" title="Permalink to this headline">¶</a></h3>
 <p>This form uses no extra storage and produces no unused summands. It’s
 good but there’s one more trick we can apply. The list of seven terms
@@ -265,16 +267,16 @@ integer terms from the list.</p>
 <span class="mi">0</span><span class="n">b</span> <span class="mi">11</span> <span class="mi">10</span> <span class="mi">01</span> <span class="mi">11</span> <span class="mi">01</span> <span class="mi">10</span> <span class="mi">11</span> <span class="o">==</span> <span class="mi">14811</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mb">0b11100111011011</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>0b11100111011011
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">14811</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.2 == [3 &amp; PE1.1] dupdip 2 &gt;&gt;&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE1.2 == [3 &amp; PE1.1] dupdip 2 &gt;&gt;&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 14811 PE1.2&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;0 0 14811 PE1.2&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                      <span class="o">.</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">14811</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">2</span>
@@ -297,7 +299,7 @@ integer terms from the list.</p>
              <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3702</span> <span class="o">.</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;3 3 3702 PE1.2&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;3 3 3702 PE1.2&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                     <span class="o">.</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3702</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">2</span>
@@ -320,7 +322,7 @@ integer terms from the list.</p>
              <span class="mi">8</span> <span class="mi">5</span> <span class="mi">925</span> <span class="o">.</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 0 14811 7 [PE1.2] times pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;0 0 14811 7 [PE1.2] times pop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                      <span class="o">.</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">14811</span> <span class="mi">7</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mi">2</span><span class="p">]</span> <span class="n">times</span> <span class="n">pop</span>
@@ -457,17 +459,17 @@ integer terms from the list.</p>
 </pre></div>
 </div>
 <p>And so we have at last:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1 == 0 0 66 [14811 7 [PE1.2] times pop] times 14811 4 [PE1.2] times popop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE1 == 0 0 66 [14811 7 [PE1.2] times pop] times 14811 4 [PE1.2] times popop&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;PE1&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">233168</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="let-s-refactor">
+</section>
+<section id="let-s-refactor">
 <h3>Let’s refactor<a class="headerlink" href="#let-s-refactor" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="mi">14811</span> <span class="mi">7</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mi">2</span><span class="p">]</span> <span class="n">times</span> <span class="n">pop</span>
   <span class="mi">14811</span> <span class="mi">4</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mi">2</span><span class="p">]</span> <span class="n">times</span> <span class="n">pop</span>
@@ -475,14 +477,14 @@ integer terms from the list.</p>
 <span class="n">n</span> <span class="mi">14811</span> <span class="n">swap</span> <span class="p">[</span><span class="n">PE1</span><span class="o">.</span><span class="mi">2</span><span class="p">]</span> <span class="n">times</span> <span class="n">pop</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.3 == 14811 swap [PE1.2] times pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE1.3 == 14811 swap [PE1.2] times pop&#39;)
 </pre></div>
 </div>
 <p>Now we can simplify the definition above:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;PE1&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">233168</span>
@@ -497,18 +499,18 @@ I hope it’s clear.</p>
 <span class="n">PE1</span> <span class="o">==</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">66</span> <span class="p">[</span><span class="mi">7</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">3</span><span class="p">]</span> <span class="n">times</span> <span class="mi">4</span> <span class="n">PE1</span><span class="o">.</span><span class="mi">3</span> <span class="n">pop</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="generator-version">
+</section>
+</section>
+<section id="generator-version">
 <h2>Generator Version<a class="headerlink" href="#generator-version" title="Permalink to this headline">¶</a></h2>
 <p>It’s a little clunky iterating sixty-six times though the seven numbers
 then four more. In the <em>Generator Programs</em> notebook we derive a
 generator that can be repeatedly driven by the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator to
 produce a stream of the seven numbers repeating over and over again.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;PE1.terms == [0 swap [dup [pop 14811] [] branch [3 &amp;] dupdip 2 &gt;&gt;] dip rest cons]&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;PE1.terms == [0 swap [dup [pop 14811] [] branch [3 &amp;] dupdip 2 &gt;&gt;] dip rest cons]&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1.terms 21 [x] times&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;PE1.terms 21 [x] times&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">0</span> <span class="n">swap</span> <span class="p">[</span><span class="n">dup</span> <span class="p">[</span><span class="n">pop</span> <span class="mi">14811</span><span class="p">]</span> <span class="p">[]</span> <span class="n">branch</span> <span class="p">[</span><span class="mi">3</span> <span class="o">&amp;</span><span class="p">]</span> <span class="n">dupdip</span> <span class="mi">2</span> <span class="o">&gt;&gt;</span><span class="p">]</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span><span class="p">]</span>
@@ -516,19 +518,19 @@ produce a stream of the seven numbers repeating over and over again.</p>
 </div>
 <p>We know from above that we need sixty-six times seven then four more
 terms to reach up to but not over one thousand.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;7 66 * 4 +&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;7 66 * 4 +&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">466</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;PE1.terms 466 [x] times pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;PE1.terms 466 [x] times pop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[PE1.terms 466 [x] times pop] run sum&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[PE1.terms 466 [x] times pop] run sum&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">999</span>
@@ -537,18 +539,18 @@ terms to reach up to but not over one thousand.</p>
 <p>Now we can use <code class="docutils literal notranslate"><span class="pre">PE1.1</span></code> to accumulate the terms as we go, and then
 <code class="docutils literal notranslate"><span class="pre">pop</span></code> the generator and the counter from the stack when we’re done,
 leaving just the sum.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 PE1.terms 466 [x [PE1.1] dip] times popop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;0 0 PE1.terms 466 [x [PE1.1] dip] times popop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">233168</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="a-little-further-analysis-renders-iteration-unnecessary">
+</section>
+<section id="a-little-further-analysis-renders-iteration-unnecessary">
 <h2>A little further analysis renders iteration unnecessary.<a class="headerlink" href="#a-little-further-analysis-renders-iteration-unnecessary" title="Permalink to this headline">¶</a></h2>
 <p>Consider finding the sum of the positive integers less than or equal to
 ten.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[10 9 8 7 6 5 4 3 2 1] sum&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[10 9 8 7 6 5 4 3 2 1] sum&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">55</span>
@@ -571,10 +573,10 @@ positive integers is:</p>
 </div>
 <p>(The formula also works for odd values of N, I’ll leave that to you if
 you want to work it out or you can take my word for it.)</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;F == dup ++ * 2 floordiv&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;F == dup ++ * 2 floordiv&#39;)
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;10 F&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;10 F&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="o">.</span> <span class="mi">10</span> <span class="n">F</span>
@@ -598,13 +600,13 @@ each, starting with:</p>
 </pre></div>
 </div>
 <p>If we reverse one of these two blocks and sum pairs…</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">978</span> <span class="mi">15</span><span class="p">]</span> <span class="p">[</span><span class="mi">980</span> <span class="mi">12</span><span class="p">]</span> <span class="p">[</span><span class="mi">981</span> <span class="mi">10</span><span class="p">]</span> <span class="p">[</span><span class="mi">984</span> <span class="mi">9</span><span class="p">]</span> <span class="p">[</span><span class="mi">985</span> <span class="mi">6</span><span class="p">]</span> <span class="p">[</span><span class="mi">987</span> <span class="mi">5</span><span class="p">]</span> <span class="p">[</span><span class="mi">990</span> <span class="mi">3</span><span class="p">]]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip [sum] map&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip [sum] map&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">993</span> <span class="mi">992</span> <span class="mi">991</span> <span class="mi">993</span> <span class="mi">991</span> <span class="mi">992</span> <span class="mi">993</span><span class="p">]</span>
@@ -612,7 +614,7 @@ each, starting with:</p>
 </div>
 <p>(Interesting that the sequence of seven numbers appears again in the
 rightmost digit of each term.)</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[ 3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip [sum] map sum&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[ 3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip [sum] map sum&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6945</span>
@@ -626,7 +628,7 @@ additional unpaired terms between 990 and 1000:</p>
 </div>
 <p>So we can give the “sum of all the multiples of 3 or 5 below 1000” like
 so:</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;6945 33 * [993 995 996 999] cons sum&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;6945 33 * [993 995 996 999] cons sum&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">233168</span>
@@ -648,8 +650,8 @@ directly from the diagram: 4 3 1 4 2 2 4 1 3 4.</p>
 <em>lcm</em> don’t matter, the pattern they make will always be symmetrical
 around its midpoint. The same reasoning holds for multiples of more than
 two numbers.</p>
-</div>
-<div class="section" id="the-simplest-program">
+</section>
+<section id="the-simplest-program">
 <h2>The Simplest Program<a class="headerlink" href="#the-simplest-program" title="Permalink to this headline">¶</a></h2>
 <p>Of course, the simplest joy program for the first Project Euler problem
 is just:</p>
@@ -657,32 +659,55 @@ is just:</p>
 </pre></div>
 </div>
 <p>Fin.</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Developing a Program in Joy</a><ul>
-<li><a class="reference internal" href="#project-euler-first-problem-multiples-of-3-and-5">Project Euler, first problem: “Multiples of 3 and 5”</a><ul>
-<li><a class="reference internal" href="#sum-a-range-filtered-by-a-predicate">Sum a range filtered by a predicate</a></li>
-<li><a class="reference internal" href="#generate-just-the-multiples">Generate just the multiples</a></li>
-<li><a class="reference internal" href="#how-many-multiples-to-sum">How many multiples to sum?</a></li>
-<li><a class="reference internal" href="#packing-the-terms-into-an-integer">Packing the terms into an integer</a></li>
-<li><a class="reference internal" href="#let-s-refactor">Let’s refactor</a></li>
+<h1 class="logo"><a href="../index.html">Thun</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Intro.html">Thun: Joy in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joy.html">Joy Interpreter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack.html">Stack or Quote or Sequence or List…</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parser.html">Parsing Text into Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pretty.html">Tracing Joy Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lib.html">Functions Grouped by, er, Function with Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../types.html">Type Inference of Joy Expressions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Essays about Programming in Joy</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Developing a Program in Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Quadratic.html">Quadratic formula</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replacing.html">Replacing Functions in the Dictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Recursion_Combinators.html">Recursion Combinators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ordered_Binary_Trees.html">Treating Trees I: Ordered Binary Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Treestep.html">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Generator_Programs.html">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Newton-Raphson.html">Newton’s method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Zipper.html">Traversing Datastructures with Zippers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Types.html">The Blissful Elegance of Typing Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeChecking.html">Type Checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NoUpdates.html">No Updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Categorical.html">Categorical Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="The_Four_Operations.html">The Four Fundamental Operations of Definite Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html">∂RE</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#generator-version">Generator Version</a></li>
-<li><a class="reference internal" href="#a-little-further-analysis-renders-iteration-unnecessary">A little further analysis renders iteration unnecessary.</a></li>
-<li><a class="reference internal" href="#the-simplest-program">The Simplest Program</a></li>
 </ul>
-</li>
-</ul>
+
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -694,25 +719,24 @@ is just:</p>
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/notebooks/Developing.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -723,7 +747,7 @@ is just:</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
     </div>
 
   </body>

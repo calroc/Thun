@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>∂RE &#8212; Thun 0.4.1 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="The Four Fundamental Operations of Definite Action" href="The_Four_Operations.html" />
@@ -29,11 +28,13 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="re">
+  <section id="re">
 <h1>∂RE<a class="headerlink" href="#re" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="brzozowskis-derivatives-of-regular-expressions">
+<section id="brzozowskis-derivatives-of-regular-expressions">
 <h2>Brzozowski’s Derivatives of Regular Expressions<a class="headerlink" href="#brzozowskis-derivatives-of-regular-expressions" title="Permalink to this headline">¶</a></h2>
 <p>Legend:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>∧ intersection
@@ -92,33 +93,33 @@ R∘λ = λ∘R = R
 <p>{a∘b for a in A for b in B}</p>
 <p>E.g.:</p>
 <p>{‘a’, ‘b’}∘{‘c’, ‘d’} → {‘ac’, ‘ad’, ‘bc’, ‘bd’}</p>
-</div>
-<div class="section" id="implementation">
+</section>
+<section id="implementation">
 <h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span> <span class="k">as</span> <span class="n">curry</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">product</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span> <span class="k">as</span> <span class="n">curry</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 </pre></div>
 </div>
-<div class="section" id="and">
+<section id="and">
 <h3><code class="docutils literal notranslate"><span class="pre">ϕ</span></code> and <code class="docutils literal notranslate"><span class="pre">λ</span></code><a class="headerlink" href="#and" title="Permalink to this headline">¶</a></h3>
 <p>The empty set and the set of just the empty string.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>   <span class="c1"># ϕ</span>
-<span class="n">y</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;&#39;</span><span class="p">})</span> <span class="c1"># λ</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>phi = frozenset()   # ϕ
+y = frozenset({&#39;&#39;}) # λ
 </pre></div>
 </div>
-</div>
-<div class="section" id="two-letter-alphabet">
+</section>
+<section id="two-letter-alphabet">
 <h3>Two-letter Alphabet<a class="headerlink" href="#two-letter-alphabet" title="Permalink to this headline">¶</a></h3>
 <p>I’m only going to use two symbols (at first) becaase this is enough to
 illustrate the algorithm and because you can represent any other
 alphabet with two symbols (if you had to.)</p>
 <p>I chose the names <code class="docutils literal notranslate"><span class="pre">O</span></code> and <code class="docutils literal notranslate"><span class="pre">l</span></code> (uppercase “o” and lowercase “L”) to
 look like <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code> (zero and one) respectively.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">syms</span> <span class="o">=</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;0&#39;</span><span class="p">}),</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;1&#39;</span><span class="p">})</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>syms = O, l = frozenset({&#39;0&#39;}), frozenset({&#39;1&#39;})
 </pre></div>
 </div>
-</div>
-<div class="section" id="representing-regular-expressions">
+</section>
+<section id="representing-regular-expressions">
 <h3>Representing Regular Expressions<a class="headerlink" href="#representing-regular-expressions" title="Permalink to this headline">¶</a></h3>
 <p>To represent REs in Python I’m going to use tagged tuples. A <em>regular
 expression</em> is one of:</p>
@@ -132,64 +133,64 @@ expression</em> is one of:</p>
 </pre></div>
 </div>
 <p>Where <code class="docutils literal notranslate"><span class="pre">R</span></code> and <code class="docutils literal notranslate"><span class="pre">S</span></code> stand for <em>regular expressions</em>.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AND</span><span class="p">,</span> <span class="n">CONS</span><span class="p">,</span> <span class="n">KSTAR</span><span class="p">,</span> <span class="n">NOT</span><span class="p">,</span> <span class="n">OR</span> <span class="o">=</span> <span class="s1">&#39;and cons * not or&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  <span class="c1"># Tags are just strings.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>AND, CONS, KSTAR, NOT, OR = &#39;and cons * not or&#39;.split()  # Tags are just strings.
 </pre></div>
 </div>
 <p>Because they are formed of <code class="docutils literal notranslate"><span class="pre">frozenset</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code> and <code class="docutils literal notranslate"><span class="pre">str</span></code> objects
 only, these datastructures are immutable.</p>
-</div>
-<div class="section" id="string-representation-of-re-datastructures">
+</section>
+<section id="string-representation-of-re-datastructures">
 <h3>String Representation of RE Datastructures<a class="headerlink" href="#string-representation-of-re-datastructures" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Return a nice string repr for a regular expression datastructure.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">re</span> <span class="o">==</span> <span class="n">I</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;.&#39;</span>
-    <span class="k">if</span> <span class="n">re</span> <span class="ow">in</span> <span class="n">syms</span><span class="p">:</span> <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">re</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">re</span> <span class="o">==</span> <span class="n">y</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;^&#39;</span>
-    <span class="k">if</span> <span class="n">re</span> <span class="o">==</span> <span class="n">phi</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;X&#39;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>def stringy(re):
+    &#39;&#39;&#39;
+    Return a nice string repr for a regular expression datastructure.
+    &#39;&#39;&#39;
+    if re == I: return &#39;.&#39;
+    if re in syms: return next(iter(re))
+    if re == y: return &#39;^&#39;
+    if re == phi: return &#39;X&#39;
 
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">re</span><span class="p">)</span>
-    <span class="n">tag</span> <span class="o">=</span> <span class="n">re</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    assert isinstance(re, tuple), repr(re)
+    tag = re[0]
 
-    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">KSTAR</span><span class="p">:</span>
-        <span class="n">body</span> <span class="o">=</span> <span class="n">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">body</span><span class="p">:</span> <span class="k">return</span> <span class="n">body</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">body</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="s2">&quot;)*&quot;</span>
-        <span class="k">return</span> <span class="n">body</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span>
+    if tag == KSTAR:
+        body = stringy(re[1])
+        if not body: return body
+        if len(body) &gt; 1: return &#39;(&#39; + body + &quot;)*&quot;
+        return body + &#39;*&#39;
 
-    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">NOT</span><span class="p">:</span>
-        <span class="n">body</span> <span class="o">=</span> <span class="n">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">body</span><span class="p">:</span> <span class="k">return</span> <span class="n">body</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">body</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">body</span> <span class="o">+</span> <span class="s2">&quot;)&#39;&quot;</span>
-        <span class="k">return</span> <span class="n">body</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+    if tag == NOT:
+        body = stringy(re[1])
+        if not body: return body
+        if len(body) &gt; 1: return &#39;(&#39; + body + &quot;)&#39;&quot;
+        return body + &quot;&#39;&quot;
 
-    <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">CONS</span><span class="p">:</span> <span class="k">return</span> <span class="n">r</span> <span class="o">+</span> <span class="n">s</span>
-    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">OR</span><span class="p">:</span>   <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> | </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">AND</span><span class="p">:</span>  <span class="k">return</span> <span class="s1">&#39;(</span><span class="si">%s</span><span class="s1">) &amp; (</span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    r, s = stringy(re[1]), stringy(re[2])
+    if tag == CONS: return r + s
+    if tag == OR:   return &#39;%s | %s&#39; % (r, s)
+    if tag == AND:  return &#39;(%s) &amp; (%s)&#39; % (r, s)
 
-    <span class="k">raise</span> <span class="ne">ValueError</span>
+    raise ValueError
 </pre></div>
 </div>
-</div>
-<div class="section" id="i">
+</section>
+<section id="i">
 <h3><code class="docutils literal notranslate"><span class="pre">I</span></code><a class="headerlink" href="#i" title="Permalink to this headline">¶</a></h3>
 <p>Match anything. Often spelled “.”</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">|</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="n">KSTAR</span><span class="p">,</span> <span class="p">(</span><span class="n">OR</span><span class="p">,</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>I = (KSTAR, (OR, O, l))
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">stringy</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>print stringy(I)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h3><code class="docutils literal notranslate"><span class="pre">(.111.)</span> <span class="pre">&amp;</span> <span class="pre">(.01</span> <span class="pre">+</span> <span class="pre">11*)'</span></code><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>The example expression from Brzozowski:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">.</span><span class="mf">111.</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">.</span><span class="mi">01</span> <span class="o">+</span> <span class="mi">11</span><span class="o">*</span><span class="p">)</span><span class="s1">&#39;</span>
@@ -197,223 +198,223 @@ only, these datastructures are immutable.</p>
 </pre></div>
 </div>
 <p>Note that it contains one of everything.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">I</span><span class="p">))))</span>
-<span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
-<span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">KSTAR</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
-<span class="n">it</span> <span class="o">=</span> <span class="p">(</span><span class="n">AND</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">NOT</span><span class="p">,</span> <span class="p">(</span><span class="n">OR</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)))</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>a = (CONS, I, (CONS, l, (CONS, l, (CONS, l, I))))
+b = (CONS, I, (CONS, O, l))
+c = (CONS, l, (KSTAR, l))
+it = (AND, a, (NOT, (OR, b, c)))
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">stringy</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>print stringy(it)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">.</span><span class="mf">111.</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="o">.</span><span class="mi">01</span> <span class="o">|</span> <span class="mi">11</span><span class="o">*</span><span class="p">)</span><span class="s1">&#39;)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="nully">
+</section>
+<section id="nully">
 <h3><code class="docutils literal notranslate"><span class="pre">nully()</span></code><a class="headerlink" href="#nully" title="Permalink to this headline">¶</a></h3>
 <p>Let’s get that auxiliary predicate function <code class="docutils literal notranslate"><span class="pre">δ</span></code> out of the way.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">nully</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    δ - Return λ if λ ⊆ R otherwise ϕ.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>def nully(R):
+    &#39;&#39;&#39;
+    δ - Return λ if λ ⊆ R otherwise ϕ.
+    &#39;&#39;&#39;
 
-    <span class="c1"># δ(a) → ϕ</span>
-    <span class="c1"># δ(ϕ) → ϕ</span>
-    <span class="k">if</span> <span class="n">R</span> <span class="ow">in</span> <span class="n">syms</span> <span class="ow">or</span> <span class="n">R</span> <span class="o">==</span> <span class="n">phi</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">phi</span>
+    # δ(a) → ϕ
+    # δ(ϕ) → ϕ
+    if R in syms or R == phi:
+        return phi
 
-    <span class="c1"># δ(λ) → λ</span>
-    <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="n">y</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">y</span>
+    # δ(λ) → λ
+    if R == y:
+        return y
 
-    <span class="n">tag</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    tag = R[0]
 
-    <span class="c1"># δ(R*) → λ</span>
-    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">KSTAR</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">y</span>
+    # δ(R*) → λ
+    if tag == KSTAR:
+        return y
 
-    <span class="c1"># δ(¬R) δ(R)≟ϕ → λ</span>
-    <span class="c1"># δ(¬R) δ(R)≟λ → ϕ</span>
-    <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">NOT</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">phi</span> <span class="k">if</span> <span class="n">nully</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">else</span> <span class="n">y</span>
+    # δ(¬R) δ(R)≟ϕ → λ
+    # δ(¬R) δ(R)≟λ → ϕ
+    if tag == NOT:
+        return phi if nully(R[1]) else y
 
-    <span class="c1"># δ(R∘S) → δ(R) ∧ δ(S)</span>
-    <span class="c1"># δ(R ∧ S) → δ(R) ∧ δ(S)</span>
-    <span class="c1"># δ(R ∨ S) → δ(R) ∨ δ(S)</span>
-    <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">nully</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">nully</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">r</span> <span class="o">&amp;</span> <span class="n">s</span> <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="p">{</span><span class="n">AND</span><span class="p">,</span> <span class="n">CONS</span><span class="p">}</span> <span class="k">else</span> <span class="n">r</span> <span class="o">|</span> <span class="n">s</span>
+    # δ(R∘S) → δ(R) ∧ δ(S)
+    # δ(R ∧ S) → δ(R) ∧ δ(S)
+    # δ(R ∨ S) → δ(R) ∨ δ(S)
+    r, s = nully(R[1]), nully(R[2])
+    return r &amp; s if tag in {AND, CONS} else r | s
 </pre></div>
 </div>
-</div>
-<div class="section" id="no-compaction">
+</section>
+<section id="no-compaction">
 <h3>No “Compaction”<a class="headerlink" href="#no-compaction" title="Permalink to this headline">¶</a></h3>
 <p>This is the straightforward version with no “compaction”. It works fine,
 but does waaaay too much work because the expressions grow each
 derivation.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">D</span><span class="p">(</span><span class="n">symbol</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>def D(symbol):
 
-    <span class="k">def</span> <span class="nf">derv</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+    def derv(R):
 
-        <span class="c1"># ∂a(a) → λ</span>
-        <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="p">{</span><span class="n">symbol</span><span class="p">}:</span>
-            <span class="k">return</span> <span class="n">y</span>
+        # ∂a(a) → λ
+        if R == {symbol}:
+            return y
 
-        <span class="c1"># ∂a(λ) → ϕ</span>
-        <span class="c1"># ∂a(ϕ) → ϕ</span>
-        <span class="c1"># ∂a(¬a) → ϕ</span>
-        <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="n">y</span> <span class="ow">or</span> <span class="n">R</span> <span class="o">==</span> <span class="n">phi</span> <span class="ow">or</span> <span class="n">R</span> <span class="ow">in</span> <span class="n">syms</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">phi</span>
+        # ∂a(λ) → ϕ
+        # ∂a(ϕ) → ϕ
+        # ∂a(¬a) → ϕ
+        if R == y or R == phi or R in syms:
+            return phi
 
-        <span class="n">tag</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        tag = R[0]
 
-        <span class="c1"># ∂a(R*) → ∂a(R)∘R*</span>
-        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">KSTAR</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">R</span><span class="p">)</span>
+        # ∂a(R*) → ∂a(R)∘R*
+        if tag == KSTAR:
+            return (CONS, derv(R[1]), R)
 
-        <span class="c1"># ∂a(¬R) → ¬∂a(R)</span>
-        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">NOT</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">NOT</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        # ∂a(¬R) → ¬∂a(R)
+        if tag == NOT:
+            return (NOT, derv(R[1]))
 
-        <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        r, s = R[1:]
 
-        <span class="c1"># ∂a(R∘S) → ∂a(R)∘S ∨ δ(R)∘∂a(S)</span>
-        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">CONS</span><span class="p">:</span>
-            <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">s</span><span class="p">)</span>  <span class="c1"># A = ∂a(R)∘S</span>
-            <span class="c1"># A ∨ δ(R) ∘ ∂a(S)</span>
-            <span class="c1"># A ∨  λ   ∘ ∂a(S) → A ∨ ∂a(S)</span>
-            <span class="c1"># A ∨  ϕ   ∘ ∂a(S) → A ∨ ϕ → A</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">OR</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="k">if</span> <span class="n">nully</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">else</span> <span class="n">A</span>
+        # ∂a(R∘S) → ∂a(R)∘S ∨ δ(R)∘∂a(S)
+        if tag == CONS:
+            A = (CONS, derv(r), s)  # A = ∂a(R)∘S
+            # A ∨ δ(R) ∘ ∂a(S)
+            # A ∨  λ   ∘ ∂a(S) → A ∨ ∂a(S)
+            # A ∨  ϕ   ∘ ∂a(S) → A ∨ ϕ → A
+            return (OR, A, derv(s)) if nully(r) else A
 
-        <span class="c1"># ∂a(R ∧ S) → ∂a(R) ∧ ∂a(S)</span>
-        <span class="c1"># ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">derv</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+        # ∂a(R ∧ S) → ∂a(R) ∧ ∂a(S)
+        # ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
+        return (tag, derv(r), derv(s))
 
-    <span class="k">return</span> <span class="n">derv</span>
+    return derv
 </pre></div>
 </div>
-</div>
-<div class="section" id="compaction-rules">
+</section>
+<section id="compaction-rules">
 <h3>Compaction Rules<a class="headerlink" href="#compaction-rules" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_compaction_rule</span><span class="p">(</span><span class="n">relation</span><span class="p">,</span> <span class="n">one</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="n">b</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">one</span> <span class="k">else</span>  <span class="c1"># R*1 = 1*R = R</span>
-        <span class="n">a</span> <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="n">one</span> <span class="k">else</span>
-        <span class="n">zero</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">zero</span> <span class="ow">or</span> <span class="n">b</span> <span class="o">==</span> <span class="n">zero</span> <span class="k">else</span>  <span class="c1"># R*0 = 0*R = 0</span>
-        <span class="p">(</span><span class="n">relation</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-        <span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>def _compaction_rule(relation, one, zero, a, b):
+    return (
+        b if a == one else  # R*1 = 1*R = R
+        a if b == one else
+        zero if a == zero or b == zero else  # R*0 = 0*R = 0
+        (relation, a, b)
+        )
 </pre></div>
 </div>
 <p>An elegant symmetry.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># R ∧ I = I ∧ R = R</span>
-<span class="c1"># R ∧ ϕ = ϕ ∧ R = ϕ</span>
-<span class="n">_and</span> <span class="o">=</span> <span class="n">curry</span><span class="p">(</span><span class="n">_compaction_rule</span><span class="p">,</span> <span class="n">AND</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span># R ∧ I = I ∧ R = R
+# R ∧ ϕ = ϕ ∧ R = ϕ
+_and = curry(_compaction_rule, AND, I, phi)
 
-<span class="c1"># R ∨ ϕ = ϕ ∨ R = R</span>
-<span class="c1"># R ∨ I = I ∨ R = I</span>
-<span class="n">_or</span> <span class="o">=</span> <span class="n">curry</span><span class="p">(</span><span class="n">_compaction_rule</span><span class="p">,</span> <span class="n">OR</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">I</span><span class="p">)</span>
+# R ∨ ϕ = ϕ ∨ R = R
+# R ∨ I = I ∨ R = I
+_or = curry(_compaction_rule, OR, phi, I)
 
-<span class="c1"># R∘λ = λ∘R = R</span>
-<span class="c1"># R∘ϕ = ϕ∘R = ϕ</span>
-<span class="n">_cons</span> <span class="o">=</span> <span class="n">curry</span><span class="p">(</span><span class="n">_compaction_rule</span><span class="p">,</span> <span class="n">CONS</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+# R∘λ = λ∘R = R
+# R∘ϕ = ϕ∘R = ϕ
+_cons = curry(_compaction_rule, CONS, y, phi)
 </pre></div>
 </div>
-</div>
-<div class="section" id="memoizing">
+</section>
+<section id="memoizing">
 <h3>Memoizing<a class="headerlink" href="#memoizing" title="Permalink to this headline">¶</a></h3>
 <p>We can save re-processing by remembering results we have already
 computed. RE datastructures are immutable and the <code class="docutils literal notranslate"><span class="pre">derv()</span></code> functions
 are <em>pure</em> so this is fine.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Memo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>class Memo(object):
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">calls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hits</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mem</span> <span class="o">=</span> <span class="p">{}</span>
+    def __init__(self, f):
+        self.f = f
+        self.calls = self.hits = 0
+        self.mem = {}
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">calls</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">hits</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span>
+    def __call__(self, key):
+        self.calls += 1
+        try:
+            result = self.mem[key]
+            self.hits += 1
+        except KeyError:
+            result = self.mem[key] = self.f(key)
+        return result
 </pre></div>
 </div>
-</div>
-<div class="section" id="with-compaction">
+</section>
+<section id="with-compaction">
 <h3>With “Compaction”<a class="headerlink" href="#with-compaction" title="Permalink to this headline">¶</a></h3>
 <p>This version uses the rules above to perform compaction. It keeps the
 expressions from growing too large.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">D_compaction</span><span class="p">(</span><span class="n">symbol</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>def D_compaction(symbol):
 
-    <span class="nd">@Memo</span>
-    <span class="k">def</span> <span class="nf">derv</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+    @Memo
+    def derv(R):
 
-        <span class="c1"># ∂a(a) → λ</span>
-        <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="p">{</span><span class="n">symbol</span><span class="p">}:</span>
-            <span class="k">return</span> <span class="n">y</span>
+        # ∂a(a) → λ
+        if R == {symbol}:
+            return y
 
-        <span class="c1"># ∂a(λ) → ϕ</span>
-        <span class="c1"># ∂a(ϕ) → ϕ</span>
-        <span class="c1"># ∂a(¬a) → ϕ</span>
-        <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="n">y</span> <span class="ow">or</span> <span class="n">R</span> <span class="o">==</span> <span class="n">phi</span> <span class="ow">or</span> <span class="n">R</span> <span class="ow">in</span> <span class="n">syms</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">phi</span>
+        # ∂a(λ) → ϕ
+        # ∂a(ϕ) → ϕ
+        # ∂a(¬a) → ϕ
+        if R == y or R == phi or R in syms:
+            return phi
 
-        <span class="n">tag</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        tag = R[0]
 
-        <span class="c1"># ∂a(R*) → ∂a(R)∘R*</span>
-        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">KSTAR</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_cons</span><span class="p">(</span><span class="n">derv</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">R</span><span class="p">)</span>
+        # ∂a(R*) → ∂a(R)∘R*
+        if tag == KSTAR:
+            return _cons(derv(R[1]), R)
 
-        <span class="c1"># ∂a(¬R) → ¬∂a(R)</span>
-        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">NOT</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">NOT</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        # ∂a(¬R) → ¬∂a(R)
+        if tag == NOT:
+            return (NOT, derv(R[1]))
 
-        <span class="n">r</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        r, s = R[1:]
 
-        <span class="c1"># ∂a(R∘S) → ∂a(R)∘S ∨ δ(R)∘∂a(S)</span>
-        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">CONS</span><span class="p">:</span>
-            <span class="n">A</span> <span class="o">=</span> <span class="n">_cons</span><span class="p">(</span><span class="n">derv</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">s</span><span class="p">)</span>  <span class="c1"># A = ∂a(r)∘s</span>
-            <span class="c1"># A ∨ δ(R) ∘ ∂a(S)</span>
-            <span class="c1"># A ∨  λ   ∘ ∂a(S) → A ∨ ∂a(S)</span>
-            <span class="c1"># A ∨  ϕ   ∘ ∂a(S) → A ∨ ϕ → A</span>
-            <span class="k">return</span> <span class="n">_or</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">derv</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="k">if</span> <span class="n">nully</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">else</span> <span class="n">A</span>
+        # ∂a(R∘S) → ∂a(R)∘S ∨ δ(R)∘∂a(S)
+        if tag == CONS:
+            A = _cons(derv(r), s)  # A = ∂a(r)∘s
+            # A ∨ δ(R) ∘ ∂a(S)
+            # A ∨  λ   ∘ ∂a(S) → A ∨ ∂a(S)
+            # A ∨  ϕ   ∘ ∂a(S) → A ∨ ϕ → A
+            return _or(A, derv(s)) if nully(r) else A
 
-        <span class="c1"># ∂a(R ∧ S) → ∂a(R) ∧ ∂a(S)</span>
-        <span class="c1"># ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)</span>
-        <span class="n">dr</span><span class="p">,</span> <span class="n">ds</span> <span class="o">=</span> <span class="n">derv</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">derv</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">_and</span><span class="p">(</span><span class="n">dr</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span> <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="n">AND</span> <span class="k">else</span> <span class="n">_or</span><span class="p">(</span><span class="n">dr</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+        # ∂a(R ∧ S) → ∂a(R) ∧ ∂a(S)
+        # ∂a(R ∨ S) → ∂a(R) ∨ ∂a(S)
+        dr, ds = derv(r), derv(s)
+        return _and(dr, ds) if tag == AND else _or(dr, ds)
 
-    <span class="k">return</span> <span class="n">derv</span>
+    return derv
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="lets-try-it-out">
+</section>
+</section>
+<section id="lets-try-it-out">
 <h2>Let’s try it out…<a class="headerlink" href="#lets-try-it-out" title="Permalink to this headline">¶</a></h2>
 <p>(FIXME: redo.)</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">o</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">),</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
-<span class="n">REs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])))</span>
-<span class="n">dervs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">[(</span><span class="n">o</span><span class="p">,</span> <span class="n">z</span><span class="p">)])))</span>
-<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">ds</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">dervs</span><span class="p">):</span>
-    <span class="n">R</span> <span class="o">=</span> <span class="n">it</span>
-    <span class="n">ds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
-    <span class="k">while</span> <span class="n">ds</span><span class="p">:</span>
-        <span class="n">R</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pop</span><span class="p">()(</span><span class="n">R</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">R</span> <span class="o">==</span> <span class="n">phi</span> <span class="ow">or</span> <span class="n">R</span> <span class="o">==</span> <span class="n">I</span><span class="p">:</span>
-            <span class="k">break</span>
-        <span class="n">REs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>o, z = D_compaction(&#39;0&#39;), D_compaction(&#39;1&#39;)
+REs = set()
+N = 5
+names = list(product(*(N * [(0, 1)])))
+dervs = list(product(*(N * [(o, z)])))
+for name, ds in zip(names, dervs):
+    R = it
+    ds = list(ds)
+    while ds:
+        R = ds.pop()(R)
+        if R == phi or R == I:
+            break
+        REs.add(R)
 
-<span class="nb">print</span> <span class="n">stringy</span><span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="p">;</span> <span class="nb">print</span>
-<span class="nb">print</span> <span class="n">o</span><span class="o">.</span><span class="n">hits</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">calls</span>
-<span class="nb">print</span> <span class="n">z</span><span class="o">.</span><span class="n">hits</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">calls</span>
-<span class="nb">print</span>
-<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">stringy</span><span class="p">,</span> <span class="n">REs</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">n</span><span class="p">)):</span>
-    <span class="nb">print</span> <span class="n">s</span>
+print stringy(it) ; print
+print o.hits, &#39;/&#39;, o.calls
+print z.hits, &#39;/&#39;, z.calls
+print
+for s in sorted(map(stringy, REs), key=lambda n: (len(n), n)):
+    print s
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">.</span><span class="mf">111.</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="o">.</span><span class="mi">01</span> <span class="o">|</span> <span class="mi">11</span><span class="o">*</span><span class="p">)</span><span class="s1">&#39;)</span>
@@ -449,10 +450,10 @@ expressions from growing too large.</p>
 <span class="p">(</span><span class="o">.</span><span class="mf">111.</span> <span class="o">|</span> <span class="mf">11.</span> <span class="o">|</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="o">.</span><span class="mi">01</span> <span class="o">|</span> <span class="mi">1</span><span class="o">*</span><span class="p">)</span><span class="s1">&#39;)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="larger-alphabets">
+</section>
+<section id="larger-alphabets">
 <h2>Larger Alphabets<a class="headerlink" href="#larger-alphabets" title="Permalink to this headline">¶</a></h2>
-<p>We could parse larger alphabets by defining patterns for e.g.&nbsp;each byte
+<p>We could parse larger alphabets by defining patterns for e.g. each byte
 of the ASCII code. Or we can generalize this code. If you study the code
 above you’ll see that we never use the “set-ness” of the symbols <code class="docutils literal notranslate"><span class="pre">O</span></code>
 and <code class="docutils literal notranslate"><span class="pre">l</span></code>. The only time Python set operators (<code class="docutils literal notranslate"><span class="pre">&amp;</span></code> and <code class="docutils literal notranslate"><span class="pre">|</span></code>) appear
@@ -489,8 +490,8 @@ computed) outputs of that function, never <code class="docutils literal notransl
 <p>This suggests that we should be able to alter the functions above to
 detect sets and deal with them appropriately. Exercise for the Reader
 for now.</p>
-</div>
-<div class="section" id="state-machine">
+</section>
+<section id="state-machine">
 <h2>State Machine<a class="headerlink" href="#state-machine" title="Permalink to this headline">¶</a></h2>
 <p>We can drive the regular expressions to flesh out the underlying state
 machine transition table.</p>
@@ -498,9 +499,11 @@ machine transition table.</p>
 </pre></div>
 </div>
 <p>Says, “Three or more 1’s and not ending in 01 nor composed of all 1’s.”</p>
-<div class="figure" id="id2">
-<img alt="omg.svg" src="notebooks/attachment:omg.svg" /><p class="caption"><span class="caption-text">omg.svg</span></p>
-</div>
+<figure class="align-default" id="id2">
+<img alt="State Machine Graph" src="../_images/omg.svg" /><figcaption>
+<p><span class="caption-text">State Machine Graph</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>Start at <code class="docutils literal notranslate"><span class="pre">a</span></code> and follow the transition arrows according to their
 labels. Accepting states have a double outline. (Graphic generated with
 <a class="reference external" href="http://www.graphviz.org/">Dot from Graphviz</a>.) You’ll see that only
@@ -525,7 +528,7 @@ row and still be either still at <code class="docutils literal notranslate"><spa
 0’s). If you find yourself at <code class="docutils literal notranslate"><span class="pre">i</span></code> you can see as many 0’s, or
 repetitions of 10, as there are, but if you see just a 1 you move to
 <code class="docutils literal notranslate"><span class="pre">j</span></code>.</p>
-<div class="section" id="re-to-fsm">
+<section id="re-to-fsm">
 <h3>RE to FSM<a class="headerlink" href="#re-to-fsm" title="Permalink to this headline">¶</a></h3>
 <p>So how do we get the state machine from the regular expression?</p>
 <p>It turns out that each RE is effectively a state, and each arrow points
@@ -552,45 +555,45 @@ a --1--&gt; ∂1(a)
 <p>You can see the one-way nature of the <code class="docutils literal notranslate"><span class="pre">g</span></code> state and the <code class="docutils literal notranslate"><span class="pre">hij</span></code> “trap”
 in the way that the <code class="docutils literal notranslate"><span class="pre">.111.</span></code> on the left-hand side of the <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>
 disappears once it has been matched.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">pprint</span> <span class="k">import</span> <span class="n">pprint</span>
-<span class="kn">from</span> <span class="nn">string</span> <span class="k">import</span> <span class="n">ascii_lowercase</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from collections import defaultdict
+from pprint import pprint
+from string import ascii_lowercase
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d0</span><span class="p">,</span> <span class="n">d1</span> <span class="o">=</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">),</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>d0, d1 = D_compaction(&#39;0&#39;), D_compaction(&#39;1&#39;)
 </pre></div>
 </div>
-</div>
-<div class="section" id="explore">
+</section>
+<section id="explore">
 <h3><code class="docutils literal notranslate"><span class="pre">explore()</span></code><a class="headerlink" href="#explore" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">explore</span><span class="p">(</span><span class="n">re</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>def explore(re):
 
-    <span class="c1"># Don&#39;t have more than 26 states...</span>
-    <span class="n">names</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">ascii_lowercase</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">)</span>
+    # Don&#39;t have more than 26 states...
+    names = defaultdict(iter(ascii_lowercase).next)
 
-    <span class="n">table</span><span class="p">,</span> <span class="n">accepting</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(),</span> <span class="nb">set</span><span class="p">()</span>
+    table, accepting = dict(), set()
 
-    <span class="n">to_check</span> <span class="o">=</span> <span class="p">{</span><span class="n">re</span><span class="p">}</span>
-    <span class="k">while</span> <span class="n">to_check</span><span class="p">:</span>
+    to_check = {re}
+    while to_check:
 
-        <span class="n">re</span> <span class="o">=</span> <span class="n">to_check</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-        <span class="n">state_name</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">re</span><span class="p">]</span>
+        re = to_check.pop()
+        state_name = names[re]
 
-        <span class="k">if</span> <span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
-            <span class="k">continue</span>
+        if (state_name, 0) in table:
+            continue
 
-        <span class="k">if</span> <span class="n">nully</span><span class="p">(</span><span class="n">re</span><span class="p">):</span>
-            <span class="n">accepting</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">state_name</span><span class="p">)</span>
+        if nully(re):
+            accepting.add(state_name)
 
-        <span class="n">o</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="n">d0</span><span class="p">(</span><span class="n">re</span><span class="p">),</span> <span class="n">d1</span><span class="p">(</span><span class="n">re</span><span class="p">)</span>
-        <span class="n">table</span><span class="p">[</span><span class="n">state_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="p">;</span> <span class="n">to_check</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
-        <span class="n">table</span><span class="p">[</span><span class="n">state_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">;</span> <span class="n">to_check</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        o, i = d0(re), d1(re)
+        table[state_name, 0] = names[o] ; to_check.add(o)
+        table[state_name, 1] = names[i] ; to_check.add(i)
 
-    <span class="k">return</span> <span class="n">table</span><span class="p">,</span> <span class="n">accepting</span>
+    return table, accepting
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">table</span><span class="p">,</span> <span class="n">accepting</span> <span class="o">=</span> <span class="n">explore</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-<span class="n">table</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>table, accepting = explore(it)
+table
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span>
@@ -615,42 +618,42 @@ disappears once it has been matched.</p>
  <span class="p">(</span><span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s1">&#39;h&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">accepting</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>accepting
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="generate-diagram">
+</section>
+<section id="generate-diagram">
 <h3>Generate Diagram<a class="headerlink" href="#generate-diagram" title="Permalink to this headline">¶</a></h3>
 <p>Once we have the FSM table and the set of accepting states we can
 generate the diagram above.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_template</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
-<span class="s1">digraph finite_state_machine {</span>
-<span class="s1">  rankdir=LR;</span>
-<span class="s1">  size=&quot;8,5&quot;</span>
-<span class="s1">  node [shape = doublecircle]; </span><span class="si">%s</span><span class="s1">;</span>
-<span class="s1">  node [shape = circle];</span>
-<span class="si">%s</span><span class="s1"></span>
-<span class="s1">}</span>
-<span class="s1">&#39;&#39;&#39;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>_template = &#39;&#39;&#39;\
+digraph finite_state_machine {
+  rankdir=LR;
+  size=&quot;8,5&quot;
+  node [shape = doublecircle]; %s;
+  node [shape = circle];
+%s
+}
+&#39;&#39;&#39;
 
-<span class="k">def</span> <span class="nf">link</span><span class="p">(</span><span class="n">fr</span><span class="p">,</span> <span class="n">nm</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s1">&#39;  </span><span class="si">%s</span><span class="s1"> -&gt; </span><span class="si">%s</span><span class="s1"> [ label = &quot;</span><span class="si">%s</span><span class="s1">&quot; ];&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fr</span><span class="p">,</span> <span class="n">nm</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+def link(fr, nm, label):
+    return &#39;  %s -&gt; %s [ label = &quot;%s&quot; ];&#39; % (fr, nm, label)
 
 
-<span class="k">def</span> <span class="nf">make_graph</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">accepting</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">_template</span> <span class="o">%</span> <span class="p">(</span>
-        <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">accepting</span><span class="p">),</span>
-        <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-          <span class="n">link</span><span class="p">(</span><span class="n">from_</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="n">char</span><span class="p">)</span>
-          <span class="k">for</span> <span class="p">(</span><span class="n">from_</span><span class="p">,</span> <span class="n">char</span><span class="p">),</span> <span class="p">(</span><span class="n">to</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">iteritems</span><span class="p">())</span>
-          <span class="p">)</span>
-        <span class="p">)</span>
+def make_graph(table, accepting):
+    return _template % (
+        &#39; &#39;.join(accepting),
+        &#39;\n&#39;.join(
+          link(from_, to, char)
+          for (from_, char), (to) in sorted(table.iteritems())
+          )
+        )
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">make_graph</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">accepting</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>print make_graph(table, accepting)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">digraph</span> <span class="n">finite_state_machine</span> <span class="p">{</span>
@@ -681,8 +684,8 @@ generate the diagram above.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="drive-a-fsm">
+</section>
+<section id="drive-a-fsm">
 <h3>Drive a FSM<a class="headerlink" href="#drive-a-fsm" title="Permalink to this headline">¶</a></h3>
 <p>There are <em>lots</em> of FSM libraries already. Once you have the state
 transition table they should all be straightforward to use. State
@@ -692,68 +695,68 @@ Python that imitates what “compiled” FSM code might look like in an
 datastructure, the code below instead acts like JMP instructions
 (“jump”, or GOTO in higher-level-but-still-low-level languages) to
 hard-code the information in the table into a little patch of branches.</p>
-<div class="section" id="trampoline-function">
+<section id="trampoline-function">
 <h4>Trampoline Function<a class="headerlink" href="#trampoline-function" title="Permalink to this headline">¶</a></h4>
 <p>Python has no GOTO statement but we can fake it with a “trampoline”
 function.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">trampoline</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">jump_from</span><span class="p">,</span> <span class="n">accepting</span><span class="p">):</span>
-    <span class="n">I</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">input_</span><span class="p">)</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">bounce_to</span> <span class="o">=</span> <span class="n">jump_from</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">jump_from</span> <span class="ow">in</span> <span class="n">accepting</span>
-        <span class="n">jump_from</span> <span class="o">=</span> <span class="n">bounce_to</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>def trampoline(input_, jump_from, accepting):
+    I = iter(input_)
+    while True:
+        try:
+            bounce_to = jump_from(I)
+        except StopIteration:
+            return jump_from in accepting
+        jump_from = bounce_to
 </pre></div>
 </div>
-</div>
-<div class="section" id="stream-functions">
+</section>
+<section id="stream-functions">
 <h4>Stream Functions<a class="headerlink" href="#stream-functions" title="Permalink to this headline">¶</a></h4>
 <p>Little helpers to process the iterator of our data (a “stream” of “1”
 and “0” characters, not bits.)</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">getch</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">I</span><span class="p">))</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>getch = lambda I: int(next(I))
 
 
-<span class="k">def</span> <span class="nf">_1</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Loop on ones.&#39;&#39;&#39;</span>
-    <span class="k">while</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">):</span> <span class="k">pass</span>
+def _1(I):
+    &#39;&#39;&#39;Loop on ones.&#39;&#39;&#39;
+    while getch(I): pass
 
 
-<span class="k">def</span> <span class="nf">_0</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Loop on zeros.&#39;&#39;&#39;</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">):</span> <span class="k">pass</span>
+def _0(I):
+    &#39;&#39;&#39;Loop on zeros.&#39;&#39;&#39;
+    while not getch(I): pass
 </pre></div>
 </div>
-</div>
-<div class="section" id="a-finite-state-machine">
+</section>
+<section id="a-finite-state-machine">
 <h4>A Finite State Machine<a class="headerlink" href="#a-finite-state-machine" title="Permalink to this headline">¶</a></h4>
 <p>With those preliminaries out of the way, from the state table of
 <code class="docutils literal notranslate"><span class="pre">.111.</span> <span class="pre">&amp;</span> <span class="pre">(.01</span> <span class="pre">+</span> <span class="pre">11*)'</span></code> we can immediately write down state machine
 code. (You have to imagine that these are GOTO statements in C or
 branches in assembly and that the state names are branch destination
 labels.)</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">c</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
-<span class="n">b</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">_0</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="ow">or</span> <span class="n">d</span>
-<span class="n">c</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">e</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
-<span class="n">d</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">f</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
-<span class="n">e</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">g</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
-<span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">h</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
-<span class="n">g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">_1</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="ow">or</span> <span class="n">i</span>
-<span class="n">h</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">_1</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="ow">or</span> <span class="n">i</span>
-<span class="n">i</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">_0</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="ow">or</span> <span class="n">j</span>
-<span class="n">j</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">h</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">i</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>a = lambda I: c if getch(I) else b
+b = lambda I: _0(I) or d
+c = lambda I: e if getch(I) else b
+d = lambda I: f if getch(I) else b
+e = lambda I: g if getch(I) else b
+f = lambda I: h if getch(I) else b
+g = lambda I: _1(I) or i
+h = lambda I: _1(I) or i
+i = lambda I: _0(I) or j
+j = lambda I: h if getch(I) else i
 </pre></div>
 </div>
 <p>Note that the implementations of <code class="docutils literal notranslate"><span class="pre">h</span></code> and <code class="docutils literal notranslate"><span class="pre">g</span></code> are identical ergo
 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">=</span> <span class="pre">g</span></code> and we could eliminate one in the code but <code class="docutils literal notranslate"><span class="pre">h</span></code> is an
 accepting state and <code class="docutils literal notranslate"><span class="pre">g</span></code> isn’t.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">acceptable</span><span class="p">(</span><span class="n">input_</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">trampoline</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="p">{</span><span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">})</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>def acceptable(input_):
+    return trampoline(input_, a, {h, i})
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">5</span><span class="p">):</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="n">n</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
-    <span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%05s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">s</span><span class="p">,</span> <span class="n">acceptable</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>for n in range(2**5):
+    s = bin(n)[2:]
+    print &#39;%05s&#39; % s, acceptable(s)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="mi">0</span> <span class="kc">False</span>
@@ -790,10 +793,10 @@ accepting state and <code class="docutils literal notranslate"><span class="pre"
 <span class="mi">11111</span> <span class="kc">False</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="reversing-the-derivatives-to-generate-matching-strings">
+</section>
+</section>
+</section>
+<section id="reversing-the-derivatives-to-generate-matching-strings">
 <h2>Reversing the Derivatives to Generate Matching Strings<a class="headerlink" href="#reversing-the-derivatives-to-generate-matching-strings" title="Permalink to this headline">¶</a></h2>
 <p>(UNFINISHED) Brzozowski also shewed how to go from the state machine to
 strings and expressions…</p>
@@ -837,51 +840,55 @@ derivative-with-respect-to-N of some other state/RE:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="mi">01</span><span class="p">)</span><span class="o">*</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">∂RE</a><ul>
-<li><a class="reference internal" href="#brzozowskis-derivatives-of-regular-expressions">Brzozowski’s Derivatives of Regular Expressions</a></li>
-<li><a class="reference internal" href="#implementation">Implementation</a><ul>
-<li><a class="reference internal" href="#and"><code class="docutils literal notranslate"><span class="pre">ϕ</span></code> and <code class="docutils literal notranslate"><span class="pre">λ</span></code></a></li>
-<li><a class="reference internal" href="#two-letter-alphabet">Two-letter Alphabet</a></li>
-<li><a class="reference internal" href="#representing-regular-expressions">Representing Regular Expressions</a></li>
-<li><a class="reference internal" href="#string-representation-of-re-datastructures">String Representation of RE Datastructures</a></li>
-<li><a class="reference internal" href="#i"><code class="docutils literal notranslate"><span class="pre">I</span></code></a></li>
-<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">(.111.)</span> <span class="pre">&amp;</span> <span class="pre">(.01</span> <span class="pre">+</span> <span class="pre">11*)'</span></code></a></li>
-<li><a class="reference internal" href="#nully"><code class="docutils literal notranslate"><span class="pre">nully()</span></code></a></li>
-<li><a class="reference internal" href="#no-compaction">No “Compaction”</a></li>
-<li><a class="reference internal" href="#compaction-rules">Compaction Rules</a></li>
-<li><a class="reference internal" href="#memoizing">Memoizing</a></li>
-<li><a class="reference internal" href="#with-compaction">With “Compaction”</a></li>
+<h1 class="logo"><a href="../index.html">Thun</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Intro.html">Thun: Joy in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joy.html">Joy Interpreter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack.html">Stack or Quote or Sequence or List…</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parser.html">Parsing Text into Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pretty.html">Tracing Joy Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lib.html">Functions Grouped by, er, Function with Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../types.html">Type Inference of Joy Expressions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Essays about Programming in Joy</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Developing.html">Developing a Program in Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Quadratic.html">Quadratic formula</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replacing.html">Replacing Functions in the Dictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Recursion_Combinators.html">Recursion Combinators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ordered_Binary_Trees.html">Treating Trees I: Ordered Binary Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Treestep.html">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Generator_Programs.html">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Newton-Raphson.html">Newton’s method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Zipper.html">Traversing Datastructures with Zippers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Types.html">The Blissful Elegance of Typing Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeChecking.html">Type Checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NoUpdates.html">No Updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Categorical.html">Categorical Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="The_Four_Operations.html">The Four Fundamental Operations of Definite Action</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">∂RE</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#lets-try-it-out">Let’s try it out…</a></li>
-<li><a class="reference internal" href="#larger-alphabets">Larger Alphabets</a></li>
-<li><a class="reference internal" href="#state-machine">State Machine</a><ul>
-<li><a class="reference internal" href="#re-to-fsm">RE to FSM</a></li>
-<li><a class="reference internal" href="#explore"><code class="docutils literal notranslate"><span class="pre">explore()</span></code></a></li>
-<li><a class="reference internal" href="#generate-diagram">Generate Diagram</a></li>
-<li><a class="reference internal" href="#drive-a-fsm">Drive a FSM</a><ul>
-<li><a class="reference internal" href="#trampoline-function">Trampoline Function</a></li>
-<li><a class="reference internal" href="#stream-functions">Stream Functions</a></li>
-<li><a class="reference internal" href="#a-finite-state-machine">A Finite State Machine</a></li>
 </ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#reversing-the-derivatives-to-generate-matching-strings">Reversing the Derivatives to Generate Matching Strings</a></li>
-</ul>
-</li>
-</ul>
+
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -892,25 +899,24 @@ derivative-with-respect-to-N of some other state/RE:</p>
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/notebooks/Derivatives_of_Regular_Expressions.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -921,7 +927,7 @@ derivative-with-respect-to-N of some other state/RE:</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
     </div>
 
   </body>
