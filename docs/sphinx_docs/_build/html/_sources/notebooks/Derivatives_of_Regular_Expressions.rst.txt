@@ -76,7 +76,7 @@ E.g.:
 Implementation
 --------------
 
-.. code:: python
+.. code:: ipython2
 
     from functools import partial as curry
     from itertools import product
@@ -533,10 +533,10 @@ machine transition table.
 
 Says, “Three or more 1’s and not ending in 01 nor composed of all 1’s.”
 
-.. figure:: omg.svg
-   :alt: State Machine Graph
+.. figure:: attachment:omg.svg
+   :alt: omg.svg
 
-   State Machine Graph
+   omg.svg
 
 Start at ``a`` and follow the transition arrows according to their
 labels. Accepting states have a double outline. (Graphic generated with
