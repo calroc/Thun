@@ -36,7 +36,7 @@ implementation under the hood. (Where does the “type” come from? It has
 a contingent existence predicated on the disciplined use of these
 functions on otherwise undistinguished Joy datastructures.)
 
-.. code:: ipython2
+.. code:: python
 
     from notebook_preamble import D, J, V, define, DefinitionWrapper
 
@@ -87,11 +87,11 @@ Definition:
 
    Tree-new == swap [[] []] cons cons
 
-.. code:: ipython2
+.. code:: python
 
     define('Tree-new == swap [[] []] cons cons')
 
-.. code:: ipython2
+.. code:: python
 
     J('"v" "k" Tree-new')
 
@@ -163,11 +163,11 @@ comparison operator:
    P < == pop roll> pop first <
    P   == pop roll> pop first
 
-.. code:: ipython2
+.. code:: python
 
     define('P == pop roll> pop first')
 
-.. code:: ipython2
+.. code:: python
 
     J('["old_key" 23 [] []] 17 "new_key" ["..."] P')
 
@@ -242,11 +242,11 @@ And so ``T`` is just:
 
    T == cons cons [dipdd] cons infra
 
-.. code:: ipython2
+.. code:: python
 
     define('T == cons cons [dipdd] cons infra')
 
-.. code:: ipython2
+.. code:: python
 
     J('["old_k" "old_value" "left" "right"] "new_value" "new_key" ["Tree-add"] T')
 
@@ -266,7 +266,7 @@ This is very very similar to the above:
    [key_n value_n left right] value key [Tree-add] E
    [key_n value_n left right] value key [Tree-add] [P <] [Te] [Ee] ifte
 
-.. code:: ipython2
+.. code:: python
 
     define('E == [P <] [Te] [Ee] ifte')
 
@@ -278,11 +278,11 @@ instead of the right, so the only difference is that it must use
 
    Te == cons cons [dipd] cons infra
 
-.. code:: ipython2
+.. code:: python
 
     define('Te == cons cons [dipd] cons infra')
 
-.. code:: ipython2
+.. code:: python
 
     J('["old_k" "old_value" "left" "right"] "new_value" "new_key" ["Tree-add"] Te')
 
@@ -320,11 +320,11 @@ Example:
    key new_value [              left right]                                     cons cons
                  [key new_value left right]
 
-.. code:: ipython2
+.. code:: python
 
     define('Ee == pop swap roll< rest rest cons cons')
 
-.. code:: ipython2
+.. code:: python
 
     J('["k" "old_value" "left" "right"] "new_value" "k" ["Tree-add"] Ee')
 
@@ -355,14 +355,14 @@ Putting it all together:
 
    Tree-add == [popop not] [[pop] dipd Tree-new] [] [R] genrec
 
-.. code:: ipython2
+.. code:: python
 
     define('Tree-add == [popop not] [[pop] dipd Tree-new] [] [[P >] [T] [E] ifte] genrec')
 
 Examples
 ~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[] 23 "b" Tree-add')  # Initial
 
@@ -372,7 +372,7 @@ Examples
     ['b' 23 [] []]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('["b" 23 [] []] 88 "c" Tree-add')  # Greater than
 
@@ -382,7 +382,7 @@ Examples
     ['b' 23 [] ['c' 88 [] []]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('["b" 23 [] []] 88 "a" Tree-add')  # Less than
 
@@ -392,7 +392,7 @@ Examples
     ['b' 23 ['a' 88 [] []] []]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('["b" 23 [] []] 88 "b" Tree-add')  # Equal to
 
@@ -402,7 +402,7 @@ Examples
     ['b' 88 [] []]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[] 23 "b" Tree-add 88 "a" Tree-add 44 "c" Tree-add')  # Series.
 
@@ -412,7 +412,7 @@ Examples
     ['b' 23 ['a' 88 [] []] ['c' 44 [] []]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[] [[23 "b"] [88 "a"] [44 "c"]] [i Tree-add] step')
 
@@ -444,7 +444,7 @@ values:
    ------------------------- a < b
                    L
 
-.. code:: ipython2
+.. code:: python
 
     J("1 0 ['G'] ['E'] ['L'] cmp")
 
@@ -454,7 +454,7 @@ values:
     'G'
 
 
-.. code:: ipython2
+.. code:: python
 
     J("1 1 ['G'] ['E'] ['L'] cmp")
 
@@ -464,7 +464,7 @@ values:
     'E'
 
 
-.. code:: ipython2
+.. code:: python
 
     J("0 1 ['G'] ['E'] ['L'] cmp")
 
@@ -514,7 +514,7 @@ Or just:
 
    P == over [popop popop first] nullary
 
-.. code:: ipython2
+.. code:: python
 
     define('P == over [popop popop first] nullary')
 
@@ -541,11 +541,11 @@ to understand:
 
    Tree-add == [popop not] [[pop] dipd Tree-new] [] [P [T] [Ee] [Te] cmp] genrec
 
-.. code:: ipython2
+.. code:: python
 
     define('Tree-add == [popop not] [[pop] dipd Tree-new] [] [P [T] [Ee] [Te] cmp] genrec')
 
-.. code:: ipython2
+.. code:: python
 
     J('[] 23 "b" Tree-add 88 "a" Tree-add 44 "c" Tree-add')  # Still works.
 
@@ -685,14 +685,14 @@ Working backward:
 
    Tree-iter == [not] [pop] roll< [dupdip rest rest] cons [step] genrec
 
-.. code:: ipython2
+.. code:: python
 
     define('Tree-iter == [not] [pop] roll< [dupdip rest rest] cons [step] genrec')
 
 Examples
 ~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[] [foo] Tree-iter')  #  It doesn't matter what F is as it won't be used.
 
@@ -702,7 +702,7 @@ Examples
     
 
 
-.. code:: ipython2
+.. code:: python
 
     J("['b' 23 ['a' 88 [] []] ['c' 44 [] []]] [first] Tree-iter")
 
@@ -712,7 +712,7 @@ Examples
     'b' 'a' 'c'
 
 
-.. code:: ipython2
+.. code:: python
 
     J("['b' 23 ['a' 88 [] []] ['c' 44 [] []]] [second] Tree-iter")
 
@@ -731,7 +731,7 @@ to it will only occur once within it, and we can query it in
 `:math:`O(\log_2 N)` <https://en.wikipedia.org/wiki/Binary_search_tree#cite_note-2>`__
 time.
 
-.. code:: ipython2
+.. code:: python
 
     J('[] [3 9 5 2 8 6 7 8 4] [0 swap Tree-add] step')
 
@@ -741,11 +741,11 @@ time.
     [3 0 [2 0 [] []] [9 0 [5 0 [4 0 [] []] [8 0 [6 0 [] [7 0 [] []]] []]] []]]
 
 
-.. code:: ipython2
+.. code:: python
 
     define('to_set == [] swap [0 swap Tree-add] step')
 
-.. code:: ipython2
+.. code:: python
 
     J('[3 9 5 2 8 6 7 8 4] to_set')
 
@@ -758,11 +758,11 @@ time.
 And with that we can write a little program ``unique`` to remove
 duplicate items from a list.
 
-.. code:: ipython2
+.. code:: python
 
     define('unique == [to_set [first] Tree-iter] cons run')
 
-.. code:: ipython2
+.. code:: python
 
     J('[3 9 3 5 2 9 8 8 8 6 2 7 8 4 3] unique')  # Filter duplicate items.
 
@@ -872,7 +872,7 @@ Let’s do a little semantic factoring:
 
 Now we can sort sequences.
 
-.. code:: ipython2
+.. code:: python
 
     #define('Tree-iter-order == [not] [pop] [dup third] [[cons dip] dupdip [[first] dupdip] dip [rest rest rest first] dip i] genrec')
     
@@ -892,7 +892,7 @@ Now we can sort sequences.
     
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[3 9 5 2 8 6 7 8 4] to_set Tree-iter-order')
 
@@ -1070,7 +1070,7 @@ So:
 
    Tree-get == [pop not] swap [] [P [T>] [E] [T<] cmp] genrec
 
-.. code:: ipython2
+.. code:: python
 
     # I don't want to deal with name conflicts with the above so I'm inlining everything here.
     # The original Joy system has "hide" which is a meta-command which allows you to use named
@@ -1088,7 +1088,7 @@ So:
       ] genrec
     ''')
 
-.. code:: ipython2
+.. code:: python
 
     J('["gary" 23 [] []] "mike" [popd " not in tree" +] Tree-get')
 
@@ -1098,7 +1098,7 @@ So:
     'mike not in tree'
 
 
-.. code:: ipython2
+.. code:: python
 
     J('["gary" 23 [] []] "gary" [popop "err"] Tree-get')
 
@@ -1108,7 +1108,7 @@ So:
     23
 
 
-.. code:: ipython2
+.. code:: python
 
     J('''
     
@@ -1124,7 +1124,7 @@ So:
     2
 
 
-.. code:: ipython2
+.. code:: python
 
     J('''
     
@@ -1500,7 +1500,7 @@ Refactoring
 By the standards of the code I’ve written so far, this is a *huge* Joy
 program.
 
-.. code:: ipython2
+.. code:: python
 
     DefinitionWrapper.add_definitions('''
     first_two == uncons uncons pop
@@ -1519,7 +1519,7 @@ program.
     Tree-Delete == [pop not] [pop] [R0] [R1] genrec
     ''', D)
 
-.. code:: ipython2
+.. code:: python
 
     J("['a' 23 [] ['b' 88 [] ['c' 44 [] []]]] 'c' Tree-Delete ")
 
@@ -1529,7 +1529,7 @@ program.
     ['a' 23 [] ['b' 88 [] []]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J("['a' 23 [] ['b' 88 [] ['c' 44 [] []]]] 'b' Tree-Delete ")
 
@@ -1539,7 +1539,7 @@ program.
     ['a' 23 [] ['c' 44 [] []]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J("['a' 23 [] ['b' 88 [] ['c' 44 [] []]]] 'a' Tree-Delete ")
 
@@ -1549,7 +1549,7 @@ program.
     ['b' 88 [] ['c' 44 [] []]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J("['a' 23 [] ['b' 88 [] ['c' 44 [] []]]] 'der' Tree-Delete ")
 
@@ -1559,7 +1559,7 @@ program.
     ['a' 23 [] ['b' 88 [] ['c' 44 [] []]]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[] [4 2 3 1 6 7 5 ] [0 swap Tree-add] step')
 
@@ -1569,7 +1569,7 @@ program.
     [4 0 [2 0 [1 0 [] []] [3 0 [] []]] [6 0 [5 0 [] []] [7 0 [] []]]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J("[4 0 [2 0 [1 0 [] []] [3 0 [] []]] [6 0 [5 0 [] []] [7 0 [] []]]] 3 Tree-Delete ")
 
@@ -1579,7 +1579,7 @@ program.
     [4 0 [2 0 [1 0 [] []] []] [6 0 [5 0 [] []] [7 0 [] []]]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J("[4 0 [2 0 [1 0 [] []] [3 0 [] []]] [6 0 [5 0 [] []] [7 0 [] []]]] 4 Tree-Delete ")
 

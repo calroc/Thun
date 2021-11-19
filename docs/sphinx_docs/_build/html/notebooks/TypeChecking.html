@@ -35,33 +35,33 @@
             
   <section id="type-checking">
 <h1>Type Checking<a class="headerlink" href="#type-checking" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>import logging, sys
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">sys</span>
 
-logging.basicConfig(
-  format=&#39;%(message)s&#39;,
-  stream=sys.stdout,
-  level=logging.INFO,
-  )
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+  <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span>
+  <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+  <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+  <span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from joy.utils.types import (
-    doc_from_stack_effect,
-    infer,
-    reify,
-    unify,
-    FUNCTIONS,
-    JoyTypeError,
-)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joy.utils.types</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">doc_from_stack_effect</span><span class="p">,</span>
+    <span class="n">infer</span><span class="p">,</span>
+    <span class="n">reify</span><span class="p">,</span>
+    <span class="n">unify</span><span class="p">,</span>
+    <span class="n">FUNCTIONS</span><span class="p">,</span>
+    <span class="n">JoyTypeError</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>D = FUNCTIONS.copy()
-del D[&#39;product&#39;]
-globals().update(D)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">FUNCTIONS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="k">del</span> <span class="n">D</span><span class="p">[</span><span class="s1">&#39;product&#39;</span><span class="p">]</span>
+<span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
 </pre></div>
 </div>
 <section id="an-example">
 <h2>An Example<a class="headerlink" href="#an-example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>fi, fo = infer(pop, swap, rolldown, rrest, ccons)[0]
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="o">=</span> <span class="n">infer</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">rolldown</span><span class="p">,</span> <span class="n">rrest</span><span class="p">,</span> <span class="n">ccons</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>25 (--) ∘ pop swap rolldown rrest ccons
@@ -72,32 +72,32 @@ globals().update(D)
 40 ([a4 a5 ...1] a3 a2 a1 -- [a2 a3 ...1]) ∘
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>print doc_from_stack_effect(fi, fo)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">([</span><span class="n">a4</span> <span class="n">a5</span> <span class="o">...</span><span class="mi">1</span><span class="p">]</span> <span class="n">a3</span> <span class="n">a2</span> <span class="n">a1</span> <span class="o">--</span> <span class="p">[</span><span class="n">a2</span> <span class="n">a3</span> <span class="o">...</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from joy.parser import text_to_expression
-from joy.utils.stack import stack_to_string
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joy.parser</span> <span class="kn">import</span> <span class="n">text_to_expression</span>
+<span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">stack_to_string</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>e = text_to_expression(&#39;0 1 2 [3 4]&#39;)  # reverse order
-print stack_to_string(e)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;0 1 2 [3 4]&#39;</span><span class="p">)</span>  <span class="c1"># reverse order</span>
+<span class="nb">print</span> <span class="n">stack_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>u = unify(e, fi)[0]
-u
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">fi</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">u</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">a1</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a3</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="n">a4</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">a5</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="n">s2</span><span class="p">:</span> <span class="p">(),</span> <span class="n">s1</span><span class="p">:</span> <span class="p">()}</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>g = reify(u, (fi, fo))
-print doc_from_stack_effect(*g)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">reify</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">))</span>
+<span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">g</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="p">]</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span> <span class="o">--</span> <span class="o">...</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="p">])</span>
@@ -106,18 +106,18 @@ print doc_from_stack_effect(*g)
 </section>
 <section id="unification-works-in-reverse">
 <h2>Unification Works “in Reverse”<a class="headerlink" href="#unification-works-in-reverse" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>e = text_to_expression(&#39;[2 3]&#39;)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[2 3]&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>u = unify(e, fo)[0]  # output side, not input side
-u
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">unify</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">fo</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># output side, not input side</span>
+<span class="n">u</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">a2</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="n">a3</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">s2</span><span class="p">:</span> <span class="p">(),</span> <span class="n">s1</span><span class="p">:</span> <span class="p">()}</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>g = reify(u, (fi, fo))
-print doc_from_stack_effect(*g)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">reify</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span><span class="p">))</span>
+<span class="nb">print</span> <span class="n">doc_from_stack_effect</span><span class="p">(</span><span class="o">*</span><span class="n">g</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">...</span> <span class="p">[</span><span class="n">a4</span> <span class="n">a5</span> <span class="p">]</span> <span class="mi">3</span> <span class="mi">2</span> <span class="n">a1</span> <span class="o">--</span> <span class="o">...</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="p">])</span>
@@ -126,7 +126,7 @@ print doc_from_stack_effect(*g)
 </section>
 <section id="failing-a-check">
 <h2>Failing a Check<a class="headerlink" href="#failing-a-check" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>fi, fo = infer(dup, mul)[0]
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fi</span><span class="p">,</span> <span class="n">fo</span> <span class="o">=</span> <span class="n">infer</span><span class="p">(</span><span class="n">dup</span><span class="p">,</span> <span class="n">mul</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>25 (--) ∘ dup mul
@@ -135,17 +135,17 @@ print doc_from_stack_effect(*g)
 31 (i1 -- i2) ∘
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>e = text_to_expression(&#39;&quot;two&quot;&#39;)
-print stack_to_string(e)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;&quot;two&quot;&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">stack_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;two&#39;</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>try:
-    unify(e, fi)
-except JoyTypeError, err:
-    print err
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">unify</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">fi</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">JoyTypeError</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">err</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Cannot</span> <span class="n">unify</span> <span class="s1">&#39;two&#39;</span> <span class="ow">and</span> <span class="n">f1</span><span class="o">.</span>

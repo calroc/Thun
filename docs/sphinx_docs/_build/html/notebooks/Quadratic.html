@@ -34,7 +34,7 @@
 
           <div class="body" role="main">
             
-  <div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from notebook_preamble import J, V, define
+  <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
 </pre></div>
 </div>
 <section id="quadratic-formula">
@@ -100,11 +100,11 @@ the variables:</p>
 </div>
 <p>The three arguments are to the left, so we can “chop off” everything to
 the right and say it’s the definition of the <code class="docutils literal notranslate"><span class="pre">quadratic</span></code> function:</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2&#39;)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Let’s try it out:</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;3 1 1 quadratic&#39;)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 1 1 quadratic&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mf">0.3819660112501051</span> <span class="o">-</span><span class="mf">2.618033988749895</span>
@@ -114,7 +114,7 @@ the right and say it’s the definition of the <code class="docutils literal not
 lines are the <code class="docutils literal notranslate"><span class="pre">dip</span></code> and <code class="docutils literal notranslate"><span class="pre">dipd</span></code> combinators building the main program
 by incorporating the values on the stack. Then that program runs and you
 get the results. This is pretty typical of Joy code.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;-5 1 4 quadratic&#39;)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;-5 1 4 quadratic&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                   <span class="o">.</span> <span class="o">-</span><span class="mi">5</span> <span class="mi">1</span> <span class="mi">4</span> <span class="n">quadratic</span>

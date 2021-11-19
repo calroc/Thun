@@ -150,7 +150,7 @@ TBD (look in the :module: joy.parser  module.)
 Examples
 ~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     joy.parser.text_to_expression('1 2 3 4 5')  # A simple sequence.
 
@@ -160,7 +160,7 @@ Examples
     (1, (2, (3, (4, (5, ())))))
 
 
-.. code:: ipython2
+.. code:: python
 
     joy.parser.text_to_expression('[1 2 3] 4 5')  # Three items, the first is a list with three items
 
@@ -170,7 +170,7 @@ Examples
     ((1, (2, (3, ()))), (4, (5, ())))
 
 
-.. code:: ipython2
+.. code:: python
 
     joy.parser.text_to_expression('1 23 ["four" [-5.0] cons] 8888')  # A mixed bag. cons is
                                                                      # a Symbol, no lookup at
@@ -184,7 +184,7 @@ Examples
 
 
 
-.. code:: ipython2
+.. code:: python
 
     joy.parser.text_to_expression('[][][][][]')  # Five empty lists.
 
@@ -197,7 +197,7 @@ Examples
 
 
 
-.. code:: ipython2
+.. code:: python
 
     joy.parser.text_to_expression('[[[[[]]]]]')  # Five nested lists.
 
@@ -221,7 +221,7 @@ provide control-flow and higher-order operations.
 
 Many of the functions are defined in Python, like ``dip``:
 
-.. code:: ipython2
+.. code:: python
 
     print inspect.getsource(joy.library.dip)
 
@@ -239,7 +239,7 @@ When the interpreter executes a definition function that function just
 pushes its body expression onto the pending expression (the
 continuation) and returns control to the interpreter.
 
-.. code:: ipython2
+.. code:: python
 
     print joy.library.definitions
 

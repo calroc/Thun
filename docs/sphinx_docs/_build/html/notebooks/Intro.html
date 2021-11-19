@@ -157,33 +157,33 @@ like that.</p>
 </section>
 <section id="examples">
 <h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>joy.parser.text_to_expression(&#39;1 2 3 4 5&#39;)  # A simple sequence.
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5&#39;</span><span class="p">)</span>  <span class="c1"># A simple sequence.</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">())))))</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>joy.parser.text_to_expression(&#39;[1 2 3] 4 5&#39;)  # Three items, the first is a list with three items
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[1 2 3] 4 5&#39;</span><span class="p">)</span>  <span class="c1"># Three items, the first is a list with three items</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">()))),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">())))</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>joy.parser.text_to_expression(&#39;1 23 [&quot;four&quot; [-5.0] cons] 8888&#39;)  # A mixed bag. cons is
-                                                                 # a Symbol, no lookup at
-                                                                 # parse-time.  Haiku docs.
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;1 23 [&quot;four&quot; [-5.0] cons] 8888&#39;</span><span class="p">)</span>  <span class="c1"># A mixed bag. cons is</span>
+                                                                 <span class="c1"># a Symbol, no lookup at</span>
+                                                                 <span class="c1"># parse-time.  Haiku docs.</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="p">((</span><span class="s1">&#39;four&#39;</span><span class="p">,</span> <span class="p">((</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="p">()),</span> <span class="p">(</span><span class="n">cons</span><span class="p">,</span> <span class="p">()))),</span> <span class="p">(</span><span class="mi">8888</span><span class="p">,</span> <span class="p">()))))</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>joy.parser.text_to_expression(&#39;[][][][][]&#39;)  # Five empty lists.
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[][][][][]&#39;</span><span class="p">)</span>  <span class="c1"># Five empty lists.</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((),</span> <span class="p">((),</span> <span class="p">((),</span> <span class="p">((),</span> <span class="p">((),</span> <span class="p">())))))</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>joy.parser.text_to_expression(&#39;[[[[[]]]]]&#39;)  # Five nested lists.
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">joy</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">text_to_expression</span><span class="p">(</span><span class="s1">&#39;[[[[[]]]]]&#39;</span><span class="p">)</span>  <span class="c1"># Five nested lists.</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((((((),</span> <span class="p">()),</span> <span class="p">()),</span> <span class="p">()),</span> <span class="p">()),</span> <span class="p">())</span>
@@ -199,7 +199,7 @@ the Joy system. There are simple functions such as addition <code class="docutil
 <code class="docutils literal notranslate"><span class="pre">+</span></code>, the library module supports aliases), and combinators which
 provide control-flow and higher-order operations.</p>
 <p>Many of the functions are defined in Python, like <code class="docutils literal notranslate"><span class="pre">dip</span></code>:</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>print inspect.getsource(joy.library.dip)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">dip</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dip</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
@@ -212,7 +212,7 @@ provide control-flow and higher-order operations.</p>
 When the interpreter executes a definition function that function just
 pushes its body expression onto the pending expression (the
 continuation) and returns control to the interpreter.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>print joy.library.definitions
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">joy</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">definitions</span>
 </pre></div>
 </div>
 <pre class="literal-block">second == rest first

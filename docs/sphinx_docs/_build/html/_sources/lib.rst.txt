@@ -2,7 +2,7 @@
 Functions Grouped by, er, Function with Examples
 ------------------------------------------------
 
-.. code:: ipython2
+.. code:: python
 
     from notebook_preamble import J, V
 
@@ -19,7 +19,7 @@ it's "off the shelf" technology.)
 ``clear``
 ~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 clear')
 
@@ -32,7 +32,7 @@ it's "off the shelf" technology.)
 ``dup`` ``dupd``
 ~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 dup')
 
@@ -42,7 +42,7 @@ it's "off the shelf" technology.)
     1 2 3 3
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 dupd')
 
@@ -58,7 +58,7 @@ it's "off the shelf" technology.)
 (I may have these paired up wrong. I.e. ``disenstacken`` should be
 ``unstack`` and vice versa.)
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 enstacken') # Replace the stack with a quote of itself.
 
@@ -68,7 +68,7 @@ it's "off the shelf" technology.)
     [3 2 1]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('4 5 6 [3 2 1] disenstacken')  # Unpack a list onto the stack.
 
@@ -78,7 +78,7 @@ it's "off the shelf" technology.)
     4 5 6 3 2 1
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 stack')  # Get the stack on the stack.
 
@@ -88,7 +88,7 @@ it's "off the shelf" technology.)
     1 2 3 [3 2 1]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 [4 5 6] unstack')  # Replace the stack with the list on top.
                                 # The items appear reversed but they are not,
@@ -103,7 +103,7 @@ it's "off the shelf" technology.)
 ``pop`` ``popd`` ``popop``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 pop')
 
@@ -113,7 +113,7 @@ it's "off the shelf" technology.)
     1 2
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 popd')
 
@@ -123,7 +123,7 @@ it's "off the shelf" technology.)
     1 3
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 popop')
 
@@ -139,7 +139,7 @@ it's "off the shelf" technology.)
 The "down" and "up" refer to the movement of two of the top three items
 (displacing the third.)
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 roll<')
 
@@ -149,7 +149,7 @@ The "down" and "up" refer to the movement of two of the top three items
     2 3 1
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 roll>')
 
@@ -162,7 +162,7 @@ The "down" and "up" refer to the movement of two of the top three items
 ``swap``
 ~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 swap')
 
@@ -175,7 +175,7 @@ The "down" and "up" refer to the movement of two of the top three items
 ``tuck`` ``over``
 ~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 tuck')
 
@@ -185,7 +185,7 @@ The "down" and "up" refer to the movement of two of the top three items
     1 3 2 3
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 over')
 
@@ -198,7 +198,7 @@ The "down" and "up" refer to the movement of two of the top three items
 ``unit`` ``quoted`` ``unquoted``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 unit')
 
@@ -208,7 +208,7 @@ The "down" and "up" refer to the movement of two of the top three items
     1 2 [3]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 quoted')
 
@@ -218,7 +218,7 @@ The "down" and "up" refer to the movement of two of the top three items
     1 [2] 3
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 [2] 3 unquoted')
 
@@ -228,7 +228,7 @@ The "down" and "up" refer to the movement of two of the top three items
     1 2 3
 
 
-.. code:: ipython2
+.. code:: python
 
     V('1 [dup] 3 unquoted')  # Unquoting evaluates.  Be aware.
 
@@ -253,7 +253,7 @@ List words
 ``concat`` ``swoncat`` ``shunt``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3] [4 5 6] concat')
 
@@ -263,7 +263,7 @@ List words
     [1 2 3 4 5 6]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3] [4 5 6] swoncat')
 
@@ -273,7 +273,7 @@ List words
     [4 5 6 1 2 3]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3] [4 5 6] shunt')
 
@@ -286,7 +286,7 @@ List words
 ``cons`` ``swons`` ``uncons``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('1 [2 3] cons')
 
@@ -296,7 +296,7 @@ List words
     [1 2 3]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[2 3] 1 swons')
 
@@ -306,7 +306,7 @@ List words
     [1 2 3]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3] uncons')
 
@@ -319,7 +319,7 @@ List words
 ``first`` ``second`` ``third`` ``rest``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 4] first')
 
@@ -329,7 +329,7 @@ List words
     1
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 4] second')
 
@@ -339,7 +339,7 @@ List words
     2
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 4] third')
 
@@ -349,7 +349,7 @@ List words
     3
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 4] rest')
 
@@ -362,7 +362,7 @@ List words
 ``flatten``
 ~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[[1] [2 [3] 4] [5 6]] flatten')
 
@@ -377,7 +377,7 @@ List words
 
 ``at`` and ``getitem`` are the same function. ``of == swap at``
 
-.. code:: ipython2
+.. code:: python
 
     J('[10 11 12 13 14] 2 getitem')
 
@@ -387,7 +387,7 @@ List words
     12
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 4] 0 at')
 
@@ -397,7 +397,7 @@ List words
     1
 
 
-.. code:: ipython2
+.. code:: python
 
     J('2 [1 2 3 4] of')
 
@@ -407,7 +407,7 @@ List words
     3
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 4] 2 drop')
 
@@ -417,7 +417,7 @@ List words
     [3 4]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 4] 2 take')  # reverses the order
 
@@ -432,7 +432,7 @@ List words
 ``remove``
 ~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 1 4] 1 remove')
 
@@ -445,7 +445,7 @@ List words
 ``reverse``
 ~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 4] reverse')
 
@@ -458,7 +458,7 @@ List words
 ``size``
 ~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 1 1 1] size')
 
@@ -475,7 +475,7 @@ List words
 put the old stack on top of the new one. Think of it as a context
 switch. Niether of the lists/stacks change their order.
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 [4 5 6] swaack')
 
@@ -488,7 +488,7 @@ switch. Niether of the lists/stacks change their order.
 ``choice`` ``select``
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 1 choice')
 
@@ -498,7 +498,7 @@ switch. Niether of the lists/stacks change their order.
     9
 
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 0 choice')
 
@@ -508,7 +508,7 @@ switch. Niether of the lists/stacks change their order.
     23
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 9 7] 1 select')  # select is basically getitem, should retire it?
 
@@ -518,7 +518,7 @@ switch. Niether of the lists/stacks change their order.
     9
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 9 7] 0 select')
 
@@ -531,7 +531,7 @@ switch. Niether of the lists/stacks change their order.
 ``zip``
 ~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3] [6 5 4] zip')
 
@@ -541,7 +541,7 @@ switch. Niether of the lists/stacks change their order.
     [[6 1] [5 2] [4 3]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3] [6 5 4] zip [sum] map')
 
@@ -557,7 +557,7 @@ Math words
 ``+`` ``add``
 ~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 +')
 
@@ -570,7 +570,7 @@ Math words
 ``-`` ``sub``
 ~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 -')
 
@@ -583,7 +583,7 @@ Math words
 ``*`` ``mul``
 ~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 *')
 
@@ -596,7 +596,7 @@ Math words
 ``/`` ``div`` ``floordiv`` ``truediv``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 /')
 
@@ -606,7 +606,7 @@ Math words
     2.5555555555555554
 
 
-.. code:: ipython2
+.. code:: python
 
     J('23 -9 truediv')
 
@@ -616,7 +616,7 @@ Math words
     -2.5555555555555554
 
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 div')
 
@@ -626,7 +626,7 @@ Math words
     2
 
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 floordiv')
 
@@ -636,7 +636,7 @@ Math words
     2
 
 
-.. code:: ipython2
+.. code:: python
 
     J('23 -9 div')
 
@@ -646,7 +646,7 @@ Math words
     -3
 
 
-.. code:: ipython2
+.. code:: python
 
     J('23 -9 floordiv')
 
@@ -659,7 +659,7 @@ Math words
 ``%`` ``mod`` ``modulus`` ``rem`` ``remainder``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 %')
 
@@ -672,7 +672,7 @@ Math words
 ``neg``
 ~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('23 neg -5 neg')
 
@@ -685,7 +685,7 @@ Math words
 ``pow``
 ~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('2 10 pow')
 
@@ -698,7 +698,7 @@ Math words
 ``sqr`` ``sqrt``
 ~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('23 sqr')
 
@@ -708,7 +708,7 @@ Math words
     529
 
 
-.. code:: ipython2
+.. code:: python
 
     J('23 sqrt')
 
@@ -721,7 +721,7 @@ Math words
 ``++`` ``succ`` ``--`` ``pred``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('1 ++')
 
@@ -731,7 +731,7 @@ Math words
     2
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 --')
 
@@ -744,7 +744,7 @@ Math words
 ``<<`` ``lshift`` ``>>`` ``rshift``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('8 1 <<')
 
@@ -754,7 +754,7 @@ Math words
     16
 
 
-.. code:: ipython2
+.. code:: python
 
     J('8 1 >>')
 
@@ -767,7 +767,7 @@ Math words
 ``average``
 ~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 5] average')
 
@@ -780,7 +780,7 @@ Math words
 ``range`` ``range_to_zero`` ``down_to_zero``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('5 range')
 
@@ -790,7 +790,7 @@ Math words
     [4 3 2 1 0]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('5 range_to_zero')
 
@@ -800,7 +800,7 @@ Math words
     [0 1 2 3 4 5]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('5 down_to_zero')
 
@@ -813,7 +813,7 @@ Math words
 ``product``
 ~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 5] product')
 
@@ -826,7 +826,7 @@ Math words
 ``sum``
 ~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 5] sum')
 
@@ -839,7 +839,7 @@ Math words
 ``min``
 ~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3 5] min')
 
@@ -852,7 +852,7 @@ Math words
 ``gcd``
 ~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('45 30 gcd')
 
@@ -868,7 +868,7 @@ Math words
 If we represent fractions as a quoted pair of integers [q d] this word
 reduces them to their ... least common factors or whatever.
 
-.. code:: ipython2
+.. code:: python
 
     J('[45 30] least_fraction')
 
@@ -878,7 +878,7 @@ reduces them to their ... least common factors or whatever.
     [3 2]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 12] least_fraction')
 
@@ -896,7 +896,7 @@ Logic and Comparison
 
 Get the Boolean value of the item on the top of the stack.
 
-.. code:: ipython2
+.. code:: python
 
     J('23 truthy')
 
@@ -906,7 +906,7 @@ Get the Boolean value of the item on the top of the stack.
     True
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[] truthy')  # Python semantics.
 
@@ -916,7 +916,7 @@ Get the Boolean value of the item on the top of the stack.
     False
 
 
-.. code:: ipython2
+.. code:: python
 
     J('0 truthy')
 
@@ -930,7 +930,7 @@ Get the Boolean value of the item on the top of the stack.
 
     ? == dup truthy
 
-.. code:: ipython2
+.. code:: python
 
     V('23 ?')
 
@@ -944,7 +944,7 @@ Get the Boolean value of the item on the top of the stack.
     23 True . 
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[] ?')
 
@@ -954,7 +954,7 @@ Get the Boolean value of the item on the top of the stack.
     [] False
 
 
-.. code:: ipython2
+.. code:: python
 
     J('0 ?')
 
@@ -967,7 +967,7 @@ Get the Boolean value of the item on the top of the stack.
 ``&`` ``and``
 ~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 &')
 
@@ -980,7 +980,7 @@ Get the Boolean value of the item on the top of the stack.
 ``!=`` ``<>`` ``ne``
 ~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('23 9 !=')
 
@@ -996,7 +996,7 @@ Get the Boolean value of the item on the top of the stack.
 ``^`` ``xor``
 ~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('1 1 ^')
 
@@ -1006,7 +1006,7 @@ Get the Boolean value of the item on the top of the stack.
     0
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 0 ^')
 
@@ -1022,7 +1022,7 @@ Miscellaneous
 ``help``
 ~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[help] help')
 
@@ -1036,7 +1036,7 @@ Miscellaneous
 ``parse``
 ~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[parse] help')
 
@@ -1047,7 +1047,7 @@ Miscellaneous
     
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 "2 [3] dup" parse')
 
@@ -1062,7 +1062,7 @@ Miscellaneous
 
 Evaluate a quoted Joy sequence.
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 dup + +] run')
 
@@ -1078,7 +1078,7 @@ Combinators
 ``app1`` ``app2`` ``app3``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[app1] help')
 
@@ -1095,7 +1095,7 @@ Combinators
     
 
 
-.. code:: ipython2
+.. code:: python
 
     J('10 4 [sqr *] app1')
 
@@ -1105,7 +1105,7 @@ Combinators
     10 160
 
 
-.. code:: ipython2
+.. code:: python
 
     J('10 3 4 [sqr *] app2')
 
@@ -1115,7 +1115,7 @@ Combinators
     10 90 160
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[app2] help')
 
@@ -1131,7 +1131,7 @@ Combinators
     
 
 
-.. code:: ipython2
+.. code:: python
 
     J('10 2 3 4 [sqr *] app3')
 
@@ -1159,7 +1159,7 @@ Example, ``range``:
 
     range == [0 <=] [1 - dup] anamorphism
 
-.. code:: ipython2
+.. code:: python
 
     J('3 [0 <=] [1 - dup] anamorphism')
 
@@ -1172,7 +1172,7 @@ Example, ``range``:
 ``branch``
 ~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('3 4 1 [+] [*] branch')
 
@@ -1182,7 +1182,7 @@ Example, ``range``:
     12
 
 
-.. code:: ipython2
+.. code:: python
 
     J('3 4 0 [+] [*] branch')
 
@@ -1217,7 +1217,7 @@ in terms of ``app2``:
 
     cleave == [i] app2 [popd] dip
 
-.. code:: ipython2
+.. code:: python
 
     J('10 2 [+] [-] cleave')
 
@@ -1230,7 +1230,7 @@ in terms of ``app2``:
 ``dip`` ``dipd`` ``dipdd``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 4 5 [+] dip')
 
@@ -1240,7 +1240,7 @@ in terms of ``app2``:
     1 2 7 5
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 4 5 [+] dipd')
 
@@ -1250,7 +1250,7 @@ in terms of ``app2``:
     1 5 4 5
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 4 5 [+] dipdd')
 
@@ -1270,7 +1270,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
 
     n [Q] dupdip == n Q n
 
-.. code:: ipython2
+.. code:: python
 
     V('23 [++] dupdip *')  # N(N + 1)
 
@@ -1289,7 +1289,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
 ``genrec`` ``primrec``
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[genrec] help')
 
@@ -1343,7 +1343,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
     
 
 
-.. code:: ipython2
+.. code:: python
 
     J('3 [1 <=] [] [dup --] [i *] genrec')
 
@@ -1356,7 +1356,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
 ``i``
 ~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     V('1 2 3 [+ +] i')
 
@@ -1380,7 +1380,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
 
     [predicate] [then] [else] ifte
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 [1] [+] [*] ifte')
 
@@ -1390,7 +1390,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
     3
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 [0] [+] [*] ifte')
 
@@ -1403,7 +1403,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
 ``infra``
 ~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     V('1 2 3 [4 5 6] [* +] infra')
 
@@ -1426,7 +1426,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
 ``loop``
 ~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[loop] help')
 
@@ -1445,7 +1445,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
     
 
 
-.. code:: ipython2
+.. code:: python
 
     V('3 dup [1 - dup] loop')
 
@@ -1477,7 +1477,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
 ``map`` ``pam``
 ~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('10 [1 2 3] [*] map')
 
@@ -1487,7 +1487,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
     10 [10 20 30]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('10 5 [[*][/][+][-]] pam')
 
@@ -1503,7 +1503,7 @@ Expects a quoted program ``[Q]`` on the stack and some item under it,
 Run a quoted program enforcing
 `arity <https://en.wikipedia.org/wiki/Arity>`__.
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 4 5 [+] nullary')
 
@@ -1513,7 +1513,7 @@ Run a quoted program enforcing
     1 2 3 4 5 9
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 4 5 [+] unary')
 
@@ -1523,7 +1523,7 @@ Run a quoted program enforcing
     1 2 3 4 9
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 4 5 [+] binary')  # + has arity 2 so this is technically pointless...
 
@@ -1533,7 +1533,7 @@ Run a quoted program enforcing
     1 2 3 9
 
 
-.. code:: ipython2
+.. code:: python
 
     J('1 2 3 4 5 [+] ternary')
 
@@ -1546,7 +1546,7 @@ Run a quoted program enforcing
 ``step``
 ~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[step] help')
 
@@ -1574,7 +1574,7 @@ Run a quoted program enforcing
     
 
 
-.. code:: ipython2
+.. code:: python
 
     V('0 [1 2 3] [+] step')
 
@@ -1603,7 +1603,7 @@ Run a quoted program enforcing
 ``times``
 ~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     V('3 2 1 2 [+] times')
 
@@ -1627,7 +1627,7 @@ Run a quoted program enforcing
 ``b``
 ~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[b] help')
 
@@ -1641,7 +1641,7 @@ Run a quoted program enforcing
     
 
 
-.. code:: ipython2
+.. code:: python
 
     V('1 2 [3] [4] b')
 
@@ -1665,7 +1665,7 @@ Run a quoted program enforcing
 
     [predicate] [body] while
 
-.. code:: ipython2
+.. code:: python
 
     J('3 [0 >] [dup --] while')
 
@@ -1678,7 +1678,7 @@ Run a quoted program enforcing
 ``x``
 ~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[x] help')
 
@@ -1693,7 +1693,7 @@ Run a quoted program enforcing
     
 
 
-.. code:: ipython2
+.. code:: python
 
     V('1 [2] [i 3] x')  # Kind of a pointless example.
 
@@ -1720,7 +1720,7 @@ Implements `**Laws of Form**
 over quote-only datastructures (that is, datastructures that consist
 soley of containers, without strings or numbers or anything else.)
 
-.. code:: ipython2
+.. code:: python
 
     J('[] void')
 
@@ -1730,7 +1730,7 @@ soley of containers, without strings or numbers or anything else.)
     False
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[[]] void')
 
@@ -1740,7 +1740,7 @@ soley of containers, without strings or numbers or anything else.)
     True
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[[][[]]] void')
 
@@ -1750,7 +1750,7 @@ soley of containers, without strings or numbers or anything else.)
     True
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[[[]][[][]]] void')
 

@@ -148,11 +148,11 @@ Working backwards:
 Define ``treestep``
 -------------------
 
-.. code:: ipython2
+.. code:: python
 
     from notebook_preamble import D, J, V, define, DefinitionWrapper
 
-.. code:: ipython2
+.. code:: python
 
     DefinitionWrapper.add_definitions('''
     
@@ -173,7 +173,7 @@ all nodes in a tree with this function:
 
    sumtree == [pop 0] [] [sum +] treestep
 
-.. code:: ipython2
+.. code:: python
 
     define('sumtree == [pop 0] [] [sum +] treestep')
 
@@ -185,7 +185,7 @@ Running this function on an empty tree value gives zero:
    ------------------------------------
               0
 
-.. code:: ipython2
+.. code:: python
 
     J('[] sumtree')  # Empty tree.
 
@@ -205,7 +205,7 @@ Running it on a non-empty node:
    n m                                             +
    n+m
 
-.. code:: ipython2
+.. code:: python
 
     J('[23] sumtree')  # No child trees.
 
@@ -215,7 +215,7 @@ Running it on a non-empty node:
     23
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 []] sumtree')  # Child tree, empty.
 
@@ -225,7 +225,7 @@ Running it on a non-empty node:
     23
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 [2 [4]] [3]] sumtree')  # Non-empty child trees.
 
@@ -235,7 +235,7 @@ Running it on a non-empty node:
     32
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 [2 [8] [9]] [3] [4 []]] sumtree')  # Etc...
 
@@ -245,7 +245,7 @@ Running it on a non-empty node:
     49
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 [2 [8] [9]] [3] [4 []]] [pop 0] [] [cons sum] treestep')  # Alternate "spelling".
 
@@ -255,7 +255,7 @@ Running it on a non-empty node:
     49
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 [2 [8] [9]] [3] [4 []]] [] [pop 23] [cons] treestep')  # Replace each node.
 
@@ -265,7 +265,7 @@ Running it on a non-empty node:
     [23 [23 [23] [23]] [23] [23 []]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 [2 [8] [9]] [3] [4 []]] [] [pop 1] [cons] treestep')
 
@@ -275,7 +275,7 @@ Running it on a non-empty node:
     [1 [1 [1] [1]] [1] [1 []]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 [2 [8] [9]] [3] [4 []]] [] [pop 1] [cons] treestep sumtree')
 
@@ -285,7 +285,7 @@ Running it on a non-empty node:
     6
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[23 [2 [8] [9]] [3] [4 []]] [pop 0] [pop 1] [sum +] treestep')  # Combine replace and sum into one function.
 
@@ -295,7 +295,7 @@ Running it on a non-empty node:
     6
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[4 [3 [] [7]]] [pop 0] [pop 1] [sum +] treestep')  # Combine replace and sum into one function.
 
@@ -339,7 +339,7 @@ Traversal
 
 This doesn’t quite work:
 
-.. code:: ipython2
+.. code:: python
 
     J('[[3 0] [[2 0] [][]] [[9 0] [[5 0] [[4 0] [][]] [[8 0] [[6 0] [] [[7 0] [][]]][]]][]]] ["B"] [first] [i] treestep')
 
@@ -369,7 +369,7 @@ So:
 
    [] [first] [flatten cons] treestep
 
-.. code:: ipython2
+.. code:: python
 
     J('[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [first] [flatten cons] treestep')
 
@@ -401,7 +401,7 @@ So:
 
    [] [i roll< swons concat] [first] treestep
 
-.. code:: ipython2
+.. code:: python
 
     J('[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [uncons pop] [i roll< swons concat] treestep')
 
@@ -429,7 +429,7 @@ Plugging in our BTree structure:
 
    [key value] N [left right] [K] C
 
-.. code:: ipython2
+.. code:: python
 
     J('[["key" "value"] ["left"] ["right"] ] ["B"] ["N"] ["C"] treegrind')
 
@@ -444,7 +444,7 @@ Plugging in our BTree structure:
 
 Iteration through the nodes
 
-.. code:: ipython2
+.. code:: python
 
     J('[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [pop] ["N"] [step] treegrind')
 
@@ -456,7 +456,7 @@ Iteration through the nodes
 
 Sum the nodes’ keys.
 
-.. code:: ipython2
+.. code:: python
 
     J('0 [[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [pop] [first +] [step] treegrind')
 
@@ -468,7 +468,7 @@ Sum the nodes’ keys.
 
 Rebuild the tree using ``map`` (imitating ``treestep``.)
 
-.. code:: ipython2
+.. code:: python
 
     J('[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [[100 +] infra] [map cons] treegrind')
 
@@ -574,7 +574,7 @@ Putting it together
 
 To me, that seems simpler than the ``genrec`` version.
 
-.. code:: ipython2
+.. code:: python
 
     DefinitionWrapper.add_definitions('''
     
@@ -587,7 +587,7 @@ To me, that seems simpler than the ``genrec`` version.
     
     ''', D)
 
-.. code:: ipython2
+.. code:: python
 
     J('''\
     
@@ -603,7 +603,7 @@ To me, that seems simpler than the ``genrec`` version.
     15
 
 
-.. code:: ipython2
+.. code:: python
 
     J('''\
     

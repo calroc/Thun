@@ -12,7 +12,7 @@ As an example of developing a program in Joy let's take the first problem from t
 
     Find the sum of all the multiples of 3 or 5 below 1000.
 
-.. code:: ipython2
+.. code:: python
 
     from notebook_preamble import J, V, define
 
@@ -22,11 +22,11 @@ Sum a range filtered by a predicate
 Let's create a predicate that returns ``True`` if a number is a multiple
 of 3 or 5 and ``False`` otherwise.
 
-.. code:: ipython2
+.. code:: python
 
     define('P == [3 % not] dupdip 5 % not or')
 
-.. code:: ipython2
+.. code:: python
 
     V('80 P')
 
@@ -108,11 +108,11 @@ the counter to the running sum. This function will do that:
 
     PE1.1 == + [+] dupdip
 
-.. code:: ipython2
+.. code:: python
 
     define('PE1.1 == + [+] dupdip')
 
-.. code:: ipython2
+.. code:: python
 
     V('0 0 3 PE1.1')
 
@@ -131,7 +131,7 @@ the counter to the running sum. This function will do that:
         3 3 . 
 
 
-.. code:: ipython2
+.. code:: python
 
     V('0 0 [3 2 1 3 1 2 3] [PE1.1] step')
 
@@ -219,7 +219,7 @@ total to 60.
 How many multiples to sum?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: ipython2
+.. code:: python
 
     1000 / 15
 
@@ -232,7 +232,7 @@ How many multiples to sum?
 
 
 
-.. code:: ipython2
+.. code:: python
 
     66 * 15
 
@@ -245,7 +245,7 @@ How many multiples to sum?
 
 
 
-.. code:: ipython2
+.. code:: python
 
     1000 - 990
 
@@ -260,7 +260,7 @@ How many multiples to sum?
 
 We only want the terms *less than* 1000.
 
-.. code:: ipython2
+.. code:: python
 
     999 - 990
 
@@ -276,11 +276,11 @@ We only want the terms *less than* 1000.
 That means we want to run the full list of numbers sixty-six times to
 get to 990 and then the first four numbers 3 2 1 3 to get to 999.
 
-.. code:: ipython2
+.. code:: python
 
     define('PE1 == 0 0 66 [[3 2 1 3 1 2 3] [PE1.1] step] times [3 2 1 3] [PE1.1] step pop')
 
-.. code:: ipython2
+.. code:: python
 
     J('PE1')
 
@@ -305,7 +305,7 @@ integer terms from the list.
         3  2  1  3  1  2  3
     0b 11 10 01 11 01 10 11 == 14811
 
-.. code:: ipython2
+.. code:: python
 
     0b11100111011011
 
@@ -318,11 +318,11 @@ integer terms from the list.
 
 
 
-.. code:: ipython2
+.. code:: python
 
     define('PE1.2 == [3 & PE1.1] dupdip 2 >>')
 
-.. code:: ipython2
+.. code:: python
 
     V('0 0 14811 PE1.2')
 
@@ -349,7 +349,7 @@ integer terms from the list.
                  3 3 3702 . 
 
 
-.. code:: ipython2
+.. code:: python
 
     V('3 3 3702 PE1.2')
 
@@ -376,7 +376,7 @@ integer terms from the list.
                  8 5 925 . 
 
 
-.. code:: ipython2
+.. code:: python
 
     V('0 0 14811 7 [PE1.2] times pop')
 
@@ -518,11 +518,11 @@ integer terms from the list.
 
 And so we have at last:
 
-.. code:: ipython2
+.. code:: python
 
     define('PE1 == 0 0 66 [14811 7 [PE1.2] times pop] times 14811 4 [PE1.2] times popop')
 
-.. code:: ipython2
+.. code:: python
 
     J('PE1')
 
@@ -542,17 +542,17 @@ Let's refactor
       14811 n [PE1.2] times pop
     n 14811 swap [PE1.2] times pop
 
-.. code:: ipython2
+.. code:: python
 
     define('PE1.3 == 14811 swap [PE1.2] times pop')
 
 Now we can simplify the definition above:
 
-.. code:: ipython2
+.. code:: python
 
     define('PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop')
 
-.. code:: ipython2
+.. code:: python
 
     J('PE1')
 
@@ -581,11 +581,11 @@ then four more. In the *Generator Programs* notebook we derive a
 generator that can be repeatedly driven by the ``x`` combinator to
 produce a stream of the seven numbers repeating over and over again.
 
-.. code:: ipython2
+.. code:: python
 
     define('PE1.terms == [0 swap [dup [pop 14811] [] branch [3 &] dupdip 2 >>] dip rest cons]')
 
-.. code:: ipython2
+.. code:: python
 
     J('PE1.terms 21 [x] times')
 
@@ -598,7 +598,7 @@ produce a stream of the seven numbers repeating over and over again.
 We know from above that we need sixty-six times seven then four more
 terms to reach up to but not over one thousand.
 
-.. code:: ipython2
+.. code:: python
 
     J('7 66 * 4 +')
 
@@ -611,7 +611,7 @@ terms to reach up to but not over one thousand.
 Here they are...
 ~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('PE1.terms 466 [x] times pop')
 
@@ -624,7 +624,7 @@ Here they are...
 ...and they do sum to 999.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: ipython2
+.. code:: python
 
     J('[PE1.terms 466 [x] times pop] run sum')
 
@@ -638,7 +638,7 @@ Now we can use ``PE1.1`` to accumulate the terms as we go, and then
 ``pop`` the generator and the counter from the stack when we're done,
 leaving just the sum.
 
-.. code:: ipython2
+.. code:: python
 
     J('0 0 PE1.terms 466 [x [PE1.1] dip] times popop')
 
@@ -654,7 +654,7 @@ A little further analysis renders iteration unnecessary.
 Consider finding the sum of the positive integers less than or equal to
 ten.
 
-.. code:: ipython2
+.. code:: python
 
     J('[10 9 8 7 6 5 4 3 2 1] sum')
 
@@ -686,11 +686,11 @@ positive integers is:
 (The formula also works for odd values of N, I'll leave that to you if
 you want to work it out or you can take my word for it.)
 
-.. code:: ipython2
+.. code:: python
 
     define('F == dup ++ * 2 floordiv')
 
-.. code:: ipython2
+.. code:: python
 
     V('10 F')
 
@@ -727,7 +727,7 @@ And ending with:
 
 If we reverse one of these two blocks and sum pairs...
 
-.. code:: ipython2
+.. code:: python
 
     J('[3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip')
 
@@ -737,7 +737,7 @@ If we reverse one of these two blocks and sum pairs...
     [[978 15] [980 12] [981 10] [984 9] [985 6] [987 5] [990 3]]
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip [sum] map')
 
@@ -750,7 +750,7 @@ If we reverse one of these two blocks and sum pairs...
 (Interesting that the sequence of seven numbers appears again in the
 rightmost digit of each term.)
 
-.. code:: ipython2
+.. code:: python
 
     J('[ 3 5 6 9 10 12 15] reverse [978 980 981 984 985 987 990] zip [sum] map sum')
 
@@ -771,7 +771,7 @@ additional unpaired terms between 990 and 1000:
 So we can give the "sum of all the multiples of 3 or 5 below 1000" like
 so:
 
-.. code:: ipython2
+.. code:: python
 
     J('6945 33 * [993 995 996 999] cons sum')
 
