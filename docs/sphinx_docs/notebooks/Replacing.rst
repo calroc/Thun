@@ -9,14 +9,14 @@ dictionary. However, there’s no function that does that. Adding a new
 function to the dictionary is a meta-interpreter action, you have to do
 it in Python, not Joy.
 
-.. code:: ipython2
+.. code:: python
 
     from notebook_preamble import D, J, V
 
 A long trace
 ------------
 
-.. code:: ipython2
+.. code:: python
 
     V('[23 18] average')
 
@@ -81,7 +81,7 @@ An efficient ``sum`` function is already in the library. But for
 ``size`` we can use a “compiled” version hand-written in Python to speed
 up evaluation and make the trace more readable.
 
-.. code:: ipython2
+.. code:: python
 
     from joy.library import SimpleFunctionWrapper
     from joy.utils.stack import iter_stack
@@ -99,7 +99,7 @@ up evaluation and make the trace more readable.
 Now we replace the old version in the dictionary with the new version,
 and re-evaluate the expression.
 
-.. code:: ipython2
+.. code:: python
 
     D['size'] = size
 
@@ -108,7 +108,7 @@ A shorter trace
 
 You can see that ``size`` now executes in a single step.
 
-.. code:: ipython2
+.. code:: python
 
     V('[23 18] average')
 

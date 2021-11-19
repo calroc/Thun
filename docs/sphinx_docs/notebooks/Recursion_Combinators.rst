@@ -1,4 +1,4 @@
-.. code:: ipython2
+.. code:: python
 
     from notebook_preamble import D, DefinitionWrapper, J, V, define
 
@@ -80,7 +80,7 @@ is a recursive function ``H :: A -> C`` that converts a value of type
 It may be helpful to see this function implemented in imperative Python
 code.
 
-.. code:: ipython2
+.. code:: python
 
     def hylomorphism(c, F, P, G):
         '''Return a hylomorphism function H.'''
@@ -185,7 +185,7 @@ the left so we have a definition for ``hylomorphism``:
 
    hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec
 
-.. code:: ipython2
+.. code:: python
 
     define('hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec')
 
@@ -203,13 +203,13 @@ To sum a range of integers from 0 to *n* - 1:
 -  ``[G]`` is ``[-- dup]``
 -  ``[F]`` is ``[+]``
 
-.. code:: ipython2
+.. code:: python
 
     define('triangular_number == [1 <=] 0 [-- dup] [+] hylomorphism')
 
 Let’s try it:
 
-.. code:: ipython2
+.. code:: python
 
     J('5 triangular_number')
 
@@ -219,7 +219,7 @@ Let’s try it:
     10
 
 
-.. code:: ipython2
+.. code:: python
 
     J('[0 1 2 3 4 5 6] [triangular_number] map')
 
@@ -405,11 +405,11 @@ Each of the above variations can be used to make four slightly different
    H1 == [P]    [pop c]  [G]      [dip F]     genrec
       == [0 <=] [pop []] [-- dup] [dip swons] genrec
 
-.. code:: ipython2
+.. code:: python
 
     define('range == [0 <=] [] [-- dup] [swons] hylomorphism')
 
-.. code:: ipython2
+.. code:: python
 
     J('5 range')
 
@@ -427,11 +427,11 @@ Each of the above variations can be used to make four slightly different
    H2 == c  swap [P]    [pop] [G      [F]     dip] primrec
       == [] swap [0 <=] [pop] [-- dup [swons] dip] primrec
 
-.. code:: ipython2
+.. code:: python
 
     define('range_reverse == [] swap [0 <=] [pop] [-- dup [swons] dip] primrec')
 
-.. code:: ipython2
+.. code:: python
 
     J('5 range_reverse')
 
@@ -449,11 +449,11 @@ Each of the above variations can be used to make four slightly different
    H3 == [P]    [pop c]  [[G]  dupdip] [dip F]     genrec
       == [0 <=] [pop []] [[--] dupdip] [dip swons] genrec
 
-.. code:: ipython2
+.. code:: python
 
     define('ranger == [0 <=] [pop []] [[--] dupdip] [dip swons] genrec')
 
-.. code:: ipython2
+.. code:: python
 
     J('5 ranger')
 
@@ -471,11 +471,11 @@ Each of the above variations can be used to make four slightly different
    H4 == c  swap [P]    [pop] [[F]     dupdip G ] primrec
       == [] swap [0 <=] [pop] [[swons] dupdip --] primrec
 
-.. code:: ipython2
+.. code:: python
 
     define('ranger_reverse == [] swap [0 <=] [pop] [[swons] dupdip --] primrec')
 
-.. code:: ipython2
+.. code:: python
 
     J('5 ranger_reverse')
 
@@ -501,7 +501,7 @@ and makes some new value.
 
    C == [not] c [uncons swap] [F] hylomorphism
 
-.. code:: ipython2
+.. code:: python
 
     define('swuncons == uncons swap')  # Awkward name.
 
@@ -511,11 +511,11 @@ An example of a catamorphism is the sum function.
 
    sum == [not] 0 [swuncons] [+] hylomorphism
 
-.. code:: ipython2
+.. code:: python
 
     define('sum == [not] 0 [swuncons] [+] hylomorphism')
 
-.. code:: ipython2
+.. code:: python
 
     J('[5 4 3 2 1] sum')
 
@@ -531,7 +531,7 @@ The ``step`` combinator
 The ``step`` combinator will usually be better to use than
 ``catamorphism``.
 
-.. code:: ipython2
+.. code:: python
 
     J('[step] help')
 
@@ -560,11 +560,11 @@ The ``step`` combinator will usually be better to use than
     
 
 
-.. code:: ipython2
+.. code:: python
 
     define('sum == 0 swap [+] step')
 
-.. code:: ipython2
+.. code:: python
 
     J('[5 4 3 2 1] sum')
 
@@ -592,11 +592,11 @@ With:
    G == --
    P == 1 <=
 
-.. code:: ipython2
+.. code:: python
 
     define('factorial == 1 swap [1 <=] [pop] [[*] dupdip --] primrec')
 
-.. code:: ipython2
+.. code:: python
 
     J('5 factorial')
 
@@ -635,11 +635,11 @@ We would use:
    G == rest dup
    P == not
 
-.. code:: ipython2
+.. code:: python
 
     define('tails == [] swap [not] [pop] [rest dup [swons] dip] primrec')
 
-.. code:: ipython2
+.. code:: python
 
     J('[1 2 3] tails')
 
