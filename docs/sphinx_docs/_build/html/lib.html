@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Functions Grouped by, er, Function with Examples &#8212; Thun 0.4.1 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Type Inference of Joy Expressions" href="types.html" />
@@ -30,14 +29,16 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="functions-grouped-by-er-function-with-examples">
+  <section id="functions-grouped-by-er-function-with-examples">
 <h1>Functions Grouped by, er, Function with Examples<a class="headerlink" href="#functions-grouped-by-er-function-with-examples" title="Permalink to this headline">¶</a></h1>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="k">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from notebook_preamble import J, V
 </pre></div>
 </div>
-<div class="section" id="stack-chatter">
+<section id="stack-chatter">
 <h2>Stack Chatter<a class="headerlink" href="#stack-chatter" title="Permalink to this headline">¶</a></h2>
 <p>This is what I like to call the functions that just rearrange things on
 the stack. (One thing I want to mention is that during a hypothetical
@@ -45,144 +46,144 @@ compilation phase these “stack chatter” words effectively disappear
 because we can map the logical stack locations to registers that remain
 static for the duration of the computation. This remains to be done but
 it’s “off the shelf” technology.)</p>
-<div class="section" id="clear">
+<section id="clear">
 <h3><code class="docutils literal notranslate"><span class="pre">clear</span></code><a class="headerlink" href="#clear" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 clear&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 clear&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">nothing</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="dup-dupd">
+</section>
+<section id="dup-dupd">
 <h3><code class="docutils literal notranslate"><span class="pre">dup</span></code> <code class="docutils literal notranslate"><span class="pre">dupd</span></code><a class="headerlink" href="#dup-dupd" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 dup&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 dup&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 dupd&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 dupd&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">3</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="enstacken-disenstacken-stack-unstack">
+</section>
+<section id="enstacken-disenstacken-stack-unstack">
 <h3><code class="docutils literal notranslate"><span class="pre">enstacken</span></code> <code class="docutils literal notranslate"><span class="pre">disenstacken</span></code> <code class="docutils literal notranslate"><span class="pre">stack</span></code> <code class="docutils literal notranslate"><span class="pre">unstack</span></code><a class="headerlink" href="#enstacken-disenstacken-stack-unstack" title="Permalink to this headline">¶</a></h3>
 <p>(I may have these paired up wrong. I.e. <code class="docutils literal notranslate"><span class="pre">disenstacken</span></code> should be
 <code class="docutils literal notranslate"><span class="pre">unstack</span></code> and vice versa.)</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 enstacken&#39;</span><span class="p">)</span> <span class="c1"># Replace the stack with a quote of itself.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 enstacken&#39;) # Replace the stack with a quote of itself.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;4 5 6 [3 2 1] disenstacken&#39;</span><span class="p">)</span>  <span class="c1"># Unpack a list onto the stack.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;4 5 6 [3 2 1] disenstacken&#39;)  # Unpack a list onto the stack.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 stack&#39;</span><span class="p">)</span>  <span class="c1"># Get the stack on the stack.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 stack&#39;)  # Get the stack on the stack.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 [4 5 6] unstack&#39;</span><span class="p">)</span>  <span class="c1"># Replace the stack with the list on top.</span>
-                            <span class="c1"># The items appear reversed but they are not,</span>
-                            <span class="c1"># 4 is on the top of both the list and the stack.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 [4 5 6] unstack&#39;)  # Replace the stack with the list on top.
+                            # The items appear reversed but they are not,
+                            # 4 is on the top of both the list and the stack.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6</span> <span class="mi">5</span> <span class="mi">4</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="pop-popd-popop">
+</section>
+<section id="pop-popd-popop">
 <h3><code class="docutils literal notranslate"><span class="pre">pop</span></code> <code class="docutils literal notranslate"><span class="pre">popd</span></code> <code class="docutils literal notranslate"><span class="pre">popop</span></code><a class="headerlink" href="#pop-popd-popop" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 pop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 popd&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 popd&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">3</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 popop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 popop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="roll-rolldown-roll-rollup">
+</section>
+<section id="roll-rolldown-roll-rollup">
 <h3><code class="docutils literal notranslate"><span class="pre">roll&lt;</span></code> <code class="docutils literal notranslate"><span class="pre">rolldown</span></code> <code class="docutils literal notranslate"><span class="pre">roll&gt;</span></code> <code class="docutils literal notranslate"><span class="pre">rollup</span></code><a class="headerlink" href="#roll-rolldown-roll-rollup" title="Permalink to this headline">¶</a></h3>
 <p>The “down” and “up” refer to the movement of two of the top three items
 (displacing the third.)</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 roll&lt;&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 roll&lt;&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 roll&gt;&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 roll&gt;&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="swap">
+</section>
+<section id="swap">
 <h3><code class="docutils literal notranslate"><span class="pre">swap</span></code><a class="headerlink" href="#swap" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 swap&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 swap&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tuck-over">
+</section>
+<section id="tuck-over">
 <h3><code class="docutils literal notranslate"><span class="pre">tuck</span></code> <code class="docutils literal notranslate"><span class="pre">over</span></code><a class="headerlink" href="#tuck-over" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 tuck&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 tuck&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">3</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 over&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 over&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">2</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="unit-quoted-unquoted">
+</section>
+<section id="unit-quoted-unquoted">
 <h3><code class="docutils literal notranslate"><span class="pre">unit</span></code> <code class="docutils literal notranslate"><span class="pre">quoted</span></code> <code class="docutils literal notranslate"><span class="pre">unquoted</span></code><a class="headerlink" href="#unit-quoted-unquoted" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 unit&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 unit&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 quoted&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 quoted&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="mi">3</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 [2] 3 unquoted&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 [2] 3 unquoted&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;1 [dup] 3 unquoted&#39;</span><span class="p">)</span>  <span class="c1"># Unquoting evaluates.  Be aware.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;1 [dup] 3 unquoted&#39;)  # Unquoting evaluates.  Be aware.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="o">.</span> <span class="mi">1</span> <span class="p">[</span><span class="n">dup</span><span class="p">]</span> <span class="mi">3</span> <span class="n">unquoted</span>
@@ -197,447 +198,447 @@ it’s “off the shelf” technology.)</p>
         <span class="mi">1</span> <span class="mi">1</span> <span class="mi">3</span> <span class="o">.</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="list-words">
+</section>
+</section>
+<section id="list-words">
 <h2>List words<a class="headerlink" href="#list-words" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="concat-swoncat-shunt">
+<section id="concat-swoncat-shunt">
 <h3><code class="docutils literal notranslate"><span class="pre">concat</span></code> <code class="docutils literal notranslate"><span class="pre">swoncat</span></code> <code class="docutils literal notranslate"><span class="pre">shunt</span></code><a class="headerlink" href="#concat-swoncat-shunt" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] [4 5 6] concat&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3] [4 5 6] concat&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] [4 5 6] swoncat&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3] [4 5 6] swoncat&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] [4 5 6] shunt&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3] [4 5 6] shunt&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">6</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="cons-swons-uncons">
+</section>
+<section id="cons-swons-uncons">
 <h3><code class="docutils literal notranslate"><span class="pre">cons</span></code> <code class="docutils literal notranslate"><span class="pre">swons</span></code> <code class="docutils literal notranslate"><span class="pre">uncons</span></code><a class="headerlink" href="#cons-swons-uncons" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 [2 3] cons&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 [2 3] cons&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[2 3] 1 swons&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[2 3] 1 swons&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] uncons&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3] uncons&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="first-second-third-rest">
+</section>
+<section id="first-second-third-rest">
 <h3><code class="docutils literal notranslate"><span class="pre">first</span></code> <code class="docutils literal notranslate"><span class="pre">second</span></code> <code class="docutils literal notranslate"><span class="pre">third</span></code> <code class="docutils literal notranslate"><span class="pre">rest</span></code><a class="headerlink" href="#first-second-third-rest" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] first&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 4] first&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] second&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 4] second&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] third&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 4] third&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] rest&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 4] rest&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="flatten">
+</section>
+<section id="flatten">
 <h3><code class="docutils literal notranslate"><span class="pre">flatten</span></code><a class="headerlink" href="#flatten" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[1] [2 [3] 4] [5 6]] flatten&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[[1] [2 [3] 4] [5 6]] flatten&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="getitem-at-of-drop-take">
+</section>
+<section id="getitem-at-of-drop-take">
 <h3><code class="docutils literal notranslate"><span class="pre">getitem</span></code> <code class="docutils literal notranslate"><span class="pre">at</span></code> <code class="docutils literal notranslate"><span class="pre">of</span></code> <code class="docutils literal notranslate"><span class="pre">drop</span></code> <code class="docutils literal notranslate"><span class="pre">take</span></code><a class="headerlink" href="#getitem-at-of-drop-take" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">at</span></code> and <code class="docutils literal notranslate"><span class="pre">getitem</span></code> are the same function. <code class="docutils literal notranslate"><span class="pre">of</span> <span class="pre">==</span> <span class="pre">swap</span> <span class="pre">at</span></code></p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[10 11 12 13 14] 2 getitem&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[10 11 12 13 14] 2 getitem&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">12</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] 0 at&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 4] 0 at&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;2 [1 2 3 4] of&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;2 [1 2 3 4] of&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] 2 drop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 4] 2 drop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] 2 take&#39;</span><span class="p">)</span>  <span class="c1"># reverses the order</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 4] 2 take&#39;)  # reverses the order
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">2</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">reverse</span></code> could be defines as <code class="docutils literal notranslate"><span class="pre">reverse</span> <span class="pre">==</span> <span class="pre">dup</span> <span class="pre">size</span> <span class="pre">take</span></code></p>
-</div>
-<div class="section" id="remove">
+</section>
+<section id="remove">
 <h3><code class="docutils literal notranslate"><span class="pre">remove</span></code><a class="headerlink" href="#remove" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 1 4] 1 remove&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 1 4] 1 remove&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="reverse">
+</section>
+<section id="reverse">
 <h3><code class="docutils literal notranslate"><span class="pre">reverse</span></code><a class="headerlink" href="#reverse" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 4] reverse&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 4] reverse&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="size">
+</section>
+<section id="size">
 <h3><code class="docutils literal notranslate"><span class="pre">size</span></code><a class="headerlink" href="#size" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 1 1 1] size&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 1 1 1] size&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">4</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="swaack">
+</section>
+<section id="swaack">
 <h3><code class="docutils literal notranslate"><span class="pre">swaack</span></code><a class="headerlink" href="#swaack" title="Permalink to this headline">¶</a></h3>
 <p>“Swap stack” swap the list on the top of the stack for the stack, and
 put the old stack on top of the new one. Think of it as a context
 switch. Niether of the lists/stacks change their order.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 [4 5 6] swaack&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 [4 5 6] swaack&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6</span> <span class="mi">5</span> <span class="mi">4</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="choice-select">
+</section>
+<section id="choice-select">
 <h3><code class="docutils literal notranslate"><span class="pre">choice</span></code> <code class="docutils literal notranslate"><span class="pre">select</span></code><a class="headerlink" href="#choice-select" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 1 choice&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 1 choice&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">9</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 0 choice&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 0 choice&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 9 7] 1 select&#39;</span><span class="p">)</span>  <span class="c1"># select is basically getitem, should retire it?</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 9 7] 1 select&#39;)  # select is basically getitem, should retire it?
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">9</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 9 7] 0 select&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 9 7] 0 select&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="zip">
+</section>
+<section id="zip">
 <h3><code class="docutils literal notranslate"><span class="pre">zip</span></code><a class="headerlink" href="#zip" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] [6 5 4] zip&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3] [6 5 4] zip&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">6</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] [6 5 4] zip [sum] map&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3] [6 5 4] zip [sum] map&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">7</span> <span class="mi">7</span> <span class="mi">7</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="math-words">
+</section>
+</section>
+<section id="math-words">
 <h2>Math words<a class="headerlink" href="#math-words" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="add">
+<section id="add">
 <h3><code class="docutils literal notranslate"><span class="pre">+</span></code> <code class="docutils literal notranslate"><span class="pre">add</span></code><a class="headerlink" href="#add" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 +&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 +&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">32</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="sub">
+</section>
+<section id="sub">
 <h3><code class="docutils literal notranslate"><span class="pre">-</span></code> <code class="docutils literal notranslate"><span class="pre">sub</span></code><a class="headerlink" href="#sub" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 -&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 -&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">14</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="mul">
+</section>
+<section id="mul">
 <h3><code class="docutils literal notranslate"><span class="pre">*</span></code> <code class="docutils literal notranslate"><span class="pre">mul</span></code><a class="headerlink" href="#mul" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 *&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 *&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">207</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="div-floordiv-truediv">
+</section>
+<section id="div-floordiv-truediv">
 <h3><code class="docutils literal notranslate"><span class="pre">/</span></code> <code class="docutils literal notranslate"><span class="pre">div</span></code> <code class="docutils literal notranslate"><span class="pre">floordiv</span></code> <code class="docutils literal notranslate"><span class="pre">truediv</span></code><a class="headerlink" href="#div-floordiv-truediv" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 /&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 /&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">2.5555555555555554</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 -9 truediv&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 -9 truediv&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mf">2.5555555555555554</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 div&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 div&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 floordiv&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 floordiv&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 -9 div&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 -9 div&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mi">3</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 -9 floordiv&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 -9 floordiv&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mi">3</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="mod-modulus-rem-remainder">
+</section>
+<section id="mod-modulus-rem-remainder">
 <h3><code class="docutils literal notranslate"><span class="pre">%</span></code> <code class="docutils literal notranslate"><span class="pre">mod</span></code> <code class="docutils literal notranslate"><span class="pre">modulus</span></code> <code class="docutils literal notranslate"><span class="pre">rem</span></code> <code class="docutils literal notranslate"><span class="pre">remainder</span></code><a class="headerlink" href="#mod-modulus-rem-remainder" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 %&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 %&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">5</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="neg">
+</section>
+<section id="neg">
 <h3><code class="docutils literal notranslate"><span class="pre">neg</span></code><a class="headerlink" href="#neg" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 neg -5 neg&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 neg -5 neg&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mi">23</span> <span class="mi">5</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="pow">
+</section>
+<section id="pow">
 <h3><code class="docutils literal notranslate"><span class="pre">pow</span></code><a class="headerlink" href="#pow" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;2 10 pow&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;2 10 pow&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1024</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="sqr-sqrt">
+</section>
+<section id="sqr-sqrt">
 <h3><code class="docutils literal notranslate"><span class="pre">sqr</span></code> <code class="docutils literal notranslate"><span class="pre">sqrt</span></code><a class="headerlink" href="#sqr-sqrt" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 sqr&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 sqr&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">529</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 sqrt&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 sqrt&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">4.795831523312719</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="succ-pred">
+</section>
+<section id="succ-pred">
 <h3><code class="docutils literal notranslate"><span class="pre">++</span></code> <code class="docutils literal notranslate"><span class="pre">succ</span></code> <code class="docutils literal notranslate"><span class="pre">--</span></code> <code class="docutils literal notranslate"><span class="pre">pred</span></code><a class="headerlink" href="#succ-pred" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 ++&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 ++&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 --&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 --&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="lshift-rshift">
+</section>
+<section id="lshift-rshift">
 <h3><code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> <code class="docutils literal notranslate"><span class="pre">lshift</span></code> <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> <code class="docutils literal notranslate"><span class="pre">rshift</span></code><a class="headerlink" href="#lshift-rshift" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;8 1 &lt;&lt;&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;8 1 &lt;&lt;&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">16</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;8 1 &gt;&gt;&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;8 1 &gt;&gt;&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">4</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="average">
+</section>
+<section id="average">
 <h3><code class="docutils literal notranslate"><span class="pre">average</span></code><a class="headerlink" href="#average" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 5] average&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 5] average&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">2.75</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="range-range-to-zero-down-to-zero">
+</section>
+<section id="range-range-to-zero-down-to-zero">
 <h3><code class="docutils literal notranslate"><span class="pre">range</span></code> <code class="docutils literal notranslate"><span class="pre">range_to_zero</span></code> <code class="docutils literal notranslate"><span class="pre">down_to_zero</span></code><a class="headerlink" href="#range-range-to-zero-down-to-zero" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 range&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;5 range&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 range_to_zero&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;5 range_to_zero&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 down_to_zero&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;5 down_to_zero&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="product">
+</section>
+<section id="product">
 <h3><code class="docutils literal notranslate"><span class="pre">product</span></code><a class="headerlink" href="#product" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 5] product&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 5] product&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">30</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="sum">
+</section>
+<section id="sum">
 <h3><code class="docutils literal notranslate"><span class="pre">sum</span></code><a class="headerlink" href="#sum" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 5] sum&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 5] sum&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">11</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="min">
+</section>
+<section id="min">
 <h3><code class="docutils literal notranslate"><span class="pre">min</span></code><a class="headerlink" href="#min" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3 5] min&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3 5] min&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="gcd">
+</section>
+<section id="gcd">
 <h3><code class="docutils literal notranslate"><span class="pre">gcd</span></code><a class="headerlink" href="#gcd" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;45 30 gcd&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;45 30 gcd&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">15</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="least-fraction">
+</section>
+<section id="least-fraction">
 <h3><code class="docutils literal notranslate"><span class="pre">least_fraction</span></code><a class="headerlink" href="#least-fraction" title="Permalink to this headline">¶</a></h3>
 <p>If we represent fractions as a quoted pair of integers [q d] this word
 reduces them to their … least common factors or whatever.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[45 30] least_fraction&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[45 30] least_fraction&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">2</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 12] least_fraction&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 12] least_fraction&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">23</span> <span class="mi">12</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="logic-and-comparison">
+</section>
+</section>
+<section id="logic-and-comparison">
 <h2>Logic and Comparison<a class="headerlink" href="#logic-and-comparison" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="truthy">
+<section id="truthy">
 <h3><code class="docutils literal notranslate"><span class="pre">?</span></code> <code class="docutils literal notranslate"><span class="pre">truthy</span></code><a class="headerlink" href="#truthy" title="Permalink to this headline">¶</a></h3>
 <p>Get the Boolean value of the item on the top of the stack.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 truthy&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 truthy&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] truthy&#39;</span><span class="p">)</span>  <span class="c1"># Python semantics.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[] truthy&#39;)  # Python semantics.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">False</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 truthy&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;0 truthy&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">False</span>
@@ -646,7 +647,7 @@ reduces them to their … least common factors or whatever.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>? == dup truthy
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 ?&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;23 ?&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        . 23 ?
@@ -656,31 +657,31 @@ reduces them to their … least common factors or whatever.</p>
 23 True .
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] ?&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[] ?&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[]</span> <span class="kc">False</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 ?&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;0 ?&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="kc">False</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="and">
+</section>
+<section id="and">
 <h3><code class="docutils literal notranslate"><span class="pre">&amp;</span></code> <code class="docutils literal notranslate"><span class="pre">and</span></code><a class="headerlink" href="#and" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 &amp;&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 &amp;&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="ne">
+</section>
+<section id="ne">
 <h3><code class="docutils literal notranslate"><span class="pre">!=</span></code> <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code> <code class="docutils literal notranslate"><span class="pre">ne</span></code><a class="headerlink" href="#ne" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 9 !=&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 9 !=&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span>
@@ -690,65 +691,65 @@ reduces them to their … least common factors or whatever.</p>
 <div class="line">The usual suspects: - <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> <code class="docutils literal notranslate"><span class="pre">lt</span></code> - <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code> <code class="docutils literal notranslate"><span class="pre">le</span></code></div>
 <div class="line">- <code class="docutils literal notranslate"><span class="pre">=</span></code> <code class="docutils literal notranslate"><span class="pre">eq</span></code> - <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> <code class="docutils literal notranslate"><span class="pre">gt</span></code> - <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> <code class="docutils literal notranslate"><span class="pre">ge</span></code> - <code class="docutils literal notranslate"><span class="pre">not</span></code> - <code class="docutils literal notranslate"><span class="pre">or</span></code></div>
 </div>
-</div>
-<div class="section" id="xor">
+</section>
+<section id="xor">
 <h3><code class="docutils literal notranslate"><span class="pre">^</span></code> <code class="docutils literal notranslate"><span class="pre">xor</span></code><a class="headerlink" href="#xor" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 1 ^&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 1 ^&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 0 ^&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 0 ^&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="miscellaneous">
+</section>
+</section>
+<section id="miscellaneous">
 <h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="help">
+<section id="help">
 <h3><code class="docutils literal notranslate"><span class="pre">help</span></code><a class="headerlink" href="#help" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[help] help&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[help] help&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Accepts</span> <span class="n">a</span> <span class="n">quoted</span> <span class="n">symbol</span> <span class="n">on</span> <span class="n">the</span> <span class="n">top</span> <span class="n">of</span> <span class="n">the</span> <span class="n">stack</span> <span class="ow">and</span> <span class="n">prints</span> <span class="n">its</span> <span class="n">docs</span><span class="o">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="parse">
+</section>
+<section id="parse">
 <h3><code class="docutils literal notranslate"><span class="pre">parse</span></code><a class="headerlink" href="#parse" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[parse] help&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[parse] help&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Parse</span> <span class="n">the</span> <span class="n">string</span> <span class="n">on</span> <span class="n">the</span> <span class="n">stack</span> <span class="n">to</span> <span class="n">a</span> <span class="n">Joy</span> <span class="n">expression</span><span class="o">.</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 &quot;2 [3] dup&quot; parse&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 &quot;2 [3] dup&quot; parse&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="n">dup</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="run">
+</section>
+<section id="run">
 <h3><code class="docutils literal notranslate"><span class="pre">run</span></code><a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h3>
 <p>Evaluate a quoted Joy sequence.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 dup + +] run&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 dup + +] run&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="combinators">
+</section>
+</section>
+<section id="combinators">
 <h2>Combinators<a class="headerlink" href="#combinators" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="app1-app2-app3">
+<section id="app1-app2-app3">
 <h3><code class="docutils literal notranslate"><span class="pre">app1</span></code> <code class="docutils literal notranslate"><span class="pre">app2</span></code> <code class="docutils literal notranslate"><span class="pre">app3</span></code><a class="headerlink" href="#app1-app2-app3" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[app1] help&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[app1] help&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Given</span> <span class="n">a</span> <span class="n">quoted</span> <span class="n">program</span> <span class="n">on</span> <span class="n">TOS</span> <span class="ow">and</span> <span class="n">anything</span> <span class="k">as</span> <span class="n">the</span> <span class="n">second</span> <span class="n">stack</span> <span class="n">item</span> <span class="n">run</span>
@@ -760,19 +761,19 @@ reduces them to their … least common factors or whatever.</p>
       <span class="o">...</span> <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="o">.</span> <span class="n">infra</span> <span class="n">first</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;10 4 [sqr *] app1&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;10 4 [sqr *] app1&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="mi">160</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;10 3 4 [sqr *] app2&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;10 3 4 [sqr *] app2&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="mi">90</span> <span class="mi">160</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[app2] help&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[app2] help&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Like</span> <span class="n">app1</span> <span class="k">with</span> <span class="n">two</span> <span class="n">items</span><span class="o">.</span>
@@ -783,14 +784,14 @@ reduces them to their … least common factors or whatever.</p>
        <span class="p">[</span><span class="n">x</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>   <span class="n">infra</span> <span class="n">first</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;10 2 3 4 [sqr *] app3&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;10 2 3 4 [sqr *] app3&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="mi">40</span> <span class="mi">90</span> <span class="mi">160</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="anamorphism">
+</section>
+<section id="anamorphism">
 <h3><code class="docutils literal notranslate"><span class="pre">anamorphism</span></code><a class="headerlink" href="#anamorphism" title="Permalink to this headline">¶</a></h3>
 <p>Given an initial value, a predicate function <code class="docutils literal notranslate"><span class="pre">[P]</span></code>, and a generator
 function <code class="docutils literal notranslate"><span class="pre">[G]</span></code>, the <code class="docutils literal notranslate"><span class="pre">anamorphism</span></code> combinator creates a sequence.</p>
@@ -803,29 +804,29 @@ function <code class="docutils literal notranslate"><span class="pre">[G]</span>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">range</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dup</span><span class="p">]</span> <span class="n">anamorphism</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 [0 &lt;=] [1 - dup] anamorphism&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;3 [0 &lt;=] [1 - dup] anamorphism&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="branch">
+</section>
+<section id="branch">
 <h3><code class="docutils literal notranslate"><span class="pre">branch</span></code><a class="headerlink" href="#branch" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 4 1 [+] [*] branch&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;3 4 1 [+] [*] branch&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">12</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 4 0 [+] [*] branch&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;3 4 0 [+] [*] branch&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">7</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="cleave">
+</section>
+<section id="cleave">
 <h3><code class="docutils literal notranslate"><span class="pre">cleave</span></code><a class="headerlink" href="#cleave" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span> <span class="n">x</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">cleave</span>
 </pre></div>
@@ -845,42 +846,42 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cleave</span> <span class="o">==</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="n">app2</span> <span class="p">[</span><span class="n">popd</span><span class="p">]</span> <span class="n">dip</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;10 2 [+] [-] cleave&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;10 2 [+] [-] cleave&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="mi">12</span> <span class="mi">8</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="dip-dipd-dipdd">
+</section>
+<section id="dip-dipd-dipdd">
 <h3><code class="docutils literal notranslate"><span class="pre">dip</span></code> <code class="docutils literal notranslate"><span class="pre">dipd</span></code> <code class="docutils literal notranslate"><span class="pre">dipdd</span></code><a class="headerlink" href="#dip-dipd-dipdd" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5 [+] dip&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 4 5 [+] dip&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">7</span> <span class="mi">5</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5 [+] dipd&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 4 5 [+] dipd&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">5</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5 [+] dipdd&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 4 5 [+] dipdd&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="dupdip">
+</section>
+<section id="dupdip">
 <h3><code class="docutils literal notranslate"><span class="pre">dupdip</span></code><a class="headerlink" href="#dupdip" title="Permalink to this headline">¶</a></h3>
 <p>Expects a quoted program <code class="docutils literal notranslate"><span class="pre">[Q]</span></code> on the stack and some item under it,
 <code class="docutils literal notranslate"><span class="pre">dup</span></code> the item and <code class="docutils literal notranslate"><span class="pre">dip</span></code> the quoted program under it.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">dupdip</span> <span class="o">==</span> <span class="n">n</span> <span class="n">Q</span> <span class="n">n</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 [++] dupdip *&#39;</span><span class="p">)</span>  <span class="c1"># N(N + 1)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;23 [++] dupdip *&#39;)  # N(N + 1)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        <span class="o">.</span> <span class="mi">23</span> <span class="p">[</span><span class="o">++</span><span class="p">]</span> <span class="n">dupdip</span> <span class="o">*</span>
@@ -892,10 +893,10 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
     <span class="mi">552</span> <span class="o">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="genrec-primrec">
+</section>
+<section id="genrec-primrec">
 <h3><code class="docutils literal notranslate"><span class="pre">genrec</span></code> <code class="docutils literal notranslate"><span class="pre">primrec</span></code><a class="headerlink" href="#genrec-primrec" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[genrec] help&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[genrec] help&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">General</span> <span class="n">Recursion</span> <span class="n">Combinator</span><span class="o">.</span>
@@ -944,16 +945,16 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 [1 &lt;=] [] [dup --] [i *] genrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;3 [1 &lt;=] [] [dup --] [i *] genrec&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="i">
+</section>
+<section id="i">
 <h3><code class="docutils literal notranslate"><span class="pre">i</span></code><a class="headerlink" href="#i" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;1 2 3 [+ +] i&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;1 2 3 [+ +] i&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="o">.</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="p">[</span><span class="o">+</span> <span class="o">+</span><span class="p">]</span> <span class="n">i</span>
@@ -966,28 +967,28 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
           <span class="mi">6</span> <span class="o">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="ifte">
+</section>
+<section id="ifte">
 <h3><code class="docutils literal notranslate"><span class="pre">ifte</span></code><a class="headerlink" href="#ifte" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">predicate</span><span class="p">]</span> <span class="p">[</span><span class="n">then</span><span class="p">]</span> <span class="p">[</span><span class="k">else</span><span class="p">]</span> <span class="n">ifte</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 [1] [+] [*] ifte&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 [1] [+] [*] ifte&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 [0] [+] [*] ifte&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 [0] [+] [*] ifte&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="infra">
+</section>
+<section id="infra">
 <h3><code class="docutils literal notranslate"><span class="pre">infra</span></code><a class="headerlink" href="#infra" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;1 2 3 [4 5 6] [* +] infra&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;1 2 3 [4 5 6] [* +] infra&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                    <span class="o">.</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">]</span> <span class="p">[</span><span class="o">*</span> <span class="o">+</span><span class="p">]</span> <span class="n">infra</span>
@@ -1003,10 +1004,10 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
          <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="loop">
+</section>
+<section id="loop">
 <h3><code class="docutils literal notranslate"><span class="pre">loop</span></code><a class="headerlink" href="#loop" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[loop] help&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[loop] help&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Basic</span> <span class="n">loop</span> <span class="n">combinator</span><span class="o">.</span>
@@ -1020,7 +1021,7 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
           <span class="o">...</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;3 dup [1 - dup] loop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;3 dup [1 - dup] loop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="o">.</span> <span class="mi">3</span> <span class="n">dup</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dup</span><span class="p">]</span> <span class="n">loop</span>
@@ -1045,54 +1046,54 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
             <span class="mi">0</span> <span class="o">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="map-pam">
+</section>
+<section id="map-pam">
 <h3><code class="docutils literal notranslate"><span class="pre">map</span></code> <code class="docutils literal notranslate"><span class="pre">pam</span></code><a class="headerlink" href="#map-pam" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;10 [1 2 3] [*] map&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;10 [1 2 3] [*] map&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="p">[</span><span class="mi">10</span> <span class="mi">20</span> <span class="mi">30</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;10 5 [[*][/][+][-]] pam&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;10 5 [[*][/][+][-]] pam&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="mi">5</span> <span class="p">[</span><span class="mi">50</span> <span class="mf">2.0</span> <span class="mi">15</span> <span class="mi">5</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="nullary-unary-binary-ternary">
+</section>
+<section id="nullary-unary-binary-ternary">
 <h3><code class="docutils literal notranslate"><span class="pre">nullary</span></code> <code class="docutils literal notranslate"><span class="pre">unary</span></code> <code class="docutils literal notranslate"><span class="pre">binary</span></code> <code class="docutils literal notranslate"><span class="pre">ternary</span></code><a class="headerlink" href="#nullary-unary-binary-ternary" title="Permalink to this headline">¶</a></h3>
 <p>Run a quoted program enforcing
 <a class="reference external" href="https://en.wikipedia.org/wiki/Arity">arity</a>.</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5 [+] nullary&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 4 5 [+] nullary&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">9</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5 [+] unary&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 4 5 [+] unary&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">9</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5 [+] binary&#39;</span><span class="p">)</span>  <span class="c1"># + has arity 2 so this is technically pointless...</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 4 5 [+] binary&#39;)  # + has arity 2 so this is technically pointless...
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">9</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 2 3 4 5 [+] ternary&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 2 3 4 5 [+] ternary&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">9</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="step">
+</section>
+<section id="step">
 <h3><code class="docutils literal notranslate"><span class="pre">step</span></code><a class="headerlink" href="#step" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[step] help&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[step] help&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Run</span> <span class="n">a</span> <span class="n">quoted</span> <span class="n">program</span> <span class="n">on</span> <span class="n">each</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">sequence</span><span class="o">.</span>
@@ -1115,7 +1116,7 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
 <span class="n">on</span> <span class="n">top</span> <span class="n">of</span> <span class="n">the</span> <span class="n">stack</span><span class="o">.</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;0 [1 2 3] [+] step&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;0 [1 2 3] [+] step&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="o">.</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">step</span>
@@ -1137,10 +1138,10 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
             <span class="mi">6</span> <span class="o">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="times">
+</section>
+<section id="times">
 <h3><code class="docutils literal notranslate"><span class="pre">times</span></code><a class="headerlink" href="#times" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;3 2 1 2 [+] times&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;3 2 1 2 [+] times&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="o">.</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">times</span>
@@ -1157,10 +1158,10 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
           <span class="mi">6</span> <span class="o">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="b">
+</section>
+<section id="b">
 <h3><code class="docutils literal notranslate"><span class="pre">b</span></code><a class="headerlink" href="#b" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[b] help&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[b] help&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">==</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="n">dip</span> <span class="n">i</span>
@@ -1169,7 +1170,7 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
 <span class="o">...</span> <span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">b</span> <span class="o">==</span> <span class="o">...</span> <span class="n">P</span> <span class="n">Q</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;1 2 [3] [4] b&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;1 2 [3] [4] b&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="o">.</span> <span class="mi">1</span> <span class="mi">2</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="n">b</span>
@@ -1182,22 +1183,22 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
     <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="o">.</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="while">
+</section>
+<section id="while">
 <h3><code class="docutils literal notranslate"><span class="pre">while</span></code><a class="headerlink" href="#while" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">predicate</span><span class="p">]</span> <span class="p">[</span><span class="n">body</span><span class="p">]</span> <span class="k">while</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;3 [0 &gt;] [dup --] while&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;3 [0 &gt;] [dup --] while&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="x">
+</section>
+<section id="x">
 <h3><code class="docutils literal notranslate"><span class="pre">x</span></code><a class="headerlink" href="#x" title="Permalink to this headline">¶</a></h3>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[x] help&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[x] help&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">==</span> <span class="n">dup</span> <span class="n">i</span>
@@ -1207,7 +1208,7 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
 <span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span> <span class="n">x</span> <span class="o">=</span> <span class="o">...</span> <span class="p">[</span><span class="n">Q</span><span class="p">]</span>  <span class="n">Q</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;1 [2] [i 3] x&#39;</span><span class="p">)</span>  <span class="c1"># Kind of a pointless example.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;1 [2] [i 3] x&#39;)  # Kind of a pointless example.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="o">.</span> <span class="mi">1</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="n">i</span> <span class="mi">3</span><span class="p">]</span> <span class="n">x</span>
@@ -1222,133 +1223,79 @@ in terms of <code class="docutils literal notranslate"><span class="pre">app2</s
     <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="o">.</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="void">
+</section>
+</section>
+<section id="void">
 <h2><code class="docutils literal notranslate"><span class="pre">void</span></code><a class="headerlink" href="#void" title="Permalink to this headline">¶</a></h2>
 <p>Implements <a class="reference external" href="https://en.wikipedia.org/wiki/Laws_of_Form#The_primary_arithmetic_.28Chapter_4.29">**Laws of Form**
 *arithmetic*</a>
 over quote-only datastructures (that is, datastructures that consist
 soley of containers, without strings or numbers or anything else.)</p>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] void&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[] void&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">False</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[]] void&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[[]] void&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[][[]]] void&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[[][[]]] void&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span>
 </pre></div>
 </div>
-<div class="code ipython2 highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[[]][[][]]] void&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[[[]][[][]]] void&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">False</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Functions Grouped by, er, Function with Examples</a><ul>
-<li><a class="reference internal" href="#stack-chatter">Stack Chatter</a><ul>
-<li><a class="reference internal" href="#clear"><code class="docutils literal notranslate"><span class="pre">clear</span></code></a></li>
-<li><a class="reference internal" href="#dup-dupd"><code class="docutils literal notranslate"><span class="pre">dup</span></code> <code class="docutils literal notranslate"><span class="pre">dupd</span></code></a></li>
-<li><a class="reference internal" href="#enstacken-disenstacken-stack-unstack"><code class="docutils literal notranslate"><span class="pre">enstacken</span></code> <code class="docutils literal notranslate"><span class="pre">disenstacken</span></code> <code class="docutils literal notranslate"><span class="pre">stack</span></code> <code class="docutils literal notranslate"><span class="pre">unstack</span></code></a></li>
-<li><a class="reference internal" href="#pop-popd-popop"><code class="docutils literal notranslate"><span class="pre">pop</span></code> <code class="docutils literal notranslate"><span class="pre">popd</span></code> <code class="docutils literal notranslate"><span class="pre">popop</span></code></a></li>
-<li><a class="reference internal" href="#roll-rolldown-roll-rollup"><code class="docutils literal notranslate"><span class="pre">roll&lt;</span></code> <code class="docutils literal notranslate"><span class="pre">rolldown</span></code> <code class="docutils literal notranslate"><span class="pre">roll&gt;</span></code> <code class="docutils literal notranslate"><span class="pre">rollup</span></code></a></li>
-<li><a class="reference internal" href="#swap"><code class="docutils literal notranslate"><span class="pre">swap</span></code></a></li>
-<li><a class="reference internal" href="#tuck-over"><code class="docutils literal notranslate"><span class="pre">tuck</span></code> <code class="docutils literal notranslate"><span class="pre">over</span></code></a></li>
-<li><a class="reference internal" href="#unit-quoted-unquoted"><code class="docutils literal notranslate"><span class="pre">unit</span></code> <code class="docutils literal notranslate"><span class="pre">quoted</span></code> <code class="docutils literal notranslate"><span class="pre">unquoted</span></code></a></li>
+<h1 class="logo"><a href="index.html">Thun</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Intro.html">Thun: Joy in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="joy.html">Joy Interpreter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Stack or Quote or Sequence or List…</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parser.html">Parsing Text into Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pretty.html">Tracing Joy Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Function Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Functions Grouped by, er, Function with Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#stack-chatter">Stack Chatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#list-words">List words</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#math-words">Math words</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#logic-and-comparison">Logic and Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#miscellaneous">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#combinators">Combinators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#void"><code class="docutils literal notranslate"><span class="pre">void</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#list-words">List words</a><ul>
-<li><a class="reference internal" href="#concat-swoncat-shunt"><code class="docutils literal notranslate"><span class="pre">concat</span></code> <code class="docutils literal notranslate"><span class="pre">swoncat</span></code> <code class="docutils literal notranslate"><span class="pre">shunt</span></code></a></li>
-<li><a class="reference internal" href="#cons-swons-uncons"><code class="docutils literal notranslate"><span class="pre">cons</span></code> <code class="docutils literal notranslate"><span class="pre">swons</span></code> <code class="docutils literal notranslate"><span class="pre">uncons</span></code></a></li>
-<li><a class="reference internal" href="#first-second-third-rest"><code class="docutils literal notranslate"><span class="pre">first</span></code> <code class="docutils literal notranslate"><span class="pre">second</span></code> <code class="docutils literal notranslate"><span class="pre">third</span></code> <code class="docutils literal notranslate"><span class="pre">rest</span></code></a></li>
-<li><a class="reference internal" href="#flatten"><code class="docutils literal notranslate"><span class="pre">flatten</span></code></a></li>
-<li><a class="reference internal" href="#getitem-at-of-drop-take"><code class="docutils literal notranslate"><span class="pre">getitem</span></code> <code class="docutils literal notranslate"><span class="pre">at</span></code> <code class="docutils literal notranslate"><span class="pre">of</span></code> <code class="docutils literal notranslate"><span class="pre">drop</span></code> <code class="docutils literal notranslate"><span class="pre">take</span></code></a></li>
-<li><a class="reference internal" href="#remove"><code class="docutils literal notranslate"><span class="pre">remove</span></code></a></li>
-<li><a class="reference internal" href="#reverse"><code class="docutils literal notranslate"><span class="pre">reverse</span></code></a></li>
-<li><a class="reference internal" href="#size"><code class="docutils literal notranslate"><span class="pre">size</span></code></a></li>
-<li><a class="reference internal" href="#swaack"><code class="docutils literal notranslate"><span class="pre">swaack</span></code></a></li>
-<li><a class="reference internal" href="#choice-select"><code class="docutils literal notranslate"><span class="pre">choice</span></code> <code class="docutils literal notranslate"><span class="pre">select</span></code></a></li>
-<li><a class="reference internal" href="#zip"><code class="docutils literal notranslate"><span class="pre">zip</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="types.html">Type Inference of Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Essays about Programming in Joy</a></li>
 </ul>
-</li>
-<li><a class="reference internal" href="#math-words">Math words</a><ul>
-<li><a class="reference internal" href="#add"><code class="docutils literal notranslate"><span class="pre">+</span></code> <code class="docutils literal notranslate"><span class="pre">add</span></code></a></li>
-<li><a class="reference internal" href="#sub"><code class="docutils literal notranslate"><span class="pre">-</span></code> <code class="docutils literal notranslate"><span class="pre">sub</span></code></a></li>
-<li><a class="reference internal" href="#mul"><code class="docutils literal notranslate"><span class="pre">*</span></code> <code class="docutils literal notranslate"><span class="pre">mul</span></code></a></li>
-<li><a class="reference internal" href="#div-floordiv-truediv"><code class="docutils literal notranslate"><span class="pre">/</span></code> <code class="docutils literal notranslate"><span class="pre">div</span></code> <code class="docutils literal notranslate"><span class="pre">floordiv</span></code> <code class="docutils literal notranslate"><span class="pre">truediv</span></code></a></li>
-<li><a class="reference internal" href="#mod-modulus-rem-remainder"><code class="docutils literal notranslate"><span class="pre">%</span></code> <code class="docutils literal notranslate"><span class="pre">mod</span></code> <code class="docutils literal notranslate"><span class="pre">modulus</span></code> <code class="docutils literal notranslate"><span class="pre">rem</span></code> <code class="docutils literal notranslate"><span class="pre">remainder</span></code></a></li>
-<li><a class="reference internal" href="#neg"><code class="docutils literal notranslate"><span class="pre">neg</span></code></a></li>
-<li><a class="reference internal" href="#pow"><code class="docutils literal notranslate"><span class="pre">pow</span></code></a></li>
-<li><a class="reference internal" href="#sqr-sqrt"><code class="docutils literal notranslate"><span class="pre">sqr</span></code> <code class="docutils literal notranslate"><span class="pre">sqrt</span></code></a></li>
-<li><a class="reference internal" href="#succ-pred"><code class="docutils literal notranslate"><span class="pre">++</span></code> <code class="docutils literal notranslate"><span class="pre">succ</span></code> <code class="docutils literal notranslate"><span class="pre">--</span></code> <code class="docutils literal notranslate"><span class="pre">pred</span></code></a></li>
-<li><a class="reference internal" href="#lshift-rshift"><code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> <code class="docutils literal notranslate"><span class="pre">lshift</span></code> <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> <code class="docutils literal notranslate"><span class="pre">rshift</span></code></a></li>
-<li><a class="reference internal" href="#average"><code class="docutils literal notranslate"><span class="pre">average</span></code></a></li>
-<li><a class="reference internal" href="#range-range-to-zero-down-to-zero"><code class="docutils literal notranslate"><span class="pre">range</span></code> <code class="docutils literal notranslate"><span class="pre">range_to_zero</span></code> <code class="docutils literal notranslate"><span class="pre">down_to_zero</span></code></a></li>
-<li><a class="reference internal" href="#product"><code class="docutils literal notranslate"><span class="pre">product</span></code></a></li>
-<li><a class="reference internal" href="#sum"><code class="docutils literal notranslate"><span class="pre">sum</span></code></a></li>
-<li><a class="reference internal" href="#min"><code class="docutils literal notranslate"><span class="pre">min</span></code></a></li>
-<li><a class="reference internal" href="#gcd"><code class="docutils literal notranslate"><span class="pre">gcd</span></code></a></li>
-<li><a class="reference internal" href="#least-fraction"><code class="docutils literal notranslate"><span class="pre">least_fraction</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#logic-and-comparison">Logic and Comparison</a><ul>
-<li><a class="reference internal" href="#truthy"><code class="docutils literal notranslate"><span class="pre">?</span></code> <code class="docutils literal notranslate"><span class="pre">truthy</span></code></a></li>
-<li><a class="reference internal" href="#and"><code class="docutils literal notranslate"><span class="pre">&amp;</span></code> <code class="docutils literal notranslate"><span class="pre">and</span></code></a></li>
-<li><a class="reference internal" href="#ne"><code class="docutils literal notranslate"><span class="pre">!=</span></code> <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code> <code class="docutils literal notranslate"><span class="pre">ne</span></code></a></li>
-<li><a class="reference internal" href="#xor"><code class="docutils literal notranslate"><span class="pre">^</span></code> <code class="docutils literal notranslate"><span class="pre">xor</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#miscellaneous">Miscellaneous</a><ul>
-<li><a class="reference internal" href="#help"><code class="docutils literal notranslate"><span class="pre">help</span></code></a></li>
-<li><a class="reference internal" href="#parse"><code class="docutils literal notranslate"><span class="pre">parse</span></code></a></li>
-<li><a class="reference internal" href="#run"><code class="docutils literal notranslate"><span class="pre">run</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#combinators">Combinators</a><ul>
-<li><a class="reference internal" href="#app1-app2-app3"><code class="docutils literal notranslate"><span class="pre">app1</span></code> <code class="docutils literal notranslate"><span class="pre">app2</span></code> <code class="docutils literal notranslate"><span class="pre">app3</span></code></a></li>
-<li><a class="reference internal" href="#anamorphism"><code class="docutils literal notranslate"><span class="pre">anamorphism</span></code></a></li>
-<li><a class="reference internal" href="#branch"><code class="docutils literal notranslate"><span class="pre">branch</span></code></a></li>
-<li><a class="reference internal" href="#cleave"><code class="docutils literal notranslate"><span class="pre">cleave</span></code></a></li>
-<li><a class="reference internal" href="#dip-dipd-dipdd"><code class="docutils literal notranslate"><span class="pre">dip</span></code> <code class="docutils literal notranslate"><span class="pre">dipd</span></code> <code class="docutils literal notranslate"><span class="pre">dipdd</span></code></a></li>
-<li><a class="reference internal" href="#dupdip"><code class="docutils literal notranslate"><span class="pre">dupdip</span></code></a></li>
-<li><a class="reference internal" href="#genrec-primrec"><code class="docutils literal notranslate"><span class="pre">genrec</span></code> <code class="docutils literal notranslate"><span class="pre">primrec</span></code></a></li>
-<li><a class="reference internal" href="#i"><code class="docutils literal notranslate"><span class="pre">i</span></code></a></li>
-<li><a class="reference internal" href="#ifte"><code class="docutils literal notranslate"><span class="pre">ifte</span></code></a></li>
-<li><a class="reference internal" href="#infra"><code class="docutils literal notranslate"><span class="pre">infra</span></code></a></li>
-<li><a class="reference internal" href="#loop"><code class="docutils literal notranslate"><span class="pre">loop</span></code></a></li>
-<li><a class="reference internal" href="#map-pam"><code class="docutils literal notranslate"><span class="pre">map</span></code> <code class="docutils literal notranslate"><span class="pre">pam</span></code></a></li>
-<li><a class="reference internal" href="#nullary-unary-binary-ternary"><code class="docutils literal notranslate"><span class="pre">nullary</span></code> <code class="docutils literal notranslate"><span class="pre">unary</span></code> <code class="docutils literal notranslate"><span class="pre">binary</span></code> <code class="docutils literal notranslate"><span class="pre">ternary</span></code></a></li>
-<li><a class="reference internal" href="#step"><code class="docutils literal notranslate"><span class="pre">step</span></code></a></li>
-<li><a class="reference internal" href="#times"><code class="docutils literal notranslate"><span class="pre">times</span></code></a></li>
-<li><a class="reference internal" href="#b"><code class="docutils literal notranslate"><span class="pre">b</span></code></a></li>
-<li><a class="reference internal" href="#while"><code class="docutils literal notranslate"><span class="pre">while</span></code></a></li>
-<li><a class="reference internal" href="#x"><code class="docutils literal notranslate"><span class="pre">x</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#void"><code class="docutils literal notranslate"><span class="pre">void</span></code></a></li>
-</ul>
-</li>
-</ul>
+
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -1358,25 +1305,24 @@ soley of containers, without strings or numbers or anything else.)</p>
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/lib.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -1387,7 +1333,7 @@ soley of containers, without strings or numbers or anything else.)</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
     </div>
 
   </body>
