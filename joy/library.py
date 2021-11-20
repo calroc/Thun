@@ -223,7 +223,7 @@ def BinaryBuiltinWrapper(f):
             (a, (b, stack)) = stack
         except ValueError:
             raise StackUnderflowError('Not enough values on stack.')
-        if (not isinstance(a, int)
+        if (   not isinstance(a, int)
             or not isinstance(b, int)
             or isinstance(a, bool)  # Because bools are ints in Python.
             or isinstance(b, bool)
@@ -688,7 +688,7 @@ def divmod_(S):
     '''
     divmod(x, y) -> (quotient, remainder)
 
-    Return the tuple (x//y, x%y).  Invariant: div*y + mod == x.
+    Return the tuple (x//y, x%y).  Invariant: q * y + r == x.
     '''
     a, (b, stack) = S
     d, m = divmod(a, b)
