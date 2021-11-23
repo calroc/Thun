@@ -1,7 +1,11 @@
 from ipykernel.kernelbase import Kernel
-from joy.library import initialize
+from joy.library import initialize, inscribe
 from joy.joy import run
 from joy.utils.stack import stack_to_string
+from joy.utils.pretty_print import trace
+
+
+inscribe(trace)
 
 
 class JoyKernel(Kernel):
