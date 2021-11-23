@@ -23,6 +23,78 @@ in the `joypy/docs` directory and run the notebooks.
 ...something about the `notebook_preamble.py` file.
 
 
+## Installing the [Joy Jupyter Kernel](https://osdn.net/projects/joypy/scm/git/Thun/tree/master/docs/jupyter_kernel/)
+
+[Joy Jupyter Kernel](https://osdn.net/projects/joypy/scm/git/Thun/tree/master/docs/jupyter_kernel/)
+
+Tracking down the deets:
+- [Installing Kernels](https://jupyter.readthedocs.io/en/latest/install/kernels.html)
+- [Kernels](https://jupyter.readthedocs.io/en/latest/projects/kernels.html#kernels-langs)
+- [Jupyter kernels](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages)
+- [Jupyter kernels](https://github.com/jupyter/jupyter/wiki/Jupyter-kernels)
+- [Creating new Jupyter kernels](https://github.com/jupyter/jupyter/wiki/Jupyter-kernels#creating-new-jupyter-kernels)
+- "[Making kernels for Jupyter](https://jupyter-client.readthedocs.io/en/latest/kernels.html) in the documentation."
+
+From [Making simple Python wrapper kernels](https://jupyter-client.readthedocs.io/en/latest/wrapperkernels.html):
+
+> Now create a JSON kernel spec file and install it using
+  ``jupyter kernelspec install </path/to/kernel>``.
+  Place your kernel module anywhere Python can import it
+  (try current directory for testing). 
+
+The current list of kernels:
+
+    % jupyter kernelspec list
+    Available kernels:
+      python3    /usr/home/sforman/.local/share/jupyter/kernels/python3
+
+> Place your kernel module anywhere Python can import it
+
+Yah, okay.
+
+    sforman@bock:~/src/Joypy/docs/jupyter_kernel % setenv PYTHONPATH `pwd`
+
+Let's go!
+
+    sforman@bock:~/src/Joypy/docs/jupyter_kernel % jupyter kernelspec install .
+    [Errno 13] Permission denied: '/usr/local/share/jupyter'
+    Perhaps you want to install with `sudo` or `--user`?
+
+Okay
+
+    sforman@bock:~/src/Joypy/docs/jupyter_kernel % jupyter kernelspec install --user .
+    [InstallKernelSpec] Removing existing kernelspec in /usr/home/sforman/.local/share/jupyter/kernels/.
+    Traceback (most recent call last):
+      File "/home/sforman/.local/bin/jupyter-kernelspec", line 8, in <module>
+        sys.exit(KernelSpecApp.launch_instance())
+      File "/home/sforman/.local/lib/python3.7/site-packages/traitlets/config/application.py", line 846, in launch_instance
+        app.start()
+      File "/home/sforman/.local/lib/python3.7/site-packages/jupyter_client/kernelspecapp.py", line 323, in start
+        return self.subapp.start()
+      File "/home/sforman/.local/lib/python3.7/site-packages/jupyter_client/kernelspecapp.py", line 151, in start
+        replace=self.replace,
+      File "/home/sforman/.local/lib/python3.7/site-packages/jupyter_client/kernelspec.py", line 404, in install_kernel_spec
+        shutil.rmtree(destination)
+      File "/usr/local/lib/python3.7/shutil.py", line 498, in rmtree
+        onerror(os.rmdir, path, sys.exc_info())
+      File "/usr/local/lib/python3.7/shutil.py", line 496, in rmtree
+        os.rmdir(path)
+    OSError: [Errno 22] Invalid argument: '/usr/home/sforman/.local/share/jupyter/kernels/.'
+
+__Looks at code__ Oh FFS
+
+    cp -Rv /usr/home/sforman/src/Joypy/docs/jupyter_kernel /usr/home/sforman/.local/share/jupyter/kernels/thun
+
+    /usr/home/sforman/src/Joypy/docs/jupyter_kernel -> /usr/home/sforman/.local/share/jupyter/kernels/thun
+    /usr/home/sforman/src/Joypy/docs/jupyter_kernel/Try out the Joypy Jupyter Kernel.ipynb -> /usr/home/sforman/.local/share/jupyter/kernels/thun/Try out the Joypy Jupyter Kernel.ipynb
+    /usr/home/sforman/src/Joypy/docs/jupyter_kernel/joy_kernel.py -> /usr/home/sforman/.local/share/jupyter/kernels/thun/joy_kernel.py
+    /usr/home/sforman/src/Joypy/docs/jupyter_kernel/kernel.json -> /usr/home/sforman/.local/share/jupyter/kernels/thun/kernel.json
+
+Done.  Can start joy kernal notebooks.
+
+
+
+
 
 ## Table of Contents
 
