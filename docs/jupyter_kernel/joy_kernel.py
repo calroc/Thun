@@ -1,3 +1,4 @@
+import sys
 from ipykernel.kernelbase import Kernel
 from joy.library import initialize, inscribe
 from joy.joy import run
@@ -6,6 +7,28 @@ from joy.utils.pretty_print import trace
 
 
 inscribe(trace)
+
+
+class FileFaker:
+
+    def __init__(self):
+        self.output = ''
+
+    def write(self, text):
+        self.output += text
+
+    def flush(self):
+        pass
+
+    @classmethod
+    def hook(class_, f):
+        o = class_()
+        sys.stdout, old_stdout = o, sys.stdout
+        try:
+            f()
+        finally:
+            sys.stdout = old_stdout
+        return o.output
 
 
 class JoyKernel(Kernel):
@@ -33,11 +56,16 @@ class JoyKernel(Kernel):
       user_expressions=None,
       allow_stdin=False,
       ):
-      self.S = run(code, self.S, self.D)[0]
+      def f():
+        self.S = run(code, self.S, self.D)[0]
+      output = FileFaker.hook(f)
       if not silent:
+        text = stack_to_string(self.S)
+        if output:
+          text = '%s\n%s' % (output, text)
         stream_content = {
           'name': 'stdout',
-          'text': stack_to_string(self.S),
+          'text': text,
           }
         self.send_response(self.iopub_socket, 'stream', stream_content)
 
