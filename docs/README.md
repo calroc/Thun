@@ -1,33 +1,26 @@
-# Some Jupyter Notebooks and other material.
+# Thun Documentation Documentation
 
-All of the notebooks are also available as HTML and Markdown files
-(generated using nbconvert) so you can view them without running Jupyter.
+Most of the docs take the form of some [Jupyter](https://jupyter.org/index.html) notebooks.
 
-In order to run the [Jupyter Notebooks](https://jupyter.org/index.html)
-you need Jupyter (obviously) and you should install `Joypy`.  Here's an
-example using `virtualenv` from the project directory:
+The notebooks are converted (using [nbconvert](https://nbconvert.readthedocs.io/en/latest/install.html)) to HTML, Markdown, and ReST files so you can view them without running Jupyter.
 
-    virtualenv --system-site-packages venv
-    source ./venv/bin/activate
-    pip install notebook
-    python ./setup.py install
+## Running the Notebooks with [Jupyter](https://jupyter.org/index.html)
+
+In order to run the [Jupyter](https://jupyter.org/index.html) notebooks
+you need [Jupyter](https://jupyter.org/index.html) (obviously):
+
+[Installing the classic Jupyter Notebook interface](https://jupyter.readthedocs.io/en/latest/install/notebook-classic.html)
+
+And, of course, you should install `Thun` (see the main project README or the
+[online docs](https://joypy.osdn.io/#quick-start)).
 
 Once that's done you should be able to start Jupyter Notebook server
-with, e.g.:
+in the `joypy/docs` directory and run the notebooks.
 
-    python -m notebook --ip=0.0.0.0
 
-This starts it using the `virtualenv` version of Python so `joy` will be
-available.  Navigate to the `joypy/docs` directory and the notebooks
-should be able to import the `notebook_preamble.py` file.
+## ``notebook_preamble.py``
 
-I find I have to include `--ip=0.0.0.0` to workaround a bug where it
-tries to bind to an IPv6 address, YMMV.
-
-Clean up when you're done:
-
-    deactivate 
-    rm -rf venv
+...something about the `notebook_preamble.py` file.
 
 
 
