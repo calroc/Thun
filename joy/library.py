@@ -311,6 +311,19 @@ class DefinitionWrapper(object):
             class_.add_def(line, dictionary)
 
 
+class Def(DefinitionWrapper):
+    '''
+    Definitions created by inscribe.
+    '''
+
+    def __init__(self, name, body):
+        self.name = name
+        self.body = body
+        self._body = tuple(iter_stack(body))
+        self.__doc__ = expression_to_string(body)
+        self._compiled = None
+
+
 def _text_to_defs(text):
     return (
         line.strip()
@@ -331,16 +344,15 @@ def _text_to_defs(text):
 def inscribe_(stack, expression, dictionary):
     '''
     Create a new Joy function definition in the Joy dictionary.  A
-    definition is given as a string with a name followed by a double
-    equal sign then one or more Joy functions, the body. for example:
+    definition is given as a quote with a name followed by a Joy
+    expression. for example:
 
-        sqr == dup mul
+        [sqr dup mul] inscribe
 
-    If you want the definition to persist over restarts, enter it into
-    the definitions.txt resource.
     '''
-    definition, stack = stack
-    DefinitionWrapper.add_def(definition, dictionary, fail_fails=True)
+    (name, body), stack = stack
+    d = Def(name, body)
+    dictionary[d.name] = d
     return stack, expression, dictionary
 
 
