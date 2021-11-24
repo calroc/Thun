@@ -58,9 +58,9 @@ HELP_TEMPLATE = '''\
 _dictionary = {}
 
 
-def inscribe(function):
+def inscribe(function, d=_dictionary):
     '''A decorator to inscribe functions into the default dictionary.'''
-    _dictionary[function.name] = function
+    d[function.name] = function
     return function
 
 
@@ -351,8 +351,7 @@ def inscribe_(stack, expression, dictionary):
 
     '''
     (name, body), stack = stack
-    d = Def(name, body)
-    dictionary[d.name] = d
+    inscribe(Def(name, body), dictionary)
     return stack, expression, dictionary
 
 
