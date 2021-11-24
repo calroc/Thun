@@ -223,12 +223,13 @@ def BinaryBuiltinWrapper(f):
             (a, (b, stack)) = stack
         except ValueError:
             raise StackUnderflowError('Not enough values on stack.')
-        if (   not isinstance(a, int)
-            or not isinstance(b, int)
-            or isinstance(a, bool)  # Because bools are ints in Python.
-            or isinstance(b, bool)
-            ):
-            raise NotAnIntError
+        # Boolean predicates like "or" fail here.  :(
+##        if (   not isinstance(a, int)
+##            or not isinstance(b, int)
+##            or isinstance(a, bool)  # Because bools are ints in Python.
+##            or isinstance(b, bool)
+##            ):
+##            raise NotAnIntError
         result = f(b, a)
         return (result, stack), expression, dictionary
     return inner
