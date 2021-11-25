@@ -18,7 +18,7 @@
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
 import argparse, io, pkg_resources
-from .library import initialize, inscribe
+from .library import initialize, inscribe, Def
 from .joy import repl, interp
 from .utils.pretty_print import trace
 
@@ -68,4 +68,8 @@ under certain conditions; type "sharing" for details.
 Type "words" to see a list of all words, and "[<name>] help" to print the
 docs for a word.
 ''')
-stack = j(dictionary=initialize())
+
+dictionary=initialize()
+for def_stream in args.defs:
+    Def.load_definitions(def_stream, dictionary)
+stack = j(dictionary=dictionary)

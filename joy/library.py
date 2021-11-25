@@ -323,6 +323,14 @@ class Def(DefinitionWrapper):
         self.__doc__ = expression_to_string(body)
         self._compiled = None
 
+    @classmethod
+    def load_definitions(class_, stream, dictionary):
+        for line in stream:
+            if line.lstrip().startswith('#'):
+                continue
+            name, body = text_to_expression(line)
+            inscribe(class_(name, body), dictionary)
+
 
 def _text_to_defs(text):
     return (
