@@ -23,11 +23,14 @@ functions.  Its main export is a Python function initialize() that
 returns a dictionary of Joy functions suitable for use with the joy()
 function.
 '''
+from pkg_resources import resource_stream
+from io import TextIOWrapper
 from inspect import getdoc, getmembers, isfunction
 from functools import wraps
 from itertools import count
 import operator, math
 
+from . import __name__ as _joy_package_name
 from .parser import text_to_expression, Symbol
 from .utils import generated_library as genlib
 from .utils.errors import (
@@ -42,6 +45,14 @@ from .utils.stack import (
     list_to_stack,
     pick,
     )
+
+
+def default_defs(dictionary):
+    def_stream = TextIOWrapper(
+        resource_stream(_joy_package_name, 'defs.txt'),
+        encoding='UTF_8',
+        )
+    Def.load_definitions(def_stream, dictionary)
 
 
 HELP_TEMPLATE = '''\
@@ -190,7 +201,8 @@ class Def(object):
             if line.lstrip().startswith('#'):
                 continue
             name, body = text_to_expression(line)
-            inscribe(class_(name, body), dictionary)
+            if name not in dictionary:
+                inscribe(class_(name, body), dictionary)
 
 
 #

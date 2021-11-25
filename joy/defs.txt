@@ -87,6 +87,7 @@ sum [+] step_zero
 swapd [swap] dip
 swons swap cons
 swoncat swap concat
+sqr dup mul
 tailrec [i] genrec
 take [] roll> [shift] times pop
 ternary binary popd
