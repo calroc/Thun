@@ -17,7 +17,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #
-import sys
+import argparse, io, pkg_resources
 from .library import initialize, inscribe
 from .joy import repl, interp
 from .utils.pretty_print import trace
@@ -25,7 +25,38 @@ from .utils.pretty_print import trace
 
 inscribe(trace)
 
-if '-q' in sys.argv:
+
+argparser = argparse.ArgumentParser(
+    prog='thun',
+    description='Joy Interpreter',
+    )
+argparser.add_argument(
+    '-d', '--defs',
+    action='append',
+    default=[
+        io.TextIOWrapper(
+            pkg_resources.resource_stream(__name__, 'defs.txt'),
+            encoding='UTF_8',
+            )
+        ],
+    type=argparse.FileType('r', encoding='UTF_8'),
+    help=(
+        'Add additional definition files.'
+        ' Can be used more than once.'
+        ),
+    )
+argparser.add_argument(
+    '-q', '--quiet',
+    help='Don\'t show the prompt.',
+    default=False,
+    action='store_true',
+    )
+
+
+args = argparser.parse_args()
+
+
+if args.quiet:
     j = interp
 else:
     j = repl

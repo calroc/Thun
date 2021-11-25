@@ -37,6 +37,9 @@ setup(
 	url='https://joypy.osdn.io',
 	license='GPLv3+',
 	packages=['joy', 'joy.utils'],
+        package_data={
+            'joy': ['defs.txt'],
+            },
 	classifiers=[
 		'Development Status :: 4 - Beta',
 		'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
