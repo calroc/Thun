@@ -111,88 +111,6 @@ def add_aliases(D, A):
             D[alias] = F
 
 
-definitions = ('''\
-? == dup truthy
-*fraction == [uncons] dip uncons [swap] dip concat [*] infra [*] dip cons
-*fraction0 == concat [[swap] dip * [*] dip] infra
-anamorphism == [pop []] swap [dip swons] genrec
-average == [sum 1.0 *] [size] cleave /
-binary == nullary [popop] dip
-cleave == fork [popd] dip
-codireco == cons dip rest cons
-dinfrirst == dip infra first
-unstack == ? [uncons ?] loop pop
-down_to_zero == [0 >] [dup --] while
-dupdipd == dup dipd
-enstacken == stack [clear] dip
-flatten == [] swap [concat] step
-fork == [i] app2
-gcd == 1 [tuck modulus dup 0 >] loop pop
-ifte == [nullary not] dipd branch
-ii == [dip] dupdip i
-least_fraction == dup [gcd] infra [div] concat map
-make_generator == [codireco] ccons
-nullary == [stack] dinfrirst
-of == swap at
-pam == [i] map
-tailrec == [i] genrec
-product == 1 swap [*] step
-quoted == [unit] dip
-range == [0 <=] [1 - dup] anamorphism
-range_to_zero == unit [down_to_zero] infra
-run == [] swap infra
-size == 0 swap [pop ++] step
-sqr == dup mul
-step_zero == 0 roll> step
-swoncat == swap concat
-tailrec == [i] genrec
-ternary == unary [popop] dip
-unary == nullary popd
-unquoted == [i] dip
-while == swap [nullary] cons dup dipd concat loop
-'''
-#
-#
-# ifte == [nullary] dipd swap branch
-# genrec == [[genrec] cons cons cons cons] nullary swons concat ifte
-
-# Another definition for while. FWIW
-# while == over [[i] dip nullary] ccons [nullary] dip loop
-
-##ccons == cons cons
-##unit == [] cons
-##second == rest first
-##third == rest rest first
-##swons == swap cons
-
-##Zipper
-##z-down == [] swap uncons swap
-##z-up == swons swap shunt
-##z-right == [swons] cons dip uncons swap
-##z-left == swons [uncons swap] dip swap
-
-##Quadratic Formula
-##divisor == popop 2 *
-##minusb == pop neg
-##radical == swap dup * rollup * 4 * - sqrt
-##root1 == + swap /
-##root2 == - swap /
-##q0 == [[divisor] [minusb] [radical]] pam
-##q1 == [[root1] [root2]] pam
-##quadratic == [q0] ternary i [q1] ternary
-
-# Project Euler
-##'''\
-##PE1.1 == + dup [+] dip
-##PE1.2 == dup [3 & PE1.1] dip 2 >>
-##PE1.3 == 14811 swap [PE1.2] times pop
-##PE1 == 0 0 66 [7 PE1.3] times 4 PE1.3 pop
-##'''
-#PE1.2 == [PE1.1] step
-#PE1 == 0 0 66 [[3 2 1 3 1 2 3] PE1.2] times [3 2 1 3] PE1.2 pop
-)
-
-
 def FunctionWrapper(f):
     '''Set name attribute.'''
     if not f.__doc__:
@@ -248,70 +166,7 @@ def UnaryBuiltinWrapper(f):
     return inner
 
 
-class DefinitionWrapper(object):
-    '''
-    Provide implementation of defined functions, and some helper methods.
-    '''
-
-    def __init__(self, name, body_text, doc=None):
-        self.name = self.__name__ = name
-        self.body = text_to_expression(body_text)
-        self._body = tuple(iter_stack(self.body))
-        self.__doc__ = doc or body_text
-        self._compiled = None
-
-    def __call__(self, stack, expression, dictionary):
-        if self._compiled:
-            return self._compiled(stack, expression, dictionary)  # pylint: disable=E1102
-        expression = list_to_stack(self._body, expression)
-        return stack, expression, dictionary
-
-    @classmethod
-    def parse_definition(class_, defi):
-        '''
-        Given some text describing a Joy function definition parse it and
-        return a DefinitionWrapper.
-        '''
-        # At some point I decided that the definitions file should NOT
-        # use '==' to separate the name from the body.  But somehow the
-        # xerblin\gui\default_joy_home\definitions.txt file didn't get
-        # the memo.  Nor did the load_definitions() method.
-        # So I think the simplest way forward at the moment will be to
-        # edit this function to expect '=='.
-
-        name, part, body = defi.partition('==')
-        if part:
-            return class_(name.strip(), body.strip())
-        raise ValueError("No '==' in definition text %r" % (defi,))
-
-        # return class_(*(n.strip() for n in defi.split(None, 1)))
-
-    @classmethod
-    def add_definitions(class_, defs, dictionary):
-        '''
-        Scan multi-line string defs for definitions and add them to the
-        dictionary.
-        '''
-        for definition in _text_to_defs(defs):
-            class_.add_def(definition, dictionary)
-
-    @classmethod
-    def add_def(class_, definition, dictionary, fail_fails=False):
-        '''
-        Add the definition to the dictionary.
-        '''
-        F = class_.parse_definition(definition)
-        dictionary[F.name] = F
-
-    @classmethod
-    def load_definitions(class_, filename, dictionary):
-        with open(filename) as f:
-            lines = [line for line in f if '==' in line]
-        for line in lines:
-            class_.add_def(line, dictionary)
-
-
-class Def(DefinitionWrapper):
+class Def(object):
     '''
     Definitions created by inscribe.
     '''
@@ -323,6 +178,12 @@ class Def(DefinitionWrapper):
         self.__doc__ = expression_to_string(body)
         self._compiled = None
 
+    def __call__(self, stack, expression, dictionary):
+        if self._compiled:
+            return self._compiled(stack, expression, dictionary)  # pylint: disable=E1102
+        expression = list_to_stack(self._body, expression)
+        return stack, expression, dictionary
+
     @classmethod
     def load_definitions(class_, stream, dictionary):
         for line in stream:
@@ -330,16 +191,6 @@ class Def(DefinitionWrapper):
                 continue
             name, body = text_to_expression(line)
             inscribe(class_(name, body), dictionary)
-
-
-def _text_to_defs(text):
-    return (
-        line.strip()
-        for line in text.splitlines()
-        if line
-           and not line.startswith('#')
-           and '==' in line
-        )
 
 
 #
@@ -1497,6 +1348,3 @@ for name, primitive in getmembers(genlib, isfunction):
 
 
 add_aliases(_dictionary, ALIASES)
-
-
-DefinitionWrapper.add_definitions(definitions, _dictionary)
