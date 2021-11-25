@@ -5,7 +5,7 @@
 || nulco [nullary] dip [true] branch
 !- 0 >=
 <{} [] swap
-<<{} [] rolldown
+<<{} [] rollup
 abs dup 0 < [] [neg] branch
 anamorphism [pop []] swap [dip swons] genrec
 app1 grba infrst
