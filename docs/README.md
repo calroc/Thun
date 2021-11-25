@@ -92,9 +92,25 @@ __Looks at code__ Oh FFS
 
 Done.  Can start joy kernal notebooks.
 
+## Building and Uploading
+
+This section is mostly for my own reference.
 
 
+### `backup-and-remove-htdocs` script
 
+On the OSDN server I have a little script I call `backup-and-remove-htdocs`
+which does exactly what it says.  Here are the current contents:
+
+    #!/usr/bin/env bash
+    tar cvz --remove-files \
+      -f $HOME/site-backup-$(date -u +'%F-%T').tgz \
+      /home/groups/j/jo/joypy/htdocs/*
+
+As you can see, all it does is move the existing site into a tarball (in case I want to refer to it later for some reason.)
+Every once in a while they should be cleared out.
+
+The main `Makefile` uses this script via ssh then uses rsync to upload the new version of the site.
 
 ## Table of Contents
 
