@@ -1,0 +1,71 @@
+                       [1 [2 [3 4 25 6] 7] 8] [sqr] [dip dip infra dip infra dip infra] • [[] ccons] step i
+            [1 [2 [3 4 25 6] 7] 8] [sqr] [dip dip infra dip infra dip infra] [[] ccons] • step i
+                                            [1 [2 [3 4 25 6] 7] 8] [sqr] dip [[] ccons] • i [dip infra dip infra dip infra] [[] ccons] step i
+                                                       [1 [2 [3 4 25 6] 7] 8] [sqr] dip • [] ccons [dip infra dip infra dip infra] [[] ccons] step i
+                                                    [1 [2 [3 4 25 6] 7] 8] [sqr] dip [] • ccons [dip infra dip infra dip infra] [[] ccons] step i
+                                                     [1 [2 [3 4 25 6] 7] 8] [[sqr] dip] • [dip infra dip infra dip infra] [[] ccons] step i
+                     [1 [2 [3 4 25 6] 7] 8] [[sqr] dip] [dip infra dip infra dip infra] • [[] ccons] step i
+          [1 [2 [3 4 25 6] 7] 8] [[sqr] dip] [dip infra dip infra dip infra] [[] ccons] • step i
+                                      [1 [2 [3 4 25 6] 7] 8] [[sqr] dip] dip [[] ccons] • i [infra dip infra dip infra] [[] ccons] step i
+                                                 [1 [2 [3 4 25 6] 7] 8] [[sqr] dip] dip • [] ccons [infra dip infra dip infra] [[] ccons] step i
+                                              [1 [2 [3 4 25 6] 7] 8] [[sqr] dip] dip [] • ccons [infra dip infra dip infra] [[] ccons] step i
+                                               [1 [2 [3 4 25 6] 7] 8] [[[sqr] dip] dip] • [infra dip infra dip infra] [[] ccons] step i
+                   [1 [2 [3 4 25 6] 7] 8] [[[sqr] dip] dip] [infra dip infra dip infra] • [[] ccons] step i
+        [1 [2 [3 4 25 6] 7] 8] [[[sqr] dip] dip] [infra dip infra dip infra] [[] ccons] • step i
+                              [1 [2 [3 4 25 6] 7] 8] [[[sqr] dip] dip] infra [[] ccons] • i [dip infra dip infra] [[] ccons] step i
+                                         [1 [2 [3 4 25 6] 7] 8] [[[sqr] dip] dip] infra • [] ccons [dip infra dip infra] [[] ccons] step i
+                                      [1 [2 [3 4 25 6] 7] 8] [[[sqr] dip] dip] infra [] • ccons [dip infra dip infra] [[] ccons] step i
+                                       [1 [2 [3 4 25 6] 7] 8] [[[[sqr] dip] dip] infra] • [dip infra dip infra] [[] ccons] step i
+                 [1 [2 [3 4 25 6] 7] 8] [[[[sqr] dip] dip] infra] [dip infra dip infra] • [[] ccons] step i
+      [1 [2 [3 4 25 6] 7] 8] [[[[sqr] dip] dip] infra] [dip infra dip infra] [[] ccons] • step i
+                        [1 [2 [3 4 25 6] 7] 8] [[[[sqr] dip] dip] infra] dip [[] ccons] • i [infra dip infra] [[] ccons] step i
+                                   [1 [2 [3 4 25 6] 7] 8] [[[[sqr] dip] dip] infra] dip • [] ccons [infra dip infra] [[] ccons] step i
+                                [1 [2 [3 4 25 6] 7] 8] [[[[sqr] dip] dip] infra] dip [] • ccons [infra dip infra] [[] ccons] step i
+                                 [1 [2 [3 4 25 6] 7] 8] [[[[[sqr] dip] dip] infra] dip] • [infra dip infra] [[] ccons] step i
+               [1 [2 [3 4 25 6] 7] 8] [[[[[sqr] dip] dip] infra] dip] [infra dip infra] • [[] ccons] step i
+    [1 [2 [3 4 25 6] 7] 8] [[[[[sqr] dip] dip] infra] dip] [infra dip infra] [[] ccons] • step i
+                [1 [2 [3 4 25 6] 7] 8] [[[[[sqr] dip] dip] infra] dip] infra [[] ccons] • i [dip infra] [[] ccons] step i
+                           [1 [2 [3 4 25 6] 7] 8] [[[[[sqr] dip] dip] infra] dip] infra • [] ccons [dip infra] [[] ccons] step i
+                        [1 [2 [3 4 25 6] 7] 8] [[[[[sqr] dip] dip] infra] dip] infra [] • ccons [dip infra] [[] ccons] step i
+                         [1 [2 [3 4 25 6] 7] 8] [[[[[[sqr] dip] dip] infra] dip] infra] • [dip infra] [[] ccons] step i
+             [1 [2 [3 4 25 6] 7] 8] [[[[[[sqr] dip] dip] infra] dip] infra] [dip infra] • [[] ccons] step i
+  [1 [2 [3 4 25 6] 7] 8] [[[[[[sqr] dip] dip] infra] dip] infra] [dip infra] [[] ccons] • step i
+          [1 [2 [3 4 25 6] 7] 8] [[[[[[sqr] dip] dip] infra] dip] infra] dip [[] ccons] • i [infra] [[] ccons] step i
+                     [1 [2 [3 4 25 6] 7] 8] [[[[[[sqr] dip] dip] infra] dip] infra] dip • [] ccons [infra] [[] ccons] step i
+                  [1 [2 [3 4 25 6] 7] 8] [[[[[[sqr] dip] dip] infra] dip] infra] dip [] • ccons [infra] [[] ccons] step i
+                   [1 [2 [3 4 25 6] 7] 8] [[[[[[[sqr] dip] dip] infra] dip] infra] dip] • [infra] [[] ccons] step i
+           [1 [2 [3 4 25 6] 7] 8] [[[[[[[sqr] dip] dip] infra] dip] infra] dip] [infra] • [[] ccons] step i
+[1 [2 [3 4 25 6] 7] 8] [[[[[[[sqr] dip] dip] infra] dip] infra] dip] [infra] [[] ccons] • step i
+  [1 [2 [3 4 25 6] 7] 8] [[[[[[[sqr] dip] dip] infra] dip] infra] dip] infra [[] ccons] • i i
+             [1 [2 [3 4 25 6] 7] 8] [[[[[[[sqr] dip] dip] infra] dip] infra] dip] infra • [] ccons i
+          [1 [2 [3 4 25 6] 7] 8] [[[[[[[sqr] dip] dip] infra] dip] infra] dip] infra [] • ccons i
+           [1 [2 [3 4 25 6] 7] 8] [[[[[[[[sqr] dip] dip] infra] dip] infra] dip] infra] • i
+                                                                 [1 [2 [3 4 25 6] 7] 8] • [[[[[[[sqr] dip] dip] infra] dip] infra] dip] infra
+                   [1 [2 [3 4 25 6] 7] 8] [[[[[[[sqr] dip] dip] infra] dip] infra] dip] • infra
+                                                                   8 [2 [3 4 25 6] 7] 1 • [[[[[[sqr] dip] dip] infra] dip] infra] dip [] swaack
+                           8 [2 [3 4 25 6] 7] 1 [[[[[[sqr] dip] dip] infra] dip] infra] • dip [] swaack
+                                                                     8 [2 [3 4 25 6] 7] • [[[[[sqr] dip] dip] infra] dip] infra 1 [] swaack
+                                     8 [2 [3 4 25 6] 7] [[[[[sqr] dip] dip] infra] dip] • infra 1 [] swaack
+                                                                         7 [3 4 25 6] 2 • [[[[sqr] dip] dip] infra] dip [8] swaack 1 [] swaack
+                                               7 [3 4 25 6] 2 [[[[sqr] dip] dip] infra] • dip [8] swaack 1 [] swaack
+                                                                           7 [3 4 25 6] • [[[sqr] dip] dip] infra 2 [8] swaack 1 [] swaack
+                                                         7 [3 4 25 6] [[[sqr] dip] dip] • infra 2 [8] swaack 1 [] swaack
+                                                                               6 25 4 3 • [[sqr] dip] dip [7] swaack 2 [8] swaack 1 [] swaack
+                                                                   6 25 4 3 [[sqr] dip] • dip [7] swaack 2 [8] swaack 1 [] swaack
+                                                                                 6 25 4 • [sqr] dip 3 [7] swaack 2 [8] swaack 1 [] swaack
+                                                                           6 25 4 [sqr] • dip 3 [7] swaack 2 [8] swaack 1 [] swaack
+                                                                                   6 25 • sqr 4 3 [7] swaack 2 [8] swaack 1 [] swaack
+                                                                                   6 25 • dup * 4 3 [7] swaack 2 [8] swaack 1 [] swaack
+                                                                                6 25 25 • * 4 3 [7] swaack 2 [8] swaack 1 [] swaack
+                                                                                  6 625 • 4 3 [7] swaack 2 [8] swaack 1 [] swaack
+                                                                                6 625 4 • 3 [7] swaack 2 [8] swaack 1 [] swaack
+                                                                              6 625 4 3 • [7] swaack 2 [8] swaack 1 [] swaack
+                                                                          6 625 4 3 [7] • swaack 2 [8] swaack 1 [] swaack
+                                                                          7 [3 4 625 6] • 2 [8] swaack 1 [] swaack
+                                                                        7 [3 4 625 6] 2 • [8] swaack 1 [] swaack
+                                                                    7 [3 4 625 6] 2 [8] • swaack 1 [] swaack
+                                                                    8 [2 [3 4 625 6] 7] • 1 [] swaack
+                                                                  8 [2 [3 4 625 6] 7] 1 • [] swaack
+                                                               8 [2 [3 4 625 6] 7] 1 [] • swaack
+                                                                [1 [2 [3 4 625 6] 7] 8] • 
+[1 [2 [3 4 625 6] 7] 8]
