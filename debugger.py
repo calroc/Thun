@@ -27,13 +27,30 @@ expression = text_to_expression(
 ##    'trace'
     )
 
-for def_name in defs:
-    D = dictionary.copy()
-    D[def_name] = defs[def_name]
-    try:
-        stack, _, d = joy((), expression, D)
-    except:
-        print(def_name, 'failed!')
-    else:
-        print(stack_to_string(stack), def_name, 'pass')
+step_d = {d:defs[d] for d in defs if 'step' in d}
+for name in ('?', 'dupdipd', 'popopop'):
+    step_d[name] = defs[name]
 
+def test_expr(ds):
+    D = dictionary.copy()
+    D.update(ds)
+    try:
+        stack, _, _ = joy((), expression, D)
+    except Exception as err:
+        return err
+    return stack_to_string(stack)
+
+res = test_expr(step_d)
+if res:
+    print(res)
+
+##for def_name in defs:
+##    D = dictionary.copy()
+##    D[def_name] = defs[def_name]
+##    try:
+##        stack, _, d = joy((), expression, D)
+##    except:
+##        print(def_name, 'failed!')
+##    else:
+##        print(stack_to_string(stack), def_name, 'pass')
+##
