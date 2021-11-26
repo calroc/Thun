@@ -210,7 +210,7 @@
     <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">while</span> <span class="n">quote</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">NotAListError</span><span class="p">(</span><span class="s1">&#39;Not a list.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NotAListError</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">quote</span><span class="p">))</span>
         <span class="n">item</span><span class="p">,</span> <span class="n">quote</span> <span class="o">=</span> <span class="n">quote</span>
         <span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>

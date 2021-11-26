@@ -53,16 +53,18 @@ Continue with :doc:`the introduction <notebooks/Intro>`.
 Project Hosted on `OSDN`_
 -------------------------
 
-* `Source Repository`_ (Mercurial)
-* `Bug tracker`_
+* `Source Repository`_ (`mirror`_)
+* `Bug tracker`_ (`old tracker`_)
 * `Forums`_
 * `Mailing list`_
 
-.. _Bug tracker: https://osdn.net/projects/joypy/ticket/
+.. _Bug tracker: https://todo.sr.ht/~sforman/thun-der
+.. _old tracker: https://osdn.net/projects/joypy/ticket/
 .. _Forums: https://osdn.net/projects/joypy/forums/
 .. _Mailing list: https://osdn.net/projects/joypy/lists/
 .. _OSDN: https://osdn.net/projects/joypy/
-.. _Source Repository: https://osdn.net/projects/joypy/scm/hg/Joypy/tree/tip/
+.. _Source Repository: https://osdn.net/projects/joypy/scm/git/Thun/
+.. _mirror: https://github.com/calroc/Thun
 
 
 Information on the Joy language
