@@ -56,7 +56,9 @@ legible as any other notation.  Some layout helps::
 This function accepts two integers on the stack and increments or
 decrements one of them such that the new pair of numbers is the next
 coordinate pair in a square spiral (like the kind used to construct an
-Ulam Spiral).  For more information see :doc:`notebooks/Square_Spiral`
+`Ulam Spiral`_).  For more information see :doc:`notebooks/Square_Spiral`
+
+.. _Ulam Spiral: https://en.wikipedia.org/wiki/Ulam_spiral
 
 
 Quick Start
