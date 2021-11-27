@@ -42,12 +42,12 @@ we can implement e.g. a function that adds new functions to the
 dictionary. However, there’s no function that does that. Adding a new
 function to the dictionary is a meta-interpreter action, you have to do
 it in Python, not Joy.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span>
 </pre></div>
 </div>
 <section id="a-long-trace">
 <h2>A long trace<a class="headerlink" href="#a-long-trace" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[23 18] average&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[23 18] average&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                  <span class="o">.</span> <span class="p">[</span><span class="mi">23</span> <span class="mi">18</span><span class="p">]</span> <span class="n">average</span>
@@ -105,7 +105,7 @@ it in Python, not Joy.</p>
 <p>An efficient <code class="docutils literal notranslate"><span class="pre">sum</span></code> function is already in the library. But for
 <code class="docutils literal notranslate"><span class="pre">size</span></code> we can use a “compiled” version hand-written in Python to speed
 up evaluation and make the trace more readable.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">SimpleFunctionWrapper</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joy.library</span> <span class="kn">import</span> <span class="n">SimpleFunctionWrapper</span>
 <span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">iter_stack</span>
 
 
@@ -121,14 +121,14 @@ up evaluation and make the trace more readable.</p>
 </div>
 <p>Now we replace the old version in the dictionary with the new version,
 and re-evaluate the expression.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">D</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">size</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">D</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">size</span>
 </pre></div>
 </div>
 </section>
 <section id="a-shorter-trace">
 <h2>A shorter trace<a class="headerlink" href="#a-shorter-trace" title="Permalink to this headline">¶</a></h2>
 <p>You can see that <code class="docutils literal notranslate"><span class="pre">size</span></code> now executes in a single step.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[23 18] average&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[23 18] average&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                  <span class="o">.</span> <span class="p">[</span><span class="mi">23</span> <span class="mi">18</span><span class="p">]</span> <span class="n">average</span>

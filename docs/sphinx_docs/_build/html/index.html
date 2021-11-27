@@ -54,6 +54,29 @@ additional joy interpreter (the binary in the archive from La Trobe seems
 to run just fine on my modern Linux machine!)  But I also hope that you
 can read and understand the Python code and play with the implementation
 itself.</p>
+<section id="example-code">
+<h2>Example Code<a class="headerlink" href="#example-code" title="Permalink to this headline">¶</a></h2>
+<p>Here is an example of Joy code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[[[abs]ii &lt;=][[&lt;&gt;][pop !-]||]&amp;&amp;][[!-][[++]][[--]]ifte dip][[pop !-][--][++]ifte]ifte
+</pre></div>
+</div>
+<p>It might seem unreadable but with a little familiarity it becomes just as
+legible as any other notation.  Some layout helps:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[   [[abs] ii &lt;=]
+    [
+        [&lt;&gt;] [pop !-] ||
+    ] &amp;&amp;
+]
+[[    !-] [[++]] [[--]] ifte dip]
+[[pop !-]  [--]   [++]  ifte    ]
+ifte
+</pre></div>
+</div>
+<p>This function accepts two integers on the stack and increments or
+decrements one of them such that the new pair of numbers is the next
+coordinate pair in a square spiral (like the kind used to construct an
+Ulam Spiral).  For more information see <a class="reference internal" href="notebooks/Square_Spiral.html"><span class="doc">Square Spiral Example Joy Code</span></a></p>
+</section>
 <section id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
 <p>Install from <a class="reference external" href="https://pypi.org/project/Thun/">PyPI</a> in the usual way:</p>
@@ -145,6 +168,7 @@ interesting aspects.  It’s quite a treasure trove.</p>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/Treestep.html">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/Generator_Programs.html">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/Newton-Raphson.html">Newton’s method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Square_Spiral.html">Square Spiral Example Joy Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/Zipper.html">Traversing Datastructures with Zippers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/Types.html">The Blissful Elegance of Typing Joy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/TypeChecking.html">Type Checking</a></li>

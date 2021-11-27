@@ -7,7 +7,7 @@ to write a function that can compute the square root of a number.
 Cf. `"Why Functional Programming Matters" by John
 Hughes <https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf>`__
 
-.. code:: python
+.. code:: ipython3
 
     from notebook_preamble import J, V, define
 
@@ -75,11 +75,11 @@ The generator can be written as:
     1       [23 over / + 2 /]      [dup] swoncat make_generator
     1   [dup 23 over / + 2 /]                    make_generator
 
-.. code:: python
+.. code:: ipython3
 
     define('gsra 1 swap [over / + 2 /] cons [dup] swoncat make_generator')
 
-.. code:: python
+.. code:: ipython3
 
     J('23 gsra')
 
@@ -92,7 +92,7 @@ The generator can be written as:
 Let's drive the generator a few time (with the ``x`` combinator) and
 square the approximation to see how well it works...
 
-.. code:: python
+.. code:: ipython3
 
     J('23 gsra 6 [x popd] times first sqr')
 
@@ -142,7 +142,7 @@ Predicate
     abs(a-b)            ε                   <=
     (abs(a-b)<=ε)
 
-.. code:: python
+.. code:: ipython3
 
     define('_within_P [first - abs] dip <=')
 
@@ -156,7 +156,7 @@ Base-Case
       [b G]               first
        b
 
-.. code:: python
+.. code:: ipython3
 
     define('_within_B roll< popop first')
 
@@ -184,7 +184,7 @@ Pretty straightforward:
 
     b [c G] ε within
 
-.. code:: python
+.. code:: ipython3
 
     define('_within_R [popd x] dip')
 
@@ -199,14 +199,14 @@ The recursive function we have defined so far needs a slight preamble:
     [a G] x ε ...
     a [b G] ε ...
 
-.. code:: python
+.. code:: ipython3
 
     define('within x 0.000000001 [_within_P] [_within_B] [_within_R] tailrec')
     define('sqrt gsra within')
 
 Try it out...
 
-.. code:: python
+.. code:: ipython3
 
     J('36 sqrt')
 
@@ -216,7 +216,7 @@ Try it out...
     6.0
 
 
-.. code:: python
+.. code:: ipython3
 
     J('23 sqrt')
 
@@ -228,7 +228,7 @@ Try it out...
 
 Check it.
 
-.. code:: python
+.. code:: ipython3
 
     4.795831523312719**2
 
@@ -241,7 +241,7 @@ Check it.
 
 
 
-.. code:: python
+.. code:: ipython3
 
     from math import sqrt
     

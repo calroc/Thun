@@ -1,4 +1,4 @@
-.. code:: python
+.. code:: ipython2
 
     from notebook_preamble import D, DefinitionWrapper, J, V, define
 
@@ -80,7 +80,7 @@ is a recursive function ``H :: A -> C`` that converts a value of type
 It may be helpful to see this function implemented in imperative Python
 code.
 
-.. code:: python
+.. code:: ipython2
 
     def hylomorphism(c, F, P, G):
         '''Return a hylomorphism function H.'''
@@ -185,7 +185,7 @@ the left so we have a definition for ``hylomorphism``:
 
    hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec
 
-.. code:: python
+.. code:: ipython2
 
     define('hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec')
 
@@ -203,13 +203,13 @@ To sum a range of integers from 0 to *n* - 1:
 -  ``[G]`` is ``[-- dup]``
 -  ``[F]`` is ``[+]``
 
-.. code:: python
+.. code:: ipython2
 
     define('triangular_number == [1 <=] 0 [-- dup] [+] hylomorphism')
 
 Let’s try it:
 
-.. code:: python
+.. code:: ipython2
 
     J('5 triangular_number')
 
@@ -219,7 +219,7 @@ Let’s try it:
     10
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[0 1 2 3 4 5 6] [triangular_number] map')
 
@@ -391,10 +391,8 @@ values.
 
    A == [P] [] [G] [swons] hylomorphism
 
-``range`` et. al.
-~~~~~~~~~~~~~~~~~
-
-An example of an anamorphism is the ``range`` function which generates the list of integers from 0 to *n* - 1 given *n*.
+``range`` et. al. An example of an anamorphism is the ``range`` function which generates the list of integers from 0 to *n* - 1 given *n*.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Each of the above variations can be used to make four slightly different
 ``range`` functions.
@@ -407,11 +405,11 @@ Each of the above variations can be used to make four slightly different
    H1 == [P]    [pop c]  [G]      [dip F]     genrec
       == [0 <=] [pop []] [-- dup] [dip swons] genrec
 
-.. code:: python
+.. code:: ipython2
 
     define('range == [0 <=] [] [-- dup] [swons] hylomorphism')
 
-.. code:: python
+.. code:: ipython2
 
     J('5 range')
 
@@ -429,11 +427,11 @@ Each of the above variations can be used to make four slightly different
    H2 == c  swap [P]    [pop] [G      [F]     dip] primrec
       == [] swap [0 <=] [pop] [-- dup [swons] dip] primrec
 
-.. code:: python
+.. code:: ipython2
 
     define('range_reverse == [] swap [0 <=] [pop] [-- dup [swons] dip] primrec')
 
-.. code:: python
+.. code:: ipython2
 
     J('5 range_reverse')
 
@@ -451,11 +449,11 @@ Each of the above variations can be used to make four slightly different
    H3 == [P]    [pop c]  [[G]  dupdip] [dip F]     genrec
       == [0 <=] [pop []] [[--] dupdip] [dip swons] genrec
 
-.. code:: python
+.. code:: ipython2
 
     define('ranger == [0 <=] [pop []] [[--] dupdip] [dip swons] genrec')
 
-.. code:: python
+.. code:: ipython2
 
     J('5 ranger')
 
@@ -473,11 +471,11 @@ Each of the above variations can be used to make four slightly different
    H4 == c  swap [P]    [pop] [[F]     dupdip G ] primrec
       == [] swap [0 <=] [pop] [[swons] dupdip --] primrec
 
-.. code:: python
+.. code:: ipython2
 
     define('ranger_reverse == [] swap [0 <=] [pop] [[swons] dupdip --] primrec')
 
-.. code:: python
+.. code:: ipython2
 
     J('5 ranger_reverse')
 
@@ -503,7 +501,7 @@ and makes some new value.
 
    C == [not] c [uncons swap] [F] hylomorphism
 
-.. code:: python
+.. code:: ipython2
 
     define('swuncons == uncons swap')  # Awkward name.
 
@@ -513,11 +511,11 @@ An example of a catamorphism is the sum function.
 
    sum == [not] 0 [swuncons] [+] hylomorphism
 
-.. code:: python
+.. code:: ipython2
 
     define('sum == [not] 0 [swuncons] [+] hylomorphism')
 
-.. code:: python
+.. code:: ipython2
 
     J('[5 4 3 2 1] sum')
 
@@ -533,7 +531,7 @@ The ``step`` combinator
 The ``step`` combinator will usually be better to use than
 ``catamorphism``.
 
-.. code:: python
+.. code:: ipython2
 
     J('[step] help')
 
@@ -562,11 +560,11 @@ The ``step`` combinator will usually be better to use than
     
 
 
-.. code:: python
+.. code:: ipython2
 
     define('sum == 0 swap [+] step')
 
-.. code:: python
+.. code:: ipython2
 
     J('[5 4 3 2 1] sum')
 
@@ -594,11 +592,11 @@ With:
    G == --
    P == 1 <=
 
-.. code:: python
+.. code:: ipython2
 
     define('factorial == 1 swap [1 <=] [pop] [[*] dupdip --] primrec')
 
-.. code:: python
+.. code:: ipython2
 
     J('5 factorial')
 
@@ -637,11 +635,11 @@ We would use:
    G == rest dup
    P == not
 
-.. code:: python
+.. code:: ipython2
 
     define('tails == [] swap [not] [pop] [rest dup [swons] dip] primrec')
 
-.. code:: python
+.. code:: ipython2
 
     J('[1 2 3] tails')
 

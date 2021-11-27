@@ -96,14 +96,14 @@ R∘λ = λ∘R = R
 </section>
 <section id="implementation">
 <h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span> <span class="k">as</span> <span class="n">curry</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span> <span class="k">as</span> <span class="n">curry</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 </pre></div>
 </div>
 <section id="and">
 <h3><code class="docutils literal notranslate"><span class="pre">ϕ</span></code> and <code class="docutils literal notranslate"><span class="pre">λ</span></code><a class="headerlink" href="#and" title="Permalink to this headline">¶</a></h3>
 <p>The empty set and the set of just the empty string.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>   <span class="c1"># ϕ</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>   <span class="c1"># ϕ</span>
 <span class="n">y</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;&#39;</span><span class="p">})</span> <span class="c1"># λ</span>
 </pre></div>
 </div>
@@ -115,7 +115,7 @@ illustrate the algorithm and because you can represent any other
 alphabet with two symbols (if you had to.)</p>
 <p>I chose the names <code class="docutils literal notranslate"><span class="pre">O</span></code> and <code class="docutils literal notranslate"><span class="pre">l</span></code> (uppercase “o” and lowercase “L”) to
 look like <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code> (zero and one) respectively.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">syms</span> <span class="o">=</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;0&#39;</span><span class="p">}),</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;1&#39;</span><span class="p">})</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">syms</span> <span class="o">=</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;0&#39;</span><span class="p">}),</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s1">&#39;1&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
 </section>
@@ -133,7 +133,7 @@ expression</em> is one of:</p>
 </pre></div>
 </div>
 <p>Where <code class="docutils literal notranslate"><span class="pre">R</span></code> and <code class="docutils literal notranslate"><span class="pre">S</span></code> stand for <em>regular expressions</em>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">AND</span><span class="p">,</span> <span class="n">CONS</span><span class="p">,</span> <span class="n">KSTAR</span><span class="p">,</span> <span class="n">NOT</span><span class="p">,</span> <span class="n">OR</span> <span class="o">=</span> <span class="s1">&#39;and cons * not or&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  <span class="c1"># Tags are just strings.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">AND</span><span class="p">,</span> <span class="n">CONS</span><span class="p">,</span> <span class="n">KSTAR</span><span class="p">,</span> <span class="n">NOT</span><span class="p">,</span> <span class="n">OR</span> <span class="o">=</span> <span class="s1">&#39;and cons * not or&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  <span class="c1"># Tags are just strings.</span>
 </pre></div>
 </div>
 <p>Because they are formed of <code class="docutils literal notranslate"><span class="pre">frozenset</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code> and <code class="docutils literal notranslate"><span class="pre">str</span></code> objects
@@ -141,7 +141,7 @@ only, these datastructures are immutable.</p>
 </section>
 <section id="string-representation-of-re-datastructures">
 <h3>String Representation of RE Datastructures<a class="headerlink" href="#string-representation-of-re-datastructures" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stringy</span><span class="p">(</span><span class="n">re</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Return a nice string repr for a regular expression datastructure.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -180,10 +180,10 @@ only, these datastructures are immutable.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">|</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="n">KSTAR</span><span class="p">,</span> <span class="p">(</span><span class="n">OR</span><span class="p">,</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="n">KSTAR</span><span class="p">,</span> <span class="p">(</span><span class="n">OR</span><span class="p">,</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">stringy</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">stringy</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span>
@@ -198,13 +198,13 @@ only, these datastructures are immutable.</p>
 </pre></div>
 </div>
 <p>Note that it contains one of everything.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">I</span><span class="p">))))</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">I</span><span class="p">))))</span>
 <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">O</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
 <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONS</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="p">(</span><span class="n">KSTAR</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
 <span class="n">it</span> <span class="o">=</span> <span class="p">(</span><span class="n">AND</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">NOT</span><span class="p">,</span> <span class="p">(</span><span class="n">OR</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)))</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">stringy</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">stringy</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">.</span><span class="mf">111.</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="o">.</span><span class="mi">01</span> <span class="o">|</span> <span class="mi">11</span><span class="o">*</span><span class="p">)</span><span class="s1">&#39;)</span>
@@ -214,7 +214,7 @@ only, these datastructures are immutable.</p>
 <section id="nully">
 <h3><code class="docutils literal notranslate"><span class="pre">nully()</span></code><a class="headerlink" href="#nully" title="Permalink to this headline">¶</a></h3>
 <p>Let’s get that auxiliary predicate function <code class="docutils literal notranslate"><span class="pre">δ</span></code> out of the way.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">nully</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">nully</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    δ - Return λ if λ ⊆ R otherwise ϕ.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -252,7 +252,7 @@ only, these datastructures are immutable.</p>
 <p>This is the straightforward version with no “compaction”. It works fine,
 but does waaaay too much work because the expressions grow each
 derivation.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">D</span><span class="p">(</span><span class="n">symbol</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">D</span><span class="p">(</span><span class="n">symbol</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">derv</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
 
@@ -296,7 +296,7 @@ derivation.</p>
 </section>
 <section id="compaction-rules">
 <h3>Compaction Rules<a class="headerlink" href="#compaction-rules" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_compaction_rule</span><span class="p">(</span><span class="n">relation</span><span class="p">,</span> <span class="n">one</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_compaction_rule</span><span class="p">(</span><span class="n">relation</span><span class="p">,</span> <span class="n">one</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">b</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">one</span> <span class="k">else</span>  <span class="c1"># R*1 = 1*R = R</span>
         <span class="n">a</span> <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="n">one</span> <span class="k">else</span>
@@ -306,7 +306,7 @@ derivation.</p>
 </pre></div>
 </div>
 <p>An elegant symmetry.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># R ∧ I = I ∧ R = R</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># R ∧ I = I ∧ R = R</span>
 <span class="c1"># R ∧ ϕ = ϕ ∧ R = ϕ</span>
 <span class="n">_and</span> <span class="o">=</span> <span class="n">curry</span><span class="p">(</span><span class="n">_compaction_rule</span><span class="p">,</span> <span class="n">AND</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
 
@@ -325,7 +325,7 @@ derivation.</p>
 <p>We can save re-processing by remembering results we have already
 computed. RE datastructures are immutable and the <code class="docutils literal notranslate"><span class="pre">derv()</span></code> functions
 are <em>pure</em> so this is fine.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Memo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Memo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
@@ -347,7 +347,7 @@ are <em>pure</em> so this is fine.</p>
 <h3>With “Compaction”<a class="headerlink" href="#with-compaction" title="Permalink to this headline">¶</a></h3>
 <p>This version uses the rules above to perform compaction. It keeps the
 expressions from growing too large.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">D_compaction</span><span class="p">(</span><span class="n">symbol</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">D_compaction</span><span class="p">(</span><span class="n">symbol</span><span class="p">):</span>
 
     <span class="nd">@Memo</span>
     <span class="k">def</span> <span class="nf">derv</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
@@ -395,7 +395,7 @@ expressions from growing too large.</p>
 <section id="lets-try-it-out">
 <h2>Let’s try it out…<a class="headerlink" href="#lets-try-it-out" title="Permalink to this headline">¶</a></h2>
 <p>(FIXME: redo.)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">o</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">),</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">o</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">),</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
 <span class="n">REs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 <span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])))</span>
@@ -500,8 +500,8 @@ machine transition table.</p>
 </div>
 <p>Says, “Three or more 1’s and not ending in 01 nor composed of all 1’s.”</p>
 <figure class="align-default" id="id2">
-<img alt="State Machine Graph" src="../_images/omg.svg" /><figcaption>
-<p><span class="caption-text">State Machine Graph</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<img alt="omg.svg" src="notebooks/attachment:omg.svg" /><figcaption>
+<p><span class="caption-text">omg.svg</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>Start at <code class="docutils literal notranslate"><span class="pre">a</span></code> and follow the transition arrows according to their
@@ -555,18 +555,18 @@ a --1--&gt; ∂1(a)
 <p>You can see the one-way nature of the <code class="docutils literal notranslate"><span class="pre">g</span></code> state and the <code class="docutils literal notranslate"><span class="pre">hij</span></code> “trap”
 in the way that the <code class="docutils literal notranslate"><span class="pre">.111.</span></code> on the left-hand side of the <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>
 disappears once it has been matched.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
 <span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">ascii_lowercase</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d0</span><span class="p">,</span> <span class="n">d1</span> <span class="o">=</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">),</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">d0</span><span class="p">,</span> <span class="n">d1</span> <span class="o">=</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">),</span> <span class="n">D_compaction</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="explore">
 <h3><code class="docutils literal notranslate"><span class="pre">explore()</span></code><a class="headerlink" href="#explore" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">explore</span><span class="p">(</span><span class="n">re</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">explore</span><span class="p">(</span><span class="n">re</span><span class="p">):</span>
 
     <span class="c1"># Don&#39;t have more than 26 states...</span>
     <span class="n">names</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">ascii_lowercase</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">)</span>
@@ -592,7 +592,7 @@ disappears once it has been matched.</p>
     <span class="k">return</span> <span class="n">table</span><span class="p">,</span> <span class="n">accepting</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">table</span><span class="p">,</span> <span class="n">accepting</span> <span class="o">=</span> <span class="n">explore</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">table</span><span class="p">,</span> <span class="n">accepting</span> <span class="o">=</span> <span class="n">explore</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 <span class="n">table</span>
 </pre></div>
 </div>
@@ -618,7 +618,7 @@ disappears once it has been matched.</p>
  <span class="p">(</span><span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s1">&#39;h&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">accepting</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">accepting</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">}</span>
@@ -629,7 +629,7 @@ disappears once it has been matched.</p>
 <h3>Generate Diagram<a class="headerlink" href="#generate-diagram" title="Permalink to this headline">¶</a></h3>
 <p>Once we have the FSM table and the set of accepting states we can
 generate the diagram above.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_template</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">_template</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
 <span class="s1">digraph finite_state_machine {</span>
 <span class="s1">  rankdir=LR;</span>
 <span class="s1">  size=&quot;8,5&quot;</span>
@@ -653,7 +653,7 @@ generate the diagram above.</p>
         <span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">make_graph</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">accepting</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="n">make_graph</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">accepting</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">digraph</span> <span class="n">finite_state_machine</span> <span class="p">{</span>
@@ -699,7 +699,7 @@ hard-code the information in the table into a little patch of branches.</p>
 <h4>Trampoline Function<a class="headerlink" href="#trampoline-function" title="Permalink to this headline">¶</a></h4>
 <p>Python has no GOTO statement but we can fake it with a “trampoline”
 function.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">trampoline</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">jump_from</span><span class="p">,</span> <span class="n">accepting</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">trampoline</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">jump_from</span><span class="p">,</span> <span class="n">accepting</span><span class="p">):</span>
     <span class="n">I</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">input_</span><span class="p">)</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -714,7 +714,7 @@ function.</p>
 <h4>Stream Functions<a class="headerlink" href="#stream-functions" title="Permalink to this headline">¶</a></h4>
 <p>Little helpers to process the iterator of our data (a “stream” of “1”
 and “0” characters, not bits.)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">getch</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">I</span><span class="p">))</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">getch</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">I</span><span class="p">))</span>
 
 
 <span class="k">def</span> <span class="nf">_1</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
@@ -735,7 +735,7 @@ and “0” characters, not bits.)</p>
 code. (You have to imagine that these are GOTO statements in C or
 branches in assembly and that the state names are branch destination
 labels.)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">c</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">c</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
 <span class="n">b</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">_0</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="ow">or</span> <span class="n">d</span>
 <span class="n">c</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">e</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
 <span class="n">d</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">I</span><span class="p">:</span> <span class="n">f</span> <span class="k">if</span> <span class="n">getch</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span>
@@ -750,11 +750,11 @@ labels.)</p>
 <p>Note that the implementations of <code class="docutils literal notranslate"><span class="pre">h</span></code> and <code class="docutils literal notranslate"><span class="pre">g</span></code> are identical ergo
 <code class="docutils literal notranslate"><span class="pre">h</span> <span class="pre">=</span> <span class="pre">g</span></code> and we could eliminate one in the code but <code class="docutils literal notranslate"><span class="pre">h</span></code> is an
 accepting state and <code class="docutils literal notranslate"><span class="pre">g</span></code> isn’t.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">acceptable</span><span class="p">(</span><span class="n">input_</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">acceptable</span><span class="p">(</span><span class="n">input_</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">trampoline</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="p">{</span><span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">})</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">5</span><span class="p">):</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">5</span><span class="p">):</span>
     <span class="n">s</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="n">n</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
     <span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%05s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">s</span><span class="p">,</span> <span class="n">acceptable</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 </pre></div>
@@ -878,6 +878,7 @@ derivative-with-respect-to-N of some other state/RE:</p>
 <li class="toctree-l2"><a class="reference internal" href="Treestep.html">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="Generator_Programs.html">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Newton-Raphson.html">Newton’s method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Square_Spiral.html">Square Spiral Example Joy Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Zipper.html">Traversing Datastructures with Zippers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Types.html">The Blissful Elegance of Typing Joy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TypeChecking.html">Type Checking</a></li>

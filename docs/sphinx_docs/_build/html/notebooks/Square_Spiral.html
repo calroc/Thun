@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Square Spiral Example Joy Code &#8212; Thun 0.4.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Traversing Datastructures with Zippers" href="Zipper.html" />
+    <link rel="prev" title="Newton’s method" href="Newton-Raphson.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+</pre></div>
+</div>
+<section id="square-spiral-example-joy-code">
+<h1>Square Spiral Example Joy Code<a class="headerlink" href="#square-spiral-example-joy-code" title="Permalink to this headline">¶</a></h1>
+<p>Here is the example of Joy code from the <code class="docutils literal notranslate"><span class="pre">README</span></code> file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[[[abs]ii &lt;=][[&lt;&gt;][pop !-]||]&amp;&amp;][[!-][[++]][[--]]ifte dip][[pop !-][--][++]ifte]ifte
+</pre></div>
+</div>
+<p>It might seem unreadable but with a little familiarity it becomes just
+as legible as any other notation. Some layout helps:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[   [[abs] ii &lt;=]
+    [
+        [&lt;&gt;] [pop !-] ||
+    ] &amp;&amp;
+]
+[[    !-] [[++]] [[--]] ifte dip]
+[[pop !-]  [--]   [++]  ifte    ]
+ifte
+</pre></div>
+</div>
+<p>This function accepts two integers on the stack and increments or
+decrements one of them such that the new pair of numbers is the next
+coordinate pair in a square spiral (like the kind used to construct an
+Ulam Spiral).</p>
+<section id="original-form">
+<h2>Original Form<a class="headerlink" href="#original-form" title="Permalink to this headline">¶</a></h2>
+<p>It’s adapted from <a class="reference external" href="https://stackoverflow.com/questions/398299/looping-in-a-spiral/31864777#31864777">the original code on
+StackOverflow</a>:</p>
+<blockquote>
+<div><p>If all you’re trying to do is generate the first N points in the
+spiral (without the original problem’s constraint of masking to an N
+x M region), the code becomes very simple:</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>void spiral(const int N)
+{
+    int x = 0;
+    int y = 0;
+    for(int i = 0; i &lt; N; ++i)
+    {
+        cout &lt;&lt; x &lt;&lt; &#39;\t&#39; &lt;&lt; y &lt;&lt; &#39;\n&#39;;
+        if(abs(x) &lt;= abs(y) &amp;&amp; (x != y || x &gt;= 0))
+            x += ((y &gt;= 0) ? 1 : -1);
+        else
+            y += ((x &gt;= 0) ? -1 : 1);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="translation-to-joy">
+<h2>Translation to Joy<a class="headerlink" href="#translation-to-joy" title="Permalink to this headline">¶</a></h2>
+<p>I’m going to make a function that take two ints (<code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>) and
+generates the next pair, we’ll turn it into a generator later using the
+<code class="docutils literal notranslate"><span class="pre">x</span></code> combinator.</p>
+<section id="first-boolean-predicate">
+<h3>First Boolean Predicate<a class="headerlink" href="#first-boolean-predicate" title="Permalink to this headline">¶</a></h3>
+<p>We need a function that computes <code class="docutils literal notranslate"><span class="pre">abs(x)</span> <span class="pre">&lt;=</span> <span class="pre">abs(y)</span></code>, we can use <code class="docutils literal notranslate"><span class="pre">ii</span></code>
+to apply <code class="docutils literal notranslate"><span class="pre">abs</span></code> to both values and then compare them with <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="nb">abs</span><span class="p">]</span> <span class="n">ii</span> <span class="o">&lt;=</span>
+</pre></div>
+</div>
+<p>I’ve defined two short-circuiting Boolean combinators <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code> and <code class="docutils literal notranslate"><span class="pre">||</span></code>
+that each accept two quoted predicate programs, run the first, and
+conditionally run the second only if required (to compute the final
+Boolean value). They run their predicate arguments <code class="docutils literal notranslate"><span class="pre">nullary</span></code>.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;&amp;&amp; [nullary] cons [nullary [0]] dip branch&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;|| [nullary] cons [nullary] dip [1] branch&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Given those, we can define <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">!=</span> <span class="pre">y</span> <span class="pre">||</span> <span class="pre">x</span> <span class="pre">&gt;=</span> <span class="pre">0</span></code> as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span> <span class="mi">0</span> <span class="o">&gt;=</span><span class="p">]</span> <span class="o">||</span>
+</pre></div>
+</div>
+<p>And <code class="docutils literal notranslate"><span class="pre">(abs(x)</span> <span class="pre">&lt;=</span> <span class="pre">abs(y)</span> <span class="pre">&amp;&amp;</span> <span class="pre">(x</span> <span class="pre">!=</span> <span class="pre">y</span> <span class="pre">||</span> <span class="pre">x</span> <span class="pre">&gt;=</span> <span class="pre">0))</span></code> as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="nb">abs</span><span class="p">]</span> <span class="n">ii</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[[</span><span class="o">&lt;&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span> <span class="mi">0</span> <span class="o">&gt;=</span><span class="p">]</span> <span class="o">||</span><span class="p">]</span> <span class="o">&amp;&amp;</span>
+</pre></div>
+</div>
+<p>It’s a little rough, but, as I say, with a little familiarity it becomes
+legible.</p>
+</section>
+<section id="the-increment-decrement-branches">
+<h3>The Increment / Decrement Branches<a class="headerlink" href="#the-increment-decrement-branches" title="Permalink to this headline">¶</a></h3>
+<p>Turning to the branches of the main <code class="docutils literal notranslate"><span class="pre">if</span></code> statement:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>x += ((y &gt;= 0) ? 1 : -1);
+</pre></div>
+</div>
+<p>Rewrite as a hybrid (pseudo-code) <code class="docutils literal notranslate"><span class="pre">ifte</span></code> expression:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="n">X</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">]</span> <span class="n">ifte</span>
+</pre></div>
+</div>
+<p>Change each C phrase to Joy code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="o">&gt;=</span><span class="p">]</span> <span class="p">[[</span><span class="o">++</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="p">[[</span><span class="o">--</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">ifte</span>
+</pre></div>
+</div>
+<p>Factor out the dip from each branch:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="o">&gt;=</span><span class="p">]</span> <span class="p">[[</span><span class="o">++</span><span class="p">]]</span> <span class="p">[[</span><span class="o">--</span><span class="p">]]</span> <span class="n">ifte</span> <span class="n">dip</span>
+</pre></div>
+</div>
+<p>Similar logic applies to the other branch:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>y += ((x &gt;= 0) ? -1 : 1);
+
+[x &gt;= 0] [y -= 1] [y += 1] ifte
+
+[pop 0 &gt;=] [--] [++] ifte
+</pre></div>
+</div>
+</section>
+<section id="not-negative">
+<h3>“Not Negative”<a class="headerlink" href="#not-negative" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;!- 0 &gt;=&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="putting-the-pieces-together">
+<h2>Putting the Pieces Together<a class="headerlink" href="#putting-the-pieces-together" title="Permalink to this headline">¶</a></h2>
+<p>We can assemble the three functions we just defined in quotes and give
+them them to the <code class="docutils literal notranslate"><span class="pre">ifte</span></code> combinator. With some arrangement to show off
+the symmetry of the two branches, we have:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[[[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp;]
+[[    !-] [[++]] [[--]] ifte dip]
+[[pop !-]  [--]   [++]  ifte    ]
+ifte
+</pre></div>
+</div>
+<p>As I was writing this up I realized that, since the <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code> combinator
+doesn’t consume the stack (below its quoted args), I can unquote the
+predicate, swap the branches, and use the <code class="docutils literal notranslate"><span class="pre">branch</span></code> combinator instead
+of <code class="docutils literal notranslate"><span class="pre">ifte</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp;
+[[pop !-]  [--]   [++]  ifte    ]
+[[    !-] [[++]] [[--]] ifte dip]
+branch
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;spiral_next [[[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp;] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s try it out:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 spiral_next&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 0 spiral_next&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 -1 spiral_next&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 -1 spiral_next&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+</section>
+<section id="turning-it-into-a-generator-with-x">
+<h2>Turning it into a Generator with <code class="docutils literal notranslate"><span class="pre">x</span></code><a class="headerlink" href="#turning-it-into-a-generator-with-x" title="Permalink to this headline">¶</a></h2>
+<p>It can be used with the x combinator to make a kind of generator for
+spiral square coordinates.</p>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">codireco</span></code> to make a generator</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">codireco</span> <span class="p">:</span><span class="o">:=</span> <span class="n">cons</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span>
+</pre></div>
+</div>
+<p>It will look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">value</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Here’s a trace of how it works:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>           <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span> <span class="n">x</span>
+           <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span> <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span>
+         <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="mi">0</span> <span class="o">.</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span>
+<span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="n">codireco</span>
+<span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span>
+<span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="p">[</span><span class="mi">0</span> <span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="o">.</span> <span class="n">dip</span> <span class="n">rest</span> <span class="n">cons</span>
+                                 <span class="o">.</span> <span class="mi">0</span> <span class="n">dup</span> <span class="o">++</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
+                               <span class="mi">0</span> <span class="o">.</span> <span class="n">dup</span> <span class="o">++</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
+                             <span class="mi">0</span> <span class="mi">0</span> <span class="o">.</span> <span class="o">++</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
+                             <span class="mi">0</span> <span class="mi">1</span> <span class="o">.</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="n">rest</span> <span class="n">cons</span>
+       <span class="mi">0</span> <span class="mi">1</span> <span class="p">[</span><span class="mi">0</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span> <span class="n">rest</span> <span class="n">cons</span>
+         <span class="mi">0</span> <span class="mi">1</span> <span class="p">[[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span> <span class="n">cons</span>
+         <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="n">dup</span> <span class="o">++</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>But first we have to change the <code class="docutils literal notranslate"><span class="pre">spiral_next</span></code> function to work on a
+quoted pair of integers, and leave a copy of the pair on the stack.
+From:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">y</span> <span class="n">x</span> <span class="n">spiral_next</span>
+<span class="o">---------------------</span>
+        <span class="n">y</span><span class="s1">&#39; x&#39;</span>
+</pre></div>
+</div>
+<p>to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">x</span> <span class="n">y</span><span class="p">]</span> <span class="p">[</span><span class="n">spiral_next</span><span class="p">]</span> <span class="n">infra</span>
+<span class="o">-------------------------------</span>
+           <span class="p">[</span><span class="n">x</span><span class="s1">&#39; y&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 0] [spiral_next] infra&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>So our generator is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">x</span> <span class="n">y</span><span class="p">]</span> <span class="p">[</span><span class="n">dup</span> <span class="p">[</span><span class="n">spiral_next</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Or rather:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">0</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">dup</span> <span class="p">[</span><span class="n">spiral_next</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>There is a function <code class="docutils literal notranslate"><span class="pre">make_generator</span></code> that will build the generator for
+us out of the value and stepper function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">dup</span> <span class="p">[</span><span class="n">spiral_next</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">make_generator</span>
+<span class="o">----------------------------------------------------</span>
+     <span class="p">[[</span><span class="mi">0</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="n">dup</span> <span class="p">[</span><span class="n">spiral_next</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Here it is in action:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 0] [dup [spiral_next] infra] make_generator x x x x pop&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Four <code class="docutils literal notranslate"><span class="pre">x</span></code> combinators, four pairs of coordinates.</p>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>So that’s an example of Joy code. It’s a straightforward translation of
+the original. It’s a little long for a single definition, you might
+break it up like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>     _spn_P ::= [[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp;
+
+     _spn_T ::= [    !-] [[++]] [[--]] ifte dip
+     _spn_E ::= [pop !-]  [--]   [++]  ifte
+
+spiral_next ::= _spn_P [_spn_E] [_spn_T] branch
+</pre></div>
+</div>
+<p>This way it’s easy to see that the function is a branch with two
+quasi-symmetrical paths.</p>
+<p>We then used this function to make a simple generator of coordinate
+pairs, where the next pair in the series can be generated at any time by
+using the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator on the generator (which is just a quoted
+expression containing a copy of the current pair and the “stepper
+function” to generate the next pair from that.)</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_spn_P [[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp;&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;_spn_T [!-] [[++]] [[--]] ifte dip&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;_spn_E [pop !-] [--] [++] ifte&#39;</span><span class="p">)</span>
+<span class="n">define</span><span class="p">(</span><span class="s1">&#39;spiral_next _spn_P [_spn_E] [_spn_T] branch&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 18 spiral_next&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                               . 23 18 spiral_next
+                                                            23 . 18 spiral_next
+                                                         23 18 . spiral_next
+                                                         23 18 . _spn_P [_spn_E] [_spn_T] branch
+                                                         23 18 . [[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp; [_spn_E] [_spn_T] branch
+                                           23 18 [[abs] ii &lt;=] . [[&lt;&gt;] [pop !-] ||] &amp;&amp; [_spn_E] [_spn_T] branch
+                        23 18 [[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] . &amp;&amp; [_spn_E] [_spn_T] branch
+                        23 18 [[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] . [nullary] cons [nullary [0]] dip branch [_spn_E] [_spn_T] branch
+              23 18 [[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] [nullary] . cons [nullary [0]] dip branch [_spn_E] [_spn_T] branch
+              23 18 [[abs] ii &lt;=] [[[&lt;&gt;] [pop !-] ||] nullary] . [nullary [0]] dip branch [_spn_E] [_spn_T] branch
+23 18 [[abs] ii &lt;=] [[[&lt;&gt;] [pop !-] ||] nullary] [nullary [0]] . dip branch [_spn_E] [_spn_T] branch
+                                           23 18 [[abs] ii &lt;=] . nullary [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                           23 18 [[abs] ii &lt;=] . [stack] dinfrirst [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                   23 18 [[abs] ii &lt;=] [stack] . dinfrirst [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                   23 18 [[abs] ii &lt;=] [stack] . dip infra first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                         23 18 . stack [[abs] ii &lt;=] infra first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                 23 18 [18 23] . [[abs] ii &lt;=] infra first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                   23 18 [18 23] [[abs] ii &lt;=] . infra first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                         23 18 . [abs] ii &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                   23 18 [abs] . ii &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                   23 18 [abs] . [dip] dupdip i &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                             23 18 [abs] [dip] . dupdip i &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                   23 18 [abs] . dip [abs] i &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                            23 . abs 18 [abs] i &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                            23 . 18 [abs] i &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                         23 18 . [abs] i &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                   23 18 [abs] . i &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                         23 18 . abs &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                         23 18 . &lt;= [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                         False . [18 23] swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                 False [18 23] . swaack first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                 23 18 [False] . first [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                                   23 18 False . [0] [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                                               23 18 False [0] . [[[&lt;&gt;] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
+                  23 18 False [0] [[[&lt;&gt;] [pop !-] ||] nullary] . branch [_spn_E] [_spn_T] branch
+                                                         23 18 . 0 [_spn_E] [_spn_T] branch
+                                                       23 18 0 . [_spn_E] [_spn_T] branch
+                                              23 18 0 [_spn_E] . [_spn_T] branch
+                                     23 18 0 [_spn_E] [_spn_T] . branch
+                                                         23 18 . _spn_E
+                                                         23 18 . [pop !-] [--] [++] ifte
+                                                23 18 [pop !-] . [--] [++] ifte
+                                           23 18 [pop !-] [--] . [++] ifte
+                                      23 18 [pop !-] [--] [++] . ifte
+                                      23 18 [pop !-] [--] [++] . [nullary not] dipd branch
+                        23 18 [pop !-] [--] [++] [nullary not] . dipd branch
+                                                23 18 [pop !-] . nullary not [--] [++] branch
+                                                23 18 [pop !-] . [stack] dinfrirst not [--] [++] branch
+                                        23 18 [pop !-] [stack] . dinfrirst not [--] [++] branch
+                                        23 18 [pop !-] [stack] . dip infra first not [--] [++] branch
+                                                         23 18 . stack [pop !-] infra first not [--] [++] branch
+                                                 23 18 [18 23] . [pop !-] infra first not [--] [++] branch
+                                        23 18 [18 23] [pop !-] . infra first not [--] [++] branch
+                                                         23 18 . pop !- [18 23] swaack first not [--] [++] branch
+                                                            23 . !- [18 23] swaack first not [--] [++] branch
+                                                            23 . 0 &gt;= [18 23] swaack first not [--] [++] branch
+                                                          23 0 . &gt;= [18 23] swaack first not [--] [++] branch
+                                                          True . [18 23] swaack first not [--] [++] branch
+                                                  True [18 23] . swaack first not [--] [++] branch
+                                                  23 18 [True] . first not [--] [++] branch
+                                                    23 18 True . not [--] [++] branch
+                                                   23 18 False . [--] [++] branch
+                                              23 18 False [--] . [++] branch
+                                         23 18 False [--] [++] . branch
+                                                         23 18 . --
+                                                         23 17 .
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Thun</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Intro.html">Thun: Joy in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../joy.html">Joy Interpreter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack.html">Stack or Quote or Sequence or List…</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parser.html">Parsing Text into Joy Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pretty.html">Tracing Joy Execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lib.html">Functions Grouped by, er, Function with Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../types.html">Type Inference of Joy Expressions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Essays about Programming in Joy</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Developing.html">Developing a Program in Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Quadratic.html">Quadratic formula</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Replacing.html">Replacing Functions in the Dictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Recursion_Combinators.html">Recursion Combinators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ordered_Binary_Trees.html">Treating Trees I: Ordered Binary Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Treestep.html">Treating Trees II: <code class="docutils literal notranslate"><span class="pre">treestep</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Generator_Programs.html">Using <code class="docutils literal notranslate"><span class="pre">x</span></code> to Generate Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Newton-Raphson.html">Newton’s method</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Square Spiral Example Joy Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Zipper.html">Traversing Datastructures with Zippers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Types.html">The Blissful Elegance of Typing Joy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeChecking.html">Type Checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NoUpdates.html">No Updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Categorical.html">Categorical Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="The_Four_Operations.html">The Four Fundamental Operations of Definite Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Derivatives_of_Regular_Expressions.html">∂RE</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Essays about Programming in Joy</a><ul>
+      <li>Previous: <a href="Newton-Raphson.html" title="previous chapter">Newton’s method</a></li>
+      <li>Next: <a href="Zipper.html" title="next chapter">Traversing Datastructures with Zippers</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+</a>
+<br />
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
+    </div>
+
+  </body>
+</html>

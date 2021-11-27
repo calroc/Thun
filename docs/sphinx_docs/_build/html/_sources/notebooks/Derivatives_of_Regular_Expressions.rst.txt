@@ -76,7 +76,7 @@ E.g.:
 Implementation
 --------------
 
-.. code:: python
+.. code:: ipython2
 
     from functools import partial as curry
     from itertools import product
@@ -86,7 +86,7 @@ Implementation
 
 The empty set and the set of just the empty string.
 
-.. code:: python
+.. code:: ipython2
 
     phi = frozenset()   # ϕ
     y = frozenset({''}) # λ
@@ -101,7 +101,7 @@ alphabet with two symbols (if you had to.)
 I chose the names ``O`` and ``l`` (uppercase “o” and lowercase “L”) to
 look like ``0`` and ``1`` (zero and one) respectively.
 
-.. code:: python
+.. code:: ipython2
 
     syms = O, l = frozenset({'0'}), frozenset({'1'})
 
@@ -123,7 +123,7 @@ expression* is one of:
 
 Where ``R`` and ``S`` stand for *regular expressions*.
 
-.. code:: python
+.. code:: ipython2
 
     AND, CONS, KSTAR, NOT, OR = 'and cons * not or'.split()  # Tags are just strings.
 
@@ -133,7 +133,7 @@ only, these datastructures are immutable.
 String Representation of RE Datastructures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: python
+.. code:: ipython2
 
     def stringy(re):
         '''
@@ -175,11 +175,11 @@ Match anything. Often spelled “.”
 
    I = (0|1)*
 
-.. code:: python
+.. code:: ipython2
 
     I = (KSTAR, (OR, O, l))
 
-.. code:: python
+.. code:: ipython2
 
     print stringy(I)
 
@@ -201,14 +201,14 @@ The example expression from Brzozowski:
 
 Note that it contains one of everything.
 
-.. code:: python
+.. code:: ipython2
 
     a = (CONS, I, (CONS, l, (CONS, l, (CONS, l, I))))
     b = (CONS, I, (CONS, O, l))
     c = (CONS, l, (KSTAR, l))
     it = (AND, a, (NOT, (OR, b, c)))
 
-.. code:: python
+.. code:: ipython2
 
     print stringy(it)
 
@@ -223,7 +223,7 @@ Note that it contains one of everything.
 
 Let’s get that auxiliary predicate function ``δ`` out of the way.
 
-.. code:: python
+.. code:: ipython2
 
     def nully(R):
         '''
@@ -263,7 +263,7 @@ This is the straightforward version with no “compaction”. It works fine,
 but does waaaay too much work because the expressions grow each
 derivation.
 
-.. code:: python
+.. code:: ipython2
 
     def D(symbol):
     
@@ -308,7 +308,7 @@ derivation.
 Compaction Rules
 ~~~~~~~~~~~~~~~~
 
-.. code:: python
+.. code:: ipython2
 
     def _compaction_rule(relation, one, zero, a, b):
         return (
@@ -320,7 +320,7 @@ Compaction Rules
 
 An elegant symmetry.
 
-.. code:: python
+.. code:: ipython2
 
     # R ∧ I = I ∧ R = R
     # R ∧ ϕ = ϕ ∧ R = ϕ
@@ -341,7 +341,7 @@ We can save re-processing by remembering results we have already
 computed. RE datastructures are immutable and the ``derv()`` functions
 are *pure* so this is fine.
 
-.. code:: python
+.. code:: ipython2
 
     class Memo(object):
     
@@ -365,7 +365,7 @@ With “Compaction”
 This version uses the rules above to perform compaction. It keeps the
 expressions from growing too large.
 
-.. code:: python
+.. code:: ipython2
 
     def D_compaction(symbol):
     
@@ -414,7 +414,7 @@ Let’s try it out…
 
 (FIXME: redo.)
 
-.. code:: python
+.. code:: ipython2
 
     o, z = D_compaction('0'), D_compaction('1')
     REs = set()
@@ -533,10 +533,10 @@ machine transition table.
 
 Says, “Three or more 1’s and not ending in 01 nor composed of all 1’s.”
 
-.. figure:: omg.svg
-   :alt: State Machine Graph
+.. figure:: attachment:omg.svg
+   :alt: omg.svg
 
-   State Machine Graph
+   omg.svg
 
 Start at ``a`` and follow the transition arrows according to their
 labels. Accepting states have a double outline. (Graphic generated with
@@ -605,20 +605,20 @@ You can see the one-way nature of the ``g`` state and the ``hij`` “trap”
 in the way that the ``.111.`` on the left-hand side of the ``&``
 disappears once it has been matched.
 
-.. code:: python
+.. code:: ipython2
 
     from collections import defaultdict
     from pprint import pprint
     from string import ascii_lowercase
 
-.. code:: python
+.. code:: ipython2
 
     d0, d1 = D_compaction('0'), D_compaction('1')
 
 ``explore()``
 ~~~~~~~~~~~~~
 
-.. code:: python
+.. code:: ipython2
 
     def explore(re):
     
@@ -645,7 +645,7 @@ disappears once it has been matched.
     
         return table, accepting
 
-.. code:: python
+.. code:: ipython2
 
     table, accepting = explore(it)
     table
@@ -678,7 +678,7 @@ disappears once it has been matched.
 
 
 
-.. code:: python
+.. code:: ipython2
 
     accepting
 
@@ -697,7 +697,7 @@ Generate Diagram
 Once we have the FSM table and the set of accepting states we can
 generate the diagram above.
 
-.. code:: python
+.. code:: ipython2
 
     _template = '''\
     digraph finite_state_machine {
@@ -722,7 +722,7 @@ generate the diagram above.
               )
             )
 
-.. code:: python
+.. code:: ipython2
 
     print make_graph(table, accepting)
 
@@ -776,7 +776,7 @@ Trampoline Function
 Python has no GOTO statement but we can fake it with a “trampoline”
 function.
 
-.. code:: python
+.. code:: ipython2
 
     def trampoline(input_, jump_from, accepting):
         I = iter(input_)
@@ -793,7 +793,7 @@ Stream Functions
 Little helpers to process the iterator of our data (a “stream” of “1”
 and “0” characters, not bits.)
 
-.. code:: python
+.. code:: ipython2
 
     getch = lambda I: int(next(I))
     
@@ -816,7 +816,7 @@ code. (You have to imagine that these are GOTO statements in C or
 branches in assembly and that the state names are branch destination
 labels.)
 
-.. code:: python
+.. code:: ipython2
 
     a = lambda I: c if getch(I) else b
     b = lambda I: _0(I) or d
@@ -833,12 +833,12 @@ Note that the implementations of ``h`` and ``g`` are identical ergo
 ``h = g`` and we could eliminate one in the code but ``h`` is an
 accepting state and ``g`` isn’t.
 
-.. code:: python
+.. code:: ipython2
 
     def acceptable(input_):
         return trampoline(input_, a, {h, i})
 
-.. code:: python
+.. code:: ipython2
 
     for n in range(2**5):
         s = bin(n)[2:]

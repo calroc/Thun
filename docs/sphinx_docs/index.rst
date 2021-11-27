@@ -34,6 +34,31 @@ itself.
 .. _Concatinative: https://en.wikipedia.org/wiki/Concatenative_programming_language
 
 
+Example Code
+--------------------------------------------------
+
+Here is an example of Joy code::
+
+    [[[abs]ii <=][[<>][pop !-]||]&&][[!-][[++]][[--]]ifte dip][[pop !-][--][++]ifte]ifte
+
+It might seem unreadable but with a little familiarity it becomes just as
+legible as any other notation.  Some layout helps::
+
+    [   [[abs] ii <=]
+        [
+            [<>] [pop !-] ||
+        ] &&
+    ]
+    [[    !-] [[++]] [[--]] ifte dip]
+    [[pop !-]  [--]   [++]  ifte    ]
+    ifte
+
+This function accepts two integers on the stack and increments or
+decrements one of them such that the new pair of numbers is the next
+coordinate pair in a square spiral (like the kind used to construct an
+Ulam Spiral).  For more information see :doc:`notebooks/Square_Spiral`
+
+
 Quick Start
 --------------------------------------------------
 

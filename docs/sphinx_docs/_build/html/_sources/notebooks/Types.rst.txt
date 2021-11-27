@@ -184,7 +184,7 @@ Compiling ``pop∘swap∘roll<``
 
 The simplest way to “compile” this function would be something like:
 
-.. code:: python
+.. code:: ipython2
 
     def poswrd(s, e, d):
         return rolldown(*swap(*pop(s, e, d)))
@@ -200,7 +200,7 @@ Looking ahead for a moment, from the stack effect comment:
 
 We should be able to directly write out a Python function like:
 
-.. code:: python
+.. code:: ipython2
 
     def poswrd(stack):
         (_, (a, (b, (c, stack)))) = stack
@@ -393,7 +393,7 @@ And there you have it, the stack effect for
 From this stack effect comment it should be possible to construct the
 following Python code:
 
-.. code:: python
+.. code:: ipython2
 
     def F(stack):
         (_, (d, (c, ((a, (b, S0)), stack)))) = stack
@@ -408,7 +408,7 @@ Representing Stack Effect Comments in Python
 I’m going to use pairs of tuples of type descriptors, which will be
 integers or tuples of type descriptors:
 
-.. code:: python
+.. code:: ipython2
 
     roll_dn = (1, 2, 3), (2, 3, 1)
     
@@ -419,7 +419,7 @@ integers or tuples of type descriptors:
 ``compose()``
 ~~~~~~~~~~~~~
 
-.. code:: python
+.. code:: ipython2
 
     def compose(f, g):
     
@@ -465,7 +465,7 @@ integers or tuples of type descriptors:
 ``unify()``
 ~~~~~~~~~~~
 
-.. code:: python
+.. code:: ipython2
 
     def unify(u, v, s=None):
         if s is None:
@@ -483,7 +483,7 @@ integers or tuples of type descriptors:
 ``update()``
 ~~~~~~~~~~~~
 
-.. code:: python
+.. code:: ipython2
 
     def update(s, term):
         if not isinstance(term, tuple):
@@ -493,7 +493,7 @@ integers or tuples of type descriptors:
 ``relabel()``
 ~~~~~~~~~~~~~
 
-.. code:: python
+.. code:: ipython2
 
     def relabel(left, right):
         return left, _1000(right)
@@ -517,7 +517,7 @@ integers or tuples of type descriptors:
 ``delabel()``
 ~~~~~~~~~~~~~
 
-.. code:: python
+.. code:: ipython2
 
     def delabel(f):
         s = {u: i for i, u in enumerate(sorted(_unique(f)))}
@@ -551,7 +551,7 @@ At last we put it all together in a function ``C()`` that accepts two
 stack effect comments and returns their composition (or raises and
 exception if they can’t be composed due to type conflicts.)
 
-.. code:: python
+.. code:: ipython2
 
     def C(f, g):
         f, g = relabel(f, g)
@@ -560,7 +560,7 @@ exception if they can’t be composed due to type conflicts.)
 
 Let’s try it out.
 
-.. code:: python
+.. code:: ipython2
 
     C(pop, swap)
 
@@ -573,7 +573,7 @@ Let’s try it out.
 
 
 
-.. code:: python
+.. code:: ipython2
 
     C(C(pop, swap), roll_dn)
 
@@ -586,7 +586,7 @@ Let’s try it out.
 
 
 
-.. code:: python
+.. code:: ipython2
 
     C(swap, roll_dn)
 
@@ -599,7 +599,7 @@ Let’s try it out.
 
 
 
-.. code:: python
+.. code:: ipython2
 
     C(pop, C(swap, roll_dn))
 
@@ -612,7 +612,7 @@ Let’s try it out.
 
 
 
-.. code:: python
+.. code:: ipython2
 
     poswrd = reduce(C, (pop, swap, roll_dn))
     poswrd
@@ -633,13 +633,13 @@ Here’s that trick to represent functions like ``rest`` and ``cons`` that
 manipulate stacks. We use a cons-list of tuples and give the tails their
 own numbers. Then everything above already works.
 
-.. code:: python
+.. code:: ipython2
 
     rest = ((1, 2),), (2,)
     
     cons = (1, 2), ((1, 2),)
 
-.. code:: python
+.. code:: ipython2
 
     C(poswrd, rest)
 
@@ -671,7 +671,7 @@ The translation table, if you will, would be:
    0: 0,
    }
 
-.. code:: python
+.. code:: ipython2
 
     F = reduce(C, (pop, swap, roll_dn, rest, rest, cons, cons))
     
@@ -699,11 +699,11 @@ Dealing with ``cons`` and ``uncons``
 However, if we try to compose e.g. ``cons`` and ``uncons`` it won’t
 work:
 
-.. code:: python
+.. code:: ipython2
 
     uncons = ((1, 2),), (1, 2)
 
-.. code:: python
+.. code:: ipython2
 
     try:
         C(cons, uncons)
@@ -723,7 +723,7 @@ The problem is that the ``unify()`` function as written doesn’t handle
 the case when both terms are tuples. We just have to add a clause to
 deal with this recursively:
 
-.. code:: python
+.. code:: ipython2
 
     def unify(u, v, s=None):
         if s is None:
@@ -753,7 +753,7 @@ deal with this recursively:
     
         return s
 
-.. code:: python
+.. code:: ipython2
 
     C(cons, uncons)
 
@@ -771,7 +771,7 @@ Part III: Compiling Yin Functions
 
 Now consider the Python function we would like to derive:
 
-.. code:: python
+.. code:: ipython2
 
     def F_python(stack):
         (_, (d, (c, ((a, (b, S0)), stack)))) = stack
@@ -779,7 +779,7 @@ Now consider the Python function we would like to derive:
 
 And compare it to the input stack effect comment tuple we just computed:
 
-.. code:: python
+.. code:: ipython2
 
     F[0]
 
@@ -816,7 +816,7 @@ Eh?
 
 And the return tuple
 
-.. code:: python
+.. code:: ipython2
 
     F[1]
 
@@ -848,7 +848,7 @@ Python Identifiers
 We want to substitute Python identifiers for the integers. I’m going to
 repurpose ``joy.parser.Symbol`` class for this:
 
-.. code:: python
+.. code:: ipython2
 
     from collections import defaultdict
     from joy.parser import Symbol
@@ -874,7 +874,7 @@ effect comment tuples to reasonable text format. There are some details
 in how this code works that related to stuff later in the notebook, so
 you should skip it for now and read it later if you’re interested.
 
-.. code:: python
+.. code:: ipython2
 
     def doc_from_stack_effect(inputs, outputs):
         return '(%s--%s)' % (
@@ -914,7 +914,7 @@ Now we can write a compiler function to emit Python source code. (The
 underscore suffix distiguishes it from the built-in ``compile()``
 function.)
 
-.. code:: python
+.. code:: ipython2
 
     def compile_(name, f, doc=None):
         if doc is None:
@@ -932,7 +932,7 @@ function.)
 
 Here it is in action:
 
-.. code:: python
+.. code:: ipython2
 
     source = compile_('F', F)
     
@@ -949,7 +949,7 @@ Here it is in action:
 
 Compare:
 
-.. code:: python
+.. code:: ipython2
 
     def F_python(stack):
         (_, (d, (c, ((a, (b, S0)), stack)))) = stack
@@ -957,7 +957,7 @@ Compare:
 
 Next steps:
 
-.. code:: python
+.. code:: ipython2
 
     L = {}
     
@@ -976,16 +976,16 @@ Next steps:
 
 Let’s try it out:
 
-.. code:: python
+.. code:: ipython2
 
     from notebook_preamble import D, J, V
     from joy.library import SimpleFunctionWrapper
 
-.. code:: python
+.. code:: ipython2
 
     D['F'] = SimpleFunctionWrapper(L['F'])
 
-.. code:: python
+.. code:: ipython2
 
     J('[4 5 ...] 2 3 1 F')
 
@@ -1012,7 +1012,7 @@ Compiling Library Functions
 We can use ``compile_()`` to generate many primitives in the library
 from their stack effect comments:
 
-.. code:: python
+.. code:: ipython2
 
     def defs():
     
@@ -1036,7 +1036,7 @@ from their stack effect comments:
     
         return locals()
 
-.. code:: python
+.. code:: ipython2
 
     for name, stack_effect_comment in sorted(defs().items()):
         print
@@ -1205,7 +1205,7 @@ Python class hierarchy of Joy types and use the ``issubclass()`` method
 to establish domain ordering, as well as other handy behaviour that will
 make it fairly easy to reuse most of the code above.
 
-.. code:: python
+.. code:: ipython2
 
     class AnyJoyType(object):
     
@@ -1251,14 +1251,14 @@ make it fairly easy to reuse most of the code above.
 
 Mess with it a little:
 
-.. code:: python
+.. code:: ipython2
 
     from itertools import permutations
 
 “Any” types can be specialized to numbers and stacks, but not vice
 versa:
 
-.. code:: python
+.. code:: ipython2
 
     for a, b in permutations((A[0], N[0], S[0]), 2):
         print a, '>=', b, '->', a >= b
@@ -1278,7 +1278,7 @@ Our crude `Numerical
 Tower <https://en.wikipedia.org/wiki/Numerical_tower>`__ of *numbers* >
 *floats* > *integers* works as well (but we’re not going to use it yet):
 
-.. code:: python
+.. code:: ipython2
 
     for a, b in permutations((A[0], N[0], FloatJoyType(0), IntJoyType(0)), 2):
         print a, '>=', b, '->', a >= b
@@ -1303,13 +1303,13 @@ Tower <https://en.wikipedia.org/wiki/Numerical_tower>`__ of *numbers* >
 Typing ``sqr``
 ~~~~~~~~~~~~~~
 
-.. code:: python
+.. code:: ipython2
 
     dup = (A[1],), (A[1], A[1])
     
     mul = (N[1], N[2]), (N[3],)
 
-.. code:: python
+.. code:: ipython2
 
     dup
 
@@ -1322,7 +1322,7 @@ Typing ``sqr``
 
 
 
-.. code:: python
+.. code:: ipython2
 
     mul
 
@@ -1340,7 +1340,7 @@ Modifying the Inferencer
 
 Re-labeling still works fine:
 
-.. code:: python
+.. code:: ipython2
 
     foo = relabel(dup, mul)
     
@@ -1361,7 +1361,7 @@ Re-labeling still works fine:
 The ``delabel()`` function needs an overhaul. It now has to keep track
 of how many labels of each domain it has “seen”.
 
-.. code:: python
+.. code:: ipython2
 
     from collections import Counter
     
@@ -1383,7 +1383,7 @@ of how many labels of each domain it has “seen”.
     
         return tuple(delabel(inner, seen, c) for inner in f)
 
-.. code:: python
+.. code:: ipython2
 
     delabel(foo)
 
@@ -1399,7 +1399,7 @@ of how many labels of each domain it has “seen”.
 ``unify()`` version 3
 ^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
+.. code:: ipython2
 
     def unify(u, v, s=None):
         if s is None:
@@ -1449,7 +1449,7 @@ of how many labels of each domain it has “seen”.
 
 Rewrite the stack effect comments:
 
-.. code:: python
+.. code:: ipython2
 
     def defs():
     
@@ -1503,11 +1503,11 @@ Rewrite the stack effect comments:
     
         return locals()
 
-.. code:: python
+.. code:: ipython2
 
     DEFS = defs()
 
-.. code:: python
+.. code:: ipython2
 
     for name, stack_effect_comment in sorted(DEFS.items()):
         print name, '=', doc_from_stack_effect(*stack_effect_comment)
@@ -1543,14 +1543,14 @@ Rewrite the stack effect comments:
     uncons = ([a1 .1.] -- a1 [.1.])
 
 
-.. code:: python
+.. code:: ipython2
 
     globals().update(DEFS)
 
 Compose ``dup`` and ``mul``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
+.. code:: ipython2
 
     C(dup, mul)
 
@@ -1565,7 +1565,7 @@ Compose ``dup`` and ``mul``
 
 Revisit the ``F`` function, works fine.
 
-.. code:: python
+.. code:: ipython2
 
     F = reduce(C, (pop, swap, rolldown, rest, rest, cons, cons))
     F
@@ -1579,7 +1579,7 @@ Revisit the ``F`` function, works fine.
 
 
 
-.. code:: python
+.. code:: ipython2
 
     print doc_from_stack_effect(*F)
 
@@ -1592,12 +1592,12 @@ Revisit the ``F`` function, works fine.
 Some otherwise inefficient functions are no longer to be feared. We can
 also get the effect of combinators in some limited cases.
 
-.. code:: python
+.. code:: ipython2
 
     def neato(*funcs):
         print doc_from_stack_effect(*reduce(C, funcs))
 
-.. code:: python
+.. code:: ipython2
 
     # e.g. [swap] dip
     neato(rollup, swap, rolldown)
@@ -1608,7 +1608,7 @@ also get the effect of combinators in some limited cases.
     (a1 a2 a3 -- a2 a1 a3)
 
 
-.. code:: python
+.. code:: ipython2
 
     # e.g. [popop] dipd
     neato(popdd, rolldown, pop)
@@ -1619,7 +1619,7 @@ also get the effect of combinators in some limited cases.
     (a1 a2 a3 a4 -- a3 a4)
 
 
-.. code:: python
+.. code:: ipython2
 
     # Reverse the order of the top three items.
     neato(rollup, swap)
@@ -1636,7 +1636,7 @@ also get the effect of combinators in some limited cases.
 Because the type labels represent themselves as valid Python identifiers
 the ``compile_()`` function doesn’t need to generate them anymore:
 
-.. code:: python
+.. code:: ipython2
 
     def compile_(name, f, doc=None):
         inputs, outputs = f
@@ -1652,7 +1652,7 @@ the ``compile_()`` function doesn’t need to generate them anymore:
         %s = stack
         return %s''' % (name, doc, i, o)
 
-.. code:: python
+.. code:: ipython2
 
     print compile_('F', F)
 
@@ -1668,7 +1668,7 @@ the ``compile_()`` function doesn’t need to generate them anymore:
 But it cannot magically create new functions that involve e.g. math and
 such. Note that this is *not* a ``sqr`` function implementation:
 
-.. code:: python
+.. code:: ipython2
 
     print compile_('sqr', C(dup, mul))
 
@@ -1696,7 +1696,7 @@ The functions that *can* be compiled are the ones that have only
 ``AnyJoyType`` and ``StackJoyType`` labels in their stack effect
 comments. We can write a function to check that:
 
-.. code:: python
+.. code:: ipython2
 
     from itertools import imap
     
@@ -1704,7 +1704,7 @@ comments. We can write a function to check that:
     def compilable(f):
         return isinstance(f, tuple) and all(imap(compilable, f)) or stacky(f)
 
-.. code:: python
+.. code:: ipython2
 
     for name, stack_effect_comment in sorted(defs().items()):
         if compilable(stack_effect_comment):
@@ -1828,7 +1828,7 @@ the “truthiness” of ``StackJoyType`` to false to let e.g.
 ``joy.utils.stack.concat`` work with our stack effect comment cons-list
 tuples.)
 
-.. code:: python
+.. code:: ipython2
 
     def compose(f, g):
         (f_in, f_out), (g_in, g_out) = f, g
@@ -1840,7 +1840,7 @@ tuples.)
 I don’t want to rewrite all the defs myself, so I’ll write a little
 conversion function instead. This is programmer’s laziness.
 
-.. code:: python
+.. code:: ipython2
 
     def sequence_to_stack(seq, stack=StackJoyType(23)):
         for item in seq: stack = item, stack
@@ -1854,7 +1854,7 @@ conversion function instead. This is programmer’s laziness.
     NEW_DEFS['swaack'] = (S[1], S[0]), (S[0], S[1])
     globals().update(NEW_DEFS)
 
-.. code:: python
+.. code:: ipython2
 
     C(stack, uncons)
 
@@ -1867,7 +1867,7 @@ conversion function instead. This is programmer’s laziness.
 
 
 
-.. code:: python
+.. code:: ipython2
 
     reduce(C, (stack, uncons, uncons))
 
@@ -1887,7 +1887,7 @@ The display function should be changed too.
 
 Clunky junk, but it will suffice for now.
 
-.. code:: python
+.. code:: ipython2
 
     def doc_from_stack_effect(inputs, outputs):
         switch = [False]  # Do we need to display the '...' for the rest of the main stack?
@@ -1935,7 +1935,7 @@ Clunky junk, but it will suffice for now.
         a.append(end)
         return '[%s]' % ' '.join(a)
 
-.. code:: python
+.. code:: ipython2
 
     for name, stack_effect_comment in sorted(NEW_DEFS.items()):
         print name, '=', doc_from_stack_effect(*stack_effect_comment)
@@ -1973,7 +1973,7 @@ Clunky junk, but it will suffice for now.
     uncons = ([a1 .1.] -- a1 [.1.])
 
 
-.. code:: python
+.. code:: ipython2
 
     print ; print doc_from_stack_effect(*stack)
     print ; print doc_from_stack_effect(*C(stack, uncons))
@@ -1993,7 +1993,7 @@ Clunky junk, but it will suffice for now.
     (... a1 -- ... a1 [a1 ...])
 
 
-.. code:: python
+.. code:: ipython2
 
     print doc_from_stack_effect(*C(ccons, stack))
 
@@ -2003,7 +2003,7 @@ Clunky junk, but it will suffice for now.
     (... a2 a1 [.1.] -- ... [a2 a1 .1.] [[a2 a1 .1.] ...])
 
 
-.. code:: python
+.. code:: ipython2
 
     Q = C(ccons, stack)
     
@@ -2024,7 +2024,7 @@ Clunky junk, but it will suffice for now.
 This makes the ``compile_()`` function pretty simple as the stack effect
 comments are now already in the form needed for the Python code:
 
-.. code:: python
+.. code:: ipython2
 
     def compile_(name, f, doc=None):
         i, o = f
@@ -2035,7 +2035,7 @@ comments are now already in the form needed for the Python code:
         %s = stack
         return %s''' % (name, doc, i, o)
 
-.. code:: python
+.. code:: ipython2
 
     print compile_('Q', Q)
 
@@ -2053,12 +2053,12 @@ comments are now already in the form needed for the Python code:
 
 
 
-.. code:: python
+.. code:: ipython2
 
     unstack = (S[1], S[0]), S[1]
     enstacken = S[0], (S[0], S[1])
 
-.. code:: python
+.. code:: ipython2
 
     print doc_from_stack_effect(*unstack)
 
@@ -2068,7 +2068,7 @@ comments are now already in the form needed for the Python code:
     ([.1.] --)
 
 
-.. code:: python
+.. code:: ipython2
 
     print doc_from_stack_effect(*enstacken)
 
@@ -2078,7 +2078,7 @@ comments are now already in the form needed for the Python code:
     (-- [.0.])
 
 
-.. code:: python
+.. code:: ipython2
 
     print doc_from_stack_effect(*C(cons, unstack))
 
@@ -2088,7 +2088,7 @@ comments are now already in the form needed for the Python code:
     (a1 [.1.] -- a1)
 
 
-.. code:: python
+.. code:: ipython2
 
     print doc_from_stack_effect(*C(cons, enstacken))
 
@@ -2098,7 +2098,7 @@ comments are now already in the form needed for the Python code:
     (a1 [.1.] -- [[a1 .1.] .2.])
 
 
-.. code:: python
+.. code:: ipython2
 
     C(cons, unstack)
 
@@ -2117,7 +2117,7 @@ Part VI: Multiple Stack Effects
 
 …
 
-.. code:: python
+.. code:: ipython2
 
     class IntJoyType(NumberJoyType): prefix = 'i'
     
@@ -2125,7 +2125,7 @@ Part VI: Multiple Stack Effects
     F = map(FloatJoyType, _R)
     I = map(IntJoyType, _R)
 
-.. code:: python
+.. code:: ipython2
 
     muls = [
          ((I[2], (I[1], S[0])), (I[3], S[0])),
@@ -2134,7 +2134,7 @@ Part VI: Multiple Stack Effects
          ((F[2], (F[1], S[0])), (F[3], S[0])),
     ]
 
-.. code:: python
+.. code:: ipython2
 
     for f in muls:
         print doc_from_stack_effect(*f)
@@ -2148,7 +2148,7 @@ Part VI: Multiple Stack Effects
     (f1 f2 -- f3)
 
 
-.. code:: python
+.. code:: ipython2
 
     for f in muls:
         try:
@@ -2164,7 +2164,7 @@ Part VI: Multiple Stack Effects
     (a1 -- a1 a1) (f1 f2 -- f3) (f1 -- f2)
 
 
-.. code:: python
+.. code:: ipython2
 
     from itertools import product
     
@@ -2180,7 +2180,7 @@ Part VI: Multiple Stack Effects
     def MC(F, G):
         return sorted(set(meta_compose(F, G)))
 
-.. code:: python
+.. code:: ipython2
 
     for f in MC([dup], [mul]):
         print doc_from_stack_effect(*f)
@@ -2191,7 +2191,7 @@ Part VI: Multiple Stack Effects
     (n1 -- n2)
 
 
-.. code:: python
+.. code:: ipython2
 
     for f in MC([dup], muls):
         print doc_from_stack_effect(*f)
@@ -2264,7 +2264,7 @@ Giving us two unifiers:
    {c: a,  d: b,  .1.:      .0.}
    {c: a,  d: e,  .1.: A* b .0.}
 
-.. code:: python
+.. code:: ipython2
 
     class KleeneStar(object):
     
@@ -2314,7 +2314,7 @@ Giving us two unifiers:
 
 Can now return multiple results…
 
-.. code:: python
+.. code:: ipython2
 
     def unify(u, v, s=None):
         if s is None:
@@ -2386,7 +2386,7 @@ Can now return multiple results…
     def stacky(thing):
         return thing.__class__ in {AnyJoyType, StackJoyType}
 
-.. code:: python
+.. code:: ipython2
 
     a = (As[1], S[1])
     a
@@ -2400,7 +2400,7 @@ Can now return multiple results…
 
 
 
-.. code:: python
+.. code:: ipython2
 
     b = (A[1], S[2])
     b
@@ -2414,7 +2414,7 @@ Can now return multiple results…
 
 
 
-.. code:: python
+.. code:: ipython2
 
     for result in unify(b, a):
         print result, '->', update(result, a), update(result, b)
@@ -2426,7 +2426,7 @@ Can now return multiple results…
     {a1: a10001, s2: (a1*, s1)} -> (a1*, s1) (a10001, (a1*, s1))
 
 
-.. code:: python
+.. code:: ipython2
 
     for result in unify(a, b):
         print result, '->', update(result, a), update(result, b)
@@ -2446,7 +2446,7 @@ Can now return multiple results…
 
    (a1*, s1)       [a1*]       (a2, (a1*, s1)) [a2 a1*]
 
-.. code:: python
+.. code:: ipython2
 
     sum_ = ((Ns[1], S[1]), S[0]), (N[0], S[0])
     
@@ -2458,7 +2458,7 @@ Can now return multiple results…
     ([n1* .1.] -- n0)
 
 
-.. code:: python
+.. code:: ipython2
 
     f = (N[1], (N[2], (N[3], S[1]))), S[0]
     
@@ -2470,7 +2470,7 @@ Can now return multiple results…
     (-- [n1 n2 n3 .1.])
 
 
-.. code:: python
+.. code:: ipython2
 
     for result in unify(sum_[0], f):
         print result, '->', update(result, sum_[1])
@@ -2489,7 +2489,7 @@ Can now return multiple results…
 
 This function has to be modified to yield multiple results.
 
-.. code:: python
+.. code:: ipython2
 
     def compose(f, g):
         (f_in, f_out), (g_in, g_out) = f, g
@@ -2501,7 +2501,7 @@ This function has to be modified to yield multiple results.
 
 
 
-.. code:: python
+.. code:: ipython2
 
     def meta_compose(F, G):
         for f, g in product(F, G):
@@ -2517,7 +2517,7 @@ This function has to be modified to yield multiple results.
         for fg in compose(f, g):
             yield delabel(fg)
 
-.. code:: python
+.. code:: ipython2
 
     for f in MC([dup], muls):
         print doc_from_stack_effect(*f)
@@ -2529,7 +2529,7 @@ This function has to be modified to yield multiple results.
     (i1 -- i2)
 
 
-.. code:: python
+.. code:: ipython2
 
     
     
@@ -2542,7 +2542,7 @@ This function has to be modified to yield multiple results.
     ([n1* .1.] -- [n1* .1.] n1)
 
 
-.. code:: python
+.. code:: ipython2
 
     
     
@@ -2556,7 +2556,7 @@ This function has to be modified to yield multiple results.
     (n1 [n1* .1.] -- n2)
 
 
-.. code:: python
+.. code:: ipython2
 
     sum_ = (((N[1], (Ns[1], S[1])), S[0]), (N[0], S[0]))
     print doc_from_stack_effect(*cons),
@@ -2571,7 +2571,7 @@ This function has to be modified to yield multiple results.
     (a1 [.1.] -- [a1 .1.]) ([n1 n1* .1.] -- n0) (n1 [n1* .1.] -- n2)
 
 
-.. code:: python
+.. code:: ipython2
 
     a = (A[4], (As[1], (A[3], S[1])))
     a
@@ -2585,7 +2585,7 @@ This function has to be modified to yield multiple results.
 
 
 
-.. code:: python
+.. code:: ipython2
 
     b = (A[1], (A[2], S[2]))
     b
@@ -2599,7 +2599,7 @@ This function has to be modified to yield multiple results.
 
 
 
-.. code:: python
+.. code:: ipython2
 
     for result in unify(b, a):
         print result
@@ -2611,7 +2611,7 @@ This function has to be modified to yield multiple results.
     {a1: a4, s2: (a1*, (a3, s1)), a2: a10003}
 
 
-.. code:: python
+.. code:: ipython2
 
     for result in unify(a, b):
         print result
@@ -2681,7 +2681,7 @@ We need a type variable for Joy functions that can go in our expressions
 and be used by the hybrid inferencer/interpreter. They have to store a
 name and a list of stack effects.
 
-.. code:: python
+.. code:: ipython2
 
     class FunctionJoyType(AnyJoyType):
     
@@ -2703,14 +2703,14 @@ Specialized for Simple Functions and Combinators
 For non-combinator functions the stack effects list contains stack
 effect comments (represented by pairs of cons-lists as described above.)
 
-.. code:: python
+.. code:: ipython2
 
     class SymbolJoyType(FunctionJoyType):
         prefix = 'F'
 
 For combinators the list contains Python functions.
 
-.. code:: python
+.. code:: ipython2
 
     class CombinatorJoyType(FunctionJoyType):
     
@@ -2731,7 +2731,7 @@ For combinators the list contains Python functions.
 For simple combinators that have only one effect (like ``dip``) you only
 need one function and it can be the combinator itself.
 
-.. code:: python
+.. code:: ipython2
 
     import joy.library
     
@@ -2741,7 +2741,7 @@ For combinators that can have more than one effect (like ``branch``) you
 have to write functions that each implement the action of one of the
 effects.
 
-.. code:: python
+.. code:: ipython2
 
     def branch_true(stack, expression, dictionary):
         (then, (else_, (flag, stack))) = stack
@@ -2771,7 +2771,7 @@ updated along with the stack effects after doing unification or we risk
 losing useful information. This was a straightforward, if awkward,
 modification to the call structure of ``meta_compose()`` et. al.
 
-.. code:: python
+.. code:: ipython2
 
     ID = S[0], S[0]  # Identity function.
     
@@ -2833,7 +2833,7 @@ cruft to convert the definitions in ``DEFS`` to the new
 ``SymbolJoyType`` objects, and some combinators. Here is an example of
 output from the current code :
 
-.. code:: python
+.. code:: ipython2
 
     1/0  # (Don't try to run this cell!  It's not going to work.  This is "read only" code heh..)
     
@@ -2956,7 +2956,7 @@ module. But if you’re interested in all that you should just use Prolog!
 
 Anyhow, type *checking* is a few easy steps away.
 
-.. code:: python
+.. code:: ipython2
 
     def _ge(self, other):
         return (issubclass(other.__class__, self.__class__)

@@ -1,4 +1,4 @@
-.. code:: python
+.. code:: ipython2
 
     from notebook_preamble import J, V, define
 
@@ -81,13 +81,13 @@ the variables:
 The three arguments are to the left, so we can “chop off” everything to
 the right and say it’s the definition of the ``quadratic`` function:
 
-.. code:: python
+.. code:: ipython2
 
     define('quadratic == over [[[neg] dupdip sqr 4] dipd * * - sqrt pm] dip 2 * [/] cons app2')
 
 Let’s try it out:
 
-.. code:: python
+.. code:: ipython2
 
     J('3 1 1 quadratic')
 
@@ -102,7 +102,7 @@ lines are the ``dip`` and ``dipd`` combinators building the main program
 by incorporating the values on the stack. Then that program runs and you
 get the results. This is pretty typical of Joy code.
 
-.. code:: python
+.. code:: ipython2
 
     V('-5 1 4 quadratic')
 

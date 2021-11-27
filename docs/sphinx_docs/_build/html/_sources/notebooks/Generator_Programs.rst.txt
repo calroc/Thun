@@ -3,7 +3,7 @@ Using ``x`` to Generate Values
 
 Cf. jp-reprod.html
 
-.. code:: python
+.. code:: ipython2
 
     from notebook_preamble import J, V, define
 
@@ -57,7 +57,7 @@ We can make a generator for the Natural numbers (0, 1, 2, …) by using
 
 Let’s try it:
 
-.. code:: python
+.. code:: ipython2
 
     V('[0 swap [dup ++] dip rest cons] x')
 
@@ -81,7 +81,7 @@ Let’s try it:
 After one application of ``x`` the quoted program contains ``1`` and
 ``0`` is below it on the stack.
 
-.. code:: python
+.. code:: ipython2
 
     J('[0 swap [dup ++] dip rest cons] x x x x x pop')
 
@@ -94,11 +94,11 @@ After one application of ``x`` the quoted program contains ``1`` and
 ``direco``
 ----------
 
-.. code:: python
+.. code:: ipython2
 
     define('direco == dip rest cons')
 
-.. code:: python
+.. code:: ipython2
 
     V('[0 swap [dup ++] direco] x')
 
@@ -149,13 +149,13 @@ Reading from the bottom up:
    G == [direco] cons [swap] swap concat cons
    G == [direco] cons [swap] swoncat cons
 
-.. code:: python
+.. code:: ipython2
 
     define('G == [direco] cons [swap] swoncat cons')
 
 Let’s try it out:
 
-.. code:: python
+.. code:: ipython2
 
     J('0 [dup ++] G')
 
@@ -165,7 +165,7 @@ Let’s try it out:
     [0 swap [dup ++] direco]
 
 
-.. code:: python
+.. code:: ipython2
 
     J('0 [dup ++] G x x x pop')
 
@@ -178,7 +178,7 @@ Let’s try it out:
 Powers of 2
 ~~~~~~~~~~~
 
-.. code:: python
+.. code:: ipython2
 
     J('1 [dup 1 <<] G x x x x x x x x x pop')
 
@@ -194,7 +194,7 @@ Powers of 2
 If we have one of these quoted programs we can drive it using ``times``
 with the ``x`` combinator.
 
-.. code:: python
+.. code:: ipython2
 
     J('23 [dup ++] G 5 [x] times')
 
@@ -226,11 +226,11 @@ int:
 And pick them off by masking with 3 (binary 11) and then shifting the
 int right two bits.
 
-.. code:: python
+.. code:: ipython2
 
     define('PE1.1 == dup [3 &] dip 2 >>')
 
-.. code:: python
+.. code:: ipython2
 
     V('14811 PE1.1')
 
@@ -252,7 +252,7 @@ int right two bits.
 
 If we plug ``14811`` and ``[PE1.1]`` into our generator form…
 
-.. code:: python
+.. code:: ipython2
 
     J('14811 [PE1.1] G')
 
@@ -264,7 +264,7 @@ If we plug ``14811`` and ``[PE1.1]`` into our generator form…
 
 …we get a generator that works for seven cycles before it reaches zero:
 
-.. code:: python
+.. code:: ipython2
 
     J('[14811 swap [PE1.1] direco] 7 [x] times')
 
@@ -280,11 +280,11 @@ Reset at Zero
 We need a function that checks if the int has reached zero and resets it
 if so.
 
-.. code:: python
+.. code:: ipython2
 
     define('PE1.1.check == dup [pop 14811] [] branch')
 
-.. code:: python
+.. code:: ipython2
 
     J('14811 [PE1.1.check PE1.1] G')
 
@@ -294,7 +294,7 @@ if so.
     [14811 swap [PE1.1.check PE1.1] direco]
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[14811 swap [PE1.1.check PE1.1] direco] 21 [x] times')
 
@@ -316,7 +316,7 @@ In the PE1 problem we are asked to sum all the multiples of three and
 five less than 1000. It’s worked out that we need to use all seven
 numbers sixty-six times and then four more.
 
-.. code:: python
+.. code:: ipython2
 
     J('7 66 * 4 +')
 
@@ -328,7 +328,7 @@ numbers sixty-six times and then four more.
 
 If we drive our generator 466 times and sum the stack we get 999.
 
-.. code:: python
+.. code:: ipython2
 
     J('[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times')
 
@@ -338,7 +338,7 @@ If we drive our generator 466 times and sum the stack we get 999.
     3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 [57 swap [PE1.1.check PE1.1] direco]
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[14811 swap [PE1.1.check PE1.1] direco] 466 [x] times pop enstacken sum')
 
@@ -351,13 +351,13 @@ If we drive our generator 466 times and sum the stack we get 999.
 Project Euler Problem One
 -------------------------
 
-.. code:: python
+.. code:: ipython2
 
     define('PE1.2 == + dup [+] dip')
 
 Now we can add ``PE1.2`` to the quoted program given to ``G``.
 
-.. code:: python
+.. code:: ipython2
 
     J('0 0 0 [PE1.1.check PE1.1] G 466 [x [PE1.2] dip] times popop')
 
@@ -445,15 +445,15 @@ Putting it all together:
    F == + [popdd over] cons infra uncons
    fib_gen == [1 1 F]
 
-.. code:: python
+.. code:: ipython2
 
     define('fib == + [popdd over] cons infra uncons')
 
-.. code:: python
+.. code:: ipython2
 
     define('fib_gen == [1 1 fib]')
 
-.. code:: python
+.. code:: ipython2
 
     J('fib_gen 10 [x] times')
 
@@ -473,14 +473,14 @@ Now that we have a generator for the Fibonacci sequence, we need a
 function that adds a term in the sequence to a sum if it is even, and
 ``pop``\ s it otherwise.
 
-.. code:: python
+.. code:: ipython2
 
     define('PE2.1 == dup 2 % [+] [pop] branch')
 
 And a predicate function that detects when the terms in the series
 “exceed four million”.
 
-.. code:: python
+.. code:: ipython2
 
     define('>4M == 4000000 >')
 
@@ -488,11 +488,11 @@ Now it’s straightforward to define ``PE2`` as a recursive function that
 generates terms in the Fibonacci sequence until they exceed four million
 and sums the even ones.
 
-.. code:: python
+.. code:: ipython2
 
     define('PE2 == 0 fib_gen x [pop >4M] [popop] [[PE2.1] dip x] primrec')
 
-.. code:: python
+.. code:: ipython2
 
     J('PE2')
 
@@ -535,7 +535,7 @@ So the Fibonacci sequence considered in terms of just parity would be:
 
 Every third term is even.
 
-.. code:: python
+.. code:: ipython2
 
     J('[1 0 fib] x x x')  # To start the sequence with 1 1 2 3 instead of 1 2 3.
 
@@ -547,7 +547,7 @@ Every third term is even.
 
 Drive the generator three times and ``popop`` the two odd terms.
 
-.. code:: python
+.. code:: ipython2
 
     J('[1 0 fib] x x x [popop] dipd')
 
@@ -557,11 +557,11 @@ Drive the generator three times and ``popop`` the two odd terms.
     2 [3 2 fib]
 
 
-.. code:: python
+.. code:: ipython2
 
     define('PE2.2 == x x x [popop] dipd')
 
-.. code:: python
+.. code:: ipython2
 
     J('[1 0 fib] 10 [PE2.2] times')
 
@@ -574,7 +574,7 @@ Drive the generator three times and ``popop`` the two odd terms.
 Replace ``x`` with our new driver function ``PE2.2`` and start our
 ``fib`` generator at ``1 0``.
 
-.. code:: python
+.. code:: ipython2
 
     J('0 [1 0 fib] PE2.2 [pop >4M] [popop] [[PE2.1] dip PE2.2] primrec')
 
@@ -593,11 +593,11 @@ modifications to the default ``x``?
 An Interesting Variation
 ------------------------
 
-.. code:: python
+.. code:: ipython2
 
     define('codireco == cons dip rest cons')
 
-.. code:: python
+.. code:: ipython2
 
     V('[0 [dup ++] codireco] x')
 
@@ -620,11 +620,11 @@ An Interesting Variation
              0 [1 [dup ++] codireco] . 
 
 
-.. code:: python
+.. code:: ipython2
 
     define('G == [codireco] cons cons')
 
-.. code:: python
+.. code:: ipython2
 
     J('230 [dup ++] G 5 [x] times pop')
 

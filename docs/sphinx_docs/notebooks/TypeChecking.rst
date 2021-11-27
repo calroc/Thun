@@ -1,7 +1,7 @@
 Type Checking
 =============
 
-.. code:: python
+.. code:: ipython2
 
     import logging, sys
     
@@ -11,7 +11,7 @@ Type Checking
       level=logging.INFO,
       )
 
-.. code:: python
+.. code:: ipython2
 
     from joy.utils.types import (
         doc_from_stack_effect, 
@@ -22,7 +22,7 @@ Type Checking
         JoyTypeError,
     )
 
-.. code:: python
+.. code:: ipython2
 
     D = FUNCTIONS.copy()
     del D['product']
@@ -31,7 +31,7 @@ Type Checking
 An Example
 ----------
 
-.. code:: python
+.. code:: ipython2
 
     fi, fo = infer(pop, swap, rolldown, rrest, ccons)[0]
 
@@ -46,7 +46,7 @@ An Example
      40 ([a4 a5 ...1] a3 a2 a1 -- [a2 a3 ...1]) ∘ 
 
 
-.. code:: python
+.. code:: ipython2
 
     print doc_from_stack_effect(fi, fo)
 
@@ -56,13 +56,13 @@ An Example
     ([a4 a5 ...1] a3 a2 a1 -- [a2 a3 ...1])
 
 
-.. code:: python
+.. code:: ipython2
 
     from joy.parser import text_to_expression
     from joy.utils.stack import stack_to_string
 
 
-.. code:: python
+.. code:: ipython2
 
     e = text_to_expression('0 1 2 [3 4]')  # reverse order
     print stack_to_string(e)
@@ -73,7 +73,7 @@ An Example
     [3 4] 2 1 0
 
 
-.. code:: python
+.. code:: ipython2
 
     u = unify(e, fi)[0]
     u
@@ -87,7 +87,7 @@ An Example
 
 
 
-.. code:: python
+.. code:: ipython2
 
     g = reify(u, (fi, fo))
     print doc_from_stack_effect(*g)
@@ -101,11 +101,11 @@ An Example
 Unification Works “in Reverse”
 ------------------------------
 
-.. code:: python
+.. code:: ipython2
 
     e = text_to_expression('[2 3]')
 
-.. code:: python
+.. code:: ipython2
 
     u = unify(e, fo)[0]  # output side, not input side
     u
@@ -119,7 +119,7 @@ Unification Works “in Reverse”
 
 
 
-.. code:: python
+.. code:: ipython2
 
     g = reify(u, (fi, fo))
     print doc_from_stack_effect(*g)
@@ -133,7 +133,7 @@ Unification Works “in Reverse”
 Failing a Check
 ---------------
 
-.. code:: python
+.. code:: ipython2
 
     fi, fo = infer(dup, mul)[0]
 
@@ -146,7 +146,7 @@ Failing a Check
      31 (i1 -- i2) ∘ 
 
 
-.. code:: python
+.. code:: ipython2
 
     e = text_to_expression('"two"')
     print stack_to_string(e)
@@ -157,7 +157,7 @@ Failing a Check
     'two'
 
 
-.. code:: python
+.. code:: ipython2
 
     try:
         unify(e, fi)

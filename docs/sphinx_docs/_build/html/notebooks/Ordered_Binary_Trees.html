@@ -63,7 +63,7 @@ the Sufficiently Smart Compiler can be modified to use an optimized
 implementation under the hood. (Where does the “type” come from? It has
 a contingent existence predicated on the disciplined use of these
 functions on otherwise undistinguished Joy datastructures.)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span><span class="p">,</span> <span class="n">DefinitionWrapper</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span><span class="p">,</span> <span class="n">DefinitionWrapper</span>
 </pre></div>
 </div>
 <section id="adding-nodes-to-the-tree">
@@ -100,10 +100,10 @@ functions on otherwise undistinguished Joy datastructures.)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Tree</span><span class="o">-</span><span class="n">new</span> <span class="o">==</span> <span class="n">swap</span> <span class="p">[[]</span> <span class="p">[]]</span> <span class="n">cons</span> <span class="n">cons</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Tree-new == swap [[] []] cons cons&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Tree-new == swap [[] []] cons cons&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&quot;v&quot; &quot;k&quot; Tree-new&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&quot;v&quot; &quot;k&quot; Tree-new&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;k&#39;</span> <span class="s1">&#39;v&#39;</span> <span class="p">[]</span> <span class="p">[]]</span>
@@ -159,10 +159,10 @@ comparison operator:</p>
 <span class="n">P</span>   <span class="o">==</span> <span class="n">pop</span> <span class="n">roll</span><span class="o">&gt;</span> <span class="n">pop</span> <span class="n">first</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;P == pop roll&gt; pop first&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;P == pop roll&gt; pop first&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;old_key&quot; 23 [] []] 17 &quot;new_key&quot; [&quot;...&quot;] P&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;old_key&quot; 23 [] []] 17 &quot;new_key&quot; [&quot;...&quot;] P&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;new_key&#39;</span> <span class="s1">&#39;old_key&#39;</span>
@@ -217,10 +217,10 @@ stack:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">==</span> <span class="n">cons</span> <span class="n">cons</span> <span class="p">[</span><span class="n">dipdd</span><span class="p">]</span> <span class="n">cons</span> <span class="n">infra</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;T == cons cons [dipdd] cons infra&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;T == cons cons [dipdd] cons infra&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;old_k&quot; &quot;old_value&quot; &quot;left&quot; &quot;right&quot;] &quot;new_value&quot; &quot;new_key&quot; [&quot;Tree-add&quot;] T&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;old_k&quot; &quot;old_value&quot; &quot;left&quot; &quot;right&quot;] &quot;new_value&quot; &quot;new_key&quot; [&quot;Tree-add&quot;] T&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;old_k&#39;</span> <span class="s1">&#39;old_value&#39;</span> <span class="s1">&#39;left&#39;</span> <span class="s1">&#39;Tree-add&#39;</span> <span class="s1">&#39;new_key&#39;</span> <span class="s1">&#39;new_value&#39;</span> <span class="s1">&#39;right&#39;</span><span class="p">]</span>
@@ -234,7 +234,7 @@ stack:</p>
 <span class="p">[</span><span class="n">key_n</span> <span class="n">value_n</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="n">value</span> <span class="n">key</span> <span class="p">[</span><span class="n">Tree</span><span class="o">-</span><span class="n">add</span><span class="p">]</span> <span class="p">[</span><span class="n">P</span> <span class="o">&lt;</span><span class="p">]</span> <span class="p">[</span><span class="n">Te</span><span class="p">]</span> <span class="p">[</span><span class="n">Ee</span><span class="p">]</span> <span class="n">ifte</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;E == [P &lt;] [Te] [Ee] ifte&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;E == [P &lt;] [Te] [Ee] ifte&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In this case <code class="docutils literal notranslate"><span class="pre">Te</span></code> works that same as <code class="docutils literal notranslate"><span class="pre">T</span></code> but on the left child tree
@@ -243,10 +243,10 @@ instead of the right, so the only difference is that it must use
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Te</span> <span class="o">==</span> <span class="n">cons</span> <span class="n">cons</span> <span class="p">[</span><span class="n">dipd</span><span class="p">]</span> <span class="n">cons</span> <span class="n">infra</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Te == cons cons [dipd] cons infra&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Te == cons cons [dipd] cons infra&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;old_k&quot; &quot;old_value&quot; &quot;left&quot; &quot;right&quot;] &quot;new_value&quot; &quot;new_key&quot; [&quot;Tree-add&quot;] Te&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;old_k&quot; &quot;old_value&quot; &quot;left&quot; &quot;right&quot;] &quot;new_value&quot; &quot;new_key&quot; [&quot;Tree-add&quot;] Te&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;old_k&#39;</span> <span class="s1">&#39;old_value&#39;</span> <span class="s1">&#39;Tree-add&#39;</span> <span class="s1">&#39;new_key&#39;</span> <span class="s1">&#39;new_value&#39;</span> <span class="s1">&#39;left&#39;</span> <span class="s1">&#39;right&#39;</span><span class="p">]</span>
@@ -274,10 +274,10 @@ instead of the right, so the only difference is that it must use
               <span class="p">[</span><span class="n">key</span> <span class="n">new_value</span> <span class="n">left</span> <span class="n">right</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Ee == pop swap roll&lt; rest rest cons cons&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Ee == pop swap roll&lt; rest rest cons cons&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;k&quot; &quot;old_value&quot; &quot;left&quot; &quot;right&quot;] &quot;new_value&quot; &quot;k&quot; [&quot;Tree-add&quot;] Ee&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;k&quot; &quot;old_value&quot; &quot;left&quot; &quot;right&quot;] &quot;new_value&quot; &quot;k&quot; [&quot;Tree-add&quot;] Ee&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;k&#39;</span> <span class="s1">&#39;new_value&#39;</span> <span class="s1">&#39;left&#39;</span> <span class="s1">&#39;right&#39;</span><span class="p">]</span>
@@ -302,43 +302,43 @@ instead of the right, so the only difference is that it must use
 <span class="n">Tree</span><span class="o">-</span><span class="n">add</span> <span class="o">==</span> <span class="p">[</span><span class="n">popop</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[[</span><span class="n">pop</span><span class="p">]</span> <span class="n">dipd</span> <span class="n">Tree</span><span class="o">-</span><span class="n">new</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[</span><span class="n">R</span><span class="p">]</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Tree-add == [popop not] [[pop] dipd Tree-new] [] [[P &gt;] [T] [E] ifte] genrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Tree-add == [popop not] [[pop] dipd Tree-new] [] [[P &gt;] [T] [E] ifte] genrec&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="examples">
 <h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] 23 &quot;b&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Initial</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] 23 &quot;b&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Initial</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;b&#39;</span> <span class="mi">23</span> <span class="p">[]</span> <span class="p">[]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;b&quot; 23 [] []] 88 &quot;c&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Greater than</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;b&quot; 23 [] []] 88 &quot;c&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Greater than</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;b&#39;</span> <span class="mi">23</span> <span class="p">[]</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span> <span class="mi">88</span> <span class="p">[]</span> <span class="p">[]]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;b&quot; 23 [] []] 88 &quot;a&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Less than</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;b&quot; 23 [] []] 88 &quot;a&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Less than</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;b&#39;</span> <span class="mi">23</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span> <span class="mi">88</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;b&quot; 23 [] []] 88 &quot;b&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Equal to</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;b&quot; 23 [] []] 88 &quot;b&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Equal to</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;b&#39;</span> <span class="mi">88</span> <span class="p">[]</span> <span class="p">[]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] 23 &quot;b&quot; Tree-add 88 &quot;a&quot; Tree-add 44 &quot;c&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Series.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] 23 &quot;b&quot; Tree-add 88 &quot;a&quot; Tree-add 44 &quot;c&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Series.</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;b&#39;</span> <span class="mi">23</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span> <span class="mi">88</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span> <span class="mi">44</span> <span class="p">[]</span> <span class="p">[]]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [[23 &quot;b&quot;] [88 &quot;a&quot;] [44 &quot;c&quot;]] [i Tree-add] step&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [[23 &quot;b&quot;] [88 &quot;a&quot;] [44 &quot;c&quot;]] [i Tree-add] step&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;b&#39;</span> <span class="mi">23</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span> <span class="mi">88</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span> <span class="mi">44</span> <span class="p">[]</span> <span class="p">[]]]</span>
@@ -365,19 +365,19 @@ values:</p>
                 <span class="n">L</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;1 0 [&#39;G&#39;] [&#39;E&#39;] [&#39;L&#39;] cmp&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;1 0 [&#39;G&#39;] [&#39;E&#39;] [&#39;L&#39;] cmp&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;G&#39;</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;1 1 [&#39;G&#39;] [&#39;E&#39;] [&#39;L&#39;] cmp&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;1 1 [&#39;G&#39;] [&#39;E&#39;] [&#39;L&#39;] cmp&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;E&#39;</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;0 1 [&#39;G&#39;] [&#39;E&#39;] [&#39;L&#39;] cmp&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;0 1 [&#39;G&#39;] [&#39;E&#39;] [&#39;L&#39;] cmp&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;L&#39;</span>
@@ -414,7 +414,7 @@ node key (by throwing everything else away):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">P</span> <span class="o">==</span> <span class="n">over</span> <span class="p">[</span><span class="n">popop</span> <span class="n">popop</span> <span class="n">first</span><span class="p">]</span> <span class="n">nullary</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;P == over [popop popop first] nullary&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;P == over [popop popop first] nullary&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Using <code class="docutils literal notranslate"><span class="pre">cmp</span></code> to simplify <cite>our code above at
@@ -434,10 +434,10 @@ to understand:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Tree</span><span class="o">-</span><span class="n">add</span> <span class="o">==</span> <span class="p">[</span><span class="n">popop</span> <span class="ow">not</span><span class="p">]</span> <span class="p">[[</span><span class="n">pop</span><span class="p">]</span> <span class="n">dipd</span> <span class="n">Tree</span><span class="o">-</span><span class="n">new</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[</span><span class="n">P</span> <span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="p">[</span><span class="n">Ee</span><span class="p">]</span> <span class="p">[</span><span class="n">Te</span><span class="p">]</span> <span class="n">cmp</span><span class="p">]</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Tree-add == [popop not] [[pop] dipd Tree-new] [] [P [T] [Ee] [Te] cmp] genrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Tree-add == [popop not] [[pop] dipd Tree-new] [] [P [T] [Ee] [Te] cmp] genrec&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] 23 &quot;b&quot; Tree-add 88 &quot;a&quot; Tree-add 44 &quot;c&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Still works.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] 23 &quot;b&quot; Tree-add 88 &quot;a&quot; Tree-add 44 &quot;c&quot; Tree-add&#39;</span><span class="p">)</span>  <span class="c1"># Still works.</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;b&#39;</span> <span class="mi">23</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span> <span class="mi">88</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span> <span class="mi">44</span> <span class="p">[]</span> <span class="p">[]]]</span>
@@ -545,22 +545,22 @@ with an interesting situation:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Tree</span><span class="o">-</span><span class="nb">iter</span> <span class="o">==</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span><span class="p">]</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="p">[</span><span class="n">dupdip</span> <span class="n">rest</span> <span class="n">rest</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Tree-iter == [not] [pop] roll&lt; [dupdip rest rest] cons [step] genrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Tree-iter == [not] [pop] roll&lt; [dupdip rest rest] cons [step] genrec&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="id1">
 <h3>Examples<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [foo] Tree-iter&#39;</span><span class="p">)</span>  <span class="c1">#  It doesn&#39;t matter what F is as it won&#39;t be used.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [foo] Tree-iter&#39;</span><span class="p">)</span>  <span class="c1">#  It doesn&#39;t matter what F is as it won&#39;t be used.</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;b&#39; 23 [&#39;a&#39; 88 [] []] [&#39;c&#39; 44 [] []]] [first] Tree-iter&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;b&#39; 23 [&#39;a&#39; 88 [] []] [&#39;c&#39; 44 [] []]] [first] Tree-iter&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;b&#39;</span> <span class="s1">&#39;a&#39;</span> <span class="s1">&#39;c&#39;</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;b&#39; 23 [&#39;a&#39; 88 [] []] [&#39;c&#39; 44 [] []]] [second] Tree-iter&quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;b&#39; 23 [&#39;a&#39; 88 [] []] [&#39;c&#39; 44 [] []]] [second] Tree-iter&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span> <span class="mi">88</span> <span class="mi">44</span>
@@ -575,16 +575,16 @@ to e.g. 0 and ignoring them. It’s set-like in that duplicate items added
 to it will only occur once within it, and we can query it in
 <cite>:math:`O(log_2 N)</cite> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Binary_search_tree#cite_note-2">https://en.wikipedia.org/wiki/Binary_search_tree#cite_note-2</a>&gt;`__
 time.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [3 9 5 2 8 6 7 8 4] [0 swap Tree-add] step&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [3 9 5 2 8 6 7 8 4] [0 swap Tree-add] step&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="mi">9</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="mi">8</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">6</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[</span><span class="mi">7</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]]</span> <span class="p">[]]]</span> <span class="p">[]]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;to_set == [] swap [0 swap Tree-add] step&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;to_set == [] swap [0 swap Tree-add] step&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 9 5 2 8 6 7 8 4] to_set&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 9 5 2 8 6 7 8 4] to_set&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="mi">9</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="mi">8</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">6</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[</span><span class="mi">7</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]]</span> <span class="p">[]]]</span> <span class="p">[]]]</span>
@@ -592,10 +592,10 @@ time.</p>
 </div>
 <p>And with that we can write a little program <code class="docutils literal notranslate"><span class="pre">unique</span></code> to remove
 duplicate items from a list.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;unique == [to_set [first] Tree-iter] cons run&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;unique == [to_set [first] Tree-iter] cons run&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 9 3 5 2 9 8 8 8 6 2 7 8 4 3] unique&#39;</span><span class="p">)</span>  <span class="c1"># Filter duplicate items.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 9 3 5 2 9 8 8 8 6 2 7 8 4 3] unique&#39;</span><span class="p">)</span>  <span class="c1"># Filter duplicate items.</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">7</span> <span class="mi">6</span> <span class="mi">8</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">9</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>
@@ -679,7 +679,7 @@ right side:</p>
 </pre></div>
 </div>
 <p>Now we can sort sequences.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#define(&#39;Tree-iter-order == [not] [pop] [dup third] [[cons dip] dupdip [[first] dupdip] dip [rest rest rest first] dip i] genrec&#39;)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1">#define(&#39;Tree-iter-order == [not] [pop] [dup third] [[cons dip] dupdip [[first] dupdip] dip [rest rest rest first] dip i] genrec&#39;)</span>
 
 
 <span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
@@ -695,7 +695,7 @@ right side:</p>
 <span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 9 5 2 8 6 7 8 4] to_set Tree-iter-order&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[3 9 5 2 8 6 7 8 4] to_set Tree-iter-order&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">9</span>
@@ -835,7 +835,7 @@ because there’s no value to discard.</p>
 <span class="n">Tree</span><span class="o">-</span><span class="n">get</span> <span class="o">==</span> <span class="p">[</span><span class="n">pop</span> <span class="ow">not</span><span class="p">]</span> <span class="n">swap</span> <span class="p">[]</span> <span class="p">[</span><span class="n">P</span> <span class="p">[</span><span class="n">T</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">E</span><span class="p">]</span> <span class="p">[</span><span class="n">T</span><span class="o">&lt;</span><span class="p">]</span> <span class="n">cmp</span><span class="p">]</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># I don&#39;t want to deal with name conflicts with the above so I&#39;m inlining everything here.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="c1"># I don&#39;t want to deal with name conflicts with the above so I&#39;m inlining everything here.</span>
 <span class="c1"># The original Joy system has &quot;hide&quot; which is a meta-command which allows you to use named</span>
 <span class="c1"># definitions that are only in scope for a given definition.  I don&#39;t want to implement</span>
 <span class="c1"># that (yet) so...</span>
@@ -852,19 +852,19 @@ because there’s no value to discard.</p>
 <span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;gary&quot; 23 [] []] &quot;mike&quot; [popd &quot; not in tree&quot; +] Tree-get&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;gary&quot; 23 [] []] &quot;mike&quot; [popd &quot; not in tree&quot; +] Tree-get&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;mike not in tree&#39;</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;gary&quot; 23 [] []] &quot;gary&quot; [popop &quot;err&quot;] Tree-get&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[&quot;gary&quot; 23 [] []] &quot;gary&quot; [popop &quot;err&quot;] Tree-get&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 
 <span class="s1">    [] [[0 &#39;a&#39;] [1 &#39;b&#39;] [2 &#39;c&#39;]] [i Tree-add] step</span>
 
@@ -876,7 +876,7 @@ because there’s no value to discard.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 
 <span class="s1">    [] [[0 &#39;a&#39;] [1 &#39;b&#39;] [2 &#39;c&#39;]] [i Tree-add] step</span>
 
@@ -1175,7 +1175,7 @@ E == [
 </div>
 <p>By the standards of the code I’ve written so far, this is a <em>huge</em> Joy
 program.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">first_two == uncons uncons pop</span>
 <span class="s1">fourth == rest rest rest first</span>
 <span class="s1">?fourth == [] [fourth] [] ifte</span>
@@ -1193,43 +1193,43 @@ program.</p>
 <span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;c&#39; Tree-Delete &quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;c&#39; Tree-Delete &quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;a&#39;</span> <span class="mi">23</span> <span class="p">[]</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span> <span class="mi">88</span> <span class="p">[]</span> <span class="p">[]]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;b&#39; Tree-Delete &quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;b&#39; Tree-Delete &quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;a&#39;</span> <span class="mi">23</span> <span class="p">[]</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span> <span class="mi">44</span> <span class="p">[]</span> <span class="p">[]]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;a&#39; Tree-Delete &quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;a&#39; Tree-Delete &quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;b&#39;</span> <span class="mi">88</span> <span class="p">[]</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span> <span class="mi">44</span> <span class="p">[]</span> <span class="p">[]]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;der&#39; Tree-Delete &quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[&#39;a&#39; 23 [] [&#39;b&#39; 88 [] [&#39;c&#39; 44 [] []]]] &#39;der&#39; Tree-Delete &quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;a&#39;</span> <span class="mi">23</span> <span class="p">[]</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span> <span class="mi">88</span> <span class="p">[]</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span> <span class="mi">44</span> <span class="p">[]</span> <span class="p">[]]]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [4 2 3 1 6 7 5 ] [0 swap Tree-add] step&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] [4 2 3 1 6 7 5 ] [0 swap Tree-add] step&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">4</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]]</span> <span class="p">[</span><span class="mi">6</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="mi">7</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[4 0 [2 0 [1 0 [] []] [3 0 [] []]] [6 0 [5 0 [] []] [7 0 [] []]]] 3 Tree-Delete &quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[4 0 [2 0 [1 0 [] []] [3 0 [] []]] [6 0 [5 0 [] []] [7 0 [] []]]] 3 Tree-Delete &quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">4</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[]]</span> <span class="p">[</span><span class="mi">6</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="mi">7</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]]]</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[4 0 [2 0 [1 0 [] []] [3 0 [] []]] [6 0 [5 0 [] []] [7 0 [] []]]] 4 Tree-Delete &quot;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s2">&quot;[4 0 [2 0 [1 0 [] []] [3 0 [] []]] [6 0 [5 0 [] []] [7 0 [] []]]] 4 Tree-Delete &quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[]]</span> <span class="p">[</span><span class="mi">6</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[</span><span class="mi">7</span> <span class="mi">0</span> <span class="p">[]</span> <span class="p">[]]]]</span>

@@ -10,7 +10,7 @@ Huet <https://www.st.cs.uni-saarland.de/edu/seminare/2005/advanced-fp/docs/huet-
 Given a datastructure on the stack we can navigate through it, modify
 it, and rebuild it using the “zipper” technique.
 
-.. code:: python
+.. code:: ipython2
 
     from notebook_preamble import J, V, define
 
@@ -23,7 +23,7 @@ strings, Symbols (strings that are names of functions) and sequences
 `trees <https://en.wikipedia.org/wiki/Tree_%28data_structure%29>`__ out
 of sequences.
 
-.. code:: python
+.. code:: ipython2
 
     J('[1 [2 [3 4 25 6] 7] 8]')
 
@@ -54,14 +54,14 @@ show the trace so you can see how it works. If we were going to use
 these a lot it would make sense to write Python versions for efficiency,
 but see below.
 
-.. code:: python
+.. code:: ipython2
 
     define('z-down == [] swap uncons swap')
     define('z-up == swons swap shunt')
     define('z-right == [swons] cons dip uncons swap')
     define('z-left == swons [uncons swap] dip swap')
 
-.. code:: python
+.. code:: ipython2
 
     V('[1 [2 [3 4 25 6] 7] 8] z-down')
 
@@ -77,7 +77,7 @@ but see below.
     [] [[2 [3 4 25 6] 7] 8] 1 . 
 
 
-.. code:: python
+.. code:: ipython2
 
     V('[] [[2 [3 4 25 6] 7] 8] 1 z-right')
 
@@ -101,7 +101,7 @@ but see below.
              [1] [8] [2 [3 4 25 6] 7] . 
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[1] [8] [2 [3 4 25 6] 7] z-down')
 
@@ -111,7 +111,7 @@ but see below.
     [1] [8] [] [[3 4 25 6] 7] 2
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[1] [8] [] [[3 4 25 6] 7] 2 z-right')
 
@@ -121,7 +121,7 @@ but see below.
     [1] [8] [2] [7] [3 4 25 6]
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[1] [8] [2] [7] [3 4 25 6] z-down')
 
@@ -131,7 +131,7 @@ but see below.
     [1] [8] [2] [7] [] [4 25 6] 3
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[1] [8] [2] [7] [] [4 25 6] 3 z-right')
 
@@ -141,7 +141,7 @@ but see below.
     [1] [8] [2] [7] [3] [25 6] 4
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[1] [8] [2] [7] [3] [25 6] 4 z-right')
 
@@ -151,7 +151,7 @@ but see below.
     [1] [8] [2] [7] [4 3] [6] 25
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[1] [8] [2] [7] [4 3] [6] 25 sqr')
 
@@ -161,7 +161,7 @@ but see below.
     [1] [8] [2] [7] [4 3] [6] 625
 
 
-.. code:: python
+.. code:: ipython2
 
     V('[1] [8] [2] [7] [4 3] [6] 625 z-up')
 
@@ -184,7 +184,7 @@ but see below.
       [1] [8] [2] [7] [3 4 625 6] . 
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[1] [8] [2] [7] [3 4 625 6] z-up')
 
@@ -194,7 +194,7 @@ but see below.
     [1] [8] [2 [3 4 625 6] 7]
 
 
-.. code:: python
+.. code:: ipython2
 
     J('[1] [8] [2 [3 4 625 6] 7] z-up')
 
@@ -210,7 +210,7 @@ but see below.
 In Joy we have the ``dip`` and ``infra`` combinators which can “target”
 or “address” any particular item in a Joy tree structure.
 
-.. code:: python
+.. code:: ipython2
 
     V('[1 [2 [3 4 25 6] 7] 8] [[[[[[sqr] dipd] infra] dip] infra] dip] infra')
 
@@ -270,13 +270,13 @@ been embedded in a nested series of quoted programs, e.g.:
 
 The ``Z`` function isn’t hard to make.
 
-.. code:: python
+.. code:: ipython2
 
     define('Z == [[] cons cons] step i')
 
 Here it is in action in a simplified scenario.
 
-.. code:: python
+.. code:: ipython2
 
     V('1 [2 3 4] Z')
 
@@ -314,7 +314,7 @@ Here it is in action in a simplified scenario.
 
 And here it is doing the main thing.
 
-.. code:: python
+.. code:: ipython2
 
     J('[1 [2 [3 4 25 6] 7] 8] [sqr] [dip dip infra dip infra dip infra] Z')
 
