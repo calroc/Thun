@@ -1,7 +1,3 @@
-```python
-from notebook_preamble import J, V, define
-```
-
 # Square Spiral Example Joy Code
 
 
@@ -65,27 +61,176 @@ with `<=`:
 
     [abs] ii <=
 
+
+```Joy
+[_p [abs] ii <=] inscribe
+```
+
+    
+
+
+```Joy
+clear 23 -18
+```
+
+    23 -18
+
+
+```Joy
+[_p] trace
+```
+
+          23 -18 • _p
+          23 -18 • [abs] ii <=
+    23 -18 [abs] • ii <=
+              23 • abs -18 abs <=
+              23 • -18 abs <=
+          23 -18 • abs <=
+           23 18 • <=
+           false • 
+    
+    false
+
+
+```Joy
+clear
+```
+
+    
+
+### Short-Circuiting Boolean Combinators
+
 I've defined two short-circuiting Boolean combinators `&&` and `||` that
 each accept two quoted predicate programs, run the first, and
 conditionally run the second only if required (to compute the final
 Boolean value).  They run their predicate arguments `nullary`.
 
 
-```python
-define('&& [nullary] cons [nullary [0]] dip branch')
-define('|| [nullary] cons [nullary] dip [1] branch')
+```Joy
+[&& [nullary] cons [nullary [false]] dip branch] inscribe
+[|| [nullary] cons [nullary] dip [true] branch] inscribe
 ```
+
+    
+
+
+```Joy
+clear 
+[true] [false] &&
+```
+
+    false
+
+
+```Joy
+clear 
+[false] [true] &&
+```
+
+    false
+
+
+```Joy
+clear 
+[true] [false] ||
+```
+
+    true
+
+
+```Joy
+clear 
+[false] [true] ||
+```
+
+    true
+
+
+```Joy
+clear
+```
+
+    
+
+### Translating the Conditionals
 
 Given those, we can define `x != y || x >= 0` as:
 
-    [<>] [pop 0 >=] ||
+    _a == [!=] [pop 0 >=] ||
+
+
+```Joy
+[_a [!=] [pop 0 >=] ||] inscribe
+```
+
+    
 
 And `(abs(x) <= abs(y) && (x != y || x >= 0))` as:
 
-    [[abs] ii <=] [[<>] [pop 0 >=] ||] &&
+    _b == [_p] [_a] &&
+
+
+```Joy
+[_b [_p] [_a] &&] inscribe
+```
+
+    
 
 It's a little rough, but, as I say, with a little familiarity it becomes
 legible.
+
+
+```Joy
+clear 23 -18
+```
+
+    23 -18
+
+
+```Joy
+[_b] trace
+```
+
+                                          23 -18 • _b
+                                          23 -18 • [_p] [_a] &&
+                                     23 -18 [_p] • [_a] &&
+                                23 -18 [_p] [_a] • &&
+                                23 -18 [_p] [_a] • [nullary] cons [nullary [false]] dip branch
+                      23 -18 [_p] [_a] [nullary] • cons [nullary [false]] dip branch
+                      23 -18 [_p] [[_a] nullary] • [nullary [false]] dip branch
+    23 -18 [_p] [[_a] nullary] [nullary [false]] • dip branch
+                                     23 -18 [_p] • nullary [false] [[_a] nullary] branch
+                                     23 -18 [_p] • [stack] dinfrirst [false] [[_a] nullary] branch
+                             23 -18 [_p] [stack] • dinfrirst [false] [[_a] nullary] branch
+                             23 -18 [_p] [stack] • dip infrst [false] [[_a] nullary] branch
+                                          23 -18 • stack [_p] infrst [false] [[_a] nullary] branch
+                                 23 -18 [-18 23] • [_p] infrst [false] [[_a] nullary] branch
+                            23 -18 [-18 23] [_p] • infrst [false] [[_a] nullary] branch
+                            23 -18 [-18 23] [_p] • infra first [false] [[_a] nullary] branch
+                                          23 -18 • _p [-18 23] swaack first [false] [[_a] nullary] branch
+                                          23 -18 • [abs] ii <= [-18 23] swaack first [false] [[_a] nullary] branch
+                                    23 -18 [abs] • ii <= [-18 23] swaack first [false] [[_a] nullary] branch
+                                              23 • abs -18 abs <= [-18 23] swaack first [false] [[_a] nullary] branch
+                                              23 • -18 abs <= [-18 23] swaack first [false] [[_a] nullary] branch
+                                          23 -18 • abs <= [-18 23] swaack first [false] [[_a] nullary] branch
+                                           23 18 • <= [-18 23] swaack first [false] [[_a] nullary] branch
+                                           false • [-18 23] swaack first [false] [[_a] nullary] branch
+                                  false [-18 23] • swaack first [false] [[_a] nullary] branch
+                                  23 -18 [false] • first [false] [[_a] nullary] branch
+                                    23 -18 false • [false] [[_a] nullary] branch
+                            23 -18 false [false] • [[_a] nullary] branch
+             23 -18 false [false] [[_a] nullary] • branch
+                                          23 -18 • false
+                                    23 -18 false • 
+    
+    23 -18 false
+
+
+```Joy
+clear
+```
+
+    
 
 ### The Increment / Decrement Branches
 
@@ -113,13 +258,6 @@ Similar logic applies to the other branch:
 
     [pop 0 >=] [--] [++] ifte
 
-### "Not Negative"
-
-
-```python
-define('!- 0 >=')
-```
-
 ## Putting the Pieces Together
 
 We can assemble the three functions we just defined in quotes and give
@@ -131,6 +269,20 @@ the symmetry of the two branches, we have:
     [[pop !-]  [--]   [++]  ifte    ]
     ifte
 
+
+```Joy
+[spiral_next
+
+[_b]
+[[    !-] [[++]] [[--]] ifte dip]
+[[pop !-]  [--]   [++]  ifte    ]
+ifte
+
+] inscribe
+```
+
+    
+
 As I was writing this up I realized that, since the `&&` combinator
 doesn't consume the stack (below its quoted args), I can unquote the
 predicate, swap the branches, and use the `branch` combinator instead of
@@ -141,44 +293,119 @@ predicate, swap the branches, and use the `branch` combinator instead of
     [[    !-] [[++]] [[--]] ifte dip]
     branch
 
-
-```python
-define('spiral_next [[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte')
-```
-
 Let's try it out:
 
 
-```python
-J('0 0 spiral_next')
+```Joy
+clear 0 0
+```
+
+    0 0
+
+
+```Joy
+spiral_next
 ```
 
     1 0
 
 
-
-```python
-J('1 0 spiral_next')
+```Joy
+spiral_next
 ```
 
     1 -1
 
 
-
-```python
-J('1 -1 spiral_next')
+```Joy
+spiral_next
 ```
 
     0 -1
 
 
-
-```python
-J('0 -1 spiral_next')
+```Joy
+spiral_next
 ```
 
     -1 -1
 
+
+```Joy
+spiral_next
+```
+
+    -1 0
+
+
+```Joy
+spiral_next
+```
+
+    -1 1
+
+
+```Joy
+spiral_next
+```
+
+    0 1
+
+
+```Joy
+spiral_next
+```
+
+    1 1
+
+
+```Joy
+spiral_next
+```
+
+    2 1
+
+
+```Joy
+spiral_next
+```
+
+    2 0
+
+
+```Joy
+spiral_next
+```
+
+    2 -1
+
+
+```Joy
+spiral_next
+```
+
+    2 -2
+
+
+```Joy
+spiral_next
+```
+
+    1 -2
+
+
+```Joy
+spiral_next
+```
+
+    0 -2
+
+
+```Joy
+spiral_next
+```
+
+    -1 -2
 
 ## Turning it into a Generator with `x`
 
@@ -188,7 +415,7 @@ spiral square coordinates.
 
 We can use `codireco` to make a generator
 
-    codireco ::= cons dip rest cons
+    codireco == cons dip rest cons
 
 It will look like this:
 
@@ -196,19 +423,37 @@ It will look like this:
 
 Here's a trace of how it works:
 
-               [0 [dup ++] codireco] . x
-               [0 [dup ++] codireco] . 0 [dup ++] codireco
-             [0 [dup ++] codireco] 0 . [dup ++] codireco
-    [0 [dup ++] codireco] 0 [dup ++] . codireco
-    [0 [dup ++] codireco] 0 [dup ++] . cons dip rest cons
-    [0 [dup ++] codireco] [0 dup ++] . dip rest cons
-                                     . 0 dup ++ [0 [dup ++] codireco] rest cons
-                                   0 . dup ++ [0 [dup ++] codireco] rest cons
-                                 0 0 . ++ [0 [dup ++] codireco] rest cons
-                                 0 1 . [0 [dup ++] codireco] rest cons
-           0 1 [0 [dup ++] codireco] . rest cons
-             0 1 [[dup ++] codireco] . cons
-             0 [1 [dup ++] codireco] . 
+
+```Joy
+clear
+
+[0 [dup ++] codireco] [x] trace
+```
+
+               [0 [dup ++] codireco] • x
+               [0 [dup ++] codireco] • 0 [dup ++] codireco
+             [0 [dup ++] codireco] 0 • [dup ++] codireco
+    [0 [dup ++] codireco] 0 [dup ++] • codireco
+    [0 [dup ++] codireco] 0 [dup ++] • codi reco
+    [0 [dup ++] codireco] 0 [dup ++] • cons dip reco
+    [0 [dup ++] codireco] [0 dup ++] • dip reco
+                                     • 0 dup ++ [0 [dup ++] codireco] reco
+                                   0 • dup ++ [0 [dup ++] codireco] reco
+                                 0 0 • ++ [0 [dup ++] codireco] reco
+                                 0 1 • [0 [dup ++] codireco] reco
+           0 1 [0 [dup ++] codireco] • reco
+           0 1 [0 [dup ++] codireco] • rest cons
+             0 1 [[dup ++] codireco] • cons
+             0 [1 [dup ++] codireco] • 
+    
+    0 [1 [dup ++] codireco]
+
+
+```Joy
+clear
+```
+
+    
 
 But first we have to change the `spiral_next` function to work on a
 quoted pair of integers, and leave a copy of the pair on the stack.
@@ -225,12 +470,11 @@ to:
                [x' y']
 
 
-```python
-J('[0 0] [spiral_next] infra')
+```Joy
+[0 0] [spiral_next] infra
 ```
 
     [0 1]
-
 
 So our generator is:
 
@@ -247,17 +491,34 @@ out of the value and stepper function:
     ----------------------------------------------------
          [[0 0] [dup [spiral_next] infra] codireco]
 
+
+```Joy
+clear
+```
+
+    
+
 Here it is in action:
 
 
-```python
-J('[0 0] [dup [spiral_next] infra] make_generator x x x x pop')
+```Joy
+[0 0] [dup [spiral_next] infra] make_generator x x x x pop
 ```
 
     [0 0] [0 1] [-1 1] [-1 0]
 
-
 Four `x` combinators, four pairs of coordinates.
+
+Or you can leave out `dup` and let the value stay in the generator until you want it:
+
+
+```Joy
+clear
+
+[0 0] [[spiral_next] infra] make_generator 50 [x] times first
+```
+
+    [2 4]
 
 ## Conclusion
 
@@ -265,12 +526,14 @@ So that's an example of Joy code.  It's a straightforward translation of
 the original.  It's a little long for a single definition, you might
 break it up like so:
 
-         _spn_P ::= [[abs] ii <=] [[<>] [pop !-] ||] &&
+    _spn_Pa == [abs] ii <=
+    _spn_Pb == [!=] [pop 0 >=] ||
+    _spn_P  == [_spn_Pa] [_spn_Pb] &&
+    
+    _spn_T == [    !-] [[++]] [[--]] ifte dip
+    _spn_E == [pop !-]  [--]   [++]  ifte
 
-         _spn_T ::= [    !-] [[++]] [[--]] ifte dip
-         _spn_E ::= [pop !-]  [--]   [++]  ifte
-
-    spiral_next ::= _spn_P [_spn_E] [_spn_T] branch
+    spiral_next == _spn_P [_spn_E] [_spn_T] branch
 
 This way it's easy to see that the function is a branch with two
 quasi-symmetrical paths.
@@ -280,84 +543,3 @@ pairs, where the next pair in the series can be generated at any time by
 using the `x` combinator on the generator (which is just a quoted
 expression containing a copy of the current pair and the "stepper
 function" to generate the next pair from that.)
-
-
-```python
-define('_spn_P [[abs] ii <=] [[<>] [pop !-] ||] &&')
-define('_spn_T [!-] [[++]] [[--]] ifte dip')
-define('_spn_E [pop !-] [--] [++] ifte')
-define('spiral_next _spn_P [_spn_E] [_spn_T] branch')
-```
-
-
-```python
-V('23 18 spiral_next')
-```
-
-                                                                   . 23 18 spiral_next
-                                                                23 . 18 spiral_next
-                                                             23 18 . spiral_next
-                                                             23 18 . _spn_P [_spn_E] [_spn_T] branch
-                                                             23 18 . [[abs] ii <=] [[<>] [pop !-] ||] && [_spn_E] [_spn_T] branch
-                                               23 18 [[abs] ii <=] . [[<>] [pop !-] ||] && [_spn_E] [_spn_T] branch
-                            23 18 [[abs] ii <=] [[<>] [pop !-] ||] . && [_spn_E] [_spn_T] branch
-                            23 18 [[abs] ii <=] [[<>] [pop !-] ||] . [nullary] cons [nullary [0]] dip branch [_spn_E] [_spn_T] branch
-                  23 18 [[abs] ii <=] [[<>] [pop !-] ||] [nullary] . cons [nullary [0]] dip branch [_spn_E] [_spn_T] branch
-                  23 18 [[abs] ii <=] [[[<>] [pop !-] ||] nullary] . [nullary [0]] dip branch [_spn_E] [_spn_T] branch
-    23 18 [[abs] ii <=] [[[<>] [pop !-] ||] nullary] [nullary [0]] . dip branch [_spn_E] [_spn_T] branch
-                                               23 18 [[abs] ii <=] . nullary [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                               23 18 [[abs] ii <=] . [stack] dinfrirst [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                       23 18 [[abs] ii <=] [stack] . dinfrirst [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                       23 18 [[abs] ii <=] [stack] . dip infra first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                             23 18 . stack [[abs] ii <=] infra first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                     23 18 [18 23] . [[abs] ii <=] infra first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                       23 18 [18 23] [[abs] ii <=] . infra first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                             23 18 . [abs] ii <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                       23 18 [abs] . ii <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                       23 18 [abs] . [dip] dupdip i <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                 23 18 [abs] [dip] . dupdip i <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                       23 18 [abs] . dip [abs] i <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                                23 . abs 18 [abs] i <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                                23 . 18 [abs] i <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                             23 18 . [abs] i <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                       23 18 [abs] . i <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                             23 18 . abs <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                             23 18 . <= [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                             False . [18 23] swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                     False [18 23] . swaack first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                     23 18 [False] . first [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                       23 18 False . [0] [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                                                   23 18 False [0] . [[[<>] [pop !-] ||] nullary] branch [_spn_E] [_spn_T] branch
-                      23 18 False [0] [[[<>] [pop !-] ||] nullary] . branch [_spn_E] [_spn_T] branch
-                                                             23 18 . 0 [_spn_E] [_spn_T] branch
-                                                           23 18 0 . [_spn_E] [_spn_T] branch
-                                                  23 18 0 [_spn_E] . [_spn_T] branch
-                                         23 18 0 [_spn_E] [_spn_T] . branch
-                                                             23 18 . _spn_E
-                                                             23 18 . [pop !-] [--] [++] ifte
-                                                    23 18 [pop !-] . [--] [++] ifte
-                                               23 18 [pop !-] [--] . [++] ifte
-                                          23 18 [pop !-] [--] [++] . ifte
-                                          23 18 [pop !-] [--] [++] . [nullary not] dipd branch
-                            23 18 [pop !-] [--] [++] [nullary not] . dipd branch
-                                                    23 18 [pop !-] . nullary not [--] [++] branch
-                                                    23 18 [pop !-] . [stack] dinfrirst not [--] [++] branch
-                                            23 18 [pop !-] [stack] . dinfrirst not [--] [++] branch
-                                            23 18 [pop !-] [stack] . dip infra first not [--] [++] branch
-                                                             23 18 . stack [pop !-] infra first not [--] [++] branch
-                                                     23 18 [18 23] . [pop !-] infra first not [--] [++] branch
-                                            23 18 [18 23] [pop !-] . infra first not [--] [++] branch
-                                                             23 18 . pop !- [18 23] swaack first not [--] [++] branch
-                                                                23 . !- [18 23] swaack first not [--] [++] branch
-                                                                23 . 0 >= [18 23] swaack first not [--] [++] branch
-                                                              23 0 . >= [18 23] swaack first not [--] [++] branch
-                                                              True . [18 23] swaack first not [--] [++] branch
-                                                      True [18 23] . swaack first not [--] [++] branch
-                                                      23 18 [True] . first not [--] [++] branch
-                                                        23 18 True . not [--] [++] branch
-                                                       23 18 False . [--] [++] branch
-                                                  23 18 False [--] . [++] branch
-                                             23 18 False [--] [++] . branch
-                                                             23 18 . --
-                                                             23 17 . 
-
