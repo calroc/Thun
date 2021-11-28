@@ -785,6 +785,22 @@ def b(stack, expression, dictionary):
 
 @inscribe
 @FunctionWrapper
+def ii(stack, expression, dictionary):
+    '''
+    ::
+
+           ... a [Q] ii
+        ------------------
+            ... Q a Q
+
+    '''
+    quote, (a, stack) = stack
+    expression = concat(quote, (a, concat(quote, expression)))
+    return stack, expression, dictionary
+
+
+@inscribe
+@FunctionWrapper
 def dupdip(stack, expression, dictionary):
     '''
     ::
