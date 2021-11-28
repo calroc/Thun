@@ -35,7 +35,7 @@ expected_result = '[1 [2 [3 4 625 6] 7] 8]'
 expected_result_as_stack = text_to_expression(expected_result)
 
 
-def test_expr(ds):
+def test_expr(ds, e=expression):
     '''
     Run the test expression with the defs in ds.
     Return the resulting stack as a string or the
@@ -44,7 +44,7 @@ def test_expr(ds):
     D = dictionary.copy()
     D.update(ds)
     try:
-        stack, _, _ = joy((), expression, D)
+        stack, _, _ = joy((), e, D)
     except Exception as err:
         return err
     return stack_to_string(stack)
@@ -202,9 +202,9 @@ del CD['unit']
 del CD['unswons']
 del CD['x']
 
-print(test_expr(CD))
-for n in sorted(CD):
-	print(n)
+##print(test_expr(CD))
+##for n in sorted(CD):
+##    print(n)
 ##    ?
 ##    _step0
 ##    _step1
@@ -217,7 +217,8 @@ for n in sorted(CD):
 ##    step
 ##    uncons
 
-
+expr = text_to_expression('[[dip]] [uncons] trace')
+print(test_expr(CD, e=expr))
 
 
 
