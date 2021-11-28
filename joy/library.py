@@ -201,9 +201,9 @@ class Def(object):
             if line.lstrip().startswith('#'):
                 continue
             name, body = text_to_expression(line)
-##            if name not in dictionary:
-##                inscribe(class_(name, body), dictionary)
-            inscribe(class_(name, body), dictionary)
+            if name not in dictionary:
+                inscribe(class_(name, body), dictionary)
+##            inscribe(class_(name, body), dictionary)
 
 
 #
