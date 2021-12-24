@@ -1007,32 +1007,32 @@ def branch(stack, expression, dictionary):
     return stack, concat(then if flag else else_, expression), dictionary
 
 
-##@inscribe
-##@FunctionWrapper
-##def ifte(stack, expression, dictionary):
-##  '''
-##  If-Then-Else Combinator
-##  ::
-##
-##                  ... [if] [then] [else] ifte
-##       ---------------------------------------------------
-##          ... [[else] [then]] [...] [if] infra select i
-##
-##
-##
-##
-##                ... [if] [then] [else] ifte
-##       -------------------------------------------------------
-##          ... [else] [then] [...] [if] infra first choice i
-##
-##
-##  Has the effect of grabbing a copy of the stack on which to run the
-##  if-part using infra.
-##  '''
-##  (else_, (then, (if_, stack))) = stack
-##  expression = (S_infra, (S_first, (S_choice, (S_i, expression))))
-##  stack = (if_, (stack, (then, (else_, stack))))
-##  return stack, expression, dictionary
+@inscribe
+@FunctionWrapper
+def ifte(stack, expression, dictionary):
+  '''
+  If-Then-Else Combinator
+  ::
+
+                  ... [if] [then] [else] ifte
+       ---------------------------------------------------
+          ... [[else] [then]] [...] [if] infra select i
+
+
+
+
+                ... [if] [then] [else] ifte
+       -------------------------------------------------------
+          ... [else] [then] [...] [if] infra first choice i
+
+
+  Has the effect of grabbing a copy of the stack on which to run the
+  if-part using infra.
+  '''
+  (else_, (then, (if_, stack))) = stack
+  expression = (S_infra, (S_first, (S_choice, (S_i, expression))))
+  stack = (if_, (stack, (then, (else_, stack))))
+  return stack, expression, dictionary
 
 
 @inscribe
