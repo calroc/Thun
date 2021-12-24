@@ -61,11 +61,10 @@ def joy(stack, expression, dictionary, viewer=None):
 
         term, expression = expression
         if isinstance(term, Symbol):
-            try:
-                term = dictionary[term]
-            except KeyError:
+            if term not in dictionary:
                 raise UnknownSymbolError(term)
-            stack, expression, dictionary = term(stack, expression, dictionary)
+            func = dictionary[term]
+            stack, expression, dictionary = func(stack, expression, dictionary)
         else:
             stack = term, stack
 
