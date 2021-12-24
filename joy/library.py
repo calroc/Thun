@@ -416,7 +416,8 @@ def sum_(S):
 def remove(S):
     '''
     Expects an item on the stack and a quote under it and removes that item
-    from the the quote.  The item is only removed once.
+    from the the quote.  The item is only removed once.  If the list is
+    empty or the item isn't in the list then the list is unchanged.
     ::
 
            [1 2 3 1] 1 remove
@@ -424,10 +425,14 @@ def remove(S):
              [2 3 1]
 
     '''
-    (tos, (second, stack)) = S
-    l = list(iter_stack(second))
-    l.remove(tos)
-    return list_to_stack(l), stack
+    (item, (quote, stack)) = S
+    return _remove(item, quote), stack
+
+
+def _remove(item, quote):
+    try: head, tail = quote
+    except ValueError: return quote
+    return tail if head == item else (head, _remove(item, tail))
 
 
 @inscribe
