@@ -1,0 +1,2 @@
+print_expression	printer.html#print_expression,JoyListType	printer: print_expression(stack: JoyListType): string	
+print_stack	printer.html#print_stack,JoyListType	printer: print_stack(stack: JoyListType): string	

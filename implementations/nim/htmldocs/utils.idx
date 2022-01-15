@@ -1,0 +1,7 @@
+pop_any	utils.html#pop_any,JoyState	utils: pop_any(state: var JoyState): JoyType	
+pop_bool	utils.html#pop_bool,JoyState	utils: pop_bool(state: var JoyState): bool	
+pop_int	utils.html#pop_int,JoyState	utils: pop_int(state: var JoyState): BigInt	
+pop_list	utils.html#pop_list,JoyState	utils: pop_list(state: var JoyState): JoyListType	
+push_int	utils.html#push_int,BigInt,JoyState	utils: push_int(a: BigInt; state: var JoyState)	
+push_list	utils.html#push_list,JoyListType,JoyState	utils: push_list(a: JoyListType; state: var JoyState)	
+push_bool	utils.html#push_bool,bool,JoyState	utils: push_bool(a: bool; state: var JoyState)	
