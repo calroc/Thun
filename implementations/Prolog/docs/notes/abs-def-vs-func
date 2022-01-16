@@ -1,0 +1,310 @@
+% With abs as a definition: abs ::= dup 0 < [] [neg] branch
+
+?- joy(`[abs] ii <=`, [int(A), int(C)], [bool(B)]).
+
+% Eight solutions:
+
+B = false,
+A in 0..sup,
+A#=<C+ -1,
+A+1#=_67378,
+C in 1..sup,
+C+1#=_67426,
+_67426 in 1..sup,
+_67378 in 1..sup ;
+
+
+B = true,
+A in 0..sup,
+A#>=C,
+A+1#=_67204,
+C in 0..sup,
+C+1#=_67252,
+_67252 in 1..sup,
+_67204 in 1..sup ;
+
+
+B = false,
+A in inf.. -1,
+_67892+A#=0,
+A+1#=_67912,
+_67892 in 1..sup,
+_67892#=<C+ -1,
+C in 2..sup,
+C+1#=_68008,
+_68008 in 1..sup,
+_67912 in inf..0 ;
+
+
+B = true,
+A in inf.. -1,
+_67724+A#=0,
+A+1#=_67744,
+_67724 in 1..sup,
+_67724#>=C,
+C in 0..sup,
+C+1#=_67834,
+_67834 in 1..sup,
+_67744 in inf..0 ;
+
+
+B = false,
+A in 0..sup,
+A#=<_67850+ -1,
+A+1#=_67870,
+_67850 in 1..sup,
+_67850+C#=0,
+C in inf.. -1,
+C+1#=_67966,
+_67966 in inf..0,
+_67870 in 1..sup ;
+
+
+B = true,
+A in 1..sup,
+A#>=_67762,
+A+1#=_67780,
+_67762 in 1..sup,
+_67762+C#=0,
+C in inf.. -1,
+C+1#=_67876,
+_67876 in inf..0,
+_67780 in 1..sup ;
+
+
+B = false,
+A in inf.. -1,
+_68746+A#=0,
+A+1#=_68766,
+_68746 in 1..sup,
+_68746#=<_68818+ -1,
+_68818 in 2..sup,
+_68818+C#=0,
+C in inf.. -2,
+C+1#=_68910,
+_68910 in inf..0,
+_68766 in inf..0 ;
+
+
+B = true,
+A in inf.. -1,
+_68258+A#=0,
+A+1#=_68278,
+_68258 in 1..sup,
+_68258#>=_68326,
+_68326 in 1..sup,
+_68326+C#=0,
+C in inf.. -1,
+C+1#=_68416,
+_68416 in inf..0,
+_68278 in inf..0 ;
+
+
+false.
+
+
+% If we add a function rule for it using CLP(FD)...:
+
+    func(abs, [int(A)|S], [int(B)|S]) :- B #= abs(A).
+
+?- joy(`[abs] ii <=`, [int(A), int(C)], [bool(B)]).
+
+% We get eighteen solutions!  Egad.
+
+B = false,
+_7784#=abs(A),
+_7784 in 0..sup,
+_7784#=<_7836+ -1,
+_7836 in 1..sup,
+_7836#=abs(C),
+C in inf.. -1\/1..sup ;
+
+
+B = true,
+_6512#=abs(A),
+_6512 in 0..sup,
+_6512#>=_6560,
+_6560 in 0..sup,
+_6560#=abs(C) ;
+
+
+B = false,
+A in 0..sup,
+A#=<_8820+ -1,
+A+1#=_8840,
+_8820 in 1..sup,
+_8820#=abs(C),
+C in inf.. -1\/1..sup,
+_8840 in 1..sup ;
+
+
+B = true,
+A in 0..sup,
+A#>=_7544,
+A+1#=_7562,
+_7544 in 0..sup,
+_7544#=abs(C),
+_7562 in 1..sup ;
+
+
+B = false,
+A in inf.. -1,
+_9354+A#=0,
+A+1#=_9374,
+_9354 in 1..sup,
+_9354#=<_9426+ -1,
+_9426 in 2..sup,
+_9426#=abs(C),
+C in inf.. -2\/2..sup,
+_9374 in inf..0 ;
+
+
+B = true,
+A in inf.. -1,
+_8082+A#=0,
+A+1#=_8102,
+_8082 in 1..sup,
+_8082#>=_8150,
+_8150 in 0..sup,
+_8150#=abs(C),
+_8102 in inf..0 ;
+
+
+B = false,
+_7686#=abs(A),
+_7686 in 0..sup,
+_7686#=<C+ -1,
+C in 1..sup,
+C+1#=_7782,
+_7782 in 1..sup ;
+
+
+B = true,
+_7518#=abs(A),
+_7518 in 0..sup,
+_7518#>=C,
+C in 0..sup,
+C+1#=_7608,
+_7608 in 1..sup ;
+
+
+B = false,
+A in 0..sup,
+A#=<C+ -1,
+A+1#=_8742,
+C in 1..sup,
+C+1#=_8790,
+_8790 in 1..sup,
+_8742 in 1..sup ;
+
+
+B = true,
+A in 0..sup,
+A#>=C,
+A+1#=_8568,
+C in 0..sup,
+C+1#=_8616,
+_8616 in 1..sup,
+_8568 in 1..sup ;
+
+
+B = false,
+A in inf.. -1,
+_9256+A#=0,
+A+1#=_9276,
+_9256 in 1..sup,
+_9256#=<C+ -1,
+C in 2..sup,
+C+1#=_9372,
+_9372 in 1..sup,
+_9276 in inf..0 ;
+
+
+B = true,
+A in inf.. -1,
+_9088+A#=0,
+A+1#=_9108,
+_9088 in 1..sup,
+_9088#>=C,
+C in 0..sup,
+C+1#=_9198,
+_9198 in 1..sup,
+_9108 in inf..0 ;
+
+
+B = false,
+_8178#=abs(A),
+_8178 in 0..sup,
+_8178#=<_8230+ -1,
+_8230 in 1..sup,
+_8230+C#=0,
+C in inf.. -1,
+C+1#=_8322,
+_8322 in inf..0 ;
+
+
+B = true,
+A in inf.. -1\/1..sup,
+_9272#=abs(A),
+_9272 in 1..sup,
+_9272#>=_9320,
+_9320 in 1..sup,
+_9320+C#=0,
+C in inf.. -1,
+C+1#=_9410,
+_9410 in inf..0 ;
+
+
+B = false,
+A in 0..sup,
+A#=<_9214+ -1,
+A+1#=_9234,
+_9214 in 1..sup,
+_9214+C#=0,
+C in inf.. -1,
+C+1#=_9330,
+_9330 in inf..0,
+_9234 in 1..sup ;
+
+
+B = true,
+A in 1..sup,
+A#>=_9126,
+A+1#=_9144,
+_9126 in 1..sup,
+_9126+C#=0,
+C in inf.. -1,
+C+1#=_9240,
+_9240 in inf..0,
+_9144 in 1..sup ;
+
+
+B = false,
+A in inf.. -1,
+_10110+A#=0,
+A+1#=_10130,
+_10110 in 1..sup,
+_10110#=<_10182+ -1,
+_10182 in 2..sup,
+_10182+C#=0,
+C in inf.. -2,
+C+1#=_10274,
+_10274 in inf..0,
+_10130 in inf..0 ;
+
+
+B = true,
+A in inf.. -1,
+_9622+A#=0,
+A+1#=_9642,
+_9622 in 1..sup,
+_9622#>=_9690,
+_9690 in 1..sup,
+_9690+C#=0,
+C in inf.. -1,
+C+1#=_9780,
+_9780 in inf..0,
+_9642 in inf..0 ;
+
+
+false.

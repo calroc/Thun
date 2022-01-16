@@ -1,0 +1,62 @@
+
+
+https://c9x.me/notes/2019-01-15.html
+
+    uint32_t mulinv(uint32_t a) {
+        uint32_t b = a;   /* 1/a mod 2² */
+        b *= 2 - a*b;     /* 1/a mod 2⁴ */
+        b *= 2 - a*b;     /* 1/a mod 2⁸ */
+        b *= 2 - a*b;     /* 1/a mod 2¹⁶ */
+        b *= 2 - a*b;     /* 1/a mod 2³² */
+        return b;
+    }
+
+In Joy:
+
+
+    b *= 2 - a*b
+
+    b = b * (2 - a*b)
+
+
+
+    a 2 a b * - b *
+    a 2 a*b   - b *
+    a 2-(a*b)   b *
+    a b*(2-(a*b))
+
+    a b over over
+    a b a b [* 2 swap -] dip *
+    a b a * 2 swap - b *
+    a b*a   2 swap - b *
+    a 2 b*a        - b *
+    a 2-b*a          b *
+    a (2-b*a)*b
+
+    G == over over [* 2 swap -] dip *
+    mulinv == dup 5 [G] times popd
+
+Can compile G (mulinv must wait on times.)
+
+    ?- gronk("fn", `over over [* 2 swap -] dip *`).
+
+    def fn(stack, expression, dictionary):
+        (i1, (i2, stack)) = stack
+        i3 = i1 * i2
+        i4 = 2 - i3
+        i5 = i4 * i1
+        return (i5, (i2, stack)), expression, dictionary
+
+
+
+Using Unary
+
+    a b [F] dupdip *
+    a b F b *
+    a b * 2 swap - b *
+
+
+    G == [* 2 swap -] dupdip *
+    mulinv == dup 5 [[G] unary] times popd
+
+Bleah.

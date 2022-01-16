@@ -1,0 +1,20 @@
+The problem is twofold:
+
+1.) Programming is very young, and has been in a growth phase since it's inception.  I forget the exact numbers, but *half* of *all* programmers have been doing it for less than *five years*, and that has been true for many decades.
+
+Because there has been no "shakedown" phase (a "correction" in financial jargon), and because the influx of newbies ("Eternal September") has washed out any attempts at *better* programming ("Mother of All Demos", Nelson's "Dream Machine", etc., on the one hand and e.g. Ada on the other, all of it pretty much ignored in the mainstream machines and software available today.  How many people have heard of Jef Raskin, let alone read "Humane Interface"? etc...) because of these things we should not expect programming to be at the level of engineering.  We are in the Alchemy phase, not Chemistry.
+
+
+2.) Choice of notation.  Without going into a long rant, our fundamental mathematical tools for programming are grotesque.  (It would be shocking if the first thing out of the primordial ooze was the perfect programming notation, eh?  In point of fact we have Turing Machines, Lambda Calculus, and what was the other one?  Anyway, they're clunky.)
+
+For binary Boolean circuits the notation in "Laws of Form" by George Spencer-Brown is the most elegant and parsimonious:
+
+       AA == A
+    ((A)) == A
+    A(AB) == A(B)
+
+That is a complete system of binary Boolean logic that is more efficient than other notations.  (For instance, de Morgan's law doesn't apply: you can convert a formula into it's dual, reduce, and recover the original formula.  (Ergo, conventional notation has (non-useful) redundancy.))
+
+For orchestrating binary Boolean logic circuits into what we call "programs" the best notation is something called "Joy".  It was invented by a philosopher!  It has the best aspects of Lisp and Forth.  It handles concurrency in a very simple and tractable way.  It delivers on the promise of Backus' FP to enable mathematical *algebraic* derivations of algorithms/programs.  Etc...
+
+Anyhow, I'm preparing a demo of Joy, with UI influenced by psycho-ergonomic considerations, that can be compiled down to the logic circuits (and e.g. burned onto an FPGA or whatever.)  A new model of computer architecture is implied, using latching sort-nets to allow for dynamic reconfiguration of what amounts to dataflow on the level of the CPU.  (No more Von Neumann bottleneck.)

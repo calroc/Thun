@@ -1,0 +1,56 @@
+
+
+-----------------------------------------
+Unreleased
+
+Added:
+
+- Some documentation for a few functors.
+- A start on regression tests.
+
+Fixed:
+- Blanks should parse as null expression.
+
+
+-----------------------------------------
+[-10.0.0] - 2020-2-1
+
+Initial re-release as a Prolog project.  See https://joypy.osdn.io/ for
+the original Python 2 project.
+
+Added: 
+
+- Parser & Grammar.
+- Semantics (evaluation function.)
+- Many functions, combinators,  & definitions.
+- Compiler to Prolog.
+- (Unfinished) Compiler to machine code.
+- Expand/Contract Definitions.
+- Formatter (Joy expressions to strings.)
+- Partial Reducer (transforms Prolog rules for greater efficiency.)
+
+Removed:
+
+- All the Python code.
+- All the Jupyter notebooks.  (I want to rework the content anyway.  The
+  originals will remain up on the web at the same URLs (I think the web
+  hosting of OSDN allows for setting up 301s though, in case I want to move
+  them and redirect.))
+- All the GNU Prolog portage ( https://osdn.net/projects/joypy/scm/hg/Joypy/tree/tip/thun/gnu-prolog/ )
+  This is another area where i want to rework the content.  It's kind of
+  cool to compile Prolog to native code so easily.
+
+
+
+
+
+Appendix A: Types of changes
+
+See https://keepachangelog.com/en/1.0.0/
+
+- 'Added' for new features.
+- 'Changed' for changes in existing functionality.
+- 'Deprecated' for soon-to-be removed features.
+- 'Removed' for now removed features.
+- 'Fixed' for any bug fixes.
+- 'Security' in case of vulnerabilities.

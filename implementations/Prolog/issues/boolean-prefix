@@ -1,0 +1,21 @@
+    ?- phrase(joy_parse(Expression), `truedat`).
+    Expression = [bool(true), symbol(dat)] .
+
+Oops!
+
+I knew about:
+
+    ?- phrase(joy_parse(Expression), `23dat`).
+    Expression = [int(23), symbol(dat)] .
+
+should probably fix it too
+
+still want:
+
+    ?- phrase(joy_parse(Expression), `[2[3]]`).
+    Expression = [list([int(2), list([int(3)])])] .
+
+    ?- phrase(joy_parse(Expression), `[true[false]]`).
+    Expression = [list([bool(true), list([bool(false)])])] .
+
+...to work.  That is, you shouldn't need spaces around '[' and ']'.

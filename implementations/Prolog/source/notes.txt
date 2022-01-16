@@ -1,0 +1,317 @@
+By using LoF to represent values all operations are effectively binary
+digital circuits.  So this is a way to model hardware by orchestrating it
+with Joy code.  For example, an 8-bit integer zero could be represented
+as [[][][][][][][][]] and so on:
+
+    [ []  []  []  []  []  []  []  [] ] 0
+    [ []  []  []  []  []  []  [] [[]]] 1
+    [ []  []  []  []  []  [] [[]] [] ] 2
+    [ []  []  []  []  []  [] [[]][[]]] 3
+
+Treating [] as zero and [[]] as one.
+
+
+Sum = a xor b xor c
+Carry = (b and a) or (c and (b xor a))
+
+Sum = a ⊕ b ⊕ c
+Carry = (b ∧ a) ∨ (c ∧ (b ⊕ a))
+
+∧∨⊕
+
+def full_bit_adder(a, b, c):
+    '''Based on the definitions from Wikipedia.'''
+    return (
+        simplify(xor(xor(a, b), c)),
+        simplify(or_(and_(a, b), and_(c, xor(a, b)))),
+    )
+
+c b a
+    [xor xor void]
+    [[and] [xor and] fork or void]
+    clop popdd
+
+
+c b a [and] [xor and] clop
+c  (b and a)    (c and (b xor a))  or
+c ((b and a) or (c and (b xor a)))
+
+
+fba == [xor xor void] [[and] [xor and] fork or void] clop popdd
+
+
+So we have a full-bit adder (with carry in and out), it's a trinary
+function with binary output.
+
+
+       carry b a fba
+    -------------------
+        carry' (a+b)
+
+
+Now we need a function that takes two 8-bit "numbers" and a carry bit and
+returns a single 8-bit number with the carry bit out.
+
+
+       carry [.b.] [.a.] +
+    -------------------------
+          carry' [a+b]
+
+
+The first thing that comes to my mind as a "2step" combinator:
+
+
+        [b ...] [a ...] [F] 2step
+    ---------------------------------
+       b a F [,,,] [,,,] [F] 2step
+
+And so on; if lists aren't the same length...?
+
+Could just zip the tho lists and use step.  Then merge zip and the step
+form?
+
+I think you would still want to define zip in terms of 2step.
+
+zipF == <<{} [unswons] dip uncons [duo swap [cons] dip] dip
+
+How's that work:
+
+   [b ...] [a ...] <<{} [unswons] dip uncons [duo swap [cons] dip] dip
+[] [b ...] [a ...]      [unswons] dip uncons [duo swap [cons] dip] dip
+[] [b ...] unswons [a ...]            uncons [duo swap [cons] dip] dip
+[] [...] b         [a ...]            uncons [duo swap [cons] dip] dip
+[] [...] b a [...]                           [duo swap [cons] dip] dip
+[] [...] b a duo swap [cons] dip [...]
+[] [...] [b a]   swap [cons] dip [...]
+[] [b a] [...]        [cons] dip [...]
+                                       Opps!  swons!
+[] [b a] [...]        [swons] dip [...]
+[] [b a] swons [...]              [...]
+[[b a]]        [...]              [...]
+
+[[b a]] [...] [...]
+
+The other bug in this is that you wind up with the pairs in the new list
+in reverse order from the original lists.  Time to review recursion
+combinators...
+
+Or, just collect the bits at the end?
+
+    c8b == [] [[[[[[[[[]]]]]]]]] [cons] times 
+
+To deal with the Carry bit let it ride at TOS then grab the bits under it
+and swap to get the result byte above the carry bit.
+
+    fin == [c8b] dip swap
+
+Or rewrite fba to have carry on tos?
+
+   c [b ...] [a ...] [uncons] dip unswons rolldown
+   c [b ...] uncons [a ...]       unswons rolldown
+   c b [...]        [a ...]       unswons rolldown
+   c b [...]        [...] a               rolldown
+   c b a [...] [...]
+
+Okay, then:
+
+   c b a [...] [...] [fba swap] dipd
+   c b a fba swap [...] [...]
+   c' a+b    swap [...] [...]
+   a+b c'         [...] [...]
+
+
+So (using ints as shorthand for Peano numbers):
+
+      F == [uncons] dip unswons rolldown [fba swap] dipd
+    c8b == [] 8 [cons] times 
+      + == 8 [F] times popop [c8b] dip swap
+
+Note the function that uncons's a pair from two lists compiles to a
+primitive nicely:
+
+    ?- sjc(uncons-pair, `[uncons] dip unswons rolldown`).
+    func(uncons-pair, [list([C|A]), list([D|B])|E], [list(A), list(B), C, D|E]).
+
+
+    uncons-pair == [uncons] dip unswons rolldown
+      F == uncons-pair [fba swap] dipd
+    c8b == [] 8 [cons] times 
+      + == 8 [F] times popop [c8b] dip swap
+
+Also c8b:
+
+    ?- sjc(foo, `[] 8 [cons] times`).
+    func(foo, [H, G, F, E, D, C, B, A|I], [list([A, B, C, D, E, F, G, H])|I]).
+
+
+    sjc(foo, `[[] 8 [cons] times] dip swap`).
+
+    func(foo, [int(I), H, G, F, E, D, C, B, A|J], [list([A, B, C, D, E, F, G, H]), int(I)|J]).
+
+Hmm...  (I'm using main thun, it hallucinates literals...)  Easy enough
+to fix manually...
+
+    func(foo, [I, H, G, F, E, D, C, B, A|J], [list([A, B, C, D, E, F, G, H]), I|J]).
+
+But it would be nice to figure out exactly why it can't hallucinate the
+most general case (first) and make it do that.
+
+- - - -
+
+THe other thing to do would be to build up the formulas with (atoms) vars
+for the input signals and then use LoF simplification to precompute
+formulas for each output bit (including carry) and the write one function
+that directly builds the output byte and carry from the input byte and
+carry by direct unification in Prolog and then run `cons [void] map
+uncons` on it to reduce the formulas.
+
+
+- - -  -
+
+
+Sum = a xor b xor c
+Carry = (b and a) or (c and (b xor a))
+
+Sum = a ⊕ b ⊕ c
+Carry = (b ∧ a) ∨ (c ∧ (b ⊕ a))
+
+∧∨⊕¬∥¿
+
+c b a
+    [⊕ ⊕           ¿]
+    [[∧] [⊕ ∧] ∥ ∨ ¿]
+    ∥ppp
+
+
+∥ = [i] app2
+∥p == ∥ popdd
+∥pp == ∥p popdd
+∥ppp == ∥pp popdd
+
+
+cleave == fork popdd
+clop == cleave popdd
+clopp == clop popdd
+
+
+
+
+[⊕ ⊕ ¿] [[∧] [⊕ ∧] ∥ ∨ ¿] ∥ppp
+
+
+- - - -
+
+list\(([^)]+)\)
+
+or == [unit] ii unit cons
+and == unit cons unit
+not == unit
+
+or == [not] ii not cons
+and == not cons not
+
+xor == [unit unit cons] [swap unit unit cons] cleave unit cons
+
+
+------------------------------
+
+
+Messing about with binary Boolean semantics and the Joy programming
+language, implementing a full-bit adder.
+
+https://en.wikipedia.org/wiki/Adder_(electronics)#Full_adder
+
+> A full adder adds binary numbers and accounts for values carried in as
+well as out. A one-bit full-adder adds three one-bit numbers, often
+written as A, B, and Cin; A and B are the operands, and Cin is a bit
+carried in from the previous less-significant stage.
+
+As logical expression with operators:
+
+    sum = a xor b xor c
+    carry = (b and a) or (c and (b xor a))
+
+Replace the words with common symbols (APL envy?)
+
+    sum = a ⊕ b ⊕ c
+    carry = (b ∧ a) ∨ (c ∧ (b ⊕ a))
+
+As Python psuedo-code:
+
+    def full_bit_adder(a, b, c):
+        return (
+            simplify(xor(xor(a, b), c)),
+            simplify(or_(and_(a, b), and_(c, xor(a, b)))),
+        )
+
+As Joy:
+
+        [xor xor simplify]
+        [[and] [xor and] fork or simplify]
+        clop popdd
+
+With cute symbols:
+
+    [⊕ ⊕ ¿] [[∧] [⊕ ∧] ∥ ∨ ¿] ∥ppp
+
+Factoring out the simplify function (represented by '¿'):
+
+    [⊕ ⊕] [[∧] [⊕ ∧] ∥ ∨] ∥ppp [¿] ii
+
+One thing to note, the parentheses in the equational and Python forms are
+encoding operator precedence while the square brackets in the Joy
+expression encode the control-flow-independence of the sub-functions of
+the main function, they *quote* the sub-subfunctions so they can be
+arguments to the '∥' and '∥ppp' concurrency combinators.
+
+- - - -
+
+"Selfie" as an alternate target to Oberon.
+
+https://selfie.cs.uni-salzburg.at/
+https://news.ycombinator.com/item?id=22427189
+https://github.com/cksystemsteaching/selfie/blob/master/semantics.md
+
+
+- - - -
+
+https://www.geoffreylitt.com/wildcard/salon2020/
+
+Wildcard: Spreadsheet-Driven Customization of Web Applications
+By Geoffrey Litt and Daniel Jackson
+
+
+
+https://edtr.io/
+https://news.ycombinator.com/item?id=22451568
+
+https://handsontable.com/
+JavaScript data grid that looks and feels like a spreadsheet.
+
+https://www.tampermonkey.net/
+Tampermonkey is a userscript manager
+
+
+
+https://www.cs.kent.ac.uk/people/staff/dat/miranda/
+https://en.wikipedia.org/wiki/Miranda_(programming_language)
+https://news.ycombinator.com/item?id=22447185
+
+
+
+https://ncatlab.org/nlab/show/differentiation
+file:///C:/Users/sforman/Desktop/FooNolder/1803.10228.pdf
+Demystifying Differentiable Programming:Shift/Reset the Penultimate Backpropagator
+https://news.ycombinator.com/item?id=22343285
+
+
+Domain Modelling made Functional
+https://www.youtube.com/watch?v=Up7LcbGZFuo
+
+
+
+
+https://langserver.org/
+https://news.ycombinator.com/item?id=22442133
+
+

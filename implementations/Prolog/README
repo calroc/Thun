@@ -1,0 +1,211 @@
+  _____ _
+ |_   _| |_ _  _ _ _  
+   | | | ' \ || | ' \ 
+   |_| |_||_\_,_|_||_|
+
+Thun
+
+"...as simple as possible, but no simpler."
+
+A dialect of Joy.
+
+Version -10.0.0.  (Version -10 in case I want to change the names of some
+functions before the first "real" release, and I'm more-or-less using
+https://semver.org/ )
+
+This project started life as part of a Python project called at first
+Joypy but then later renamed (after someone claimed the name on PyPI
+before me) to Thun in honor of Manfred Von Thun who created Joy.  While
+creating a type-inference system for it I realized that it would be much
+easier and more flexible to do it in Prolog.  In fact, the Prolog code
+(using SWI Prolog) is so much more elegant than the Python version that,
+combined with the recent deprecation of Python 2, it convinced me to
+switch "whole-hog" to Prolog.  (You can find the original project at:
+https://joypy.osdn.io/ )
+
+  ___                     _        ___         _     
+ | __|_ ____ _ _ __  _ __| |___   / __|___  __| |___ 
+ | _|\ \ / _` | '  \| '_ \ / -_) | (__/ _ \/ _` / -_)
+ |___/_\_\__,_|_|_|_| .__/_\___|  \___\___/\__,_\___|
+                    |_|                              
+Here is an example of Joy code:
+
+    [[[abs]ii <=][[<>][pop !-]||]&&][[!-][[++]][[--]]ifte dip][[pop !-][--][++]ifte]ifte
+
+It might seem unreadable but with a little familiarity it becomes just as
+legible as any other notation.  Some layout helps:
+
+    [   [[abs] ii <=]
+        [
+            [<>] [pop !-] ||
+        ] &&
+    ]
+    [[    !-] [[++]] [[--]] ifte dip]
+    [[pop !-]  [--]   [++]  ifte    ]
+    ifte
+
+This function accepts two integers on the stack and increments or
+decrements one of them such that the new pair of numbers is the next
+coordinate pair in a square spiral (like the kind used to construct an
+Ulam Spiral).  For more information see docs\notes\on-square-spiral.md
+
+  ___             _   _               _ _ _
+ | __|  _ _ _  __| |_(_)___ _ _  __ _| (_) |_ _  _ 
+ | _| || | ' \/ _|  _| / _ \ ' \/ _` | | |  _| || |
+ |_| \_,_|_||_\__|\__|_\___/_||_\__,_|_|_|\__|\_, |
+  __ _ _ _  __| | | _ \_  _ _ _ _ __  ___ ___ |__/ 
+ / _` | ' \/ _` | |  _/ || | '_| '_ \/ _ (_-</ -_) 
+ \__,_|_||_\__,_| |_|  \_,_|_| | .__/\___/__/\___| 
+                               |_|
+Functionality and Purpose
+
+It all started about a quarter of a century ago when I first went to
+Seattle and found the book in their main branch library: "System Design
+from Provably-Correct Constructs".  It presents a version of Dr. Margaret
+Hamilton's "Higher Order Software".  Thun is an attempt at making a
+system like that.
+
+There are two aspects to this project.  One is the language Joy and tools
+to work with it, the other is a kind of user interface that presents Joy
+in a way that (hopefully) is much better than current UIs.  Both of these
+come together to create what I hope is a fundamentally better computer
+system.
+
+At the moment, this repo just contains the Prolog version of Joy.  I'll
+bring over the GUI code from the original project or create some new
+version, possibly web-based.
+
+Joy
+
+Joy is a notation for programming created by Manfred von Thun that's easy
+to use and understand and has many other nice properties.  This Prolog
+code implements an interpreter and other tools for a dialect of Joy that
+attempts to stay very close to the spirit of Joy but does not precisely
+match the behaviour of the original version(s) written in C.  The main
+difference between Thun and the originals, other than being written in
+Prolog, is that it works by the "Continuation-Passing Style".
+
+The best source (no pun intended) for learning about Joy is the
+information made available at the website of La Trobe University (see
+below for the URL) which contains source code for the original C
+interpreter, Joy language source code for various functions, and a great
+deal of fascinating material mostly written by Von Thun on Joy and its
+deeper facets as well as how to program in it and several interesting
+aspects.  It's quite a treasure trove.
+
+Wikipedia entry for Joy:
+https://en.wikipedia.org/wiki/Joy_%28programming_language%29
+
+Homepage at La Trobe University:
+http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language
+
+Joy is stack-based, concatenative, and purely functional.  Currently only
+four kinds of fundamental values are recognized: integers, Boolean values
+'true' and 'false', symbols (representing the names of functors), and
+sequences (enclosed in square brackets.)
+
+    23 dup [21 18 /] [1 [2 [3]]] true false
+
+A Joy expression is just a sequence of items.  Sequences are also called
+lists, and sequences intended as programs are called "quoted programs".
+Evaluation proceeds by iterating through the terms in the expression,
+putting all literals onto the main stack and evaluating functions as they
+are encountered.  Functions receive the current stack and return the next
+stack.
+
+Functions called "combinators" accept quoted programs on the stack and
+run them in various ways.  These combinators factor specific patterns
+that provide the effect of control-flow in other languages (such as ifte
+which is like if..then..else..)  Combinators receive the current
+expession in addition to the stack and return the next expression.  They
+work by changing the pending expression the interpreter is about to
+execute.
+
+  ___         _        _ _      _   _          
+ |_ _|_ _  __| |_ __ _| | |__ _| |_(_)___ _ _  
+  | || ' \(_-<  _/ _` | | / _` |  _| / _ \ ' \ 
+ |___|_||_/__/\__\__,_|_|_\__,_|\__|_\___/_||_|
+
+Installation
+
+Download or clone the repository, no special installation is required,
+although you will need a recent version of SWI Prolog.  No configuration
+is required.
+
+  ___                _           
+ | _ \_  _ _ _  _ _ (_)_ _  __ _ 
+ |   / || | ' \| ' \| | ' \/ _` |
+ |_|_\\_,_|_||_|_||_|_|_||_\__, |
+                           |___/ 
+Running
+
+I just change into the source directory and load the thun.pl into SWI
+Prolog.
+
+    PS C:\Users\sforman\Desktop\src\PROLOG\Thun> cd source
+
+    PS C:\Users\sforman\Desktop\src\PROLOG\Thun\source> swipl thun.pl
+
+    Welcome to SWI-Prolog (threaded, 64 bits, version 8.1.4-33-gf5970a6e0)
+    SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
+    Please run ?- license. for legal details.
+
+    For online help and background, visit http://www.swi-prolog.org
+    For built-in help, use ?- help(Topic). or ?- apropos(Word).
+
+    1 ?-
+
+Creating a better user interface is a big part of the "meta-project"
+here, if you will.  Thun/Joy is the language, the UI is the real project.
+I'm thinking a server with multiple clients (web, native) just because
+Prolog isn't fabulous at the nitty-gritty of UIs.  There are other logic
+languages that have e.g. reactive rules.  Kowalski has a great thing: LPS
+(Logic Production Systems) http://lps.doc.ic.ac.uk/
+
+Anyhooo, for now there's not even a REPL.  Use Prolog's.
+
+TODO: Explain the top-level predicates, with examples, this can be put in
+the docs directory...
+
+  ___              _
+ |   \ _____ _____| |___ _ __  ___ _ _
+ | |) / -_) V / -_) / _ \ '_ \/ -_) '_|
+ |___/\___|\_/\___|_\___/ .__/\___|_|      _   _
+ |   \ ___  __ _  _ _ __|_|__ _ _| |_ __ _| |_(_)___ _ _  
+ | |) / _ \/ _| || | '  \/ -_) ' \  _/ _` |  _| / _ \ ' \ 
+ |___/\___/\__|\_,_|_|_|_\___|_||_\__\__,_|\__|_\___/_||_|
+
+Developer Documentation
+
+Since there aren't yet any user-facing clients this is pretty much all
+developer documentation.  Until the UI side of the project is re-worked
+this will mostly be of interest to people who are into formal semanics of
+programming languages.
+
+If you already know Prolog then the code should be pretty simple and
+straightforward.  The partial reducer is documented in "The Art of
+Prolog" so I won't repeat that here.  Other than that there just really
+isn't anything to crunchy in there.  The signal virtual of Joy is it's
+simplicity after all.
+
+Adding syntax should be avoided.  At some point I'll likely add more
+types, and maybe subtype relations between them.  Maybe add the ability
+to "tag" types from Joy itself (i.e. the ordered binary tree functions.)
+
+   ___         _       _ _         _   _             
+  / __|___ _ _| |_ _ _(_) |__ _  _| |_(_)___ _ _  ___
+ | (__/ _ \ ' \  _| '_| | '_ \ || |  _| / _ \ ' \(_-<
+  \___\___/_||_\__|_| |_|_.__/\_,_|\__|_\___/_||_/__/
+
+Contributions
+
+Well, aren't you sweet!  GPL, docs please, "Be excellent to each other."
+
+  ___      _ _    _   ___ _        _           
+ | _ )_  _(_) |__| | / __| |_ __ _| |_ _  _ ___
+ | _ \ || | | / _` | \__ \  _/ _` |  _| || (_-<
+ |___/\_,_|_|_\__,_| |___/\__\__,_|\__|\_,_/__/
+
+Build Status
+
+No build, no status.

@@ -1,0 +1,114 @@
+?- gronk("fn", `stackd`).
+
+def fn(stack, expression, dictionary):
+    (v1, stack) = stack
+    return (v1, ((), stack)), expression, dictionary
+
+using the func/3
+
+func(stackd, [A|B], [A, list(B)|B]).
+
+
+However, compiling with 
+
+gronk_fn_list([list(Body), symbol(dip)|Js], ...
+
+we get
+
+?- gronk("fn", `stackd`).
+
+def fn(stack, expression, dictionary):
+    (v1, stack) = stack
+    stack = (stack, stack)
+    return (v1, stack), expression, dictionary
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+What would "[dup] cons dip" compile to?
+
+
+    def fn(stack, expression, dictionary):
+        (v1, (v2, stack)) = stack
+        return (v2, (v1, (v1, stack))), expression, dictionary
+
+E.g.:
+
+    ?- sjc(fn, `[dup] cons dip`).
+    func(fn, [B, A|C], [A, B, B|C]).
+    true .
+
+Hmm...
+
+
+
+/*
+?- gronk("fn", `[+] step`).
+
+    def fn(stack, expression, dictionary):
+        (s1, (i1, stack)) = stack
+        while s1:
+            (i2, s1) = s1
+            i1 = i1 + i2
+        return (i1, stack), expression, dictionary
+
+
+So just the above works great, but initializing it with a zero leads to
+BS:
+
+?- gronk("fn", `0 swap [+] step`).
+
+    def fn(stack, expression, dictionary):
+        (s1, stack) = stack
+        while s1:
+            (i1, s1) = s1
+            0 = 0 + i1
+        return (0, stack), expression, dictionary
+
+        
+We want something like this:
+
+    def fn(stack, expression, dictionary):
+        (s1, stack) = stack
+        v1 = 0
+        while s1:
+            (i1, s1) = s1
+            v1 = v1 + i1
+        return (v1, stack), expression, dictionary
+
+
+Hmmm....
+
+
+
+ */
+ 
+
+
+/*
+
+?- gronk("swaack", `swaack`).
+
+def swaack(stack, expression, dictionary):
+    (s1, stack) = stack
+    stack = (stack, s1)
+    return stack, expression, dictionary
+
+true.
+
+?- gronk("swaack", `[swaack] dip`).
+
+def swaack(stack, expression, dictionary):
+    (v1, (s1, stack)) = stack
+    stack = (stack, s1)
+    return (v1, stack), expression, dictionary
+
+true.
+
+
+*/
+
+['C:/Users/sforman/Desktop/src/PROLOG/Thun/source/thun.pl'].
+['C:/Users/sforman/Desktop/src/PROLOG/Thun/source/joy2py.pl'].
+
+@command:editor.action.selectToBracket

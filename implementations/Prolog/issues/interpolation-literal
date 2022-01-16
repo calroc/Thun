@@ -1,0 +1,13 @@
+
+What about a kind of interpolation literal?
+
+    {} -> []
+    \n -> nth stack item.
+
+So:
+
+       a b c { \0 { \2 { \0 \1 }}}
+    ---------------------------------
+             [ c  [ a  [ c  b  ]]]
+
+And so on...

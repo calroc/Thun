@@ -1,0 +1,98 @@
+Implement modular arithmetic semantics for Joy, or
+
+Implement 'BigNums' for Oberon RISC, or
+
+Implement mod arith in Joy and use that to implement BigNums in mod-Joy,
+then partial reduce/eval etc. to get BigNums for RISC?
+
+
+
+OR, let division operator make rationals!?
+
+
+
+
+
+I'm using DCG w/ the lists as machine code, and explicitly passing the
+environment around; If I put the machine code into the environment I can
+just pass that around and define an asm//n DCG for writing machine code.
+
+
+
+Parsing and Compiling Using Prolog
+
+    1. Introduction
+    2. Parsing
+        2.1 Bottom-Up
+        2.2 Top-Down
+        2.3 Recursive Descent
+    3. Syntax-Directed Translation
+    4. M-Grammars and DCGs
+    5. Grammar Properties
+    6. Lexical Scanners And Parser Generation
+    7. Code Generation
+        7.1 Generating Code from Polish
+        7.2 Generating Code from Trees
+        7.3 A Machine-Independent Algorithm for Code Generation
+        7.4 Code Generation from a Labelled Tree
+    8. Optimizations
+        8.1 Compile-Time Evaluation
+        8.2 Peephole Optimization
+    9. Using Proposed Extension
+    10. Final Remarks
+
+
+
+
+
+type Item
+    = Integer Int
+    | Symbol String
+    | Boolean Bool
+
+
+
+
+The Web UI
+
+- Docs for each function
+    - Crosslinks to other funcs in PatLang style
+- "Forge" for creating new funcs
+    - Type-checking
+    - Examples
+    - Docs
+    - Domain/Applicability
+    - Mathematical Aspects (Cat Theory)
+- Evaluation Contexts
+    - Stage
+    - Spreadsheet/Grid
+    - Factory
+    - Dataflow
+    - Hall of Records
+- History
+    - Learning from
+    - Quoting from
+    - Changing/Deleting (sometimes you gotta)
+- Publishing/Sharing
+    - Registry of definition/functions
+    - Money?
+
+
+https://thenewstack.io/rust-creator-graydon-hoare-recounts-the-history-of-compilers/
+
+
+I've been working (on and off, for years) on making a system inspired by that book and by Jef Raskin's "Humane Interface", et. el., and I'm convinced that software could be made bug-free and cheaply, however I have no hope of convincing other programmers.  Instead, I'm going to take it directly to end users (and not tell them that they are learning to program until they already have, so as not to jinx it.)
+
+Trying to market to other developers would be an uphill battle, but normal people can use it to develop bug-free software easily and with minimal training (it's fun, like playing a video game).
+
+I should have a demo going in a week or two.  I'm learning Elm lang right now to make a web UI for it.  The original demo UI is in Python 2 and Tkinter, but I've transitioned to an implementation based on Prolog, where inter-op with TCL/Tk would be more trouble than simple putting a web server in front of it (not to go off on a tangent but search for "pengine" if you want to know more about Prolog-over-TCP.)
+
+
+- - - -
+
+Graydon Hoare has a talk on the history of compilers but he doesn't mention Prolog once.  I think it's possible he doesn't know about the research into logic programming and compilers.
+
+
+"Parsing and Compiling Using Prolog" Jacques Cohen and Tim Hickey
+ACM Transactions on Programming Languages and Systems 9(2):125-163 · April 1987
+DOI: 10.1145/22719.22946 · Source: DBLP

@@ -1,0 +1,18 @@
+?- sjc(add_twice, `[36 *] ii`).
+func(add_twice, [int(B), int(D)|A], [int(C), int(E)|A]) :-
+    maplist(call,
+            [clpfd:(36*B#=C), clpfd:(36*D#=E)]).
+true ;
+func(add_twice, [symbol(swap), int(D), int(B)|A], [int(C), int(E)|A]) :-
+    maplist(call,
+            [clpfd:(36*B#=C), clpfd:(36*D#=E)]).
+true ;
+func(add_twice, [symbol(dup), int(D)|A], [int(C), int(B)|A]) :-
+    maplist(call,
+            [clpfd:(36*B#=C), clpfd:(36*D#=B)]).
+true ;
+func(add_twice, [symbol(pop), int(D), int(B)|A], [int(C)|A]) :-
+    maplist(call,
+            [clpfd:(36*B#=C), clpfd:(36*D#=_)]).
+true .
+

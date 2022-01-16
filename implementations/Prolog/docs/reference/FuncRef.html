@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Functor-Reference</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#functor-reference">Functor Reference</a>
+<ul>
+<li><a href="#section">!-</a></li>
+<li><a href="#app1">app1</a></li>
+<li><a href="#b">b</a></li>
+<li><a href="#binary">binary</a></li>
+<li><a href="#ccons">ccons</a></li>
+<li><a href="#cons">cons</a></li>
+<li><a href="#i">i</a></li>
+<li><a href="#infra">infra</a></li>
+<li><a href="#nullary">nullary</a></li>
+<li><a href="#ternary">ternary</a></li>
+<li><a href="#unary">unary</a></li>
+<li><a href="#uncons">uncons</a></li>
+<li><a href="#x">x</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="functor-reference">Functor Reference</h1>
+<p>Version -10.0.0</p>
+<p>Each function, combinator, or definition should be documented here.</p>
+<hr />
+<h2 id="section">!-</h2>
+<p>&#x201C;not negative&#x201D;</p>
+<p>(Function, Boolean Predicate)</p>
+<p>Integer on top of stack is replaced by Boolean value indicating whether it is non-negative.</p>
+<pre><code>    N !-
+-----------  N &lt; 0
+   false
+
+   N !-
+----------  N &gt;= 0
+   true</code></pre>
+<h3 id="definition">Definition</h3>
+<pre><code>0 &gt;=</code></pre>
+<hr />
+<h2 id="app1">app1</h2>
+<p>&#x201C;apply one&#x201D;</p>
+<p>(Combinator)</p>
+<p>Given a quoted program on TOS and anything as the second stack item run the program without disturbing the stack and replace the two args with the first result of the program.</p>
+<pre><code>         ... x [Q] app1
+---------------------------------
+   ... [x ...] [Q] infra first</code></pre>
+<h3 id="definition-1">Definition</h3>
+<pre><code>nullary popd</code></pre>
+<h3 id="discussion">Discussion</h3>
+<p>Just a specialization of <code>nullary</code> really. Its parallelizable cousins are more useful.</p>
+<hr />
+<h2 id="b">b</h2>
+<p>(Combinator)</p>
+<p>Run two quoted programs</p>
+<pre><code>   [P] [Q] b
+---------------
+      P Q</code></pre>
+<h3 id="definition-2">Definition</h3>
+<pre><code>[i] dip i</code></pre>
+<h3 id="derivation">Derivation</h3>
+<pre><code>[P] [Q] b
+[P] [Q] [i] dip i
+[P] i [Q] i
+ P    [Q] i
+ P     Q</code></pre>
+<h3 id="discussion-1">Discussion</h3>
+<p>This combinator comes in handy.</p>
+<h3 id="crosslinks">Crosslinks</h3>
+<p><a href="#dupdip">dupdip</a> <a href="#ii">ii</a></p>
+<hr />
+<h2 id="binary">binary</h2>
+<p>(Combinator)</p>
+<p>Run a quoted program using exactly two stack values and leave the first item of the result on the stack.</p>
+<pre><code>   ... y x [P] binary
+-----------------------
+        ... A</code></pre>
+<h3 id="definition-3">Definition</h3>
+<pre><code>unary popd</code></pre>
+<h3 id="discussion-2">Discussion</h3>
+<p>Runs any other quoted function and returns its first result while consuming exactly two items from the stack.</p>
+<h3 id="crosslinks-1">Crosslinks</h3>
+<p><a href="#nullary">nullary</a> <a href="#ternary">ternary</a> <a href="#unary">unary</a></p>
+<hr />
+<h2 id="ccons">ccons</h2>
+<p>(Function)</p>
+<p>Given two items and a list, append the items to the list to make a new list.</p>
+<pre><code>   B A [...] ccons
+---------------------
+      [B A ...]</code></pre>
+<h3 id="definition-4">Definition</h3>
+<pre><code>cons cons</code></pre>
+<h3 id="discussion-3">Discussion</h3>
+<p>Does <code>cons</code> twice.</p>
+<h3 id="crosslinks-2">Crosslinks</h3>
+<p><a href="#cons">cons</a></p>
+<hr />
+<h2 id="cons">cons</h2>
+<p>(Basis Function)</p>
+<p>Given an item and a list, append the item to the list to make a new list.</p>
+<pre><code>   A [...] cons
+------------------
+     [A ...]</code></pre>
+<h3 id="source">Source</h3>
+<pre><code>func(cons, [list(A), B|S], [list([B|A])|S]).</code></pre>
+<h3 id="discussion-4">Discussion</h3>
+<p>Cons is a venerable old function from Lisp. It doesn&#x2019;t inspect the item but it will not cons onto a non-list. It&#x2019;s inverse operation is called <code>uncons</code>.</p>
+<h3 id="crosslinks-3">Crosslinks</h3>
+<p><a href="#ccons">ccons</a> <a href="#uncons">uncons</a></p>
+<hr />
+<h2 id="i">i</h2>
+<p>(Basis Combinator)</p>
+<p>Append a quoted expression onto the pending expression.</p>
+<pre><code>   [Q] i
+-----------
+    Q</code></pre>
+<h3 id="source-1">Source</h3>
+<pre><code>combo(i, [list(P)|S], S, Ei, Eo) :- append(P, Ei, Eo).</code></pre>
+<h3 id="discussion-5">Discussion</h3>
+<p>This is probably the fundamental combinator. You wind up using it in all kinds of places (for example, the <code>x</code> combinator can be defined as <code>dup i</code>.)</p>
+<hr />
+<h2 id="infra">infra</h2>
+<p>(Combinator)</p>
+<p>Accept a quoted program and a list on the stack and run the program with the list as its stack. Does not affect the stack (below the list.)</p>
+<pre><code>   ... [a b c] [Q] infra
+---------------------------
+    c b a Q [...] swaack</code></pre>
+<h3 id="definition-5">Definition</h3>
+<pre><code>swons swaack [i] dip swaack</code></pre>
+<h3 id="discussion-6">Discussion</h3>
+<p>This is one of the more useful combinators. It allows a quoted expression to serve as a stack for a program, effectively running it in a kind of &#x201C;pocket universe&#x201D;. If the list represents a datastructure then <code>infra</code> lets you work on its internal structure.</p>
+<h3 id="crosslinks-4">Crosslinks</h3>
+<p><a href="#swaack">swaack</a></p>
+<hr />
+<h2 id="nullary">nullary</h2>
+<p>(Combinator)</p>
+<p>Run a quoted program without using any stack values and leave the first item of the result on the stack.</p>
+<pre><code>   ... [P] nullary
+---------------------
+        ... A</code></pre>
+<h3 id="definition-6">Definition</h3>
+<pre><code>[stack] dip infra first</code></pre>
+<h3 id="derivation-1">Derivation</h3>
+<pre><code>... [P] nullary
+... [P] [stack] dip infra first
+... stack [P] infra first
+... [...] [P] infra first
+... [A ...] first
+...  A</code></pre>
+<h3 id="discussion-7">Discussion</h3>
+<p>A very useful function that runs any other quoted function and returns it&#x2019;s first result without disturbing the stack (under the quoted program.)</p>
+<h3 id="crosslinks-5">Crosslinks</h3>
+<p><a href="#unary">unary</a> <a href="#binary">binary</a> <a href="#ternary">ternary</a></p>
+<hr />
+<h2 id="ternary">ternary</h2>
+<p>(Combinator)</p>
+<p>Run a quoted program using exactly three stack values and leave the first item of the result on the stack.</p>
+<pre><code>   ... z y x [P] unary
+-------------------------
+         ... A</code></pre>
+<h3 id="definition-7">Definition</h3>
+<pre><code>binary popd</code></pre>
+<h3 id="discussion-8">Discussion</h3>
+<p>Runs any other quoted function and returns its first result while consuming exactly three items from the stack.</p>
+<h3 id="crosslinks-6">Crosslinks</h3>
+<p><a href="#binary">binary</a> <a href="#nullary">nullary</a> <a href="#unary">unary</a></p>
+<hr />
+<h2 id="unary">unary</h2>
+<p>(Combinator)</p>
+<p>Run a quoted program using exactly one stack value and leave the first item of the result on the stack.</p>
+<pre><code>   ... x [P] unary
+---------------------
+       ... A</code></pre>
+<h3 id="definition-8">Definition</h3>
+<pre><code>nullary popd</code></pre>
+<h3 id="discussion-9">Discussion</h3>
+<p>Runs any other quoted function and returns its first result while consuming exactly one item from the stack.</p>
+<h3 id="crosslinks-7">Crosslinks</h3>
+<p><a href="#binary">binary</a> <a href="#nullary">nullary</a> <a href="#ternary">ternary</a></p>
+<hr />
+<h2 id="uncons">uncons</h2>
+<p>(Basis Function)</p>
+<p>Removes an item from a list and leaves it on the stack under the rest of the list. You cannot <code>uncons</code> an item from an empty list.</p>
+<pre><code>   [A ...] uncons
+--------------------
+      A [...]</code></pre>
+<h3 id="source-2">Source</h3>
+<pre><code>func(uncons, Si, So) :- func(cons, So, Si).</code></pre>
+<h3 id="discussion-10">Discussion</h3>
+<p>This is the inverse of <code>cons</code>.</p>
+<h3 id="crosslinks-8">Crosslinks</h3>
+<p><a href="#cons">cons</a></p>
+<hr />
+<h2 id="x">x</h2>
+<p>(Combinator)</p>
+<pre><code>   [F] x
+-----------
+   [F] F</code></pre>
+<h3 id="definition-9">Definition</h3>
+<pre><code>dup i</code></pre>
+<h3 id="discussion-11">Discussion</h3>
+<p>The <code>x</code> combinator &#x2026;</p>
+</body>
+</html>
