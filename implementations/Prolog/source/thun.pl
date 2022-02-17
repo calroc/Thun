@@ -138,7 +138,7 @@ joy_parse([J|Js]) --> joy_term(J), !, joy_parse(Js).
 joy_parse([]) --> [].
 
 joy_term(list(J)) --> [lbracket], !, joy_parse(J), [rbracket].
-joy_term(Atomic) --> [tok(Codes)], {joy_token(Atomic, Codes)}.
+joy_term(Token) --> [tok(Codes)], {joy_token(Token, Codes)}.
 
 joy_token(int(I), Codes) :- number(I, Codes, []), !.  % See dcg/basics.
 joy_token(bool(true), `true`) :- !.
