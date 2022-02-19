@@ -1,0 +1,286 @@
+Some notes on definitions.
+
+Let's work out the definition of the step combinator in Joy:
+
+       [] [P] step
+    -----------------
+
+
+         [X|Xs] [P] step
+    -----------------------
+       X P [Xs] [P] step
+
+In terms of branch and x:
+
+     step == [F] x
+
+So:
+
+        [L] [P] step
+     ------------------
+        [L] [P] [F] x
+     ------------------
+        [L] [P] [F] F
+
+First, get the flag value and roll< it to the top for a branch:
+
+     F  == F′ F″
+     F′ == [?] dipd roll<
+
+        [L] [P] [F] F
+     ---------------------------
+        [L] [P] [F′ F″] F′ F″
+     ---------------------------------------
+        [L] [P] [F′ F″] [?] dipd roll< F″
+
+How that works out:
+
+     [L]   [P] [F] [?] dipd roll< F″
+     [L] ? [P] [F]          roll< F″
+     [L] b [P] [F]          roll< F″
+     [L]   [P] [F] b              F″
+
+Now we can write a branch:
+
+     F″ == [Ff] [Ft] branch
+
+        [L] [P] [F] b F″
+     ------------------------------------
+        [L] [P] [F] b [Ff] [Ft] branch
+
+The false case is easy:
+
+     Ff == pop popop
+
+     ... [] [P] [F] Ff
+     ... [] [P] [F] pop popop
+     ... [] [P]         popop
+     ... 
+
+
+The true case is a little more fun:
+
+     ... [X|Xs] [P] [F] Ft
+
+We need to uncons that first term, run a copy of P, and recur (recurse?
+I think re-curse means to "curse again" so it must be "recur".)
+
+     Ft == Ft′ Ft″
+     Ft′ == [uncons] dipd
+
+     ... [X|Xs]        [P] [F] [uncons] dipd Ft″
+     ... [X|Xs] uncons [P] [F]               Ft″
+     ... X [Xs]        [P] [F]               Ft″
+
+So now we run a copy of P:
+
+     ... X [Xs] [P] [F] Ft″
+
+     Ft″ == [dup dipd] dip Ft‴
+
+     ... X   [Xs] [P]          [F] Ft″
+     ... X   [Xs] [P]          [F] [dup dipd] dip Ft‴
+     ... X   [Xs] [P] dup dipd [F] Ft‴
+     ... X   [Xs] [P] [P] dipd [F] Ft‴
+     ... X P [Xs] [P]          [F] Ft‴
+
+And now all that remains is to recur on F:
+
+     Ft‴ == x
+
+     ... X P [Xs] [P] [F] x
+
+
+Collecting the definitions, we have:
+
+     step == [F] x
+       F  == F′ [Ff] [Ft] branch
+       F′ == [?] dipd roll<
+       Ff == pop popop
+       Ft == Ft′ Ft″ x
+      Ft′ == [uncons] dipd
+      Ft″ == [dup dipd] dip
+
+
+QED.
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+       x [P] dupdip
+    ------------------
+         x P x
+
+
+    x     [P] [dup] dip dip
+    x dup [P]           dip
+    x x   [P]           dip
+
+
+    dupdip [dup] dip dip
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+3 true [-- [0 >] nullary] loop
+
+5 [1 <] [] [dup --] [i +] genrec
+
+′ ″ ‴ ⁗ 
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+map
+     in terms of genrec:
+
+                    [F] map
+     -------------------------------------
+        [] [P] [E] [[F] R0] [R1] genrec
+     -------------------------------------  w/ K == [P] [E] [[F] R0] [R1] genrec
+        [] [P] [E] [[F] R0 [K] R1] ifte
+
+
+P is applied nullary so it will just be:
+
+     P == pop bool
+
+to check the non-emptiness of the input list.  When the input list is
+empty, the output list is ready, but in the reverse order, so:
+
+     E == popd reverse
+
+That leaves the non-empty case:
+
+    [X|Xs] [Ys] [F] R0 [K] R1
+
+Here we want to uncons that X term, prepend it to a copy of the stack for
+using infra on F, put the result on [Ys], and recur.
+
+Let's keep it simple:
+
+    R0 == [R0′] dipd R0″
+
+    [X|Xs]     [Ys] [F] [R0′] dipd R0″ [K] R1
+    [X|Xs] R0′ [Ys] [F]            R0″ [K] R1
+
+Let's concentrate on R0′:
+
+    R0′ == [stack] dip shift
+
+    ... [X|Xs] R0′
+    ... [X|Xs] [stack] dip shift
+    ... [...] [X|Xs] shift
+    ... [X|...] [Xs]
+
+okay, so:
+
+    ... [X|...] [Xs] [Ys] [F] R0″ [K] R1
+
+We want to use F on that stack we just made:
+
+    R0″ == [infra first] cons dipd R0‴
+
+    ... [X|...]                 [Xs] [Ys] [F] R0″                     R0‴ [K] R1
+    ... [X|...]                 [Xs] [Ys] [F] [infra first] cons dipd R0‴ [K] R1
+    ... [X|...]                 [Xs] [Ys] [[F] infra first]      dipd R0‴ [K] R1
+    ... [X|...] [F] infra first [Xs] [Ys]                             R0‴ [K] R1
+    ... [Y|...]           first [Xs] [Ys]                             R0‴ [K] R1
+    ...  Y                      [Xs] [Ys]                             R0‴ [K] R1
+
+And:
+
+    R0‴ == roll< swons
+
+    ... Y [Xs] [Ys] R0‴         [K] R1
+    ... Y [Xs] [Ys] roll< swons [K] R1
+    ... [Xs] [Ys] Y       swons [K] R1
+    ... [Xs] [Y|Ys]             [K] R1
+
+That just leaves R1:
+
+    R1 == i
+
+    ... [Xs] [Y|Ys] [K] R1
+    ... [Xs] [Y|Ys] [K] i
+    ... [Xs] [Y|Ys]  K
+    ... [Xs] [Y|Ys] [P] [E] [[F] R0] [R1] genrec
+
+::
+
+
+      P == pop bool
+      E == popd reverse
+     R0 == [R0′] dipd R0″
+    R0′ == [stack] dip shift
+    R0″ == [infra first] cons dipd R0‴
+    R0‴ == roll< swons
+     R1 == i
+
+Now that we have the parts, we need to make the map combinator that takes
+[F] and builds the genrec function:
+
+                    [F] map
+     -------------------------------------
+        [] [P] [E] [[F] R0] [R1] genrec
+
+Working backwards:
+
+    [] [P] [E] [[F] R0]                       [R1] genrec
+               [[F] R0]      [[] [P] [E]] dip [R1] genrec
+               [F] [R0] cons [[] [P] [E]] dip [R1] genrec
+
+Ergo:
+
+    map == [R0] cons [[] [P] [E]] dip [R1] genrec
+
+So the source would be:
+
+    map [_map0] cons [[] [_map?] [_mape]] dip [i] genrec
+    _map? pop bool
+    _mape popd reverse
+    _map0 [_map1] dipd _map2
+    _map1 [stack] dip shift
+    _map2 [infra first] cons dipd _map3
+    _map3 roll< swons
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Minimal Basis
+----------------
+
+This is a tight set of primitives from the POV of implementation.  You
+can get nice performance improvements by implementing some additional
+words (like uncons and rest) but these along with the defs.txt file are
+good to go:
+
+and bool branch concat cons dip dup first i loop or pop stack swaack swap
++ - * / % < > = >= <= <>
+
+
+Integer Math
+----------------
++ - * / %
+
+
+Binary Boolean Logic
+----------------
+< > = >= <= <>
+and or bool
+
+
+Stack Manipulation
+----------------
+dup pop stack swaack swap
+
+
+Combinators
+----------------
+branch loop i dip
+
+
+List Manipulation
+----------------
+concat cons first
+
+
