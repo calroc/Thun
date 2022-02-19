@@ -94,11 +94,10 @@
 
         <span class="n">term</span><span class="p">,</span> <span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">term</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">term</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">term</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">UnknownSymbolError</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
-            <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span> <span class="o">=</span> <span class="n">term</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">)</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">term</span><span class="p">]</span>
+            <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">stack</span> <span class="o">=</span> <span class="n">term</span><span class="p">,</span> <span class="n">stack</span>
 

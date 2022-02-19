@@ -33,7 +33,7 @@ Pretty printing support, e.g.::
     joy? 
 
 On each line the stack is printed with the top to the left, then a
-bullet symbol,``•``, to represent the current locus of processing, then
+bullet symbol, •, to represent the current locus of processing, then
 the pending expression to the right.
 '''
 # (Kinda clunky and hacky.  This should be swapped out in favor of much

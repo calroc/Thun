@@ -234,9 +234,9 @@
             <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
                 <span class="k">continue</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">body</span> <span class="o">=</span> <span class="n">text_to_expression</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-<span class="c1">##            if name not in dictionary:</span>
-<span class="c1">##                inscribe(class_(name, body), dictionary)</span>
-            <span class="n">inscribe</span><span class="p">(</span><span class="n">class_</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">body</span><span class="p">),</span> <span class="n">dictionary</span><span class="p">)</span></div>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
+                <span class="n">inscribe</span><span class="p">(</span><span class="n">class_</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">body</span><span class="p">),</span> <span class="n">dictionary</span><span class="p">)</span></div>
+<span class="c1">##            inscribe(class_(name, body), dictionary)</span>
 
 
 <span class="c1">#</span>
@@ -449,7 +449,8 @@
 <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Expects an item on the stack and a quote under it and removes that item</span>
-<span class="sd">    from the the quote.  The item is only removed once.</span>
+<span class="sd">    from the the quote.  The item is only removed once.  If the list is</span>
+<span class="sd">    empty or the item isn&#39;t in the list then the list is unchanged.</span>
 <span class="sd">    ::</span>
 
 <span class="sd">           [1 2 3 1] 1 remove</span>
@@ -457,10 +458,14 @@
 <span class="sd">             [2 3 1]</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="p">(</span><span class="n">tos</span><span class="p">,</span> <span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
-    <span class="n">l</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iter_stack</span><span class="p">(</span><span class="n">second</span><span class="p">))</span>
-    <span class="n">l</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tos</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">list_to_stack</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="n">stack</span></div>
+    <span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">S</span>
+    <span class="k">return</span> <span class="n">_remove</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">quote</span><span class="p">),</span> <span class="n">stack</span></div>
+
+
+<span class="k">def</span> <span class="nf">_remove</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">quote</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span> <span class="n">head</span><span class="p">,</span> <span class="n">tail</span> <span class="o">=</span> <span class="n">quote</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span> <span class="k">return</span> <span class="n">quote</span>
+    <span class="k">return</span> <span class="n">tail</span> <span class="k">if</span> <span class="n">head</span> <span class="o">==</span> <span class="n">item</span> <span class="k">else</span> <span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">_remove</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">tail</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="unique"><a class="viewcode-back" href="../../library.html#joy.library.unique">[docs]</a><span class="nd">@inscribe</span>
@@ -816,6 +821,22 @@
     <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">expression</span><span class="p">)),</span> <span class="n">dictionary</span></div>
 
 
+<div class="viewcode-block" id="ii"><a class="viewcode-back" href="../../library.html#joy.library.ii">[docs]</a><span class="nd">@inscribe</span>
+<span class="nd">@FunctionWrapper</span>
+<span class="k">def</span> <span class="nf">ii</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    ::</span>
+
+<span class="sd">           ... a [Q] ii</span>
+<span class="sd">        ------------------</span>
+<span class="sd">            ... Q a Q</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span> <span class="o">=</span> <span class="n">stack</span>
+    <span class="n">expression</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="n">expression</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
+
+
 <div class="viewcode-block" id="dupdip"><a class="viewcode-back" href="../../library.html#joy.library.dupdip">[docs]</a><span class="nd">@inscribe</span>
 <span class="nd">@FunctionWrapper</span>
 <span class="k">def</span> <span class="nf">dupdip</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
@@ -1019,32 +1040,32 @@
     <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">concat</span><span class="p">(</span><span class="n">then</span> <span class="k">if</span> <span class="n">flag</span> <span class="k">else</span> <span class="n">else_</span><span class="p">,</span> <span class="n">expression</span><span class="p">),</span> <span class="n">dictionary</span></div>
 
 
-<span class="c1">##@inscribe</span>
-<span class="c1">##@FunctionWrapper</span>
-<span class="c1">##def ifte(stack, expression, dictionary):</span>
-<span class="c1">##  &#39;&#39;&#39;</span>
-<span class="c1">##  If-Then-Else Combinator</span>
-<span class="c1">##  ::</span>
-<span class="c1">##</span>
-<span class="c1">##                  ... [if] [then] [else] ifte</span>
-<span class="c1">##       ---------------------------------------------------</span>
-<span class="c1">##          ... [[else] [then]] [...] [if] infra select i</span>
-<span class="c1">##</span>
-<span class="c1">##</span>
-<span class="c1">##</span>
-<span class="c1">##</span>
-<span class="c1">##                ... [if] [then] [else] ifte</span>
-<span class="c1">##       -------------------------------------------------------</span>
-<span class="c1">##          ... [else] [then] [...] [if] infra first choice i</span>
-<span class="c1">##</span>
-<span class="c1">##</span>
-<span class="c1">##  Has the effect of grabbing a copy of the stack on which to run the</span>
-<span class="c1">##  if-part using infra.</span>
-<span class="c1">##  &#39;&#39;&#39;</span>
-<span class="c1">##  (else_, (then, (if_, stack))) = stack</span>
-<span class="c1">##  expression = (S_infra, (S_first, (S_choice, (S_i, expression))))</span>
-<span class="c1">##  stack = (if_, (stack, (then, (else_, stack))))</span>
-<span class="c1">##  return stack, expression, dictionary</span>
+<div class="viewcode-block" id="ifte"><a class="viewcode-back" href="../../library.html#joy.library.ifte">[docs]</a><span class="nd">@inscribe</span>
+<span class="nd">@FunctionWrapper</span>
+<span class="k">def</span> <span class="nf">ifte</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  If-Then-Else Combinator</span>
+<span class="sd">  ::</span>
+
+<span class="sd">                  ... [if] [then] [else] ifte</span>
+<span class="sd">       ---------------------------------------------------</span>
+<span class="sd">          ... [[else] [then]] [...] [if] infra select i</span>
+
+
+
+
+<span class="sd">                ... [if] [then] [else] ifte</span>
+<span class="sd">       -------------------------------------------------------</span>
+<span class="sd">          ... [else] [then] [...] [if] infra first choice i</span>
+
+
+<span class="sd">  Has the effect of grabbing a copy of the stack on which to run the</span>
+<span class="sd">  if-part using infra.</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="p">(</span><span class="n">else_</span><span class="p">,</span> <span class="p">(</span><span class="n">then</span><span class="p">,</span> <span class="p">(</span><span class="n">if_</span><span class="p">,</span> <span class="n">stack</span><span class="p">)))</span> <span class="o">=</span> <span class="n">stack</span>
+  <span class="n">expression</span> <span class="o">=</span> <span class="p">(</span><span class="n">S_infra</span><span class="p">,</span> <span class="p">(</span><span class="n">S_first</span><span class="p">,</span> <span class="p">(</span><span class="n">S_choice</span><span class="p">,</span> <span class="p">(</span><span class="n">S_i</span><span class="p">,</span> <span class="n">expression</span><span class="p">))))</span>
+  <span class="n">stack</span> <span class="o">=</span> <span class="p">(</span><span class="n">if_</span><span class="p">,</span> <span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="p">(</span><span class="n">then</span><span class="p">,</span> <span class="p">(</span><span class="n">else_</span><span class="p">,</span> <span class="n">stack</span><span class="p">))))</span>
+  <span class="k">return</span> <span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span></div>
 
 
 <div class="viewcode-block" id="cond"><a class="viewcode-back" href="../../library.html#joy.library.cond">[docs]</a><span class="nd">@inscribe</span>
