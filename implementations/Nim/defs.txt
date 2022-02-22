@@ -5,7 +5,7 @@
 || nulco [nullary] dip [true] branch
 !- 0 >=
 <{} [] swap
-<<{} [] rolldown
+<<{} [] rollup
 abs dup 0 < [] [neg] branch
 anamorphism [pop []] swap [dip swons] genrec
 app1 grba infrst
@@ -87,6 +87,7 @@ sum [+] step_zero
 swapd [swap] dip
 swons swap cons
 swoncat swap concat
+sqr dup mul
 tailrec [i] genrec
 take [] roll> [shift] times pop
 ternary binary popd
