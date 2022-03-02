@@ -71,6 +71,7 @@ printed left-to-right.  These functions are written to support :doc:`../pretty`.
 
 '''
 from .errors import NotAListError
+from .snippets import Snippet, to_string as snip_to_string
 
 
 def list_to_stack(el, stack=()):
@@ -133,20 +134,24 @@ _JOY_BOOL_LITS = 'false', 'true'
 
 
 def _joy_repr(thing):
-        if isinstance(thing, bool):
-                return _JOY_BOOL_LITS[thing]
-        return repr(thing)
+    if isinstance(thing, bool): return _JOY_BOOL_LITS[thing]
+    if isinstance(thing, Snippet): return snip_to_string(thing)
+    return repr(thing)
 
 
 def _to_string(stack, f):
     if not isinstance(stack, tuple): return _joy_repr(stack)
     if not stack: return ''  # shortcut
+    if isinstance(stack, Snippet): return snip_to_string(stack)
     return ' '.join(map(_s, f(stack)))
 
 
 _s = lambda s: (
     '[%s]' % expression_to_string(s)
         if isinstance(s, tuple)
+        and not isinstance(s, Snippet)
+        # Is it worth making a non-tuple class for Snippet?
+        # Doing this check on each tuple seems a bit much.
     else _joy_repr(s)
     )
 

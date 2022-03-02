@@ -38,6 +38,11 @@ around square brackets.
 '''
 from re import Scanner
 from .utils.stack import list_to_stack
+from .utils.snippets import (
+    pat as SNIPPETS,
+    from_string,
+    Snippet,
+    )
 
 
 BRACKETS = r'\[|\]'
@@ -46,6 +51,7 @@ WORDS = r'[^[\]\s]+'
 
 
 token_scanner = Scanner([
+    (SNIPPETS, lambda _, token: from_string(token)),
     (BRACKETS, lambda _, token: token),
     (BLANKS, None),
     (WORDS, lambda _, token: token),
@@ -111,6 +117,8 @@ def _parse(tokens):
             frame.append(True)
         elif tok == 'false':
             frame.append(False)
+        elif isinstance(tok, Snippet):
+            frame.append(tok)
         else:
             try:
                 thing = int(tok)
