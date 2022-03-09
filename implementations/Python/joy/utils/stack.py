@@ -130,11 +130,11 @@ def expression_to_string(expression):
     return _to_string(expression, iter_stack)
 
 
-_JOY_BOOL_LITS = 'false', 'true'
+JOY_BOOL_LITERALS = 'false', 'true'
 
 
 def _joy_repr(thing):
-    if isinstance(thing, bool): return _JOY_BOOL_LITS[thing]
+    if isinstance(thing, bool): return JOY_BOOL_LITERALS[thing]
     if isinstance(thing, Snippet): return snip_to_string(thing)
     return repr(thing)
 
