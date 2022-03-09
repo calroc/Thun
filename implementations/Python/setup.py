@@ -32,6 +32,7 @@ setup(
 		package implements an interpreter for a dialect of Joy that attempts to
 		stay very close to the spirit of Joy but does not precisely match the
 		behaviour of the original version written in C.'''),
+	long_description_content_type='text/plain',
 	author='Simon Forman',
 	author_email='sforman@hushmail.com',
 	url='https://joypy.osdn.io',
