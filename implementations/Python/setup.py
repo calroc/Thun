@@ -24,7 +24,7 @@ from textwrap import dedent
 
 setup(
 	name='Thun',
-	version='0.5.0',
+	version='0.5.1',
 	description='Python Implementation of Joy',
 	long_description=dedent('''\
 		Joy is a programming language created by Manfred von Thun that is easy to
