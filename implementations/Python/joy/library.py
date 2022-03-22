@@ -227,15 +227,6 @@ def inscribe_(stack, expression, dictionary):
     return stack, expression, dictionary
 
 
-@inscribe
-@SimpleFunctionWrapper
-def parse(stack):
-    '''Parse the string on the stack to a Joy expression.'''
-    text, stack = stack
-    expression = text_to_expression(text)
-    return expression, stack
-
-
 # @inscribe
 # @SimpleFunctionWrapper
 # def infer_(stack):
