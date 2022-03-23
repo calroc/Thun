@@ -1,8 +1,10 @@
 FUNCDOCS = $(wildcard ../*.md)
+TITLE = --metadata title="Functor Reference"
+TOC = --toc --toc-depth=2
 
 
 all: Functor-Reference.md
-	pandoc -s --toc --toc-depth=2 --ascii Functor-Reference.md -o FuncRef.html
+	pandoc -s $(TOC) $(TITLE) --ascii Functor-Reference.md -o FuncRef.html
 
 
 Functor-Reference.md: HEADER.md $(FUNCDOCS)
