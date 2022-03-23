@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# divmod
+## divmod
 
 Basis Function Combinator
 
@@ -10,22 +10,22 @@ Return the tuple (x//y, x%y). Invariant: q \* y + r == x.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

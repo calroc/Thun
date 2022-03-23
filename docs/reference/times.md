@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# times
+## times
 
 Basis Function Combinator
 
@@ -22,22 +22,22 @@ times == \[\-- dip\] cons \[swap\] infra \[0 \>\] swap while pop :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

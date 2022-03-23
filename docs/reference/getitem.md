@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# getitem
+## getitem
 
 Basis Function Combinator
 
@@ -15,22 +15,22 @@ nth position in the quote counting from 0. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

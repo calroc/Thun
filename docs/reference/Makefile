@@ -1,4 +1,4 @@
-NOT_US = Functor-Reference.md FORMAT-Functor-Reference.md
+NOT_US = Functor-Reference.md FORMAT-Functor-Reference.md HEADER.md
 FUNCDOCS = $(filter-out $(NOT_US),$(wildcard *.md))
 
 

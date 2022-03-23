@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# id
+## id
 
 Basis Function Combinator
 
@@ -8,22 +8,22 @@ The identity function.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

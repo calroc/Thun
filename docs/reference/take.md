@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# take
+## take
 
 Basis Function Combinator
 
@@ -14,22 +14,22 @@ can use reverse if needed.) :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# cleave
+## cleave
 
 Basis Function Combinator
 
@@ -8,22 +8,22 @@ fork popdd
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# range_to_zero
+## range_to_zero
 
 Basis Function Combinator
 
@@ -8,22 +8,22 @@ unit \[down_to_zero\] infra
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# bool
+## bool
 
 Basis Function Combinator
 
@@ -12,22 +12,22 @@ bool is a subclass of the class int, and cannot be subclassed.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

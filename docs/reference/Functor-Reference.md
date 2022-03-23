@@ -6,39 +6,16 @@ Version -10.0.0
 Each function, combinator, or definition should be documented here.
 
 
-------------------------------------------------------------------------
+--------------
 
-# &
+## &
 
-Basis Function Combinator
+See [and](#and).
 
-Same as a & b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# &&
+## &&
 
 Basis Function Combinator
 
@@ -46,179 +23,64 @@ nulco \[nullary \[false\]\] dip branch
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## *
+
+See [mul](#mul).
+
+
+--------------
+
+## •
+
+See [id](#id).
+
+
+--------------
+
+## ^
+
+See [xor](#xor).
+
+
+--------------
+
+## =
+
+See [eq](#eq).
+
+
+--------------
+
+## !=
+
+See [ne](#ne).
+
 
 ------------------------------------------------------------------------
 
-# \*
-
-Basis Function Combinator
-
-Same as a \* b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# •
-
-Basis Function Combinator
-
-The identity function.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# \^
-
-Basis Function Combinator
-
-Same as a \^ b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# =
-
-Basis Function Combinator
-
-Same as a == b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# !=
-
-Basis Function Combinator
-
-Same as a != b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-!-\^\^\^\^
+## !-
 
 Basis Function Combinator
 
@@ -226,277 +88,85 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-# Definition
+### Definition
 
 if not basis.
 
-# Derivation
+### Derivation
 
 if not basis.
 
-# Source
+### Source
 
 if basis
 
-# Discussion
+### Discussion
 
 Lorem ipsum.
 
-# Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
-------------------------------------------------------------------------
+--------------
 
-# \>
+## >
 
-Basis Function Combinator
-
-Same as a \> b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# \>=
-
-Basis Function Combinator
-
-Same as a \>= b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# \>\>
-
-Basis Function Combinator
-
-Same as a \>\> b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
+See [gt](#gt).
 
 
-# Functor Reference
+--------------
 
-Version -10.0.0
+## >=
 
-Each function, combinator, or definition should be documented here.
+See [ge](#ge).
+
+
+--------------
+
+## >>
+
+See [rshift](#rshift).
+
+
+--------------
+
+## -
+
+See [sub](#sub).
+
+
+--------------
+
+## --
+
+See [pred](#pred).
+
+
+--------------
+
+## <
+
+See [lt](#lt).
+
+
+--------------
+
+## <=
+
+See [le](#le).
+
+
+--------------
+
+## <>
+
+See [ne](#ne).
 
 
 ------------------------------------------------------------------------
 
--\^\^\^
-
-Basis Function Combinator
-
-Same as a - b.
-
-Gentzen diagram.
-
-# Definition
-
-if not basis.
-
-# Derivation
-
-if not basis.
-
-# Source
-
-if basis
-
-# Discussion
-
-Lorem ipsum.
-
-# Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-\--\^\^\^\^
-
-Basis Function Combinator
-
-Decrement TOS.
-
-Gentzen diagram.
-
-# Definition
-
-if not basis.
-
-# Derivation
-
-if not basis.
-
-# Source
-
-if basis
-
-# Discussion
-
-Lorem ipsum.
-
-# Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# \<
-
-Basis Function Combinator
-
-Same as a \< b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# \<=
-
-Basis Function Combinator
-
-Same as a \<= b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# \<\>
-
-Basis Function Combinator
-
-Same as a != b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# \<{}
+## \<{}
 
 Basis Function Combinator
 
@@ -504,59 +174,36 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## <<
+
+See [lshift](#lshift).
+
 
 ------------------------------------------------------------------------
 
-# \<\<
-
-Basis Function Combinator
-
-Same as a \<\< b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# \<\<{}
+## \<\<{}
 
 Basis Function Combinator
 
@@ -564,119 +211,50 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## %
+
+See [mod](#mod).
+
+
+--------------
+
+## +
+
+See [add](#add).
+
+
+--------------
+
+## ++
+
+See [succ](#succ).
+
 
 ------------------------------------------------------------------------
 
-# %
-
-Basis Function Combinator
-
-Same as a % b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# +
-
-Basis Function Combinator
-
-Same as a + b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# ++
-
-Basis Function Combinator
-
-Increment TOS.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# ?
+## ?
 
 Basis Function Combinator
 
@@ -684,119 +262,50 @@ dup bool
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## /
+
+See [floordiv](#floordiv).
+
+
+--------------
+
+## //
+
+See [floordiv](#floordiv).
+
+
+--------------
+
+## /floor
+
+See [floordiv](#floordiv).
+
 
 ------------------------------------------------------------------------
 
-# /
-
-Basis Function Combinator
-
-Same as a // b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# //
-
-Basis Function Combinator
-
-Same as a // b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# /floor
-
-Basis Function Combinator
-
-Same as a // b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# \|\|
+## \|\|
 
 Basis Function Combinator
 
@@ -804,29 +313,29 @@ nulco \[nullary\] dip \[true\] branch
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# abs
+## abs
 
 Basis Function Combinator
 
@@ -834,29 +343,29 @@ Return the absolute value of the argument.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# add
+## add
 
 Basis Function Combinator
 
@@ -864,29 +373,29 @@ Same as a + b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# anamorphism
+## anamorphism
 
 Basis Function Combinator
 
@@ -894,29 +403,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# and
+## and
 
 Basis Function Combinator
 
@@ -924,23 +433,23 @@ Same as a & b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -973,7 +482,7 @@ are more useful.
 
 ------------------------------------------------------------------------
 
-# app2
+## app2
 
 Basis Function Combinator
 
@@ -986,29 +495,29 @@ Like app1 with two items.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# app3
+## app3
 
 Basis Function Combinator
 
@@ -1022,29 +531,29 @@ Like app1 with three items.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# appN
+## appN
 
 Basis Function Combinator
 
@@ -1052,66 +561,36 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## at
+
+See [getitem](#getitem).
+
 
 ------------------------------------------------------------------------
 
-# at
-
-Basis Function Combinator
-
-    getitem == drop first
-
-Expects an integer and a quote on the stack and returns the item at the
-nth position in the quote counting from 0. :
-
-    [a b c d] 0 getitem
-    -------------------------
-     a
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# average
+## average
 
 Basis Function Combinator
 
@@ -1119,23 +598,23 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -1204,7 +683,7 @@ consuming exactly two items from the stack.
 
 ------------------------------------------------------------------------
 
-# bool
+## bool
 
 Basis Function Combinator
 
@@ -1216,29 +695,29 @@ bool is a subclass of the class int, and cannot be subclassed.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# branch
+## branch
 
 Basis Function Combinator
 
@@ -1256,29 +735,29 @@ Use a Boolean value to select one of two quoted programs to run.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# ccccons
+## ccccons
 
 Basis Function Combinator
 
@@ -1286,23 +765,23 @@ ccons ccons
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -1333,7 +812,7 @@ Does `cons` twice.
 
 ------------------------------------------------------------------------
 
-# choice
+## choice
 
 Basis Function Combinator
 
@@ -1354,29 +833,29 @@ etc.)
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# clear
+## clear
 
 Basis Function Combinator
 
@@ -1389,29 +868,29 @@ Clear everything from the stack.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# cleave
+## cleave
 
 Basis Function Combinator
 
@@ -1419,29 +898,29 @@ fork popdd
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# clop
+## clop
 
 Basis Function Combinator
 
@@ -1449,29 +928,29 @@ cleave popdd
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# cmp
+## cmp
 
 Basis Function Combinator
 
@@ -1492,29 +971,29 @@ of the three depending on the results of comparing the two values: :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# codi
+## codi
 
 Basis Function Combinator
 
@@ -1522,29 +1001,29 @@ cons dip
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# codireco
+## codireco
 
 Basis Function Combinator
 
@@ -1552,29 +1031,29 @@ codi reco
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# concat
+## concat
 
 Basis Function Combinator
 
@@ -1586,29 +1065,29 @@ Concatinate the two lists on the top of the stack. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# cond
+## cond
 
 Basis Function Combinator
 
@@ -1627,23 +1106,23 @@ expressions, e.g.:
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -1677,7 +1156,7 @@ but it will not cons onto a non-list.  It's inverse operation is called
 
 ------------------------------------------------------------------------
 
-# dinfrirst
+## dinfrirst
 
 Basis Function Combinator
 
@@ -1685,29 +1164,29 @@ dip infrst
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# dip
+## dip
 
 Basis Function Combinator
 
@@ -1721,29 +1200,29 @@ on the rest of the stack. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# dipd
+## dipd
 
 Basis Function Combinator
 
@@ -1755,29 +1234,29 @@ Like dip but expects two items. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# dipdd
+## dipdd
 
 Basis Function Combinator
 
@@ -1789,29 +1268,29 @@ Like dip but expects three items. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# disenstacken
+## disenstacken
 
 Basis Function Combinator
 
@@ -1820,59 +1299,36 @@ that the stack discarding the rest of the stack.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## div
+
+See [floordiv](#floordiv).
+
 
 ------------------------------------------------------------------------
 
-# div
-
-Basis Function Combinator
-
-Same as a // b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# divmod
+## divmod
 
 Basis Function Combinator
 
@@ -1882,29 +1338,29 @@ Return the tuple (x//y, x%y). Invariant: q \* y + r == x.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# down_to_zero
+## down_to_zero
 
 Basis Function Combinator
 
@@ -1912,29 +1368,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# drop
+## drop
 
 Basis Function Combinator
 
@@ -1949,29 +1405,29 @@ items removed off the top. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# dup
+## dup
 
 Basis Function Combinator
 
@@ -1979,29 +1435,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# dupd
+## dupd
 
 Basis Function Combinator
 
@@ -2009,29 +1465,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# dupdd
+## dupdd
 
 Basis Function Combinator
 
@@ -2039,29 +1495,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# dupdip
+## dupdip
 
 Basis Function Combinator
 
@@ -2074,29 +1530,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# dupdipd
+## dupdipd
 
 Basis Function Combinator
 
@@ -2104,29 +1560,29 @@ dup dipd
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# enstacken
+## enstacken
 
 Basis Function Combinator
 
@@ -2134,29 +1590,29 @@ stack \[clear\] dip
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# eq
+## eq
 
 Basis Function Combinator
 
@@ -2164,29 +1620,29 @@ Same as a == b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# first
+## first
 
 Basis Function Combinator
 
@@ -2194,29 +1650,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# first_two
+## first_two
 
 Basis Function Combinator
 
@@ -2224,29 +1680,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# flatten
+## flatten
 
 Basis Function Combinator
 
@@ -2254,29 +1710,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# floor
+## floor
 
 Basis Function Combinator
 
@@ -2286,29 +1742,29 @@ This is the largest integer \<= x.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# floordiv
+## floordiv
 
 Basis Function Combinator
 
@@ -2316,29 +1772,29 @@ Same as a // b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# fork
+## fork
 
 Basis Function Combinator
 
@@ -2346,29 +1802,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# fourth
+## fourth
 
 Basis Function Combinator
 
@@ -2376,29 +1832,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# gcd
+## gcd
 
 Basis Function Combinator
 
@@ -2406,29 +1862,29 @@ true \[tuck mod dup 0 \>\] loop pop
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# gcd2
+## gcd2
 
 Basis Function Combinator
 
@@ -2436,29 +1892,29 @@ Compiled GCD function.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# ge
+## ge
 
 Basis Function Combinator
 
@@ -2466,29 +1922,29 @@ Same as a \>= b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# genrec
+## genrec
 
 Basis Function Combinator
 
@@ -2538,29 +1994,29 @@ Primitive recursive functions are those where R2 == i. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# getitem
+## getitem
 
 Basis Function Combinator
 
@@ -2575,29 +2031,29 @@ nth position in the quote counting from 0. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# grabN
+## grabN
 
 Basis Function Combinator
 
@@ -2605,29 +2061,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# grba
+## grba
 
 Basis Function Combinator
 
@@ -2635,29 +2091,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# gt
+## gt
 
 Basis Function Combinator
 
@@ -2665,29 +2121,29 @@ Same as a \> b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# help
+## help
 
 Basis Function Combinator
 
@@ -2695,29 +2151,29 @@ Accepts a quoted symbol on the top of the stack and prints its docs.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# hypot
+## hypot
 
 Basis Function Combinator
 
@@ -2725,23 +2181,23 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -2770,7 +2226,7 @@ kinds of places (for example, the `x` combinator can be defined as `dup i`.)
 
 ------------------------------------------------------------------------
 
-# id
+## id
 
 Basis Function Combinator
 
@@ -2778,29 +2234,29 @@ The identity function.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# ifte
+## ifte
 
 Basis Function Combinator
 
@@ -2822,29 +2278,29 @@ if-part using infra.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# ii
+## ii
 
 Basis Function Combinator
 
@@ -2854,23 +2310,23 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -2906,7 +2362,7 @@ kind of "pocket universe".  If the list represents a datastructure then
 
 ------------------------------------------------------------------------
 
-# infrst
+## infrst
 
 Basis Function Combinator
 
@@ -2914,29 +2370,29 @@ infra first
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# inscribe
+## inscribe
 
 Basis Function Combinator
 
@@ -2948,29 +2404,29 @@ example:
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# le
+## le
 
 Basis Function Combinator
 
@@ -2978,29 +2434,29 @@ Same as a \<= b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# loop
+## loop
 
 Basis Function Combinator
 
@@ -3016,29 +2472,29 @@ Basic loop combinator. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# lshift
+## lshift
 
 Basis Function Combinator
 
@@ -3046,29 +2502,29 @@ Same as a \<\< b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# lt
+## lt
 
 Basis Function Combinator
 
@@ -3076,29 +2532,29 @@ Same as a \< b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# make_generator
+## make_generator
 
 Basis Function Combinator
 
@@ -3106,29 +2562,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# map
+## map
 
 Basis Function Combinator
 
@@ -3137,29 +2593,29 @@ new list with the results in place of the program and original list.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# max
+## max
 
 Basis Function Combinator
 
@@ -3167,29 +2623,29 @@ Given a list find the maximum.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# min
+## min
 
 Basis Function Combinator
 
@@ -3197,29 +2653,29 @@ Given a list find the minimum.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# mod
+## mod
 
 Basis Function Combinator
 
@@ -3227,59 +2683,36 @@ Same as a % b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## modulus
+
+See [mod](#mod).
+
 
 ------------------------------------------------------------------------
 
-# modulus
-
-Basis Function Combinator
-
-Same as a % b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# mul
+## mul
 
 Basis Function Combinator
 
@@ -3287,29 +2720,29 @@ Same as a \* b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# ne
+## ne
 
 Basis Function Combinator
 
@@ -3317,29 +2750,29 @@ Same as a != b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# neg
+## neg
 
 Basis Function Combinator
 
@@ -3347,29 +2780,29 @@ Same as -a.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# not
+## not
 
 Basis Function Combinator
 
@@ -3377,23 +2810,23 @@ Same as not a.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -3424,7 +2857,7 @@ it is non-negative.
 
 ------------------------------------------------------------------------
 
-# nulco
+## nulco
 
 Basis Function Combinator
 
@@ -3432,23 +2865,23 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -3492,7 +2925,7 @@ program.)
 
 ------------------------------------------------------------------------
 
-# of
+## of
 
 Basis Function Combinator
 
@@ -3500,29 +2933,29 @@ swap at
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# or
+## or
 
 Basis Function Combinator
 
@@ -3530,29 +2963,29 @@ Same as a \| b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# over
+## over
 
 Basis Function Combinator
 
@@ -3560,29 +2993,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# pam
+## pam
 
 Basis Function Combinator
 
@@ -3590,66 +3023,36 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## pick
+
+See [getitem](#getitem).
+
 
 ------------------------------------------------------------------------
 
-# pick
-
-Basis Function Combinator
-
-    getitem == drop first
-
-Expects an integer and a quote on the stack and returns the item at the
-nth position in the quote counting from 0. :
-
-    [a b c d] 0 getitem
-    -------------------------
-     a
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# pm
+## pm
 
 Basis Function Combinator
 
@@ -3661,29 +3064,29 @@ Plus or minus :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# pop
+## pop
 
 Basis Function Combinator
 
@@ -3691,29 +3094,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# popd
+## popd
 
 Basis Function Combinator
 
@@ -3721,29 +3124,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# popdd
+## popdd
 
 Basis Function Combinator
 
@@ -3751,29 +3154,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# popop
+## popop
 
 Basis Function Combinator
 
@@ -3781,29 +3184,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# popopd
+## popopd
 
 Basis Function Combinator
 
@@ -3811,29 +3214,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# popopdd
+## popopdd
 
 Basis Function Combinator
 
@@ -3841,29 +3244,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# popopop
+## popopop
 
 Basis Function Combinator
 
@@ -3871,29 +3274,29 @@ pop popop
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# pow
+## pow
 
 Basis Function Combinator
 
@@ -3901,29 +3304,29 @@ Same as a \*\* b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# pred
+## pred
 
 Basis Function Combinator
 
@@ -3931,29 +3334,29 @@ Decrement TOS.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# primrec
+## primrec
 
 Basis Function Combinator
 
@@ -3988,29 +3391,29 @@ element on the stack.:
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# product
+## product
 
 Basis Function Combinator
 
@@ -4018,29 +3421,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# quoted
+## quoted
 
 Basis Function Combinator
 
@@ -4048,29 +3451,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# range
+## range
 
 Basis Function Combinator
 
@@ -4078,29 +3481,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# range_to_zero
+## range_to_zero
 
 Basis Function Combinator
 
@@ -4108,29 +3511,29 @@ unit \[down_to_zero\] infra
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# reco
+## reco
 
 Basis Function Combinator
 
@@ -4138,89 +3541,43 @@ rest cons
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## rem
+
+See [mod](#mod).
+
+
+--------------
+
+## remainder
+
+See [mod](#mod).
+
 
 ------------------------------------------------------------------------
 
-# rem
-
-Basis Function Combinator
-
-Same as a % b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# remainder
-
-Basis Function Combinator
-
-Same as a % b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# remove
+## remove
 
 Basis Function Combinator
 
@@ -4234,29 +3591,29 @@ or the item isn\'t in the list then the list is unchanged. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# rest
+## rest
 
 Basis Function Combinator
 
@@ -4264,29 +3621,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# reverse
+## reverse
 
 Basis Function Combinator
 
@@ -4296,29 +3653,29 @@ Reverse the list on the top of the stack. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# rolldown
+## rolldown
 
 Basis Function Combinator
 
@@ -4326,29 +3683,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# rollup
+## rollup
 
 Basis Function Combinator
 
@@ -4356,89 +3713,43 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## roll>
+
+See [rollup](#rollup).
+
+
+--------------
+
+## roll<
+
+See [rolldown](#rolldown).
+
 
 ------------------------------------------------------------------------
 
-# roll>
-
-Basis Function Combinator
-
-    (a1 a2 a3 -- a3 a1 a2)
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# roll\<
-
-Basis Function Combinator
-
-    (a1 a2 a3 -- a2 a3 a1)
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# round
+## round
 
 Basis Function Combinator
 
@@ -4450,29 +3761,29 @@ negative.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# rrest
+## rrest
 
 Basis Function Combinator
 
@@ -4480,29 +3791,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# rshift
+## rshift
 
 Basis Function Combinator
 
@@ -4510,29 +3821,29 @@ Same as a \>\> b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# run
+## run
 
 Basis Function Combinator
 
@@ -4540,29 +3851,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# second
+## second
 
 Basis Function Combinator
 
@@ -4570,29 +3881,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# select
+## select
 
 Basis Function Combinator
 
@@ -4613,29 +3924,29 @@ value (so empty string, zero, etc. are counted as false, etc.)
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# sharing
+## sharing
 
 Basis Function Combinator
 
@@ -4643,29 +3954,29 @@ Print redistribution information.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# shift
+## shift
 
 Basis Function Combinator
 
@@ -4673,29 +3984,29 @@ uncons \[swons\] dip
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# shunt
+## shunt
 
 Basis Function Combinator
 
@@ -4709,29 +4020,29 @@ Like concat but reverses the top list into the second. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# size
+## size
 
 Basis Function Combinator
 
@@ -4739,29 +4050,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# sort
+## sort
 
 Basis Function Combinator
 
@@ -4769,29 +4080,29 @@ Given a list return it sorted.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# spiral_next
+## spiral_next
 
 Basis Function Combinator
 
@@ -4801,29 +4112,29 @@ ifte
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# split_at
+## split_at
 
 Basis Function Combinator
 
@@ -4831,29 +4142,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# split_list
+## split_list
 
 Basis Function Combinator
 
@@ -4861,29 +4172,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# sqr
+## sqr
 
 Basis Function Combinator
 
@@ -4891,29 +4202,29 @@ dup \*
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# sqrt
+## sqrt
 
 Basis Function Combinator
 
@@ -4922,29 +4233,29 @@ roots.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# stack
+## stack
 
 Basis Function Combinator
 
@@ -4952,29 +4263,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# stackd
+## stackd
 
 Basis Function Combinator
 
@@ -4982,29 +4293,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# step
+## step
 
 Basis Function Combinator
 
@@ -5029,29 +4340,29 @@ top of the stack.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# step_zero
+## step_zero
 
 Basis Function Combinator
 
@@ -5059,29 +4370,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# stuncons
+## stuncons
 
 Basis Function Combinator
 
@@ -5089,29 +4400,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# stununcons
+## stununcons
 
 Basis Function Combinator
 
@@ -5119,29 +4430,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# sub
+## sub
 
 Basis Function Combinator
 
@@ -5149,29 +4460,29 @@ Same as a - b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# succ
+## succ
 
 Basis Function Combinator
 
@@ -5179,29 +4490,29 @@ Increment TOS.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# sum
+## sum
 
 Basis Function Combinator
 
@@ -5211,29 +4522,29 @@ Given a quoted sequence of numbers return the sum. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# swaack
+## swaack
 
 Basis Function Combinator
 
@@ -5241,29 +4552,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# swap
+## swap
 
 Basis Function Combinator
 
@@ -5271,29 +4582,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# swapd
+## swapd
 
 Basis Function Combinator
 
@@ -5301,29 +4612,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# swoncat
+## swoncat
 
 Basis Function Combinator
 
@@ -5331,29 +4642,29 @@ swap concat
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# swons
+## swons
 
 Basis Function Combinator
 
@@ -5361,29 +4672,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# tailrec
+## tailrec
 
 Basis Function Combinator
 
@@ -5391,29 +4702,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# take
+## take
 
 Basis Function Combinator
 
@@ -5427,23 +4738,23 @@ can use reverse if needed.) :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -5479,7 +4790,7 @@ consuming exactly three items from the stack.
 
 ------------------------------------------------------------------------
 
-# third
+## third
 
 Basis Function Combinator
 
@@ -5487,29 +4798,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# times
+## times
 
 Basis Function Combinator
 
@@ -5531,63 +4842,36 @@ times == \[\-- dip\] cons \[swap\] infra \[0 \>\] swap while pop :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
+
+--------------
+
+## truthy
+
+See [bool](#bool).
+
 
 ------------------------------------------------------------------------
 
-# truthy
-
-Basis Function Combinator
-
-bool(x) -\> bool
-
-Returns True when the argument x is true, False otherwise. The builtins
-True and False are the only two instances of the class bool. The class
-bool is a subclass of the class int, and cannot be subclassed.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.
-
-------------------------------------------------------------------------
-
-# tuck
+## tuck
 
 Basis Function Combinator
 
@@ -5595,23 +4879,23 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -5671,7 +4955,7 @@ This is the inverse of `cons`.
 
 ------------------------------------------------------------------------
 
-# unique
+## unique
 
 Basis Function Combinator
 
@@ -5679,29 +4963,29 @@ Given a list remove duplicate items.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# unit
+## unit
 
 Basis Function Combinator
 
@@ -5709,29 +4993,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# unquoted
+## unquoted
 
 Basis Function Combinator
 
@@ -5739,29 +5023,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# unswons
+## unswons
 
 Basis Function Combinator
 
@@ -5769,29 +5053,29 @@ Basis Function Combinator
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# void
+## void
 
 Basis Function Combinator
 
@@ -5799,29 +5083,29 @@ True if the form on TOS is void otherwise False.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# warranty
+## warranty
 
 Basis Function Combinator
 
@@ -5829,29 +5113,29 @@ Print warranty information.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# while
+## while
 
 Basis Function Combinator
 
@@ -5859,29 +5143,29 @@ swap nulco dupdipd concat loop
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# words
+## words
 
 Basis Function Combinator
 
@@ -5889,23 +5173,23 @@ Print all the words in alphabetical order.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
@@ -5930,7 +5214,7 @@ The `x` combinator ...
 
 ------------------------------------------------------------------------
 
-# xor
+## xor
 
 Basis Function Combinator
 
@@ -5938,29 +5222,29 @@ Same as a \^ b.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
 
 ------------------------------------------------------------------------
 
-# zip
+## zip
 
 Basis Function Combinator
 
@@ -5969,22 +5253,22 @@ from each list. The smallest list sets the length of the result list.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

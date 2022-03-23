@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# spiral_next
+## spiral_next
 
 Basis Function Combinator
 
@@ -10,22 +10,22 @@ ifte
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

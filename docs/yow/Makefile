@@ -8,5 +8,7 @@ clean:
 	$(RM) -v $(mds)
 
 $(mds): %.md : %.rst
-	pandoc $< -o $@
-	cp -vf $@ ../reference/
+	#pandoc $< -o $@
+	sed -e 's/^#/##/' $@ > ../reference/$@
+ 
+# 	cp -vf $@ ../reference/

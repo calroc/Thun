@@ -1,3 +1,10 @@
+'''
+A brutal little script to rip out the ReST docstrings and emit
+ReST files for Pandoc to transform into Markdown.
+
+This is a one-off script.
+
+'''
 from pathlib import Path
 from string import ascii_letters, digits
 from textwrap import dedent

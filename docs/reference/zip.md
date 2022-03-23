@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# zip
+## zip
 
 Basis Function Combinator
 
@@ -9,22 +9,22 @@ from each list. The smallest list sets the length of the result list.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

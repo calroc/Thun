@@ -1,29 +1,6 @@
-------------------------------------------------------------------------
+--------------
 
-# remainder
+## remainder
 
-Basis Function Combinator
+See [mod](#mod).
 
-Same as a % b.
-
-Gentzen diagram.
-
-## Definition
-
-if not basis.
-
-## Derivation
-
-if not basis.
-
-## Source
-
-if basis
-
-## Discussion
-
-Lorem ipsum.
-
-## Crosslinks
-
-Lorem ipsum.

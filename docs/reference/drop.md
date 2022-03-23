@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# drop
+## drop
 
 Basis Function Combinator
 
@@ -15,22 +15,22 @@ items removed off the top. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

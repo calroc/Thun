@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# genrec
+## genrec
 
 Basis Function Combinator
 
@@ -50,22 +50,22 @@ Primitive recursive functions are those where R2 == i. :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

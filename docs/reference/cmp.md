@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# cmp
+## cmp
 
 Basis Function Combinator
 
@@ -21,22 +21,22 @@ of the three depending on the results of comparing the two values: :
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.

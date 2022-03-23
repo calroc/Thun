@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 
-# map
+## map
 
 Basis Function Combinator
 
@@ -9,22 +9,22 @@ new list with the results in place of the program and original list.
 
 Gentzen diagram.
 
-## Definition
+### Definition
 
 if not basis.
 
-## Derivation
+### Derivation
 
 if not basis.
 
-## Source
+### Source
 
 if basis
 
-## Discussion
+### Discussion
 
 Lorem ipsum.
 
-## Crosslinks
+### Crosslinks
 
 Lorem ipsum.
