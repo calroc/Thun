@@ -12,23 +12,30 @@ from each list.  The smallest list sets the length of the result list.
 
 Gentzen diagram.
 
+
 Definition
 ~~~~~~~~~~
 
 if not basis.
+
 
 Derivation
 ~~~~~~~~~~
 
 if not basis.
 
+
 Source
 ~~~~~~~~~~
 
 if basis
 
+
 Discussion
 ~~~~~~~~~~
+
+Lorem ipsum.
+
 
 Crosslinks
 ~~~~~~~~~~

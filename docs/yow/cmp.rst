@@ -25,23 +25,30 @@ one of the three depending on the results of comparing the two values:
 
 Gentzen diagram.
 
+
 Definition
 ~~~~~~~~~~
 
 if not basis.
+
 
 Derivation
 ~~~~~~~~~~
 
 if not basis.
 
+
 Source
 ~~~~~~~~~~
 
 if basis
 
+
 Discussion
 ~~~~~~~~~~
+
+Lorem ipsum.
+
 
 Crosslinks
 ~~~~~~~~~~

@@ -39,6 +39,19 @@ def units_of_filename(fn):
 def safe_filename(fn):
     return '•'.join(units_of_filename(fn))
 
+done_manually = '''\
+app1.md
+b.md
+binary.md
+ccons.md
+cons.md
+i.md
+infra.md
+nullary.md
+ternary.md
+unary.md
+uncons.md
+x.md'''.split()
 
 for w in words:
 
@@ -46,11 +59,14 @@ for w in words:
     rst = f'{ww}.rst'
 
     fn = f'{w}.md'
-    rf = (refdir / fn)
-    if rf.exists():
+    if fn in done_manually:
+        continue
+
+##    rf = (refdir / fn)
+##    if rf.exists():
 ##        print(f'copying existing {fn}')
 ##        Path(fn).write_bytes(rf.read_bytes())
-        continue
+##        continue
 
     Path(rst).write_text(f'''\
 --------------

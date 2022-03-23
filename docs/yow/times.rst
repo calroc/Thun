@@ -27,23 +27,30 @@ times == [-- dip] cons [swap] infra [0 >] swap while pop
 
 Gentzen diagram.
 
+
 Definition
 ~~~~~~~~~~
 
 if not basis.
+
 
 Derivation
 ~~~~~~~~~~
 
 if not basis.
 
+
 Source
 ~~~~~~~~~~
 
 if basis
 
+
 Discussion
 ~~~~~~~~~~
+
+Lorem ipsum.
+
 
 Crosslinks
 ~~~~~~~~~~

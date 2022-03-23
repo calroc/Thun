@@ -13,23 +13,30 @@ The class bool is a subclass of the class int, and cannot be subclassed.
 
 Gentzen diagram.
 
+
 Definition
 ~~~~~~~~~~
 
 if not basis.
+
 
 Derivation
 ~~~~~~~~~~
 
 if not basis.
 
+
 Source
 ~~~~~~~~~~
 
 if basis
 
+
 Discussion
 ~~~~~~~~~~
+
+Lorem ipsum.
+
 
 Crosslinks
 ~~~~~~~~~~

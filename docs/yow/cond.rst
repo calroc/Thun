@@ -22,23 +22,30 @@ It works by rewriting into a chain of nested `ifte` expressions, e.g.::
 
 Gentzen diagram.
 
+
 Definition
 ~~~~~~~~~~
 
 if not basis.
+
 
 Derivation
 ~~~~~~~~~~
 
 if not basis.
 
+
 Source
 ~~~~~~~~~~
 
 if basis
 
+
 Discussion
 ~~~~~~~~~~
+
+Lorem ipsum.
+
 
 Crosslinks
 ~~~~~~~~~~
