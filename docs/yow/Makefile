@@ -1,8 +1,6 @@
 rsts = $(wildcard *.rst)
 mds  = $(patsubst %.rst,%.md,$(rsts))
 
-# mv -vf *.md ../reference/
-
 
 all: $(mds)
 
@@ -11,3 +9,4 @@ clean:
 
 $(mds): %.md : %.rst
 	pandoc $< -o $@
+	cp -vf $@ ../reference/

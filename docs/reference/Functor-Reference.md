@@ -32,6 +32,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # &&
@@ -59,6 +61,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \*
@@ -86,6 +90,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # •
@@ -113,6 +119,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \^
@@ -140,6 +148,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # =
@@ -167,6 +177,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # !=
@@ -194,6 +206,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 !-\^\^\^\^
@@ -221,6 +235,8 @@ if basis
 Lorem ipsum.
 
 # Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \>
@@ -248,6 +264,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \>=
@@ -275,6 +293,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \>\>
@@ -302,6 +322,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 
 # Functor Reference
 
@@ -336,6 +358,8 @@ if basis
 Lorem ipsum.
 
 # Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 \--\^\^\^\^
@@ -363,6 +387,8 @@ if basis
 Lorem ipsum.
 
 # Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \<
@@ -390,6 +416,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \<=
@@ -417,6 +445,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \<\>
@@ -444,6 +474,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \<{}
@@ -471,6 +503,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \<\<
@@ -498,6 +532,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \<\<{}
@@ -525,6 +561,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # %
@@ -552,6 +590,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # +
@@ -579,6 +619,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # ++
@@ -606,6 +648,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # ?
@@ -633,6 +677,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # /
@@ -660,6 +706,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # //
@@ -687,6 +735,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # /floor
@@ -714,6 +764,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # \|\|
@@ -741,6 +793,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # abs
@@ -768,6 +822,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # add
@@ -795,6 +851,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # anamorphism
@@ -822,6 +880,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # and
@@ -849,6 +909,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## app1
@@ -907,6 +969,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # app3
@@ -940,6 +1004,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # appN
@@ -967,6 +1033,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # at
@@ -1001,6 +1069,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # average
@@ -1028,6 +1098,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## b
@@ -1120,6 +1192,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # branch
@@ -1157,6 +1231,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # ccccons
@@ -1184,6 +1260,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## ccons
@@ -1248,6 +1326,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # clear
@@ -1280,6 +1360,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # cleave
@@ -1307,6 +1389,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # clop
@@ -1334,6 +1418,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # cmp
@@ -1374,6 +1460,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # codi
@@ -1401,6 +1489,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # codireco
@@ -1428,6 +1518,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # concat
@@ -1459,6 +1551,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # cond
@@ -1497,6 +1591,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## cons
@@ -1551,6 +1647,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # dip
@@ -1584,6 +1682,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # dipd
@@ -1615,6 +1715,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # dipdd
@@ -1646,6 +1748,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # disenstacken
@@ -1674,6 +1778,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # div
@@ -1701,6 +1807,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # divmod
@@ -1730,6 +1838,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # down_to_zero
@@ -1757,6 +1867,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # drop
@@ -1791,6 +1903,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # dup
@@ -1818,6 +1932,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # dupd
@@ -1845,6 +1961,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # dupdd
@@ -1872,6 +1990,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # dupdip
@@ -1904,6 +2024,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # dupdipd
@@ -1931,6 +2053,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # enstacken
@@ -1958,6 +2082,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # eq
@@ -1985,6 +2111,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # first
@@ -2012,6 +2140,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # first_two
@@ -2039,6 +2169,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # flatten
@@ -2066,6 +2198,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # floor
@@ -2095,6 +2229,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # floordiv
@@ -2122,6 +2258,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # fork
@@ -2149,6 +2287,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # fourth
@@ -2176,6 +2316,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # gcd
@@ -2203,6 +2345,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # gcd2
@@ -2230,6 +2374,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # ge
@@ -2257,6 +2403,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # genrec
@@ -2326,6 +2474,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # getitem
@@ -2360,6 +2510,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # grabN
@@ -2387,6 +2539,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # grba
@@ -2414,6 +2568,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # gt
@@ -2441,6 +2597,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # help
@@ -2468,6 +2626,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # hypot
@@ -2495,6 +2655,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## i
@@ -2544,6 +2706,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # ifte
@@ -2585,6 +2749,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # ii
@@ -2614,6 +2780,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## infra
@@ -2670,6 +2838,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # inscribe
@@ -2701,6 +2871,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # le
@@ -2728,6 +2900,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # loop
@@ -2763,6 +2937,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # lshift
@@ -2790,6 +2966,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # lt
@@ -2817,6 +2995,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # make_generator
@@ -2844,6 +3024,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # map
@@ -2872,6 +3054,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # max
@@ -2899,6 +3083,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # min
@@ -2926,6 +3112,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # mod
@@ -2953,6 +3141,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # modulus
@@ -2980,6 +3170,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # mul
@@ -3007,6 +3199,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # ne
@@ -3034,6 +3228,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # neg
@@ -3061,6 +3257,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # not
@@ -3088,6 +3286,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## !-
@@ -3139,6 +3339,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## nullary
@@ -3203,6 +3405,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # or
@@ -3230,6 +3434,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # over
@@ -3257,6 +3463,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # pam
@@ -3284,6 +3492,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # pick
@@ -3318,6 +3528,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # pm
@@ -3349,6 +3561,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # pop
@@ -3376,6 +3590,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # popd
@@ -3403,6 +3619,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # popdd
@@ -3430,6 +3648,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # popop
@@ -3457,6 +3677,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # popopd
@@ -3484,6 +3706,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # popopdd
@@ -3511,6 +3735,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # popopop
@@ -3538,6 +3764,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # pow
@@ -3565,6 +3793,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # pred
@@ -3592,6 +3822,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # primrec
@@ -3646,6 +3878,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # product
@@ -3673,6 +3907,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # quoted
@@ -3700,6 +3936,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # range
@@ -3727,6 +3965,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # range_to_zero
@@ -3754,6 +3994,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # reco
@@ -3781,6 +4023,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # rem
@@ -3808,6 +4052,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # remainder
@@ -3835,6 +4081,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # remove
@@ -3868,6 +4116,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # rest
@@ -3895,6 +4145,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # reverse
@@ -3924,6 +4176,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # rolldown
@@ -3951,6 +4205,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # rollup
@@ -3978,6 +4234,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # roll>
@@ -4005,6 +4263,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # roll\<
@@ -4032,6 +4292,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # round
@@ -4063,6 +4325,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # rrest
@@ -4090,6 +4354,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # rshift
@@ -4117,6 +4383,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # run
@@ -4144,6 +4412,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # second
@@ -4171,6 +4441,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # select
@@ -4211,6 +4483,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # sharing
@@ -4238,6 +4512,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # shift
@@ -4265,6 +4541,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # shunt
@@ -4298,6 +4576,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # size
@@ -4325,6 +4605,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # sort
@@ -4352,6 +4634,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # spiral_next
@@ -4381,6 +4665,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # split_at
@@ -4408,6 +4694,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # split_list
@@ -4435,6 +4723,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # sqr
@@ -4462,6 +4752,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # sqrt
@@ -4490,6 +4782,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # stack
@@ -4517,6 +4811,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # stackd
@@ -4544,6 +4840,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # step
@@ -4588,6 +4886,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # step_zero
@@ -4615,6 +4915,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # stuncons
@@ -4642,6 +4944,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # stununcons
@@ -4669,6 +4973,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # sub
@@ -4696,6 +5002,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # succ
@@ -4723,6 +5031,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # sum
@@ -4752,6 +5062,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # swaack
@@ -4779,6 +5091,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # swap
@@ -4806,6 +5120,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # swapd
@@ -4833,6 +5149,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # swoncat
@@ -4860,6 +5178,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # swons
@@ -4887,6 +5207,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # tailrec
@@ -4914,6 +5236,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # take
@@ -4947,6 +5271,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## ternary
@@ -5003,6 +5329,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # times
@@ -5044,6 +5372,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # truthy
@@ -5075,6 +5405,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # tuck
@@ -5102,6 +5434,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## unary
@@ -5181,6 +5515,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # unit
@@ -5208,6 +5544,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # unquoted
@@ -5235,6 +5573,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # unswons
@@ -5262,6 +5602,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # void
@@ -5289,6 +5631,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # warranty
@@ -5316,6 +5660,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # while
@@ -5343,6 +5689,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # words
@@ -5370,6 +5718,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 --------------------
 
 ## x
@@ -5415,6 +5765,8 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
 ------------------------------------------------------------------------
 
 # zip
@@ -5443,3 +5795,5 @@ if basis
 Lorem ipsum.
 
 ## Crosslinks
+
+Lorem ipsum.
