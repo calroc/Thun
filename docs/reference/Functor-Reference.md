@@ -7,30 +7,6 @@ Each function, combinator, or definition should be documented here.
 
 --------------------
 
-## !-
-
-"not negative"
-
-(Function, Boolean Predicate)
-
-Integer on top of stack is replaced by Boolean value indicating whether
-it is non-negative.
-
-        N !-
-    -----------  N < 0
-       false
-
-       N !-
-    ----------  N >= 0
-       true
-
-
-### Definition
-
-    0 >=
-
---------------------
-
 ## app1
 
 "apply one"
@@ -217,6 +193,30 @@ kind of "pocket universe".  If the list represents a datastructure then
 ### Crosslinks
 
 [swaack](#swaack)
+
+--------------------
+
+## !-
+
+"not negative"
+
+(Function, Boolean Predicate)
+
+Integer on top of stack is replaced by Boolean value indicating whether
+it is non-negative.
+
+        N !-
+    -----------  N < 0
+       false
+
+       N !-
+    ----------  N >= 0
+       true
+
+
+### Definition
+
+    0 >=
 
 --------------------
 

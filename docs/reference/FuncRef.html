@@ -21,7 +21,7 @@
       padding-top: 50px;
       padding-bottom: 50px;
       hyphens: auto;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
       text-rendering: optimizeLegibility;
       font-kerning: normal;
     }
@@ -92,6 +92,7 @@
     pre code {
       padding: 0;
       overflow: visible;
+      overflow-wrap: normal;
     }
     .sourceCode {
      background-color: transparent;
@@ -153,7 +154,6 @@
 <ul>
 <li><a href="#functor-reference">Functor Reference</a>
 <ul>
-<li><a href="#section">!-</a></li>
 <li><a href="#app1">app1</a></li>
 <li><a href="#b">b</a></li>
 <li><a href="#binary">binary</a></li>
@@ -161,6 +161,7 @@
 <li><a href="#cons">cons</a></li>
 <li><a href="#i">i</a></li>
 <li><a href="#infra">infra</a></li>
+<li><a href="#section">!-</a></li>
 <li><a href="#nullary">nullary</a></li>
 <li><a href="#ternary">ternary</a></li>
 <li><a href="#unary">unary</a></li>
@@ -173,20 +174,6 @@
 <p>Version -10.0.0</p>
 <p>Each function, combinator, or definition should be documented here.</p>
 <hr />
-<h2 id="section">!-</h2>
-<p>&#x201C;not negative&#x201D;</p>
-<p>(Function, Boolean Predicate)</p>
-<p>Integer on top of stack is replaced by Boolean value indicating whether it is non-negative.</p>
-<pre><code>    N !-
------------  N &lt; 0
-   false
-
-   N !-
-----------  N &gt;= 0
-   true</code></pre>
-<h3 id="definition">Definition</h3>
-<pre><code>0 &gt;=</code></pre>
-<hr />
 <h2 id="app1">app1</h2>
 <p>&#x201C;apply one&#x201D;</p>
 <p>(Combinator)</p>
@@ -194,7 +181,7 @@
 <pre><code>         ... x [Q] app1
 ---------------------------------
    ... [x ...] [Q] infra first</code></pre>
-<h3 id="definition-1">Definition</h3>
+<h3 id="definition">Definition</h3>
 <pre><code>nullary popd</code></pre>
 <h3 id="discussion">Discussion</h3>
 <p>Just a specialization of <code>nullary</code> really. Its parallelizable cousins are more useful.</p>
@@ -205,7 +192,7 @@
 <pre><code>   [P] [Q] b
 ---------------
       P Q</code></pre>
-<h3 id="definition-2">Definition</h3>
+<h3 id="definition-1">Definition</h3>
 <pre><code>[i] dip i</code></pre>
 <h3 id="derivation">Derivation</h3>
 <pre><code>[P] [Q] b
@@ -224,7 +211,7 @@
 <pre><code>   ... y x [P] binary
 -----------------------
         ... A</code></pre>
-<h3 id="definition-3">Definition</h3>
+<h3 id="definition-2">Definition</h3>
 <pre><code>unary popd</code></pre>
 <h3 id="discussion-2">Discussion</h3>
 <p>Runs any other quoted function and returns its first result while consuming exactly two items from the stack.</p>
@@ -237,7 +224,7 @@
 <pre><code>   B A [...] ccons
 ---------------------
       [B A ...]</code></pre>
-<h3 id="definition-4">Definition</h3>
+<h3 id="definition-3">Definition</h3>
 <pre><code>cons cons</code></pre>
 <h3 id="discussion-3">Discussion</h3>
 <p>Does <code>cons</code> twice.</p>
@@ -274,12 +261,26 @@
 <pre><code>   ... [a b c] [Q] infra
 ---------------------------
     c b a Q [...] swaack</code></pre>
-<h3 id="definition-5">Definition</h3>
+<h3 id="definition-4">Definition</h3>
 <pre><code>swons swaack [i] dip swaack</code></pre>
 <h3 id="discussion-6">Discussion</h3>
 <p>This is one of the more useful combinators. It allows a quoted expression to serve as a stack for a program, effectively running it in a kind of &#x201C;pocket universe&#x201D;. If the list represents a datastructure then <code>infra</code> lets you work on its internal structure.</p>
 <h3 id="crosslinks-4">Crosslinks</h3>
 <p><a href="#swaack">swaack</a></p>
+<hr />
+<h2 id="section">!-</h2>
+<p>&#x201C;not negative&#x201D;</p>
+<p>(Function, Boolean Predicate)</p>
+<p>Integer on top of stack is replaced by Boolean value indicating whether it is non-negative.</p>
+<pre><code>    N !-
+-----------  N &lt; 0
+   false
+
+   N !-
+----------  N &gt;= 0
+   true</code></pre>
+<h3 id="definition-5">Definition</h3>
+<pre><code>0 &gt;=</code></pre>
 <hr />
 <h2 id="nullary">nullary</h2>
 <p>(Combinator)</p>
