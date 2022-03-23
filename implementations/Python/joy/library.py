@@ -61,7 +61,7 @@ HELP_TEMPLATE = '''\
 
 %s
 
----- end (%s)
+---- end ( %s )
 '''
 
 
@@ -331,12 +331,12 @@ def choice(stack):
     Use a Boolean value to select one of two items.
     ::
 
-           A B False choice
+           A B false choice
         ----------------------
            A
 
 
-           A B True choice
+           A B true choice
         ---------------------
              B
 
@@ -354,12 +354,12 @@ def select(stack):
     Use a Boolean value to select one of two items from a sequence.
     ::
 
-           [A B] False select
+           [A B] false select
         ------------------------
             A
 
 
-           [A B] True select
+           [A B] true select
         -----------------------
               B
 

@@ -111,20 +111,14 @@ def _parse(tokens):
             v = frame
             try: frame = stack.pop()
             except IndexError:
-                raise ParseError('Extra closing bracket.')
+                raise ParseError('Extra closing bracket.') from None
             frame.append(list_to_stack(v))
-        elif tok == 'true':
-            frame.append(True)
-        elif tok == 'false':
-            frame.append(False)
-        elif isinstance(tok, Snippet):
-            frame.append(tok)
+        elif tok == 'true': frame.append(True)
+        elif tok == 'false': frame.append(False)
+        elif isinstance(tok, Snippet): frame.append(tok)
         else:
-            try:
-                thing = int(tok)
-            except ValueError:
-                thing = Symbol(tok)
+            try: thing = int(tok)
+            except ValueError: thing = Symbol(tok)
             frame.append(thing)
-    if stack:
-        raise ParseError('Unclosed bracket.')
+    if stack: raise ParseError('Unclosed bracket.')
     return list_to_stack(frame)
