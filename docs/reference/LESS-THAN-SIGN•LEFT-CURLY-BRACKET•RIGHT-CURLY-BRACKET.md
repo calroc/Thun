@@ -2,23 +2,17 @@
 
 ## \<{}
 
-Basis Function Combinator
+Function
 
-\[\] swap
 
-Gentzen diagram.
+       ... a \<{}
+    ----------------
+       ... [] a
+
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+    \[\] swap
 
 ### Discussion
 

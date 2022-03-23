@@ -2,28 +2,40 @@
 
 ## &&
 
-Basis Function Combinator
+Combinator
 
-nulco \[nullary \[false\]\] dip branch
+Short-circuiting Boolean AND
 
-Gentzen diagram.
+Accept two quoted programs, run the first and expect a Boolean value, if
+it's `true` pop it and run the second program (which should also return a
+Boolean value) otherwise pop the second program (leaving `false` on the
+stack.)
+
+
+       [A] [B] &&
+    ---------------- true
+            B
+
+
+       [A] [B] &&
+    ---------------- false
+         false
+
 
 ### Definition
 
-if not basis.
+    nulco [nullary [false]] dip branch
 
 ### Derivation
 
-if not basis.
-
-### Source
-
-if basis
+TODO: this is derived in one of the notebooks I think, look it up and
+link to it, or copy the content here.
 
 ### Discussion
 
-Lorem ipsum.
+This is seldom useful, I suspect, but this way you have it.
 
 ### Crosslinks
 
-Lorem ipsum.
+[||](#section-25)
+

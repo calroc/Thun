@@ -2,28 +2,27 @@
 
 ## !-
 
-Basis Function Combinator
+Function
 
-0 \>=
+Not negative.
 
-Gentzen diagram.
+
+        n !-
+    ----------- n < 0
+       false
+
+
+       n !-
+    ---------- n >= 0
+       true
+
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+    0 \>=
 
 ### Discussion
 
-Lorem ipsum.
+Return a Boolean value indicating if a number is greater than or equal to
+zero.
 
-### Crosslinks
-
-Lorem ipsum.
