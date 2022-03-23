@@ -1,4 +1,5 @@
-﻿# Functor Reference
+
+# Functor Reference
 
 Version -10.0.0
 
