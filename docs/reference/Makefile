@@ -7,4 +7,7 @@ all: Functor-Reference.md
 
 
 Functor-Reference.md: HEADER.md $(FUNCDOCS)
-	cat HEADER.md $(FUNCDOCS) > Functor-Reference.md
+	awk 'FNR==1 && NR > 1 {print ""}1' HEADER.md $(FUNCDOCS) > Functor-Reference.md
+
+# https://stackoverflow.com/questions/8183191/concatenating-files-and-insert-new-line-in-between-files
+# WTF would we do w/o the Internet?  Know our tools well?
