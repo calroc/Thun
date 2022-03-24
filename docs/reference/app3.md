@@ -2,34 +2,28 @@
 
 ## app3
 
-Basis Function Combinator
+Combinator
 
-Like app1 with three items.
+Like [app1] with three items.
 
-:   ... z y x [Q] . app3
-        -----------------------------------
-        ... [z ...] [Q] . infra first
-          [y ...] [Q]   infra first
-          [x ...] [Q]   infra first
-
-Gentzen diagram.
+         ... z y x [Q] . app3
+    -----------------------------------
+       ... [z ...] [Q] . infra first
+           [y ...] [Q]   infra first
+           [x ...] [Q]   infra first
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> 3 [appN]
 
 ### Discussion
 
-Lorem ipsum.
+See [app2].
 
 ### Crosslinks
 
-Lorem ipsum.
+[app1](#app1)
+[app2](#app2)
+[appN](#appN)
+[unary](#unary)
+

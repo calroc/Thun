@@ -8,5 +8,5 @@ Return the absolute value of the argument.
 
 ### Definition
 
-> \[0 <\] \[0 [swap](#swap) -\] \[\] [ifte](#ifte)
+> [dup](#dup) 0 < [] \[[neg](#neg)\] [branch](#branch)
 

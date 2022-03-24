@@ -2,28 +2,23 @@
 
 ## average
 
-Basis Function Combinator
+Function
 
-\[sum\] \[size\] cleave /
-
-Gentzen diagram.
+Compute the average of a list of numbers.
+(Currently broken until I can figure out what to do about "numeric tower"
+in Thun.)
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[sum]\] \[[size]\] [cleave] [/]
 
 ### Discussion
 
-Lorem ipsum.
+Theoretically this function would compute the sum and the size in two
+separate threads, then divide.  This works but a compiled version would
+probably do better to sum and count the list once, in one thread, eh?
 
-### Crosslinks
+As an exercise in Functional Programming in Joy it would be fun to
+convert this into a catamorphism.
+See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 
-Lorem ipsum.

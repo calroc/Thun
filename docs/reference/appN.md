@@ -2,28 +2,31 @@
 
 ## appN
 
-Basis Function Combinator
+Combinator
 
-\[grabN\] codi map disenstacken
+Like [app1] with any number of items.
 
-Gentzen diagram.
+       ... xN ... x2 x1 x0 [Q] n . appN
+    --------------------------------------
+       ... [xN ...] [Q] . infra first
+                       ...
+           [x2 ...] [Q]   infra first
+           [x1 ...] [Q]   infra first
+           [x0 ...] [Q]   infra first
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[grabN]\] [codi] [map] [disenstacken]
 
 ### Discussion
 
-Lorem ipsum.
+This function takes a quoted function `Q` and an integer and runs the
+function that many times on that many stack items.  See also [app2].
 
 ### Crosslinks
 
-Lorem ipsum.
+[app1](#app1)
+[app2](#app2)
+[app3](#app3)
+[unary](#unary)
+

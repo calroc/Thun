@@ -511,7 +511,7 @@
 <p>Return the absolute value of the argument.</p>
 <h3 id="definition-6">Definition</h3>
 <blockquote>
-<p>[0 &lt;] [0 <a href="#swap">swap</a> -] [] <a href="#ifte">ifte</a></p>
+<p><a href="#dup">dup</a> 0 &lt; [] [<a href="#neg">neg</a>] <a href="#branch">branch</a></p>
 </blockquote>
 <hr />
 <h2 id="add">add</h2>
@@ -540,90 +540,91 @@
 <p>Basis Function</p>
 <p>Logical bit-wise AND.</p>
 <h3 id="crosslinks-5">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p><a href="#or">or</a> <a href="#xor">xor</a></p>
 <hr />
 <h2 id="app1">app1</h2>
 <p>&#x201C;apply one&#x201D;</p>
-<p>(Combinator)</p>
+<p>Combinator</p>
 <p>Given a quoted program on TOS and anything as the second stack item run the program without disturbing the stack and replace the two args with the first result of the program.</p>
 <pre><code>         ... x [Q] app1
 ---------------------------------
    ... [x ...] [Q] infra first</code></pre>
+<p>This is the same effect as the <a href="#unary">unary</a> combinator.</p>
 <h3 id="definition-8">Definition</h3>
-<pre><code>nullary popd</code></pre>
+<blockquote>
+<p><a href="#nullary">nullary</a> <a href="#popd">popd</a></p>
+</blockquote>
 <h3 id="discussion-7">Discussion</h3>
 <p>Just a specialization of <code>nullary</code> really. Its parallelizable cousins are more useful.</p>
+<h3 id="crosslinks-6">Crosslinks</h3>
+<p><a href="#app2">app2</a> <a href="#app3">app3</a> <a href="#appN">appN</a> <a href="#unary">unary</a></p>
 <hr />
 <h2 id="app2">app2</h2>
-<p>Basis Function Combinator</p>
-<dl>
-<dt>Like app1 with two items.</dt>
-<dd><p>&#x2026; y x [Q] . app2 &#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2013; &#x2026; [y &#x2026;] [Q] . infra first [x &#x2026;] [Q] infra first</p>
-</dd>
-</dl>
-<p>Gentzen diagram.</p>
+<p>Combinator</p>
+<p>Like <a href="#app1">app1</a> with two items.</p>
+<pre><code>   ... y x [Q] . app2
+-----------------------------------
+   ... [y ...] [Q] . infra first
+       [x ...] [Q]   infra first</code></pre>
 <h3 id="definition-9">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-1">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source">Source</h3>
-<p>if basis</p>
+<blockquote>
+<p>[<a href="#grba">grba</a> <a href="#swap">swap</a> <a href="#grba">grba</a> <a href="#swap">swap</a>] <a href="#dip">dip</a> [<a href="#infrst">infrst</a>] <a href="#cons">cons</a> <a href="#ii">ii</a></p>
+</blockquote>
 <h3 id="discussion-8">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-6">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Unlike <a href="#app1">app1</a>, which is essentially an alias for <a href="#unary">unary</a>, this function is not the same as <a href="#binary">binary</a>. Instead of running one program using exactly two items from the stack and pushing one result (as <a href="#binary">binary</a> does) this function takes two items from the stack and runs the program twice, separately for each of the items, then puts both results onto the stack.</p>
+<p>This is not currently implemented as parallel processes but it can (and should) be done.</p>
+<h3 id="crosslinks-7">Crosslinks</h3>
+<p><a href="#app1">app1</a> <a href="#app3">app3</a> <a href="#appN">appN</a> <a href="#unary">unary</a></p>
 <hr />
 <h2 id="app3">app3</h2>
-<p>Basis Function Combinator</p>
-<dl>
-<dt>Like app1 with three items.</dt>
-<dd><p>&#x2026; z y x [Q] . app3 &#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2014;&#x2013; &#x2026; [z &#x2026;] [Q] . infra first [y &#x2026;] [Q] infra first [x &#x2026;] [Q] infra first</p>
-</dd>
-</dl>
-<p>Gentzen diagram.</p>
+<p>Combinator</p>
+<p>Like <a href="#app1">app1</a> with three items.</p>
+<pre><code>     ... z y x [Q] . app3
+-----------------------------------
+   ... [z ...] [Q] . infra first
+       [y ...] [Q]   infra first
+       [x ...] [Q]   infra first</code></pre>
 <h3 id="definition-10">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-2">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-1">Source</h3>
-<p>if basis</p>
+<blockquote>
+<p>3 <a href="#appn">appN</a></p>
+</blockquote>
 <h3 id="discussion-9">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-7">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>See <a href="#app2">app2</a>.</p>
+<h3 id="crosslinks-8">Crosslinks</h3>
+<p><a href="#app1">app1</a> <a href="#app2">app2</a> <a href="#appN">appN</a> <a href="#unary">unary</a></p>
 <hr />
 <h2 id="appn">appN</h2>
-<p>Basis Function Combinator</p>
-<p>[grabN] codi map disenstacken</p>
-<p>Gentzen diagram.</p>
+<p>Combinator</p>
+<p>Like <a href="#app1">app1</a> with any number of items.</p>
+<pre><code>   ... xN ... x2 x1 x0 [Q] n . appN
+--------------------------------------
+   ... [xN ...] [Q] . infra first
+                   ...
+       [x2 ...] [Q]   infra first
+       [x1 ...] [Q]   infra first
+       [x0 ...] [Q]   infra first</code></pre>
 <h3 id="definition-11">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-3">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-2">Source</h3>
-<p>if basis</p>
+<blockquote>
+<p>[<a href="#grabn">grabN</a>] <a href="#codi">codi</a> <a href="#map">map</a> <a href="#disenstacken">disenstacken</a></p>
+</blockquote>
 <h3 id="discussion-10">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-8">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>This function takes a quoted function <code>Q</code> and an integer and runs the function that many times on that many stack items. See also <a href="#app2">app2</a>.</p>
+<h3 id="crosslinks-9">Crosslinks</h3>
+<p><a href="#app1">app1</a> <a href="#app2">app2</a> <a href="#app3">app3</a> <a href="#unary">unary</a></p>
 <hr />
 <h2 id="at">at</h2>
 <p>See <a href="#getitem">getitem</a>.</p>
 <hr />
 <h2 id="average">average</h2>
-<p>Basis Function Combinator</p>
-<p>[sum] [size] cleave /</p>
-<p>Gentzen diagram.</p>
+<p>Function</p>
+<p>Compute the average of a list of numbers. (Currently broken until I can figure out what to do about &#x201C;numeric tower&#x201D; in Thun.)</p>
 <h3 id="definition-12">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-4">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-3">Source</h3>
-<p>if basis</p>
+<blockquote>
+<p>[<a href="#sum">sum</a>] [<a href="#size">size</a>] <a href="#cleave">cleave</a> <a href="#section-23">/</a></p>
+</blockquote>
 <h3 id="discussion-11">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-9">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Theoretically this function would compute the sum and the size in two separate threads, then divide. This works but a compiled version would probably do better to sum and count the list once, in one thread, eh?</p>
+<p>As an exercise in Functional Programming in Joy it would be fun to convert this into a catamorphism. See the <a href="https://joypy.osdn.io/notebooks/Recursion_Combinators.html">Recursion Combinators notebook</a>.</p>
 <hr />
 <h2 id="b">b</h2>
 <p>(Combinator)</p>
@@ -633,7 +634,7 @@
       P Q</code></pre>
 <h3 id="definition-13">Definition</h3>
 <pre><code>[i] dip i</code></pre>
-<h3 id="derivation-5">Derivation</h3>
+<h3 id="derivation-1">Derivation</h3>
 <pre><code>[P] [Q] b
 [P] [Q] [i] dip i
 [P] i [Q] i
@@ -664,9 +665,9 @@
 <p>Gentzen diagram.</p>
 <h3 id="definition-15">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-6">Derivation</h3>
+<h3 id="derivation-2">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-4">Source</h3>
+<h3 id="source">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-14">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -688,9 +689,9 @@ True [F] [T] branch
 <p>Gentzen diagram.</p>
 <h3 id="definition-16">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-7">Derivation</h3>
+<h3 id="derivation-3">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-5">Source</h3>
+<h3 id="source-1">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-15">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -703,9 +704,9 @@ True [F] [T] branch
 <p>Gentzen diagram.</p>
 <h3 id="definition-17">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-8">Derivation</h3>
+<h3 id="derivation-4">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-6">Source</h3>
+<h3 id="source-2">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-16">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -740,9 +741,9 @@ A B true choice
 <p>Gentzen diagram.</p>
 <h3 id="definition-19">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-9">Derivation</h3>
+<h3 id="derivation-5">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-7">Source</h3>
+<h3 id="source-3">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-18">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -761,9 +762,9 @@ A B true choice
 <p>Gentzen diagram.</p>
 <h3 id="definition-20">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-10">Derivation</h3>
+<h3 id="derivation-6">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-8">Source</h3>
+<h3 id="source-4">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-19">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -776,9 +777,9 @@ A B true choice
 <p>Gentzen diagram.</p>
 <h3 id="definition-21">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-11">Derivation</h3>
+<h3 id="derivation-7">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-9">Source</h3>
+<h3 id="source-5">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-20">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -791,9 +792,9 @@ A B true choice
 <p>Gentzen diagram.</p>
 <h3 id="definition-22">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-12">Derivation</h3>
+<h3 id="derivation-8">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-10">Source</h3>
+<h3 id="source-6">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-21">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -817,9 +818,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-23">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-13">Derivation</h3>
+<h3 id="derivation-9">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-11">Source</h3>
+<h3 id="source-7">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-22">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -832,9 +833,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-24">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-14">Derivation</h3>
+<h3 id="derivation-10">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-12">Source</h3>
+<h3 id="source-8">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-23">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -847,9 +848,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-25">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-15">Derivation</h3>
+<h3 id="derivation-11">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-13">Source</h3>
+<h3 id="source-9">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-24">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -865,9 +866,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-26">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-16">Derivation</h3>
+<h3 id="derivation-12">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-14">Source</h3>
+<h3 id="source-10">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-25">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -884,9 +885,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-27">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-17">Derivation</h3>
+<h3 id="derivation-13">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-15">Source</h3>
+<h3 id="source-11">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-26">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -899,7 +900,7 @@ a b [G] [E] [L] cmp
 <pre><code>   A [...] cons
 ------------------
      [A ...]</code></pre>
-<h3 id="source-16">Source</h3>
+<h3 id="source-12">Source</h3>
 <pre><code>func(cons, [list(A), B|S], [list([B|A])|S]).</code></pre>
 <h3 id="discussion-27">Discussion</h3>
 <p>Cons is a venerable old function from Lisp. It doesn&#x2019;t inspect the item but it will not cons onto a non-list. It&#x2019;s inverse operation is called <code>uncons</code>.</p>
@@ -912,9 +913,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-28">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-18">Derivation</h3>
+<h3 id="derivation-14">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-17">Source</h3>
+<h3 id="source-13">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-28">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -930,9 +931,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-29">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-19">Derivation</h3>
+<h3 id="derivation-15">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-18">Source</h3>
+<h3 id="source-14">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-29">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -948,9 +949,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-30">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-20">Derivation</h3>
+<h3 id="derivation-16">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-19">Source</h3>
+<h3 id="source-15">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-30">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -966,9 +967,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-31">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-21">Derivation</h3>
+<h3 id="derivation-17">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-20">Source</h3>
+<h3 id="source-16">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-31">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -981,9 +982,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-32">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-22">Derivation</h3>
+<h3 id="derivation-18">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-21">Source</h3>
+<h3 id="source-17">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-32">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1000,9 +1001,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-33">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-23">Derivation</h3>
+<h3 id="derivation-19">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-22">Source</h3>
+<h3 id="source-18">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-33">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1015,9 +1016,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-34">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-24">Derivation</h3>
+<h3 id="derivation-20">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-23">Source</h3>
+<h3 id="source-19">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-34">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1034,9 +1035,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-35">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-25">Derivation</h3>
+<h3 id="derivation-21">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-24">Source</h3>
+<h3 id="source-20">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-35">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1049,9 +1050,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-36">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-26">Derivation</h3>
+<h3 id="derivation-22">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-25">Source</h3>
+<h3 id="source-21">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-36">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1064,9 +1065,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-37">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-27">Derivation</h3>
+<h3 id="derivation-23">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-26">Source</h3>
+<h3 id="source-22">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-37">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1079,9 +1080,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-38">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-28">Derivation</h3>
+<h3 id="derivation-24">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-27">Source</h3>
+<h3 id="source-23">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-38">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1099,9 +1100,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-39">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-29">Derivation</h3>
+<h3 id="derivation-25">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-28">Source</h3>
+<h3 id="source-24">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-39">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1114,9 +1115,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-40">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-30">Derivation</h3>
+<h3 id="derivation-26">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-29">Source</h3>
+<h3 id="source-25">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-40">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1129,9 +1130,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-41">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-31">Derivation</h3>
+<h3 id="derivation-27">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-30">Source</h3>
+<h3 id="source-26">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-41">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1144,9 +1145,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-42">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-32">Derivation</h3>
+<h3 id="derivation-28">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-31">Source</h3>
+<h3 id="source-27">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-42">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1159,9 +1160,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-43">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-33">Derivation</h3>
+<h3 id="derivation-29">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-32">Source</h3>
+<h3 id="source-28">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-43">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1174,9 +1175,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-44">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-34">Derivation</h3>
+<h3 id="derivation-30">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-33">Source</h3>
+<h3 id="source-29">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-44">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1189,9 +1190,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-45">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-35">Derivation</h3>
+<h3 id="derivation-31">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-34">Source</h3>
+<h3 id="source-30">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-45">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1205,9 +1206,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-46">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-36">Derivation</h3>
+<h3 id="derivation-32">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-35">Source</h3>
+<h3 id="source-31">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-46">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1220,9 +1221,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-47">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-37">Derivation</h3>
+<h3 id="derivation-33">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-36">Source</h3>
+<h3 id="source-32">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-47">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1235,9 +1236,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-48">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-38">Derivation</h3>
+<h3 id="derivation-34">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-37">Source</h3>
+<h3 id="source-33">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-48">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1250,9 +1251,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-49">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-39">Derivation</h3>
+<h3 id="derivation-35">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-38">Source</h3>
+<h3 id="source-34">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-49">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1265,9 +1266,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-50">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-40">Derivation</h3>
+<h3 id="derivation-36">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-39">Source</h3>
+<h3 id="source-35">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-50">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1280,9 +1281,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-51">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-41">Derivation</h3>
+<h3 id="derivation-37">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-40">Source</h3>
+<h3 id="source-36">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-51">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1295,9 +1296,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-52">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-42">Derivation</h3>
+<h3 id="derivation-38">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-41">Source</h3>
+<h3 id="source-37">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-52">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1326,9 +1327,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-53">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-43">Derivation</h3>
+<h3 id="derivation-39">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-42">Source</h3>
+<h3 id="source-38">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-53">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1345,9 +1346,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-54">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-44">Derivation</h3>
+<h3 id="derivation-40">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-43">Source</h3>
+<h3 id="source-39">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-54">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1360,9 +1361,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-55">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-45">Derivation</h3>
+<h3 id="derivation-41">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-44">Source</h3>
+<h3 id="source-40">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-55">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1375,9 +1376,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-56">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-46">Derivation</h3>
+<h3 id="derivation-42">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-45">Source</h3>
+<h3 id="source-41">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-56">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1390,9 +1391,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-57">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-47">Derivation</h3>
+<h3 id="derivation-43">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-46">Source</h3>
+<h3 id="source-42">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-57">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1405,9 +1406,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-58">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-48">Derivation</h3>
+<h3 id="derivation-44">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-47">Source</h3>
+<h3 id="source-43">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-58">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1420,9 +1421,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-59">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-49">Derivation</h3>
+<h3 id="derivation-45">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-48">Source</h3>
+<h3 id="source-44">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-59">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1435,7 +1436,7 @@ a b [G] [E] [L] cmp
 <pre><code>   [Q] i
 -----------
     Q</code></pre>
-<h3 id="source-49">Source</h3>
+<h3 id="source-45">Source</h3>
 <pre><code>combo(i, [list(P)|S], S, Ei, Eo) :- append(P, Ei, Eo).</code></pre>
 <h3 id="discussion-60">Discussion</h3>
 <p>This is probably the fundamental combinator. You wind up using it in all kinds of places (for example, the <code>x</code> combinator can be defined as <code>dup i</code>.)</p>
@@ -1446,9 +1447,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-60">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-50">Derivation</h3>
+<h3 id="derivation-46">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-50">Source</h3>
+<h3 id="source-46">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-61">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1472,9 +1473,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-61">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-51">Derivation</h3>
+<h3 id="derivation-47">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-51">Source</h3>
+<h3 id="source-47">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-62">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1489,9 +1490,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-62">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-52">Derivation</h3>
+<h3 id="derivation-48">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-52">Source</h3>
+<h3 id="source-48">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-63">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1517,9 +1518,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-64">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-53">Derivation</h3>
+<h3 id="derivation-49">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-53">Source</h3>
+<h3 id="source-49">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-65">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1535,9 +1536,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-65">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-54">Derivation</h3>
+<h3 id="derivation-50">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-54">Source</h3>
+<h3 id="source-50">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-66">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1550,9 +1551,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-66">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-55">Derivation</h3>
+<h3 id="derivation-51">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-55">Source</h3>
+<h3 id="source-51">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-67">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1572,9 +1573,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-67">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-56">Derivation</h3>
+<h3 id="derivation-52">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-56">Source</h3>
+<h3 id="source-52">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-68">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1587,9 +1588,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-68">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-57">Derivation</h3>
+<h3 id="derivation-53">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-57">Source</h3>
+<h3 id="source-53">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-69">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1602,9 +1603,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-69">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-58">Derivation</h3>
+<h3 id="derivation-54">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-58">Source</h3>
+<h3 id="source-54">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-70">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1617,9 +1618,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-70">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-59">Derivation</h3>
+<h3 id="derivation-55">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-59">Source</h3>
+<h3 id="source-55">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-71">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1632,9 +1633,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-71">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-60">Derivation</h3>
+<h3 id="derivation-56">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-60">Source</h3>
+<h3 id="source-56">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-72">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1647,9 +1648,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-72">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-61">Derivation</h3>
+<h3 id="derivation-57">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-61">Source</h3>
+<h3 id="source-57">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-73">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1662,9 +1663,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-73">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-62">Derivation</h3>
+<h3 id="derivation-58">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-62">Source</h3>
+<h3 id="source-58">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-74">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1677,9 +1678,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-74">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-63">Derivation</h3>
+<h3 id="derivation-59">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-63">Source</h3>
+<h3 id="source-59">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-75">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1695,9 +1696,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-75">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-64">Derivation</h3>
+<h3 id="derivation-60">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-64">Source</h3>
+<h3 id="source-60">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-76">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1710,9 +1711,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-76">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-65">Derivation</h3>
+<h3 id="derivation-61">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-65">Source</h3>
+<h3 id="source-61">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-77">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1725,9 +1726,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-77">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-66">Derivation</h3>
+<h3 id="derivation-62">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-66">Source</h3>
+<h3 id="source-62">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-78">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1740,9 +1741,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-78">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-67">Derivation</h3>
+<h3 id="derivation-63">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-67">Source</h3>
+<h3 id="source-63">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-79">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1769,9 +1770,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-80">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-68">Derivation</h3>
+<h3 id="derivation-64">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-68">Source</h3>
+<h3 id="source-64">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-80">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1786,7 +1787,7 @@ a b [G] [E] [L] cmp
         ... A</code></pre>
 <h3 id="definition-81">Definition</h3>
 <pre><code>[stack] dip infra first</code></pre>
-<h3 id="derivation-69">Derivation</h3>
+<h3 id="derivation-65">Derivation</h3>
 <pre><code>... [P] nullary
 ... [P] [stack] dip infra first
 ... stack [P] infra first
@@ -1804,9 +1805,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-82">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-70">Derivation</h3>
+<h3 id="derivation-66">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-69">Source</h3>
+<h3 id="source-65">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-82">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1819,9 +1820,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-83">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-71">Derivation</h3>
+<h3 id="derivation-67">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-70">Source</h3>
+<h3 id="source-66">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-83">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1834,9 +1835,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-84">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-72">Derivation</h3>
+<h3 id="derivation-68">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-71">Source</h3>
+<h3 id="source-67">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-84">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1849,9 +1850,9 @@ a b [G] [E] [L] cmp
 <p>Gentzen diagram.</p>
 <h3 id="definition-85">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-73">Derivation</h3>
+<h3 id="derivation-69">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-72">Source</h3>
+<h3 id="source-68">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-85">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1870,9 +1871,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-86">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-74">Derivation</h3>
+<h3 id="derivation-70">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-73">Source</h3>
+<h3 id="source-69">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-86">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1885,9 +1886,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-87">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-75">Derivation</h3>
+<h3 id="derivation-71">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-74">Source</h3>
+<h3 id="source-70">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-87">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1900,9 +1901,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-88">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-76">Derivation</h3>
+<h3 id="derivation-72">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-75">Source</h3>
+<h3 id="source-71">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-88">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1915,9 +1916,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-89">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-77">Derivation</h3>
+<h3 id="derivation-73">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-76">Source</h3>
+<h3 id="source-72">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-89">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1930,9 +1931,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-90">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-78">Derivation</h3>
+<h3 id="derivation-74">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-77">Source</h3>
+<h3 id="source-73">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-90">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1945,9 +1946,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-91">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-79">Derivation</h3>
+<h3 id="derivation-75">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-78">Source</h3>
+<h3 id="source-74">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-91">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1960,9 +1961,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-92">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-80">Derivation</h3>
+<h3 id="derivation-76">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-79">Source</h3>
+<h3 id="source-75">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-92">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1975,9 +1976,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-93">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-81">Derivation</h3>
+<h3 id="derivation-77">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-80">Source</h3>
+<h3 id="source-76">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-93">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -1990,9 +1991,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-94">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-82">Derivation</h3>
+<h3 id="derivation-78">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-81">Source</h3>
+<h3 id="source-77">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-94">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2005,9 +2006,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-95">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-83">Derivation</h3>
+<h3 id="derivation-79">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-82">Source</h3>
+<h3 id="source-78">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-95">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2032,9 +2033,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-96">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-84">Derivation</h3>
+<h3 id="derivation-80">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-83">Source</h3>
+<h3 id="source-79">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-96">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2047,9 +2048,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-97">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-85">Derivation</h3>
+<h3 id="derivation-81">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-84">Source</h3>
+<h3 id="source-80">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-97">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2062,9 +2063,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-98">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-86">Derivation</h3>
+<h3 id="derivation-82">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-85">Source</h3>
+<h3 id="source-81">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-98">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2077,9 +2078,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-99">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-87">Derivation</h3>
+<h3 id="derivation-83">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-86">Source</h3>
+<h3 id="source-82">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-99">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2092,9 +2093,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-100">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-88">Derivation</h3>
+<h3 id="derivation-84">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-87">Source</h3>
+<h3 id="source-83">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-100">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2107,9 +2108,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-101">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-89">Derivation</h3>
+<h3 id="derivation-85">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-88">Source</h3>
+<h3 id="source-84">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-101">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2131,9 +2132,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-102">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-90">Derivation</h3>
+<h3 id="derivation-86">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-89">Source</h3>
+<h3 id="source-85">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-102">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2146,9 +2147,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-103">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-91">Derivation</h3>
+<h3 id="derivation-87">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-90">Source</h3>
+<h3 id="source-86">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-103">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2162,9 +2163,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-104">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-92">Derivation</h3>
+<h3 id="derivation-88">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-91">Source</h3>
+<h3 id="source-87">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-104">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2177,9 +2178,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-105">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-93">Derivation</h3>
+<h3 id="derivation-89">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-92">Source</h3>
+<h3 id="source-88">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-105">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2192,9 +2193,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-106">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-94">Derivation</h3>
+<h3 id="derivation-90">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-93">Source</h3>
+<h3 id="source-89">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-106">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2214,9 +2215,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-107">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-95">Derivation</h3>
+<h3 id="derivation-91">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-94">Source</h3>
+<h3 id="source-90">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-107">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2229,9 +2230,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-108">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-96">Derivation</h3>
+<h3 id="derivation-92">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-95">Source</h3>
+<h3 id="source-91">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-108">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2244,9 +2245,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-109">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-97">Derivation</h3>
+<h3 id="derivation-93">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-96">Source</h3>
+<h3 id="source-92">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-109">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2259,9 +2260,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-110">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-98">Derivation</h3>
+<h3 id="derivation-94">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-97">Source</h3>
+<h3 id="source-93">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-110">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2274,9 +2275,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-111">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-99">Derivation</h3>
+<h3 id="derivation-95">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-98">Source</h3>
+<h3 id="source-94">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-111">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2298,9 +2299,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-112">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-100">Derivation</h3>
+<h3 id="derivation-96">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-99">Source</h3>
+<h3 id="source-95">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-112">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2313,9 +2314,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-113">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-101">Derivation</h3>
+<h3 id="derivation-97">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-100">Source</h3>
+<h3 id="source-96">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-113">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2328,9 +2329,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-114">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-102">Derivation</h3>
+<h3 id="derivation-98">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-101">Source</h3>
+<h3 id="source-97">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-114">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2348,9 +2349,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-115">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-103">Derivation</h3>
+<h3 id="derivation-99">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-102">Source</h3>
+<h3 id="source-98">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-115">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2363,9 +2364,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-116">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-104">Derivation</h3>
+<h3 id="derivation-100">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-103">Source</h3>
+<h3 id="source-99">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-116">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2378,9 +2379,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-117">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-105">Derivation</h3>
+<h3 id="derivation-101">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-104">Source</h3>
+<h3 id="source-100">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-117">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2393,9 +2394,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-118">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-106">Derivation</h3>
+<h3 id="derivation-102">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-105">Source</h3>
+<h3 id="source-101">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-118">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2408,9 +2409,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-119">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-107">Derivation</h3>
+<h3 id="derivation-103">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-106">Source</h3>
+<h3 id="source-102">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-119">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2423,9 +2424,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-120">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-108">Derivation</h3>
+<h3 id="derivation-104">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-107">Source</h3>
+<h3 id="source-103">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-120">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2438,9 +2439,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-121">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-109">Derivation</h3>
+<h3 id="derivation-105">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-108">Source</h3>
+<h3 id="source-104">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-121">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2453,9 +2454,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-122">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-110">Derivation</h3>
+<h3 id="derivation-106">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-109">Source</h3>
+<h3 id="source-105">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-122">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2468,9 +2469,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-123">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-111">Derivation</h3>
+<h3 id="derivation-107">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-110">Source</h3>
+<h3 id="source-106">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-123">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2483,9 +2484,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-124">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-112">Derivation</h3>
+<h3 id="derivation-108">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-111">Source</h3>
+<h3 id="source-107">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-124">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2512,9 +2513,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-125">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-113">Derivation</h3>
+<h3 id="derivation-109">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-112">Source</h3>
+<h3 id="source-108">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-125">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2527,9 +2528,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-126">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-114">Derivation</h3>
+<h3 id="derivation-110">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-113">Source</h3>
+<h3 id="source-109">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-126">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2542,9 +2543,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-127">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-115">Derivation</h3>
+<h3 id="derivation-111">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-114">Source</h3>
+<h3 id="source-110">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-127">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2557,9 +2558,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-128">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-116">Derivation</h3>
+<h3 id="derivation-112">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-115">Source</h3>
+<h3 id="source-111">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-128">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2572,9 +2573,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-129">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-117">Derivation</h3>
+<h3 id="derivation-113">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-116">Source</h3>
+<h3 id="source-112">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-129">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2587,9 +2588,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-130">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-118">Derivation</h3>
+<h3 id="derivation-114">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-117">Source</h3>
+<h3 id="source-113">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-130">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2603,9 +2604,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-131">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-119">Derivation</h3>
+<h3 id="derivation-115">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-118">Source</h3>
+<h3 id="source-114">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-131">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2618,9 +2619,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-132">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-120">Derivation</h3>
+<h3 id="derivation-116">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-119">Source</h3>
+<h3 id="source-115">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-132">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2633,9 +2634,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-133">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-121">Derivation</h3>
+<h3 id="derivation-117">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-120">Source</h3>
+<h3 id="source-116">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-133">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2648,9 +2649,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-134">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-122">Derivation</h3>
+<h3 id="derivation-118">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-121">Source</h3>
+<h3 id="source-117">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-134">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2663,9 +2664,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-135">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-123">Derivation</h3>
+<h3 id="derivation-119">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-122">Source</h3>
+<h3 id="source-118">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-135">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2678,9 +2679,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-136">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-124">Derivation</h3>
+<h3 id="derivation-120">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-123">Source</h3>
+<h3 id="source-119">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-136">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2693,9 +2694,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-137">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-125">Derivation</h3>
+<h3 id="derivation-121">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-124">Source</h3>
+<h3 id="source-120">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-137">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2711,9 +2712,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-138">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-126">Derivation</h3>
+<h3 id="derivation-122">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-125">Source</h3>
+<h3 id="source-121">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-138">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2739,9 +2740,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-140">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-127">Derivation</h3>
+<h3 id="derivation-123">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-126">Source</h3>
+<h3 id="source-122">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-140">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2767,9 +2768,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-141">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-128">Derivation</h3>
+<h3 id="derivation-124">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-127">Source</h3>
+<h3 id="source-123">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-141">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2785,9 +2786,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-142">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-129">Derivation</h3>
+<h3 id="derivation-125">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-128">Source</h3>
+<h3 id="source-124">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-142">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2813,7 +2814,7 @@ a+b a-b</code></pre>
 <pre><code>   [A ...] uncons
 --------------------
       A [...]</code></pre>
-<h3 id="source-129">Source</h3>
+<h3 id="source-125">Source</h3>
 <pre><code>func(uncons, Si, So) :- func(cons, So, Si).</code></pre>
 <h3 id="discussion-144">Discussion</h3>
 <p>This is the inverse of <code>cons</code>.</p>
@@ -2826,9 +2827,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-144">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-130">Derivation</h3>
+<h3 id="derivation-126">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-130">Source</h3>
+<h3 id="source-126">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-145">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2841,9 +2842,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-145">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-131">Derivation</h3>
+<h3 id="derivation-127">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-131">Source</h3>
+<h3 id="source-127">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-146">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2856,9 +2857,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-146">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-132">Derivation</h3>
+<h3 id="derivation-128">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-132">Source</h3>
+<h3 id="source-128">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-147">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2871,9 +2872,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-147">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-133">Derivation</h3>
+<h3 id="derivation-129">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-133">Source</h3>
+<h3 id="source-129">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-148">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2886,9 +2887,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-148">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-134">Derivation</h3>
+<h3 id="derivation-130">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-134">Source</h3>
+<h3 id="source-130">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-149">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2901,9 +2902,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-149">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-135">Derivation</h3>
+<h3 id="derivation-131">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-135">Source</h3>
+<h3 id="source-131">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-150">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2916,9 +2917,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-150">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-136">Derivation</h3>
+<h3 id="derivation-132">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-136">Source</h3>
+<h3 id="source-132">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-151">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2931,9 +2932,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-151">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-137">Derivation</h3>
+<h3 id="derivation-133">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-137">Source</h3>
+<h3 id="source-133">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-152">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2956,9 +2957,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-153">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-138">Derivation</h3>
+<h3 id="derivation-134">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-138">Source</h3>
+<h3 id="source-134">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-154">Discussion</h3>
 <p>Lorem ipsum.</p>
@@ -2971,9 +2972,9 @@ a+b a-b</code></pre>
 <p>Gentzen diagram.</p>
 <h3 id="definition-154">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-139">Derivation</h3>
+<h3 id="derivation-135">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-139">Source</h3>
+<h3 id="source-135">Source</h3>
 <p>if basis</p>
 <h3 id="discussion-155">Discussion</h3>
 <p>Lorem ipsum.</p>

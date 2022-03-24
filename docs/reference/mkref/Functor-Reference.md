@@ -338,7 +338,7 @@ Return the absolute value of the argument.
 
 ### Definition
 
-> \[0 <\] \[0 [swap](#swap) -\] \[\] [ifte](#ifte)
+> [dup](#dup) 0 < [] \[[neg](#neg)\] [branch](#branch)
 
 
 ------------------------------------------------------------------------
@@ -386,10 +386,11 @@ Basis Function
 
 Logical bit-wise AND.
 
-
 ### Crosslinks
 
-Lorem ipsum.
+[or](#or)
+[xor](#xor)
+
 
 --------------------
 
@@ -397,7 +398,7 @@ Lorem ipsum.
 
 "apply one"
 
-(Combinator)
+Combinator
 
 Given a quoted program on TOS and anything as the second stack item run
 the program without disturbing the stack and replace the two args with
@@ -407,117 +408,124 @@ the first result of the program.
     ---------------------------------
        ... [x ...] [Q] infra first
 
+This is the same effect as the [unary](#unary) combinator.
+
 ### Definition
 
-    nullary popd
+> [nullary](#nullary) [popd](#popd)
 
 ### Discussion
 
 Just a specialization of `nullary` really.  Its parallelizable cousins
 are more useful.
 
+### Crosslinks
+
+[app2](#app2)
+[app3](#app3)
+[appN](#appN)
+[unary](#unary)
 
 
 ------------------------------------------------------------------------
 
 ## app2
 
-Basis Function Combinator
+Combinator
 
-Like app1 with two items.
+Like [app1](#app1) with two items.
 
-:   ... y x [Q] . app2
-        -----------------------------------
-        ... [y ...] [Q] . infra first
-        [x ...] [Q]   infra first
-
-Gentzen diagram.
+       ... y x [Q] . app2
+    -----------------------------------
+       ... [y ...] [Q] . infra first
+           [x ...] [Q]   infra first
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[grba] [swap] [grba] [swap]\] [dip] \[[infrst]\] [cons] [ii]
 
 ### Discussion
 
-Lorem ipsum.
+Unlike [app1](#app1), which is essentially an alias for [unary](#unary),
+this function is not the same as [binary](#binary).  Instead of running
+one program using exactly two items from the stack and pushing one
+result (as [binary](#binary) does) this function takes two items from the
+stack and runs the program twice, separately for each of the items, then
+puts both results onto the stack.
+
+This is not currently implemented as parallel processes but it can (and
+should) be done.
 
 ### Crosslinks
 
-Lorem ipsum.
+[app1](#app1)
+[app3](#app3)
+[appN](#appN)
+[unary](#unary)
+
 
 ------------------------------------------------------------------------
 
 ## app3
 
-Basis Function Combinator
+Combinator
 
-Like app1 with three items.
+Like [app1] with three items.
 
-:   ... z y x [Q] . app3
-        -----------------------------------
-        ... [z ...] [Q] . infra first
-          [y ...] [Q]   infra first
-          [x ...] [Q]   infra first
-
-Gentzen diagram.
+         ... z y x [Q] . app3
+    -----------------------------------
+       ... [z ...] [Q] . infra first
+           [y ...] [Q]   infra first
+           [x ...] [Q]   infra first
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> 3 [appN]
 
 ### Discussion
 
-Lorem ipsum.
+See [app2].
 
 ### Crosslinks
 
-Lorem ipsum.
+[app1](#app1)
+[app2](#app2)
+[appN](#appN)
+[unary](#unary)
+
 
 ------------------------------------------------------------------------
 
 ## appN
 
-Basis Function Combinator
+Combinator
 
-\[grabN\] codi map disenstacken
+Like [app1] with any number of items.
 
-Gentzen diagram.
+       ... xN ... x2 x1 x0 [Q] n . appN
+    --------------------------------------
+       ... [xN ...] [Q] . infra first
+                       ...
+           [x2 ...] [Q]   infra first
+           [x1 ...] [Q]   infra first
+           [x0 ...] [Q]   infra first
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[grabN]\] [codi] [map] [disenstacken]
 
 ### Discussion
 
-Lorem ipsum.
+This function takes a quoted function `Q` and an integer and runs the
+function that many times on that many stack items.  See also [app2].
 
 ### Crosslinks
 
-Lorem ipsum.
+[app1](#app1)
+[app2](#app2)
+[app3](#app3)
+[unary](#unary)
+
 
 --------------
 
@@ -530,31 +538,26 @@ See [getitem](#getitem).
 
 ## average
 
-Basis Function Combinator
+Function
 
-\[sum\] \[size\] cleave /
-
-Gentzen diagram.
+Compute the average of a list of numbers.
+(Currently broken until I can figure out what to do about "numeric tower"
+in Thun.)
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[sum]\] \[[size]\] [cleave] [/]
 
 ### Discussion
 
-Lorem ipsum.
+Theoretically this function would compute the sum and the size in two
+separate threads, then divide.  This works but a compiled version would
+probably do better to sum and count the list once, in one thread, eh?
 
-### Crosslinks
+As an exercise in Functional Programming in Joy it would be fun to
+convert this into a catamorphism.
+See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 
-Lorem ipsum.
 
 --------------------
 

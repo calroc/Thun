@@ -6,7 +6,8 @@ Basis Function
 
 Logical bit-wise AND.
 
-
 ### Crosslinks
 
-Lorem ipsum.
+[or](#or)
+[xor](#xor)
+
