@@ -2,26 +2,20 @@
 
 ## cons
 
-(Basis Function)
+Basis Function
 
 Given an item and a list, append the item to the list to make a new list.
 
-       A [...] cons
+       a [...] cons
     ------------------
-         [A ...]
-
-### Source
-
-    func(cons, [list(A), B|S], [list([B|A])|S]).
+         [a ...]
 
 ### Discussion
 
-Cons is a venerable old function from Lisp.  It doesn't inspect the item
-but it will not cons onto a non-list.  It's inverse operation is called
-`uncons`.
+Cons is a [venerable old function from Lisp](https://en.wikipedia.org/wiki/Cons#Lists).
+Its inverse operation is [uncons].
 
 ### Crosslinks
 
-[ccons](#ccons)
-[uncons](#uncons)
+[uncons]
 

@@ -2,32 +2,33 @@
 
 ## concat
 
-Basis Function Combinator
+Function
 
-Concatinate the two lists on the top of the stack. :
+Concatinate two lists.
 
-    [a b c] [d e f] concat
+       [a b c] [d e f] concat
     ----------------------------
-        [a b c d e f]
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+           [a b c d e f]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[first_two]
+[flatten]
+[fourth]
+[getitem]
+[remove]
+[rest]
+[reverse]
+[rrest]
+[second]
+[shift]
+[shunt]
+[size]
+[sort]
+[split_at]
+[split_list]
+[swaack]
+[third]
+[zip]
+

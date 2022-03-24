@@ -895,133 +895,118 @@ useful in a few places.
 
 ## codireco
 
-Basis Function Combinator
+Combinator
 
-codi reco
-
-Gentzen diagram.
+This is part of the [make_generator] function.  You would not use this
+combinator directly.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [codi] [reco]
 
 ### Discussion
 
-Lorem ipsum.
+See [make_generator] and the 
+["Using `x` to Generate Values" notebook](https://joypy.osdn.io/notebooks/Generator_Programs.html#an-interesting-variation)
+as well as
+[Recursion Theory and Joy](https://www.kevinalbrecht.com/code/joy-mirror/j05cmp.html) by Manfred von Thun.
 
 ### Crosslinks
 
-Lorem ipsum.
+[make_generator]
+
 
 ------------------------------------------------------------------------
 
 ## concat
 
-Basis Function Combinator
+Function
 
-Concatinate the two lists on the top of the stack. :
+Concatinate two lists.
 
-    [a b c] [d e f] concat
+       [a b c] [d e f] concat
     ----------------------------
-        [a b c d e f]
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+           [a b c d e f]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[first_two]
+[flatten]
+[fourth]
+[getitem]
+[remove]
+[rest]
+[reverse]
+[rrest]
+[second]
+[shift]
+[shunt]
+[size]
+[sort]
+[split_at]
+[split_list]
+[swaack]
+[third]
+[zip]
+
 
 ------------------------------------------------------------------------
 
 ## cond
 
-Basis Function Combinator
+Combinator
 
 This combinator works like a case statement. It expects a single quote
 on the stack that must contain zero or more condition quotes and a
-default quote. Each condition clause should contain a quoted predicate
+default quote. Each condition quote should contain a quoted predicate
 followed by the function expression to run if that predicate returns
-true. If no predicates return true the default function runs.
+`true`. If no predicates return `true` the default function runs.
+
+    [
+        [ [Predicate0] Function0 ]
+        [ [Predicate1] Function1 ]
+        ...
+        [ [PredicateN] FunctionN ]
+        [Default]
+    ]
+    cond
+
+### Discussion
 
 It works by rewriting into a chain of nested [ifte]{.title-ref}
 expressions, e.g.:
 
-    [[[B0] T0] [[B1] T1] [D]] cond
+          [[[B0] T0] [[B1] T1] [D]] cond
     -----------------------------------------
-    [B0] [T0] [[B1] [T1] [D] ifte] ifte
+       [B0] [T0] [[B1] [T1] [D] ifte] ifte
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
 
 ### Crosslinks
 
-Lorem ipsum.
+[ifte]
+
 
 --------------------
 
 ## cons
 
-(Basis Function)
+Basis Function
 
 Given an item and a list, append the item to the list to make a new list.
 
-       A [...] cons
+       a [...] cons
     ------------------
-         [A ...]
-
-### Source
-
-    func(cons, [list(A), B|S], [list([B|A])|S]).
+         [a ...]
 
 ### Discussion
 
-Cons is a venerable old function from Lisp.  It doesn't inspect the item
-but it will not cons onto a non-list.  It's inverse operation is called
-`uncons`.
+Cons is a [venerable old function from Lisp](https://en.wikipedia.org/wiki/Cons#Lists).
+Its inverse operation is [uncons].
 
 ### Crosslinks
 
-[ccons](#ccons)
-[uncons](#uncons)
+[uncons]
 
 
 ------------------------------------------------------------------------

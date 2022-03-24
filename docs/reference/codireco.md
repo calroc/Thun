@@ -2,28 +2,23 @@
 
 ## codireco
 
-Basis Function Combinator
+Combinator
 
-codi reco
-
-Gentzen diagram.
+This is part of the [make_generator] function.  You would not use this
+combinator directly.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [codi] [reco]
 
 ### Discussion
 
-Lorem ipsum.
+See [make_generator] and the 
+["Using `x` to Generate Values" notebook](https://joypy.osdn.io/notebooks/Generator_Programs.html#an-interesting-variation)
+as well as
+[Recursion Theory and Joy](https://www.kevinalbrecht.com/code/joy-mirror/j05cmp.html) by Manfred von Thun.
 
 ### Crosslinks
 
-Lorem ipsum.
+[make_generator]
+
