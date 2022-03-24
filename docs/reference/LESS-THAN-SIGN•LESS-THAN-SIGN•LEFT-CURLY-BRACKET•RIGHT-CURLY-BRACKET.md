@@ -1,29 +1,25 @@
 ------------------------------------------------------------------------
 
-## \<\<{}
+## \<\<\{\}
 
-Basis Function Combinator
+Function
 
-\[\] rollup
 
-Gentzen diagram.
+       ... b a <{}
+    -----------------
+       ... [] b a
+
 
 ### Definition
 
-if not basis.
+    [] rollup
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
 
 ### Discussion
 
-Lorem ipsum.
+Tuck an empty list just under the first two items on the stack.
 
 ### Crosslinks
 
-Lorem ipsum.
+[<{}](#section-16)
+

@@ -2,27 +2,10 @@
 
 ## and
 
-Basis Function Combinator
+Basis Function
 
-Same as a & b.
+Logical bit-wise AND.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
 
 ### Crosslinks
 

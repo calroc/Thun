@@ -175,27 +175,28 @@ See [ne](#ne).
 
 ------------------------------------------------------------------------
 
-## \<{}
+## \<\{\}
 
 Function
 
 
-       ... a \<{}
+       ... a <{}
     ----------------
        ... [] a
 
 
 ### Definition
 
-    \[\] swap
+    [] swap
 
 ### Discussion
 
-Lorem ipsum.
+Tuck an empty list just under the first item on the stack.
 
 ### Crosslinks
 
-Lorem ipsum.
+[<<{}](#section-18)
+
 
 --------------
 
@@ -206,33 +207,29 @@ See [lshift](#lshift).
 
 ------------------------------------------------------------------------
 
-## \<\<{}
+## \<\<\{\}
 
-Basis Function Combinator
+Function
 
-\[\] rollup
 
-Gentzen diagram.
+       ... b a <{}
+    -----------------
+       ... [] b a
+
 
 ### Definition
 
-if not basis.
+    [] rollup
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
 
 ### Discussion
 
-Lorem ipsum.
+Tuck an empty list just under the first two items on the stack.
 
 ### Crosslinks
 
-Lorem ipsum.
+[<{}](#section-16)
+
 
 --------------
 
@@ -259,31 +256,23 @@ See [succ](#succ).
 
 ## ?
 
-Basis Function Combinator
+Function
 
-dup bool
-
-Gentzen diagram.
+Is the item on the top of the stack "truthy"?
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [dup](#dup) [bool](#bool)
 
 ### Discussion
 
-Lorem ipsum.
+You often want to test the truth value of an item on the stack without
+consuming the item.
 
 ### Crosslinks
 
-Lorem ipsum.
+[bool](#bool)
+
 
 --------------
 
@@ -310,147 +299,93 @@ See [floordiv](#floordiv).
 
 ## \|\|
 
-Basis Function Combinator
+Combinator
 
-nulco \[nullary\] dip \[true\] branch
+Short-circuiting Boolean OR
 
-Gentzen diagram.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [nulco](#nulco) \[[nullary](#nullary)\] [dip](#dip) \[true\] [branch](#branch)
 
 ### Discussion
 
-Lorem ipsum.
+Accept two quoted programs, run the first and expect a Boolean value, if
+it’s `false` pop it and run the second program (which should also return a
+Boolean value) otherwise pop the second program (leaving `true` on the
+stack.)
+
+       [A] [B] ||
+    ---------------- A -> false
+            B
+
+
+       [A] [B] ||
+    ---------------- A -> true
+          true
 
 ### Crosslinks
 
-Lorem ipsum.
+[&&](#section-1)
 
 ------------------------------------------------------------------------
 
 ## abs
 
-Basis Function Combinator
+Function
 
 Return the absolute value of the argument.
 
-Gentzen diagram.
-
 ### Definition
 
-if not basis.
+> \[0 <\] \[0 [swap](#swap) -\] \[\] [ifte](#ifte)
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## add
 
-Basis Function Combinator
+Basis Function
 
-Same as a + b.
+Add two numbers together: a + b.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## anamorphism
 
-Basis Function Combinator
+Combinator
 
-\[pop \[\]\] swap \[dip swons\] genrec
+Build a list of values from a generator program `G` and a stopping
+predicate `P`.
 
-Gentzen diagram.
+               [P] [G] anamorphism
+    -----------------------------------------
+       [P] [pop []] [G] [dip swons] genrec
 
 ### Definition
 
-if not basis.
+> \[[pop](#pop) \[\]\] [swap](#swap) \[[dip](#dip) [swons](#swons)\] [genrec](#genrec)
 
-### Derivation
+### Example
 
-if not basis.
+The `range` function generates a list of the integers from 0 to n - 1:
 
-### Source
-
-if basis
+> \[0 <=\] \[\-\- dup\] anamorphism
 
 ### Discussion
 
-Lorem ipsum.
+See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## and
 
-Basis Function Combinator
+Basis Function
 
-Same as a & b.
+Logical bit-wise AND.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
 
 ### Crosslinks
 

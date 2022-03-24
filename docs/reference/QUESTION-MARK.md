@@ -2,28 +2,20 @@
 
 ## ?
 
-Basis Function Combinator
+Function
 
-dup bool
-
-Gentzen diagram.
+Is the item on the top of the stack "truthy"?
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [dup](#dup) [bool](#bool)
 
 ### Discussion
 
-Lorem ipsum.
+You often want to test the truth value of an item on the stack without
+consuming the item.
 
 ### Crosslinks
 
-Lorem ipsum.
+[bool](#bool)
+

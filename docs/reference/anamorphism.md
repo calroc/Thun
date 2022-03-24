@@ -2,28 +2,26 @@
 
 ## anamorphism
 
-Basis Function Combinator
+Combinator
 
-\[pop \[\]\] swap \[dip swons\] genrec
+Build a list of values from a generator program `G` and a stopping
+predicate `P`.
 
-Gentzen diagram.
+               [P] [G] anamorphism
+    -----------------------------------------
+       [P] [pop []] [G] [dip swons] genrec
 
 ### Definition
 
-if not basis.
+> \[[pop](#pop) \[\]\] [swap](#swap) \[[dip](#dip) [swons](#swons)\] [genrec](#genrec)
 
-### Derivation
+### Example
 
-if not basis.
+The `range` function generates a list of the integers from 0 to n - 1:
 
-### Source
-
-if basis
+> \[0 <=\] \[\-\- dup\] anamorphism
 
 ### Discussion
 
-Lorem ipsum.
+See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 
-### Crosslinks
-
-Lorem ipsum.

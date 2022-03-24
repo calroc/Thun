@@ -2,28 +2,31 @@
 
 ## \|\|
 
-Basis Function Combinator
+Combinator
 
-nulco \[nullary\] dip \[true\] branch
+Short-circuiting Boolean OR
 
-Gentzen diagram.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [nulco](#nulco) \[[nullary](#nullary)\] [dip](#dip) \[true\] [branch](#branch)
 
 ### Discussion
 
-Lorem ipsum.
+Accept two quoted programs, run the first and expect a Boolean value, if
+it’s `false` pop it and run the second program (which should also return a
+Boolean value) otherwise pop the second program (leaving `true` on the
+stack.)
+
+       [A] [B] ||
+    ---------------- A -> false
+            B
+
+
+       [A] [B] ||
+    ---------------- A -> true
+          true
 
 ### Crosslinks
 
-Lorem ipsum.
+[&&](#section-1)

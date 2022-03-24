@@ -1,23 +1,24 @@
 ------------------------------------------------------------------------
 
-## \<{}
+## \<\{\}
 
 Function
 
 
-       ... a \<{}
+       ... a <{}
     ----------------
        ... [] a
 
 
 ### Definition
 
-    \[\] swap
+    [] swap
 
 ### Discussion
 
-Lorem ipsum.
+Tuck an empty list just under the first item on the stack.
 
 ### Crosslinks
 
-Lorem ipsum.
+[<<{}](#section-18)
+

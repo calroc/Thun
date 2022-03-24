@@ -2,28 +2,7 @@
 
 ## add
 
-Basis Function Combinator
+Basis Function
 
-Same as a + b.
+Add two numbers together: a + b.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

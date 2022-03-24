@@ -2,28 +2,11 @@
 
 ## abs
 
-Basis Function Combinator
+Function
 
 Return the absolute value of the argument.
 
-Gentzen diagram.
-
 ### Definition
 
-if not basis.
+> \[0 <\] \[0 [swap](#swap) -\] \[\] [ifte](#ifte)
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
