@@ -2,28 +2,32 @@
 
 ## cleave
 
-Basis Function Combinator
+Combinator
 
-fork popdd
+Run two programs in parallel, consuming one additional item, and put their
+results on the stack.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
+       ... x [A] [B] cleave
+    ------------------------
+            ... a b
 
 ### Derivation
 
-if not basis.
+> [fork] [popdd]
 
-### Source
+### Example
 
-if basis
+       1 2 3 [+] [-] cleave
+    --------------------------
+             1 2 5 -1
 
 ### Discussion
 
-Lorem ipsum.
+One of a handful of useful parallel combinators.
 
 ### Crosslinks
 
-Lorem ipsum.
+[clop]
+[fork]
+[map]
+

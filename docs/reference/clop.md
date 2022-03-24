@@ -2,28 +2,29 @@
 
 ## clop
 
-Basis Function Combinator
+Combinator
 
-cleave popdd
+Run two programs in parallel, consuming two additional items, and put their results on the stack.
 
-Gentzen diagram.
+       ... x y [A] [B] clop
+    --------------------------
+            ... a b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [cleave] [popdd]
 
 ### Discussion
 
-Lorem ipsum.
+Like [cleave] but consumes an additional item from the stack.
+
+       1 2 3 4 [+] [-] clop
+    --------------------------
+             1 2 7 -1
 
 ### Crosslinks
 
-Lorem ipsum.
+[cleave]
+[fork]
+[map]
+

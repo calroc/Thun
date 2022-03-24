@@ -671,267 +671,225 @@ terms of [choice] as above).  The more common "if..then..else" construct
 
 ## ccccons
 
-Basis Function Combinator
+Function
 
-ccons ccons
+       a b c d [...] ccccons
+    ---------------------------
+           [a b c d ...]
 
-Gentzen diagram.
+Do [cons] four times.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [ccons] [ccons]
 
 ### Crosslinks
 
-Lorem ipsum.
+[ccons] [cons] [times]
+
 
 --------------------
 
 ## ccons
 
-(Function)
+Function
 
-Given two items and a list, append the items to the list to make a new list.
-
-       B A [...] ccons
+       a b [...] ccons
     ---------------------
-          [B A ...]
+          [a b ...]
+
+Do [cons] two times.
 
 ### Definition
 
-    cons cons
-
-### Discussion
-
-Does `cons` twice.
+> [cons] [cons]
 
 ### Crosslinks
 
-[cons](#cons)
+[cons]
+[ccons]
 
 
 ------------------------------------------------------------------------
 
 ## choice
 
-Basis Function Combinator
+Basis Function
 
-Use a Boolean value to select one of two items. :
+Use a Boolean value to select one of two items.
 
-    A B false choice
+       a b false choice
     ----------------------
-    A
+              a
 
-
-    A B true choice
+       a b true choice
     ---------------------
-      B
-
-Currently Python semantics are used to evaluate the \"truthiness\" of
-the Boolean value (so empty string, zero, etc. are counted as false,
-etc.)
-
-Gentzen diagram.
+              b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[pop]\] \[[popd]\] [branch]
 
 ### Discussion
 
-Lorem ipsum.
+It's a matter of taste whether you implement this in terms of [branch] or
+the other way around.
 
 ### Crosslinks
 
-Lorem ipsum.
+[branch]
+[select]
+
 
 ------------------------------------------------------------------------
 
 ## clear
 
-Basis Function Combinator
+Basis Function
 
 Clear everything from the stack.
 
-:   clear == stack [pop stack] loop
-
-           ... clear
-        ---------------
-
-Gentzen diagram.
-
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [stack] [bool] \[[pop] [stack] [bool]\] [loop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[stack]
+[swaack]
+
 
 ------------------------------------------------------------------------
 
 ## cleave
 
-Basis Function Combinator
+Combinator
 
-fork popdd
+Run two programs in parallel, consuming one additional item, and put their
+results on the stack.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
+       ... x [A] [B] cleave
+    ------------------------
+            ... a b
 
 ### Derivation
 
-if not basis.
+> [fork] [popdd]
 
-### Source
+### Example
 
-if basis
+       1 2 3 [+] [-] cleave
+    --------------------------
+             1 2 5 -1
 
 ### Discussion
 
-Lorem ipsum.
+One of a handful of useful parallel combinators.
 
 ### Crosslinks
 
-Lorem ipsum.
+[clop]
+[fork]
+[map]
+
 
 ------------------------------------------------------------------------
 
 ## clop
 
-Basis Function Combinator
+Combinator
 
-cleave popdd
+Run two programs in parallel, consuming two additional items, and put their results on the stack.
 
-Gentzen diagram.
+       ... x y [A] [B] clop
+    --------------------------
+            ... a b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [cleave] [popdd]
 
 ### Discussion
 
-Lorem ipsum.
+Like [cleave] but consumes an additional item from the stack.
+
+       1 2 3 4 [+] [-] clop
+    --------------------------
+             1 2 7 -1
 
 ### Crosslinks
 
-Lorem ipsum.
+[cleave]
+[fork]
+[map]
+
 
 ------------------------------------------------------------------------
 
 ## cmp
 
-Basis Function Combinator
+Combinator
 
-cmp takes two values and three quoted programs on the stack and runs one
-of the three depending on the results of comparing the two values: :
+Take two values and three quoted programs on the stack and run one
+of the three depending on the results of comparing the two values.
 
-    a b [G] [E] [L] cmp
+       a b [G] [E] [L] cmp
     ------------------------- a > b
-     G
+            G
 
-    a b [G] [E] [L] cmp
+       a b [G] [E] [L] cmp
     ------------------------- a = b
-         E
+                E
 
-    a b [G] [E] [L] cmp
+       a b [G] [E] [L] cmp
     ------------------------- a < b
-         L
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
+                    L
 ### Discussion
 
-Lorem ipsum.
+This is useful sometimes, and you can [dup] or [dupd] with two quoted
+programs to handle the cases when you just want to deal with [<=] or [>=]
+and not all three possibilities, e.g.:
+
+    [G] [LE] dup cmp
+
+    [GE] [L] dupd cmp
+
+Or even:
+
+    [GL] [E] over cmp
 
 ### Crosslinks
 
-Lorem ipsum.
+TODO: link to tree notebooks where this was used.
+
 
 ------------------------------------------------------------------------
 
 ## codi
 
-Basis Function Combinator
+Combinator
 
-cons dip
-
-Gentzen diagram.
+Take a quoted program from the stack, [cons] the next item onto it, then
+[dip] the whole thing under what was the third item on the stack.
+ 
+       a b [F] . codi
+    --------------------
+             b . F a
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [cons] [dip]
 
 ### Discussion
 
-Lorem ipsum.
+This is one of those weirdly specific functions that turns out to be
+useful in a few places.
 
 ### Crosslinks
 
-Lorem ipsum.
+[appN]
+[codireco]
+
 
 ------------------------------------------------------------------------
 

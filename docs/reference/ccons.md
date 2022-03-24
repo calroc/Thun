@@ -2,23 +2,20 @@
 
 ## ccons
 
-(Function)
+Function
 
-Given two items and a list, append the items to the list to make a new list.
-
-       B A [...] ccons
+       a b [...] ccons
     ---------------------
-          [B A ...]
+          [a b ...]
+
+Do [cons] two times.
 
 ### Definition
 
-    cons cons
-
-### Discussion
-
-Does `cons` twice.
+> [cons] [cons]
 
 ### Crosslinks
 
-[cons](#cons)
+[cons]
+[ccons]
 

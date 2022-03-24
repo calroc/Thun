@@ -2,28 +2,26 @@
 
 ## codi
 
-Basis Function Combinator
+Combinator
 
-cons dip
-
-Gentzen diagram.
+Take a quoted program from the stack, [cons] the next item onto it, then
+[dip] the whole thing under what was the third item on the stack.
+ 
+       a b [F] . codi
+    --------------------
+             b . F a
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [cons] [dip]
 
 ### Discussion
 
-Lorem ipsum.
+This is one of those weirdly specific functions that turns out to be
+useful in a few places.
 
 ### Crosslinks
 
-Lorem ipsum.
+[appN]
+[codireco]
+

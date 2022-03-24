@@ -340,10 +340,9 @@ def choice(stack):
         ---------------------
              B
 
-    Currently Python semantics are used to evaluate the "truthiness" of the
-    Boolean value (so empty string, zero, etc. are counted as false, etc.)
     '''
     (if_, (then, (else_, stack))) = stack
+    assert isinstance(if_, bool), repr(if_)
     return then if if_ else else_, stack
 
 

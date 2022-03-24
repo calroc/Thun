@@ -2,41 +2,37 @@
 
 ## cmp
 
-Basis Function Combinator
+Combinator
 
-cmp takes two values and three quoted programs on the stack and runs one
-of the three depending on the results of comparing the two values: :
+Take two values and three quoted programs on the stack and run one
+of the three depending on the results of comparing the two values.
 
-    a b [G] [E] [L] cmp
+       a b [G] [E] [L] cmp
     ------------------------- a > b
-     G
+            G
 
-    a b [G] [E] [L] cmp
+       a b [G] [E] [L] cmp
     ------------------------- a = b
-         E
+                E
 
-    a b [G] [E] [L] cmp
+       a b [G] [E] [L] cmp
     ------------------------- a < b
-         L
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
+                    L
 ### Discussion
 
-Lorem ipsum.
+This is useful sometimes, and you can [dup] or [dupd] with two quoted
+programs to handle the cases when you just want to deal with [<=] or [>=]
+and not all three possibilities, e.g.:
+
+    [G] [LE] dup cmp
+
+    [GE] [L] dupd cmp
+
+Or even:
+
+    [GL] [E] over cmp
 
 ### Crosslinks
 
-Lorem ipsum.
+TODO: link to tree notebooks where this was used.
+

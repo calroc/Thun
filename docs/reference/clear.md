@@ -2,33 +2,16 @@
 
 ## clear
 
-Basis Function Combinator
+Basis Function
 
 Clear everything from the stack.
 
-:   clear == stack [pop stack] loop
-
-           ... clear
-        ---------------
-
-Gentzen diagram.
-
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [stack] [bool] \[[pop] [stack] [bool]\] [loop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[stack]
+[swaack]
+

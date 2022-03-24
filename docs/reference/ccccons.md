@@ -2,28 +2,19 @@
 
 ## ccccons
 
-Basis Function Combinator
+Function
 
-ccons ccons
+       a b c d [...] ccccons
+    ---------------------------
+           [a b c d ...]
 
-Gentzen diagram.
+Do [cons] four times.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [ccons] [ccons]
 
 ### Crosslinks
 
-Lorem ipsum.
+[ccons] [cons] [times]
+

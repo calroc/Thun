@@ -2,41 +2,29 @@
 
 ## choice
 
-Basis Function Combinator
+Basis Function
 
-Use a Boolean value to select one of two items. :
+Use a Boolean value to select one of two items.
 
-    A B false choice
+       a b false choice
     ----------------------
-    A
+              a
 
-
-    A B true choice
+       a b true choice
     ---------------------
-      B
-
-Currently Python semantics are used to evaluate the \"truthiness\" of
-the Boolean value (so empty string, zero, etc. are counted as false,
-etc.)
-
-Gentzen diagram.
+              b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[pop]\] \[[popd]\] [branch]
 
 ### Discussion
 
-Lorem ipsum.
+It's a matter of taste whether you implement this in terms of [branch] or
+the other way around.
 
 ### Crosslinks
 
-Lorem ipsum.
+[branch]
+[select]
+
