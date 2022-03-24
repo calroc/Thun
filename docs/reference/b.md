@@ -2,7 +2,7 @@
 
 ## b
 
-(Combinator)
+Combinator
 
 Run two quoted programs
 
@@ -12,19 +12,11 @@ Run two quoted programs
 
 ### Definition
 
-    [i] dip i
-
-### Derivation
-
-    [P] [Q] b
-    [P] [Q] [i] dip i
-    [P] i [Q] i
-     P    [Q] i
-     P     Q
+> \[[i]\] [dip] [i]
 
 ### Discussion
 
-This combinator comes in handy.
+This combinator may seem trivial but it comes in handy.
 
 ### Crosslinks
 

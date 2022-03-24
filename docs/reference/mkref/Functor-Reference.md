@@ -563,7 +563,7 @@ See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursi
 
 ## b
 
-(Combinator)
+Combinator
 
 Run two quoted programs
 
@@ -573,19 +573,11 @@ Run two quoted programs
 
 ### Definition
 
-    [i] dip i
-
-### Derivation
-
-    [P] [Q] b
-    [P] [Q] [i] dip i
-    [P] i [Q] i
-     P    [Q] i
-     P     Q
+> \[[i]\] [dip] [i]
 
 ### Discussion
 
-This combinator comes in handy.
+This combinator may seem trivial but it comes in handy.
 
 ### Crosslinks
 
@@ -597,18 +589,18 @@ This combinator comes in handy.
 
 ## binary
 
-(Combinator)
+Combinator
 
 Run a quoted program using exactly two stack values and leave the first
 item of the result on the stack.
 
        ... y x [P] binary
     -----------------------
-            ... A
+            ... a
 
 ### Definition
 
-    unary popd
+> [unary] [popd]
 
 ### Discussion
 
@@ -626,75 +618,54 @@ consuming exactly two items from the stack.
 
 ## bool
 
-Basis Function Combinator
+Basis Function
 
-bool(x) -\> bool
-
-Returns True when the argument x is true, False otherwise. The builtins
-True and False are the only two instances of the class bool. The class
-bool is a subclass of the class int, and cannot be subclassed.
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+Convert the item on the top of the stack to a Boolean value.
 
 ### Discussion
 
-Lorem ipsum.
+For integers 0 is `false` and any other number is `true`; for lists the
+empty list is `false` and all other lists are `true`.
 
 ### Crosslinks
 
-Lorem ipsum.
+[not]
+
 
 ------------------------------------------------------------------------
 
 ## branch
 
-Basis Function Combinator
+Basis Combinator
 
-Use a Boolean value to select one of two quoted programs to run.
+Use a Boolean value to select and run one of two quoted programs.
 
-    branch == roll< choice i
 
-    False [F] [T] branch
+       false [F] [T] branch
     --------------------------
-       F
+              F
 
-    True [F] [T] branch
+       true [F] [T] branch
     -------------------------
-          T
+                 T
 
-Gentzen diagram.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [rolldown] [choice] [i]
 
 ### Discussion
 
-Lorem ipsum.
+This is one of the fundamental operations (although it can be defined in
+terms of [choice] as above).  The more common "if..then..else" construct
+[ifte] adds a predicate function that is evaluated [nullary].
 
 ### Crosslinks
 
-Lorem ipsum.
+[choice]
+[ifte]
+[select]
+
 
 ------------------------------------------------------------------------
 

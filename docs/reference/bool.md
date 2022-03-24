@@ -2,32 +2,16 @@
 
 ## bool
 
-Basis Function Combinator
+Basis Function
 
-bool(x) -\> bool
-
-Returns True when the argument x is true, False otherwise. The builtins
-True and False are the only two instances of the class bool. The class
-bool is a subclass of the class int, and cannot be subclassed.
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+Convert the item on the top of the stack to a Boolean value.
 
 ### Discussion
 
-Lorem ipsum.
+For integers 0 is `false` and any other number is `true`; for lists the
+empty list is `false` and all other lists are `true`.
 
 ### Crosslinks
 
-Lorem ipsum.
+[not]
+
