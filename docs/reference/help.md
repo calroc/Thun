@@ -2,28 +2,16 @@
 
 ## help
 
-Basis Function Combinator
+Function
 
-Accepts a quoted symbol on the top of the stack and prints its docs.
+Accepts a quoted symbol on the top of the stack and prints its
+documentation.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       [foo] help
+    ----------------
 
 ### Discussion
 
-Lorem ipsum.
+Technically this is equivalent to `pop`, but it will only work if the
+item on the top of the stack is a quoted symbol.
 
-### Crosslinks
-
-Lorem ipsum.

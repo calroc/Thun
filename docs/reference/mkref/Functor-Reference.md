@@ -1821,61 +1821,42 @@ Greater-than comparison of two numbers.
 
 ## help
 
-Basis Function Combinator
+Function
 
-Accepts a quoted symbol on the top of the stack and prints its docs.
+Accepts a quoted symbol on the top of the stack and prints its
+documentation.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       [foo] help
+    ----------------
 
 ### Discussion
 
-Lorem ipsum.
+Technically this is equivalent to `pop`, but it will only work if the
+item on the top of the stack is a quoted symbol.
 
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## hypot
 
-Basis Function Combinator
+Function
 
-\[sqr\] ii + sqrt
-
-Gentzen diagram.
+             x y hypot
+    --------------------------
+       sqrt(sqr(x) + sqr(y))
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[sqr]\] [ii] [+] [sqrt]
 
 ### Discussion
 
-Lorem ipsum.
+This is another function that has to wait on the numeric tower.
 
 ### Crosslinks
 
-Lorem ipsum.
+[sqrt]
+
 
 --------------------
 

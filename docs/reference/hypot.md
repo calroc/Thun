@@ -2,28 +2,21 @@
 
 ## hypot
 
-Basis Function Combinator
+Function
 
-\[sqr\] ii + sqrt
-
-Gentzen diagram.
+             x y hypot
+    --------------------------
+       sqrt(sqr(x) + sqr(y))
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[sqr]\] [ii] [+] [sqrt]
 
 ### Discussion
 
-Lorem ipsum.
+This is another function that has to wait on the numeric tower.
 
 ### Crosslinks
 
-Lorem ipsum.
+[sqrt]
+
