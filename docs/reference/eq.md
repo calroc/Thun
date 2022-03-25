@@ -2,23 +2,14 @@
 
 ## eq
 
-Basis Function Combinator
+Basis Function
 
-Same as a == b.
+Compare the two items on the top of the stack for equality and replace
+them with a Boolean value.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       a b eq
+    -------------
+       Boolean
 
 ### Discussion
 
@@ -26,4 +17,10 @@ Lorem ipsum.
 
 ### Crosslinks
 
-Lorem ipsum.
+[cmp]
+[ge]
+[gt]
+[le]
+[lt]
+[ne]
+

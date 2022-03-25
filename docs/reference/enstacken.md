@@ -2,28 +2,27 @@
 
 ## enstacken
 
-Basis Function Combinator
+Function
 
-stack \[clear\] dip
+Put the stack onto the stack replacing the contents of the stack.
 
-Gentzen diagram.
+       ... a b c enstacken
+    -------------------------
+           [c b a ...]
+
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [stack] \[[clear]\] [dip]
 
 ### Discussion
 
-Lorem ipsum.
+This is a destructive version of [stack].  See the note under
+[disenstacken] about the apparent but illusory reversal of the stack.
 
 ### Crosslinks
 
-Lorem ipsum.
+[stack]
+[unstack]
+[disenstacken]
+
