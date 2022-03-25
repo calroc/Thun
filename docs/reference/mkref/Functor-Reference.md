@@ -850,7 +850,7 @@ This is useful sometimes, and you can [dup] or [dupd] with two quoted
 programs to handle the cases when you just want to deal with [<=] or [>=]
 and not all three possibilities, e.g.:
 
-    [G] [LE] dup cmp
+    [G] [EL] dup cmp
 
     [GE] [L] dupd cmp
 
