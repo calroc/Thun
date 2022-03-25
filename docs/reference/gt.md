@@ -2,28 +2,20 @@
 
 ## gt
 
-Basis Function Combinator
+Basis Function
 
-Same as a \> b.
+Greater-than comparison of two numbers.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b gt
+    --------------
+       Boolean
+       (a > b)
 
 ### Crosslinks
 
-Lorem ipsum.
+[cmp]
+[eq]
+[ge]
+[le]
+[lt]
+[ne]

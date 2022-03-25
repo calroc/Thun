@@ -11,7 +11,6 @@ Greater-than-or-equal-to comparison of two numbers.
        Boolean
        (a >= b)
 
-
 ### Crosslinks
 
 [cmp]

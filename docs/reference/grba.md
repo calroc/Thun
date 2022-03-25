@@ -2,28 +2,25 @@
 
 ## grba
 
-Basis Function Combinator
+Function
 
-\[stack popd\] dip
+A weird function used in [app2] that does this:
 
-Gentzen diagram.
+          ... 1 2 3 4 5 grba
+    -------------------------------
+       ... 1 2 3 [4 3 2 1 ...] 5
+
+It grabs the stack under the top item, and substitutes it for the second item down on the stack.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[stack] [popd]\] [dip]
 
 ### Discussion
 
-Lorem ipsum.
+This function "grabs" an item from the stack along with a copy of the stack.
+It's part of the [app2] definition.
 
 ### Crosslinks
 
-Lorem ipsum.
+[app2]

@@ -4,26 +4,14 @@
 
 Function
 
-\<{} \[cons\] times
+Expect a number on the top of the satck and put that many items from uner it onto a new list.
 
-Gentzen diagram.
+### Example
+
+       a b c d e 3 grabN
+    -----------------------
+          a b [c d e]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
+> [\<\{\}] \[[cons]\] [times]
