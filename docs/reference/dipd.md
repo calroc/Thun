@@ -2,32 +2,22 @@
 
 ## dipd
 
-Basis Function Combinator
+Combinator
 
-Like dip but expects two items. :
+Like [dip] but expects two items.
 
-    ... y x [Q] dip
-    ---------------------
-      ... Q y x
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       ... y x [Q] . dipd
+    -------------------------
+               ... . Q y x
 
 ### Discussion
 
-Lorem ipsum.
+See [dip].
 
 ### Crosslinks
 
-Lorem ipsum.
+[dip]
+[dipdd]
+[dupdip]
+[dupdipd]
+[infra]

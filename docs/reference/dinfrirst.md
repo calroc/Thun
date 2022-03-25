@@ -2,28 +2,11 @@
 
 ## dinfrirst
 
-Basis Function Combinator
+Combinator
 
-dip infrst
-
-Gentzen diagram.
+Specialist function (that means I forgot what it does and why.)
 
 ### Definition
 
-if not basis.
+> [dip] [infrst]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

@@ -2,33 +2,32 @@
 
 ## dupdip
 
-Basis Function Combinator
+Combinator
 
-    [F] dupdip == dup [F] dip
+Apply a function `F` and [dup] the item under it on the stack.
 
-    ... a [F] dupdip
-    ... a dup [F] dip
-    ... a a   [F] dip
-    ... a F a
-
-Gentzen diagram.
+       a [F] dupdip
+    ------------------
+          a F a
 
 ### Definition
 
-if not basis.
+> [dupd] [dip]
 
 ### Derivation
 
-if not basis.
-
-### Source
-
-if basis
+    a [F] dupdip
+    a [F] dupd dip
+    a [F] [dup] dip dip
+    a dup [F] dip
+    a a [F] dip
+    a F a
 
 ### Discussion
 
-Lorem ipsum.
+A very common and useful combinator.
 
 ### Crosslinks
 
-Lorem ipsum.
+[dupdipd]
+

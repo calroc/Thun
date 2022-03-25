@@ -1013,166 +1013,132 @@ Its inverse operation is [uncons].
 
 ## dinfrirst
 
-Basis Function Combinator
+Combinator
 
-dip infrst
-
-Gentzen diagram.
+Specialist function (that means I forgot what it does and why.)
 
 ### Definition
 
-if not basis.
+> [dip] [infrst]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## dip
 
-Basis Function Combinator
+Basis Combinator
 
-The dip combinator expects a quoted program on the stack and below it
+The `dip` combinator expects a quoted program on the stack and below it
 some item, it hoists the item into the expression and runs the program
-on the rest of the stack. :
+on the rest of the stack. 
 
-    ... x [Q] dip
-    -------------------
-      ... Q x
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       ... x [Q] . dip
+    ---------------------
+             ... . Q x
 
 ### Discussion
 
-Lorem ipsum.
+This along with [infra] are enough to update any datastructure.
+See the ["Traversing Datastructures with Zippers" notebook](https://joypy.osdn.io/notebooks/Zipper.html).
+
+Note that the item that was on the top of the stack (`x` in the example above)
+will not be treated specially by the interpreter when it is reached
+again.  This is something of a footgun.  My advice is to avoid putting
+bare unquoted symbols onto the stack, but then you can't use symbols as
+"atoms" and also use `dip` and `infra` to operate on compound
+datastructures with atoms in them.  This is a kind of side-effect of the
+Continuation-Passing Style.  The `dip` combinator could "set aside" the
+item and replace it after running `Q` but that means that there is an
+"extra space" where the item resides while `Q` runs.  One of the nice
+things about CPS is that the whole state is recorded in the stack and
+pending expression (not counting modifications to the dictionary.)
 
 ### Crosslinks
 
-Lorem ipsum.
+[dipd]
+[dipdd]
+[dupdip]
+[dupdipd]
+[infra]
+
 
 ------------------------------------------------------------------------
 
 ## dipd
 
-Basis Function Combinator
+Combinator
 
-Like dip but expects two items. :
+Like [dip] but expects two items.
 
-    ... y x [Q] dip
-    ---------------------
-      ... Q y x
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       ... y x [Q] . dipd
+    -------------------------
+               ... . Q y x
 
 ### Discussion
 
-Lorem ipsum.
+See [dip].
 
 ### Crosslinks
 
-Lorem ipsum.
+[dip]
+[dipdd]
+[dupdip]
+[dupdipd]
+[infra]
 
 ------------------------------------------------------------------------
 
 ## dipdd
 
-Basis Function Combinator
+Combinator
 
-Like dip but expects three items. :
+Like [dip] but expects three items. :
 
-    ... z y x [Q] dip
-    -----------------------
-      ... Q z y x
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
+       ... z y x [Q] . dip
+    -----------------------------
+                 ... . Q z y x
 ### Discussion
 
-Lorem ipsum.
+See [dip].
 
 ### Crosslinks
 
-Lorem ipsum.
+[dip]
+[dipd]
+[dupdip]
+[dupdipd]
+[infra]
+
 
 ------------------------------------------------------------------------
 
 ## disenstacken
 
-Basis Function Combinator
+Function
 
-The disenstacken operator expects a list on top of the stack and makes
+The `disenstacken` function expects a list on top of the stack and makes
 that the stack discarding the rest of the stack.
 
-Gentzen diagram.
+       1 2 3 [4 5 6] disenstacken
+    --------------------------------
+                6 5 4
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[clear]\] [dip] [reverse] [unstack](#unstack)
 
 ### Discussion
 
-Lorem ipsum.
+Note that the order of the list is not changed, it just looks that way
+because the stack is printed with the top on the right while lists are
+printed with the top or head on the left.
 
 ### Crosslinks
 
-Lorem ipsum.
+[enstacken]
+[stack]
+[unstack](#unstack)
+
 
 --------------
 
@@ -1185,255 +1151,191 @@ See [floordiv](#floordiv).
 
 ## divmod
 
-Basis Function Combinator
+Function
 
-divmod(x, y) -\> (quotient, remainder)
+        x y divmod
+    ------------------
+         q      r
+       (x/y)  (x%y)
 
-Return the tuple (x//y, x%y). Invariant: q \* y + r == x.
+Invariant: `qy + r = x`.
 
-Gentzen diagram.
 
 ### Definition
 
-if not basis.
+> \[[floordiv]\] \[[mod]\] [clop]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## down_to_zero
 
-Basis Function Combinator
+Function
 
-\[0 \>\] \[dup \--\] while
+Given a number greater than zero put all the Natural numbers (including
+zero) less than that onto the stack.
 
-Gentzen diagram.
+### Example
+
+       3 down_to_zero
+    --------------------
+          3 2 1 0
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[0 \>\] \[[dup] [--]\] [while]
 
 ### Crosslinks
 
-Lorem ipsum.
+[range]
+
 
 ------------------------------------------------------------------------
 
 ## drop
 
-Basis Function Combinator
-
-    drop == [rest] times
+Function
 
 Expects an integer and a quote on the stack and returns the quote with n
-items removed off the top. :
+items removed off the top.
 
-    [a b c d] 2 drop
+### Example
+
+       [a b c d] 2 drop
     ----------------------
-        [c d]
-
-Gentzen diagram.
+           [c d]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[rest]\] [times]
 
 ### Crosslinks
 
-Lorem ipsum.
+[take]
+
 
 ------------------------------------------------------------------------
 
 ## dup
 
-Basis Function Combinator
+Basis Function
 
-    (a1 -- a1 a1)
+"Dup"licate the top item on the stack.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a dup
+    -----------
+        a a
 
 ### Crosslinks
 
-Lorem ipsum.
+[dupd]
+[dupdd]
+[dupdip]
+[dupdipd]
+
 
 ------------------------------------------------------------------------
 
 ## dupd
 
-Basis Function Combinator
+Function
 
-    (a2 a1 -- a2 a2 a1)
+[dup] the second item down on the stack.
 
-Gentzen diagram.
+       a b dupd
+    --------------
+        a a b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[dup]\] [dip]
 
 ### Crosslinks
 
-Lorem ipsum.
+[dup]
+[dupdd]
+[dupdip]
+[dupdipd]
+
 
 ------------------------------------------------------------------------
 
 ## dupdd
 
-Basis Function Combinator
+Function
 
-    (a3 a2 a1 -- a3 a3 a2 a1)
+[dup] the third item down on the stack.
 
-Gentzen diagram.
+       a b c dupdd
+    -----------------
+         a a b c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[dup]\] [dipd]
 
 ### Crosslinks
 
-Lorem ipsum.
+[dup]
+[dupd]
+[dupdip]
+[dupdipd]
+
 
 ------------------------------------------------------------------------
 
 ## dupdip
 
-Basis Function Combinator
+Combinator
 
-    [F] dupdip == dup [F] dip
+Apply a function `F` and [dup] the item under it on the stack.
 
-    ... a [F] dupdip
-    ... a dup [F] dip
-    ... a a   [F] dip
-    ... a F a
-
-Gentzen diagram.
+       a [F] dupdip
+    ------------------
+          a F a
 
 ### Definition
 
-if not basis.
+> [dupd] [dip]
 
 ### Derivation
 
-if not basis.
-
-### Source
-
-if basis
+    a [F] dupdip
+    a [F] dupd dip
+    a [F] [dup] dip dip
+    a dup [F] dip
+    a a [F] dip
+    a F a
 
 ### Discussion
 
-Lorem ipsum.
+A very common and useful combinator.
 
 ### Crosslinks
 
-Lorem ipsum.
+[dupdipd]
+
 
 ------------------------------------------------------------------------
 
 ## dupdipd
 
-Basis Function Combinator
+Combinator
 
-dup dipd
+Run a copy of program `F` under the next item down on the stack.
 
-Gentzen diagram.
+       a [F] dupdipd
+    -------------------
+          F a [F]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [dup] [dipd]
 
 ### Crosslinks
 
-Lorem ipsum.
+[dupdip]
+
 
 ------------------------------------------------------------------------
 

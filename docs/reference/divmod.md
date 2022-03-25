@@ -2,30 +2,17 @@
 
 ## divmod
 
-Basis Function Combinator
+Function
 
-divmod(x, y) -\> (quotient, remainder)
+        x y divmod
+    ------------------
+         q      r
+       (x/y)  (x%y)
 
-Return the tuple (x//y, x%y). Invariant: q \* y + r == x.
+Invariant: `qy + r = x`.
 
-Gentzen diagram.
 
 ### Definition
 
-if not basis.
+> \[[floordiv]\] \[[mod]\] [clop]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

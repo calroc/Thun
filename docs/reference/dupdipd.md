@@ -2,28 +2,19 @@
 
 ## dupdipd
 
-Basis Function Combinator
+Combinator
 
-dup dipd
+Run a copy of program `F` under the next item down on the stack.
 
-Gentzen diagram.
+       a [F] dupdipd
+    -------------------
+          F a [F]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [dup] [dipd]
 
 ### Crosslinks
 
-Lorem ipsum.
+[dupdip]
+

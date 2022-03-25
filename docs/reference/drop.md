@@ -2,35 +2,22 @@
 
 ## drop
 
-Basis Function Combinator
-
-    drop == [rest] times
+Function
 
 Expects an integer and a quote on the stack and returns the quote with n
-items removed off the top. :
+items removed off the top.
 
-    [a b c d] 2 drop
+### Example
+
+       [a b c d] 2 drop
     ----------------------
-        [c d]
-
-Gentzen diagram.
+           [c d]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[rest]\] [times]
 
 ### Crosslinks
 
-Lorem ipsum.
+[take]
+

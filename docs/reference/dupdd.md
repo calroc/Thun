@@ -2,28 +2,22 @@
 
 ## dupdd
 
-Basis Function Combinator
+Function
 
-    (a3 a2 a1 -- a3 a3 a2 a1)
+[dup] the third item down on the stack.
 
-Gentzen diagram.
+       a b c dupdd
+    -----------------
+         a a b c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[dup]\] [dipd]
 
 ### Crosslinks
 
-Lorem ipsum.
+[dup]
+[dupd]
+[dupdip]
+[dupdipd]
+

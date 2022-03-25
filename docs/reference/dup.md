@@ -2,28 +2,18 @@
 
 ## dup
 
-Basis Function Combinator
+Basis Function
 
-    (a1 -- a1 a1)
+"Dup"licate the top item on the stack.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a dup
+    -----------
+        a a
 
 ### Crosslinks
 
-Lorem ipsum.
+[dupd]
+[dupdd]
+[dupdip]
+[dupdipd]
+

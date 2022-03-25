@@ -2,28 +2,22 @@
 
 ## down_to_zero
 
-Basis Function Combinator
+Function
 
-\[0 \>\] \[dup \--\] while
+Given a number greater than zero put all the Natural numbers (including
+zero) less than that onto the stack.
 
-Gentzen diagram.
+### Example
+
+       3 down_to_zero
+    --------------------
+          3 2 1 0
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[0 \>\] \[[dup] [--]\] [while]
 
 ### Crosslinks
 
-Lorem ipsum.
+[range]
+
