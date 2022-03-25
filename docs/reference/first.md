@@ -2,28 +2,22 @@
 
 ## first
 
-Basis Function Combinator
+Function
 
-    ([a1 ...1] -- a1)
+Replace a list with its first item.
 
-Gentzen diagram.
+       [a ...]
+    --------------
+          a
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [uncons] [pop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[second]
+[third]
+[fourth]
+[rest]
+

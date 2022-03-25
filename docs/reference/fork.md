@@ -2,28 +2,25 @@
 
 ## fork
 
-Basis Function Combinator
+Combinator
 
-\[i\] app2
+Run two quoted programs in parallel and replace them with their results.
 
-Gentzen diagram.
+       ... [F] [G] fork
+    ----------------------
+           ... f g
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[i]\] [app2]
 
 ### Discussion
 
-Lorem ipsum.
+The basic parallelism combinator, the two programs are run independently.
 
 ### Crosslinks
 
-Lorem ipsum.
+[cleave]
+[clop]
+[map]
+

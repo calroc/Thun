@@ -2,28 +2,22 @@
 
 ## fourth
 
-Basis Function Combinator
+Function
 
-    ([a1 a2 a3 a4 ...1] -- a4)
+Replace a list with its fourth item.
 
-Gentzen diagram.
+       [a b c d ...] fourth
+    --------------------------
+              d
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rest] [third]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[second]
+[third]
+[rest]
+

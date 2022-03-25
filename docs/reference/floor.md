@@ -2,30 +2,12 @@
 
 ## floor
 
-Basis Function Combinator
+Basis Function
 
-Return the floor of x as an Integral.
-
-This is the largest integer \<= x.
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+Return the largest integer \<= x.
 
 ### Discussion
 
-Lorem ipsum.
+This function doesn't make sense (yet) to have because there are (as yet)
+only integers in the system.
 
-### Crosslinks
-
-Lorem ipsum.

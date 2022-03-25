@@ -1397,213 +1397,184 @@ Lorem ipsum.
 
 ## first
 
-Basis Function Combinator
+Function
 
-    ([a1 ...1] -- a1)
+Replace a list with its first item.
 
-Gentzen diagram.
+       [a ...]
+    --------------
+          a
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [uncons] [pop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[second]
+[third]
+[fourth]
+[rest]
+
 
 ------------------------------------------------------------------------
 
 ## first_two
 
-Basis Function Combinator
+Function
 
-    ([a1 a2 ...1] -- a1 a2)
+Replace a list with its first two items.
 
-Gentzen diagram.
+       [a b ...] first_two
+    -------------------------
+               a b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [uncons] [first]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[second]
+[third]
+[fourth]
+[rest]
+
 
 ------------------------------------------------------------------------
 
 ## flatten
 
-Basis Function Combinator
+Function
 
-\<{} \[concat\] step
+Given a list of lists, concatinate them.
 
-Gentzen diagram.
+### Example
+
+       [[1 2] [3 [4] 5] [6 7]] flatten
+    -------------------------------------
+              [1 2 3 [4] 5 6 7]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [\<\{\}] \[[concat]\] [step]
 
 ### Discussion
 
-Lorem ipsum.
+Note that only one "level" of lists is flattened.  In the example above
+`[4]` is not unquoted.
 
 ### Crosslinks
 
-Lorem ipsum.
+[concat]
+[first]
+[first_two]
+[fourth]
+[getitem]
+[remove]
+[rest]
+[reverse]
+[rrest]
+[second]
+[shift]
+[shunt]
+[size]
+[sort]
+[split_at]
+[split_list]
+[swaack]
+[third]
+[zip]
+
 
 ------------------------------------------------------------------------
 
 ## floor
 
-Basis Function Combinator
+Basis Function
 
-Return the floor of x as an Integral.
-
-This is the largest integer \<= x.
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+Return the largest integer \<= x.
 
 ### Discussion
 
-Lorem ipsum.
+This function doesn't make sense (yet) to have because there are (as yet)
+only integers in the system.
 
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## floordiv
 
-Basis Function Combinator
+Basis Function
 
-Same as a // b.
+I don't know why this is called "floor" div, I think it rounds its
+result down (not towards zero or up.)
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       a b floordiv
+    ------------------
+          (a/b)
 
 ### Discussion
 
-Lorem ipsum.
+All the division commands need to be revisited when the "numeric tower"
+for Thun gets nailed down.
 
 ### Crosslinks
 
-Lorem ipsum.
+[divmod]
+
 
 ------------------------------------------------------------------------
 
 ## fork
 
-Basis Function Combinator
+Combinator
 
-\[i\] app2
+Run two quoted programs in parallel and replace them with their results.
 
-Gentzen diagram.
+       ... [F] [G] fork
+    ----------------------
+           ... f g
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[i]\] [app2]
 
 ### Discussion
 
-Lorem ipsum.
+The basic parallelism combinator, the two programs are run independently.
 
 ### Crosslinks
 
-Lorem ipsum.
+[cleave]
+[clop]
+[map]
+
 
 ------------------------------------------------------------------------
 
 ## fourth
 
-Basis Function Combinator
+Function
 
-    ([a1 a2 a3 a4 ...1] -- a4)
+Replace a list with its fourth item.
 
-Gentzen diagram.
+       [a b c d ...] fourth
+    --------------------------
+              d
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rest] [third]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[second]
+[third]
+[rest]
+
 
 ------------------------------------------------------------------------
 

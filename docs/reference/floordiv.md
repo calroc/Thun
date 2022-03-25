@@ -2,28 +2,21 @@
 
 ## floordiv
 
-Basis Function Combinator
+Basis Function
 
-Same as a // b.
+I don't know why this is called "floor" div, I think it rounds its
+result down (not towards zero or up.)
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       a b floordiv
+    ------------------
+          (a/b)
 
 ### Discussion
 
-Lorem ipsum.
+All the division commands need to be revisited when the "numeric tower"
+for Thun gets nailed down.
 
 ### Crosslinks
 
-Lorem ipsum.
+[divmod]
+

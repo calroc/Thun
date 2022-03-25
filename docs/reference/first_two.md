@@ -2,28 +2,23 @@
 
 ## first_two
 
-Basis Function Combinator
+Function
 
-    ([a1 a2 ...1] -- a1 a2)
+Replace a list with its first two items.
 
-Gentzen diagram.
+       [a b ...] first_two
+    -------------------------
+               a b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [uncons] [first]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[second]
+[third]
+[fourth]
+[rest]
+
