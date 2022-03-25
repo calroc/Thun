@@ -1378,10 +1378,7 @@ them with a Boolean value.
        a b eq
     -------------
        Boolean
-
-### Discussion
-
-Lorem ipsum.
+       (a = b)
 
 ### Crosslinks
 
@@ -1580,200 +1577,179 @@ Replace a list with its fourth item.
 
 ## gcd
 
-Basis Function Combinator
+Function
 
-true \[tuck mod dup 0 \>\] loop pop
-
-Gentzen diagram.
+Take two integers from the stack and replace them with their Greatest
+Common Denominator.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> true \[[tuck] [mod] [dup] 0 [>]\] [loop] [pop]
 
 ### Discussion
 
-Lorem ipsum.
+Euclid's Algorithm
 
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## gcd2
 
-Basis Function Combinator
+Function
 
 Compiled GCD function.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+See [gcd].
 
 ### Crosslinks
 
-Lorem ipsum.
+[gcd]
+
 
 ------------------------------------------------------------------------
 
 ## ge
 
-Basis Function Combinator
+Basis Function
 
-Same as a \>= b.
+Greater-than-or-equal-to comparison of two numbers.
 
-Gentzen diagram.
+       a b ge
+    --------------
+       Boolean
+       (a >= b)
 
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
 
 ### Crosslinks
 
-Lorem ipsum.
+[cmp]
+[eq]
+[gt]
+[le]
+[lt]
+[ne]
+
 
 ------------------------------------------------------------------------
 
 ## genrec
 
-Basis Function Combinator
+Combinator
 
-General Recursion Combinator. :
+**Gen**eral **Rec**ursion Combinator. 
 
-    [if] [then] [rec1] [rec2] genrec
+                          [if] [then] [rec1] [rec2] genrec
     ---------------------------------------------------------------------
-    [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte
+       [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte
 
-From \"Recursion Theory and Joy\" (j05cmp.html) by Manfred von Thun:
-\"The genrec combinator takes four program parameters in addition to
-whatever data parameters it needs. Fourth from the top is an if-part,
-followed by a then-part. If the if-part yields true, then the then-part
-is executed and the combinator terminates. The other two parameters are
-the rec1-part and the rec2-part. If the if-part yields false, the
-rec1-part is executed. Following that the four program parameters and
-the combinator are again pushed onto the stack bundled up in a quoted
-form. Then the rec2-part is executed, where it will find the bundled
-form. Typically it will then execute the bundled form, either with i or
-with app2, or some other combinator.\"
+### Definition
 
-The way to design one of these is to fix your base case \[then\] and the
-test \[if\], and then treat rec1 and rec2 as an else-part
-\"sandwiching\" a quotation of the whole function.
+> \[\[[genrec]\] [ccccons]\] [nullary] [swons] [concat] [ifte]
 
-For example, given a (general recursive) function \'F\': :
+(Note that this definition includes the `genrec` symbol itself, it is
+self-referential.  This is possible because the definition machinery does
+not check that symbols in defs are in the dictionary.  `genrec` is the
+only self-referential definition.)
+
+### Discussion
+
+See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
+
+From ["Recursion Theory and Joy"](https://www.kevinalbrecht.com/code/joy-mirror/j05cmp.html)
+by Manfred von Thun:
+
+> "The genrec combinator takes four program parameters in addition to
+> whatever data parameters it needs. Fourth from the top is an if-part,
+> followed by a then-part. If the if-part yields true, then the then-part
+> is executed and the combinator terminates. The other two parameters are
+> the rec1-part and the rec2-part. If the if-part yields false, the
+> rec1-part is executed. Following that the four program parameters and
+> the combinator are again pushed onto the stack bundled up in a quoted
+> form.  Then the rec2-part is executed, where it will find the bundled
+> form.  Typically it will then execute the bundled form, either with i
+> or with app2, or some other combinator."
+
+The way to design one of these is to fix your base case `[then]` and the
+test `[if]`, and then treat `rec1` and `rec2` as an else-part
+"sandwiching" a quotation of the whole function.
+
+For example, given a (general recursive) function `F`:
 
     F == [I] [T] [R1] [R2] genrec
 
-If the \[I\] if-part fails you must derive R1 and R2 from: :
+If the `[I]` if-part fails you must derive `R1` and `R2` from: :
 
     ... R1 [F] R2
 
-Just set the stack arguments in front, and figure out what R1 and R2
-have to do to apply the quoted \[F\] in the proper way. In effect, the
-genrec combinator turns into an ifte combinator with a quoted copy of
-the original definition in the else-part: :
+Just set the stack arguments in front, and figure out what `R1` and `R2`
+have to do to apply the quoted `[F]` in the proper way. In effect, the
+`genrec` combinator turns into an [ifte] combinator with a quoted copy of
+the original definition in the else-part:
 
     F == [I] [T] [R1]   [R2] genrec
       == [I] [T] [R1 [F] R2] ifte
 
-Primitive recursive functions are those where R2 == i. :
+Tail recursive functions are those where `R2` is the `i` combinator:
 
     P == [I] [T] [R] tailrec
       == [I] [T] [R [P] i] ifte
       == [I] [T] [R P] ifte
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
 ### Crosslinks
 
-Lorem ipsum.
+[anamorphism]
+[tailrec]
+[x]
+
 
 ------------------------------------------------------------------------
 
 ## getitem
 
-Basis Function Combinator
-
-    getitem == drop first
+Function
 
 Expects an integer and a quote on the stack and returns the item at the
-nth position in the quote counting from 0. :
+nth position in the quote counting from 0.
 
-    [a b c d] 0 getitem
+### Example
+
+       [a b c d] 2 getitem
     -------------------------
-     a
-
-Gentzen diagram.
+            c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [drop] [first]
 
 ### Discussion
 
-Lorem ipsum.
+If the number isn't a valid index into the quote `getitem` will cause
+some sort of problem (the exact nature of which is
+implementation-dependant.)
 
 ### Crosslinks
 
-Lorem ipsum.
+[concat]
+[first]
+[first_two]
+[flatten]
+[fourth]
+[remove]
+[rest]
+[reverse]
+[rrest]
+[second]
+[shift]
+[shunt]
+[size]
+[sort]
+[split_at]
+[split_list]
+[swaack]
+[third]
+[zip]
 
 ------------------------------------------------------------------------
 

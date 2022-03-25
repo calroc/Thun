@@ -2,28 +2,16 @@
 
 ## gcd
 
-Basis Function Combinator
+Function
 
-true \[tuck mod dup 0 \>\] loop pop
-
-Gentzen diagram.
+Take two integers from the stack and replace them with their Greatest
+Common Denominator.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> true \[[tuck] [mod] [dup] 0 [>]\] [loop] [pop]
 
 ### Discussion
 
-Lorem ipsum.
+Euclid's Algorithm
 
-### Crosslinks
-
-Lorem ipsum.

@@ -2,7 +2,7 @@
 
 ## grabN
 
-Basis Function Combinator
+Function
 
 \<{} \[cons\] times
 

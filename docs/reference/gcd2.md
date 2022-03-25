@@ -2,28 +2,15 @@
 
 ## gcd2
 
-Basis Function Combinator
+Function
 
 Compiled GCD function.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+See [gcd].
 
 ### Crosslinks
 
-Lorem ipsum.
+[gcd]
+

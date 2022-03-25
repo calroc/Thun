@@ -2,28 +2,22 @@
 
 ## ge
 
-Basis Function Combinator
+Basis Function
 
-Same as a \>= b.
+Greater-than-or-equal-to comparison of two numbers.
 
-Gentzen diagram.
+       a b ge
+    --------------
+       Boolean
+       (a >= b)
 
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
 
 ### Crosslinks
 
-Lorem ipsum.
+[cmp]
+[eq]
+[gt]
+[le]
+[lt]
+[ne]
+

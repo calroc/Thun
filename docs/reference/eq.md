@@ -10,10 +10,7 @@ them with a Boolean value.
        a b eq
     -------------
        Boolean
-
-### Discussion
-
-Lorem ipsum.
+       (a = b)
 
 ### Crosslinks
 
