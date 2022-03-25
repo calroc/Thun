@@ -582,9 +582,9 @@ def divmod_(S):
 
     Return the tuple (x//y, x%y).  Invariant: q * y + r == x.
     '''
-    a, (b, stack) = S
-    d, m = divmod(a, b)
-    return d, (m, stack)
+    y, (x, stack) = S
+    q, r = divmod(x, y)
+    return r, (q, stack)
 
 
 def sqrt(a):
