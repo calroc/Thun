@@ -2,28 +2,10 @@
 
 ## id
 
-Basis Function Combinator
+Basis Function
 
 The identity function.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
+Does nothing.  It's kind of a mathematical thing, but it occasionally comes in handy.

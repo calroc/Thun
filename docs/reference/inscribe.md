@@ -2,32 +2,17 @@
 
 ## inscribe
 
-Basis Function Combinator
-
 Create a new Joy function definition in the Joy dictionary. A definition
-is given as a quote with a name followed by a Joy expression. for
-example:
+is given as a quote with a name followed by a Joy expression.
 
-> \[sqr dup mul\] inscribe
+### Example
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+    [sqr dup mul] inscribe
 
 ### Discussion
 
-Lorem ipsum.
+This is the only function that modifies the dictionary.  It's provided as a 
+convenience, for tinkering with new definitions before entering them into
+the `defs.txt` file.  It can be abused, which you should avoid unless you
+know what you're doing.
 
-### Crosslinks
-
-Lorem ipsum.

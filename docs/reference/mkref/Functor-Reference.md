@@ -1842,7 +1842,7 @@ item on the top of the stack is a quoted symbol.
 Function
 
              x y hypot
-    --------------------------
+    ---------------------------
        sqrt(sqr(x) + sqr(y))
 
 ### Definition
@@ -1881,75 +1881,35 @@ example, the [x] combinator can be defined as `dup i`.
 
 ## id
 
-Basis Function Combinator
+Basis Function
 
 The identity function.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
+Does nothing.  It's kind of a mathematical thing, but it occasionally comes in handy.
 
 ------------------------------------------------------------------------
 
 ## ifte
 
-Basis Function Combinator
+Combinator
 
-If-Then-Else Combinator :
+If-Then-Else combinator, a common and convenient specialization of [branch].
 
-    ... [if] [then] [else] ifte
-    ---------------------------------------------------
-    ... [[else] [then]] [...] [if] infra select i
-
-
-
-
-    ... [if] [then] [else] ifte
-    -------------------------------------------------------
-    ... [else] [then] [...] [if] infra first choice i
-
-Has the effect of grabbing a copy of the stack on which to run the
-if-part using infra.
-
-Gentzen diagram.
+            [if] [then] [else] ifte
+    ---------------------------------------
+       [if] nullary [else] [then] branch
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[nullary]\] [dipd] [swap] [branch]
 
 ### Crosslinks
 
-Lorem ipsum.
+[branch]
+[loop]
+[while]
 
 ------------------------------------------------------------------------
 
@@ -2003,19 +1963,18 @@ In some cases (like the example above) this is the same effect as using [app2] b
 
 ## infra
 
-(Combinator)
+Combinator
 
 Accept a quoted program and a list on the stack and run the program with
 the list as its stack.  Does not affect the stack (below the list.)
 
-       ... [a b c] [Q] infra
-    ---------------------------
-        c b a Q [...] swaack
+       ... x y z [a b c] [Q] infra
+    ---------------------------------
+        c b a Q [z y x ...] swaack
 
 ### Definition
 
-    swons swaack [i] dip swaack
-
+> [swons] [swaack] \[[i]\] [dip] [swaack]
 
 ### Discussion
 
@@ -2033,65 +1992,33 @@ kind of "pocket universe".  If the list represents a datastructure then
 
 ## infrst
 
-Basis Function Combinator
+Combinator
 
-infra first
-
-Gentzen diagram.
+Does [infra] and then extracts the [first] item from the resulting list.
 
 ### Definition
 
-if not basis.
+> [infra] [first]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## inscribe
 
-Basis Function Combinator
-
 Create a new Joy function definition in the Joy dictionary. A definition
-is given as a quote with a name followed by a Joy expression. for
-example:
+is given as a quote with a name followed by a Joy expression.
 
-> \[sqr dup mul\] inscribe
+### Example
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+    [sqr dup mul] inscribe
 
 ### Discussion
 
-Lorem ipsum.
+This is the only function that modifies the dictionary.  It's provided as a 
+convenience, for tinkering with new definitions before entering them into
+the `defs.txt` file.  It can be abused, which you should avoid unless you
+know what you're doing.
 
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 

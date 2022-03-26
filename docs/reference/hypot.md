@@ -5,7 +5,7 @@
 Function
 
              x y hypot
-    --------------------------
+    ---------------------------
        sqrt(sqr(x) + sqr(y))
 
 ### Definition

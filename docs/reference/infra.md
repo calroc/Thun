@@ -2,19 +2,18 @@
 
 ## infra
 
-(Combinator)
+Combinator
 
 Accept a quoted program and a list on the stack and run the program with
 the list as its stack.  Does not affect the stack (below the list.)
 
-       ... [a b c] [Q] infra
-    ---------------------------
-        c b a Q [...] swaack
+       ... x y z [a b c] [Q] infra
+    ---------------------------------
+        c b a Q [z y x ...] swaack
 
 ### Definition
 
-    swons swaack [i] dip swaack
-
+> [swons] [swaack] \[[i]\] [dip] [swaack]
 
 ### Discussion
 

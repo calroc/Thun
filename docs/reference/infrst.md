@@ -2,28 +2,11 @@
 
 ## infrst
 
-Basis Function Combinator
+Combinator
 
-infra first
-
-Gentzen diagram.
+Does [infra] and then extracts the [first] item from the resulting list.
 
 ### Definition
 
-if not basis.
+> [infra] [first]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
