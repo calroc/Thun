@@ -15,4 +15,3 @@ This is the only function that modifies the dictionary.  It's provided as a
 convenience, for tinkering with new definitions before entering them into
 the `defs.txt` file.  It can be abused, which you should avoid unless you
 know what you're doing.
-

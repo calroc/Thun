@@ -2,28 +2,14 @@
 
 ## lshift
 
-Basis Function Combinator
+Basis Function
 
-Same as a \<\< b.
+[Logical Left-Shift](https://en.wikipedia.org/wiki/Logical_shift)
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a n lshift
+    ----------------
+         (a×2ⁿ)
 
 ### Crosslinks
 
-Lorem ipsum.
+[rshift]

@@ -2,28 +2,14 @@
 
 ## rshift
 
-Basis Function Combinator
+Basis Function
 
-Same as a \>\> b.
+[Logical Right-Shift](https://en.wikipedia.org/wiki/Logical_shift)
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a n rshift
+    ----------------
+         (a∕2ⁿ)
 
 ### Crosslinks
 
-Lorem ipsum.
+[lshift]

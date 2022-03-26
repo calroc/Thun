@@ -2,28 +2,21 @@
 
 ## lt
 
-Basis Function Combinator
+Basis Function
 
-Same as a \< b.
+Less-Than comparison of the two items on the top of the
+stack, replacing them with a Boolean value.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b lt
+    -------------
+       Boolean
+       (a < b)
 
 ### Crosslinks
 
-Lorem ipsum.
+[cmp]
+[eq]
+[ge]
+[gt]
+[le]
+[ne]

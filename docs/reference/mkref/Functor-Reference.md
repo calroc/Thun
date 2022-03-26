@@ -2019,18 +2019,16 @@ convenience, for tinkering with new definitions before entering them into
 the `defs.txt` file.  It can be abused, which you should avoid unless you
 know what you're doing.
 
-
 ------------------------------------------------------------------------
 
 ## le
 
 Basis Function
 
-
 Less-Than-or-Equal-to comparison of the two items on the top of the
 stack, replacing them with a Boolean value.
 
-       a b eq
+       a b le
     -------------
        Boolean
        (a <= b)
@@ -2085,61 +2083,40 @@ Just as [branch] has it's more common and convenient form [ifte],
 
 ## lshift
 
-Basis Function Combinator
+Basis Function
 
-Same as a \<\< b.
+[Logical Left-Shift](https://en.wikipedia.org/wiki/Logical_shift)
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a n lshift
+    ----------------
+         (a×2ⁿ)
 
 ### Crosslinks
 
-Lorem ipsum.
+[rshift]
 
 ------------------------------------------------------------------------
 
 ## lt
 
-Basis Function Combinator
+Basis Function
 
-Same as a \< b.
+Less-Than comparison of the two items on the top of the
+stack, replacing them with a Boolean value.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b lt
+    -------------
+       Boolean
+       (a < b)
 
 ### Crosslinks
 
-Lorem ipsum.
+[cmp]
+[eq]
+[ge]
+[gt]
+[le]
+[ne]
 
 ------------------------------------------------------------------------
 
@@ -2333,31 +2310,24 @@ Lorem ipsum.
 
 ## ne
 
-Basis Function Combinator
+Basis Function
 
-Same as a != b.
+Not-Equal comparison of the two items on the top of the
+stack, replacing them with a Boolean value.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b ne
+    -------------
+       Boolean
+       (a = b)
 
 ### Crosslinks
 
-Lorem ipsum.
+[cmp]
+[eq]
+[ge]
+[gt]
+[le]
+[lt]
 
 ------------------------------------------------------------------------
 
@@ -3404,31 +3374,17 @@ Lorem ipsum.
 
 ## rshift
 
-Basis Function Combinator
+Basis Function
 
-Same as a \>\> b.
+[Logical Right-Shift](https://en.wikipedia.org/wiki/Logical_shift)
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a n rshift
+    ----------------
+         (a∕2ⁿ)
 
 ### Crosslinks
 
-Lorem ipsum.
+[lshift]
 
 ------------------------------------------------------------------------
 
