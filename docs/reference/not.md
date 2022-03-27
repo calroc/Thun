@@ -2,28 +2,24 @@
 
 ## not
 
-Basis Function Combinator
+Function
 
-Same as not a.
+Like [bool] but convert the item on the top of the stack to the inverse
+Boolean value.
 
-Gentzen diagram.
+       true not
+    --------------
+        false
 
+       false not
+    ---------------
+         true
+ 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [bool] \[true\] \[false\] [branch]
 
 ### Crosslinks
 
-Lorem ipsum.
+[bool]
+

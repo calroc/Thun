@@ -2,28 +2,24 @@
 
 ## nulco
 
-Basis Function Combinator
+Function
 
-\[nullary\] cons
+Take the item on the top of the stack and [cons] it onto `[nullary]`.
 
-Gentzen diagram.
+         [F] nulco
+    -------------------
+       [[F] nullary]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[nullary]\] [cons]
 
 ### Discussion
 
-Lorem ipsum.
+Helper function for [\|\|] and [&&].
 
 ### Crosslinks
 
-Lorem ipsum.
+[&&]
+[\|\|]
+

@@ -2298,124 +2298,78 @@ stack, replacing them with a Boolean value.
 
 ## neg
 
-Basis Function Combinator
+Function
 
-Same as -a.
+Invert the sign of a number.
 
-Gentzen diagram.
-
+       a neg
+    -----------
+        -a
 ### Definition
 
-if not basis.
+> 0 [swap] [-]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## not
 
-Basis Function Combinator
+Function
 
-Same as not a.
+Like [bool] but convert the item on the top of the stack to the inverse
+Boolean value.
 
-Gentzen diagram.
+       true not
+    --------------
+        false
 
+       false not
+    ---------------
+         true
+ 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [bool] \[true\] \[false\] [branch]
 
 ### Crosslinks
 
-Lorem ipsum.
-
---------------------
-
-## !-
-
-"not negative"
-
-(Function, Boolean Predicate)
-
-Integer on top of stack is replaced by Boolean value indicating whether
-it is non-negative.
-
-        N !-
-    -----------  N < 0
-       false
-
-       N !-
-    ----------  N >= 0
-       true
-
-
-### Definition
-
-    0 >=
+[bool]
 
 
 ------------------------------------------------------------------------
 
 ## nulco
 
-Basis Function Combinator
+Function
 
-\[nullary\] cons
+Take the item on the top of the stack and [cons] it onto `[nullary]`.
 
-Gentzen diagram.
+         [F] nulco
+    -------------------
+       [[F] nullary]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[nullary]\] [cons]
 
 ### Discussion
 
-Lorem ipsum.
+Helper function for [\|\|] and [&&].
 
 ### Crosslinks
 
-Lorem ipsum.
+[&&]
+[\|\|]
+
 
 --------------------
 
 ## nullary
 
-(Combinator)
+Combinator
 
-Run a quoted program without using any stack values and leave the first item of the result on the stack.
+Run a quoted program without using any stack values and leave the first
+item of the result on the stack.
 
        ... [P] nullary
     ---------------------
@@ -2423,9 +2377,9 @@ Run a quoted program without using any stack values and leave the first item of 
 
 ### Definition
 
-    [stack] dip infra first
+> \[[stack]\] [dip] [infra] [first]
 
-### Derivation
+### Example
 
     ... [P] nullary
     ... [P] [stack] dip infra first

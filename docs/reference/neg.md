@@ -2,28 +2,14 @@
 
 ## neg
 
-Basis Function Combinator
+Function
 
-Same as -a.
+Invert the sign of a number.
 
-Gentzen diagram.
-
+       a neg
+    -----------
+        -a
 ### Definition
 
-if not basis.
+> 0 [swap] [-]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
