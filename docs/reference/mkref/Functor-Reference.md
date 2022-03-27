@@ -2122,152 +2122,129 @@ stack, replacing them with a Boolean value.
 
 ## make_generator
 
-Basis Function Combinator
+Function
 
-\[codireco\] ccons
+Given an initial state value and a quoted generator function build a
+generator quote.
 
-Gentzen diagram.
+       state [generator function] make_generator
+    -----------------------------------------------
+         [state [generator function] codireco]
+
+### Example
+
+       230 [dup ++] make_generator
+    ---------------------------------
+         [230 [dup ++] codireco]
+
+And then:
+
+       [230 [dup ++] codireco] 5 [x] times pop
+    ---------------------------------------------
+                 230 231 232 233 234
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[codireco]\] [ccons]
 
 ### Discussion
 
-Lorem ipsum.
+See the ["Using `x` to Generate Values" notebook](https://joypy.osdn.io/notebooks/Generator_Programs.html#an-interesting-variation).
 
 ### Crosslinks
 
-Lorem ipsum.
+[codireco]
+
 
 ------------------------------------------------------------------------
 
 ## map
 
-Basis Function Combinator
+Combinator
 
-Run the quoted program on TOS on the items in the list under it, push a
-new list with the results in place of the program and original list.
+Given a list of items and a quoted program run the program for each item
+in the list (with the rest of the stack) and replace the old list and the
+program with a list of the results.
 
-Gentzen diagram.
+### Example
 
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       5 [1 2 3] [++ *] map
+    --------------------------
+           5 [10 15 20]
 
 ### Discussion
 
-Lorem ipsum.
+This is a common operation in many languages.  In Joy it can be a
+parallelism combinator due to the "pure" nature of the language.
 
 ### Crosslinks
 
-Lorem ipsum.
+[app1]
+[app2]
+[app3]
+[appN](#appn)
+[fork]
+
 
 ------------------------------------------------------------------------
 
 ## max
 
-Basis Function Combinator
+Basis Function
 
 Given a list find the maximum.
 
-Gentzen diagram.
+### Example
 
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       [1 2 3 4] max
+    -------------------
+             4
 
 ### Crosslinks
 
-Lorem ipsum.
+[min]
+[size]
+[sum]
+
 
 ------------------------------------------------------------------------
 
 ## min
 
-Basis Function Combinator
+Basis Function
 
 Given a list find the minimum.
 
-Gentzen diagram.
+### Example
 
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       [1 2 3 4] min
+    -------------------
+             1 
 
 ### Crosslinks
 
-Lorem ipsum.
+[max]
+[size]
+[sum]
+
 
 ------------------------------------------------------------------------
 
 ## mod
 
-Basis Function Combinator
+Basis Function
 
-Same as a % b.
+Return the remainder of `a` divided by `b`.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b mod
+    -------------
+        (a%b)
 
 ### Crosslinks
 
-Lorem ipsum.
+[divmod]
+[mul]
+
 
 --------------
 
@@ -2280,31 +2257,19 @@ See [mod](#mod).
 
 ## mul
 
-Basis Function Combinator
+Basis Function
 
-Same as a \* b.
+Multiply two numbers.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b mul
+    -------------
+        (a×b)
 
 ### Crosslinks
 
-Lorem ipsum.
+[div]
+[product]
+
 
 ------------------------------------------------------------------------
 

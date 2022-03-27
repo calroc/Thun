@@ -2,28 +2,19 @@
 
 ## min
 
-Basis Function Combinator
+Basis Function
 
 Given a list find the minimum.
 
-Gentzen diagram.
+### Example
 
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       [1 2 3 4] min
+    -------------------
+             1 
 
 ### Crosslinks
 
-Lorem ipsum.
+[max]
+[size]
+[sum]
+

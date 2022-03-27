@@ -2,28 +2,16 @@
 
 ## mod
 
-Basis Function Combinator
+Basis Function
 
-Same as a % b.
+Return the remainder of `a` divided by `b`.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b mod
+    -------------
+        (a%b)
 
 ### Crosslinks
 
-Lorem ipsum.
+[divmod]
+[mul]
+

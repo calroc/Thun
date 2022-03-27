@@ -2,28 +2,19 @@
 
 ## max
 
-Basis Function Combinator
+Basis Function
 
 Given a list find the maximum.
 
-Gentzen diagram.
+### Example
 
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       [1 2 3 4] max
+    -------------------
+             4
 
 ### Crosslinks
 
-Lorem ipsum.
+[min]
+[size]
+[sum]
+

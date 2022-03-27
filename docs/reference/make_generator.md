@@ -2,28 +2,36 @@
 
 ## make_generator
 
-Basis Function Combinator
+Function
 
-\[codireco\] ccons
+Given an initial state value and a quoted generator function build a
+generator quote.
 
-Gentzen diagram.
+       state [generator function] make_generator
+    -----------------------------------------------
+         [state [generator function] codireco]
+
+### Example
+
+       230 [dup ++] make_generator
+    ---------------------------------
+         [230 [dup ++] codireco]
+
+And then:
+
+       [230 [dup ++] codireco] 5 [x] times pop
+    ---------------------------------------------
+                 230 231 232 233 234
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[codireco]\] [ccons]
 
 ### Discussion
 
-Lorem ipsum.
+See the ["Using `x` to Generate Values" notebook](https://joypy.osdn.io/notebooks/Generator_Programs.html#an-interesting-variation).
 
 ### Crosslinks
 
-Lorem ipsum.
+[codireco]
+

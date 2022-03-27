@@ -2,28 +2,16 @@
 
 ## mul
 
-Basis Function Combinator
+Basis Function
 
-Same as a \* b.
+Multiply two numbers.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b mul
+    -------------
+        (a×b)
 
 ### Crosslinks
 
-Lorem ipsum.
+[div]
+[product]
+
