@@ -2,28 +2,21 @@
 
 ## of
 
-Basis Function Combinator
+Function
 
-swap at
+Like [getitem] but [swap]s the order of arguments.
 
-Gentzen diagram.
+### Example
+
+       2 [a b c d] of
+    --------------------
+             c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [swap] [getitem]
 
 ### Crosslinks
 
-Lorem ipsum.
+[getitem]
+

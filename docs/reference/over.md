@@ -2,28 +2,35 @@
 
 ## over
 
-Basis Function Combinator
+Function
 
-    (a2 a1 -- a2 a1 a2)
+[dup] the second item on the stack `over` the first.
 
-Gentzen diagram.
+       a b over
+    --------------
+        a b a
 
 ### Definition
 
-if not basis.
+There are many many ways to define this function.
 
-### Derivation
+> [swap] [tuck]
 
-if not basis.
+> \[[pop]\] [nullary]
 
-### Source
+> \[[dup]\] [dip] [swap]
 
-if basis
+> [unit] [dupdip]
+
+> [unit] [dupdipd] [first]
+
+And so on...
 
 ### Discussion
 
-Lorem ipsum.
+A fine old word from Forth.
 
 ### Crosslinks
 
-Lorem ipsum.
+[tuck]
+

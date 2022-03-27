@@ -2373,7 +2373,7 @@ item of the result on the stack.
 
        ... [P] nullary
     ---------------------
-            ... A
+            ... a
 
 ### Definition
 
@@ -2385,8 +2385,8 @@ item of the result on the stack.
     ... [P] [stack] dip infra first
     ... stack [P] infra first
     ... [...] [P] infra first
-    ... [A ...] first
-    ...  A
+    ... [a ...] first
+    ...  a
 
 ### Discussion
 
@@ -2405,91 +2405,75 @@ program.)
 
 ## of
 
-Basis Function Combinator
+Function
 
-swap at
+Like [getitem] but [swap]s the order of arguments.
 
-Gentzen diagram.
+### Example
+
+       2 [a b c d] of
+    --------------------
+             c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [swap] [getitem]
 
 ### Crosslinks
 
-Lorem ipsum.
+[getitem]
+
 
 ------------------------------------------------------------------------
 
 ## or
 
-Basis Function Combinator
+Basis Function
 
-Same as a \| b.
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+Logical bit-wise OR.
 
 ### Crosslinks
 
-Lorem ipsum.
+[and]
+[xor]
+
 
 ------------------------------------------------------------------------
 
 ## over
 
-Basis Function Combinator
+Function
 
-    (a2 a1 -- a2 a1 a2)
+[dup] the second item on the stack `over` the first.
 
-Gentzen diagram.
+       a b over
+    --------------
+        a b a
 
 ### Definition
 
-if not basis.
+There are many many ways to define this function.
 
-### Derivation
+> [swap] [tuck]
 
-if not basis.
+> \[[pop]\] [nullary]
 
-### Source
+> \[[dup]\] [dip] [swap]
 
-if basis
+> [unit] [dupdip]
+
+> [unit] [dupdipd] [first]
+
+And so on...
 
 ### Discussion
 
-Lorem ipsum.
+A fine old word from Forth.
 
 ### Crosslinks
 
-Lorem ipsum.
+[tuck]
+
 
 ------------------------------------------------------------------------
 
