@@ -2,28 +2,24 @@
 
 ## popdd
 
-Basis Function Combinator
+Function
 
-    (a3 a2 a1 -- a2 a1)
+[pop] the third item on the stack.
 
-Gentzen diagram.
+       a b c popdd
+    -----------------
+           b c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rolldown] [pop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[pop]
+[popd]
+[popop]
+[popopd]
+[popopdd]
+[popopop]
+

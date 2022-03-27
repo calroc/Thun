@@ -2,28 +2,18 @@
 
 ## pow
 
-Basis Function Combinator
+Basis Function
 
-Same as a \*\* b.
+Take two numbers `a` and `b` from the stack and raise `a` to the `n`th
+power.  (`b` is on the top of the stack.)
 
-Gentzen diagram.
+       a n pow
+    -------------
+        (aⁿ)
 
-### Definition
+### Example
 
-if not basis.
+       2 [2 3 4 5 6 7 8 9] [pow] map
+    -----------------------------------
+        2 [4 8 16 32 64 128 256 512]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

@@ -2479,31 +2479,31 @@ A fine old word from Forth.
 
 ## pam
 
-Basis Function Combinator
+Combinator
 
-\[i\] map
+Take a list of quoted functions from the stack and replace it with a list
+of the [first] results from running those functions (on copies of the
+rest of the stack.)
 
-Gentzen diagram.
+### Example
+
+       5 7 [[+][-][*][/][%]] pam
+    -------------------------------
+          5 7 [12 -2 35 0 5]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[i]\] [map]
 
 ### Discussion
 
-Lorem ipsum.
+A specialization of [map] that runs a list of functions in parallel (if
+the underlying [map] function is so implemented, of course.)
 
 ### Crosslinks
 
-Lorem ipsum.
+[map]
+
 
 --------------
 
@@ -2516,392 +2516,292 @@ See [getitem](#getitem).
 
 ## pm
 
-Basis Function Combinator
+Function
 
-Plus or minus :
+Plus or minus.  Replace two numbers with their sum and difference.
 
-    a b pm
-    -------------
-    a+b a-b
-
-Gentzen diagram.
+          a b pm
+    -----------------
+       (a+b) (a-b)
 
 ### Definition
 
-if not basis.
+> \[+\] \[-\] [clop]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## pop
 
-Basis Function Combinator
+Basis Function
 
-    (a1 --)
+Pop the top item from the stack and discard it.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a pop
+    -----------
 
 ### Crosslinks
 
-Lorem ipsum.
+[popd]
+[popdd]
+[popop]
+[popopd]
+[popopdd]
+[popopop]
+
 
 ------------------------------------------------------------------------
 
 ## popd
 
-Basis Function Combinator
+Function
 
-    (a2 a1 -- a1)
+[pop] the second item down on the stack.
 
-Gentzen diagram.
+       a b popd
+    --------------
+          b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [swap] [pop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[pop]
+[popdd]
+[popop]
+[popopd]
+[popopdd]
+[popopop]
+
 
 ------------------------------------------------------------------------
 
 ## popdd
 
-Basis Function Combinator
+Function
 
-    (a3 a2 a1 -- a2 a1)
+[pop] the third item on the stack.
 
-Gentzen diagram.
+       a b c popdd
+    -----------------
+           b c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rolldown] [pop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[pop]
+[popd]
+[popop]
+[popopd]
+[popopdd]
+[popopop]
+
 
 ------------------------------------------------------------------------
 
 ## popop
 
-Basis Function Combinator
+Function
 
-    (a2 a1 --)
+[pop] two items from the stack.
 
-Gentzen diagram.
+       a b popop
+    ---------------
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [pop] [pop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[pop]
+[popd]
+[popdd]
+[popopd]
+[popopdd]
+[popopop]
+
 
 ------------------------------------------------------------------------
 
 ## popopd
 
-Basis Function Combinator
+Function
 
-    (a3 a2 a1 -- a1)
+[pop] the second and third items from the stack.
 
-Gentzen diagram.
+       a b c popopd
+    ------------------
+            c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rollup] [popop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[pop]
+[popd]
+[popdd]
+[popop]
+[popopdd]
+[popopop]
+
 
 ------------------------------------------------------------------------
 
 ## popopdd
 
-Basis Function Combinator
+Function
 
-    (a4 a3 a2 a1 -- a2 a1)
-
-Gentzen diagram.
+       a b c d popopdd
+    ---------------------
+            c d
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[popop]\] [dipd]
 
 ### Crosslinks
 
-Lorem ipsum.
+[pop]
+[popd]
+[popdd]
+[popop]
+[popopd]
+[popopop]
+
 
 ------------------------------------------------------------------------
 
 ## popopop
 
-Basis Function Combinator
+Function
 
-pop popop
+[pop] three items from the stack.
 
-Gentzen diagram.
+       a b c popopop
+    -------------------
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [pop] [popop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[pop]
+[popd]
+[popdd]
+[popop]
+[popopd]
+[popopdd]
+
 
 ------------------------------------------------------------------------
 
 ## pow
 
-Basis Function Combinator
+Basis Function
 
-Same as a \*\* b.
+Take two numbers `a` and `b` from the stack and raise `a` to the `n`th
+power.  (`b` is on the top of the stack.)
 
-Gentzen diagram.
+       a n pow
+    -------------
+        (aⁿ)
 
-### Definition
+### Example
 
-if not basis.
+       2 [2 3 4 5 6 7 8 9] [pow] map
+    -----------------------------------
+        2 [4 8 16 32 64 128 256 512]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## pred
 
-Basis Function Combinator
+Function
 
-Decrement TOS.
-
-Gentzen diagram.
+Predecessor. Decrement TOS.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> 1 -
 
 ### Crosslinks
 
-Lorem ipsum.
+[succ]
+
 
 ------------------------------------------------------------------------
 
 ## primrec
 
-Basis Function Combinator
+Combinator
 
-From the \"Overview of the language JOY\":
+From the ["Overview of the language JOY"](https://www.kevinalbrecht.com/code/joy-mirror/j00ovr.html)
 
-\> The primrec combinator expects two quoted programs in addition to a
-data parameter. For an integer data parameter it works like this: If the
-data parameter is zero, then the first quotation has to produce the
-value to be returned. If the data parameter is positive then the second
-has to combine the data parameter with the result of applying the
-function to its predecessor.:
+> The primrec combinator expects two quoted programs in addition to a
+> data parameter. For an integer data parameter it works like this: If
+> the data parameter is zero, then the first quotation has to produce the
+> value to be returned. If the data parameter is positive then the second
+> has to combine the data parameter with the result of applying the
+> function to its predecessor.
 
-    5  [1]  [*]  primrec
+> 5  \[1\]  \[\*\]  primrec
 
-\> Then primrec tests whether the top element on the stack (initially
-the 5) is equal to zero. If it is, it pops it off and executes one of
-the quotations, the \[1\] which leaves 1 on the stack as the result.
-Otherwise it pushes a decremented copy of the top element and recurses.
-On the way back from the recursion it uses the other quotation, \[\*\],
-to multiply what is now a factorial on top of the stack by the second
-element on the stack.:
+> Then primrec tests whether the top element on the stack (initially the
+> 5) is equal to zero. If it is, it pops it off and executes one of the
+> quotations, the \[1\] which leaves 1 on the stack as the result.
+> Otherwise it pushes a decremented copy of the top element and recurses.
+> On the way back from the recursion it uses the other quotation, \[\*\],
+> to multiply what is now a factorial on top of the stack by the second
+> element on the stack.
 
-    n [Base] [Recur] primrec
 
        0 [Base] [Recur] primrec
     ------------------------------
           Base
 
-         n [Base] [Recur] primrec
+             n [Base] [Recur] primrec
     ------------------------------------------ n > 0
        n (n-1) [Base] [Recur] primrec Recur
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+Simple and useful specialization of the [genrec] combinator from the
+[original Joy system](https://www.kevinalbrecht.com/code/joy-mirror/index.html).
 
 ### Crosslinks
 
-Lorem ipsum.
+[genrec]
+[tailrec]
+
 
 ------------------------------------------------------------------------
 
 ## product
 
-Basis Function Combinator
+Function
 
-1 swap \[\*\] step
-
-Gentzen diagram.
+Just as [sum] sums a list of numbers, this function multiplies them
+together.
 
 ### Definition
 
-if not basis.
+> 1 [swap] \[[mul]\] [step]
 
-### Derivation
+Or,
 
-if not basis.
+> \[1\] \[[mul]\] [primrec]
 
-### Source
 
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 

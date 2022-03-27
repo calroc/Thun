@@ -2,28 +2,23 @@
 
 ## popop
 
-Basis Function Combinator
+Function
 
-    (a2 a1 --)
+[pop] two items from the stack.
 
-Gentzen diagram.
+       a b popop
+    ---------------
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [pop] [pop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[pop]
+[popd]
+[popdd]
+[popopd]
+[popopdd]
+[popopop]
+

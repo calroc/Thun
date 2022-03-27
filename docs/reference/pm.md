@@ -2,32 +2,15 @@
 
 ## pm
 
-Basis Function Combinator
+Function
 
-Plus or minus :
+Plus or minus.  Replace two numbers with their sum and difference.
 
-    a b pm
-    -------------
-    a+b a-b
-
-Gentzen diagram.
+          a b pm
+    -----------------
+       (a+b) (a-b)
 
 ### Definition
 
-if not basis.
+> \[+\] \[-\] [clop]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

@@ -2,28 +2,15 @@
 
 ## pred
 
-Basis Function Combinator
+Function
 
-Decrement TOS.
-
-Gentzen diagram.
+Predecessor. Decrement TOS.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> 1 -
 
 ### Crosslinks
 
-Lorem ipsum.
+[succ]
+

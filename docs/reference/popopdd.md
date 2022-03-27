@@ -2,28 +2,22 @@
 
 ## popopdd
 
-Basis Function Combinator
+Function
 
-    (a4 a3 a2 a1 -- a2 a1)
-
-Gentzen diagram.
+       a b c d popopdd
+    ---------------------
+            c d
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[popop]\] [dipd]
 
 ### Crosslinks
 
-Lorem ipsum.
+[pop]
+[popd]
+[popdd]
+[popop]
+[popopd]
+[popopop]
+

@@ -2,28 +2,28 @@
 
 ## pam
 
-Basis Function Combinator
+Combinator
 
-\[i\] map
+Take a list of quoted functions from the stack and replace it with a list
+of the [first] results from running those functions (on copies of the
+rest of the stack.)
 
-Gentzen diagram.
+### Example
+
+       5 7 [[+][-][*][/][%]] pam
+    -------------------------------
+          5 7 [12 -2 35 0 5]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[i]\] [map]
 
 ### Discussion
 
-Lorem ipsum.
+A specialization of [map] that runs a list of functions in parallel (if
+the underlying [map] function is so implemented, of course.)
 
 ### Crosslinks
 
-Lorem ipsum.
+[map]
+

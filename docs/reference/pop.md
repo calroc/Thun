@@ -2,28 +2,19 @@
 
 ## pop
 
-Basis Function Combinator
+Basis Function
 
-    (a1 --)
+Pop the top item from the stack and discard it.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a pop
+    -----------
 
 ### Crosslinks
 
-Lorem ipsum.
+[popd]
+[popdd]
+[popop]
+[popopd]
+[popopdd]
+[popopop]
+

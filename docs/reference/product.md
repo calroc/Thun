@@ -2,28 +2,17 @@
 
 ## product
 
-Basis Function Combinator
+Function
 
-1 swap \[\*\] step
-
-Gentzen diagram.
+Just as [sum] sums a list of numbers, this function multiplies them
+together.
 
 ### Definition
 
-if not basis.
+> 1 [swap] \[[mul]\] [step]
 
-### Derivation
+Or,
 
-if not basis.
+> \[1\] \[[mul]\] [primrec]
 
-### Source
 
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
