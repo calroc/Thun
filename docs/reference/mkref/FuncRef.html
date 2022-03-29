@@ -1792,64 +1792,68 @@ a F a</code></pre>
 </blockquote>
 <hr />
 <h2 id="quoted">quoted</h2>
-<p>Basis Function Combinator</p>
-<p>[unit] dip</p>
-<p>Gentzen diagram.</p>
+<p>Function</p>
+<p>&#x201C;Quote D&#x201D; Wrap the second item on the stack in a list.</p>
+<pre><code>   a b quoted
+----------------
+     [a] b</code></pre>
 <h3 id="definition-65">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-3">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source">Source</h3>
-<p>if basis</p>
+<blockquote>
+<p>[<a href="#unit">unit</a>] <a href="#dip">dip</a></p>
+</blockquote>
 <h3 id="discussion-54">Discussion</h3>
-<p>Lorem ipsum.</p>
+<p>This comes from the original Joy stuff.</p>
 <h3 id="crosslinks-82">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p><a href="#unit">unit</a></p>
 <hr />
 <h2 id="range">range</h2>
-<p>Basis Function Combinator</p>
-<p>[0 &lt;=] [1 - dup] anamorphism</p>
-<p>Gentzen diagram.</p>
+<p>Function</p>
+<p>Expect a number <code>n</code> on the stack and replace it with a list: <code>[(n-1)...0]</code>.</p>
+<h3 id="example-17">Example</h3>
+<pre><code>     5 range
+-----------------
+   [4 3 2 1 0]
+
+   -5 range
+--------------
+      []</code></pre>
 <h3 id="definition-66">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-4">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-1">Source</h3>
-<p>if basis</p>
+<blockquote>
+<p>[0 &lt;=] [1 - <a href="#dup">dup</a>] <a href="#anamorphism">anamorphism</a></p>
+</blockquote>
 <h3 id="discussion-55">Discussion</h3>
-<p>Lorem ipsum.</p>
+<p>If <code>n</code> is less than 1 the resulting list is empty.</p>
 <h3 id="crosslinks-83">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p><a href="#range_to_zero">range_to_zero</a></p>
 <hr />
 <h2 id="range_to_zero">range_to_zero</h2>
-<p>Basis Function Combinator</p>
-<p>unit [down_to_zero] infra</p>
-<p>Gentzen diagram.</p>
+<p>Function</p>
+<p>Take a number <code>n</code> from the stack and replace it with a list <code>[0...n]</code>.</p>
+<h3 id="example-18">Example</h3>
+<pre><code>   5 range_to_zero
+---------------------
+    [0 1 2 3 4 5]</code></pre>
 <h3 id="definition-67">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-5">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-2">Source</h3>
-<p>if basis</p>
+<blockquote>
+<p><a href="#unit">unit</a> [<a href="#down_to_zero">down_to_zero</a>] <a href="#infra">infra</a></p>
+</blockquote>
 <h3 id="discussion-56">Discussion</h3>
-<p>Lorem ipsum.</p>
+<p>Note that the order is reversed compared to <a href="#range">range</a>.</p>
 <h3 id="crosslinks-84">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p><a href="#down_to_zero">down_to_zero</a> <a href="#range">range</a></p>
 <hr />
 <h2 id="reco">reco</h2>
-<p>Basis Function Combinator</p>
-<p>rest cons</p>
-<p>Gentzen diagram.</p>
+<p>Function</p>
+<p>Replace the first item in a list with the item under it.</p>
+<pre><code>   a [b ...] reco
+--------------------
+     [a ...]</code></pre>
 <h3 id="definition-68">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-6">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-3">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-57">Discussion</h3>
-<p>Lorem ipsum.</p>
+<blockquote>
+<p><a href="#rest">rest</a> <a href="#cons">cons</a></p>
+</blockquote>
 <h3 id="crosslinks-85">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p><a href="#codireco">codireco</a> <a href="#make_generator">make_generator</a></p>
 <hr />
 <h2 id="rem">rem</h2>
 <p>See <a href="#mod">mod</a>.</p>
@@ -1858,83 +1862,57 @@ a F a</code></pre>
 <p>See <a href="#mod">mod</a>.</p>
 <hr />
 <h2 id="remove">remove</h2>
-<p>Basis Function Combinator</p>
-<p>Expects an item on the stack and a quote under it and removes that item from the the quote. The item is only removed once. If the list is empty or the item isn't in the list then the list is unchanged. :</p>
-<pre><code>[1 2 3 1] 1 remove
+<p>Function</p>
+<p>Expects an item on the stack and a quote under it and removes that item from the the quote. The item is only removed once. If the list is empty or the item isn&#x2019;t in the list then the list is unchanged.</p>
+<pre><code>   [1 2 3 1] 1 remove
 ------------------------
-  [2 3 1]</code></pre>
-<p>Gentzen diagram.</p>
+        [2 3 1]</code></pre>
 <h3 id="definition-69">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-7">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-4">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-58">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-86">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>See the <a href="https://osdn.net/projects/joypy/scm/git/Thun/blobs/master/docs/notebooks/Remove-Function.ipynb">&#x201C;Remove Function&#x201D; notebook</a>.</p>
 <hr />
 <h2 id="rest">rest</h2>
-<p>Basis Function Combinator</p>
-<pre><code>([a1 ...0] -- [...0])</code></pre>
-<p>Gentzen diagram.</p>
-<h3 id="definition-70">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-8">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-5">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-59">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-87">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Basis Function</p>
+<pre><code>   [a ...] rest
+------------------
+      [...]</code></pre>
+<h3 id="crosslinks-86">Crosslinks</h3>
+<p><a href="#first">first</a> <a href="#uncons">uncons</a></p>
 <hr />
 <h2 id="reverse">reverse</h2>
-<p>Basis Function Combinator</p>
-<p>Reverse the list on the top of the stack. :</p>
-<pre><code>reverse == [] swap shunt</code></pre>
-<p>Gentzen diagram.</p>
-<h3 id="definition-71">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-9">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-6">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-60">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-88">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<p>Reverse the list on the top of the stack.</p>
+<h3 id="example-19">Example</h3>
+<pre><code>   [1 2 3] reverse
+---------------------
+       [3 2 1]</code></pre>
+<h3 id="definition-70">Definition</h3>
+<blockquote>
+<p><a href="#section-16">&lt;{}</a> <a href="#shunt">shunt</a></p>
+</blockquote>
 <hr />
 <h2 id="rolldown">rolldown</h2>
-<p>Basis Function Combinator</p>
-<pre><code>(a1 a2 a3 -- a2 a3 a1)</code></pre>
-<p>Gentzen diagram.</p>
-<h3 id="definition-72">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-10">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-7">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-61">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-89">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<pre><code>   a b c rolldown
+--------------------
+       b c a</code></pre>
+<h3 id="definition-71">Definition</h3>
+<blockquote>
+<p><a href="#swapd">swapd</a> <a href="#swap">swap</a></p>
+</blockquote>
+<h3 id="crosslinks-87">Crosslinks</h3>
+<p><a href="#rollup">rollup</a></p>
 <hr />
 <h2 id="rollup">rollup</h2>
-<p>Basis Function Combinator</p>
-<pre><code>(a1 a2 a3 -- a3 a1 a2)</code></pre>
-<p>Gentzen diagram.</p>
-<h3 id="definition-73">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-11">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-8">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-62">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-90">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<pre><code>   a b c rollup
+------------------
+      c a b</code></pre>
+<h3 id="definition-72">Definition</h3>
+<blockquote>
+<p><a href="#swap">swap</a> <a href="#swapd">swapd</a></p>
+</blockquote>
+<h3 id="crosslinks-88">Crosslinks</h3>
+<p><a href="#rolldown">rolldown</a></p>
 <hr />
 <h2 id="roll">roll&gt;</h2>
 <p>See <a href="#rollup">rollup</a>.</p>
@@ -1943,35 +1921,22 @@ a F a</code></pre>
 <p>See <a href="#rolldown">rolldown</a>.</p>
 <hr />
 <h2 id="round">round</h2>
-<p>Basis Function Combinator</p>
+<p>Function</p>
 <p>Round a number to a given precision in decimal digits.</p>
-<p>The return value is an integer if ndigits is omitted or None. Otherwise the return value has the same type as the number. ndigits may be negative.</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-74">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-12">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-9">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-63">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-91">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<h3 id="discussion-57">Discussion</h3>
+<p>Another one that won&#x2019;t make sense until the &#x201C;numeric tower&#x201D; is nailed down.</p>
 <hr />
 <h2 id="rrest">rrest</h2>
-<p>Basis Function Combinator</p>
-<pre><code>([a1 a2 ...1] -- [...1])</code></pre>
-<p>Gentzen diagram.</p>
-<h3 id="definition-75">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-13">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-10">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-64">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-92">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<pre><code>   [a b ...] rrest
+---------------------
+        [...]</code></pre>
+<h3 id="definition-73">Definition</h3>
+<blockquote>
+<p><a href="#rest">rest</a> <a href="#rest">rest</a></p>
+</blockquote>
+<h3 id="crosslinks-89">Crosslinks</h3>
+<p><a href="#rest">rest</a></p>
 <hr />
 <h2 id="rshift">rshift</h2>
 <p>Basis Function</p>
@@ -1979,246 +1944,201 @@ a F a</code></pre>
 <pre><code>   a n rshift
 ----------------
      (a&#x2215;2&#x207F;)</code></pre>
-<h3 id="crosslinks-93">Crosslinks</h3>
+<h3 id="crosslinks-90">Crosslinks</h3>
 <p><a href="#lshift">lshift</a></p>
 <hr />
 <h2 id="run">run</h2>
-<p>Basis Function Combinator</p>
-<p>&lt;{} infra</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-76">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-14">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-11">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-65">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-94">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<p>Run a quoted program in a list.</p>
+<h3 id="example-20">Example</h3>
+<pre><code>   [1 2 +] run
+-----------------
+       [3]</code></pre>
+<h3 id="definition-74">Definition</h3>
+<blockquote>
+<p><a href="#section-16">&lt;{}</a> <a href="#infra">infra</a></p>
+</blockquote>
 <hr />
 <h2 id="second">second</h2>
-<p>Basis Function Combinator</p>
-<pre><code>([a1 a2 ...1] -- a2)</code></pre>
-<p>Gentzen diagram.</p>
-<h3 id="definition-77">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-15">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-12">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-66">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-95">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<pre><code>   [a b ...] second
+----------------------
+          b</code></pre>
+<h3 id="definition-75">Definition</h3>
+<blockquote>
+<p><a href="#rest">rest</a> <a href="#first">first</a></p>
+</blockquote>
+<h3 id="crosslinks-91">Crosslinks</h3>
+<p><a href="#first">first</a> <a href="#third">third</a> <a href="#fourth">fourth</a></p>
 <hr />
 <h2 id="select">select</h2>
-<p>Basis Function Combinator</p>
+<p>Basis Function</p>
 <p>Use a Boolean value to select one of two items from a sequence. :</p>
-<pre><code>[A B] false select
+<pre><code>   [a b] false select
 ------------------------
- A
+           a
 
-
-[A B] true select
+   [a b] true select
 -----------------------
-   B</code></pre>
-<p>The sequence can contain more than two items but not fewer. Currently Python semantics are used to evaluate the "truthiness" of the Boolean value (so empty string, zero, etc. are counted as false, etc.)</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-78">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-16">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-13">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-67">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-96">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+           b</code></pre>
+<h3 id="discussion-58">Discussion</h3>
+<p>The sequence can contain more than two items but not fewer.</p>
+<h3 id="crosslinks-92">Crosslinks</h3>
+<p><a href="#choice">choice</a></p>
 <hr />
 <h2 id="sharing">sharing</h2>
-<p>Basis Function Combinator</p>
+<p>Function</p>
 <p>Print redistribution information.</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-79">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-17">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-14">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-68">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-97">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<h3 id="discussion-59">Discussion</h3>
+<p>Mathematically this is a form of <a href="#id">id</a>, but it has the side-effect of printing out the GPL notice.</p>
+<h3 id="crosslinks-93">Crosslinks</h3>
+<p><a href="#warranty">warranty</a></p>
 <hr />
 <h2 id="shift">shift</h2>
-<p>Basis Function Combinator</p>
-<p>uncons [swons] dip</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-80">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-18">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-15">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-69">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-98">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<p>Move the top item from one list to another.</p>
+<h3 id="example-21">Example</h3>
+<pre><code>   [x y z] [a b c] shift
+---------------------------
+      [a x y z] [b c]</code></pre>
+<h3 id="definition-76">Definition</h3>
+<blockquote>
+<p><a href="#uncons">uncons</a> [<a href="#swons">swons</a>] <a href="#dip">dip</a></p>
+</blockquote>
+<h3 id="crosslinks-94">Crosslinks</h3>
+<p><a href="#shunt">shunt</a></p>
 <hr />
 <h2 id="shunt">shunt</h2>
-<p>Basis Function Combinator</p>
-<p>Like concat but reverses the top list into the second. :</p>
-<pre><code>shunt == [swons] step == reverse swap concat
-
-   [a b c] [d e f] shunt
+<p>Function</p>
+<p>Like <a href="#concat">concat</a> but <a href="#reverse">reverse</a> the top list into the second.</p>
+<h3 id="example-22">Example</h3>
+<pre><code>   [a b c] [d e f] shunt
 ---------------------------
        [f e d a b c] </code></pre>
-<p>Gentzen diagram.</p>
-<h3 id="definition-81">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-19">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-16">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-70">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-99">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<h3 id="definition-77">Definition</h3>
+<blockquote>
+<p>[<a href="#swons">swons</a>] <a href="#step">step</a></p>
+</blockquote>
+<h3 id="discussion-60">Discussion</h3>
+<p>This is more efficient than <a href="#concat">concat</a> so prefer it if you don&#x2019;t need to preserve order.</p>
+<h3 id="crosslinks-95">Crosslinks</h3>
+<p><a href="#concat">concat</a> <a href="#reverse">reverse</a> <a href="#shift">shift</a></p>
 <hr />
 <h2 id="size">size</h2>
-<p>Basis Function Combinator</p>
-<p>[pop ++] step_zero</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-82">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-20">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-17">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-71">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-100">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<p>Replace a list with its size.</p>
+<h3 id="example-23">Example</h3>
+<pre><code>   [23 [cats] 4] size
+------------------------
+           3</code></pre>
+<h3 id="definition-78">Definition</h3>
+<blockquote>
+<p>[<a href="#pop">pop</a> <a href="#section-21">++</a>] <a href="#step_zero">step_zero</a></p>
+</blockquote>
 <hr />
 <h2 id="sort">sort</h2>
-<p>Basis Function Combinator</p>
+<p>Function</p>
 <p>Given a list return it sorted.</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-83">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-21">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-18">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-72">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-101">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<h3 id="example-24">Example</h3>
+<pre><code>   [4 2 5 7 1] sort
+----------------------
+      [1 2 4 5 7]</code></pre>
 <hr />
 <h2 id="spiral_next">spiral_next</h2>
-<p>Basis Function Combinator</p>
-<p>[[[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp;] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-84">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-22">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-19">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-73">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-102">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<p>Example code.</p>
+<h3 id="discussion-61">Discussion</h3>
+<p>See the <a href="https://joypy.osdn.io/notebooks/Square_Spiral.html">&#x201C;Square Spiral Example Joy Code&#x201D; notebook</a>.</p>
 <hr />
 <h2 id="split_at">split_at</h2>
-<p>Basis Function Combinator</p>
-<p>[drop] [take] clop</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-85">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-23">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-20">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-74">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-103">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<p>Split a list (second on the stack) at the position given by the number on the top of the stack.</p>
+<h3 id="example-25">Example</h3>
+<pre><code>   [1 2 3 4 5 6 7] 4 split_at
+--------------------------------
+       [5 6 7] [4 3 2 1]</code></pre>
+<h3 id="definition-79">Definition</h3>
+<blockquote>
+<p>[<a href="#drop">drop</a>] [<a href="#take">take</a>] <a href="#clop">clop</a></p>
+</blockquote>
+<h3 id="discussion-62">Discussion</h3>
+<p>Take a list and a number <code>n</code> from the stack, take <code>n</code> items from the top of the list and <a href="#shunt">shunt</a> them onto a new list that replaces the number <code>n</code> on the top of the stack.</p>
+<h3 id="crosslinks-96">Crosslinks</h3>
+<p><a href="#split_list">split_list</a></p>
 <hr />
 <h2 id="split_list">split_list</h2>
-<p>Basis Function Combinator</p>
-<p>[take reverse] [drop] clop</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-86">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-24">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-21">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-75">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-104">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Function</p>
+<p>Split a list (second on the stack) at the position given by the number on the top of the stack such that <a href="#concat">concat</a> would reconstruct the original list.</p>
+<pre><code>   [1 2 3 4 5 6 7] 4 split_list
+----------------------------------
+        [1 2 3 4] [5 6 7]</code></pre>
+<h3 id="definition-80">Definition</h3>
+<blockquote>
+<p>[<a href="#take">take</a> <a href="#reverse">reverse</a>] [<a href="#drop">drop</a>] <a href="#clop">clop</a></p>
+</blockquote>
+<h3 id="discussion-63">Discussion</h3>
+<p>Compare with <a href="#split_at">split_at</a>. This function does extra work to ensure that <a href="#concat">concat</a> would reconstruct the original list.</p>
+<h3 id="crosslinks-97">Crosslinks</h3>
+<p><a href="#split_at">split_at</a></p>
 <hr />
 <h2 id="sqr">sqr</h2>
 <p>Basis Function Combinator</p>
 <p>dup *</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-87">Definition</h3>
+<h3 id="definition-81">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-25">Derivation</h3>
+<h3 id="derivation-3">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-22">Source</h3>
+<h3 id="source">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-76">Discussion</h3>
+<h3 id="discussion-64">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-105">Crosslinks</h3>
+<h3 id="crosslinks-98">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="sqrt">sqrt</h2>
 <p>Basis Function Combinator</p>
 <p>Return the square root of the number a. Negative numbers return complex roots.</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-88">Definition</h3>
+<h3 id="definition-82">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-26">Derivation</h3>
+<h3 id="derivation-4">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-23">Source</h3>
+<h3 id="source-1">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-77">Discussion</h3>
+<h3 id="discussion-65">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-106">Crosslinks</h3>
+<h3 id="crosslinks-99">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="stack">stack</h2>
 <p>Basis Function Combinator</p>
 <pre><code>(... -- ... [...])</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-89">Definition</h3>
+<h3 id="definition-83">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-27">Derivation</h3>
+<h3 id="derivation-5">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-24">Source</h3>
+<h3 id="source-2">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-78">Discussion</h3>
+<h3 id="discussion-66">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-107">Crosslinks</h3>
+<h3 id="crosslinks-100">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="stackd">stackd</h2>
 <p>Basis Function Combinator</p>
 <p>[stack] dip</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-90">Definition</h3>
+<h3 id="definition-84">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-28">Derivation</h3>
+<h3 id="derivation-6">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-25">Source</h3>
+<h3 id="source-3">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-79">Discussion</h3>
+<h3 id="discussion-67">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-108">Crosslinks</h3>
+<h3 id="crosslinks-101">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="step">step</h2>
@@ -2239,90 +2159,90 @@ a F a</code></pre>
       ... a . Q [b c] [Q] step</code></pre>
 <p>The step combinator executes the quotation on each member of the list on top of the stack.</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-91">Definition</h3>
+<h3 id="definition-85">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-29">Derivation</h3>
+<h3 id="derivation-7">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-26">Source</h3>
+<h3 id="source-4">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-80">Discussion</h3>
+<h3 id="discussion-68">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-109">Crosslinks</h3>
+<h3 id="crosslinks-102">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="step_zero">step_zero</h2>
 <p>Basis Function Combinator</p>
 <p>0 roll&gt; step</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-92">Definition</h3>
+<h3 id="definition-86">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-30">Derivation</h3>
+<h3 id="derivation-8">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-27">Source</h3>
+<h3 id="source-5">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-81">Discussion</h3>
+<h3 id="discussion-69">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-110">Crosslinks</h3>
+<h3 id="crosslinks-103">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="stuncons">stuncons</h2>
 <p>Basis Function Combinator</p>
 <pre><code>(... a1 -- ... a1 a1 [...])</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-93">Definition</h3>
+<h3 id="definition-87">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-31">Derivation</h3>
+<h3 id="derivation-9">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-28">Source</h3>
+<h3 id="source-6">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-82">Discussion</h3>
+<h3 id="discussion-70">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-111">Crosslinks</h3>
+<h3 id="crosslinks-104">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="stununcons">stununcons</h2>
 <p>Basis Function Combinator</p>
 <pre><code>(... a2 a1 -- ... a2 a1 a1 a2 [...])</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-94">Definition</h3>
+<h3 id="definition-88">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-32">Derivation</h3>
+<h3 id="derivation-10">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-29">Source</h3>
+<h3 id="source-7">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-83">Discussion</h3>
+<h3 id="discussion-71">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-112">Crosslinks</h3>
+<h3 id="crosslinks-105">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="sub">sub</h2>
 <p>Basis Function Combinator</p>
 <p>Same as a - b.</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-95">Definition</h3>
+<h3 id="definition-89">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-33">Derivation</h3>
+<h3 id="derivation-11">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-30">Source</h3>
+<h3 id="source-8">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-84">Discussion</h3>
+<h3 id="discussion-72">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-113">Crosslinks</h3>
+<h3 id="crosslinks-106">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="succ">succ</h2>
 <p>Basis Function Combinator</p>
 <p>Increment TOS.</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-96">Definition</h3>
+<h3 id="definition-90">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-34">Derivation</h3>
+<h3 id="derivation-12">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-31">Source</h3>
+<h3 id="source-9">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-85">Discussion</h3>
+<h3 id="discussion-73">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-114">Crosslinks</h3>
+<h3 id="crosslinks-107">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="sum">sum</h2>
@@ -2330,105 +2250,105 @@ a F a</code></pre>
 <p>Given a quoted sequence of numbers return the sum. :</p>
 <pre><code>sum == 0 swap [+] step</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-97">Definition</h3>
+<h3 id="definition-91">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-35">Derivation</h3>
+<h3 id="derivation-13">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-32">Source</h3>
+<h3 id="source-10">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-86">Discussion</h3>
+<h3 id="discussion-74">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-115">Crosslinks</h3>
+<h3 id="crosslinks-108">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="swaack">swaack</h2>
 <p>Basis Function Combinator</p>
 <pre><code>([...1] -- [...0])</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-98">Definition</h3>
+<h3 id="definition-92">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-36">Derivation</h3>
+<h3 id="derivation-14">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-33">Source</h3>
+<h3 id="source-11">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-87">Discussion</h3>
+<h3 id="discussion-75">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-116">Crosslinks</h3>
+<h3 id="crosslinks-109">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="swap">swap</h2>
 <p>Basis Function Combinator</p>
 <pre><code>(a1 a2 -- a2 a1)</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-99">Definition</h3>
+<h3 id="definition-93">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-37">Derivation</h3>
+<h3 id="derivation-15">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-34">Source</h3>
+<h3 id="source-12">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-88">Discussion</h3>
+<h3 id="discussion-76">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-117">Crosslinks</h3>
+<h3 id="crosslinks-110">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="swapd">swapd</h2>
 <p>Basis Function Combinator</p>
 <p>[swap] dip</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-100">Definition</h3>
+<h3 id="definition-94">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-38">Derivation</h3>
+<h3 id="derivation-16">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-35">Source</h3>
+<h3 id="source-13">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-89">Discussion</h3>
+<h3 id="discussion-77">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-118">Crosslinks</h3>
+<h3 id="crosslinks-111">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="swoncat">swoncat</h2>
 <p>Basis Function Combinator</p>
 <p>swap concat</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-101">Definition</h3>
+<h3 id="definition-95">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-39">Derivation</h3>
+<h3 id="derivation-17">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-36">Source</h3>
+<h3 id="source-14">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-90">Discussion</h3>
+<h3 id="discussion-78">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-119">Crosslinks</h3>
+<h3 id="crosslinks-112">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="swons">swons</h2>
 <p>Basis Function Combinator</p>
 <pre><code>([...1] a1 -- [a1 ...1])</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-102">Definition</h3>
+<h3 id="definition-96">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-40">Derivation</h3>
+<h3 id="derivation-18">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-37">Source</h3>
+<h3 id="source-15">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-91">Discussion</h3>
+<h3 id="discussion-79">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-120">Crosslinks</h3>
+<h3 id="crosslinks-113">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="tailrec">tailrec</h2>
 <p>Basis Function Combinator</p>
 <p>[i] genrec</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-103">Definition</h3>
+<h3 id="definition-97">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-41">Derivation</h3>
+<h3 id="derivation-19">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-38">Source</h3>
+<h3 id="source-16">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-92">Discussion</h3>
+<h3 id="discussion-80">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-121">Crosslinks</h3>
+<h3 id="crosslinks-114">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="take">take</h2>
@@ -2438,15 +2358,15 @@ a F a</code></pre>
 ----------------------
     [b a]</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-104">Definition</h3>
+<h3 id="definition-98">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-42">Derivation</h3>
+<h3 id="derivation-20">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-39">Source</h3>
+<h3 id="source-17">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-93">Discussion</h3>
+<h3 id="discussion-81">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-122">Crosslinks</h3>
+<h3 id="crosslinks-115">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="ternary">ternary</h2>
@@ -2455,26 +2375,26 @@ a F a</code></pre>
 <pre><code>   ... z y x [P] unary
 -------------------------
          ... A</code></pre>
-<h3 id="definition-105">Definition</h3>
+<h3 id="definition-99">Definition</h3>
 <pre><code>binary popd</code></pre>
-<h3 id="discussion-94">Discussion</h3>
+<h3 id="discussion-82">Discussion</h3>
 <p>Runs any other quoted function and returns its first result while consuming exactly three items from the stack.</p>
-<h3 id="crosslinks-123">Crosslinks</h3>
+<h3 id="crosslinks-116">Crosslinks</h3>
 <p><a href="#binary">binary</a> <a href="#nullary">nullary</a> <a href="#unary">unary</a></p>
 <hr />
 <h2 id="third">third</h2>
 <p>Basis Function Combinator</p>
 <pre><code>([a1 a2 a3 ...1] -- a3)</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-106">Definition</h3>
+<h3 id="definition-100">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-43">Derivation</h3>
+<h3 id="derivation-21">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-40">Source</h3>
+<h3 id="source-18">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-95">Discussion</h3>
+<h3 id="discussion-83">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-124">Crosslinks</h3>
+<h3 id="crosslinks-117">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="times">times</h2>
@@ -2494,15 +2414,15 @@ a F a</code></pre>
 -------------------------------------  w/ n &gt; 1
   ... . Q (n - 1) [Q] times</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-107">Definition</h3>
+<h3 id="definition-101">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-44">Derivation</h3>
+<h3 id="derivation-22">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-41">Source</h3>
+<h3 id="source-19">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-96">Discussion</h3>
+<h3 id="discussion-84">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-125">Crosslinks</h3>
+<h3 id="crosslinks-118">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="truthy">truthy</h2>
@@ -2512,15 +2432,15 @@ a F a</code></pre>
 <p>Basis Function Combinator</p>
 <pre><code>(a2 a1 -- a1 a2 a1)</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-108">Definition</h3>
+<h3 id="definition-102">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-45">Derivation</h3>
+<h3 id="derivation-23">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-42">Source</h3>
+<h3 id="source-20">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-97">Discussion</h3>
+<h3 id="discussion-85">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-126">Crosslinks</h3>
+<h3 id="crosslinks-119">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="unary">unary</h2>
@@ -2529,11 +2449,11 @@ a F a</code></pre>
 <pre><code>   ... x [P] unary
 ---------------------
        ... A</code></pre>
-<h3 id="definition-109">Definition</h3>
+<h3 id="definition-103">Definition</h3>
 <pre><code>nullary popd</code></pre>
-<h3 id="discussion-98">Discussion</h3>
+<h3 id="discussion-86">Discussion</h3>
 <p>Runs any other quoted function and returns its first result while consuming exactly one item from the stack.</p>
-<h3 id="crosslinks-127">Crosslinks</h3>
+<h3 id="crosslinks-120">Crosslinks</h3>
 <p><a href="#binary">binary</a> <a href="#nullary">nullary</a> <a href="#ternary">ternary</a></p>
 <hr />
 <h2 id="uncons">uncons</h2>
@@ -2542,131 +2462,131 @@ a F a</code></pre>
 <pre><code>   [A ...] uncons
 --------------------
       A [...]</code></pre>
-<h3 id="source-43">Source</h3>
+<h3 id="source-21">Source</h3>
 <pre><code>func(uncons, Si, So) :- func(cons, So, Si).</code></pre>
-<h3 id="discussion-99">Discussion</h3>
+<h3 id="discussion-87">Discussion</h3>
 <p>This is the inverse of <code>cons</code>.</p>
-<h3 id="crosslinks-128">Crosslinks</h3>
+<h3 id="crosslinks-121">Crosslinks</h3>
 <p><a href="#cons">cons</a></p>
 <hr />
 <h2 id="unique">unique</h2>
 <p>Basis Function Combinator</p>
 <p>Given a list remove duplicate items.</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-110">Definition</h3>
+<h3 id="definition-104">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-46">Derivation</h3>
+<h3 id="derivation-24">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-44">Source</h3>
+<h3 id="source-22">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-100">Discussion</h3>
+<h3 id="discussion-88">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-129">Crosslinks</h3>
+<h3 id="crosslinks-122">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="unit">unit</h2>
 <p>Basis Function Combinator</p>
 <pre><code>(a1 -- [a1 ])</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-111">Definition</h3>
+<h3 id="definition-105">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-47">Derivation</h3>
+<h3 id="derivation-25">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-45">Source</h3>
+<h3 id="source-23">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-101">Discussion</h3>
+<h3 id="discussion-89">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-130">Crosslinks</h3>
+<h3 id="crosslinks-123">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="unquoted">unquoted</h2>
 <p>Basis Function Combinator</p>
 <p>[i] dip</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-112">Definition</h3>
+<h3 id="definition-106">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-48">Derivation</h3>
+<h3 id="derivation-26">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-46">Source</h3>
+<h3 id="source-24">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-102">Discussion</h3>
+<h3 id="discussion-90">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-131">Crosslinks</h3>
+<h3 id="crosslinks-124">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="unswons">unswons</h2>
 <p>Basis Function Combinator</p>
 <pre><code>([a1 ...1] -- [...1] a1)</code></pre>
 <p>Gentzen diagram.</p>
-<h3 id="definition-113">Definition</h3>
+<h3 id="definition-107">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-49">Derivation</h3>
+<h3 id="derivation-27">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-47">Source</h3>
+<h3 id="source-25">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-103">Discussion</h3>
+<h3 id="discussion-91">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-132">Crosslinks</h3>
+<h3 id="crosslinks-125">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="void">void</h2>
 <p>Basis Function Combinator</p>
 <p>True if the form on TOS is void otherwise False.</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-114">Definition</h3>
+<h3 id="definition-108">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-50">Derivation</h3>
+<h3 id="derivation-28">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-48">Source</h3>
+<h3 id="source-26">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-104">Discussion</h3>
+<h3 id="discussion-92">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-133">Crosslinks</h3>
+<h3 id="crosslinks-126">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="warranty">warranty</h2>
 <p>Basis Function Combinator</p>
 <p>Print warranty information.</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-115">Definition</h3>
+<h3 id="definition-109">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-51">Derivation</h3>
+<h3 id="derivation-29">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-49">Source</h3>
+<h3 id="source-27">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-105">Discussion</h3>
+<h3 id="discussion-93">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-134">Crosslinks</h3>
+<h3 id="crosslinks-127">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="while">while</h2>
 <p>Basis Function Combinator</p>
 <p>swap nulco dupdipd concat loop</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-116">Definition</h3>
+<h3 id="definition-110">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-52">Derivation</h3>
+<h3 id="derivation-30">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-50">Source</h3>
+<h3 id="source-28">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-106">Discussion</h3>
+<h3 id="discussion-94">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-135">Crosslinks</h3>
+<h3 id="crosslinks-128">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="words">words</h2>
 <p>Basis Function Combinator</p>
 <p>Print all the words in alphabetical order.</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-117">Definition</h3>
+<h3 id="definition-111">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-53">Derivation</h3>
+<h3 id="derivation-31">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-51">Source</h3>
+<h3 id="source-29">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-107">Discussion</h3>
+<h3 id="discussion-95">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-136">Crosslinks</h3>
+<h3 id="crosslinks-129">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="x">x</h2>
@@ -2674,39 +2594,39 @@ a F a</code></pre>
 <pre><code>   [F] x
 -----------
    [F] F</code></pre>
-<h3 id="definition-118">Definition</h3>
+<h3 id="definition-112">Definition</h3>
 <pre><code>dup i</code></pre>
-<h3 id="discussion-108">Discussion</h3>
+<h3 id="discussion-96">Discussion</h3>
 <p>The <code>x</code> combinator &#x2026;</p>
 <hr />
 <h2 id="xor">xor</h2>
 <p>Basis Function Combinator</p>
 <p>Same as a ^ b.</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-119">Definition</h3>
+<h3 id="definition-113">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-54">Derivation</h3>
+<h3 id="derivation-32">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-52">Source</h3>
+<h3 id="source-30">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-109">Discussion</h3>
+<h3 id="discussion-97">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-137">Crosslinks</h3>
+<h3 id="crosslinks-130">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 <hr />
 <h2 id="zip">zip</h2>
 <p>Basis Function Combinator</p>
 <p>Replace the two lists on the top of the stack with a list of the pairs from each list. The smallest list sets the length of the result list.</p>
 <p>Gentzen diagram.</p>
-<h3 id="definition-120">Definition</h3>
+<h3 id="definition-114">Definition</h3>
 <p>if not basis.</p>
-<h3 id="derivation-55">Derivation</h3>
+<h3 id="derivation-33">Derivation</h3>
 <p>if not basis.</p>
-<h3 id="source-53">Source</h3>
+<h3 id="source-31">Source</h3>
 <p>if basis</p>
-<h3 id="discussion-110">Discussion</h3>
+<h3 id="discussion-98">Discussion</h3>
 <p>Lorem ipsum.</p>
-<h3 id="crosslinks-138">Crosslinks</h3>
+<h3 id="crosslinks-131">Crosslinks</h3>
 <p>Lorem ipsum.</p>
 </body>
 </html>

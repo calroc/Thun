@@ -2807,121 +2807,109 @@ Or,
 
 ## quoted
 
-Basis Function Combinator
+Function
 
-\[unit\] dip
+"Quote D" Wrap the second item on the stack in a list.
 
-Gentzen diagram.
+       a b quoted
+    ----------------
+         [a] b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[unit]\] [dip]
 
 ### Discussion
 
-Lorem ipsum.
+This comes from the original Joy stuff.
 
 ### Crosslinks
 
-Lorem ipsum.
+[unit]
+
 
 ------------------------------------------------------------------------
 
 ## range
 
-Basis Function Combinator
+Function
 
-\[0 \<=\] \[1 - dup\] anamorphism
+Expect a number `n` on the stack and replace it with a list:
+`[(n-1)...0]`.
 
-Gentzen diagram.
+### Example
+
+         5 range
+    -----------------
+       [4 3 2 1 0]
+
+       -5 range
+    --------------
+          []
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[0 \<=\] \[1 - [dup]\] [anamorphism]
 
 ### Discussion
 
-Lorem ipsum.
+If `n` is less than 1 the resulting list is empty.
 
 ### Crosslinks
 
-Lorem ipsum.
+[range_to_zero]
+
 
 ------------------------------------------------------------------------
 
 ## range_to_zero
 
-Basis Function Combinator
+Function
 
-unit \[down_to_zero\] infra
+Take a number `n` from the stack and replace it with a list
+`[0...n]`.
 
-Gentzen diagram.
+### Example
+
+       5 range_to_zero
+    ---------------------
+        [0 1 2 3 4 5]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [unit] \[[down_to_zero]\] [infra]
 
 ### Discussion
 
-Lorem ipsum.
+Note that the order is reversed compared to [range].
 
 ### Crosslinks
 
-Lorem ipsum.
+[down_to_zero]
+[range]
+
 
 ------------------------------------------------------------------------
 
 ## reco
 
-Basis Function Combinator
+Function
 
-rest cons
+Replace the first item in a list with the item under it.
 
-Gentzen diagram.
+       a [b ...] reco
+    --------------------
+         [a ...]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rest] [cons]
 
 ### Crosslinks
 
-Lorem ipsum.
+[codireco]
+[make_generator]
+
 
 --------------
 
@@ -2941,159 +2929,93 @@ See [mod](#mod).
 
 ## remove
 
-Basis Function Combinator
+Function
 
 Expects an item on the stack and a quote under it and removes that item
 from the the quote. The item is only removed once. If the list is empty
-or the item isn\'t in the list then the list is unchanged. :
+or the item isn't in the list then the list is unchanged.
 
-    [1 2 3 1] 1 remove
+       [1 2 3 1] 1 remove
     ------------------------
-      [2 3 1]
-
-Gentzen diagram.
+            [2 3 1]
 
 ### Definition
 
-if not basis.
+See the ["Remove Function" notebook](https://osdn.net/projects/joypy/scm/git/Thun/blobs/master/docs/notebooks/Remove-Function.ipynb).
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## rest
 
-Basis Function Combinator
+Basis Function
 
-    ([a1 ...0] -- [...0])
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       [a ...] rest
+    ------------------
+          [...]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[uncons]
+
 
 ------------------------------------------------------------------------
 
 ## reverse
 
-Basis Function Combinator
+Function
 
-Reverse the list on the top of the stack. :
+Reverse the list on the top of the stack.
 
-    reverse == [] swap shunt
+### Example
 
-Gentzen diagram.
+       [1 2 3] reverse
+    ---------------------
+           [3 2 1]
 
 ### Definition
 
-if not basis.
+> [\<\{\}] [shunt]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## rolldown
 
-Basis Function Combinator
+Function
 
-    (a1 a2 a3 -- a2 a3 a1)
-
-Gentzen diagram.
+       a b c rolldown
+    --------------------
+           b c a
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [swapd] [swap]
 
 ### Crosslinks
 
-Lorem ipsum.
+[rollup]
+
 
 ------------------------------------------------------------------------
 
 ## rollup
 
-Basis Function Combinator
+Function
 
-    (a1 a2 a3 -- a3 a1 a2)
-
-Gentzen diagram.
+       a b c rollup
+    ------------------
+          c a b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [swap] [swapd]
 
 ### Crosslinks
 
-Lorem ipsum.
+[rolldown]
+
 
 --------------
 
@@ -3113,65 +3035,33 @@ See [rolldown](#rolldown).
 
 ## round
 
-Basis Function Combinator
+Function
 
 Round a number to a given precision in decimal digits.
 
-The return value is an integer if ndigits is omitted or None. Otherwise
-the return value has the same type as the number. ndigits may be
-negative.
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+Another one that won't make sense until the "numeric tower" is nailed
+down.
 
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## rrest
 
-Basis Function Combinator
+Function
 
-    ([a1 a2 ...1] -- [...1])
-
-Gentzen diagram.
-
+       [a b ...] rrest
+    ---------------------
+            [...]
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rest] [rest]
 
 ### Crosslinks
 
-Lorem ipsum.
+[rest]
+
 
 ------------------------------------------------------------------------
 
@@ -3193,352 +3083,242 @@ Basis Function
 
 ## run
 
-Basis Function Combinator
+Function
 
-\<{} infra
+Run a quoted program in a list.
 
-Gentzen diagram.
+### Example
+
+       [1 2 +] run
+    -----------------
+           [3]
 
 ### Definition
 
-if not basis.
+> [\<\{\}] [infra]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## second
 
-Basis Function Combinator
+Function
 
-    ([a1 a2 ...1] -- a2)
-
-Gentzen diagram.
+       [a b ...] second
+    ----------------------
+              b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rest] [first]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[third]
+[fourth]
+
 
 ------------------------------------------------------------------------
 
 ## select
 
-Basis Function Combinator
+Basis Function
 
 Use a Boolean value to select one of two items from a sequence. :
 
-    [A B] false select
+       [a b] false select
     ------------------------
-     A
+               a
 
-
-    [A B] true select
+       [a b] true select
     -----------------------
-       B
-
-The sequence can contain more than two items but not fewer. Currently
-Python semantics are used to evaluate the \"truthiness\" of the Boolean
-value (so empty string, zero, etc. are counted as false, etc.)
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+               b
 
 ### Discussion
 
-Lorem ipsum.
+The sequence can contain more than two items but not fewer.
 
 ### Crosslinks
 
-Lorem ipsum.
+[choice]
+
 
 ------------------------------------------------------------------------
 
 ## sharing
 
-Basis Function Combinator
+Function
 
 Print redistribution information.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+Mathematically this is a form of [id], but it has the side-effect of
+printing out the GPL notice.
 
 ### Crosslinks
 
-Lorem ipsum.
+[warranty]
+
 
 ------------------------------------------------------------------------
 
 ## shift
 
-Basis Function Combinator
+Function
 
-uncons \[swons\] dip
+Move the top item from one list to another.
 
-Gentzen diagram.
+### Example
+
+       [x y z] [a b c] shift
+    ---------------------------
+          [a x y z] [b c]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [uncons] \[[swons]\] [dip]
 
 ### Crosslinks
 
-Lorem ipsum.
+[shunt]
+
 
 ------------------------------------------------------------------------
 
 ## shunt
 
-Basis Function Combinator
+Function
 
-Like concat but reverses the top list into the second. :
+Like [concat] but [reverse] the top list into the second.
 
-    shunt == [swons] step == reverse swap concat
+### Example
 
        [a b c] [d e f] shunt
     ---------------------------
            [f e d a b c] 
 
-Gentzen diagram.
-
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[swons]\] [step]
 
 ### Discussion
 
-Lorem ipsum.
+This is more efficient than [concat] so prefer it if you don't need to
+preserve order.
 
 ### Crosslinks
 
-Lorem ipsum.
+[concat]
+[reverse]
+[shift]
+
 
 ------------------------------------------------------------------------
 
 ## size
 
-Basis Function Combinator
+Function
 
-\[pop ++\] step_zero
+Replace a list with its size.
 
-Gentzen diagram.
+### Example
+
+       [23 [cats] 4] size
+    ------------------------
+               3
 
 ### Definition
 
-if not basis.
+> \[[pop] [++]\] [step_zero]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## sort
 
-Basis Function Combinator
+Function
 
 Given a list return it sorted.
 
-Gentzen diagram.
+### Example
 
-### Definition
+       [4 2 5 7 1] sort
+    ----------------------
+          [1 2 4 5 7]
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## spiral_next
 
-Basis Function Combinator
+Function
 
-\[\[\[abs\] ii \<=\] \[\[\<\>\] \[pop !-\] \|\|\] &&\] \[\[!-\]
-\[\[++\]\] \[\[\--\]\] ifte dip\] \[\[pop !-\] \[\--\] \[++\] ifte\]
-ifte
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+Example code.
 
 ### Discussion
 
-Lorem ipsum.
+See the ["Square Spiral Example Joy Code" notebook](https://joypy.osdn.io/notebooks/Square_Spiral.html).
 
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## split_at
 
-Basis Function Combinator
+Function
 
-\[drop\] \[take\] clop
+Split a list (second on the stack) at the position given by the number on
+the top of the stack.
 
-Gentzen diagram.
+### Example
+
+       [1 2 3 4 5 6 7] 4 split_at
+    --------------------------------
+           [5 6 7] [4 3 2 1]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[drop]\] \[[take]\] [clop]
 
 ### Discussion
 
-Lorem ipsum.
+Take a list and a number `n` from the stack, take `n` items from the top
+of the list and [shunt] them onto a new list that replaces the number `n`
+on the top of the stack.
 
 ### Crosslinks
 
-Lorem ipsum.
+[split_list]
+
 
 ------------------------------------------------------------------------
 
 ## split_list
 
-Basis Function Combinator
+Function
 
-\[take reverse\] \[drop\] clop
+Split a list (second on the stack) at the position given by the number on
+the top of the stack such that [concat] would reconstruct the original
+list.
 
-Gentzen diagram.
+       [1 2 3 4 5 6 7] 4 split_list
+    ----------------------------------
+            [1 2 3 4] [5 6 7]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[take] [reverse]\] \[[drop]\] [clop]
 
 ### Discussion
 
-Lorem ipsum.
+Compare with [split_at].  This function does extra work to ensure that
+[concat] would reconstruct the original list.
 
 ### Crosslinks
 
-Lorem ipsum.
+[split_at]
+
 
 ------------------------------------------------------------------------
 

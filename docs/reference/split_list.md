@@ -2,28 +2,26 @@
 
 ## split_list
 
-Basis Function Combinator
+Function
 
-\[take reverse\] \[drop\] clop
+Split a list (second on the stack) at the position given by the number on
+the top of the stack such that [concat] would reconstruct the original
+list.
 
-Gentzen diagram.
+       [1 2 3 4 5 6 7] 4 split_list
+    ----------------------------------
+            [1 2 3 4] [5 6 7]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[take] [reverse]\] \[[drop]\] [clop]
 
 ### Discussion
 
-Lorem ipsum.
+Compare with [split_at].  This function does extra work to ensure that
+[concat] would reconstruct the original list.
 
 ### Crosslinks
 
-Lorem ipsum.
+[split_at]
+

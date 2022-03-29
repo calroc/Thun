@@ -2,28 +2,17 @@
 
 ## run
 
-Basis Function Combinator
+Function
 
-\<{} infra
+Run a quoted program in a list.
 
-Gentzen diagram.
+### Example
+
+       [1 2 +] run
+    -----------------
+           [3]
 
 ### Definition
 
-if not basis.
+> [\<\{\}] [infra]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

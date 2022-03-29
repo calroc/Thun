@@ -2,30 +2,11 @@
 
 ## spiral_next
 
-Basis Function Combinator
+Function
 
-\[\[\[abs\] ii \<=\] \[\[\<\>\] \[pop !-\] \|\|\] &&\] \[\[!-\]
-\[\[++\]\] \[\[\--\]\] ifte dip\] \[\[pop !-\] \[\--\] \[++\] ifte\]
-ifte
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+Example code.
 
 ### Discussion
 
-Lorem ipsum.
+See the ["Square Spiral Example Joy Code" notebook](https://joypy.osdn.io/notebooks/Square_Spiral.html).
 
-### Crosslinks
-
-Lorem ipsum.

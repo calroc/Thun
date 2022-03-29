@@ -2,28 +2,15 @@
 
 ## sqr
 
-Basis Function Combinator
+Function
 
-dup \*
+Square the number on the top of the stack.
 
-Gentzen diagram.
+       n  sqr
+    ------------
+         n²
 
 ### Definition
 
-if not basis.
+> [dup] [mul]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

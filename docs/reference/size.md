@@ -2,28 +2,17 @@
 
 ## size
 
-Basis Function Combinator
+Function
 
-\[pop ++\] step_zero
+Replace a list with its size.
 
-Gentzen diagram.
+### Example
+
+       [23 [cats] 4] size
+    ------------------------
+               3
 
 ### Definition
 
-if not basis.
+> \[[pop] [++]\] [step_zero]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

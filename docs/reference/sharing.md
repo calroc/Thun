@@ -2,28 +2,16 @@
 
 ## sharing
 
-Basis Function Combinator
+Function
 
 Print redistribution information.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+Mathematically this is a form of [id], but it has the side-effect of
+printing out the GPL notice.
 
 ### Crosslinks
 
-Lorem ipsum.
+[warranty]
+

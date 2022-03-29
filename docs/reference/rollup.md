@@ -2,28 +2,17 @@
 
 ## rollup
 
-Basis Function Combinator
+Function
 
-    (a1 a2 a3 -- a3 a1 a2)
-
-Gentzen diagram.
+       a b c rollup
+    ------------------
+          c a b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [swap] [swapd]
 
 ### Crosslinks
 
-Lorem ipsum.
+[rolldown]
+

@@ -2,28 +2,16 @@
 
 ## rrest
 
-Basis Function Combinator
+Function
 
-    ([a1 a2 ...1] -- [...1])
-
-Gentzen diagram.
-
+       [a b ...] rrest
+    ---------------------
+            [...]
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rest] [rest]
 
 ### Crosslinks
 
-Lorem ipsum.
+[rest]
+

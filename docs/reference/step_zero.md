@@ -2,7 +2,7 @@
 
 ## step_zero
 
-Basis Function Combinator
+Combinator
 
 0 roll> step
 

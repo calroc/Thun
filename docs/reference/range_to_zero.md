@@ -2,28 +2,27 @@
 
 ## range_to_zero
 
-Basis Function Combinator
+Function
 
-unit \[down_to_zero\] infra
+Take a number `n` from the stack and replace it with a list
+`[0...n]`.
 
-Gentzen diagram.
+### Example
+
+       5 range_to_zero
+    ---------------------
+        [0 1 2 3 4 5]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> [unit] \[[down_to_zero]\] [infra]
 
 ### Discussion
 
-Lorem ipsum.
+Note that the order is reversed compared to [range].
 
 ### Crosslinks
 
-Lorem ipsum.
+[down_to_zero]
+[range]
+

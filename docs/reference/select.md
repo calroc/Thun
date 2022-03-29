@@ -2,41 +2,23 @@
 
 ## select
 
-Basis Function Combinator
+Basis Function
 
 Use a Boolean value to select one of two items from a sequence. :
 
-    [A B] false select
+       [a b] false select
     ------------------------
-     A
+               a
 
-
-    [A B] true select
+       [a b] true select
     -----------------------
-       B
-
-The sequence can contain more than two items but not fewer. Currently
-Python semantics are used to evaluate the \"truthiness\" of the Boolean
-value (so empty string, zero, etc. are counted as false, etc.)
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+               b
 
 ### Discussion
 
-Lorem ipsum.
+The sequence can contain more than two items but not fewer.
 
 ### Crosslinks
 
-Lorem ipsum.
+[choice]
+

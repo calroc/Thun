@@ -2,30 +2,17 @@
 
 ## reverse
 
-Basis Function Combinator
+Function
 
-Reverse the list on the top of the stack. :
+Reverse the list on the top of the stack.
 
-    reverse == [] swap shunt
+### Example
 
-Gentzen diagram.
+       [1 2 3] reverse
+    ---------------------
+           [3 2 1]
 
 ### Definition
 
-if not basis.
+> [\<\{\}] [shunt]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

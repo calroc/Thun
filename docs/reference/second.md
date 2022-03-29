@@ -2,28 +2,19 @@
 
 ## second
 
-Basis Function Combinator
+Function
 
-    ([a1 a2 ...1] -- a2)
-
-Gentzen diagram.
+       [a b ...] second
+    ----------------------
+              b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rest] [first]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[third]
+[fourth]
+

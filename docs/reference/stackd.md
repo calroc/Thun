@@ -2,28 +2,17 @@
 
 ## stackd
 
-Basis Function Combinator
+Function
 
-\[stack\] dip
+Grab the stack under the top item and put it onto the stack.
 
-Gentzen diagram.
+### Example
+
+       ... 1 2 3 stackd
+    ------------------------
+      ... 1 2 [2 1 ...] 3
 
 ### Definition
 
-if not basis.
+> \[[stack]\] [dip]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

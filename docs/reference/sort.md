@@ -2,28 +2,13 @@
 
 ## sort
 
-Basis Function Combinator
+Function
 
 Given a list return it sorted.
 
-Gentzen diagram.
+### Example
 
-### Definition
+       [4 2 5 7 1] sort
+    ----------------------
+          [1 2 4 5 7]
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

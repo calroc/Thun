@@ -2,28 +2,14 @@
 
 ## rest
 
-Basis Function Combinator
+Basis Function
 
-    ([a1 ...0] -- [...0])
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       [a ...] rest
+    ------------------
+          [...]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[uncons]
+

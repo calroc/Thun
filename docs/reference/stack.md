@@ -2,28 +2,26 @@
 
 ## stack
 
-Basis Function Combinator
+Function
 
-    (... -- ... [...])
+Put the stack onto the stack.
 
-Gentzen diagram.
+          ... c b a stack
+    ---------------------------
+       ... c b a [a b c ...]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[\] [swaack] [dup] [swaack] [first]
 
 ### Discussion
 
-Lorem ipsum.
+This function forms a pair with [unstack], and together they form the
+complement to the "destructive" pair [enstacken] and [disenstacken].
 
 ### Crosslinks
 
-Lorem ipsum.
+[unstack]
+[enstacken]
+[disenstacken]
+

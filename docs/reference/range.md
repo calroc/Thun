@@ -2,28 +2,30 @@
 
 ## range
 
-Basis Function Combinator
+Function
 
-\[0 \<=\] \[1 - dup\] anamorphism
+Expect a number `n` on the stack and replace it with a list:
+`[(n-1)...0]`.
 
-Gentzen diagram.
+### Example
+
+         5 range
+    -----------------
+       [4 3 2 1 0]
+
+       -5 range
+    --------------
+          []
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[0 \<=\] \[1 - [dup]\] [anamorphism]
 
 ### Discussion
 
-Lorem ipsum.
+If `n` is less than 1 the resulting list is empty.
 
 ### Crosslinks
 
-Lorem ipsum.
+[range_to_zero]
+

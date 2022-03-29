@@ -2,28 +2,20 @@
 
 ## reco
 
-Basis Function Combinator
+Function
 
-rest cons
+Replace the first item in a list with the item under it.
 
-Gentzen diagram.
+       a [b ...] reco
+    --------------------
+         [a ...]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rest] [cons]
 
 ### Crosslinks
 
-Lorem ipsum.
+[codireco]
+[make_generator]
+

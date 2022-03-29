@@ -2,28 +2,21 @@
 
 ## shift
 
-Basis Function Combinator
+Function
 
-uncons \[swons\] dip
+Move the top item from one list to another.
 
-Gentzen diagram.
+### Example
+
+       [x y z] [a b c] shift
+    ---------------------------
+          [a x y z] [b c]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [uncons] \[[swons]\] [dip]
 
 ### Crosslinks
 
-Lorem ipsum.
+[shunt]
+

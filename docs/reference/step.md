@@ -2,45 +2,29 @@
 
 ## step
 
-Basis Function Combinator
+Combinator
 
-Run a quoted program on each item in a sequence. :
+Run a quoted program on each item in a sequence.
 
-    ... [] [Q] . step
-    -----------------------
-       ... .
-
-
-    ... [a] [Q] . step
-    ------------------------
-      ... a . Q
+       ... [] [Q] step
+    ---------------------
+             ...
 
 
-    ... [a b c] [Q] . step
+       ... [a] [Q] step
+    ----------------------
+          ... a Q
+
+
+       ... [a b c] [Q] . step
     ----------------------------------------
-          ... a . Q [b c] [Q] step
-
-The step combinator executes the quotation on each member of the list on
-top of the stack.
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+                 ... a . Q [b c] [Q] step
 
 ### Discussion
 
-Lorem ipsum.
+See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 
 ### Crosslinks
 
-Lorem ipsum.
+[step_zero]
+

@@ -2,28 +2,23 @@
 
 ## quoted
 
-Basis Function Combinator
+Function
 
-\[unit\] dip
+"Quote D" Wrap the second item on the stack in a list.
 
-Gentzen diagram.
+       a b quoted
+    ----------------
+         [a] b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[unit]\] [dip]
 
 ### Discussion
 
-Lorem ipsum.
+This comes from the original Joy stuff.
 
 ### Crosslinks
 
-Lorem ipsum.
+[unit]
+
