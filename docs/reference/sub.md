@@ -2,28 +2,15 @@
 
 ## sub
 
-Basis Function Combinator
+Basis Function
 
-Same as a - b.
+Subtract the number on the top of the stack from the number below it.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b sub
+    -------------
+        (a-b)
 
 ### Crosslinks
 
-Lorem ipsum.
+[add]
+

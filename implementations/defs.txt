@@ -83,6 +83,7 @@ split_list [take reverse] [drop] clop
 sqr dup *
 stackd [stack] dip
 step_zero 0 roll> step
+stuncons stack uncons
 sum [+] step_zero
 swapd [swap] dip
 swons swap cons

@@ -2,28 +2,15 @@
 
 ## succ
 
-Basis Function Combinator
+Function
 
-Increment TOS.
-
-Gentzen diagram.
+Successor. Increment TOS.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> 1 +
 
 ### Crosslinks
 
-Lorem ipsum.
+[pred]
+

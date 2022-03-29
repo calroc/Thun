@@ -2,30 +2,21 @@
 
 ## sum
 
-Basis Function Combinator
+Combinator
 
-Given a quoted sequence of numbers return the sum. :
+Given a quoted sequence of numbers return the sum.
 
-    sum == 0 swap [+] step
+### Example
 
-Gentzen diagram.
+       [1 2 3 4 5] sum
+    ---------------------
+             15
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[+\] [step_zero]
 
 ### Crosslinks
 
-Lorem ipsum.
+[size]
+

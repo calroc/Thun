@@ -2,28 +2,17 @@
 
 ## stuncons
 
-Basis Function Combinator
+Function
 
-    (... a1 -- ... a1 a1 [...])
+Take the [stack] and [uncons] the top item.
 
-Gentzen diagram.
+### Example
+
+       1 2 3 stuncons
+    --------------------
+       1 2 3 3 [2 1]
 
 ### Definition
 
-if not basis.
+> [stack] [uncons]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

@@ -3324,31 +3324,18 @@ Compare with [split_at].  This function does extra work to ensure that
 
 ## sqr
 
-Basis Function Combinator
+Function
 
-dup \*
+Square the number on the top of the stack.
 
-Gentzen diagram.
+       n  sqr
+    ------------
+         n²
 
 ### Definition
 
-if not basis.
+> [dup] [mul]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
@@ -3359,466 +3346,311 @@ Basis Function Combinator
 Return the square root of the number a. Negative numbers return complex
 roots.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+Another "numeric tower" hatch...
 
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## stack
 
-Basis Function Combinator
+Function
 
-    (... -- ... [...])
+Put the stack onto the stack.
 
-Gentzen diagram.
+          ... c b a stack
+    ---------------------------
+       ... c b a [a b c ...]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[\] [swaack] [dup] [swaack] [first]
 
 ### Discussion
 
-Lorem ipsum.
+This function forms a pair with [unstack], and together they form the
+complement to the "destructive" pair [enstacken] and [disenstacken].
 
 ### Crosslinks
 
-Lorem ipsum.
+[unstack]
+[enstacken]
+[disenstacken]
+
 
 ------------------------------------------------------------------------
 
 ## stackd
 
-Basis Function Combinator
+Function
 
-\[stack\] dip
+Grab the stack under the top item and put it onto the stack.
 
-Gentzen diagram.
+### Example
+
+       ... 1 2 3 stackd
+    ------------------------
+      ... 1 2 [2 1 ...] 3
 
 ### Definition
 
-if not basis.
+> \[[stack]\] [dip]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## step
 
-Basis Function Combinator
+Combinator
 
-Run a quoted program on each item in a sequence. :
+Run a quoted program on each item in a sequence.
 
-    ... [] [Q] . step
-    -----------------------
-       ... .
-
-
-    ... [a] [Q] . step
-    ------------------------
-      ... a . Q
+       ... [] [Q] step
+    ---------------------
+             ...
 
 
-    ... [a b c] [Q] . step
+       ... [a] [Q] step
+    ----------------------
+          ... a Q
+
+
+       ... [a b c] [Q] . step
     ----------------------------------------
-          ... a . Q [b c] [Q] step
-
-The step combinator executes the quotation on each member of the list on
-top of the stack.
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+                 ... a . Q [b c] [Q] step
 
 ### Discussion
 
-Lorem ipsum.
+See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 
 ### Crosslinks
 
-Lorem ipsum.
+[step_zero]
+
 
 ------------------------------------------------------------------------
 
 ## step_zero
 
-Basis Function Combinator
+Combinator
 
-0 roll> step
+Like [step] but with 0 as the initial value.
 
-Gentzen diagram.
+       [...] [F] step_zero
+    -------------------------
+         0 [...] [F] step
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> 0 [roll>] [step]
 
 ### Discussion
 
-Lorem ipsum.
+[size] and [sum] can both be defined in terms of this specialization of
+[step].
 
 ### Crosslinks
 
-Lorem ipsum.
+[step]
+
 
 ------------------------------------------------------------------------
 
 ## stuncons
 
-Basis Function Combinator
+Function
 
-    (... a1 -- ... a1 a1 [...])
+Take the [stack] and [uncons] the top item.
 
-Gentzen diagram.
+### Example
+
+       1 2 3 stuncons
+    --------------------
+       1 2 3 3 [2 1]
 
 ### Definition
 
-if not basis.
+> [stack] [uncons]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## stununcons
 
-Basis Function Combinator
+Function
 
-    (... a2 a1 -- ... a2 a1 a1 a2 [...])
+Take the [stack] and [uncons] the top two items.
 
-Gentzen diagram.
+### Example
+
+       1 2 3 stununcons
+    ----------------------
+        1 2 3 3 2 [1]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [stack] [uncons] [uncons]
 
 ### Crosslinks
 
-Lorem ipsum.
+[stuncons]
+
 
 ------------------------------------------------------------------------
 
 ## sub
 
-Basis Function Combinator
+Basis Function
 
-Same as a - b.
+Subtract the number on the top of the stack from the number below it.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b sub
+    -------------
+        (a-b)
 
 ### Crosslinks
 
-Lorem ipsum.
+[add]
+
 
 ------------------------------------------------------------------------
 
 ## succ
 
-Basis Function Combinator
+Function
 
-Increment TOS.
-
-Gentzen diagram.
+Successor. Increment TOS.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> 1 +
 
 ### Crosslinks
 
-Lorem ipsum.
+[pred]
+
 
 ------------------------------------------------------------------------
 
 ## sum
 
-Basis Function Combinator
+Combinator
 
-Given a quoted sequence of numbers return the sum. :
+Given a quoted sequence of numbers return the sum.
 
-    sum == 0 swap [+] step
+### Example
 
-Gentzen diagram.
+       [1 2 3 4 5] sum
+    ---------------------
+             15
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[+\] [step_zero]
 
 ### Crosslinks
 
-Lorem ipsum.
+[size]
+
 
 ------------------------------------------------------------------------
 
 ## swaack
 
-Basis Function Combinator
+Basis Function
 
-    ([...1] -- [...0])
+Swap stack.  Take a list from the top of the stack, replace the stack
+with the list, and put the old stack onto it.
 
-Gentzen diagram.
+### Example
 
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       1 2 3 [4 5 6] swaack
+    --------------------------
+       6 5 4 [3 2 1]
 
 ### Discussion
 
-Lorem ipsum.
+This function works as a kind of "context switch".  It's used in the
+definition of [infra].
 
 ### Crosslinks
 
-Lorem ipsum.
+[infra]
+
 
 ------------------------------------------------------------------------
 
 ## swap
 
-Basis Function Combinator
+Basis Function
 
-    (a1 a2 -- a2 a1)
+Swap the top two items on the stack.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b swap
+    --------------
+         b a
 
 ### Crosslinks
 
-Lorem ipsum.
+[swapd]
+
 
 ------------------------------------------------------------------------
 
 ## swapd
 
-Basis Function Combinator
+Function
 
-\[swap\] dip
+Swap the second and third items on the stack.
 
-Gentzen diagram.
+       a b c swapd
+    -----------------
+          b a c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[swap]\] [dip]
 
 ### Crosslinks
 
-Lorem ipsum.
+[over]
+[tuck]
+
 
 ------------------------------------------------------------------------
 
 ## swoncat
 
-Basis Function Combinator
+Function
 
-swap concat
-
-Gentzen diagram.
+[concat] two lists, but [swap] the lists first.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [swap] [concat]
 
 ### Crosslinks
 
-Lorem ipsum.
+[concat]
+
 
 ------------------------------------------------------------------------
 
 ## swons
 
-Basis Function Combinator
+Function
 
-    ([...1] a1 -- [a1 ...1])
+Like [cons] but [swap] the item and list.
 
-Gentzen diagram.
+       [...] a swons
+    -------------------
+          [a ...]
 
 ### Definition
 
-if not basis.
+> [swap] [cons]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 

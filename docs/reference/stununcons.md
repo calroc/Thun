@@ -2,28 +2,21 @@
 
 ## stununcons
 
-Basis Function Combinator
+Function
 
-    (... a2 a1 -- ... a2 a1 a1 a2 [...])
+Take the [stack] and [uncons] the top two items.
 
-Gentzen diagram.
+### Example
+
+       1 2 3 stununcons
+    ----------------------
+        1 2 3 3 2 [1]
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [stack] [uncons] [uncons]
 
 ### Crosslinks
 
-Lorem ipsum.
+[stuncons]
+

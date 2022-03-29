@@ -2,28 +2,15 @@
 
 ## swoncat
 
-Basis Function Combinator
+Function
 
-swap concat
-
-Gentzen diagram.
+[concat] two lists, but [swap] the lists first.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [swap] [concat]
 
 ### Crosslinks
 
-Lorem ipsum.
+[concat]
+

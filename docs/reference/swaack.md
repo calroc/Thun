@@ -2,28 +2,23 @@
 
 ## swaack
 
-Basis Function Combinator
+Basis Function
 
-    ([...1] -- [...0])
+Swap stack.  Take a list from the top of the stack, replace the stack
+with the list, and put the old stack onto it.
 
-Gentzen diagram.
+### Example
 
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+       1 2 3 [4 5 6] swaack
+    --------------------------
+       6 5 4 [3 2 1]
 
 ### Discussion
 
-Lorem ipsum.
+This function works as a kind of "context switch".  It's used in the
+definition of [infra].
 
 ### Crosslinks
 
-Lorem ipsum.
+[infra]
+

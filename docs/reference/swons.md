@@ -2,28 +2,15 @@
 
 ## swons
 
-Basis Function Combinator
+Function
 
-    ([...1] a1 -- [a1 ...1])
+Like [cons] but [swap] the item and list.
 
-Gentzen diagram.
+       [...] a swons
+    -------------------
+          [a ...]
 
 ### Definition
 
-if not basis.
+> [swap] [cons]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

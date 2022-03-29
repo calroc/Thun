@@ -4,26 +4,22 @@
 
 Combinator
 
-0 roll> step
+Like [step] but with 0 as the initial value.
 
-Gentzen diagram.
+       [...] [F] step_zero
+    -------------------------
+         0 [...] [F] step
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> 0 [roll>] [step]
 
 ### Discussion
 
-Lorem ipsum.
+[size] and [sum] can both be defined in terms of this specialization of
+[step].
 
 ### Crosslinks
 
-Lorem ipsum.
+[step]
+

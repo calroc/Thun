@@ -2,28 +2,20 @@
 
 ## swapd
 
-Basis Function Combinator
+Function
 
-\[swap\] dip
+Swap the second and third items on the stack.
 
-Gentzen diagram.
+       a b c swapd
+    -----------------
+          b a c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[swap]\] [dip]
 
 ### Crosslinks
 
-Lorem ipsum.
+[over]
+[tuck]
+

@@ -2,28 +2,15 @@
 
 ## swap
 
-Basis Function Combinator
+Basis Function
 
-    (a1 a2 -- a2 a1)
+Swap the top two items on the stack.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+       a b swap
+    --------------
+         b a
 
 ### Crosslinks
 
-Lorem ipsum.
+[swapd]
+
