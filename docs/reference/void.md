@@ -2,28 +2,13 @@
 
 ## void
 
-Basis Function Combinator
+Basis Function
 
 True if the form on TOS is void otherwise False.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+A form is any Joy expression composed solely of lists.
+This represents a binary Boolean logical formula in the arithmetic of the
+"Laws of Form", see [The Markable Mark](http://www.markability.net/)
 
-### Crosslinks
-
-Lorem ipsum.

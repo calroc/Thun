@@ -2439,103 +2439,63 @@ a F a</code></pre>
 </blockquote>
 <hr />
 <h2 id="void">void</h2>
-<p>Basis Function Combinator</p>
+<p>Basis Function</p>
 <p>True if the form on TOS is void otherwise False.</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-102">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-3">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source">Source</h3>
-<p>if basis</p>
 <h3 id="discussion-74">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-116">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>A form is any Joy expression composed solely of lists. This represents a binary Boolean logical formula in the arithmetic of the &#x201C;Laws of Form&#x201D;, see <a href="http://www.markability.net/">The Markable Mark</a></p>
 <hr />
 <h2 id="warranty">warranty</h2>
-<p>Basis Function Combinator</p>
+<p>Basis Function</p>
 <p>Print warranty information.</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-103">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-4">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-1">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-75">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-117">Crosslinks</h3>
-<p>Lorem ipsum.</p>
 <hr />
 <h2 id="while">while</h2>
-<p>Basis Function Combinator</p>
-<p>swap nulco dupdipd concat loop</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-104">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-5">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-2">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-76">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-118">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Combinator</p>
+<p>A specialization of <a href="#loop">loop</a> that accepts a quoted predicate program <code>P</code> and runs it <a href="#nullary">nullary</a>.</p>
+<pre><code>   [P] [F] while
+------------------- P -&gt; false
+
+    [P] [F] while
+--------------------- P -&gt; true
+   F [P] [F] while</code></pre>
+<h3 id="definition-102">Definition</h3>
+<blockquote>
+<p><a href="#swap">swap</a> <a href="#nulco">nulco</a> <a href="#dupdipd">dupdipd</a> <a href="#concat">concat</a> <a href="#loop">loop</a></p>
+</blockquote>
+<h3 id="crosslinks-116">Crosslinks</h3>
+<p><a href="#loop">loop</a></p>
 <hr />
 <h2 id="words">words</h2>
-<p>Basis Function Combinator</p>
+<p>Basis Function</p>
 <p>Print all the words in alphabetical order.</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-105">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-6">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-3">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-77">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-119">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<h3 id="discussion-75">Discussion</h3>
+<p>Mathematically this is a form of <a href="#id">id</a>.</p>
+<h3 id="crosslinks-117">Crosslinks</h3>
+<p><a href="#help">help</a></p>
 <hr />
 <h2 id="x">x</h2>
-<p>(Combinator)</p>
+<p>Combinator</p>
+<p>Take a quoted function <code>F</code> and run it with itself as the first item on the stack.</p>
 <pre><code>   [F] x
 -----------
    [F] F</code></pre>
-<h3 id="definition-106">Definition</h3>
+<h3 id="definition-103">Definition</h3>
 <pre><code>dup i</code></pre>
-<h3 id="discussion-78">Discussion</h3>
-<p>The <code>x</code> combinator &#x2026;</p>
+<h3 id="discussion-76">Discussion</h3>
+<p>The simplest recursive pattern.</p>
+<p>See the <a href="https://joypy.osdn.io/notebooks/Recursion_Combinators.html">Recursion Combinators notebook</a>. as well as <a href="https://www.kevinalbrecht.com/code/joy-mirror/j05cmp.html">Recursion Theory and Joy</a> by Manfred von</p>
 <hr />
 <h2 id="xor">xor</h2>
-<p>Basis Function Combinator</p>
-<p>Same as a ^ b.</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-107">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-7">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-4">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-79">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-120">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<p>Basis Function</p>
+<p>Logical bit-wise eXclusive OR.</p>
+<h3 id="crosslinks-118">Crosslinks</h3>
+<p><a href="#and">and</a> <a href="#or">or</a></p>
 <hr />
 <h2 id="zip">zip</h2>
-<p>Basis Function Combinator</p>
+<p>Function</p>
 <p>Replace the two lists on the top of the stack with a list of the pairs from each list. The smallest list sets the length of the result list.</p>
-<p>Gentzen diagram.</p>
-<h3 id="definition-108">Definition</h3>
-<p>if not basis.</p>
-<h3 id="derivation-8">Derivation</h3>
-<p>if not basis.</p>
-<h3 id="source-5">Source</h3>
-<p>if basis</p>
-<h3 id="discussion-80">Discussion</h3>
-<p>Lorem ipsum.</p>
-<h3 id="crosslinks-121">Crosslinks</h3>
-<p>Lorem ipsum.</p>
+<h3 id="example-32">Example</h3>
+<pre><code>   [1 2 3] [4 5 6] zip
+-------------------------
+   [[4 1] [5 2] [6 3]]</code></pre>
 </body>
 </html>

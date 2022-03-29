@@ -2,28 +2,15 @@
 
 ## words
 
-Basis Function Combinator
+Basis Function
 
 Print all the words in alphabetical order.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+Mathematically this is a form of [id].
 
 ### Crosslinks
 
-Lorem ipsum.
+[help]
+

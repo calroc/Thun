@@ -3940,127 +3940,76 @@ Function
 
 ## void
 
-Basis Function Combinator
+Basis Function
 
 True if the form on TOS is void otherwise False.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+A form is any Joy expression composed solely of lists.
+This represents a binary Boolean logical formula in the arithmetic of the
+"Laws of Form", see [The Markable Mark](http://www.markability.net/)
 
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## warranty
 
-Basis Function Combinator
+Basis Function
 
 Print warranty information.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## while
 
-Basis Function Combinator
+Combinator
 
-swap nulco dupdipd concat loop
+A specialization of [loop] that accepts a quoted predicate program `P`
+and runs it [nullary].
 
-Gentzen diagram.
+       [P] [F] while
+    ------------------- P -> false
+
+        [P] [F] while
+    --------------------- P -> true
+       F [P] [F] while
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [swap] [nulco] [dupdipd] [concat] [loop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[loop]
+
 
 ------------------------------------------------------------------------
 
 ## words
 
-Basis Function Combinator
+Basis Function
 
 Print all the words in alphabetical order.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
 ### Discussion
 
-Lorem ipsum.
+Mathematically this is a form of [id].
 
 ### Crosslinks
 
-Lorem ipsum.
+[help]
+
 
 --------------------
 
 ## x
 
-(Combinator)
+Combinator
+
+Take a quoted function `F` and run it with itself as the first item on
+the stack.
 
        [F] x
     -----------
@@ -4072,66 +4021,40 @@ Lorem ipsum.
 
 ### Discussion
 
-The `x` combinator ...
+The simplest recursive pattern.
+
+See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
+as well as
+[Recursion Theory and Joy](https://www.kevinalbrecht.com/code/joy-mirror/j05cmp.html) by Manfred von
+
 
 
 ------------------------------------------------------------------------
 
 ## xor
 
-Basis Function Combinator
+Basis Function
 
-Same as a \^ b.
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+Logical bit-wise eXclusive OR.
 
 ### Crosslinks
 
-Lorem ipsum.
+[and]
+[or]
+
 
 ------------------------------------------------------------------------
 
 ## zip
 
-Basis Function Combinator
+Function
 
 Replace the two lists on the top of the stack with a list of the pairs
 from each list. The smallest list sets the length of the result list.
 
-Gentzen diagram.
+### Example
 
-### Definition
+       [1 2 3] [4 5 6] zip
+    -------------------------
+       [[4 1] [5 2] [6 3]]
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

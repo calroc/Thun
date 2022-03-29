@@ -2,28 +2,23 @@
 
 ## while
 
-Basis Function Combinator
+Combinator
 
-swap nulco dupdipd concat loop
+A specialization of [loop] that accepts a quoted predicate program `P`
+and runs it [nullary].
 
-Gentzen diagram.
+       [P] [F] while
+    ------------------- P -> false
+
+        [P] [F] while
+    --------------------- P -> true
+       F [P] [F] while
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [swap] [nulco] [dupdipd] [concat] [loop]
 
 ### Crosslinks
 
-Lorem ipsum.
+[loop]
+

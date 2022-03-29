@@ -2,29 +2,14 @@
 
 ## zip
 
-Basis Function Combinator
+Function
 
 Replace the two lists on the top of the stack with a list of the pairs
 from each list. The smallest list sets the length of the result list.
 
-Gentzen diagram.
+### Example
 
-### Definition
+       [1 2 3] [4 5 6] zip
+    -------------------------
+       [[4 1] [5 2] [6 3]]
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

@@ -2,28 +2,12 @@
 
 ## xor
 
-Basis Function Combinator
+Basis Function
 
-Same as a \^ b.
-
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+Logical bit-wise eXclusive OR.
 
 ### Crosslinks
 
-Lorem ipsum.
+[and]
+[or]
+
