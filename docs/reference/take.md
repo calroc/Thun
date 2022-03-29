@@ -2,34 +2,16 @@
 
 ## take
 
-Basis Function Combinator
+Function
 
-Expects an integer and a quote on the stack and returns the quote with
-just the top n items in reverse order (because that\'s easier and you
-can use reverse if needed.) :
+Expects an integer `n` and a list on the stack and replace them with a list
+with just the top `n` items in reverse order.
 
-    [a b c d] 2 take
+       [a b c d] 2 take
     ----------------------
-        [b a]
-
-Gentzen diagram.
+            [b a]
 
 ### Definition
 
-if not basis.
+> [\<\<\{\}] \[[shift]\] [times] [pop]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

@@ -2,28 +2,21 @@
 
 ## unquoted
 
-Basis Function Combinator
+Combinator
 
-\[i\] dip
+Unquote (using [i]) the list that is second on the stack.
 
-Gentzen diagram.
+### Example
+
+       1 2 [3 4] 5 unquoted
+    --------------------------
+             1 2 3 4 5
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[i]\] [dip]
 
 ### Crosslinks
 
-Lorem ipsum.
+[unit]
+

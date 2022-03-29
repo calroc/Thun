@@ -2,28 +2,20 @@
 
 ## third
 
-Basis Function Combinator
+Function
 
-    ([a1 a2 a3 ...1] -- a3)
-
-Gentzen diagram.
+       [a b c ...] third
+    -----------------------
+               c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rest] [second]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[second]
+[fourth]
+[rest]
+

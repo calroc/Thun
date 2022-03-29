@@ -2,28 +2,13 @@
 
 ## unswons
 
-Basis Function Combinator
+Function
 
-    ([a1 ...1] -- [...1] a1)
-
-Gentzen diagram.
+       [a ...] unswons
+    ---------------------
+           [...] a
 
 ### Definition
 
-if not basis.
+> [uncons] [swap]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

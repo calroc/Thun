@@ -4,15 +4,16 @@
 
 (Combinator)
 
-Run a quoted program using exactly one stack value and leave the first item of the result on the stack.
+Run a quoted program using exactly one stack value and leave the first
+item of the result on the stack.
 
        ... x [P] unary
     ---------------------
-           ... A
+           ... a
 
 ### Definition
 
-    nullary popd
+> [nullary] [popd]
 
 ### Discussion
 

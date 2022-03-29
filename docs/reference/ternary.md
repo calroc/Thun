@@ -2,19 +2,18 @@
 
 ## ternary
 
-(Combinator)
-
+Combinator
 
 Run a quoted program using exactly three stack values and leave the first
 item of the result on the stack.
 
-       ... z y x [P] unary
+       ... z y x [P] ternary
     -------------------------
-             ... A
+             ... a
 
 ### Definition
 
-    binary popd
+> [binary] [popd]
 
 ### Discussion
 

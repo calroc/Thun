@@ -90,7 +90,7 @@ swons swap cons
 swoncat swap concat
 sqr dup mul
 tailrec [i] genrec
-take [] roll> [shift] times pop
+take <<{} [shift] times pop
 ternary binary popd
 third rest second
 tuck dup swapd

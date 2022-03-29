@@ -3656,85 +3656,62 @@ Like [cons] but [swap] the item and list.
 
 ## tailrec
 
-Basis Function Combinator
+Combinator
 
-\[i\] genrec
-
-Gentzen diagram.
+A specialization of the [genrec] combinator.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[i]\] [genrec]
 
 ### Discussion
 
-Lorem ipsum.
+Some recursive functions do not need to store additional data or pending
+actions per-call.  These are called ["tail recursive" functions](https://en.wikipedia.org/wiki/Tail_recursive).  In Joy,
+they appear as [genrec] definitions that have [i] for the second half of
+their recursive branch.
+
+See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 
 ### Crosslinks
 
-Lorem ipsum.
+[genrec]
+
 
 ------------------------------------------------------------------------
 
 ## take
 
-Basis Function Combinator
+Function
 
-Expects an integer and a quote on the stack and returns the quote with
-just the top n items in reverse order (because that\'s easier and you
-can use reverse if needed.) :
+Expects an integer `n` and a list on the stack and replace them with a list
+with just the top `n` items in reverse order.
 
-    [a b c d] 2 take
+       [a b c d] 2 take
     ----------------------
-        [b a]
-
-Gentzen diagram.
+            [b a]
 
 ### Definition
 
-if not basis.
+> [\<\<\{\}] \[[shift]\] [times] [pop]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 --------------------
 
 ## ternary
 
-(Combinator)
-
+Combinator
 
 Run a quoted program using exactly three stack values and leave the first
 item of the result on the stack.
 
-       ... z y x [P] unary
+       ... z y x [P] ternary
     -------------------------
-             ... A
+             ... a
 
 ### Definition
 
-    binary popd
+> [binary] [popd]
 
 ### Discussion
 
@@ -3752,75 +3729,70 @@ consuming exactly three items from the stack.
 
 ## third
 
-Basis Function Combinator
+Function
 
-    ([a1 a2 a3 ...1] -- a3)
-
-Gentzen diagram.
+       [a b c ...] third
+    -----------------------
+               c
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [rest] [second]
 
 ### Crosslinks
 
-Lorem ipsum.
+[first]
+[second]
+[fourth]
+[rest]
+
 
 ------------------------------------------------------------------------
 
 ## times
 
-Basis Function Combinator
+Combinator
 
-times == \[\-- dip\] cons \[swap\] infra \[0 \>\] swap while pop :
+Expect a quoted program and an integer `n` on the stack and do the
+program `n` times.
 
-    ... n [Q] . times
-    ---------------------  w/ n <= 0
-      ... .
+       ... n [Q] . times
+    -----------------------  w/ n <= 0
+             ... .
 
-
-    ... 1 [Q] . times
+       ... 1 [Q] . times
     -----------------------
-      ... . Q
+             ... . Q
 
-
-    ... n [Q] . times
+       ... n [Q] . times
     -------------------------------------  w/ n > 1
-      ... . Q (n - 1) [Q] times
-
-Gentzen diagram.
+             ... . Q (n-1) [Q] times
 
 ### Definition
 
-if not basis.
+> \[\-- dip\] cons \[swap\] infra \[0 \>\] swap while pop :
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
 
 ### Discussion
 
-Lorem ipsum.
+This works by building a little [while] program and running it:
 
-### Crosslinks
+                     1 3 [++] • [-- dip] cons [swap] infra [0 >] swap while pop                                                                                                                 
+            1 3 [++] [-- dip] • cons [swap] infra [0 >] swap while pop                                                                                                                          
+            1 3 [[++] -- dip] • [swap] infra [0 >] swap while pop                                                                                                                               
+     1 3 [[++] -- dip] [swap] • infra [0 >] swap while pop                                                                                                                                      
+                  dip -- [++] • swap [3 1] swaack [0 >] swap while pop                                                                                                                          
+                  dip [++] -- • [3 1] swaack [0 >] swap while pop                                                                                                                               
+            dip [++] -- [3 1] • swaack [0 >] swap while pop                                                                                                                                     
+            1 3 [-- [++] dip] • [0 >] swap while pop                                                                                                                                            
+      1 3 [-- [++] dip] [0 >] • swap while pop                                                                                                                                                  
+      1 3 [0 >] [-- [++] dip] • while pop                                                                                                                                                       
 
-Lorem ipsum.
+This is a common pattern in Joy.  You accept some parameters from the
+stack which typically include qouted programs and use them to build
+another program which does the actual work.  This is kind of like macros
+in Lisp, or preprocessor directives in C.
+
 
 --------------
 
@@ -3833,31 +3805,23 @@ See [bool](#bool).
 
 ## tuck
 
-Basis Function Combinator
+Function
 
-    (a2 a1 -- a1 a2 a1)
+[dup] the item on the top of the stack under the second item on the
+stack.
 
-Gentzen diagram.
+       a b tuck
+    --------------
+        b a b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [dup] \[[swap]\] [dip]
 
 ### Crosslinks
 
-Lorem ipsum.
+[over]
+
 
 --------------------
 
@@ -3865,15 +3829,16 @@ Lorem ipsum.
 
 (Combinator)
 
-Run a quoted program using exactly one stack value and leave the first item of the result on the stack.
+Run a quoted program using exactly one stack value and leave the first
+item of the result on the stack.
 
        ... x [P] unary
     ---------------------
-           ... A
+           ... a
 
 ### Definition
 
-    nullary popd
+> [nullary] [popd]
 
 ### Discussion
 
@@ -3891,147 +3856,85 @@ consuming exactly one item from the stack.
 
 ## uncons
 
-(Basis Function)
+Basis Function
 
 Removes an item from a list and leaves it on the stack under the rest of
 the list.  You cannot `uncons` an item from an empty list.
 
-       [A ...] uncons
+       [a ...] uncons
     --------------------
-          A [...]
-
-### Source
-
-    func(uncons, Si, So) :- func(cons, So, Si).
+          a [...]
 
 ### Discussion
 
-This is the inverse of `cons`.
+This is the inverse of [cons].
 
 ### Crosslinks
 
-[cons](#cons)
+[cons]
 
 
 ------------------------------------------------------------------------
 
 ## unique
 
-Basis Function Combinator
+Function
 
 Given a list remove duplicate items.
 
-Gentzen diagram.
-
-### Definition
-
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## unit
 
-Basis Function Combinator
+Function
 
-    (a1 -- [a1 ])
-
-Gentzen diagram.
+       a unit
+    ------------
+        [a]
 
 ### Definition
 
-if not basis.
+> \[\] [cons]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 
 ## unquoted
 
-Basis Function Combinator
+Combinator
 
-\[i\] dip
+Unquote (using [i]) the list that is second on the stack.
 
-Gentzen diagram.
+### Example
+
+       1 2 [3 4] 5 unquoted
+    --------------------------
+             1 2 3 4 5
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> \[[i]\] [dip]
 
 ### Crosslinks
 
-Lorem ipsum.
+[unit]
+
 
 ------------------------------------------------------------------------
 
 ## unswons
 
-Basis Function Combinator
+Function
 
-    ([a1 ...1] -- [...1] a1)
-
-Gentzen diagram.
+       [a ...] unswons
+    ---------------------
+           [...] a
 
 ### Definition
 
-if not basis.
+> [uncons] [swap]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.
 
 ------------------------------------------------------------------------
 

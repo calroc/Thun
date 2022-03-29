@@ -2,28 +2,24 @@
 
 ## tailrec
 
-Basis Function Combinator
+Combinator
 
-\[i\] genrec
-
-Gentzen diagram.
+A specialization of the [genrec] combinator.
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
+> \[[i]\] [genrec]
 
 ### Discussion
 
-Lorem ipsum.
+Some recursive functions do not need to store additional data or pending
+actions per-call.  These are called ["tail recursive" functions](https://en.wikipedia.org/wiki/Tail_recursive).  In Joy,
+they appear as [genrec] definitions that have [i] for the second half of
+their recursive branch.
+
+See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 
 ### Crosslinks
 
-Lorem ipsum.
+[genrec]
+

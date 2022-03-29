@@ -2,28 +2,13 @@
 
 ## unit
 
-Basis Function Combinator
+Function
 
-    (a1 -- [a1 ])
-
-Gentzen diagram.
+       a unit
+    ------------
+        [a]
 
 ### Definition
 
-if not basis.
+> \[\] [cons]
 
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
-
-### Crosslinks
-
-Lorem ipsum.

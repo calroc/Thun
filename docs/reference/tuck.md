@@ -2,28 +2,20 @@
 
 ## tuck
 
-Basis Function Combinator
+Function
 
-    (a2 a1 -- a1 a2 a1)
+[dup] the item on the top of the stack under the second item on the
+stack.
 
-Gentzen diagram.
+       a b tuck
+    --------------
+        b a b
 
 ### Definition
 
-if not basis.
-
-### Derivation
-
-if not basis.
-
-### Source
-
-if basis
-
-### Discussion
-
-Lorem ipsum.
+> [dup] \[[swap]\] [dip]
 
 ### Crosslinks
 
-Lorem ipsum.
+[over]
+
