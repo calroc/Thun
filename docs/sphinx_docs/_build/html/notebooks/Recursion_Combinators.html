@@ -33,7 +33,7 @@
 
           <div class="body" role="main">
             
-  <div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">DefinitionWrapper</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+  <div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from notebook_preamble import D, DefinitionWrapper, J, V, define
 </pre></div>
 </div>
 <section id="recursion-combinators">
@@ -101,18 +101,18 @@ cons list”.</p></li>
 </ul>
 <p>It may be helpful to see this function implemented in imperative Python
 code.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hylomorphism</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Return a hylomorphism function H.&#39;&#39;&#39;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>def hylomorphism(c, F, P, G):
+    &#39;&#39;&#39;Return a hylomorphism function H.&#39;&#39;&#39;
 
-    <span class="k">def</span> <span class="nf">H</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">P</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">c</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">b</span><span class="p">,</span> <span class="n">aa</span> <span class="o">=</span> <span class="n">G</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">H</span><span class="p">(</span><span class="n">aa</span><span class="p">))</span>  <span class="c1"># b is stored in the stack frame during recursive call to H().</span>
-        <span class="k">return</span> <span class="n">result</span>
+    def H(a):
+        if P(a):
+            result = c
+        else:
+            b, aa = G(a)
+            result = F(b, H(aa))  # b is stored in the stack frame during recursive call to H().
+        return result
 
-    <span class="k">return</span> <span class="n">H</span>
+    return H
 </pre></div>
 </div>
 <p>Cf. <a class="reference external" href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.125">“Bananas, Lenses, &amp; Barbed
@@ -185,7 +185,7 @@ the left so we have a definition for <code class="docutils literal notranslate">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hylomorphism</span> <span class="o">==</span> <span class="p">[</span><span class="n">unit</span> <span class="p">[</span><span class="n">pop</span><span class="p">]</span> <span class="n">swoncat</span><span class="p">]</span> <span class="n">dipd</span> <span class="p">[</span><span class="n">dip</span><span class="p">]</span> <span class="n">swoncat</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;hylomorphism == [unit [pop] swoncat] dipd [dip] swoncat genrec&#39;)
 </pre></div>
 </div>
 <section id="example-finding-triangular-numbers">
@@ -200,17 +200,17 @@ of all positive integers less than that one. (In this case the types
 <li><p><code class="docutils literal notranslate"><span class="pre">[G]</span></code> is <code class="docutils literal notranslate"><span class="pre">[--</span> <span class="pre">dup]</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[F]</span></code> is <code class="docutils literal notranslate"><span class="pre">[+]</span></code></p></li>
 </ul>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;triangular_number == [1 &lt;=] 0 [-- dup] [+] hylomorphism&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;triangular_number == [1 &lt;=] 0 [-- dup] [+] hylomorphism&#39;)
 </pre></div>
 </div>
 <p>Let’s try it:</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 triangular_number&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;5 triangular_number&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 1 2 3 4 5 6] [triangular_number] map&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[0 1 2 3 4 5 6] [triangular_number] map&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">6</span> <span class="mi">10</span> <span class="mi">15</span><span class="p">]</span>
@@ -372,10 +372,10 @@ values.</p>
    <span class="o">==</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span> <span class="p">[]]</span> <span class="p">[</span><span class="o">--</span> <span class="n">dup</span><span class="p">]</span> <span class="p">[</span><span class="n">dip</span> <span class="n">swons</span><span class="p">]</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;range == [0 &lt;=] [] [-- dup] [swons] hylomorphism&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;range == [0 &lt;=] [] [-- dup] [swons] hylomorphism&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 range&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;5 range&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">]</span>
@@ -388,10 +388,10 @@ values.</p>
    <span class="o">==</span> <span class="p">[]</span> <span class="n">swap</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span> <span class="n">dup</span> <span class="p">[</span><span class="n">swons</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">primrec</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;range_reverse == [] swap [0 &lt;=] [pop] [-- dup [swons] dip] primrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;range_reverse == [] swap [0 &lt;=] [pop] [-- dup [swons] dip] primrec&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 range_reverse&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;5 range_reverse&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">]</span>
@@ -404,10 +404,10 @@ values.</p>
    <span class="o">==</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span> <span class="p">[]]</span> <span class="p">[[</span><span class="o">--</span><span class="p">]</span> <span class="n">dupdip</span><span class="p">]</span> <span class="p">[</span><span class="n">dip</span> <span class="n">swons</span><span class="p">]</span> <span class="n">genrec</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;ranger == [0 &lt;=] [pop []] [[--] dupdip] [dip swons] genrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;ranger == [0 &lt;=] [pop []] [[--] dupdip] [dip swons] genrec&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 ranger&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;5 ranger&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">5</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">]</span>
@@ -420,10 +420,10 @@ values.</p>
    <span class="o">==</span> <span class="p">[]</span> <span class="n">swap</span> <span class="p">[</span><span class="mi">0</span> <span class="o">&lt;=</span><span class="p">]</span> <span class="p">[</span><span class="n">pop</span><span class="p">]</span> <span class="p">[[</span><span class="n">swons</span><span class="p">]</span> <span class="n">dupdip</span> <span class="o">--</span><span class="p">]</span> <span class="n">primrec</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;ranger_reverse == [] swap [0 &lt;=] [pop] [[swons] dupdip --] primrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;ranger_reverse == [] swap [0 &lt;=] [pop] [[swons] dupdip --] primrec&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 ranger_reverse&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;5 ranger_reverse&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">]</span>
@@ -444,17 +444,17 @@ and makes some new value.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">==</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="n">c</span> <span class="p">[</span><span class="n">uncons</span> <span class="n">swap</span><span class="p">]</span> <span class="p">[</span><span class="n">F</span><span class="p">]</span> <span class="n">hylomorphism</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;swuncons == uncons swap&#39;</span><span class="p">)</span>  <span class="c1"># Awkward name.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;swuncons == uncons swap&#39;)  # Awkward name.
 </pre></div>
 </div>
 <p>An example of a catamorphism is the sum function.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">sum</span> <span class="o">==</span> <span class="p">[</span><span class="ow">not</span><span class="p">]</span> <span class="mi">0</span> <span class="p">[</span><span class="n">swuncons</span><span class="p">]</span> <span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">hylomorphism</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;sum == [not] 0 [swuncons] [+] hylomorphism&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;sum == [not] 0 [swuncons] [+] hylomorphism&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 4 3 2 1] sum&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[5 4 3 2 1] sum&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">15</span>
@@ -464,7 +464,7 @@ and makes some new value.</p>
 <h3>The <code class="docutils literal notranslate"><span class="pre">step</span></code> combinator<a class="headerlink" href="#the-step-combinator" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">step</span></code> combinator will usually be better to use than
 <code class="docutils literal notranslate"><span class="pre">catamorphism</span></code>.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[step] help&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[step] help&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Run</span> <span class="n">a</span> <span class="n">quoted</span> <span class="n">program</span> <span class="n">on</span> <span class="n">each</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">sequence</span><span class="o">.</span>
@@ -488,10 +488,10 @@ and makes some new value.</p>
 <span class="n">on</span> <span class="n">top</span> <span class="n">of</span> <span class="n">the</span> <span class="n">stack</span><span class="o">.</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;sum == 0 swap [+] step&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;sum == 0 swap [+] step&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[5 4 3 2 1] sum&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[5 4 3 2 1] sum&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">15</span>
@@ -512,10 +512,10 @@ and makes some new value.</p>
 <span class="n">P</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&lt;=</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;factorial == 1 swap [1 &lt;=] [pop] [[*] dupdip --] primrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;factorial == 1 swap [1 &lt;=] [pop] [[*] dupdip --] primrec&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;5 factorial&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;5 factorial&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">120</span>
@@ -544,10 +544,10 @@ pattern <code class="docutils literal notranslate"><span class="pre">H2</span></
 <span class="n">P</span> <span class="o">==</span> <span class="ow">not</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;tails == [] swap [not] [pop] [rest dup [swons] dip] primrec&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;tails == [] swap [not] [pop] [rest dup [swons] dip] primrec&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 2 3] tails&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 2 3] tails&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[]</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span><span class="p">]]</span>
@@ -675,7 +675,7 @@ Wire”</a></p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
 
   </body>

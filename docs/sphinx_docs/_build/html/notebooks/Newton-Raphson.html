@@ -13,7 +13,7 @@
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Square Spiral Example Joy Code" href="Square_Spiral.html" />
@@ -40,7 +40,7 @@
 to write a function that can compute the square root of a number.</p>
 <p>Cf. <a class="reference external" href="https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf">“Why Functional Programming Matters” by John
 Hughes</a></p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from notebook_preamble import J, V, define
 </pre></div>
 </div>
 <section id="a-generator-for-approximations">
@@ -92,10 +92,10 @@ function we’re writing. If we let 1 be the initial approximation:</p>
 <span class="mi">1</span>   <span class="p">[</span><span class="n">dup</span> <span class="mi">23</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span>                    <span class="n">make_generator</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;gsra 1 swap [over / + 2 /] cons [dup] swoncat make_generator&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>define(&#39;gsra 1 swap [over / + 2 /] cons [dup] swoncat make_generator&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 gsra&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 gsra&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="n">dup</span> <span class="mi">23</span> <span class="n">over</span> <span class="o">/</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">/</span><span class="p">]</span> <span class="n">codireco</span><span class="p">]</span>
@@ -103,7 +103,7 @@ function we’re writing. If we let 1 be the initial approximation:</p>
 </div>
 <p>Let’s drive the generator a few time (with the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator) and
 square the approximation to see how well it works…</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 gsra 6 [x popd] times first sqr&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 gsra 6 [x popd] times first sqr&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">23.0000000001585</span>
@@ -145,7 +145,7 @@ generated already and epsilon ε is handy on the stack…</p>
 <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">ε</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_P [first - abs] dip &lt;=&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>define(&#39;_within_P [first - abs] dip &lt;=&#39;)
 </pre></div>
 </div>
 </section>
@@ -157,7 +157,7 @@ generated already and epsilon ε is handy on the stack…</p>
    <span class="n">b</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_B roll&lt; popop first&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>define(&#39;_within_B roll&lt; popop first&#39;)
 </pre></div>
 </div>
 </section>
@@ -182,7 +182,7 @@ generated already and epsilon ε is handy on the stack…</p>
 <span class="n">b</span> <span class="p">[</span><span class="n">c</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="n">within</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_within_R [popd x] dip&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>define(&#39;_within_R [popd x] dip&#39;)
 </pre></div>
 </div>
 </section>
@@ -194,33 +194,33 @@ generated already and epsilon ε is handy on the stack…</p>
 <span class="n">a</span> <span class="p">[</span><span class="n">b</span> <span class="n">G</span><span class="p">]</span> <span class="n">ε</span> <span class="o">...</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;within x 0.000000001 [_within_P] [_within_B] [_within_R] tailrec&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;sqrt gsra within&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>define(&#39;within x 0.000000001 [_within_P] [_within_B] [_within_R] tailrec&#39;)
+define(&#39;sqrt gsra within&#39;)
 </pre></div>
 </div>
 <p>Try it out…</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;36 sqrt&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>J(&#39;36 sqrt&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">6.0</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;23 sqrt&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>J(&#39;23 sqrt&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">4.795831523312719</span>
 </pre></div>
 </div>
 <p>Check it.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">4.795831523312719</span><span class="o">**</span><span class="mi">2</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>4.795831523312719**2
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">22.999999999999996</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from math import sqrt
 
-<span class="n">sqrt</span><span class="p">(</span><span class="mi">23</span><span class="p">)</span>
+sqrt(23)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">4.795831523312719</span>
@@ -316,7 +316,7 @@ generated already and epsilon ε is handy on the stack…</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
 
   </body>

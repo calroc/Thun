@@ -33,7 +33,7 @@
 
           <div class="body" role="main">
             
-  <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+  <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from notebook_preamble import J, V, define
 </pre></div>
 </div>
 <section id="square-spiral-example-joy-code">
@@ -99,8 +99,8 @@ to apply <code class="docutils literal notranslate"><span class="pre">abs</span>
 that each accept two quoted predicate programs, run the first, and
 conditionally run the second only if required (to compute the final
 Boolean value). They run their predicate arguments <code class="docutils literal notranslate"><span class="pre">nullary</span></code>.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;&amp;&amp; [nullary] cons [nullary [0]] dip branch&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;|| [nullary] cons [nullary] dip [1] branch&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>define(&#39;&amp;&amp; [nullary] cons [nullary [0]] dip branch&#39;)
+define(&#39;|| [nullary] cons [nullary] dip [1] branch&#39;)
 </pre></div>
 </div>
 <p>Given those, we can define <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">!=</span> <span class="pre">y</span> <span class="pre">||</span> <span class="pre">x</span> <span class="pre">&gt;=</span> <span class="pre">0</span></code> as:</p>
@@ -143,7 +143,7 @@ legible.</p>
 </section>
 <section id="not-negative">
 <h3>“Not Negative”<a class="headerlink" href="#not-negative" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;!- 0 &gt;=&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>define(&#39;!- 0 &gt;=&#39;)
 </pre></div>
 </div>
 </section>
@@ -169,29 +169,29 @@ of <code class="docutils literal notranslate"><span class="pre">ifte</span></cod
 branch
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;spiral_next [[[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp;] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>define(&#39;spiral_next [[[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp;] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte&#39;)
 </pre></div>
 </div>
 <p>Let’s try it out:</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 0 spiral_next&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>J(&#39;0 0 spiral_next&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 0 spiral_next&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 0 spiral_next&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;1 -1 spiral_next&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>J(&#39;1 -1 spiral_next&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="o">-</span><span class="mi">1</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 -1 spiral_next&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>J(&#39;0 -1 spiral_next&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span>
@@ -240,7 +240,7 @@ From:</p>
            <span class="p">[</span><span class="n">x</span><span class="s1">&#39; y&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 0] [spiral_next] infra&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>J(&#39;[0 0] [spiral_next] infra&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">]</span>
@@ -262,7 +262,7 @@ us out of the value and stepper function:</p>
 </pre></div>
 </div>
 <p>Here it is in action:</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[0 0] [dup [spiral_next] infra] make_generator x x x x pop&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>J(&#39;[0 0] [dup [spiral_next] infra] make_generator x x x x pop&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="mi">0</span><span class="p">]</span>
@@ -290,13 +290,13 @@ pairs, where the next pair in the series can be generated at any time by
 using the <code class="docutils literal notranslate"><span class="pre">x</span></code> combinator on the generator (which is just a quoted
 expression containing a copy of the current pair and the “stepper
 function” to generate the next pair from that.)</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;_spn_P [[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp;&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;_spn_T [!-] [[++]] [[--]] ifte dip&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;_spn_E [pop !-] [--] [++] ifte&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;spiral_next _spn_P [_spn_E] [_spn_T] branch&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>define(&#39;_spn_P [[abs] ii &lt;=] [[&lt;&gt;] [pop !-] ||] &amp;&amp;&#39;)
+define(&#39;_spn_T [!-] [[++]] [[--]] ifte dip&#39;)
+define(&#39;_spn_E [pop !-] [--] [++] ifte&#39;)
+define(&#39;spiral_next _spn_P [_spn_E] [_spn_T] branch&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;23 18 spiral_next&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>V(&#39;23 18 spiral_next&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                               . 23 18 spiral_next
@@ -456,7 +456,7 @@ function” to generate the next pair from that.)</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
 
   </body>

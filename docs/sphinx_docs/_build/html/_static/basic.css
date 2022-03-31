@@ -66,6 +66,10 @@ div.sphinxsidebar ul {
     list-style: none;
 }
 
+div.sphinxsidebar li {
+	padding-bottom: 0.5em;
+}
+
 div.sphinxsidebar ul ul,
 div.sphinxsidebar ul.want-points {
     margin-left: 20px;

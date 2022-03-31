@@ -125,13 +125,13 @@ the desired outcome.</p>
 </pre></div>
 </div>
 <p>Extract a couple of auxiliary definitions:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TS</span><span class="o">.</span><span class="mi">0</span> <span class="o">==</span> <span class="p">[[</span><span class="ow">not</span><span class="p">]</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span>
-<span class="n">TS</span><span class="o">.</span><span class="mi">1</span> <span class="o">==</span> <span class="p">[</span><span class="n">dip</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">uncons</span><span class="p">]</span> <span class="n">swoncat</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TS</span><span class="mf">.0</span> <span class="o">==</span> <span class="p">[[</span><span class="ow">not</span><span class="p">]</span> <span class="n">swap</span><span class="p">]</span> <span class="n">dip</span>
+<span class="n">TS</span><span class="mf">.1</span> <span class="o">==</span> <span class="p">[</span><span class="n">dip</span><span class="p">]</span> <span class="n">cons</span> <span class="p">[</span><span class="n">uncons</span><span class="p">]</span> <span class="n">swoncat</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">TS</span><span class="o">.</span><span class="mi">1</span> <span class="n">TS</span><span class="o">.</span><span class="mi">0</span> <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span>                         <span class="n">genrec</span>
-<span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span>           <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span>         <span class="p">[</span><span class="n">TS</span><span class="o">.</span><span class="mi">1</span> <span class="n">TS</span><span class="o">.</span><span class="mi">0</span><span class="p">]</span> <span class="n">dip</span> <span class="n">genrec</span>
-<span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span>         <span class="p">[</span><span class="nb">map</span><span class="p">]</span> <span class="n">swoncat</span> <span class="p">[</span><span class="n">TS</span><span class="o">.</span><span class="mi">1</span> <span class="n">TS</span><span class="o">.</span><span class="mi">0</span><span class="p">]</span> <span class="n">dip</span> <span class="n">genrec</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="n">TS</span><span class="mf">.1</span> <span class="n">TS</span><span class="mf">.0</span> <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span>                         <span class="n">genrec</span>
+<span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span>           <span class="p">[</span><span class="nb">map</span> <span class="n">C</span><span class="p">]</span>         <span class="p">[</span><span class="n">TS</span><span class="mf">.1</span> <span class="n">TS</span><span class="mf">.0</span><span class="p">]</span> <span class="n">dip</span> <span class="n">genrec</span>
+<span class="p">[</span><span class="n">B</span><span class="p">]</span> <span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="p">[</span><span class="n">C</span><span class="p">]</span>         <span class="p">[</span><span class="nb">map</span><span class="p">]</span> <span class="n">swoncat</span> <span class="p">[</span><span class="n">TS</span><span class="mf">.1</span> <span class="n">TS</span><span class="mf">.0</span><span class="p">]</span> <span class="n">dip</span> <span class="n">genrec</span>
 </pre></div>
 </div>
 <p>The givens are all to the left so we have our definition.</p>
@@ -148,17 +148,17 @@ the desired outcome.</p>
 </section>
 <section id="define-treestep">
 <h2>Define <code class="docutils literal notranslate"><span class="pre">treestep</span></code><a class="headerlink" href="#define-treestep" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">D</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span><span class="p">,</span> <span class="n">DefinitionWrapper</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from notebook_preamble import D, J, V, define, DefinitionWrapper
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>DefinitionWrapper.add_definitions(&#39;&#39;&#39;
 
-<span class="s1">    _treestep_0 == [[not] swap] dip</span>
-<span class="s1">    _treestep_1 == [dip] cons [uncons] swoncat</span>
-<span class="s1">    treegrind == [_treestep_1 _treestep_0] dip genrec</span>
-<span class="s1">    treestep == [map] swoncat treegrind</span>
+    _treestep_0 == [[not] swap] dip
+    _treestep_1 == [dip] cons [uncons] swoncat
+    treegrind == [_treestep_1 _treestep_0] dip genrec
+    treestep == [map] swoncat treegrind
 
-<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+&#39;&#39;&#39;, D)
 </pre></div>
 </div>
 </section>
@@ -169,7 +169,7 @@ all nodes in a tree with this function:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sumtree</span> <span class="o">==</span> <span class="p">[</span><span class="n">pop</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[</span><span class="nb">sum</span> <span class="o">+</span><span class="p">]</span> <span class="n">treestep</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;sumtree == [pop 0] [] [sum +] treestep&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;sumtree == [pop 0] [] [sum +] treestep&#39;)
 </pre></div>
 </div>
 <p>Running this function on an empty tree value gives zero:</p>
@@ -178,7 +178,7 @@ all nodes in a tree with this function:</p>
            <span class="mi">0</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[] sumtree&#39;</span><span class="p">)</span>  <span class="c1"># Empty tree.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[] sumtree&#39;)  # Empty tree.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>
@@ -192,61 +192,61 @@ all nodes in a tree with this function:</p>
 <span class="n">n</span><span class="o">+</span><span class="n">m</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23] sumtree&#39;</span><span class="p">)</span>  <span class="c1"># No child trees.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23] sumtree&#39;)  # No child trees.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 []] sumtree&#39;</span><span class="p">)</span>  <span class="c1"># Child tree, empty.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 []] sumtree&#39;)  # Child tree, empty.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">23</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [4]] [3]] sumtree&#39;</span><span class="p">)</span>  <span class="c1"># Non-empty child trees.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 [2 [4]] [3]] sumtree&#39;)  # Non-empty child trees.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">32</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] sumtree&#39;</span><span class="p">)</span>  <span class="c1"># Etc...</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 [2 [8] [9]] [3] [4 []]] sumtree&#39;)  # Etc...
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">49</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] [pop 0] [] [cons sum] treestep&#39;</span><span class="p">)</span>  <span class="c1"># Alternate &quot;spelling&quot;.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 [2 [8] [9]] [3] [4 []]] [pop 0] [] [cons sum] treestep&#39;)  # Alternate &quot;spelling&quot;.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">49</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] [] [pop 23] [cons] treestep&#39;</span><span class="p">)</span>  <span class="c1"># Replace each node.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 [2 [8] [9]] [3] [4 []]] [] [pop 23] [cons] treestep&#39;)  # Replace each node.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">23</span> <span class="p">[</span><span class="mi">23</span> <span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="p">[</span><span class="mi">23</span><span class="p">]]</span> <span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="p">[</span><span class="mi">23</span> <span class="p">[]]]</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] [] [pop 1] [cons] treestep&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 [2 [8] [9]] [3] [4 []]] [] [pop 1] [cons] treestep&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[]]]</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] [] [pop 1] [cons] treestep sumtree&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 [2 [8] [9]] [3] [4 []]] [] [pop 1] [cons] treestep sumtree&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[23 [2 [8] [9]] [3] [4 []]] [pop 0] [pop 1] [sum +] treestep&#39;</span><span class="p">)</span>  <span class="c1"># Combine replace and sum into one function.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[23 [2 [8] [9]] [3] [4 []]] [pop 0] [pop 1] [sum +] treestep&#39;)  # Combine replace and sum into one function.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[4 [3 [] [7]]] [pop 0] [pop 1] [sum +] treestep&#39;</span><span class="p">)</span>  <span class="c1"># Combine replace and sum into one function.</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[4 [3 [] [7]]] [pop 0] [pop 1] [sum +] treestep&#39;)  # Combine replace and sum into one function.
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span>
@@ -277,7 +277,7 @@ all nodes in a tree with this function:</p>
 </pre></div>
 </div>
 <p>This doesn’t quite work:</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[3 0] [[2 0] [][]] [[9 0] [[5 0] [[4 0] [][]] [[8 0] [[6 0] [] [[7 0] [][]]][]]][]]] [&quot;B&quot;] [first] [i] treestep&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[[3 0] [[2 0] [][]] [[9 0] [[5 0] [[4 0] [][]] [[8 0] [[6 0] [] [[7 0] [][]]][]]][]]] [&quot;B&quot;] [first] [i] treestep&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span> <span class="s1">&#39;B&#39;</span> <span class="s1">&#39;B&#39;</span>
@@ -299,7 +299,7 @@ depositing our results directly on the stack.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[]</span> <span class="p">[</span><span class="n">first</span><span class="p">]</span> <span class="p">[</span><span class="n">flatten</span> <span class="n">cons</span><span class="p">]</span> <span class="n">treestep</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [first] [flatten cons] treestep&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [first] [flatten cons] treestep&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">9</span> <span class="mi">5</span> <span class="mi">4</span> <span class="mi">8</span> <span class="mi">6</span> <span class="mi">7</span><span class="p">]</span>
@@ -322,7 +322,7 @@ depositing our results directly on the stack.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[]</span> <span class="p">[</span><span class="n">i</span> <span class="n">roll</span><span class="o">&lt;</span> <span class="n">swons</span> <span class="n">concat</span><span class="p">]</span> <span class="p">[</span><span class="n">first</span><span class="p">]</span> <span class="n">treestep</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [uncons pop] [i roll&lt; swons concat] treestep&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [uncons pop] [i roll&lt; swons concat] treestep&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">9</span><span class="p">]</span>
@@ -343,7 +343,7 @@ non-empty node is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">key</span> <span class="n">value</span><span class="p">]</span> <span class="n">N</span> <span class="p">[</span><span class="n">left</span> <span class="n">right</span><span class="p">]</span> <span class="p">[</span><span class="n">K</span><span class="p">]</span> <span class="n">C</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[&quot;key&quot; &quot;value&quot;] [&quot;left&quot;] [&quot;right&quot;] ] [&quot;B&quot;] [&quot;N&quot;] [&quot;C&quot;] treegrind&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[[&quot;key&quot; &quot;value&quot;] [&quot;left&quot;] [&quot;right&quot;] ] [&quot;B&quot;] [&quot;N&quot;] [&quot;C&quot;] treegrind&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;key&#39;</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]]</span> <span class="p">[[</span><span class="ow">not</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">]</span> <span class="p">[</span><span class="n">uncons</span> <span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span> <span class="n">genrec</span><span class="p">]</span> <span class="s1">&#39;C&#39;</span>
@@ -353,21 +353,21 @@ non-empty node is:</p>
 <section id="treegrind-with-step">
 <h2><code class="docutils literal notranslate"><span class="pre">treegrind</span></code> with <code class="docutils literal notranslate"><span class="pre">step</span></code><a class="headerlink" href="#treegrind-with-step" title="Permalink to this headline">¶</a></h2>
 <p>Iteration through the nodes</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [pop] [&quot;N&quot;] [step] treegrind&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [pop] [&quot;N&quot;] [step] treegrind&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">3</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">9</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">8</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">6</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span> <span class="p">[</span><span class="mi">7</span> <span class="mi">0</span><span class="p">]</span> <span class="s1">&#39;N&#39;</span>
 </pre></div>
 </div>
 <p>Sum the nodes’ keys.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;0 [[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [pop] [first +] [step] treegrind&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;0 [[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [pop] [first +] [step] treegrind&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">44</span>
 </pre></div>
 </div>
 <p>Rebuild the tree using <code class="docutils literal notranslate"><span class="pre">map</span></code> (imitating <code class="docutils literal notranslate"><span class="pre">treestep</span></code>.)</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [[100 +] infra] [map cons] treegrind&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[[3 0] [[2 0] [] []] [[9 0] [[5 0] [[4 0] [] []] [[8 0] [[6 0] [] [[7 0] [] []]] []]] []]]   [] [[100 +] infra] [map cons] treegrind&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">103</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[[</span><span class="mi">102</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[[</span><span class="mi">109</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[[</span><span class="mi">105</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[[</span><span class="mi">104</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[]]</span> <span class="p">[[</span><span class="mi">108</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[[</span><span class="mi">106</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[[</span><span class="mi">107</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[]]]</span> <span class="p">[]]]</span> <span class="p">[]]]</span>
@@ -449,37 +449,37 @@ equal):</p>
 </pre></div>
 </div>
 <p>To me, that seems simpler than the <code class="docutils literal notranslate"><span class="pre">genrec</span></code> version.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">DefinitionWrapper</span><span class="o">.</span><span class="n">add_definitions</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>DefinitionWrapper.add_definitions(&#39;&#39;&#39;
 
-<span class="s1">    T&gt; == pop [first] dip i</span>
-<span class="s1">    T&lt; == pop [second] dip i</span>
-<span class="s1">    E == roll&gt; popop first</span>
-<span class="s1">    P == roll&lt; [roll&lt; uncons swap] dip</span>
+    T&gt; == pop [first] dip i
+    T&lt; == pop [second] dip i
+    E == roll&gt; popop first
+    P == roll&lt; [roll&lt; uncons swap] dip
 
-<span class="s1">    Tree-get == [P [T&gt;] [E] [T&lt;] cmp] treegrind</span>
+    Tree-get == [P [T&gt;] [E] [T&lt;] cmp] treegrind
 
-<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+&#39;&#39;&#39;, D)
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;&#39;&#39;\
 
-<span class="s1">[[3 13] [[2 12] [] []] [[9 19] [[5 15] [[4 14] [] []] [[8 18] [[6 16] [] [[7 17] [] []]] []]] []]]</span>
+[[3 13] [[2 12] [] []] [[9 19] [[5 15] [[4 14] [] []] [[8 18] [[6 16] [] [[7 17] [] []]] []]] []]]
 
-<span class="s1">[] [5] Tree-get</span>
+[] [5] Tree-get
 
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+&#39;&#39;&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">15</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;&#39;&#39;\
 
-<span class="s1">[[3 13] [[2 12] [] []] [[9 19] [[5 15] [[4 14] [] []] [[8 18] [[6 16] [] [[7 17] [] []]] []]] []]]</span>
+[[3 13] [[2 12] [] []] [[9 19] [[5 15] [[4 14] [] []] [[8 18] [[6 16] [] [[7 17] [] []]] []]] []]]
 
-<span class="s1">[pop &quot;nope&quot;] [25] Tree-get</span>
+[pop &quot;nope&quot;] [25] Tree-get
 
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+&#39;&#39;&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;nope&#39;</span>
@@ -574,7 +574,7 @@ equal):</p>
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
 
   </body>

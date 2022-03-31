@@ -42,7 +42,7 @@ the original paper: <a class="reference external" href="https://www.st.cs.uni-sa
 Huet</a></p>
 <p>Given a datastructure on the stack we can navigate through it, modify
 it, and rebuild it using the “zipper” technique.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">notebook_preamble</span> <span class="kn">import</span> <span class="n">J</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">define</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from notebook_preamble import J, V, define
 </pre></div>
 </div>
 <section id="trees">
@@ -52,7 +52,7 @@ strings, Symbols (strings that are names of functions) and sequences
 (aka lists, aka quoted literals, aka aggregates, etc…), but we can build
 <a class="reference external" href="https://en.wikipedia.org/wiki/Tree_%28data_structure%29">trees</a> out
 of sequences.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 [2 [3 4 25 6] 7] 8]&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 [2 [3 4 25 6] 7] 8]&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span>
@@ -75,13 +75,13 @@ datastructure used to keep track of these items is the zipper.)</p>
 show the trace so you can see how it works. If we were going to use
 these a lot it would make sense to write Python versions for efficiency,
 but see below.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;z-down == [] swap uncons swap&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;z-up == swons swap shunt&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;z-right == [swons] cons dip uncons swap&#39;</span><span class="p">)</span>
-<span class="n">define</span><span class="p">(</span><span class="s1">&#39;z-left == swons [uncons swap] dip swap&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;z-down == [] swap uncons swap&#39;)
+define(&#39;z-up == swons swap shunt&#39;)
+define(&#39;z-right == [swons] cons dip uncons swap&#39;)
+define(&#39;z-left == swons [uncons swap] dip swap&#39;)
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[1 [2 [3 4 25 6] 7] 8] z-down&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;[1 [2 [3 4 25 6] 7] 8] z-down&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                          <span class="o">.</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="n">z</span><span class="o">-</span><span class="n">down</span>
@@ -93,7 +93,7 @@ but see below.</p>
 <span class="p">[]</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="mi">1</span> <span class="o">.</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[] [[2 [3 4 25 6] 7] 8] 1 z-right&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;[] [[2 [3 4 25 6] 7] 8] 1 z-right&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                  <span class="o">.</span> <span class="p">[]</span> <span class="p">[[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="mi">1</span> <span class="n">z</span><span class="o">-</span><span class="n">right</span>
@@ -113,43 +113,43 @@ but see below.</p>
          <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="o">.</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2 [3 4 25 6] 7] z-down&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1] [8] [2 [3 4 25 6] 7] z-down&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">2</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [] [[3 4 25 6] 7] 2 z-right&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1] [8] [] [[3 4 25 6] 7] 2 z-right&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [3 4 25 6] z-down&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1] [8] [2] [7] [3 4 25 6] z-down&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">3</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [] [4 25 6] 3 z-right&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1] [8] [2] [7] [] [4 25 6] 3 z-right&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">4</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [3] [25 6] 4 z-right&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1] [8] [2] [7] [3] [25 6] 4 z-right&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">25</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [4 3] [6] 25 sqr&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1] [8] [2] [7] [4 3] [6] 25 sqr&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [4 3] [6] 625 z-up&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;[1] [8] [2] [7] [4 3] [6] 625 z-up&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                              <span class="o">.</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">3</span><span class="p">]</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="mi">625</span> <span class="n">z</span><span class="o">-</span><span class="n">up</span>
@@ -168,13 +168,13 @@ but see below.</p>
   <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="o">.</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2] [7] [3 4 625 6] z-up&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1] [8] [2] [7] [3 4 625 6] z-up&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1] [8] [2 [3 4 625 6] 7] z-up&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1] [8] [2 [3 4 625 6] 7] z-up&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span>
@@ -185,7 +185,7 @@ but see below.</p>
 <h2><code class="docutils literal notranslate"><span class="pre">dip</span></code> and <code class="docutils literal notranslate"><span class="pre">infra</span></code><a class="headerlink" href="#dip-and-infra" title="Permalink to this headline">¶</a></h2>
 <p>In Joy we have the <code class="docutils literal notranslate"><span class="pre">dip</span></code> and <code class="docutils literal notranslate"><span class="pre">infra</span></code> combinators which can “target”
 or “address” any particular item in a Joy tree structure.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;[1 [2 [3 4 25 6] 7] 8] [[[[[[sqr] dipd] infra] dip] infra] dip] infra&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;[1 [2 [3 4 25 6] 7] 8] [[[[[[sqr] dipd] infra] dip] infra] dip] infra&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                                <span class="o">.</span> <span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">25</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span> <span class="p">[[[[[[</span><span class="n">sqr</span><span class="p">]</span> <span class="n">dipd</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span><span class="p">]</span> <span class="n">dip</span><span class="p">]</span> <span class="n">infra</span>
@@ -236,11 +236,11 @@ been embedded in a nested series of quoted programs, e.g.:</p>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">Z</span></code> function isn’t hard to make.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;Z == [[] cons cons] step i&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>define(&#39;Z == [[] cons cons] step i&#39;)
 </pre></div>
 </div>
 <p>Here it is in action in a simplified scenario.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">(</span><span class="s1">&#39;1 [2 3 4] Z&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>V(&#39;1 [2 3 4] Z&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                             <span class="o">.</span> <span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="n">Z</span>
@@ -273,7 +273,7 @@ been embedded in a nested series of quoted programs, e.g.:</p>
 </pre></div>
 </div>
 <p>And here it is doing the main thing.</p>
-<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span><span class="p">(</span><span class="s1">&#39;[1 [2 [3 4 25 6] 7] 8] [sqr] [dip dip infra dip infra dip infra] Z&#39;</span><span class="p">)</span>
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>J(&#39;[1 [2 [3 4 25 6] 7] 8] [sqr] [dip dip infra dip infra dip infra] Z&#39;)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="p">[</span><span class="mi">2</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">625</span> <span class="mi">6</span><span class="p">]</span> <span class="mi">7</span><span class="p">]</span> <span class="mi">8</span><span class="p">]</span>
@@ -389,7 +389,7 @@ i d i d i d d Bingo!
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
 
   </body>
