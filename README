@@ -4,8 +4,6 @@ A Dialect of Joy.
 
 v0.4.2
 
-§.1 Introduction
-
 Joy is a programming language created by Manfred von Thun that is easy to
 use and understand and has many other nice properties.  This project
 implements interpreters for a dialect that attempts to stay very close to
@@ -21,40 +19,44 @@ Joy and its deeper facets as well as how to program in it and several
 interesting aspects.  It's quite a treasure trove.
 
 
-§.2 Installation
+Directory structure
 
-From PyPI in the usual way, e.g.:
+    Thun
+     |-- LICENSE - GPLv3
+     |-- README - this file
+     |
+     |-- archive
+     |   |-- Joy-Programming.zip
+     |   `-- README
+     |
+     |-- docs
+     |   |-- notebooks - Jupyter Notebooks and supporting modules
+     |   |-- reference - Docs for each function.
+     |   |-- sphinx_docs - Generate https://joypy.osdn.io/ site.
+     |   `-- README - Table of Contents
+     |
+     `-- implementations
+         |-- Nim - interpreter
+         |-- Prolog - interpreter
+         |            type inference
+         |            work-in-progress compiler
+         |-- Python - interpreter
+         |-- Rust - work-in-progress interpreter
+         `-- defs.txt - common Joy definitions for all interpreters
 
-    pip install Thun
 
-Or if you have downloaded the source, from the top directory:
+Documentation
 
-    python ./setup.py install
+Jupyter Notebooks
 
-Or you can run the package directly from the top directory.
+The docs/notebooks dir contains Jupyter notebooks, ... TODO
 
-To start a crude REPL:
+Sphinx Docs
 
-    python -m joy
+Some of the documentation is in the form of ReST files in
+docs/sphinx_docs dir.
 
-There is a "quiet" mode for e.g. using joy from a shell script:
-
-    python -m joy -q
-
-This supresses the initial banner output and the prompt text.
-
-
-§.3 Documentation
-
-§.3.1 Jupyter Notebooks
-
-The docs/ folder contains Jupyter notebooks, ... TODO
-
-§.3.2 Sphinx Docs
-
-Some of the documentation is in the form of ReST files
-
-§.3.3 Building the Docs
+Building the Docs
 
 Building the documentation is a little tricky at the moment.  It involves
 a makefile that uses nbconvert to generate ReST files from some of the
@@ -67,7 +69,7 @@ Get the dependencies for (re)building the docs:
     make docs
 
 
-§.4 Basics of Joy
+Basics of Joy
 
 Joy is stack-based.  There is a main stack that holds data items:
 integers, floats, strings, functions, and sequences or quotes which hold
@@ -81,22 +83,8 @@ by iterating through the terms in the expression, putting all literals
 onto the main stack and executing functions as they are encountered.
 Functions receive the current stack and return the next stack.
 
-§.4.1 Python Semantics
 
-In general, where otherwise unspecified, the semantics of Thun are that
-of the underlying Python. That means, for example, that integers are
-unbounded (whatever your machine can handle), strings cannot be added to
-integers but can be multiplied, Boolean True and False are effectively
-identical to ints 1 and 0, empty sequences are considered False, etc.
-
-Nothing is done about Python exceptions currently, although it would be
-possible to capture the stack and expression just before the exception
-and build a robust and flexible error handler.  Because they are both
-just datastructures, you could immediately retry them under a debugger,
-or edit either or both of the stack and expression.  All state is in one
-or the other.
-
-§.4.2 Literals and Simple Functions
+Literals and Simple Functions
 
     joy? 1 2 3
           . 1 2 3
@@ -123,7 +111,7 @@ or the other.
     joy? 
 
 
-§.4.3 Combinators
+Combinators
 
 The main loop is very simple as most of the action happens through what
 are called "combinators": functions which accept quoted programs on the
@@ -151,41 +139,6 @@ TODO:
 §.4.5 Programming and Metaprogramming
 
 §.4.6 Refactoring
-
-
-§.5 This Implementation
-
-Run with:
-
-    python -m joy
-
-Thun
- |-- COPYING - license
- |-- README - this file
- |
- |-- archive - info on Joy
- |   |-- Joy-Programming.zip
- |   `-- README
- |
- |-- docs - Various Examples and Demos
- |   |-- * - Jupyter Notebooks on Thun and supporting modules
- |   `-- README - Table of Contents
- |
- |-- joy
- |   |-- joy.py - main loop, REPL
- |   |-- library.py - Functions, Combinators, Definitions
- |   |-- parser.py - convert text to Joy datastructures
- |   |
- |   `-- utils
- |       |-- pretty_print.py - convert Joy datastructures to text
- |       `-- stack.py - work with stacks
- |
- |-- thun - Experimental Prolog Code
- |   |-- compiler.pl - A start on a compiler for Prof. Wirth's RISC CPU
- |   `-- thun.pl - An interpreter in the Logical Paradigm, compiler.
- |
- `-- setup.py
-
 
 
 §.6 References & Further Reading
