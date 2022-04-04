@@ -1,43 +1,16 @@
-﻿
+﻿Thun
 
-                Thun
+A Dialect of Joy.
 
-  Dialects of Joy in Python.
-
-               v0.4.2
-
-
---------------------------------------------------
-
-
-Copyright © 2014-2020 Simon Forman
-
-This file is part of Thun
-
-Thun is free software: you can redistribute it and/or modify it under the
-terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any
-later version.
-
-Thun is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-details.
-
-You should have received a copy of the GNU General Public License along
-with Thun.  If not see <http://www.gnu.org/licenses/>.
-
-
---------------------------------------------------
-
+v0.4.2
 
 §.1 Introduction
 
 Joy is a programming language created by Manfred von Thun that is easy to
-use and understand and has many other nice properties.  This project 
-implements Python and Prolog interpreters for dialects that attempts to
-stay very close to the spirit of Joy but does not precisely match the
-behaviour of the original version written in C.
+use and understand and has many other nice properties.  This project
+implements interpreters for a dialect that attempts to stay very close to
+the spirit of Joy but does not precisely match the behaviour of the
+original version written in C.
 
 The best source (no pun intended) for learning about Joy is the
 information made available at the website of La Trobe University (see the
@@ -237,4 +210,23 @@ performance - metaprogramming as programming, even the lowly integer
 range function can be expressed in two phases: building a specialized
 program and then executing it with a combinator - ?Partial evaluation?
 - ?memoized dynamic dependency graphs? - algebra
+
+--------------------------------------------------
+
+Copyright © 2014-2022 Simon Forman
+
+This file is part of Thun
+
+Thun is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+Thun is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with Thun.  If not see <http://www.gnu.org/licenses/>.
 
