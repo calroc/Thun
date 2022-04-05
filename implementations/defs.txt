@@ -96,6 +96,7 @@ ternary binary popd
 third rest second
 tuck dup swapd
 unary nullary popd
+uncons [first] [rest] cleave
 unit [] cons
 unquoted [i] dip
 unswons uncons swap
