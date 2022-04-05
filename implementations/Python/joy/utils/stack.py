@@ -179,10 +179,10 @@ def concat(quote, expression):
     # In-lining is slightly faster (and won't break the
     # recursion limit on long quotes.)
 
+    if not isinstance(quote, tuple):
+        raise NotAListError('Not a list.')
     temp = []
     while quote:
-        if not isinstance(quote, tuple):
-            raise NotAListError(repr(quote))
         item, quote = quote
         temp.append(item)
     for item in reversed(temp):

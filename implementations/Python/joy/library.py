@@ -141,9 +141,9 @@ def SimpleFunctionWrapper(f):
     return inner
 
 
-def BinaryBuiltinWrapper(f):
+def BinaryMathWrapper(f):
     '''
-    Wrap functions that take two arguments and return a single result.
+    Wrap functions that take two numbers and return a single result.
     '''
     @FunctionWrapper
     @wraps(f)
@@ -152,13 +152,33 @@ def BinaryBuiltinWrapper(f):
             (a, (b, stack)) = stack
         except ValueError:
             raise StackUnderflowError('Not enough values on stack.')
-        # Boolean predicates like "or" fail here.  :(
-##        if (   not isinstance(a, int)
-##            or not isinstance(b, int)
-##            or isinstance(a, bool)  # Because bools are ints in Python.
-##            or isinstance(b, bool)
+        if (   not isinstance(a, int)
+            or not isinstance(b, int)
+            # bool is int in Python.
+            or     isinstance(a, bool)
+            or     isinstance(b, bool)
+            ):
+            raise NotAnIntError
+        result = f(b, a)
+        return (result, stack), expression, dictionary
+    return inner
+
+
+def BinaryLogicWrapper(f):
+    '''
+    Wrap functions that take two numbers and return a single result.
+    '''
+    @FunctionWrapper
+    @wraps(f)
+    def inner(stack, expression, dictionary):
+        try:
+            (a, (b, stack)) = stack
+        except ValueError:
+            raise StackUnderflowError('Not enough values on stack.')
+##        if (not isinstance(a, bool)
+##            or not isinstance(b, bool)
 ##            ):
-##            raise NotAnIntError
+##            raise NotABoolError
         result = f(b, a)
         return (result, stack), expression, dictionary
     return inner
@@ -1331,27 +1351,27 @@ for F in (
 
     #divmod_ = pm = __(n2, n1), __(n4, n3)
 
-    BinaryBuiltinWrapper(operator.eq),
-    BinaryBuiltinWrapper(operator.ge),
-    BinaryBuiltinWrapper(operator.gt),
-    BinaryBuiltinWrapper(operator.le),
-    BinaryBuiltinWrapper(operator.lt),
-    BinaryBuiltinWrapper(operator.ne),
+    BinaryMathWrapper(operator.eq),
+    BinaryMathWrapper(operator.ge),
+    BinaryMathWrapper(operator.gt),
+    BinaryMathWrapper(operator.le),
+    BinaryMathWrapper(operator.lt),
+    BinaryMathWrapper(operator.ne),
 
-    BinaryBuiltinWrapper(operator.xor),
-    BinaryBuiltinWrapper(operator.lshift),
-    BinaryBuiltinWrapper(operator.rshift),
+    BinaryMathWrapper(operator.xor),
+    BinaryMathWrapper(operator.lshift),
+    BinaryMathWrapper(operator.rshift),
 
-    BinaryBuiltinWrapper(operator.and_),
-    BinaryBuiltinWrapper(operator.or_),
+    BinaryLogicWrapper(operator.and_),
+    BinaryLogicWrapper(operator.or_),
 
-    BinaryBuiltinWrapper(operator.add),
-    BinaryBuiltinWrapper(operator.floordiv),
-    BinaryBuiltinWrapper(operator.mod),
-    BinaryBuiltinWrapper(operator.mul),
-    BinaryBuiltinWrapper(operator.pow),
-    BinaryBuiltinWrapper(operator.sub),
-##    BinaryBuiltinWrapper(operator.truediv),
+    BinaryMathWrapper(operator.add),
+    BinaryMathWrapper(operator.floordiv),
+    BinaryMathWrapper(operator.mod),
+    BinaryMathWrapper(operator.mul),
+    BinaryMathWrapper(operator.pow),
+    BinaryMathWrapper(operator.sub),
+##    BinaryMathWrapper(operator.truediv),
 
     UnaryBuiltinWrapper(bool),
     UnaryBuiltinWrapper(operator.not_),
