@@ -316,7 +316,7 @@ The other sub-programs would be cancelled.
 “Fulminators”
 ^^^^^^^^^^^^^
 
-Also known as “Futures” or “Promises” (by *everybody* else. “Fulinators”
+Also known as “Futures” or “Promises” (by *everybody* else. “Fulminators”
 is what I was going to call them when I was thinking about implementing
 them in Thun.)
 

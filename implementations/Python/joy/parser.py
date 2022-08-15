@@ -27,18 +27,18 @@ by the fact that they are not Symbol objects.
 A crude grammar::
 
     joy = term*
-    term = int | float | string | '[' joy ']' | symbol
+    term = integer | '[' joy ']' | symbol
 
 A Joy expression is a sequence of zero or more terms.  A term is a
-literal value (integer, float, string, or Joy expression) or a function
-symbol.  Function symbols are unquoted strings and cannot contain square
+literal value (integer or Joy expression) or a function symbol.
+Function symbols are sequences of non-blanks and cannot contain square
 brackets.   Terms must be separated by blanks, which can be omitted
 around square brackets.
 
 '''
 from re import Scanner
-from .utils.stack import list_to_stack
-from .utils.snippets import (
+from joy.utils.stack import list_to_stack
+from joy.utils.snippets import (
     pat as SNIPPETS,
     from_string,
     Snippet,

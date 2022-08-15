@@ -23,6 +23,19 @@ When talking about Joy we use the terms "stack", "quote", "sequence",
 permits certain operations such as iterating and pushing and popping
 values from (at least) one end.
 
+> In describing Joy I have used the term quotation to describe all of the
+above, because I needed a word to describe the arguments to combinators
+which fulfill the same role in Joy as lambda abstractions (with
+variables) fulfill in the more familiar functional languages. I use the
+term list for those quotations whose members are what I call literals:
+numbers, characters, truth values, sets, strings and other quotations.
+All these I call literals because their occurrence in code results in
+them being pushed onto the stack. But I also call [London Paris] a list.
+So, [dup *] is a quotation but not a list.
+
+"A Conversation with Manfred von Thun" w/ Stevan Apter
+http://archive.vector.org.uk/art10000350
+
 There is no "Stack" Python class, instead we use the  `cons list`_, a 
 venerable two-tuple recursive sequence datastructure, where the
 empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the
@@ -62,7 +75,7 @@ syntax was removed entirely.  Instead you would have to write::
 
 
 We have two very simple functions, one to build up a stack from a Python
-iterable and another to iterate through a stack and yield its items
+list and another to iterate through a stack and yield its items
 one-by-one in order.  There are also two functions to generate string representations
 of stacks.  They only differ in that one prints the terms in stack from left-to-right while the other prints from right-to-left.  In both functions *internal stacks* are
 printed left-to-right.  These functions are written to support :doc:`../pretty`.
@@ -81,7 +94,9 @@ def list_to_stack(el, stack=()):
 
     :param list el: A Python list or other sequence (iterators and generators
              won't work because ``reverse()`` is called on ``el``.)
-    :param stack stack: A stack, optional, defaults to the empty stack.
+    :param stack stack: A stack, optional, defaults to the empty stack. This
+             allows for concatinating Python lists (or other sequence objects)
+             onto an existing Joy stack.
     :rtype: stack
 
     '''
@@ -163,12 +178,12 @@ def concat(quote, expression):
 
     :param stack quote: A stack.
     :param stack expression: A stack.
-    :raises RuntimeError: if quote is larger than sys.getrecursionlimit().
     :rtype: stack
     '''
     # This is the fastest implementation, but will trigger
     # RuntimeError: maximum recursion depth exceeded
     # on quotes longer than sys.getrecursionlimit().
+    # :raises RuntimeError: if quote is larger than sys.getrecursionlimit().
 
 ##    return (quote[0], concat(quote[1], expression)) if quote else expression
 

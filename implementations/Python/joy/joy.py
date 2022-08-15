@@ -25,9 +25,9 @@ match the behaviour of the original version(s) written in C.
 '''
 from builtins import input
 from traceback import print_exc
-from .parser import text_to_expression, ParseError, Symbol
-from .utils.stack import stack_to_string
-from .utils.errors import (
+from joy.parser import text_to_expression, ParseError, Symbol
+from joy.utils.stack import stack_to_string
+from joy.utils.errors import (
     NotAListError,
     NotAnIntError,
     StackUnderflowError,
@@ -38,12 +38,13 @@ class UnknownSymbolError(KeyError): pass
 
 
 def joy(stack, expression, dictionary, viewer=None):
-    '''Evaluate a Joy expression on a stack.
+    '''
+    Evaluate a Joy expression on a stack.
 
-  This function iterates through a sequence of terms which are either
-  literals (strings, numbers, sequences of terms) or function symbols.
-  Literals are put onto the stack and functions are looked up in the
-  dictionary and executed.
+    This function iterates through a sequence of terms which are either
+    literals (strings, numbers, sequences of terms) or function symbols.
+    Literals are put onto the stack and functions are looked up in the
+    dictionary and executed.
 
     The viewer is a function that is called with the stack and expression
     on every iteration, its return value is ignored.
