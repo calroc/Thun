@@ -174,9 +174,9 @@
     <span class="k">return</span> <span class="n">inner</span></div>
 
 
-<div class="viewcode-block" id="BinaryBuiltinWrapper"><a class="viewcode-back" href="../../library.html#joy.library.BinaryBuiltinWrapper">[docs]</a><span class="k">def</span> <span class="nf">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<div class="viewcode-block" id="BinaryMathWrapper"><a class="viewcode-back" href="../../library.html#joy.library.BinaryMathWrapper">[docs]</a><span class="k">def</span> <span class="nf">BinaryMathWrapper</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Wrap functions that take two arguments and return a single result.</span>
+<span class="sd">    Wrap functions that take two numbers and return a single result.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="nd">@FunctionWrapper</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -185,13 +185,33 @@
             <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">StackUnderflowError</span><span class="p">(</span><span class="s1">&#39;Not enough values on stack.&#39;</span><span class="p">)</span>
-        <span class="c1"># Boolean predicates like &quot;or&quot; fail here.  :(</span>
-<span class="c1">##        if (   not isinstance(a, int)</span>
-<span class="c1">##            or not isinstance(b, int)</span>
-<span class="c1">##            or isinstance(a, bool)  # Because bools are ints in Python.</span>
-<span class="c1">##            or isinstance(b, bool)</span>
+        <span class="k">if</span> <span class="p">(</span>   <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+            <span class="c1"># bool is int in Python.</span>
+            <span class="ow">or</span>     <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+            <span class="ow">or</span>     <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+            <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NotAnIntError</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">stack</span><span class="p">),</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span>
+    <span class="k">return</span> <span class="n">inner</span></div>
+
+
+<div class="viewcode-block" id="BinaryLogicWrapper"><a class="viewcode-back" href="../../library.html#joy.library.BinaryLogicWrapper">[docs]</a><span class="k">def</span> <span class="nf">BinaryLogicWrapper</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Wrap functions that take two numbers and return a single result.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nd">@FunctionWrapper</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">stack</span><span class="p">))</span> <span class="o">=</span> <span class="n">stack</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StackUnderflowError</span><span class="p">(</span><span class="s1">&#39;Not enough values on stack.&#39;</span><span class="p">)</span>
+<span class="c1">##        if (not isinstance(a, bool)</span>
+<span class="c1">##            or not isinstance(b, bool)</span>
 <span class="c1">##            ):</span>
-<span class="c1">##            raise NotAnIntError</span>
+<span class="c1">##            raise NotABoolError</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">stack</span><span class="p">),</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span>
     <span class="k">return</span> <span class="n">inner</span></div>
@@ -1364,27 +1384,27 @@
 
     <span class="c1">#divmod_ = pm = __(n2, n1), __(n4, n3)</span>
 
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">eq</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ge</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">gt</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">le</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">lt</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ne</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">eq</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ge</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">gt</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">le</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">lt</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ne</span><span class="p">),</span>
 
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">xor</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">lshift</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">rshift</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">xor</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">lshift</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">rshift</span><span class="p">),</span>
 
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">and_</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">or_</span><span class="p">),</span>
+    <span class="n">BinaryLogicWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">and_</span><span class="p">),</span>
+    <span class="n">BinaryLogicWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">or_</span><span class="p">),</span>
 
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">add</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">floordiv</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mod</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mul</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">pow</span><span class="p">),</span>
-    <span class="n">BinaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">sub</span><span class="p">),</span>
-<span class="c1">##    BinaryBuiltinWrapper(operator.truediv),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">add</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">floordiv</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mod</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mul</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">pow</span><span class="p">),</span>
+    <span class="n">BinaryMathWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">sub</span><span class="p">),</span>
+<span class="c1">##    BinaryMathWrapper(operator.truediv),</span>
 
     <span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span>
     <span class="n">UnaryBuiltinWrapper</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">not_</span><span class="p">),</span>

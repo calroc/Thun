@@ -59,27 +59,21 @@ match the behaviour of the original version(s) written in C.</p>
 literals (strings, numbers, sequences of terms) or function symbols.
 Literals are put onto the stack and functions are looked up in the
 dictionary and executed.</p>
-<blockquote>
-<div><p>The viewer is a function that is called with the stack and expression
+<p>The viewer is a function that is called with the stack and expression
 on every iteration, its return value is ignored.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param stack stack</dt>
-<dd class="field-odd"><p>The stack.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stack</strong> (<em>stack</em>) – The stack.</p></li>
+<li><p><strong>expression</strong> (<em>stack</em>) – The expression to evaluate.</p></li>
+<li><p><strong>dictionary</strong> (<em>dict</em>) – A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</p></li>
+<li><p><strong>viewer</strong> (<em>function</em>) – Optional viewer function.</p></li>
+</ul>
 </dd>
-<dt class="field-even">param stack expression</dt>
-<dd class="field-even"><p>The expression to evaluate.</p>
-</dd>
-<dt class="field-odd">param dict dictionary</dt>
-<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping names to Joy functions.</p>
-</dd>
-<dt class="field-even">param function viewer</dt>
-<dd class="field-even"><p>Optional viewer function.</p>
-</dd>
-<dt class="field-odd">rtype</dt>
-<dd class="field-odd"><p>(stack, (), dictionary)</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(stack, (), dictionary)</p>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 <dl class="py function">

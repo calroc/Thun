@@ -41,6 +41,18 @@
 “list”, and others to mean the same thing: a simple linear datatype that
 permits certain operations such as iterating and pushing and popping
 values from (at least) one end.</p>
+<blockquote>
+<div><p>In describing Joy I have used the term quotation to describe all of the
+above, because I needed a word to describe the arguments to combinators
+which fulfill the same role in Joy as lambda abstractions (with
+variables) fulfill in the more familiar functional languages. I use the
+term list for those quotations whose members are what I call literals:
+numbers, characters, truth values, sets, strings and other quotations.
+All these I call literals because their occurrence in code results in
+them being pushed onto the stack. But I also call [London Paris] a list.
+So, [dup *] is a quotation but not a list.</p>
+</div></blockquote>
+<p><a class="reference external" href="http://archive.vector.org.uk/art10000350">“A Conversation with Manfred von Thun” w/ Stevan Apter</a></p>
 <p>There is no “Stack” Python class, instead we use the  <a class="reference external" href="https://en.wikipedia.org/wiki/Cons#Lists">cons list</a>, a 
 venerable two-tuple recursive sequence datastructure, where the
 empty tuple <code class="docutils literal notranslate"><span class="pre">()</span></code> is the empty stack and <code class="docutils literal notranslate"><span class="pre">(head,</span> <span class="pre">rest)</span></code> gives the
@@ -77,7 +89,7 @@ syntax was removed entirely.  Instead you would have to write:</p>
 </pre></div>
 </div>
 <p>We have two very simple functions, one to build up a stack from a Python
-iterable and another to iterate through a stack and yield its items
+list and another to iterate through a stack and yield its items
 one-by-one in order.  There are also two functions to generate string representations
 of stacks.  They only differ in that one prints the terms in stack from left-to-right while the other prints from right-to-left.  In both functions <em>internal stacks</em> are
 printed left-to-right.  These functions are written to support <a class="reference internal" href="pretty.html"><span class="doc">Tracing Joy Execution</span></a>.</p>
@@ -93,11 +105,8 @@ printed left-to-right.  These functions are written to support <a class="referen
 <li><p><strong>expression</strong> (<em>stack</em>) – A stack.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>RuntimeError</strong> – if quote is larger than sys.getrecursionlimit().</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>stack</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>stack</p>
 </dd>
 </dl>
 </dd></dl>
@@ -158,7 +167,9 @@ rearranging of the stack from e.g. the StackListbox.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>el</strong> (<em>list</em>) – A Python list or other sequence (iterators and generators
 won’t work because <code class="docutils literal notranslate"><span class="pre">reverse()</span></code> is called on <code class="docutils literal notranslate"><span class="pre">el</span></code>.)</p></li>
-<li><p><strong>stack</strong> (<em>stack</em>) – A stack, optional, defaults to the empty stack.</p></li>
+<li><p><strong>stack</strong> (<em>stack</em>) – A stack, optional, defaults to the empty stack. This
+allows for concatinating Python lists (or other sequence objects)
+onto an existing Joy stack.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>

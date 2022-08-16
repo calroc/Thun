@@ -23,18 +23,17 @@ When talking about Joy we use the terms "stack", "quote", "sequence",
 permits certain operations such as iterating and pushing and popping
 values from (at least) one end.
 
-> In describing Joy I have used the term quotation to describe all of the
-above, because I needed a word to describe the arguments to combinators
-which fulfill the same role in Joy as lambda abstractions (with
-variables) fulfill in the more familiar functional languages. I use the
-term list for those quotations whose members are what I call literals:
-numbers, characters, truth values, sets, strings and other quotations.
-All these I call literals because their occurrence in code results in
-them being pushed onto the stack. But I also call [London Paris] a list.
-So, [dup *] is a quotation but not a list.
+    In describing Joy I have used the term quotation to describe all of the
+    above, because I needed a word to describe the arguments to combinators
+    which fulfill the same role in Joy as lambda abstractions (with
+    variables) fulfill in the more familiar functional languages. I use the
+    term list for those quotations whose members are what I call literals:
+    numbers, characters, truth values, sets, strings and other quotations.
+    All these I call literals because their occurrence in code results in
+    them being pushed onto the stack. But I also call [London Paris] a list.
+    So, [dup \*] is a quotation but not a list.
 
-"A Conversation with Manfred von Thun" w/ Stevan Apter
-http://archive.vector.org.uk/art10000350
+`"A Conversation with Manfred von Thun" w/ Stevan Apter <http://archive.vector.org.uk/art10000350>`_ 
 
 There is no "Stack" Python class, instead we use the  `cons list`_, a 
 venerable two-tuple recursive sequence datastructure, where the

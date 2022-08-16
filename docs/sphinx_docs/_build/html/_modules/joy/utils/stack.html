@@ -56,6 +56,18 @@
 <span class="sd">permits certain operations such as iterating and pushing and popping</span>
 <span class="sd">values from (at least) one end.</span>
 
+<span class="sd">    In describing Joy I have used the term quotation to describe all of the</span>
+<span class="sd">    above, because I needed a word to describe the arguments to combinators</span>
+<span class="sd">    which fulfill the same role in Joy as lambda abstractions (with</span>
+<span class="sd">    variables) fulfill in the more familiar functional languages. I use the</span>
+<span class="sd">    term list for those quotations whose members are what I call literals:</span>
+<span class="sd">    numbers, characters, truth values, sets, strings and other quotations.</span>
+<span class="sd">    All these I call literals because their occurrence in code results in</span>
+<span class="sd">    them being pushed onto the stack. But I also call [London Paris] a list.</span>
+<span class="sd">    So, [dup \*] is a quotation but not a list.</span>
+
+<span class="sd">`&quot;A Conversation with Manfred von Thun&quot; w/ Stevan Apter &lt;http://archive.vector.org.uk/art10000350&gt;`_ </span>
+
 <span class="sd">There is no &quot;Stack&quot; Python class, instead we use the  `cons list`_, a </span>
 <span class="sd">venerable two-tuple recursive sequence datastructure, where the</span>
 <span class="sd">empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the</span>
@@ -95,7 +107,7 @@
 
 
 <span class="sd">We have two very simple functions, one to build up a stack from a Python</span>
-<span class="sd">iterable and another to iterate through a stack and yield its items</span>
+<span class="sd">list and another to iterate through a stack and yield its items</span>
 <span class="sd">one-by-one in order.  There are also two functions to generate string representations</span>
 <span class="sd">of stacks.  They only differ in that one prints the terms in stack from left-to-right while the other prints from right-to-left.  In both functions *internal stacks* are</span>
 <span class="sd">printed left-to-right.  These functions are written to support :doc:`../pretty`.</span>
@@ -114,7 +126,9 @@
 
 <span class="sd">    :param list el: A Python list or other sequence (iterators and generators</span>
 <span class="sd">             won&#39;t work because ``reverse()`` is called on ``el``.)</span>
-<span class="sd">    :param stack stack: A stack, optional, defaults to the empty stack.</span>
+<span class="sd">    :param stack stack: A stack, optional, defaults to the empty stack. This</span>
+<span class="sd">             allows for concatinating Python lists (or other sequence objects)</span>
+<span class="sd">             onto an existing Joy stack.</span>
 <span class="sd">    :rtype: stack</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -196,12 +210,12 @@
 
 <span class="sd">    :param stack quote: A stack.</span>
 <span class="sd">    :param stack expression: A stack.</span>
-<span class="sd">    :raises RuntimeError: if quote is larger than sys.getrecursionlimit().</span>
 <span class="sd">    :rtype: stack</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># This is the fastest implementation, but will trigger</span>
     <span class="c1"># RuntimeError: maximum recursion depth exceeded</span>
     <span class="c1"># on quotes longer than sys.getrecursionlimit().</span>
+    <span class="c1"># :raises RuntimeError: if quote is larger than sys.getrecursionlimit().</span>
 
 <span class="c1">##    return (quote[0], concat(quote[1], expression)) if quote else expression</span>
 
@@ -212,10 +226,10 @@
     <span class="c1"># In-lining is slightly faster (and won&#39;t break the</span>
     <span class="c1"># recursion limit on long quotes.)</span>
 
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">NotAListError</span><span class="p">(</span><span class="s1">&#39;Not a list.&#39;</span><span class="p">)</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">while</span> <span class="n">quote</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">quote</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">NotAListError</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">quote</span><span class="p">))</span>
         <span class="n">item</span><span class="p">,</span> <span class="n">quote</span> <span class="o">=</span> <span class="n">quote</span>
         <span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>

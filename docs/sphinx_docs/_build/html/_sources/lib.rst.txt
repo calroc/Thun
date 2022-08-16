@@ -473,7 +473,7 @@ List words
 
 "Swap stack" swap the list on the top of the stack for the stack, and
 put the old stack on top of the new one. Think of it as a context
-switch. Niether of the lists/stacks change their order.
+switch. Neither of the lists/stacks change their order.
 
 .. code:: python
 

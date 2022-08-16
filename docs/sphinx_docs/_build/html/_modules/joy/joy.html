@@ -58,9 +58,9 @@
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">input</span>
 <span class="kn">from</span> <span class="nn">traceback</span> <span class="kn">import</span> <span class="n">print_exc</span>
-<span class="kn">from</span> <span class="nn">.parser</span> <span class="kn">import</span> <span class="n">text_to_expression</span><span class="p">,</span> <span class="n">ParseError</span><span class="p">,</span> <span class="n">Symbol</span>
-<span class="kn">from</span> <span class="nn">.utils.stack</span> <span class="kn">import</span> <span class="n">stack_to_string</span>
-<span class="kn">from</span> <span class="nn">.utils.errors</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">joy.parser</span> <span class="kn">import</span> <span class="n">text_to_expression</span><span class="p">,</span> <span class="n">ParseError</span><span class="p">,</span> <span class="n">Symbol</span>
+<span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">stack_to_string</span>
+<span class="kn">from</span> <span class="nn">joy.utils.errors</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">NotAListError</span><span class="p">,</span>
     <span class="n">NotAnIntError</span><span class="p">,</span>
     <span class="n">StackUnderflowError</span><span class="p">,</span>
@@ -71,12 +71,13 @@
 
 
 <div class="viewcode-block" id="joy"><a class="viewcode-back" href="../../joy.html#joy.joy.joy">[docs]</a><span class="k">def</span> <span class="nf">joy</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Evaluate a Joy expression on a stack.</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Evaluate a Joy expression on a stack.</span>
 
-<span class="sd">  This function iterates through a sequence of terms which are either</span>
-<span class="sd">  literals (strings, numbers, sequences of terms) or function symbols.</span>
-<span class="sd">  Literals are put onto the stack and functions are looked up in the</span>
-<span class="sd">  dictionary and executed.</span>
+<span class="sd">    This function iterates through a sequence of terms which are either</span>
+<span class="sd">    literals (strings, numbers, sequences of terms) or function symbols.</span>
+<span class="sd">    Literals are put onto the stack and functions are looked up in the</span>
+<span class="sd">    dictionary and executed.</span>
 
 <span class="sd">    The viewer is a function that is called with the stack and expression</span>
 <span class="sd">    on every iteration, its return value is ignored.</span>
@@ -173,7 +174,7 @@
             <span class="k">except</span> <span class="n">NotAnIntError</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Not an integer.&#39;</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">NotAListError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>  <span class="c1"># &#39;Not a list.&#39;</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">except</span><span class="p">:</span>
                 <span class="n">print_exc</span><span class="p">()</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">stack_to_string</span><span class="p">(</span><span class="n">stack</span><span class="p">))</span>
@@ -247,7 +248,7 @@
 </a>
 <br />
 <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Thun Documentation</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://joypy.osdn.io/" property="cc:attributionName" rel="cc:attributionURL">Simon Forman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://osdn.net/projects/joypy/" rel="dct:source">https://osdn.net/projects/joypy/</a>.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
 
   </body>

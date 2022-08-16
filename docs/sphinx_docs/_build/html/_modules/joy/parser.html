@@ -60,18 +60,18 @@
 <span class="sd">A crude grammar::</span>
 
 <span class="sd">    joy = term*</span>
-<span class="sd">    term = int | float | string | &#39;[&#39; joy &#39;]&#39; | symbol</span>
+<span class="sd">    term = integer | &#39;[&#39; joy &#39;]&#39; | symbol</span>
 
 <span class="sd">A Joy expression is a sequence of zero or more terms.  A term is a</span>
-<span class="sd">literal value (integer, float, string, or Joy expression) or a function</span>
-<span class="sd">symbol.  Function symbols are unquoted strings and cannot contain square</span>
+<span class="sd">literal value (integer or Joy expression) or a function symbol.</span>
+<span class="sd">Function symbols are sequences of non-blanks and cannot contain square</span>
 <span class="sd">brackets.   Terms must be separated by blanks, which can be omitted</span>
 <span class="sd">around square brackets.</span>
 
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="kn">from</span> <span class="nn">re</span> <span class="kn">import</span> <span class="n">Scanner</span>
-<span class="kn">from</span> <span class="nn">.utils.stack</span> <span class="kn">import</span> <span class="n">list_to_stack</span>
-<span class="kn">from</span> <span class="nn">.utils.snippets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">joy.utils.stack</span> <span class="kn">import</span> <span class="n">list_to_stack</span>
+<span class="kn">from</span> <span class="nn">joy.utils.snippets</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">pat</span> <span class="k">as</span> <span class="n">SNIPPETS</span><span class="p">,</span>
     <span class="n">from_string</span><span class="p">,</span>
     <span class="n">Snippet</span><span class="p">,</span>
