@@ -1,0 +1,9 @@
+https://www.youtube.com/watch?v=_IgqJr8jG8M
+
+Concatenative Programming: From Ivory to Metal
+
+Great talk from Jon Purdy in 2017, he wrote Kitten.
+
+"Complete and Easy Bidirectional Typechecking
+for Higher-Rank Polymorphism"
+
