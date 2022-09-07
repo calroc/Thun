@@ -970,9 +970,7 @@ class Def(object):
     tribar = '\u2261'  # '≡'
 
     def __init__(self, name, body):
-        self.__doc__ = (
-            f'{name} {self.tribar} {expression_to_string(body)}'
-        )
+        self.__doc__ = f'{name} ≡ {expression_to_string(body)}'
         self.__name__ = name
         self.body = tuple(iter_stack(body))
 
@@ -987,11 +985,9 @@ class Def(object):
         definitions (lines with '≡' in them) into the dictionary.
         '''
         for line in stream:
-            if class_.tribar not in line:
+            if '≡' not in line:
                 continue
-            name, body = text_to_expression(
-                line.replace(class_.tribar, '')
-            )
+            name, body = text_to_expression(line.replace('≡', ''))
             if name not in dictionary:
                 inscribe(class_(name, body), dictionary)
 
