@@ -45,9 +45,16 @@ from joy.utils.snippets import (
     )
 
 
-BRACKETS = r'\[|\]'
-BLANKS = r'\s+'
-WORDS = r'[^[\]\s]+'
+BRACKETS = r'\[|\]'  # Left or right square bracket.
+BLANKS = r'\s+'  # One-or-more blankspace.
+WORDS = (
+    '['  # Character class
+        '^'   # not a
+        '['   # left square bracket nor a
+        '\]'  # right square bracket (escaped so it doesn't close the character class)
+        '\s'  # nor blankspace
+    ']+'  # end character class, one-or-more.
+    )
 
 
 token_scanner = Scanner([

@@ -92,6 +92,12 @@ __Looks at code__ Oh FFS
 
 Done.  Can start joy kernal notebooks.
 
+But really you want to use the `--name` switch:
+
+    In Joypy/docs/notebooks/jupyter_kernel:
+    % jupyter kernelspec install --user --name=thun .
+    [InstallKernelSpec] Installed kernelspec thun in /usr/home/sforman/.local/share/jupyter/kernels/thun
+
 ## Building and Uploading
 
 This section is mostly for my own reference.
