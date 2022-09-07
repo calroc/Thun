@@ -54,7 +54,7 @@ class UnknownSymbolError(KeyError):
 
 
 '''
-██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗ 
+██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
 ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
 ██║██╔██╗ ██║   ██║   █████╗  ██████╔╝██████╔╝██████╔╝█████╗     ██║   █████╗  ██████╔╝
 ██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗██╔═══╝ ██╔══██╗██╔══╝     ██║   ██╔══╝  ██╔══██╗
@@ -64,6 +64,21 @@ class UnknownSymbolError(KeyError):
 
 
 def joy(stack, expr, dictionary):
+    '''
+    Evaluate a Joy expression on a stack.
+
+    This function iterates through a sequence of terms.
+    Literals are put onto the stack and Symbols are
+    looked up in the dictionary and the functions they
+    denote are executed.
+
+    :param stack stack: The stack.
+    :param stack expression: The expression to evaluate.
+    :param dict dictionary: A ``dict`` mapping names to Joy functions.
+
+    :rtype: (stack, (), dictionary)
+
+    '''
     while expr:
         term, expr = expr
         if isinstance(term, Symbol):
@@ -78,18 +93,17 @@ def joy(stack, expr, dictionary):
 
 
 '''
-██████╗  █████╗ ██████╗ ███████╗███████╗██████╗ 
+██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
 ██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
 ██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝
 ██╔═══╝ ██╔══██║██╔══██╗╚════██║██╔══╝  ██╔══██╗
 ██║     ██║  ██║██║  ██║███████║███████╗██║  ██║
 ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
 
-There is a single function for converting text to a joy
-expression as well as a single Symbol class and a single Exception type.
-
-The Symbol string class is used by the interpreter to recognize literals
-by the fact that they are not Symbol objects.
+There is a single function for converting text to joy expressions
+as well as a Symbol class and an Exception type.  The Symbol
+string class is used by the interpreter to recognize literals by
+the fact that they are not Symbol objects.
 
 A crude grammar::
 
@@ -97,7 +111,7 @@ A crude grammar::
     term = integer | '[' joy ']' | symbol
 
 A Joy expression is a sequence of zero or more terms.  A term is a
-literal value (integer or Joy expression) or a function symbol.
+literal value (integer or quoted Joy expression) or a function symbol.
 Function symbols are sequences of non-blanks and cannot contain square
 brackets.   Terms must be separated by blanks, which can be omitted
 around square brackets.
@@ -199,10 +213,74 @@ def _parse(tokens):
 '''
 ███████╗████████╗ █████╗  ██████╗██╗  ██╗
 ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-███████╗   ██║   ███████║██║     █████╔╝ 
-╚════██║   ██║   ██╔══██║██║     ██╔═██╗ 
+███████╗   ██║   ███████║██║     █████╔╝
+╚════██║   ██║   ██╔══██║██║     ██╔═██╗
 ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
 ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
+
+When talking about Joy we use the terms "stack", "quote", "sequence",
+"list", and others to mean the same thing: a simple linear datatype that
+permits certain operations such as iterating and pushing and popping
+values from (at least) one end.
+
+    In describing Joy I have used the term quotation to describe all of the
+    above, because I needed a word to describe the arguments to combinators
+    which fulfill the same role in Joy as lambda abstractions (with
+    variables) fulfill in the more familiar functional languages. I use the
+    term list for those quotations whose members are what I call literals:
+    numbers, characters, truth values, sets, strings and other quotations.
+    All these I call literals because their occurrence in code results in
+    them being pushed onto the stack. But I also call [London Paris] a list.
+    So, [dup \*] is a quotation but not a list.
+
+`"A Conversation with Manfred von Thun" w/ Stevan Apter <http://archive.vector.org.uk/art10000350>`_
+
+There is no "Stack" Python class, instead we use the  `cons list`_, a
+venerable two-tuple recursive sequence datastructure, where the
+empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the
+recursive form of a stack with one or more items on it::
+
+    stack := () | (item, stack)
+
+Putting some numbers onto a stack::
+
+    ()
+    (1, ())
+    (2, (1, ()))
+    (3, (2, (1, ())))
+    ...
+
+Python has very nice "tuple packing and unpacking" in its syntax which
+means we can directly "unpack" the expected arguments to a Joy function.
+
+For example::
+
+    def dup((head, tail)):
+        return head, (head, tail)
+
+We replace the argument "stack" by the expected structure of the stack,
+in this case "(head, tail)", and Python takes care of unpacking the
+incoming tuple and assigning values to the names.  (Note that Python
+syntax doesn't require parentheses around tuples used in expressions
+where they would be redundant.)
+
+Unfortunately, the Sphinx documentation generator, which is used to generate this
+web page, doesn't handle tuples in the function parameters.  And in Python 3, this
+syntax was removed entirely.  Instead you would have to write::
+
+    def dup(stack):
+        head, tail = stack
+        return head, (head, tail)
+
+
+We have two very simple functions, one to build up a stack from a Python
+list and another to iterate through a stack and yield its items
+one-by-one in order.  There are also two functions to generate string representations
+of stacks.  They only differ in that one prints the terms in stack from left-to-right while the other prints from right-to-left.  In both functions *internal stacks* are
+printed left-to-right.  These functions are written to support :doc:`../pretty`.
+
+.. _cons list: https://en.wikipedia.org/wiki/Cons#Lists
+
 '''
 
 
@@ -270,7 +348,7 @@ def concat(quote, expression):
 
 
 '''
-██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗ 
+██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
 ██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
 ██████╔╝██████╔╝██║██╔██╗ ██║   ██║   █████╗  ██████╔╝
 ██╔═══╝ ██╔══██╗██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗
@@ -332,10 +410,10 @@ _s = lambda s: (
 
 
 '''
-██████╗ ███████╗██████╗ ██╗     
-██╔══██╗██╔════╝██╔══██╗██║     
-██████╔╝█████╗  ██████╔╝██║     
-██╔══██╗██╔══╝  ██╔═══╝ ██║     
+██████╗ ███████╗██████╗ ██╗
+██╔══██╗██╔════╝██╔══██╗██║
+██████╔╝█████╗  ██████╔╝██║
+██╔══██╗██╔══╝  ██╔═══╝ ██║
 ██║  ██║███████╗██║     ███████╗
 ╚═╝  ╚═╝╚══════╝╚═╝     ╚══════╝
 
@@ -377,6 +455,15 @@ def repl(stack=(), dictionary=None):
 
 
 def run(text, stack, dictionary):
+    '''
+    Return the stack resulting from running the Joy code text on the stack.
+
+    :param str text: Joy code.
+    :param stack stack: The stack.
+    :param dict dictionary: A ``dict`` mapping names to Joy functions.
+    :rtype: (stack, (), dictionary)
+
+    '''
     expr = text_to_expression(text)
     return joy(stack, expr, dictionary)
 
@@ -384,10 +471,10 @@ def run(text, stack, dictionary):
 '''
 ██████╗ ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗ █████╗ ██████╗ ██╗   ██╗
 ██╔══██╗██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔══██╗██╔══██╗╚██╗ ██╔╝
-██║  ██║██║██║        ██║   ██║██║   ██║██╔██╗ ██║███████║██████╔╝ ╚████╔╝ 
-██║  ██║██║██║        ██║   ██║██║   ██║██║╚██╗██║██╔══██║██╔══██╗  ╚██╔╝  
-██████╔╝██║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║██║  ██║██║  ██║   ██║   
-╚═════╝ ╚═╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+██║  ██║██║██║        ██║   ██║██║   ██║██╔██╗ ██║███████║██████╔╝ ╚████╔╝
+██║  ██║██║██║        ██║   ██║██║   ██║██║╚██╗██║██╔══██║██╔══██╗  ╚██╔╝
+██████╔╝██║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║██║  ██║██║  ██║   ██║
+╚═════╝ ╚═╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
 '''
 
 
