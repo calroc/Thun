@@ -817,18 +817,18 @@ def BinaryLogicWrapper(f):
     '''
     Wrap functions that take two numbers and return a single result.
     '''
+
     @wraps(f)
     def inner(stack, expression, dictionary):
         try:
             (a, (b, stack)) = stack
         except ValueError:
             raise StackUnderflowError('Not enough values on stack.')
-        if (not isinstance(a, bool)
-            or not isinstance(b, bool)
-            ):
+        if not isinstance(a, bool) or not isinstance(b, bool):
             raise NotABoolError
         result = f(b, a)
         return (result, stack), expression, dictionary
+
     return inner
 
 
@@ -836,20 +836,23 @@ def BinaryMathWrapper(func):
     '''
     Wrap functions that take two numbers and return a single result.
     '''
+
     @wraps(func)
     def inner(stack, expression, dictionary):
         try:
             (a, (b, stack)) = stack
         except ValueError:
             raise StackUnderflowError('Not enough values on stack.')
-        if (   not isinstance(a, int)
+        if (
+            not isinstance(a, int)
             or not isinstance(b, int)
-            or     isinstance(a, bool)
-            or     isinstance(b, bool)
-            ):
+            or isinstance(a, bool)
+            or isinstance(b, bool)
+        ):
             raise NotAnIntError
         result = func(b, a)
         return (result, stack), expression, dictionary
+
     return inner
 
 
@@ -877,8 +880,7 @@ def UnaryMathWrapper(f):
     @wraps(f)
     def inner(stack, expression, dictionary):
         (a, stack) = stack
-        if (not isinstance(b, int)
-            or isinstance(a, bool)):
+        if not isinstance(b, int) or isinstance(a, bool):
             raise NotAnIntError
         result = f(a)
         return (result, stack), expression, dictionary
@@ -968,7 +970,9 @@ class Def(object):
     tribar = '\u2261'  # '≡'
 
     def __init__(self, name, body):
-        self.__doc__ = f'{name} {self.tribar} {expression_to_string(body)}'
+        self.__doc__ = (
+            f'{name} {self.tribar} {expression_to_string(body)}'
+        )
         self.__name__ = name
         self.body = tuple(iter_stack(body))
 
@@ -985,7 +989,9 @@ class Def(object):
         for line in stream:
             if class_.tribar not in line:
                 continue
-            name, body = text_to_expression(line.replace(class_.tribar, ''))
+            name, body = text_to_expression(
+                line.replace(class_.tribar, '')
+            )
             if name not in dictionary:
                 inscribe(class_(name, body), dictionary)
 
