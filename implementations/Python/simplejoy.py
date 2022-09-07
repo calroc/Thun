@@ -44,6 +44,10 @@ class NotAnIntError(Exception):
     pass
 
 
+class NotABoolError(Exception):
+    pass
+
+
 class StackUnderflowError(Exception):
     pass
 
@@ -142,13 +146,16 @@ token_scanner = Scanner(
 
 
 class Symbol(str):
-    '''A string class that represents Joy function names.'''
+    '''
+    A string class that represents Joy function names.
+    '''
 
     __repr__ = str.__str__
 
 
 def text_to_expression(text):
-    '''Convert a string to a Joy expression.
+    '''
+    Convert a string to a Joy expression.
 
     When supplied with a string this function returns a Python datastructure
     that represents the Joy datastructure described by the text expression.
@@ -162,7 +169,9 @@ def text_to_expression(text):
 
 
 class ParseError(ValueError):
-    '''Raised when there is a error while parsing text.'''
+    '''
+    Raised when there is a error while parsing text.
+    '''
 
 
 def _tokenize(text):
@@ -804,21 +813,80 @@ def swap(stack):
     return (a1, (a2, s23))
 
 
-def BinaryFunc(f):
+def BinaryLogicWrapper(f):
     '''
-    Wrap functions that take two arguments and return a single result.
+    Wrap functions that take two numbers and return a single result.
+    '''
+    @wraps(f)
+    def inner(stack, expression, dictionary):
+        try:
+            (a, (b, stack)) = stack
+        except ValueError:
+            raise StackUnderflowError('Not enough values on stack.')
+        if (not isinstance(a, bool)
+            or not isinstance(b, bool)
+            ):
+            raise NotABoolError
+        result = f(b, a)
+        return (result, stack), expression, dictionary
+    return inner
+
+
+def BinaryMathWrapper(func):
+    '''
+    Wrap functions that take two numbers and return a single result.
+    '''
+    @wraps(func)
+    def inner(stack, expression, dictionary):
+        try:
+            (a, (b, stack)) = stack
+        except ValueError:
+            raise StackUnderflowError('Not enough values on stack.')
+        if (   not isinstance(a, int)
+            or not isinstance(b, int)
+            or     isinstance(a, bool)
+            or     isinstance(b, bool)
+            ):
+            raise NotAnIntError
+        result = func(b, a)
+        return (result, stack), expression, dictionary
+    return inner
+
+
+def UnaryLogicWrapper(f):
+    '''
+    Wrap functions that take one argument and return a single result.
     '''
 
     @wraps(f)
     def inner(stack, expression, dictionary):
-        (a, (b, stack)) = stack
-        result = f(b, a)
+        (a, stack) = stack
+        if not isinstance(a, bool):
+            raise NotABoolError
+        result = f(a)
         return (result, stack), expression, dictionary
 
     return inner
 
 
-def UnaryBuiltinWrapper(f):
+def UnaryMathWrapper(f):
+    '''
+    Wrap functions that take one argument and return a single result.
+    '''
+
+    @wraps(f)
+    def inner(stack, expression, dictionary):
+        (a, stack) = stack
+        if (not isinstance(b, int)
+            or isinstance(a, bool)):
+            raise NotAnIntError
+        result = f(a)
+        return (result, stack), expression, dictionary
+
+    return inner
+
+
+def UnaryWrapper(f):
     '''
     Wrap functions that take one argument and return a single result.
     '''
@@ -839,39 +907,40 @@ for F in (
     ##██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██╔══██║██╔══██╗██║╚════██║██║██║   ██║██║╚██╗██║
     ##╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║  ██║██║  ██║██║███████║██║╚██████╔╝██║ ╚████║
     ## ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
-    BinaryFunc(operator.eq),
-    BinaryFunc(operator.ge),
-    BinaryFunc(operator.gt),
-    BinaryFunc(operator.le),
-    BinaryFunc(operator.lt),
-    BinaryFunc(operator.ne),
+    BinaryMathWrapper(operator.eq),
+    BinaryMathWrapper(operator.ge),
+    BinaryMathWrapper(operator.gt),
+    BinaryMathWrapper(operator.le),
+    BinaryMathWrapper(operator.lt),
+    BinaryMathWrapper(operator.ne),
     ##██╗      ██████╗  ██████╗ ██╗ ██████╗
     ##██║     ██╔═══██╗██╔════╝ ██║██╔════╝
     ##██║     ██║   ██║██║  ███╗██║██║
     ##██║     ██║   ██║██║   ██║██║██║
     ##███████╗╚██████╔╝╚██████╔╝██║╚██████╗
     ##╚══════╝ ╚═════╝  ╚═════╝ ╚═╝ ╚═════╝
-    BinaryFunc(operator.xor),
-    BinaryFunc(operator.and_),
-    BinaryFunc(operator.or_),
-    UnaryBuiltinWrapper(operator.not_),
+    UnaryWrapper(bool),  # Convert any value to Boolean.
+    # (The only polymorphic function.)
+    BinaryLogicWrapper(operator.xor),
+    BinaryLogicWrapper(operator.and_),
+    BinaryLogicWrapper(operator.or_),
+    UnaryLogicWrapper(operator.not_),
     ##███╗   ███╗ █████╗ ████████╗██╗  ██╗
     ##████╗ ████║██╔══██╗╚══██╔══╝██║  ██║
     ##██╔████╔██║███████║   ██║   ███████║
     ##██║╚██╔╝██║██╔══██║   ██║   ██╔══██║
     ##██║ ╚═╝ ██║██║  ██║   ██║   ██║  ██║
     ##╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
-    BinaryFunc(operator.lshift),
-    BinaryFunc(operator.rshift),
-    BinaryFunc(operator.add),
-    BinaryFunc(operator.floordiv),
-    BinaryFunc(operator.mod),
-    BinaryFunc(operator.mul),
-    BinaryFunc(operator.pow),
-    BinaryFunc(operator.sub),
-    UnaryBuiltinWrapper(abs),
-    UnaryBuiltinWrapper(bool),
-    UnaryBuiltinWrapper(operator.neg),
+    BinaryMathWrapper(operator.lshift),
+    BinaryMathWrapper(operator.rshift),
+    BinaryMathWrapper(operator.add),
+    BinaryMathWrapper(operator.floordiv),
+    BinaryMathWrapper(operator.mod),
+    BinaryMathWrapper(operator.mul),
+    BinaryMathWrapper(operator.pow),
+    BinaryMathWrapper(operator.sub),
+    UnaryMathWrapper(abs),
+    UnaryMathWrapper(operator.neg),
 ):
     inscribe(F)
 
@@ -887,8 +956,16 @@ for F in (
 
 
 class Def(object):
+    '''
+    Definitions are given by equations:
 
-    tribar = '\u2261'  # ≡
+        name ≡ foo bar baz ...
+
+    When a definition symbol is evaluated its body expression is put onto
+    the pending expression.
+    '''
+
+    tribar = '\u2261'  # '≡'
 
     def __init__(self, name, body):
         self.__doc__ = f'{name} {self.tribar} {expression_to_string(body)}'
@@ -901,6 +978,10 @@ class Def(object):
 
     @classmethod
     def load_definitions(class_, stream, dictionary):
+        '''
+        Given an iterable of lines (strings) and a dictionary put any
+        definitions (lines with '≡' in them) into the dictionary.
+        '''
         for line in stream:
             if class_.tribar not in line:
                 continue
