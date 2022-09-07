@@ -484,18 +484,24 @@ _dictionary = {}
 
 
 def inscribe(function, d=_dictionary):
-    '''A decorator to inscribe functions into the default dictionary.'''
+    '''
+    A decorator to inscribe functions into the default dictionary.
+    '''
     d[function.__name__.rstrip('_')] = function
     return function
 
 
 def initialize():
-    '''Return a dictionary of Joy functions for use with joy().'''
+    '''
+    Return a dictionary of Joy functions for use with joy().
+    '''
     return _dictionary.copy()
 
 
 def SimpleFunctionWrapper(f):
-    '''Wrap functions that take and return just a stack.'''
+    '''
+    Wrap functions that take and return just a stack.
+    '''
 
     @wraps(f)
     def inner(stack, expr, dictionary):
@@ -516,6 +522,24 @@ def SimpleFunctionWrapper(f):
 
 @inscribe
 def branch(stack, expr, dictionary):
+    '''
+    Use a Boolean value to select one of two quoted programs to run.
+
+    ::
+
+        branch == roll< choice i
+
+    ::
+
+           False [F] [T] branch
+        --------------------------
+              F
+
+           True [F] [T] branch
+        -------------------------
+                 T
+
+    '''
     (then, (else_, (flag, stack))) = stack
     do = then if flag else else_
     return stack, concat(do, expr), dictionary
@@ -523,12 +547,33 @@ def branch(stack, expr, dictionary):
 
 @inscribe
 def dip(stack, expr, dictionary):
+    '''
+    The dip combinator expects a quoted program on the stack and below it
+    some item, it hoists the item into the expression and runs the program
+    on the rest of the stack.
+    ::
+
+           ... x [Q] dip
+        -------------------
+             ... Q x
+
+    '''
     quote, (x, stack) = stack
     return stack, concat(quote, (x, expr)), dictionary
 
 
 @inscribe
 def i(stack, expr, dictionary):
+    '''
+    The i combinator expects a quoted program on the stack and unpacks it
+    onto the pending expression for evaluation.
+    ::
+
+           [Q] i
+        -----------
+            Q
+
+    '''
     quote, stack = stack
     return stack, concat(quote, expr), dictionary
 
@@ -538,6 +583,19 @@ LOOP = Symbol('loop')
 
 @inscribe
 def loop(stack, expr, dictionary):
+    '''
+    Basic loop combinator.
+    ::
+
+           ... True [Q] loop
+        -----------------------
+              ... Q [Q] loop
+
+           ... False [Q] loop
+        ------------------------
+              ...
+
+    '''
     quote, (flag, stack) = stack
     if flag:
         expr = concat(quote, (quote, (LOOP, expr)))
@@ -557,12 +615,31 @@ def loop(stack, expr, dictionary):
 @inscribe
 @SimpleFunctionWrapper
 def clear(stack):
+    '''
+    Clear everything from the stack.
+    ::
+
+        clear == stack [pop stack] loop
+
+           ... clear
+        ---------------
+
+    '''
     return ()
 
 
 @inscribe
 @SimpleFunctionWrapper
 def concat_(stack):
+    '''
+    Concatinate the two lists on the top of the stack.
+    ::
+
+           [a b c] [d e f] concat
+        ----------------------------
+               [a b c d e f]
+
+    '''
     (tos, (second, stack)) = stack
     return concat(second, tos), stack
 
