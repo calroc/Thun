@@ -35,7 +35,7 @@ import operator
 
 
 class NotAListError(Exception):
-    pass
+    '''Raised when a stack is expected.'''
 
 
 class NotAnIntError(Exception):
@@ -124,8 +124,8 @@ WORDS = (
     '['  # Character class
     '^'  # not a
     '['  # left square bracket nor a
-    '\]'  # right square bracket (escaped so it doesn't close the character class)
-    '\s'  # nor blankspace
+    r'\]'  # right square bracket (escaped so it doesn't close the character class)
+    r'\s'  # nor blankspace
     ']+'  # end character class, one-or-more.
 )
 
@@ -211,7 +211,7 @@ def _parse(tokens):
     return list_to_stack(frame)
 
 
-'''
+r'''
 ███████╗████████╗ █████╗  ██████╗██╗  ██╗
 ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
 ███████╗   ██║   ███████║██║     █████╔╝
