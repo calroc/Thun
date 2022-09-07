@@ -31,6 +31,9 @@ class Expression:
         if self.current: self.stack.append(self.current)
         self.current = quoted_program
 
+    def __bool__(self):
+        return bool(self.current or self.stack)
+
     def __str__(self):
         return ' '.join(
             map(
@@ -43,6 +46,12 @@ class Expression:
                     )
                 )
             )
+
+
+class E(Expression):
+
+    def __iter__(self):
+        return iter((self.__next__(), self))
 
 
 if __name__ == '__main__':
@@ -60,3 +69,18 @@ if __name__ == '__main__':
         if i == 19:
             print('prepending "good bye"')
             e.prepend(j('good bye'))
+    print('-'*20)
+    e = E(j('23 18'))
+    e.prepend(j('88 19'))
+    e.prepend(j('foo fie feum'))
+    print(e)
+    while e:
+        i, e = e
+        print(i, e.stack, e.current)
+        if i == 88:
+            print('prepending "hello world"')
+            e.prepend(j('hello world'))
+        if i == 19:
+            print('prepending "good bye"')
+            e.prepend(j('good bye'))
+
