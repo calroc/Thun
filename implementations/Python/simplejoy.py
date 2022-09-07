@@ -647,6 +647,18 @@ def concat_(stack):
 @inscribe
 @SimpleFunctionWrapper
 def cons(stack):
+    '''
+    Given an item and a list, append the item to the list to make a new list.
+    ::
+
+           a [...] cons
+        ------------------
+             [a ...]
+
+    Cons is a venerable old function from Lisp
+    ( https://en.wikipedia.org/wiki/Cons#Lists ).
+    Its inverse operation is uncons.
+    '''
     s0, (a1, stack) = stack
     return ((a1, s0), stack)
 
@@ -654,6 +666,15 @@ def cons(stack):
 @inscribe
 @SimpleFunctionWrapper
 def dup(stack):
+    '''
+    "Dup"licate the top item on the stack.
+    ::
+
+           a dup
+        -----------
+            a a
+
+    '''
     (a1, s23) = stack
     return (a1, (a1, s23))
 
@@ -661,6 +682,14 @@ def dup(stack):
 @inscribe
 @SimpleFunctionWrapper
 def first(stack):
+    '''
+    Replace a list with its first item.
+
+           [a ...]
+        --------------
+              a
+
+    '''
     ((a1, s1), s23) = stack
     return (a1, s23)
 
@@ -668,6 +697,13 @@ def first(stack):
 @inscribe
 @SimpleFunctionWrapper
 def pop(stack):
+    '''
+    Pop the top item from the stack and discard it.
+
+           a pop
+        -----------
+
+    '''
     (_, s23) = stack
     return s23
 
@@ -675,6 +711,14 @@ def pop(stack):
 @inscribe
 @SimpleFunctionWrapper
 def rest(stack):
+    '''
+    Replace a list with its tail.
+
+           [a b c] rest
+        ------------------
+              [b c]
+
+    '''
     (_, s1), stack = stack
     return (s1, stack)
 
@@ -682,12 +726,29 @@ def rest(stack):
 @inscribe
 @SimpleFunctionWrapper
 def stack(stack):
+    '''
+    Put the stack onto the stack.
+
+              ... c b a stack
+        ---------------------------
+           ... c b a [a b c ...]
+
+    '''
     return stack, stack
 
 
 @inscribe
 @SimpleFunctionWrapper
 def swaack(stack):
+    '''
+    Swap stack.  Take a list from the top of the stack, replace the stack
+    with the list, and put the old stack onto it.
+
+           1 2 3 [4 5 6] swaack
+        --------------------------
+           6 5 4 [3 2 1]
+
+    '''
     (s1, s0) = stack
     return (s0, s1)
 
@@ -695,6 +756,14 @@ def swaack(stack):
 @inscribe
 @SimpleFunctionWrapper
 def swap(stack):
+    '''
+    Swap the top two items on the stack.
+
+           a b swap
+        --------------
+             b a
+
+    '''
     (a2, (a1, s23)) = stack
     return (a1, (a2, s23))
 
