@@ -30,6 +30,7 @@ This script implements an interpreter for a dialect of Joy.
 
 '''
 from functools import wraps
+from inspect import getdoc
 from re import Scanner
 from traceback import print_exc
 import operator
@@ -511,6 +512,40 @@ def SimpleFunctionWrapper(f):
     return inner
 
 
+@inscribe
+def words(stack, expression, dictionary):
+    '''
+    Put a list of all the words in alphabetical order onto the stack.
+    '''
+    w = ()
+    for name in reversed(sorted(dictionary)):
+        if name.startswith('_'):
+            continue
+        w = (Symbol(name), ()), w
+    return (w, stack), expression, dictionary
+
+
+HELP_TEMPLATE = '''\
+
+==== Help on %s ====
+
+%s
+
+---- end ( %s )
+'''
+
+
+@inscribe
+def help_(stack, expression, dictionary):
+    '''
+    Accepts a quoted symbol on the top of the stack and prints its docs.
+    '''
+    ((symbol, _), stack) = stack
+    word = dictionary[symbol]
+    print(HELP_TEMPLATE % (symbol, getdoc(word), symbol))
+    return stack, expression, dictionary
+
+
 '''
  ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ████████╗ ██████╗ ██████╗ ███████╗
 ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██║████╗  ██║██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝
@@ -852,7 +887,11 @@ for F in (
 
 
 class Def(object):
+
+    tribar = '\u2261'  # ≡
+
     def __init__(self, name, body):
+        self.__doc__ = f'{name} {self.tribar} {expression_to_string(body)}'
         self.__name__ = name
         self.body = tuple(iter_stack(body))
 
@@ -863,26 +902,31 @@ class Def(object):
     @classmethod
     def load_definitions(class_, stream, dictionary):
         for line in stream:
-            if line.lstrip().startswith('#'):
+            if class_.tribar not in line:
                 continue
-            name, body = text_to_expression(line)
+            name, body = text_to_expression(line.replace(class_.tribar, ''))
             if name not in dictionary:
                 inscribe(class_(name, body), dictionary)
 
 
 DEFS = '''\
--- 1 -
-? dup bool
-&& nulco [nullary [false]] dip branch
-++ 1 +
-|| nulco [nullary] dip [true] branch
-!- 0 >=
-<{} [] swap
-<<{} [] rollup
-abs dup 0 < [] [neg] branch
-anamorphism [pop []] swap [dip swons] genrec
-app1 grba infrst
-app2 [grba swap grba swap] dip [infrst] cons ii
+
+Start with increment and decrement:
+
+    -- ≡ 1 -
+    ++ ≡ 1 +
+
+
+? ≡ dup bool
+&& ≡ nulco [nullary [false]] dip branch
+|| ≡ nulco [nullary] dip [true] branch
+!- ≡ 0 >=
+<{} ≡ [] swap
+<<{} ≡ [] rollup
+abs ≡ dup 0 < [] [neg] branch
+anamorphism ≡ [pop []] swap [dip swons] genrec
+app1 ≡ grba infrst
+app2 ≡ [grba swap grba swap] dip [infrst] cons ii
 app3 3 appN
 appN [grabN] codi map disenstacken
 at drop first
@@ -892,35 +936,36 @@ binary unary popd
 ccccons ccons ccons
 ccons cons cons
 clear [] swaack pop
-cleave fork popdd
+cleave ≡ fork popdd
 clop cleave popdd
 cmp [[>] swap] dipd [ifte] ccons [=] swons ifte
-codi cons dip
+codi ≡ cons dip
 codireco codi reco
 dinfrirst dip infrst
-dipd [dip] codi
+dipd ≡ [dip] codi
 disenstacken ? [uncons ?] loop pop
 down_to_zero [0 >] [dup --] while
 drop [rest] times
-dupd [dup] dip
+dupd ≡ [dup] dip
 dupdd [dup] dipd
-dupdip dupd dip
-dupdipd dup dipd
+dupdip ≡ dupd dip
+dupdipd ≡ dup dipd
 enstacken stack [clear] dip
 first uncons pop
 flatten <{} [concat] step
-fork [i] app2
+fork ≡ [i] app2
 fourth rest third
 gcd true [tuck mod dup 0 >] loop pop
 genrec [[genrec] ccccons] nullary swons concat ifte
 grabN <{} [cons] times
-grba [stack popd] dip
+grba ≡ [stack popd] dip
 hypot [sqr] ii + sqrt
 ifte [nullary] dipd swap branch
-ii [dip] dupdip i
-infra swons swaack [i] dip swaack
-infrst infra first
+ii ≡ [dip] dupdip i
+infra ≡ swons swaack [i] dip swaack
+infrst ≡ infra first
 make_generator [codireco] ccons
+manual ≡ [] words [help] step pop
 mod %
 neg 0 swap -
 not [true] [false] branch
@@ -929,10 +974,10 @@ nullary [stack] dinfrirst
 of swap at
 pam [i] map
 pm [+] [-] clop
-popd [pop] dip
-popdd [pop] dipd
-popop pop pop
-popopop pop popop
+popd ≡ [pop] dip
+popdd ≡ [pop] dipd
+popop ≡ pop pop
+popopop ≡ pop popop
 popopd [popop] dip
 popopdd [popop] dipd
 product 1 swap [*] step
@@ -942,8 +987,8 @@ range_to_zero unit [down_to_zero] infra
 reco rest cons
 rest uncons popd
 reverse <{} shunt
-roll> swap swapd
-roll< swapd swap
+roll> ≡ swap swapd
+roll< ≡ swapd swap
 rollup roll>
 rolldown roll<
 rrest rest rest
@@ -960,8 +1005,8 @@ stackd [stack] dip
 step_zero 0 roll> step
 stuncons stack uncons
 sum [+] step_zero
-swapd [swap] dip
-swons swap cons
+swapd ≡ [swap] dip
+swons ≡ swap cons
 swoncat swap concat
 sqr dup mul
 tailrec [i] genrec
@@ -970,16 +1015,16 @@ ternary binary popd
 third rest second
 tuck dup swapd
 unary nullary popd
-uncons [first] [rest] cleave
+uncons ≡ [first] [rest] cleave
 unit [] cons
 unquoted [i] dip
 unswons uncons swap
 while swap nulco dupdipd concat loop
-x dup i
-step [_step0] x
-_step0 _step1 [popopop] [_stept] branch
-_step1 [?] dipd roll<
-_stept [uncons] dipd [dupdipd] dip x
+x ≡ dup i
+step ≡ [_step0] x
+_step0 ≡ _step1 [popopop] [_stept] branch
+_step1 ≡ [?] dipd roll<
+_stept ≡ [uncons] dipd [dupdipd] dip x
 times [_times0] x
 _times0 _times1 [popopop] [_timest] branch
 _times1 [dup 0 >] dipd roll<
