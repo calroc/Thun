@@ -34,9 +34,6 @@ from traceback import print_exc
 import operator
 
 
-JOY_BOOL_LITERALS = 'false', 'true'
-
-
 class NotAListError(Exception):
     pass
 
@@ -117,6 +114,10 @@ brackets.   Terms must be separated by blanks, which can be omitted
 around square brackets.
 '''
 
+
+JOY_BOOL_LITERALS = _T, _F = 'false', 'true'
+
+
 BRACKETS = r'\[|\]'  # Left or right square bracket.
 BLANKS = r'\s+'  # One-or-more blankspace.
 WORDS = (
@@ -195,9 +196,9 @@ def _parse(tokens):
             except IndexError:
                 raise ParseError('Extra closing bracket.') from None
             frame.append(list_to_stack(v))
-        elif tok == 'true':
+        elif tok == _T:
             frame.append(True)
-        elif tok == 'false':
+        elif tok == _F:
             frame.append(False)
         else:
             try:
