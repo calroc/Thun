@@ -37,10 +37,20 @@ import operator
 JOY_BOOL_LITERALS = 'false', 'true'
 
 
-class NotAListError(Exception): pass
-class NotAnIntError(Exception): pass
-class StackUnderflowError(Exception): pass
-class UnknownSymbolError(KeyError): pass
+class NotAListError(Exception):
+    pass
+
+
+class NotAnIntError(Exception):
+    pass
+
+
+class StackUnderflowError(Exception):
+    pass
+
+
+class UnknownSymbolError(KeyError):
+    pass
 
 
 '''
@@ -97,23 +107,26 @@ BRACKETS = r'\[|\]'  # Left or right square bracket.
 BLANKS = r'\s+'  # One-or-more blankspace.
 WORDS = (
     '['  # Character class
-        '^'   # not a
-        '['   # left square bracket nor a
-        '\]'  # right square bracket (escaped so it doesn't close the character class) 
-        '\s'  # nor blankspace
+    '^'  # not a
+    '['  # left square bracket nor a
+    '\]'  # right square bracket (escaped so it doesn't close the character class)
+    '\s'  # nor blankspace
     ']+'  # end character class, one-or-more.
-    )
+)
 
 
-token_scanner = Scanner([
-    (BRACKETS, lambda _, token: token),
-    (BLANKS, None),
-    (WORDS, lambda _, token: token),
-    ])
+token_scanner = Scanner(
+    [
+        (BRACKETS, lambda _, token: token),
+        (BLANKS, None),
+        (WORDS, lambda _, token: token),
+    ]
+)
 
 
 class Symbol(str):
     '''A string class that represents Joy function names.'''
+
     __repr__ = str.__str__
 
 
@@ -147,7 +160,7 @@ def _tokenize(text):
         raise ParseError(
             'Scan failed at position %i, %r'
             % (len(text) - len(rest), rest[:10])
-            )
+        )
     return tokens
 
 
@@ -163,17 +176,23 @@ def _parse(tokens):
             frame = []
         elif tok == ']':
             v = frame
-            try: frame = stack.pop()
+            try:
+                frame = stack.pop()
             except IndexError:
                 raise ParseError('Extra closing bracket.') from None
             frame.append(list_to_stack(v))
-        elif tok == 'true': frame.append(True)
-        elif tok == 'false': frame.append(False)
+        elif tok == 'true':
+            frame.append(True)
+        elif tok == 'false':
+            frame.append(False)
         else:
-            try: thing = int(tok)
-            except ValueError: thing = Symbol(tok)
+            try:
+                thing = int(tok)
+            except ValueError:
+                thing = Symbol(tok)
             frame.append(thing)
-    if stack: raise ParseError('Unclosed bracket.')
+    if stack:
+        raise ParseError('Unclosed bracket.')
     return list_to_stack(frame)
 
 
@@ -230,11 +249,11 @@ def concat(quote, expression):
     # on quotes longer than sys.getrecursionlimit().
     # :raises RuntimeError: if quote is larger than sys.getrecursionlimit().
 
-##    return (quote[0], concat(quote[1], expression)) if quote else expression
+    ##    return (quote[0], concat(quote[1], expression)) if quote else expression
 
     # Original implementation.
 
-##  return list_to_stack(list(iter_stack(quote)), expression)
+    ##  return list_to_stack(list(iter_stack(quote)), expression)
 
     # In-lining is slightly faster (and won't break the
     # recursion limit on long quotes.)
@@ -258,6 +277,7 @@ def concat(quote, expression):
 ██║     ██║  ██║██║██║ ╚████║   ██║   ███████╗██║  ██║
 ╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
 '''
+
 
 def stack_to_string(stack):
     '''
@@ -289,12 +309,18 @@ def expression_to_string(expression):
 
 
 def _joy_repr(thing):
-    return JOY_BOOL_LITERALS[thing] if isinstance(thing, bool) else repr(thing)
+    return (
+        JOY_BOOL_LITERALS[thing]
+        if isinstance(thing, bool)
+        else repr(thing)
+    )
 
 
 def _to_string(stack, f):
-    if not isinstance(stack, tuple): return _joy_repr(stack)
-    if not stack: return ''  # shortcut
+    if not isinstance(stack, tuple):
+        return _joy_repr(stack)
+    if not stack:
+        return ''  # shortcut
     return ' '.join(map(_s, f(stack)))
 
 
@@ -302,7 +328,7 @@ _s = lambda s: (
     '[%s]' % expression_to_string(s)
     if isinstance(s, tuple)
     else _joy_repr(s)
-    )
+)
 
 
 '''
@@ -382,9 +408,11 @@ def initialize():
 
 def SimpleFunctionWrapper(f):
     '''Wrap functions that take and return just a stack.'''
+
     @wraps(f)
     def inner(stack, expr, dictionary):
         return f(stack), expr, dictionary
+
     return inner
 
 
@@ -404,17 +432,21 @@ def branch(stack, expr, dictionary):
     do = then if flag else else_
     return stack, concat(do, expr), dictionary
 
+
 @inscribe
 def dip(stack, expr, dictionary):
     quote, (x, stack) = stack
     return stack, concat(quote, (x, expr)), dictionary
+
 
 @inscribe
 def i(stack, expr, dictionary):
     quote, stack = stack
     return stack, concat(quote, expr), dictionary
 
+
 LOOP = Symbol('loop')
+
 
 @inscribe
 def loop(stack, expr, dictionary):
@@ -439,11 +471,13 @@ def loop(stack, expr, dictionary):
 def clear(stack):
     return ()
 
+
 @inscribe
 @SimpleFunctionWrapper
 def concat_(stack):
     (tos, (second, stack)) = stack
     return concat(second, tos), stack
+
 
 @inscribe
 @SimpleFunctionWrapper
@@ -451,11 +485,13 @@ def cons(stack):
     s0, (a1, stack) = stack
     return ((a1, s0), stack)
 
+
 @inscribe
 @SimpleFunctionWrapper
 def dup(stack):
     (a1, s23) = stack
     return (a1, (a1, s23))
+
 
 @inscribe
 @SimpleFunctionWrapper
@@ -463,11 +499,13 @@ def first(stack):
     ((a1, s1), s23) = stack
     return (a1, s23)
 
+
 @inscribe
 @SimpleFunctionWrapper
 def pop(stack):
     (_, s23) = stack
     return s23
+
 
 @inscribe
 @SimpleFunctionWrapper
@@ -475,16 +513,19 @@ def rest(stack):
     (_, s1), stack = stack
     return (s1, stack)
 
+
 @inscribe
 @SimpleFunctionWrapper
 def stack(stack):
     return stack, stack
+
 
 @inscribe
 @SimpleFunctionWrapper
 def swaack(stack):
     (s1, s0) = stack
     return (s0, s1)
+
 
 @inscribe
 @SimpleFunctionWrapper
@@ -497,60 +538,59 @@ def BinaryFunc(f):
     '''
     Wrap functions that take two arguments and return a single result.
     '''
+
     @wraps(f)
     def inner(stack, expression, dictionary):
         (a, (b, stack)) = stack
         result = f(b, a)
         return (result, stack), expression, dictionary
+
     return inner
+
 
 def UnaryBuiltinWrapper(f):
     '''
     Wrap functions that take one argument and return a single result.
     '''
+
     @wraps(f)
     def inner(stack, expression, dictionary):
         (a, stack) = stack
         result = f(a)
         return (result, stack), expression, dictionary
+
     return inner
 
 
 for F in (
-'''
- ██████╗ ██████╗ ███╗   ███╗██████╗  █████╗ ██████╗ ██╗███████╗██╗ ██████╗ ███╗   ██╗
-██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔══██╗██╔══██╗██║██╔════╝██║██╔═══██╗████╗  ██║
-██║     ██║   ██║██╔████╔██║██████╔╝███████║██████╔╝██║███████╗██║██║   ██║██╔██╗ ██║
-██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██╔══██║██╔══██╗██║╚════██║██║██║   ██║██║╚██╗██║
-╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║  ██║██║  ██║██║███████║██║╚██████╔╝██║ ╚████║
- ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
-'''
+    ## ██████╗ ██████╗ ███╗   ███╗██████╗  █████╗ ██████╗ ██╗███████╗██╗ ██████╗ ███╗   ██╗
+    ##██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔══██╗██╔══██╗██║██╔════╝██║██╔═══██╗████╗  ██║
+    ##██║     ██║   ██║██╔████╔██║██████╔╝███████║██████╔╝██║███████╗██║██║   ██║██╔██╗ ██║
+    ##██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██╔══██║██╔══██╗██║╚════██║██║██║   ██║██║╚██╗██║
+    ##╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║  ██║██║  ██║██║███████║██║╚██████╔╝██║ ╚████║
+    ## ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
     BinaryFunc(operator.eq),
     BinaryFunc(operator.ge),
     BinaryFunc(operator.gt),
     BinaryFunc(operator.le),
     BinaryFunc(operator.lt),
     BinaryFunc(operator.ne),
-'''
-██╗      ██████╗  ██████╗ ██╗ ██████╗
-██║     ██╔═══██╗██╔════╝ ██║██╔════╝
-██║     ██║   ██║██║  ███╗██║██║     
-██║     ██║   ██║██║   ██║██║██║     
-███████╗╚██████╔╝╚██████╔╝██║╚██████╗
-╚══════╝ ╚═════╝  ╚═════╝ ╚═╝ ╚═════╝
-'''
+    ##██╗      ██████╗  ██████╗ ██╗ ██████╗
+    ##██║     ██╔═══██╗██╔════╝ ██║██╔════╝
+    ##██║     ██║   ██║██║  ███╗██║██║
+    ##██║     ██║   ██║██║   ██║██║██║
+    ##███████╗╚██████╔╝╚██████╔╝██║╚██████╗
+    ##╚══════╝ ╚═════╝  ╚═════╝ ╚═╝ ╚═════╝
     BinaryFunc(operator.xor),
     BinaryFunc(operator.and_),
     BinaryFunc(operator.or_),
     UnaryBuiltinWrapper(operator.not_),
-'''
-███╗   ███╗ █████╗ ████████╗██╗  ██╗
-████╗ ████║██╔══██╗╚══██╔══╝██║  ██║
-██╔████╔██║███████║   ██║   ███████║
-██║╚██╔╝██║██╔══██║   ██║   ██╔══██║
-██║ ╚═╝ ██║██║  ██║   ██║   ██║  ██║
-╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
-'''
+    ##███╗   ███╗ █████╗ ████████╗██╗  ██╗
+    ##████╗ ████║██╔══██╗╚══██╔══╝██║  ██║
+    ##██╔████╔██║███████║   ██║   ███████║
+    ##██║╚██╔╝██║██╔══██║   ██║   ██╔══██║
+    ##██║ ╚═╝ ██║██║  ██║   ██║   ██║  ██║
+    ##╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
     BinaryFunc(operator.lshift),
     BinaryFunc(operator.rshift),
     BinaryFunc(operator.add),
@@ -562,7 +602,7 @@ for F in (
     UnaryBuiltinWrapper(abs),
     UnaryBuiltinWrapper(bool),
     UnaryBuiltinWrapper(operator.neg),
-    ):
+):
     inscribe(F)
 
 
@@ -577,7 +617,6 @@ for F in (
 
 
 class Def(object):
-
     def __init__(self, name, body):
         self.__name__ = name
         self.body = tuple(iter_stack(body))
@@ -594,6 +633,7 @@ class Def(object):
             name, body = text_to_expression(line)
             if name not in dictionary:
                 inscribe(class_(name, body), dictionary)
+
 
 DEFS = '''\
 -- 1 -
