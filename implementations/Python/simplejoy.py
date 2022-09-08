@@ -37,7 +37,9 @@ import operator
 
 
 class NotAListError(Exception):
-    '''Raised when a stack is expected.'''
+    '''
+    Raised when a stack is expected but not received.
+    '''
 
 
 class NotAnIntError(Exception):
@@ -46,6 +48,12 @@ class NotAnIntError(Exception):
 
 class NotABoolError(Exception):
     pass
+
+
+class ParseError(ValueError):
+    '''
+    Raised when there is a error while parsing text.
+    '''
 
 
 class StackUnderflowError(Exception):
@@ -110,11 +118,11 @@ the fact that they are not Symbol objects.
 
 A crude grammar::
 
-    joy = term*
-    term = integer | '[' joy ']' | symbol
+    joy = <term>*
+    term = <integer> | 'true' | 'false' | '[' <joy> ']' | <symbol>
 
 A Joy expression is a sequence of zero or more terms.  A term is a
-literal value (integer or quoted Joy expression) or a function symbol.
+literal value (integer, Boolean, or quoted Joy expression) or a function symbol.
 Function symbols are sequences of non-blanks and cannot contain square
 brackets.   Terms must be separated by blanks, which can be omitted
 around square brackets.
@@ -166,12 +174,6 @@ def text_to_expression(text):
     :raises ParseError: if the parse fails.
     '''
     return _parse(_tokenize(text))
-
-
-class ParseError(ValueError):
-    '''
-    Raised when there is a error while parsing text.
-    '''
 
 
 def _tokenize(text):
@@ -349,7 +351,7 @@ def concat(quote, expression):
     # recursion limit on long quotes.)
 
     if not isinstance(quote, tuple):
-        raise NotAListError('Not a list.')
+        raise NotAListError(f'Not a list {_s(quote)}')
     temp = []
     while quote:
         item, quote = quote
@@ -480,6 +482,36 @@ def run(text, stack, dictionary):
     return joy(stack, expr, dictionary)
 
 
+def interp(stack=(), dictionary=None):
+    '''
+    Simple REPL with no extra output, suitable for use in scripts.
+    '''
+    if dictionary is None:
+        dictionary = {}
+    try:
+        while True:
+            try:
+                text = input()
+            except (EOFError, KeyboardInterrupt):
+                break
+            try:
+                stack, _, dictionary = run(text, stack, dictionary)
+            except UnknownSymbolError as sym:
+                print('Unknown:', sym)
+            except StackUnderflowError as e:
+                print(e)  # 'Not enough values on stack.'
+            except NotAnIntError:
+                print('Not an integer.')
+            except NotAListError as e:
+                print(e)
+            except:
+                print_exc()
+            print(stack_to_string(stack))
+    except:
+        print_exc()
+    return stack
+
+
 '''
 ██████╗ ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗ █████╗ ██████╗ ██╗   ██╗
 ██╔══██╗██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔══██╗██╔══██╗╚██╗ ██╔╝
@@ -586,6 +618,12 @@ def branch(stack, expr, dictionary):
 
     '''
     (then, (else_, (flag, stack))) = stack
+    if not isinstance(flag, bool):
+        raise NotABoolError(f'Not a Boolean value: {_s(flag)}')
+    if not isinstance(else_, tuple):
+        raise NotAListError(f'Not a list {_s(else_)}')
+    if not isinstance(then, tuple):
+        raise NotAListError(f'Not a list {_s(then)}')
     do = then if flag else else_
     return stack, concat(do, expr), dictionary
 
@@ -791,7 +829,7 @@ def swaack(stack):
 
            1 2 3 [4 5 6] swaack
         --------------------------
-           6 5 4 [3 2 1]
+              6 5 4 [3 2 1]
 
     '''
     (s1, s0) = stack
@@ -967,7 +1005,7 @@ class Def(object):
     the pending expression.
     '''
 
-    tribar = '\u2261'  # '≡'
+    # tribar = '\u2261'  # '≡'
 
     def __init__(self, name, body):
         self.__doc__ = f'{name} ≡ {expression_to_string(body)}'
@@ -998,6 +1036,13 @@ Start with increment and decrement:
 
     -- ≡ 1 -
     ++ ≡ 1 +
+
+= ≡ eq
++ ≡ add
+> ≡ gt
+< ≡ lt
+>= ≡ ge
+<= ≡ le
 
 
 ? ≡ dup bool
@@ -1122,6 +1167,8 @@ _map2 [infrst] cons dipd roll< swons
 
 
 if __name__ == '__main__':
+    import sys
+    J = interp if '-q' in sys.argv else repl
     dictionary = initialize()
     Def.load_definitions(DEFS.splitlines(), dictionary)
-    stack = repl(dictionary=dictionary)
+    stack = J(dictionary=dictionary)
