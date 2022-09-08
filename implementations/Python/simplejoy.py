@@ -187,7 +187,7 @@ def concat(quote, expression):
 
 def get_n_items(n, stack):
     '''
-    Return items and remainder of stack.
+    Return n items and remainder of stack.
     Raise StackUnderflowError if there are fewer than n items on the stack.
     '''
     assert n > 0, repr(n)
@@ -197,7 +197,9 @@ def get_n_items(n, stack):
         try:
             item, stack = stack
         except ValueError:
-            raise StackUnderflowError('Not enough values on stack.') from None
+            raise StackUnderflowError(
+                'Not enough values on stack.'
+            ) from None
         temp.append(item)
     temp.append(stack)
     return tuple(temp)
@@ -806,7 +808,9 @@ def rest(stack):
     try:
         _, s1 = s0
     except ValueError:
-        raise StackUnderflowError('Cannot take rest of empty list.') from None
+        raise StackUnderflowError(
+            'Cannot take rest of empty list.'
+        ) from None
     return s1, stack
 
 
@@ -1234,6 +1238,7 @@ _map2 ≡ [infrst] cons dipd roll< swons
    ██║      ██║   ██║     ███████╗    ╚██████╗██║  ██║███████╗╚██████╗██║  ██╗███████║
    ╚═╝      ╚═╝   ╚═╝     ╚══════╝     ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚══════╝
 '''
+
 
 class NotAListError(Exception):
     '''
