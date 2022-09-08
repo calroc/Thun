@@ -76,6 +76,141 @@ def joy(stack, expr, dictionary):
 
 
 '''
+███████╗████████╗ █████╗  ██████╗██╗  ██╗
+██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
+███████╗   ██║   ███████║██║     █████╔╝
+╚════██║   ██║   ██╔══██║██║     ██╔═██╗
+███████║   ██║   ██║  ██║╚██████╗██║  ██╗
+╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
+
+When talking about Joy we use the terms "stack", "quote", "sequence",
+"list", and others to mean the same thing: a simple linear datatype that
+permits certain operations such as iterating and pushing and popping
+values from (at least) one end.
+
+    In describing Joy I have used the term quotation to describe all of the
+    above, because I needed a word to describe the arguments to combinators
+    which fulfill the same role in Joy as lambda abstractions (with
+    variables) fulfill in the more familiar functional languages. I use the
+    term list for those quotations whose members are what I call literals:
+    numbers, characters, truth values, sets, strings and other quotations.
+    All these I call literals because their occurrence in code results in
+    them being pushed onto the stack. But I also call [London Paris] a list.
+    So, [dup *] is a quotation but not a list.
+
+`"A Conversation with Manfred von Thun" w/ Stevan Apter <http://archive.vector.org.uk/art10000350>`_
+
+There is no "Stack" Python class, instead we use the  `cons list`_, a
+venerable two-tuple recursive sequence datastructure, where the empty
+tuple ``()`` is the empty stack and ``(head, rest)`` gives the recursive
+form of a stack with one or more items on it::
+
+    stack := () | (item, stack)
+
+Putting some numbers onto a stack::
+
+    Joy       Python
+    []        ()
+    [1]       (1, ())
+    [2 1]     (2, (1, ()))
+    [3 2 1]   (3, (2, (1, ())))
+    ...
+
+Python has very nice "tuple packing and unpacking" in its syntax which
+means we can directly "unpack" the expected arguments to a Joy function.
+We assign the argument stack to the expected structure of the stack and
+Python takes care of unpacking the incoming tuple and assigning values to
+the names.  (Note that Python syntax doesn't require parentheses around
+tuples used in expressions where they would be redundant.)
+
+    def dup(stack):
+        head, tail = stack
+        return head, (head, tail)
+
+
+.. _cons list: https://en.wikipedia.org/wiki/Cons#Lists
+
+'''
+
+
+def list_to_stack(el, stack=()):
+    '''
+    Convert a Python list (or other sequence) to a Joy stack::
+
+    [1, 2, 3] -> (1, (2, (3, ())))
+
+    :param list el: A Python list or other sequence (iterators and generators
+             won't work because ``reversed()`` is called on ``el``.)
+    :param stack stack: A stack, optional, defaults to the empty stack. This
+             allows for concatinating Python lists (or other sequence objects)
+             onto an existing Joy stack.
+    :rtype: stack
+
+    '''
+    for item in reversed(el):
+        stack = item, stack
+    return stack
+
+
+def iter_stack(stack):
+    '''
+    Iterate through the items on the stack.
+
+    :param stack stack: A stack.
+    :rtype: iterator
+    '''
+    while stack:
+        item, stack = stack
+        yield item
+
+
+def concat(quote, expression):
+    '''
+    Concatinate quote onto expression.
+
+    In joy [1 2] [3 4] would become [1 2 3 4].
+
+    :param stack quote: A stack.
+    :param stack expression: A stack.
+    :rtype: stack
+    '''
+    isnt_stack(quote)
+    isnt_stack(expression)
+    return list_to_stack(list(iter_stack(quote)), expression)
+
+    ## return (quote[0], concat(quote[1], expression)) if quote else expression
+    # :raises RuntimeError: if quote is larger than sys.getrecursionlimit().
+    # This is the fastest implementation but it would trigger
+    # RuntimeError: maximum recursion depth exceeded
+    # on quotes longer than sys.getrecursionlimit().
+
+
+def get_n_items(n, stack):
+    '''
+    Return items and remainder of stack.
+    Raise StackUnderflowError if there are fewer than n items on the stack.
+    '''
+    assert n > 0, repr(n)
+    temp = []
+    while n > 0:
+        n -= 1
+        try:
+            item, stack = stack
+        except ValueError:
+            raise StackUnderflowError('Not enough values on stack.') from None
+        temp.append(item)
+    temp.append(stack)
+    return tuple(temp)
+
+
+def reversed_stack(stack):
+    '''
+    Return list_reverseiterator object for a stack.
+    '''
+    return reversed(list(iter_stack(stack)))
+
+
+'''
 ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
 ██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
 ██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝
@@ -194,160 +329,6 @@ def _parse(tokens):
     if stack:
         raise ParseError('Unclosed bracket.')
     return list_to_stack(frame)
-
-
-r'''
-███████╗████████╗ █████╗  ██████╗██╗  ██╗
-██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-███████╗   ██║   ███████║██║     █████╔╝
-╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
-
-When talking about Joy we use the terms "stack", "quote", "sequence",
-"list", and others to mean the same thing: a simple linear datatype that
-permits certain operations such as iterating and pushing and popping
-values from (at least) one end.
-
-    In describing Joy I have used the term quotation to describe all of the
-    above, because I needed a word to describe the arguments to combinators
-    which fulfill the same role in Joy as lambda abstractions (with
-    variables) fulfill in the more familiar functional languages. I use the
-    term list for those quotations whose members are what I call literals:
-    numbers, characters, truth values, sets, strings and other quotations.
-    All these I call literals because their occurrence in code results in
-    them being pushed onto the stack. But I also call [London Paris] a list.
-    So, [dup \*] is a quotation but not a list.
-
-`"A Conversation with Manfred von Thun" w/ Stevan Apter <http://archive.vector.org.uk/art10000350>`_
-
-There is no "Stack" Python class, instead we use the  `cons list`_, a
-venerable two-tuple recursive sequence datastructure, where the
-empty tuple ``()`` is the empty stack and ``(head, rest)`` gives the
-recursive form of a stack with one or more items on it::
-
-    stack := () | (item, stack)
-
-Putting some numbers onto a stack::
-
-    ()
-    (1, ())
-    (2, (1, ()))
-    (3, (2, (1, ())))
-    ...
-
-Python has very nice "tuple packing and unpacking" in its syntax which
-means we can directly "unpack" the expected arguments to a Joy function.
-We assign the argument stack to the expected structure of the stack and
-Python takes care of unpacking the
-incoming tuple and assigning values to the names.  (Note that Python
-syntax doesn't require parentheses around tuples used in expressions
-where they would be redundant.)
-
-    def dup(stack):
-        head, tail = stack
-        return head, (head, tail)
-
-We have two very simple functions, one to build up a stack from a Python
-list and another to iterate through a stack and yield its items
-one-by-one in order.  There are also two functions to generate string representations
-of stacks.  They only differ in that one prints the terms in stack from left-to-right while the other prints from right-to-left.  In both functions *internal stacks* are
-printed left-to-right.  These functions are written to support :doc:`../pretty`.
-
-.. _cons list: https://en.wikipedia.org/wiki/Cons#Lists
-
-'''
-
-
-def list_to_stack(el, stack=()):
-    '''
-    Convert a Python list (or other sequence) to a Joy stack::
-
-    [1, 2, 3] -> (1, (2, (3, ())))
-
-    :param list el: A Python list or other sequence (iterators and generators
-             won't work because ``reverse()`` is called on ``el``.)
-    :param stack stack: A stack, optional, defaults to the empty stack. This
-             allows for concatinating Python lists (or other sequence objects)
-             onto an existing Joy stack.
-    :rtype: stack
-
-    '''
-    for item in reversed(el):
-        stack = item, stack
-    return stack
-
-
-def iter_stack(stack):
-    '''
-    Iterate through the items on the stack.
-
-    :param stack stack: A stack.
-    :rtype: iterator
-    '''
-    while stack:
-        item, stack = stack
-        yield item
-
-
-def concat(quote, expression):
-    '''
-    Concatinate quote onto expression.
-
-    In joy [1 2] [3 4] would become [1 2 3 4].
-
-    :param stack quote: A stack.
-    :param stack expression: A stack.
-    :rtype: stack
-    '''
-    # This (below) is the fastest implementation, but will trigger
-    # RuntimeError: maximum recursion depth exceeded
-    # on quotes longer than sys.getrecursionlimit().
-    # :raises RuntimeError: if quote is larger than sys.getrecursionlimit().
-
-    ##    return (quote[0], concat(quote[1], expression)) if quote else expression
-
-    # Original implementation.
-
-    ##  return list_to_stack(list(iter_stack(quote)), expression)
-
-    # In-lining is slightly faster (and won't break the
-    # recursion limit on long quotes.)
-
-    isnt_stack(quote)
-    isnt_stack(expression)
-    temp = []
-    while quote:
-        item, quote = quote
-        temp.append(item)
-    for item in reversed(temp):
-        expression = item, expression
-    return expression
-
-
-def get_n_items(n, stack):
-    '''
-    Return items and remainder of stack.
-    Raise StackUnderflowError if there are fewer than n items on the stack.
-    '''
-    assert n > 0, repr(n)
-    temp = []
-    while n > 0:
-        n -= 1
-        try:
-            item, stack = stack
-        except ValueError:
-            raise StackUnderflowError('Not enough values on stack.') from None
-        temp.append(item)
-    temp.append(stack)
-    return tuple(temp)
-
-
-def reversed_stack(stack):
-    '''
-    Return list_reverseiterator object for a stack.
-    '''
-    return reversed(list(iter_stack(stack)))
 
 
 '''
