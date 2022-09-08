@@ -36,59 +36,6 @@ from traceback import print_exc
 import operator
 
 
-class NotAListError(Exception):
-    '''
-    Raised when a stack is expected but not received.
-    '''
-
-
-class NotAnIntError(Exception):
-    pass
-
-
-class NotABoolError(Exception):
-    pass
-
-
-class ParseError(ValueError):
-    '''
-    Raised when there is a error while parsing text.
-    '''
-
-
-class StackUnderflowError(Exception):
-    pass
-
-
-class UnknownSymbolError(KeyError):
-    pass
-
-
-def isnt_int(i):
-    '''
-    Raise NotAnIntError if i isn't an integer.
-    (Booleans are not integers in Joy.)
-    '''
-    if not isinstance(i, int) or isinstance(i, bool):
-        raise NotAnIntError(f'Not an integer: {_s(i)}')
-
-
-def isnt_bool(b):
-    '''
-    Raise NotABoolError if b isn't a Boolean.
-    '''
-    if not isinstance(b, bool):
-        raise NotABoolError(f'Not a Boolean value: {_s(b)}')
-
-
-def isnt_stack(el):
-    '''
-    Raise NotAListError if el isn't a stack/quote/list.
-    '''
-    if not isinstance(el, tuple):
-        raise NotAListError(f'Not a list: {_s(el)}')
-
-
 '''
 ██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
 ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
@@ -1296,6 +1243,68 @@ _map1 ≡ stackd shift
 _map2 ≡ [infrst] cons dipd roll< swons
 
 '''
+
+
+'''
+████████╗██╗   ██╗██████╗ ███████╗     ██████╗██╗  ██╗███████╗ ██████╗██╗  ██╗███████╗
+╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝    ██╔════╝██║  ██║██╔════╝██╔════╝██║ ██╔╝██╔════╝
+   ██║    ╚████╔╝ ██████╔╝█████╗      ██║     ███████║█████╗  ██║     █████╔╝ ███████╗
+   ██║     ╚██╔╝  ██╔═══╝ ██╔══╝      ██║     ██╔══██║██╔══╝  ██║     ██╔═██╗ ╚════██║
+   ██║      ██║   ██║     ███████╗    ╚██████╗██║  ██║███████╗╚██████╗██║  ██╗███████║
+   ╚═╝      ╚═╝   ╚═╝     ╚══════╝     ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚══════╝
+'''
+
+class NotAListError(Exception):
+    '''
+    Raised when a stack is expected but not received.
+    '''
+
+
+class NotAnIntError(Exception):
+    pass
+
+
+class NotABoolError(Exception):
+    pass
+
+
+class ParseError(ValueError):
+    '''
+    Raised when there is a error while parsing text.
+    '''
+
+
+class StackUnderflowError(Exception):
+    pass
+
+
+class UnknownSymbolError(KeyError):
+    pass
+
+
+def isnt_int(i):
+    '''
+    Raise NotAnIntError if i isn't an integer.
+    (Booleans are not integers in Joy.)
+    '''
+    if not isinstance(i, int) or isinstance(i, bool):
+        raise NotAnIntError(f'Not an integer: {_s(i)}')
+
+
+def isnt_bool(b):
+    '''
+    Raise NotABoolError if b isn't a Boolean.
+    '''
+    if not isinstance(b, bool):
+        raise NotABoolError(f'Not a Boolean value: {_s(b)}')
+
+
+def isnt_stack(el):
+    '''
+    Raise NotAListError if el isn't a stack/quote/list.
+    '''
+    if not isinstance(el, tuple):
+        raise NotAListError(f'Not a list: {_s(el)}')
 
 
 if __name__ == '__main__':
