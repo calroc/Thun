@@ -313,7 +313,8 @@ printed left-to-right.  These functions are written to support :doc:`../pretty`.
 
 
 def list_to_stack(el, stack=()):
-    '''Convert a Python list (or other sequence) to a Joy stack::
+    '''
+    Convert a Python list (or other sequence) to a Joy stack::
 
     [1, 2, 3] -> (1, (2, (3, ())))
 
@@ -331,7 +332,8 @@ def list_to_stack(el, stack=()):
 
 
 def iter_stack(stack):
-    '''Iterate through the items on the stack.
+    '''
+    Iterate through the items on the stack.
 
     :param stack stack: A stack.
     :rtype: iterator
@@ -342,7 +344,8 @@ def iter_stack(stack):
 
 
 def concat(quote, expression):
-    '''Concatinate quote onto expression.
+    '''
+    Concatinate quote onto expression.
 
     In joy [1 2] [3 4] would become [1 2 3 4].
 
@@ -350,7 +353,7 @@ def concat(quote, expression):
     :param stack expression: A stack.
     :rtype: stack
     '''
-    # This is the fastest implementation, but will trigger
+    # This (below) is the fastest implementation, but will trigger
     # RuntimeError: maximum recursion depth exceeded
     # on quotes longer than sys.getrecursionlimit().
     # :raises RuntimeError: if quote is larger than sys.getrecursionlimit().
@@ -387,7 +390,9 @@ def get_n_items(n, stack):
         try:
             item, stack = stack
         except ValueError:
-            raise StackUnderflowError('Not enough values on stack.') from None
+            raise StackUnderflowError(
+                'Not enough values on stack.'
+            ) from None
         temp.append(item)
     temp.append(stack)
     return tuple(temp)
@@ -875,7 +880,9 @@ def rest(stack):
     try:
         _, s1 = s0
     except ValueError:
-        raise StackUnderflowError('Cannot take rest of empty list.') from None
+        raise StackUnderflowError(
+            'Cannot take rest of empty list.'
+        ) from None
     return s1, stack
 
 
