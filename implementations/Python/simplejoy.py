@@ -535,11 +535,12 @@ def interp(stack=(), dictionary=None):
                 stack, _, dictionary = run(text, stack, dictionary)
             except UnknownSymbolError as sym:
                 print('Unknown:', sym)
-            except StackUnderflowError as e:
-                print(e)  # 'Not enough values on stack.'
-            except NotAnIntError as e:
-                print(e)
-            except NotAListError as e:
+            except (
+                StackUnderflowError,
+                NotABoolError,
+                NotAListError,
+                NotAnIntError,
+            ) as e:
                 print(e)
             except SystemExit as e:
                 raise SystemExit from e
