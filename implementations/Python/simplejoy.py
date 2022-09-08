@@ -64,6 +64,31 @@ class UnknownSymbolError(KeyError):
     pass
 
 
+def isnt_int(i):
+    '''
+    Raise NotAnIntError if i isn't an integer.
+    (Booleans are not integers in Joy.)
+    '''
+    if not isinstance(i, int) or isinstance(i, bool):
+        raise NotAnIntError(f'Not an integer: {_s(i)}')
+
+
+def isnt_bool(b):
+    '''
+    Raise NotABoolError if b isn't a Boolean.
+    '''
+    if not isinstance(b, bool):
+        raise NotABoolError(f'Not a Boolean value: {_s(b)}')
+
+
+def isnt_stack(el):
+    '''
+    Raise NotAListError if el isn't a stack/quote/list.
+    '''
+    if not isinstance(el, tuple):
+        raise NotAListError(f'Not a list {_s(el)}')
+
+
 '''
 ██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
 ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
@@ -118,8 +143,8 @@ the fact that they are not Symbol objects.
 
 A crude grammar::
 
-    joy = <term>*
-    term = <integer> | 'true' | 'false' | '[' <joy> ']' | <symbol>
+    joy := <term>*
+    term := <integer> | 'true' | 'false' | '[' <joy> ']' | <symbol>
 
 A Joy expression is a sequence of zero or more terms.  A term is a
 literal value (integer, Boolean, or quoted Joy expression) or a function symbol.
@@ -129,7 +154,7 @@ around square brackets.
 '''
 
 
-JOY_BOOL_LITERALS = _T, _F = 'false', 'true'
+JOY_BOOL_LITERALS = _F, _T = 'false', 'true'
 
 
 BRACKETS = r'\[|\]'  # Left or right square bracket.
@@ -266,26 +291,15 @@ Putting some numbers onto a stack::
 
 Python has very nice "tuple packing and unpacking" in its syntax which
 means we can directly "unpack" the expected arguments to a Joy function.
-
-For example::
-
-    def dup((head, tail)):
-        return head, (head, tail)
-
-We replace the argument "stack" by the expected structure of the stack,
-in this case "(head, tail)", and Python takes care of unpacking the
+We assign the argument stack to the expected structure of the stack and
+Python takes care of unpacking the
 incoming tuple and assigning values to the names.  (Note that Python
 syntax doesn't require parentheses around tuples used in expressions
 where they would be redundant.)
 
-Unfortunately, the Sphinx documentation generator, which is used to generate this
-web page, doesn't handle tuples in the function parameters.  And in Python 3, this
-syntax was removed entirely.  Instead you would have to write::
-
     def dup(stack):
         head, tail = stack
         return head, (head, tail)
-
 
 We have two very simple functions, one to build up a stack from a Python
 list and another to iterate through a stack and yield its items
@@ -350,8 +364,8 @@ def concat(quote, expression):
     # In-lining is slightly faster (and won't break the
     # recursion limit on long quotes.)
 
-    if not isinstance(quote, tuple):
-        raise NotAListError(f'Not a list {_s(quote)}')
+    isnt_stack(quote)
+    isnt_stack(expression)
     temp = []
     while quote:
         item, quote = quote
@@ -359,6 +373,31 @@ def concat(quote, expression):
     for item in reversed(temp):
         expression = item, expression
     return expression
+
+
+def get_n_items(n, stack):
+    '''
+    Return items and remainder of stack.
+    Raise StackUnderflowError if there are fewer than n items on the stack.
+    '''
+    assert n > 0, repr(n)
+    temp = []
+    while n > 0:
+        n -= 1
+        try:
+            item, stack = stack
+        except ValueError:
+            raise StackUnderflowError('Not enough values on stack.') from None
+        temp.append(item)
+    temp.append(stack)
+    return tuple(temp)
+
+
+def reversed_stack(stack):
+    '''
+    Return list_reverseiterator object for a stack.
+    '''
+    return reversed(list(iter_stack(stack)))
 
 
 '''
@@ -382,8 +421,7 @@ def stack_to_string(stack):
     :param stack stack: A stack.
     :rtype: str
     '''
-    f = lambda stack: reversed(list(iter_stack(stack)))
-    return _to_string(stack, f)
+    return _to_string(stack, reversed_stack)
 
 
 def expression_to_string(expression):
@@ -416,11 +454,12 @@ def _to_string(stack, f):
     return ' '.join(map(_s, f(stack)))
 
 
-_s = lambda s: (
-    '[%s]' % expression_to_string(s)
-    if isinstance(s, tuple)
-    else _joy_repr(s)
-)
+def _s(s):
+    return (
+        '[%s]' % expression_to_string(s)
+        if isinstance(s, tuple)
+        else _joy_repr(s)
+    )
 
 
 '''
@@ -500,8 +539,8 @@ def interp(stack=(), dictionary=None):
                 print('Unknown:', sym)
             except StackUnderflowError as e:
                 print(e)  # 'Not enough values on stack.'
-            except NotAnIntError:
-                print('Not an integer.')
+            except NotAnIntError as e:
+                print(e)
             except NotAListError as e:
                 print(e)
             except:
@@ -547,10 +586,10 @@ def SimpleFunctionWrapper(f):
     '''
 
     @wraps(f)
-    def inner(stack, expr, dictionary):
+    def SimpleFunctionWrapper_inner(stack, expr, dictionary):
         return f(stack), expr, dictionary
 
-    return inner
+    return SimpleFunctionWrapper_inner
 
 
 @inscribe
@@ -617,13 +656,10 @@ def branch(stack, expr, dictionary):
                  T
 
     '''
-    (then, (else_, (flag, stack))) = stack
-    if not isinstance(flag, bool):
-        raise NotABoolError(f'Not a Boolean value: {_s(flag)}')
-    if not isinstance(else_, tuple):
-        raise NotAListError(f'Not a list {_s(else_)}')
-    if not isinstance(then, tuple):
-        raise NotAListError(f'Not a list {_s(then)}')
+    then, else_, flag, stack = get_n_items(3, stack)
+    isnt_bool(flag)
+    isnt_stack(else_)
+    isnt_stack(then)
     do = then if flag else else_
     return stack, concat(do, expr), dictionary
 
@@ -641,7 +677,7 @@ def dip(stack, expr, dictionary):
              ... Q x
 
     '''
-    quote, (x, stack) = stack
+    quote, x, stack = get_n_items(2, stack)
     return stack, concat(quote, (x, expr)), dictionary
 
 
@@ -657,7 +693,7 @@ def i(stack, expr, dictionary):
             Q
 
     '''
-    quote, stack = stack
+    quote, stack = get_n_items(1, stack)
     return stack, concat(quote, expr), dictionary
 
 
@@ -679,7 +715,9 @@ def loop(stack, expr, dictionary):
               ...
 
     '''
-    quote, (flag, stack) = stack
+    quote, flag, stack = get_n_items(2, stack)
+    isnt_bool(flag)
+    isnt_stack(quote)
     if flag:
         expr = concat(quote, (quote, (LOOP, expr)))
     return stack, expr, dictionary
@@ -723,7 +761,7 @@ def concat_(stack):
                [a b c d e f]
 
     '''
-    (tos, (second, stack)) = stack
+    tos, second, stack = get_n_items(2, stack)
     return concat(second, tos), stack
 
 
@@ -742,7 +780,8 @@ def cons(stack):
     ( https://en.wikipedia.org/wiki/Cons#Lists ).
     Its inverse operation is uncons.
     '''
-    s0, (a1, stack) = stack
+    s0, a1, stack = get_n_items(2, stack)
+    isnt_stack(s0)
     return ((a1, s0), stack)
 
 
@@ -758,8 +797,8 @@ def dup(stack):
             a a
 
     '''
-    (a1, s23) = stack
-    return (a1, (a1, s23))
+    a1, stack = get_n_items(1, stack)
+    return a1, (a1, stack)
 
 
 @inscribe
@@ -773,8 +812,10 @@ def first(stack):
               a
 
     '''
-    ((a1, s1), s23) = stack
-    return (a1, s23)
+    s0, stack = get_n_items(1, stack)
+    isnt_stack(s0)
+    a1, _ = get_n_items(1, s0)
+    return a1, stack
 
 
 @inscribe
@@ -787,7 +828,7 @@ def pop(stack):
         -----------
 
     '''
-    (_, s23) = stack
+    _, s23 = get_n_items(1, stack)
     return s23
 
 
@@ -802,8 +843,10 @@ def rest(stack):
               [b c]
 
     '''
-    (_, s1), stack = stack
-    return (s1, stack)
+    s0, stack = get_n_items(1, stack)
+    isnt_stack(s0)
+    _, s1 = get_n_items(1, s0)
+    return s1, stack
 
 
 @inscribe
@@ -832,8 +875,9 @@ def swaack(stack):
               6 5 4 [3 2 1]
 
     '''
-    (s1, s0) = stack
-    return (s0, s1)
+    s1, s0 = get_n_items(1, stack)
+    isnt_stack(s1)
+    return s0, s1
 
 
 @inscribe
@@ -847,8 +891,8 @@ def swap(stack):
              b a
 
     '''
-    (a2, (a1, s23)) = stack
-    return (a1, (a2, s23))
+    a2, a1, stack = get_n_items(2, stack)
+    return (a1, (a2, stack))
 
 
 def BinaryLogicWrapper(f):
@@ -857,17 +901,14 @@ def BinaryLogicWrapper(f):
     '''
 
     @wraps(f)
-    def inner(stack, expression, dictionary):
-        try:
-            (a, (b, stack)) = stack
-        except ValueError:
-            raise StackUnderflowError('Not enough values on stack.')
-        if not isinstance(a, bool) or not isinstance(b, bool):
-            raise NotABoolError
+    def BinaryLogicWrapper_inner(stack, expression, dictionary):
+        a, b, stack = get_n_items(2, stack)
+        isnt_bool(a)
+        isnt_bool(b)
         result = f(b, a)
         return (result, stack), expression, dictionary
 
-    return inner
+    return BinaryLogicWrapper_inner
 
 
 def BinaryMathWrapper(func):
@@ -876,22 +917,14 @@ def BinaryMathWrapper(func):
     '''
 
     @wraps(func)
-    def inner(stack, expression, dictionary):
-        try:
-            (a, (b, stack)) = stack
-        except ValueError:
-            raise StackUnderflowError('Not enough values on stack.')
-        if (
-            not isinstance(a, int)
-            or not isinstance(b, int)
-            or isinstance(a, bool)
-            or isinstance(b, bool)
-        ):
-            raise NotAnIntError
+    def BinaryMathWrapper_inner(stack, expression, dictionary):
+        a, b, stack = get_n_items(2, stack)
+        isnt_int(a)
+        isnt_int(b)
         result = func(b, a)
         return (result, stack), expression, dictionary
 
-    return inner
+    return BinaryMathWrapper_inner
 
 
 def UnaryLogicWrapper(f):
@@ -900,14 +933,13 @@ def UnaryLogicWrapper(f):
     '''
 
     @wraps(f)
-    def inner(stack, expression, dictionary):
-        (a, stack) = stack
-        if not isinstance(a, bool):
-            raise NotABoolError
+    def UnaryLogicWrapper_inner(stack, expression, dictionary):
+        a, stack = get_n_items(1, stack)
+        isnt_bool(a)
         result = f(a)
         return (result, stack), expression, dictionary
 
-    return inner
+    return UnaryLogicWrapper_inner
 
 
 def UnaryMathWrapper(f):
@@ -916,14 +948,13 @@ def UnaryMathWrapper(f):
     '''
 
     @wraps(f)
-    def inner(stack, expression, dictionary):
-        (a, stack) = stack
-        if not isinstance(b, int) or isinstance(a, bool):
-            raise NotAnIntError
+    def UnaryMathWrapper_inner(stack, expression, dictionary):
+        a, stack = get_n_items(1, stack)
+        isnt_int(a)
         result = f(a)
         return (result, stack), expression, dictionary
 
-    return inner
+    return UnaryMathWrapper_inner
 
 
 def UnaryWrapper(f):
@@ -932,12 +963,12 @@ def UnaryWrapper(f):
     '''
 
     @wraps(f)
-    def inner(stack, expression, dictionary):
-        (a, stack) = stack
+    def UnaryWrapper_inner(stack, expression, dictionary):
+        a, stack = get_n_items(1, stack)
         result = f(a)
         return (result, stack), expression, dictionary
 
-    return inner
+    return UnaryWrapper_inner
 
 
 for F in (
@@ -1144,7 +1175,7 @@ third rest second
 tuck dup swapd
 unary nullary popd
 uncons ≡ [first] [rest] cleave
-unit [] cons
+unit ≡ [] cons
 unquoted [i] dip
 unswons uncons swap
 while swap nulco dupdipd concat loop
@@ -1168,6 +1199,7 @@ _map2 [infrst] cons dipd roll< swons
 
 if __name__ == '__main__':
     import sys
+
     J = interp if '-q' in sys.argv else repl
     dictionary = initialize()
     Def.load_definitions(DEFS.splitlines(), dictionary)
