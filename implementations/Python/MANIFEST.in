@@ -1,4 +1,3 @@
-include archive/*
 include LICENSE
 include joy/defs.txt
 recursive-include joy *.py

@@ -390,9 +390,7 @@ def get_n_items(n, stack):
         try:
             item, stack = stack
         except ValueError:
-            raise StackUnderflowError(
-                'Not enough values on stack.'
-            ) from None
+            raise StackUnderflowError('Not enough values on stack.') from None
         temp.append(item)
     temp.append(stack)
     return tuple(temp)
@@ -880,9 +878,7 @@ def rest(stack):
     try:
         _, s1 = s0
     except ValueError:
-        raise StackUnderflowError(
-            'Cannot take rest of empty list.'
-        ) from None
+        raise StackUnderflowError('Cannot take rest of empty list.') from None
     return s1, stack
 
 
@@ -1105,100 +1101,160 @@ Start with increment and decrement:
     -- ≡ 1 -
     ++ ≡ 1 +
 
-= ≡ eq
-+ ≡ add
-> ≡ gt
-< ≡ lt
->= ≡ ge
-<= ≡ le
-!= ≡ ne
-<> ≡ ne
+Common symbols for operations:
 
-% ≡ mod
-+ ≡ add
-- ≡ sub
-* ≡ mul
-/ ≡ floordiv
-div ≡ floordiv
+    = ≡ eq
+    + ≡ add
+    > ≡ gt
+    < ≡ lt
+    >= ≡ ge
+    <= ≡ le
+    != ≡ ne
+    <> ≡ ne
+
+    % ≡ mod
+    + ≡ add
+    - ≡ sub
+    * ≡ mul
+    / ≡ floordiv
+    div ≡ floordiv
+
+    & ≡ and
+    | ≡ or
+    ! ≡ not
+
+    << ≡ lshift
+    >> ≡ rshift
 
 
 
 ? ≡ dup bool
+
+
 && ≡ nulco [nullary [false]] dip branch
 || ≡ nulco [nullary] dip [true] branch
+
+
 !- ≡ 0 >=
+
 <{} ≡ [] swap
 <<{} ≡ [] rollup
+
 abs ≡ dup 0 < [] [neg] branch
+
 anamorphism ≡ [pop []] swap [dip swons] genrec
+
 app1 ≡ grba infrst
 app2 ≡ [grba swap grba swap] dip [infrst] cons ii
 app3 ≡ 3 appN
 appN ≡ [grabN] codi map disenstacken
+
 at ≡ drop first
-average ≡ [sum] [size] cleave /
+
 b ≡ [i] dip i
+dipd ≡ [dip] codi
+genrec ≡ [[genrec] ccccons] nullary swons concat ifte
+tailrec ≡ [i] genrec
+ifte ≡ [nullary] dipd swap branch
+ii ≡ [dip] dupdip i
+infra ≡ swons swaack [i] dip swaack
+x ≡ dup i
+pam ≡ [i] map
+
+
+nullary ≡ [stack] dinfrirst
+unary ≡ nullary popd
 binary ≡ unary popd
+ternary ≡ binary popd
+
 ccccons ≡ ccons ccons
 ccons ≡ cons cons
+
 clear ≡ [] swaack pop
+
 cleave ≡ fork popdd
 clop ≡ cleave popdd
+fork ≡ [i] app2
+
 cmp ≡ [[>] swap] dipd [ifte] ccons [=] swons ifte
+
 codi ≡ cons dip
 codireco ≡ codi reco
+
 dinfrirst ≡ dip infrst
-dipd ≡ [dip] codi
+
+
 disenstacken ≡ ? [uncons ?] loop pop
+enstacken ≡ stack [clear] dip
+
 down_to_zero ≡ [0 >] [dup --] while
+
 drop ≡ [rest] times
+
 dupd ≡ [dup] dip
 dupdd ≡ [dup] dipd
 dupdip ≡ dupd dip
 dupdipd ≡ dup dipd
-enstacken ≡ stack [clear] dip
-first ≡ uncons pop
+
+
+      rest ≡ uncons popd
+     first ≡ uncons pop
+    second ≡ rest first
+     third ≡ rest second
+    fourth ≡ rest third
+
+
 flatten ≡ <{} [concat] step
-fork ≡ [i] app2
-fourth ≡ rest third
+
 gcd ≡ true [tuck mod dup 0 >] loop pop
-genrec ≡ [[genrec] ccccons] nullary swons concat ifte
+
+
 grabN ≡ <{} [cons] times
 grba ≡ [stack popd] dip
+
 hypot [sqr] ii + sqrt
-ifte ≡ [nullary] dipd swap branch
-ii ≡ [dip] dupdip i
-infra ≡ swons swaack [i] dip swaack
+
 infrst ≡ infra first
+
 make_generator ≡ [codireco] ccons
+
 manual ≡ [] words [help] step pop
+
 neg ≡ 0 swap -
 not ≡ [true] [false] branch
+
 nulco ≡ [nullary] cons
-nullary ≡ [stack] dinfrirst
 of ≡ swap at
-pam ≡ [i] map
+
 pm ≡ [+] [-] clop
+
 popd ≡ [pop] dip
 popdd ≡ [pop] dipd
 popop ≡ pop pop
 popopop ≡ pop popop
 popopd ≡ [popop] dip
 popopdd ≡ [popop] dipd
+
 product ≡ 1 swap [*] step
+
 quoted ≡ [unit] dip
+
 range ≡ [0 <=] [1 - dup] anamorphism
 range_to_zero ≡ unit [down_to_zero] infra
+
 reco ≡ rest cons
-rest ≡ uncons popd
+
+
 reverse ≡ <{} shunt
+
 roll> ≡ swap swapd
 roll< ≡ swapd swap
 rollup ≡ roll>
 rolldown roll<
+
 rrest ≡ rest rest
+
 run ≡ <{} infra
-second ≡ rest first
 shift ≡ uncons [swons] dip
 shunt ≡ [swons] step
 size ≡ [pop ++] step_zero
@@ -1214,32 +1270,31 @@ swapd ≡ [swap] dip
 swons ≡ swap cons
 swoncat ≡ swap concat
 sqr ≡ dup mul
-tailrec ≡ [i] genrec
 take ≡ <<{} [shift] times pop
-ternary ≡ binary popd
-third ≡ rest second
 tuck ≡ dup swapd
-unary ≡ nullary popd
 uncons ≡ [first] [rest] cleave
 unit ≡ [] cons
 unquoted ≡ [i] dip
 unswons ≡ uncons swap
 while ≡ swap nulco dupdipd concat loop
-x ≡ dup i
+
 step ≡ [_step0] x
 _step0 ≡ _step1 [popopop] [_stept] branch
 _step1 ≡ [?] dipd roll<
 _stept ≡ [uncons] dipd [dupdipd] dip x
+
 times ≡ [_times0] x
 _times0 ≡ _times1 [popopop] [_timest] branch
 _times1 ≡ [dup 0 >] dipd roll<
 _timest ≡ [[--] dip dupdipd] dip x
+
 map ≡ [_map0] cons [[] [_map?] [_mape]] dip tailrec
 _map? ≡ pop bool not
 _mape ≡ popd reverse
 _map0 ≡ [_map1] dipd _map2
 _map1 ≡ stackd shift
 _map2 ≡ [infrst] cons dipd roll< swons
+
 '''
 
 
