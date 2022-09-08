@@ -1289,6 +1289,7 @@ def isnt_int(i):
     '''
     if not isinstance(i, int) or isinstance(i, bool):
         raise NotAnIntError(f'Not an integer: {_s(i)}')
+    return i
 
 
 def isnt_bool(b):
@@ -1297,6 +1298,7 @@ def isnt_bool(b):
     '''
     if not isinstance(b, bool):
         raise NotABoolError(f'Not a Boolean value: {_s(b)}')
+    return b
 
 
 def isnt_stack(el):
@@ -1305,6 +1307,15 @@ def isnt_stack(el):
     '''
     if not isinstance(el, tuple):
         raise NotAListError(f'Not a list: {_s(el)}')
+    return el
+
+
+# Put these into the dictionary so users can, uh, use them.
+# Not as decorators because we want to use the unwrapped
+# functions in our python code.
+inscribe(UnaryWrapper(isnt_int))
+inscribe(UnaryWrapper(isnt_bool))
+inscribe(UnaryWrapper(isnt_stack))
 
 
 if __name__ == '__main__':
