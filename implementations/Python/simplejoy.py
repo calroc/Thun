@@ -46,7 +46,7 @@ import operator
 '''
 
 
-def joy(stack, expr, dictionary):
+def joy(stack, expression, dictionary):
     '''
     Evaluate a Joy expression on a stack.
 
@@ -62,6 +62,7 @@ def joy(stack, expr, dictionary):
     :rtype: (stack, (), dictionary)
 
     '''
+    expr = Expression(expression)
     while expr:
         term, expr = expr
         if isinstance(term, Symbol):
@@ -210,6 +211,66 @@ def reversed_stack(stack):
     Return list_reverseiterator object for a stack.
     '''
     return reversed(list(iter_stack(stack)))
+
+
+'''
+███████╗██╗  ██╗██████╗ ██████╗ ███████╗███████╗███████╗██╗ ██████╗ ███╗   ██╗
+██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝██║██╔═══██╗████╗  ██║
+█████╗   ╚███╔╝ ██████╔╝██████╔╝█████╗  ███████╗███████╗██║██║   ██║██╔██╗ ██║
+██╔══╝   ██╔██╗ ██╔═══╝ ██╔══██╗██╔══╝  ╚════██║╚════██║██║██║   ██║██║╚██╗██║
+███████╗██╔╝ ██╗██║     ██║  ██║███████╗███████║███████║██║╚██████╔╝██║ ╚████║
+╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+'''
+
+
+class Expression:
+    '''
+    As elegant as it is to model the expression as a stack, it's not very
+    efficient, as concatenating definitions and other quoted programs to
+    the expression is a common and expensive operation.
+
+    Instead, let's keep a stack of sub-expressions, reading from them
+    one-by-one, and prepending new sub-expressions to the stack rather than
+    concatenating them.
+    '''
+
+    def __init__(self, initial_expression=()):
+        self.current = initial_expression
+        self.stack = []
+
+    def __iter__(self):
+        return iter((self.__next__(), self))
+
+    def __next__(self):
+        if self.current:
+            (item, self.current) = self.current
+        elif self.stack:
+            (item, self.current) = self.stack.pop()
+        else:
+            raise StopIteration
+        return item
+
+    def prepend(self, quoted_program):
+        if not quoted_program:
+            return
+        if self.current:
+            self.stack.append(self.current)
+        self.current = quoted_program
+
+    def __bool__(self):
+        return bool(self.current or self.stack)
+
+    def __str__(self):
+        return ' '.join(
+            map(
+                _s,
+                chain.from_iterable(
+                    map(
+                        iter_stack, reversed(self.stack + [self.current])
+                    )
+                ),
+            )
+        )
 
 
 '''
@@ -601,8 +662,8 @@ def branch(stack, expr, dictionary):
     isnt_bool(flag)
     isnt_stack(else_)
     isnt_stack(then)
-    do = then if flag else else_
-    return stack, concat(do, expr), dictionary
+    expr.prepend(then if flag else else_)
+    return stack, expr, dictionary
 
 
 @inscribe
@@ -619,7 +680,9 @@ def dip(stack, expr, dictionary):
 
     '''
     quote, x, stack = get_n_items(2, stack)
-    return stack, concat(quote, (x, expr)), dictionary
+    expr.prepend((x, ()))
+    expr.prepend(quote)
+    return stack, expr, dictionary
 
 
 @inscribe
@@ -635,7 +698,8 @@ def i(stack, expr, dictionary):
 
     '''
     quote, stack = get_n_items(1, stack)
-    return stack, concat(quote, expr), dictionary
+    expr.prepend(quote)
+    return stack, expr, dictionary
 
 
 LOOP = Symbol('loop')
@@ -660,16 +724,9 @@ def loop(stack, expr, dictionary):
     isnt_bool(flag)
     isnt_stack(quote)
     if flag:
-        expr = concat(quote, (quote, (LOOP, expr)))
+        expr.prepend((quote, (LOOP, ())))
+        expr.prepend(quote)
     return stack, expr, dictionary
-
-
-@inscribe
-def halt(stack, expr, dictionary):
-    '''
-    Put the pending expression onto the stack and halt.
-    '''
-    return (expr, stack), (), dictionary
 
 
 @inscribe
@@ -1006,10 +1063,10 @@ class Def(object):
     def __init__(self, name, body):
         self.__doc__ = f'{name} ≡ {expression_to_string(body)}'
         self.__name__ = name
-        self.body = tuple(iter_stack(body))
+        self.body = body
 
     def __call__(self, stack, expr, dictionary):
-        expr = list_to_stack(self.body, expr)
+        expr.prepend(self.body)
         return stack, expr, dictionary
 
     @classmethod
