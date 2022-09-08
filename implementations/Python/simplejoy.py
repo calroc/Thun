@@ -499,8 +499,12 @@ def repl(stack=(), dictionary=None):
                 break
             try:
                 stack, _, dictionary = run(text, stack, dictionary)
+            except SystemExit as e:
+                raise SystemExit from e
             except:
                 print_exc()
+    except SystemExit as e:
+        raise SystemExit from e
     except:
         print_exc()
     print()
@@ -543,9 +547,13 @@ def interp(stack=(), dictionary=None):
                 print(e)
             except NotAListError as e:
                 print(e)
+            except SystemExit as e:
+                raise SystemExit from e
             except:
                 print_exc()
             print(stack_to_string(stack))
+    except SystemExit as e:
+        raise SystemExit from e
     except:
         print_exc()
     return stack
@@ -721,6 +729,22 @@ def loop(stack, expr, dictionary):
     if flag:
         expr = concat(quote, (quote, (LOOP, expr)))
     return stack, expr, dictionary
+
+
+@inscribe
+def halt(stack, expr, dictionary):
+    '''
+    Put the pending expression onto the stack and halt.
+    '''
+    return (expr, stack), (), dictionary
+
+
+@inscribe
+def quit(stack, expr, dictionary):
+    '''
+    Stop the interpreter.
+    '''
+    raise SystemExit
 
 
 '''
@@ -1218,4 +1242,7 @@ if __name__ == '__main__':
     J = interp if '-q' in sys.argv else repl
     dictionary = initialize()
     Def.load_definitions(DEFS.splitlines(), dictionary)
-    stack = J(dictionary=dictionary)
+    try:
+        stack = J(dictionary=dictionary)
+    except SystemExit:
+        pass
