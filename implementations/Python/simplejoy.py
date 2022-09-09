@@ -323,6 +323,12 @@ token_scanner = Scanner(
 )
 
 
+class ParseError(ValueError):
+    '''
+    Raised when there is a error while parsing text.
+    '''
+
+
 class Symbol(str):
     '''
     A string class that represents Joy function names.
@@ -681,6 +687,7 @@ def dip(stack, expr, dictionary):
 
     '''
     quote, x, stack = get_n_items(2, stack)
+    isnt_stack(quote)
     expr.prepend((x, ()))
     expr.prepend(quote)
     return stack, expr, dictionary
@@ -699,6 +706,7 @@ def i(stack, expr, dictionary):
 
     '''
     quote, stack = get_n_items(1, stack)
+    isnt_stack(quote)
     expr.prepend(quote)
     return stack, expr, dictionary
 
@@ -1310,12 +1318,6 @@ class NotAnIntError(Exception):
 
 class NotABoolError(Exception):
     pass
-
-
-class ParseError(ValueError):
-    '''
-    Raised when there is a error while parsing text.
-    '''
 
 
 class StackUnderflowError(Exception):
