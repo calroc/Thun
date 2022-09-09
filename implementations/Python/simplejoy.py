@@ -28,6 +28,31 @@
 
 This script implements an interpreter for a dialect of Joy.
 
+Joy is a programming language created by Manfred von Thun that is easy to
+use and understand and has many other nice properties. This Python
+package implements an interpreter for a dialect of Joy that attempts to
+stay very close to the spirit of Joy but does not precisely match the
+behaviour of the original version(s) written in C. The main difference
+between Thun and the originals, other than being written in Python, is
+that it works by the “Continuation-Passing Style”.
+
+Here is an example of Joy code:
+
+
+    [   [[abs] ii <=]
+        [
+            [<>] [pop !-] ||
+        ] &&
+    ]
+    [[    !-] [[++]] [[--]] ifte dip]
+    [[pop !-]  [--]   [++]  ifte    ]
+    ifte
+
+This function accepts two integers on the stack and increments or
+decrements one of them such that the new pair of numbers is the next
+coordinate pair in a square spiral (like the kind used to construct an
+Ulam Spiral).
+
 '''
 from functools import wraps
 from inspect import getdoc
@@ -43,6 +68,12 @@ import operator
 ██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗██╔═══╝ ██╔══██╗██╔══╝     ██║   ██╔══╝  ██╔══██╗
 ██║██║ ╚████║   ██║   ███████╗██║  ██║██║     ██║  ██║███████╗   ██║   ███████╗██║  ██║
 ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+
+The joy() interpreter function is extrememly simple. It accepts a stack,
+an expression, and a dictionary, and it iterates through the expression
+putting values onto the stack and delegating execution to functions which
+it looks up in the dictionary.
+
 '''
 
 
@@ -296,6 +327,8 @@ literal value (integer, Boolean, or quoted Joy expression) or a function symbol.
 Function symbols are sequences of non-blanks and cannot contain square
 brackets.   Terms must be separated by blanks, which can be omitted
 around square brackets.
+
+
 '''
 
 
