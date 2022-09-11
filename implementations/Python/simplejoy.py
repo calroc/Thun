@@ -1210,6 +1210,8 @@ not ≡ [true] [false] branch
 nulco ≡ [nullary] cons
 of ≡ swap at
 
+over ≡ [dup] dip swap
+
 pm ≡ [+] [-] clop
 
 popd ≡ [pop] dip
