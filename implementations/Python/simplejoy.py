@@ -326,8 +326,6 @@ literal value (integer, Boolean, or quoted Joy expression) or a function symbol.
 Function symbols are sequences of non-blanks and cannot contain square
 brackets.   Terms must be separated by blanks, which can be omitted
 around square brackets.
-
-
 '''
 
 
@@ -360,16 +358,9 @@ def text_to_expression(text):
     :rtype: stack
     :raises ParseError: if the parse fails.
     '''
-    return _parse(text.replace('[', ' [ ').replace(']', ' ] ').split())
-
-
-def _parse(tokens):
-    '''
-    Return a stack/list expression of the tokens.
-    '''
     frame = []
     stack = []
-    for tok in tokens:
+    for tok in text.replace('[', ' [ ').replace(']', ' ] ').split():
         if tok == '[':
             stack.append(frame)
             frame = []
