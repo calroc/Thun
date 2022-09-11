@@ -307,6 +307,9 @@ def joy(stack, expression, dictionary):
     '''
     expr = push_quote(expression)  # We keep a stack-of-stacks, see below.
     while expr:
+        print(
+            f'{stack_to_string(stack)} • {expr_to_string(expr)}'
+            )
         term, expr = next_term(expr)
         if isinstance(term, Symbol):
             try:
@@ -623,6 +626,13 @@ def expression_to_string(expression):
     :rtype: str
     '''
     return _stack_to_string(expression, iter_stack)
+
+
+def expr_to_string(expr):
+    '''
+    Return a "pretty print" string for a stack-of-stacks expression.
+    '''
+    return ' '.join(map(expression_to_string, iter_stack(expr)))
 
 
 def _stack_to_string(stack, iterator):
@@ -1329,13 +1339,675 @@ inscribe(UnaryWrapper(isnt_bool))
 inscribe(UnaryWrapper(isnt_stack))
 
 
+'''
+███████╗██╗  ██╗████████╗██████╗  █████╗
+██╔════╝╚██╗██╔╝╚══██╔══╝██╔══██╗██╔══██╗
+█████╗   ╚███╔╝    ██║   ██████╔╝███████║
+██╔══╝   ██╔██╗    ██║   ██╔══██╗██╔══██║
+███████╗██╔╝ ██╗   ██║   ██║  ██║██║  ██║
+╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝
+'''
+
+
+def dnd(stack, from_index, to_index):
+    '''
+    Given a stack and two indices return a rearranged stack.
+    First remove the item at from_index and then insert it at to_index,
+    the second index is relative to the stack after removal of the item
+    at from_index.
+
+    This function reuses all of the items and as much of the stack as it
+    can.  It's meant to be used by remote clients to support drag-n-drop
+    rearranging of the stack from e.g. the StackListbox.
+    '''
+    assert 0 <= from_index
+    assert 0 <= to_index
+    if from_index == to_index:
+        return stack
+    head, n = [], from_index
+    while True:
+        item, stack = stack
+        n -= 1
+        if n < 0:
+            break
+        head.append(item)
+    assert len(head) == from_index
+    # now we have two cases:
+    diff = from_index - to_index
+    if diff < 0:
+        # from < to
+        # so the destination index is still in the stack
+        while diff:
+            h, stack = stack
+            head.append(h)
+            diff += 1
+    else:
+        # from > to
+        # so the destination is in the head list
+        while diff:
+            stack = head.pop(), stack
+            diff -= 1
+    stack = item, stack
+    while head:
+        stack = head.pop(), stack
+    return stack
+
+
+def pick(stack, n):
+    '''
+    Return the nth item on the stack.
+
+    :param stack stack: A stack.
+    :param int n: An index into the stack.
+    :raises ValueError: if ``n`` is less than zero.
+    :raises IndexError: if ``n`` is equal to or greater than the length of ``stack``.
+    :rtype: whatever
+    '''
+    if n < 0:
+        raise ValueError
+    while True:
+        try:
+            item, stack = stack
+        except ValueError:
+            raise IndexError
+        n -= 1
+        if n < 0:
+            break
+    return item
+
+
+@inscribe
+def inscribe_(stack, expression, dictionary):
+    '''
+    Create a new Joy function definition in the Joy dictionary.  A
+    definition is given as a quote with a name followed by a Joy
+    expression. for example:
+
+        [sqr dup mul] inscribe
+
+    '''
+    (name, body), stack = stack
+    inscribe(Def(name, body), dictionary)
+    return stack, expression, dictionary
+
+
+@inscribe
+@SimpleFunctionWrapper
+def getitem(stack):
+    '''
+    ::
+
+        getitem == drop first
+
+    Expects an integer and a quote on the stack and returns the item at the
+    nth position in the quote counting from 0.
+    ::
+
+           [a b c d] 0 getitem
+        -------------------------
+            a
+
+    '''
+    n, (Q, stack) = stack
+    return pick(Q, n), stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def drop(stack):
+    '''
+    ::
+
+        drop == [rest] times
+
+    Expects an integer and a quote on the stack and returns the quote with
+    n items removed off the top.
+    ::
+
+           [a b c d] 2 drop
+        ----------------------
+               [c d]
+
+    '''
+    n, (Q, stack) = stack
+    while n > 0:
+        try:
+            _, Q = Q
+        except ValueError:
+            raise StackUnderflowError
+        n -= 1
+    return Q, stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def take(stack):
+    '''
+    Expects an integer and a quote on the stack and returns the quote with
+    just the top n items in reverse order (because that's easier and you can
+    use reverse if needed.)
+    ::
+
+           [a b c d] 2 take
+        ----------------------
+               [b a]
+
+    '''
+    n, (Q, stack) = stack
+    x = ()
+    while n > 0:
+        try:
+            item, Q = Q
+        except ValueError:
+            raise StackUnderflowError
+        x = item, x
+        n -= 1
+    return x, stack
+
+
+@inscribe
+def gcd2(stack, expression, dictionary):
+    '''Compiled GCD function.'''
+    (v1, (v2, stack)) = stack
+    tos = True
+    while tos:
+        v3 = v2 % v1
+        tos = v3 > 0
+        (v1, (v2, stack)) = (v3, (v1, stack))
+    return (v2, stack), expression, dictionary
+
+
+@inscribe
+@SimpleFunctionWrapper
+def choice(stack):
+    '''
+    Use a Boolean value to select one of two items.
+    ::
+
+           A B false choice
+        ----------------------
+           A
+
+
+           A B true choice
+        ---------------------
+             B
+
+    '''
+    (if_, (then, (else_, stack))) = stack
+    assert isinstance(if_, bool), repr(if_)
+    return then if if_ else else_, stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def select(stack):
+    '''
+    Use a Boolean value to select one of two items from a sequence.
+    ::
+
+           [A B] false select
+        ------------------------
+            A
+
+
+           [A B] true select
+        -----------------------
+              B
+
+    The sequence can contain more than two items but not fewer.
+    Currently Python semantics are used to evaluate the "truthiness" of the
+    Boolean value (so empty string, zero, etc. are counted as false, etc.)
+    '''
+    (flag, (choices, stack)) = stack
+    (else_, (then, _)) = choices
+    return then if flag else else_, stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def max_(S):
+    '''Given a list find the maximum.'''
+    tos, stack = S
+    return max(iter_stack(tos)), stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def min_(S):
+    '''Given a list find the minimum.'''
+    tos, stack = S
+    return min(iter_stack(tos)), stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def sum_(S):
+    '''
+    Given a quoted sequence of numbers return the sum.
+    ::
+
+        sum == 0 swap [+] step
+
+    '''
+    tos, stack = S
+    return sum(iter_stack(tos)), stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def remove(S):
+    '''
+    Expects an item on the stack and a quote under it and removes that item
+    from the the quote.  The item is only removed once.  If the list is
+    empty or the item isn't in the list then the list is unchanged.
+    ::
+
+           [1 2 3 1] 1 remove
+        ------------------------
+             [2 3 1]
+
+    '''
+    (item, (quote, stack)) = S
+    return _remove(item, quote), stack
+
+
+def _remove(item, quote):
+    try: head, tail = quote
+    except ValueError: return quote
+    return tail if head == item else (head, _remove(item, tail))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def unique(S):
+    '''Given a list remove duplicate items.'''
+    tos, stack = S
+    I = list(iter_stack(tos))
+    return list_to_stack(sorted(set(I), key=I.index)), stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def sort_(S):
+    '''Given a list return it sorted.'''
+    tos, stack = S
+    return list_to_stack(sorted(iter_stack(tos))), stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def disenstacken(stack):
+    '''
+    The disenstacken operator expects a list on top of the stack and makes that
+    the stack discarding the rest of the stack.
+    '''
+    return stack[0]
+
+
+@inscribe
+@SimpleFunctionWrapper
+def reverse(S):
+    '''
+    Reverse the list on the top of the stack.
+    ::
+
+        reverse == [] swap shunt
+    '''
+    (tos, stack) = S
+    res = ()
+    for term in iter_stack(tos):
+        res = term, res
+    return res, stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def shunt(stack):
+    '''
+    Like concat but reverses the top list into the second.
+    ::
+
+        shunt == [swons] step == reverse swap concat
+
+           [a b c] [d e f] shunt
+        ---------------------------
+               [f e d a b c]
+
+    '''
+    (tos, (second, stack)) = stack
+    while tos:
+        term, tos = tos
+        second = term, second
+    return second, stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def zip_(S):
+    '''
+    Replace the two lists on the top of the stack with a list of the pairs
+    from each list.  The smallest list sets the length of the result list.
+    '''
+    (tos, (second, stack)) = S
+    accumulator = [
+        (a, (b, ()))
+        for a, b in zip(iter_stack(tos), iter_stack(second))
+        ]
+    return list_to_stack(accumulator), stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def succ(S):
+    '''Increment TOS.'''
+    (tos, stack) = S
+    return tos + 1, stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def pred(S):
+    '''Decrement TOS.'''
+    (tos, stack) = S
+    return tos - 1, stack
+
+
+@inscribe
+@SimpleFunctionWrapper
+def pm(stack):
+    '''
+    Plus or minus
+    ::
+
+           a b pm
+        -------------
+           a+b a-b
+
+    '''
+    a, (b, stack) = stack
+    p, m, = b + a, b - a
+    return m, (p, stack)
+
+
+@inscribe
+def sharing(stack, expression, dictionary):
+    '''Print redistribution information.'''
+    print("You may convey verbatim copies of the Program's source code as"
+    ' you receive it, in any medium, provided that you conspicuously'
+    ' and appropriately publish on each copy an appropriate copyright'
+    ' notice; keep intact all notices stating that this License and'
+    ' any non-permissive terms added in accord with section 7 apply'
+    ' to the code; keep intact all notices of the absence of any'
+    ' warranty; and give all recipients a copy of this License along'
+    ' with the Program.'
+    ' You should have received a copy of the GNU General Public License'
+    ' along with Thun.  If not see <http://www.gnu.org/licenses/>.')
+    return stack, expression, dictionary
+
+
+@inscribe
+def warranty(stack, expression, dictionary):
+    '''Print warranty information.'''
+    print('THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY'
+    ' APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE'
+    ' COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM'
+    ' "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR'
+    ' IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES'
+    ' OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE'
+    ' ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS'
+    ' WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE'
+    ' COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.')
+    return stack, expression, dictionary
+
+
+@inscribe
+def x(stack, expr, dictionary):
+    '''
+    ::
+
+        x == dup i
+
+        ... [Q] x = ... [Q] dup i
+        ... [Q] x = ... [Q] [Q] i
+        ... [Q] x = ... [Q]  Q
+
+    '''
+    quote, _ = stack
+    isnt_stack(quote)
+    return stack, push_quote(quote, expr), dictionary
+
+
+@inscribe
+def b(stack, expr, dictionary):
+    '''
+    ::
+
+        b == [i] dip i
+
+        ... [P] [Q] b == ... [P] i [Q] i
+        ... [P] [Q] b == ... P Q
+
+    '''
+    q, (p, (stack)) = stack
+    isnt_stack(q)
+    isnt_stack(p)
+    expr = push_quote(q, expr)
+    expr = push_quote(p, expr)
+    return stack, expr, dictionary
+
+
+@inscribe
+def ii(stack, expr, dictionary):
+    '''
+    ::
+
+           ... a [Q] ii
+        ------------------
+            ... Q a Q
+
+    '''
+    quote, (a, stack) = stack
+    isnt_stack(quote)
+    expr = push_quote((a, quote), expr)
+    expr = push_quote(quote, expr)
+    return stack, expr, dictionary
+
+
+@inscribe
+def dupdip(stack, expr, dictionary):
+    '''
+    ::
+
+        [F] dupdip == dup [F] dip
+
+        ... a [F] dupdip
+        ... a dup [F] dip
+        ... a a   [F] dip
+        ... a F a
+
+    '''
+    quote, stack = stack
+    isnt_stack(quote)
+    a = stack[0]
+    expr = push_quote((a, ()), expr)
+    expr = push_quote(quote, expr)
+    return stack, expr, dictionary
+
+
+S_swaack = Symbol('swaack')
+
+
+@inscribe
+def infra(stack, expr, dictionary):
+    '''
+    Accept a quoted program and a list on the stack and run the program
+    with the list as its stack.  Does not affect the rest of the stack.
+    ::
+
+           ... [a b c] [Q] . infra
+        -----------------------------
+            c b a . Q [...] swaack
+
+    '''
+    quote, aggregate, stack = get_n_items(2, stack)
+    isnt_stack(quote)
+    isnt_stack(aggregate)
+    expr = push_quote((stack, (S_swaack, ())), expr)
+    expr = push_quote(quote, expr)
+    return aggregate, expr, dictionary
+
+
+S_genrec = Symbol('genrec')
+S_ifte = Symbol('ifte')
+
+
+@inscribe
+def genrec(stack, expr, dictionary):
+    '''
+    General Recursion Combinator.
+    ::
+
+                  [if] [then] [rec1] [rec2] genrec
+        ---------------------------------------------------------------------
+           [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte
+
+    From "Recursion Theory and Joy" (j05cmp.html) by Manfred von Thun:
+    "The genrec combinator takes four program parameters in addition to
+    whatever data parameters it needs. Fourth from the top is an if-part,
+    followed by a then-part. If the if-part yields true, then the then-part
+    is executed and the combinator terminates. The other two parameters are
+    the rec1-part and the rec2-part. If the if-part yields false, the
+    rec1-part is executed. Following that the four program parameters and
+    the combinator are again pushed onto the stack bundled up in a quoted
+    form. Then the rec2-part is executed, where it will find the bundled
+    form. Typically it will then execute the bundled form, either with i or
+    with app2, or some other combinator."
+
+    The way to design one of these is to fix your base case [then] and the
+    test [if], and then treat rec1 and rec2 as an else-part "sandwiching"
+    a quotation of the whole function.
+
+    For example, given a (general recursive) function 'F':
+    ::
+
+        F == [I] [T] [R1] [R2] genrec
+
+    If the [I] if-part fails you must derive R1 and R2 from:
+    ::
+
+        ... R1 [F] R2
+
+    Just set the stack arguments in front, and figure out what R1 and R2
+    have to do to apply the quoted [F] in the proper way.  In effect, the
+    genrec combinator turns into an ifte combinator with a quoted copy of
+    the original definition in the else-part:
+    ::
+
+        F == [I] [T] [R1]   [R2] genrec
+          == [I] [T] [R1 [F] R2] ifte
+
+    Primitive recursive functions are those where R2 == i.
+    ::
+
+        P == [I] [T] [R] tailrec
+          == [I] [T] [R [P] i] ifte
+          == [I] [T] [R P] ifte
+
+    '''
+    rec2, rec1, then, if_, stack = get_n_items(4, stack)
+    isnt_stack(if_)
+    isnt_stack(then)
+    isnt_stack(rec1)
+    isnt_stack(rec2)
+    F = (if_, (then, (rec1, (rec2, (S_genrec, ())))))
+    else_ = concat(rec1, (F, rec2))
+    stack = (else_, (then, (if_, stack)))
+    expr = push_quote((S_ifte, ()), expr)
+    return stack, expr, dictionary
+
+
+S_infra = Symbol('infra')
+S_first = Symbol('first')
+
+
+@inscribe
+def map_(stack, expr, dictionary):
+    '''
+    Run the quoted program on TOS on the items in the list under it, push a
+    new list with the results in place of the program and original list.
+    '''
+    quote, aggregate, stack = get_n_items(2, stack)
+    isnt_stack(quote)
+    isnt_stack(aggregate)
+    if not aggregate:
+        return (aggregate, stack), expr, dictionary
+    batch = ()
+    for term in iter_stack(aggregate):
+        s = term, stack
+        batch = (s, (quote, (S_infra, (S_first, batch))))
+    stack = (batch, ((), stack))
+    expr = push_quote((S_infra, ()), expr)
+    return stack, expr, dictionary
+
+
+S_primrec = Symbol('primrec')
+
+
+@inscribe
+def primrec(stack, expr, dictionary):
+    '''
+    From the "Overview of the language JOY":
+
+    > The primrec combinator expects two quoted programs in addition to a
+    data parameter. For an integer data parameter it works like this: If
+    the data parameter is zero, then the first quotation has to produce
+    the value to be returned. If the data parameter is positive then the
+    second has to combine the data parameter with the result of applying
+    the function to its predecessor.::
+
+        5  [1]  [*]  primrec
+
+    > Then primrec tests whether the top element on the stack (initially
+    the 5) is equal to zero. If it is, it pops it off and executes one of
+    the quotations, the [1] which leaves 1 on the stack as the result.
+    Otherwise it pushes a decremented copy of the top element and
+    recurses. On the way back from the recursion it uses the other
+    quotation, [*], to multiply what is now a factorial on top of the
+    stack by the second element on the stack.::
+
+        n [Base] [Recur] primrec
+
+           0 [Base] [Recur] primrec
+        ------------------------------
+              Base
+
+             n [Base] [Recur] primrec
+        ------------------------------------------ n > 0
+           n (n-1) [Base] [Recur] primrec Recur
+
+    '''
+    recur, base, n, stack = get_n_items(3, stack)
+    isnt_stack(recur)
+    isnt_stack(base)
+    if n <= 0:
+        expr = push_quote(base, expr)
+    else:
+        expr = push_quote(recur, expr)
+        expr = push_quote((S_primrec, ()), expr)
+        stack = recur, (base, (n - 1, (n, stack)))
+    return stack, expr, dictionary
+
+
 if __name__ == '__main__':
     import sys
 
     J = interp if '-q' in sys.argv else repl
     dictionary = initialize()
     Def.load_definitions(__doc__.splitlines(), dictionary)
-    try:
-        stack = J(dictionary=dictionary)
-    except SystemExit:
-        pass
+##    try:
+##        stack = J(dictionary=dictionary)
+##    except SystemExit:
+##        pass
+    stack, _ = run("5  [1]  [*]  primrec", (), dictionary)
+    print(stack_to_string(stack), '•')
