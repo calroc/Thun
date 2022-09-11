@@ -56,7 +56,6 @@ Ulam Spiral).
 '''
 from functools import wraps
 from inspect import getdoc
-from re import Scanner
 from traceback import print_exc
 import operator
 
@@ -335,27 +334,6 @@ around square brackets.
 JOY_BOOL_LITERALS = _F, _T = 'false', 'true'
 
 
-BRACKETS = r'\[|\]'  # Left or right square bracket.
-BLANKS = r'\s+'  # One-or-more blankspace.
-WORDS = (
-    '['  # Character class
-    '^'  # not a
-    '['  # left square bracket nor a
-    r'\]'  # right square bracket (escaped so it doesn't close the character class)
-    r'\s'  # nor blankspace
-    ']+'  # end character class, one-or-more.
-)
-
-
-token_scanner = Scanner(
-    [
-        (BRACKETS, lambda _, token: token),
-        (BLANKS, None),
-        (WORDS, lambda _, token: token),
-    ]
-)
-
-
 class ParseError(ValueError):
     '''
     Raised when there is a error while parsing text.
@@ -382,23 +360,7 @@ def text_to_expression(text):
     :rtype: stack
     :raises ParseError: if the parse fails.
     '''
-    return _parse(_tokenize(text))
-
-
-def _tokenize(text):
-    '''Convert a text into a stream of tokens.
-
-    Converts function names to Symbols.
-
-    Raise ParseError (with some of the failing text) if the scan fails.
-    '''
-    tokens, rest = token_scanner.scan(text)
-    if rest:
-        raise ParseError(
-            'Scan failed at position %i, %r'
-            % (len(text) - len(rest), rest[:10])
-        )
-    return tokens
+    return _parse(text.replace('[', ' [ ').replace(']', ' ] ').split())
 
 
 def _parse(tokens):
