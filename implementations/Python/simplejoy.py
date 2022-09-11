@@ -93,8 +93,7 @@ def joy(stack, expression, dictionary):
 
     '''
     expr = Expression(expression)
-    while expr:
-        term, expr = expr
+    for term in expr:
         if isinstance(term, Symbol):
             try:
                 func = dictionary[term]
@@ -162,6 +161,10 @@ tuples used in expressions where they would be redundant.)
 .. _cons list: https://en.wikipedia.org/wiki/Cons#Lists
 
 '''
+
+
+class StackUnderflowError(Exception):
+    pass
 
 
 def list_to_stack(el, stack=()):
@@ -269,7 +272,7 @@ class Expression:
         self.stack = []
 
     def __iter__(self):
-        return iter((self.__next__(), self))
+        return self
 
     def __next__(self):
         if self.current:
@@ -507,8 +510,7 @@ def run(text, stack, dictionary):
     :rtype: (stack, (), dictionary)
 
     '''
-    expr = text_to_expression(text)
-    return joy(stack, expr, dictionary)
+    return joy(stack, text_to_expression(text), dictionary)
 
 
 def interp(stack=(), dictionary=None):
@@ -1305,10 +1307,6 @@ class NotAnIntError(Exception):
 
 
 class NotABoolError(Exception):
-    pass
-
-
-class StackUnderflowError(Exception):
     pass
 
 
