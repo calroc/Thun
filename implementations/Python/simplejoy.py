@@ -89,17 +89,18 @@ def joy(stack, expression, dictionary):
     :param stack expression: The expression to evaluate.
     :param dict dictionary: A ``dict`` mapping names to Joy functions.
 
-    :rtype: (stack, (), dictionary)
+    :rtype: (stack, dictionary)
 
     '''
-    expr = Expression(expression)
-    for term in expr:
+    expr = push_quote(expression)  # We keep a stack-of-stacks, see below.
+    while expr:
+        term, expr = next_term(expr)
         if isinstance(term, Symbol):
             try:
                 func = dictionary[term]
             except KeyError:
                 raise UnknownSymbolError(term) from None
-            stack, dictionary = func(stack, expr, dictionary)
+            stack, expr, dictionary = func(stack, expr, dictionary)
         else:
             stack = term, stack
     return stack, dictionary
@@ -214,7 +215,7 @@ def concat(quote, expression):
 
     ## return (quote[0], concat(quote[1], expression)) if quote else expression
     # :raises RuntimeError: if quote is larger than sys.getrecursionlimit().
-    # This is the fastest implementation but it would trigger
+    # This is faster implementation but it would trigger
     # RuntimeError: maximum recursion depth exceeded
     # on quotes longer than sys.getrecursionlimit().
 
@@ -253,57 +254,31 @@ def reversed_stack(stack):
 ██╔══╝   ██╔██╗ ██╔═══╝ ██╔══██╗██╔══╝  ╚════██║╚════██║██║██║   ██║██║╚██╗██║
 ███████╗██╔╝ ██╗██║     ██║  ██║███████╗███████║███████║██║╚██████╔╝██║ ╚████║
 ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+As elegant as it is to model the expression as a stack, it's not very
+efficient, as concatenating definitions and other quoted programs to
+the expression is a common and expensive operation.
+
+Instead, let's keep a stack of sub-expressions, reading from them
+one-by-one, and prepending new sub-expressions to the stack rather than
+concatenating them.
 '''
 
 
-class Expression:
+def push_quote(quote, expression=()):
     '''
-    As elegant as it is to model the expression as a stack, it's not very
-    efficient, as concatenating definitions and other quoted programs to
-    the expression is a common and expensive operation.
-
-    Instead, let's keep a stack of sub-expressions, reading from them
-    one-by-one, and prepending new sub-expressions to the stack rather than
-    concatenating them.
+    Put the quoted program onto the stack-of-stacks.
     '''
+    return (quote, expression) if quote else expression
 
-    def __init__(self, initial_expression=()):
-        self.current = initial_expression
-        self.stack = []
 
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.current:
-            (item, self.current) = self.current
-        elif self.stack:
-            (item, self.current) = self.stack.pop()
-        else:
-            raise StopIteration
-        return item
-
-    def prepend(self, quoted_program):
-        if not quoted_program:
-            return
-        if self.current:
-            self.stack.append(self.current)
-        self.current = quoted_program
-
-    def __bool__(self):
-        return bool(self.current or self.stack)
-
-    def __str__(self):
-        return ' '.join(
-            map(
-                _s,
-                chain.from_iterable(
-                    map(
-                        iter_stack, reversed(self.stack + [self.current])
-                    )
-                ),
-            )
-        )
+def next_term(expression):
+    '''
+    Return the next term from the expression and the new expression.
+    Raises ValueError if called on an empty expression.
+    '''
+    (item, quote), expression = expression
+    return item, push_quote(quote, expression)
 
 
 '''
@@ -367,25 +342,29 @@ def text_to_expression(text):
         if tok == '[':
             stack.append(frame)
             frame = []
-        elif tok == ']':
-            v = frame
+            continue
+
+        if tok == ']':
+            thing = list_to_stack(frame)
             try:
                 frame = stack.pop()
             except IndexError:
                 raise ParseError('Extra closing bracket.') from None
-            frame.append(list_to_stack(v))
         elif tok == _T:
-            frame.append(True)
+            thing = True
         elif tok == _F:
-            frame.append(False)
+            thing = False
         else:
             try:
                 thing = int(tok)
             except ValueError:
                 thing = Symbol(tok)
-            frame.append(thing)
+
+        frame.append(thing)
+
     if stack:
         raise ParseError('Unclosed bracket.')
+
     return list_to_stack(frame)
 
 
@@ -410,12 +389,14 @@ def stack_to_string(stack):
     :param stack stack: A stack.
     :rtype: str
     '''
-    return _to_string(stack, reversed_stack)
+    return _stack_to_string(stack, reversed_stack)
 
 
 def expression_to_string(expression):
     '''
     Return a "pretty print" string for a expression.
+    (For historical reasons this function works on a single quote
+    not a stack-of-stacks.)
 
     The items are written left-to-right::
 
@@ -424,30 +405,23 @@ def expression_to_string(expression):
     :param stack expression: A stack.
     :rtype: str
     '''
-    return _to_string(expression, iter_stack)
+    return _stack_to_string(expression, iter_stack)
 
 
-def _joy_repr(thing):
+def _stack_to_string(stack, iterator):
+    isnt_stack(stack)
+    if not stack:  # shortcut
+        return ''
+    return ' '.join(map(_s, iterator(stack)))
+
+
+def _s(thing):
     return (
-        JOY_BOOL_LITERALS[thing]
+        '[%s]' % expression_to_string(thing)
+        if isinstance(thing, tuple)
+        else JOY_BOOL_LITERALS[thing]
         if isinstance(thing, bool)
         else repr(thing)
-    )
-
-
-def _to_string(stack, f):
-    if not isinstance(stack, tuple):
-        return _joy_repr(stack)
-    if not stack:
-        return ''  # shortcut
-    return ' '.join(map(_s, f(stack)))
-
-
-def _s(s):
-    return (
-        '[%s]' % expression_to_string(s)
-        if isinstance(s, tuple)
-        else _joy_repr(s)
     )
 
 
@@ -584,13 +558,13 @@ def SimpleFunctionWrapper(f):
 
     @wraps(f)
     def SimpleFunctionWrapper_inner(stack, expr, dictionary):
-        return f(stack), dictionary
+        return f(stack), expr, dictionary
 
     return SimpleFunctionWrapper_inner
 
 
 @inscribe
-def words(stack, _expression, dictionary):
+def words(stack, expression, dictionary):
     '''
     Put a list of all the words in alphabetical order onto the stack.
     '''
@@ -599,7 +573,7 @@ def words(stack, _expression, dictionary):
         if name.startswith('_'):
             continue
         w = (Symbol(name), ()), w
-    return (w, stack), dictionary
+    return (w, stack), expression, dictionary
 
 
 HELP_TEMPLATE = '''\
@@ -613,14 +587,14 @@ HELP_TEMPLATE = '''\
 
 
 @inscribe
-def help_(stack, _expression, dictionary):
+def help_(stack, expression, dictionary):
     '''
     Accepts a quoted symbol on the top of the stack and prints its docs.
     '''
     ((symbol, _), stack) = stack
     word = dictionary[symbol]
     print(HELP_TEMPLATE % (symbol, getdoc(word), symbol))
-    return stack, dictionary
+    return stack, expression, dictionary
 
 
 '''
@@ -657,8 +631,8 @@ def branch(stack, expr, dictionary):
     isnt_bool(flag)
     isnt_stack(else_)
     isnt_stack(then)
-    expr.prepend(then if flag else else_)
-    return stack, dictionary
+    expr = push_quote((then if flag else else_), expr)
+    return stack, expr, dictionary
 
 
 @inscribe
@@ -676,9 +650,9 @@ def dip(stack, expr, dictionary):
     '''
     quote, x, stack = get_n_items(2, stack)
     isnt_stack(quote)
-    expr.prepend((x, ()))
-    expr.prepend(quote)
-    return stack, dictionary
+    expr = push_quote((x, ()), expr)
+    expr = push_quote(quote, expr)
+    return stack, expr, dictionary
 
 
 @inscribe
@@ -695,8 +669,7 @@ def i(stack, expr, dictionary):
     '''
     quote, stack = get_n_items(1, stack)
     isnt_stack(quote)
-    expr.prepend(quote)
-    return stack, dictionary
+    return stack, push_quote(quote, expr), dictionary
 
 
 LOOP = Symbol('loop')
@@ -721,9 +694,9 @@ def loop(stack, expr, dictionary):
     isnt_bool(flag)
     isnt_stack(quote)
     if flag:
-        expr.prepend((quote, (LOOP, ())))
-        expr.prepend(quote)
-    return stack, dictionary
+        expr = push_quote((quote, (LOOP, ())), expr)
+        expr = push_quote(quote, expr)
+    return stack, expr, dictionary
 
 
 @inscribe
@@ -925,7 +898,7 @@ def BinaryLogicWrapper(f):
         isnt_bool(a)
         isnt_bool(b)
         result = f(b, a)
-        return (result, stack), dictionary
+        return (result, stack), expression, dictionary
 
     return BinaryLogicWrapper_inner
 
@@ -941,7 +914,7 @@ def BinaryMathWrapper(func):
         isnt_int(a)
         isnt_int(b)
         result = func(b, a)
-        return (result, stack), dictionary
+        return (result, stack), expression, dictionary
 
     return BinaryMathWrapper_inner
 
@@ -956,7 +929,7 @@ def UnaryLogicWrapper(f):
         a, stack = get_n_items(1, stack)
         isnt_bool(a)
         result = f(a)
-        return (result, stack), dictionary
+        return (result, stack), expression, dictionary
 
     return UnaryLogicWrapper_inner
 
@@ -971,7 +944,7 @@ def UnaryMathWrapper(f):
         a, stack = get_n_items(1, stack)
         isnt_int(a)
         result = f(a)
-        return (result, stack), dictionary
+        return (result, stack), expression, dictionary
 
     return UnaryMathWrapper_inner
 
@@ -985,7 +958,7 @@ def UnaryWrapper(f):
     def UnaryWrapper_inner(stack, expression, dictionary):
         a, stack = get_n_items(1, stack)
         result = f(a)
-        return (result, stack), dictionary
+        return (result, stack), expression, dictionary
 
     return UnaryWrapper_inner
 
@@ -1063,8 +1036,7 @@ class Def(object):
         self.body = body
 
     def __call__(self, stack, expr, dictionary):
-        expr.prepend(self.body)
-        return stack, dictionary
+        return stack, push_quote(self.body, expr), dictionary
 
     @classmethod
     def load_definitions(class_, stream, dictionary):

@@ -2,6 +2,38 @@ from itertools import chain
 from joy.utils.stack import _s, iter_stack
 
 
+
+# Expression as a stack-of-stacks
+
+def push_term(quote, expression):
+    '''
+    Put the quoted program onto the stack-of-stacks.
+    '''
+    return (quote, expression) if quote else expression
+
+def next_term(expression):
+    '''
+    Return the next term from the expression and the new expression.
+    '''
+    # Don't call this with an () expression.
+    assert expression, repr(expression)
+
+    quote, expression = expression
+
+    # If you're using prepend() an empty quote can never get onto the
+    # expression.
+    assert quote, repr(quote)
+
+    item, quote = quote
+    if quote:
+        # Put the rest of the quote back onto the stack-of-stacks.
+        expression = quote, expression
+
+    return item, expression
+
+
+
+
 class Expression:
     '''
     As elegant as it is to model the expression as a stack, it's not very
