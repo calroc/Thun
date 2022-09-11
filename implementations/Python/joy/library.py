@@ -1,235 +1,11 @@
-# -*- coding: utf-8 -*-
-#
-#    Copyright © 2014-2020 Simon Forman
-#
-#    This file is part of Thun
-#
-#    Thun is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    Thun is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with Thun.  If not see <http://www.gnu.org/licenses/>. 
-#
-'''
-This module contains the Joy function infrastructure and a library of
-functions.  Its main export is a Python function initialize() that
-returns a dictionary of Joy functions suitable for use with the joy()
-function.
-'''
-from pkg_resources import resource_stream
-from io import TextIOWrapper
-from inspect import getdoc, getmembers, isfunction
-from functools import wraps
-from itertools import count
-import operator, math
-
-from . import __name__ as _joy_package_name
-from .parser import text_to_expression, Symbol
-from .utils import generated_library as genlib
-from .utils.errors import (
-    NotAListError,
-    NotAnIntError,
-    StackUnderflowError,
-    )
-from .utils.stack import (
-    concat,
-    expression_to_string,
-    iter_stack,
-    list_to_stack,
-    pick,
-    )
-
-
-def default_defs(dictionary):
-    def_stream = TextIOWrapper(
-        resource_stream(_joy_package_name, 'defs.txt'),
-        encoding='UTF_8',
-        )
-    Def.load_definitions(def_stream, dictionary)
-
-
-HELP_TEMPLATE = '''\
-
-==== Help on %s ====
-
-%s
-
----- end ( %s )
-'''
-
-
-# This is the main dict we're building.
-_dictionary = {}
-
-
-def inscribe(function, d=_dictionary):
-    '''A decorator to inscribe functions into the default dictionary.'''
-    d[function.name] = function
-    return function
-
-
-def initialize():
-    '''Return a dictionary of Joy functions for use with joy().'''
-    return _dictionary.copy()
-
-
 ALIASES = (
-    ('add', ['+']),
-    ('and', ['&']),
     ('bool', ['truthy']),
-    ('mul', ['*']),
-    ('floordiv', ['/floor', '//', '/', 'div']),
     ('mod', ['%', 'rem', 'remainder', 'modulus']),
-    ('eq', ['=']),
-    ('ge', ['>=']),
     ('getitem', ['pick', 'at']),
-    ('gt', ['>']),
-    ('le', ['<=']),
-    ('lshift', ['<<']),
-    ('lt', ['<']),
-    ('ne', ['<>', '!=']),
-    ('rshift', ['>>']),
-    ('sub', ['-']),
     ('xor', ['^']),
-    ('succ', ['++']),
-    ('pred', ['--']),
-    ('rolldown', ['roll<']),
-    ('rollup', ['roll>']),
     ('eh', ['?']),
     ('id', [u'•']),
     )
-
-
-def add_aliases(D, A):
-    '''
-    Given a dict and a iterable of (name, [alias, ...]) pairs, create
-    additional entries in the dict mapping each alias to the named function
-    if it's in the dict.  Aliases for functions not in the dict are ignored.
-    '''
-    for name, aliases in A:
-        try:
-            F = D[name]
-        except KeyError:
-            continue
-        for alias in aliases:
-            D[alias] = F
-
-
-def FunctionWrapper(f):
-    '''Set name attribute.'''
-    if not f.__doc__:
-        raise ValueError('Function %s must have doc string.' % f.__name__)
-    f.name = f.__name__.rstrip('_')  # Don't shadow builtins.
-    return f
-
-
-def SimpleFunctionWrapper(f):
-    '''
-    Wrap functions that take and return just a stack.
-    '''
-    @FunctionWrapper
-    @wraps(f)
-    def inner(stack, expression, dictionary):
-        return f(stack), expression, dictionary
-    return inner
-
-
-def BinaryMathWrapper(f):
-    '''
-    Wrap functions that take two numbers and return a single result.
-    '''
-    @FunctionWrapper
-    @wraps(f)
-    def inner(stack, expression, dictionary):
-        try:
-            (a, (b, stack)) = stack
-        except ValueError:
-            raise StackUnderflowError('Not enough values on stack.')
-        if (   not isinstance(a, int)
-            or not isinstance(b, int)
-            # bool is int in Python.
-            or     isinstance(a, bool)
-            or     isinstance(b, bool)
-            ):
-            raise NotAnIntError
-        result = f(b, a)
-        return (result, stack), expression, dictionary
-    return inner
-
-
-def BinaryLogicWrapper(f):
-    '''
-    Wrap functions that take two numbers and return a single result.
-    '''
-    @FunctionWrapper
-    @wraps(f)
-    def inner(stack, expression, dictionary):
-        try:
-            (a, (b, stack)) = stack
-        except ValueError:
-            raise StackUnderflowError('Not enough values on stack.')
-##        if (not isinstance(a, bool)
-##            or not isinstance(b, bool)
-##            ):
-##            raise NotABoolError
-        result = f(b, a)
-        return (result, stack), expression, dictionary
-    return inner
-
-
-def UnaryBuiltinWrapper(f):
-    '''
-    Wrap functions that take one argument and return a single result.
-    '''
-    @FunctionWrapper
-    @wraps(f)
-    def inner(stack, expression, dictionary):
-        (a, stack) = stack
-        result = f(a)
-        return (result, stack), expression, dictionary
-    return inner
-
-
-class Def(object):
-    '''
-    Definitions created by inscribe.
-    '''
-
-    def __init__(self, name, body):
-        self.name = name
-        self.body = body
-        self._body = tuple(iter_stack(body))
-        self.__doc__ = expression_to_string(body)
-        self._compiled = None
-
-    def __call__(self, stack, expression, dictionary):
-        if self._compiled:
-            return self._compiled(stack, expression, dictionary)  # pylint: disable=E1102
-        expression = list_to_stack(self._body, expression)
-        return stack, expression, dictionary
-
-    @classmethod
-    def load_definitions(class_, stream, dictionary):
-        for line in stream:
-            if line.lstrip().startswith('#'):
-                continue
-            name, body = text_to_expression(line)
-            if name not in dictionary:
-                inscribe(class_(name, body), dictionary)
-##            inscribe(class_(name, body), dictionary)
-
-
-#
-# Functions
-#
-
 
 @inscribe
 @FunctionWrapper
@@ -245,16 +21,6 @@ def inscribe_(stack, expression, dictionary):
     (name, body), stack = stack
     inscribe(Def(name, body), dictionary)
     return stack, expression, dictionary
-
-
-# @inscribe
-# @SimpleFunctionWrapper
-# def infer_(stack):
-#     '''Attempt to infer the stack effect of a Joy expression.'''
-#     E, stack = stack
-#     effects = infer_expression(E)
-#     e = list_to_stack([(fi, (fo, ())) for fi, fo in effects])
-#     return e, stack
 
 
 @inscribe
@@ -464,21 +230,6 @@ def sort_(S):
 
 @inscribe
 @SimpleFunctionWrapper
-def clear(stack):
-    '''Clear everything from the stack.
-    ::
-
-        clear == stack [pop stack] loop
-
-           ... clear
-        ---------------
-
-    '''
-    return ()
-
-
-@inscribe
-@SimpleFunctionWrapper
 def disenstacken(stack):
     '''
     The disenstacken operator expects a list on top of the stack and makes that
@@ -501,22 +252,6 @@ def reverse(S):
     for term in iter_stack(tos):
         res = term, res
     return res, stack
-
-
-@inscribe
-@SimpleFunctionWrapper
-def concat_(S):
-    '''
-    Concatinate the two lists on the top of the stack.
-    ::
-
-           [a b c] [d e f] concat
-        ----------------------------
-               [a b c d e f]
-
-    '''
-    (tos, (second, stack)) = S
-    return concat(second, tos), stack
 
 
 @inscribe
@@ -607,57 +342,12 @@ def divmod_(S):
     return r, (q, stack)
 
 
-def sqrt(a):
-    '''
-    Return the square root of the number a.
-    Negative numbers return complex roots.
-    '''
-    try:
-        r = math.sqrt(a)
-    except ValueError:
-        assert a < 0, repr(a)
-        r = math.sqrt(-a) * 1j
-    return r
-
-
-#def execute(S):
-#  (text, stack) = S
-#  if isinstance(text, str):
-#    return run(text, stack)
-#  return stack
-
-
 @inscribe
 @SimpleFunctionWrapper
 def id_(stack):
     '''The identity function.'''
     return stack
 
-
-@inscribe
-@SimpleFunctionWrapper
-def void(stack):
-    '''True if the form on TOS is void otherwise False.'''
-    form, stack = stack
-    return _void(form), stack
-
-
-def _void(form):
-    return any(not _void(i) for i in iter_stack(form))
-
-
-
-##  transpose
-##  sign
-##  take
-
-
-@inscribe
-@FunctionWrapper
-def words(stack, expression, dictionary):
-    '''Print all the words in alphabetical order.'''
-    print(' '.join(sorted(dictionary)))
-    return stack, expression, dictionary
 
 
 @inscribe
@@ -690,35 +380,6 @@ def warranty(stack, expression, dictionary):
     ' ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS'
     ' WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE'
     ' COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.')
-    return stack, expression, dictionary
-
-
-# def simple_manual(stack):
-#   '''
-#   Print words and help for each word.
-#   '''
-#   for name, f in sorted(FUNCTIONS.items()):
-#     d = getdoc(f)
-#     boxline = '+%s+' % ('-' * (len(name) + 2))
-#     print('\n'.join((
-#       boxline,
-#       '| %s |' % (name,),
-#       boxline,
-#       d if d else '   ...',
-#       '',
-#       '--' * 40,
-#       '',
-#       )))
-#   return stack
-
-
-@inscribe
-@FunctionWrapper
-def help_(S, expression, dictionary):
-    '''Accepts a quoted symbol on the top of the stack and prints its docs.'''
-    ((symbol, _), stack) = S
-    word = dictionary[symbol]
-    print(HELP_TEMPLATE % (symbol, getdoc(word), symbol))
     return stack, expression, dictionary
 
 
@@ -1347,48 +1008,8 @@ def cmp_(stack, expression, dictionary):
 #  FunctionWrapper(while_),
 
 
-for F in (
-
-    #divmod_ = pm = __(n2, n1), __(n4, n3)
-
-    BinaryMathWrapper(operator.eq),
-    BinaryMathWrapper(operator.ge),
-    BinaryMathWrapper(operator.gt),
-    BinaryMathWrapper(operator.le),
-    BinaryMathWrapper(operator.lt),
-    BinaryMathWrapper(operator.ne),
-
-    BinaryMathWrapper(operator.xor),
-    BinaryMathWrapper(operator.lshift),
-    BinaryMathWrapper(operator.rshift),
-
-    BinaryLogicWrapper(operator.and_),
-    BinaryLogicWrapper(operator.or_),
-
-    BinaryMathWrapper(operator.add),
-    BinaryMathWrapper(operator.floordiv),
-    BinaryMathWrapper(operator.mod),
-    BinaryMathWrapper(operator.mul),
-    BinaryMathWrapper(operator.pow),
-    BinaryMathWrapper(operator.sub),
-##    BinaryMathWrapper(operator.truediv),
-
-    UnaryBuiltinWrapper(bool),
-    UnaryBuiltinWrapper(operator.not_),
-
-    UnaryBuiltinWrapper(abs),
-    UnaryBuiltinWrapper(operator.neg),
-    UnaryBuiltinWrapper(sqrt),
-
-    UnaryBuiltinWrapper(floor),
-    UnaryBuiltinWrapper(round),
-    ):
-    inscribe(F)
-del F  # Otherwise Sphinx autodoc will pick it up.
-
 
 for name, primitive in getmembers(genlib, isfunction):
     inscribe(SimpleFunctionWrapper(primitive))
 
 
-add_aliases(_dictionary, ALIASES)
