@@ -317,6 +317,10 @@ def joy(stack, expression, dictionary):
     return stack, dictionary
 
 
+class UnknownSymbolError(KeyError):
+    pass
+
+
 '''
 ███████╗████████╗ █████╗  ██████╗██╗  ██╗
 ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
@@ -1284,10 +1288,6 @@ class NotAnIntError(Exception):
 
 
 class NotABoolError(Exception):
-    pass
-
-
-class UnknownSymbolError(KeyError):
     pass
 
 
