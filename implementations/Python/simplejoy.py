@@ -99,10 +99,10 @@ def joy(stack, expression, dictionary):
                 func = dictionary[term]
             except KeyError:
                 raise UnknownSymbolError(term) from None
-            stack, expr, dictionary = func(stack, expr, dictionary)
+            stack, dictionary = func(stack, expr, dictionary)
         else:
             stack = term, stack
-    return stack, expr, dictionary
+    return stack, dictionary
 
 
 '''
@@ -487,7 +487,7 @@ def repl(stack=(), dictionary=None):
             except (EOFError, KeyboardInterrupt):
                 break
             try:
-                stack, _, dictionary = run(text, stack, dictionary)
+                stack, dictionary = run(text, stack, dictionary)
             except SystemExit as e:
                 raise SystemExit from e
             except:
@@ -526,7 +526,7 @@ def interp(stack=(), dictionary=None):
             except (EOFError, KeyboardInterrupt):
                 break
             try:
-                stack, _, dictionary = run(text, stack, dictionary)
+                stack, dictionary = run(text, stack, dictionary)
             except UnknownSymbolError as sym:
                 print('Unknown:', sym)
             except (
@@ -584,13 +584,13 @@ def SimpleFunctionWrapper(f):
 
     @wraps(f)
     def SimpleFunctionWrapper_inner(stack, expr, dictionary):
-        return f(stack), expr, dictionary
+        return f(stack), dictionary
 
     return SimpleFunctionWrapper_inner
 
 
 @inscribe
-def words(stack, expression, dictionary):
+def words(stack, _expression, dictionary):
     '''
     Put a list of all the words in alphabetical order onto the stack.
     '''
@@ -599,7 +599,7 @@ def words(stack, expression, dictionary):
         if name.startswith('_'):
             continue
         w = (Symbol(name), ()), w
-    return (w, stack), expression, dictionary
+    return (w, stack), dictionary
 
 
 HELP_TEMPLATE = '''\
@@ -613,14 +613,14 @@ HELP_TEMPLATE = '''\
 
 
 @inscribe
-def help_(stack, expression, dictionary):
+def help_(stack, _expression, dictionary):
     '''
     Accepts a quoted symbol on the top of the stack and prints its docs.
     '''
     ((symbol, _), stack) = stack
     word = dictionary[symbol]
     print(HELP_TEMPLATE % (symbol, getdoc(word), symbol))
-    return stack, expression, dictionary
+    return stack, dictionary
 
 
 '''
@@ -658,7 +658,7 @@ def branch(stack, expr, dictionary):
     isnt_stack(else_)
     isnt_stack(then)
     expr.prepend(then if flag else else_)
-    return stack, expr, dictionary
+    return stack, dictionary
 
 
 @inscribe
@@ -678,7 +678,7 @@ def dip(stack, expr, dictionary):
     isnt_stack(quote)
     expr.prepend((x, ()))
     expr.prepend(quote)
-    return stack, expr, dictionary
+    return stack, dictionary
 
 
 @inscribe
@@ -696,7 +696,7 @@ def i(stack, expr, dictionary):
     quote, stack = get_n_items(1, stack)
     isnt_stack(quote)
     expr.prepend(quote)
-    return stack, expr, dictionary
+    return stack, dictionary
 
 
 LOOP = Symbol('loop')
@@ -723,7 +723,7 @@ def loop(stack, expr, dictionary):
     if flag:
         expr.prepend((quote, (LOOP, ())))
         expr.prepend(quote)
-    return stack, expr, dictionary
+    return stack, dictionary
 
 
 @inscribe
@@ -925,7 +925,7 @@ def BinaryLogicWrapper(f):
         isnt_bool(a)
         isnt_bool(b)
         result = f(b, a)
-        return (result, stack), expression, dictionary
+        return (result, stack), dictionary
 
     return BinaryLogicWrapper_inner
 
@@ -941,7 +941,7 @@ def BinaryMathWrapper(func):
         isnt_int(a)
         isnt_int(b)
         result = func(b, a)
-        return (result, stack), expression, dictionary
+        return (result, stack), dictionary
 
     return BinaryMathWrapper_inner
 
@@ -956,7 +956,7 @@ def UnaryLogicWrapper(f):
         a, stack = get_n_items(1, stack)
         isnt_bool(a)
         result = f(a)
-        return (result, stack), expression, dictionary
+        return (result, stack), dictionary
 
     return UnaryLogicWrapper_inner
 
@@ -971,7 +971,7 @@ def UnaryMathWrapper(f):
         a, stack = get_n_items(1, stack)
         isnt_int(a)
         result = f(a)
-        return (result, stack), expression, dictionary
+        return (result, stack), dictionary
 
     return UnaryMathWrapper_inner
 
@@ -985,7 +985,7 @@ def UnaryWrapper(f):
     def UnaryWrapper_inner(stack, expression, dictionary):
         a, stack = get_n_items(1, stack)
         result = f(a)
-        return (result, stack), expression, dictionary
+        return (result, stack), dictionary
 
     return UnaryWrapper_inner
 
@@ -1064,7 +1064,7 @@ class Def(object):
 
     def __call__(self, stack, expr, dictionary):
         expr.prepend(self.body)
-        return stack, expr, dictionary
+        return stack, dictionary
 
     @classmethod
     def load_definitions(class_, stream, dictionary):
