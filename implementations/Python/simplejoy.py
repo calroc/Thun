@@ -93,6 +93,8 @@ Common symbols for operations:
     >> ≡ rshift
 
 
+• ≡
+
 
 ? ≡ dup bool
 
