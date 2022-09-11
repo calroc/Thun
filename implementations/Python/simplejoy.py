@@ -1999,6 +1999,38 @@ def primrec(stack, expr, dictionary):
     return stack, expr, dictionary
 
 
+S_choice = Symbol('choice')
+S_i = Symbol('i')
+
+
+@inscribe
+def ifte(stack, expr, dictionary):
+    '''
+    If-Then-Else Combinator
+    ::
+
+                  ... [if] [then] [else] ifte
+       ---------------------------------------------------
+          ... [[else] [then]] [...] [if] infra select i
+
+
+
+
+                ... [if] [then] [else] ifte
+       -------------------------------------------------------
+          ... [else] [then] [...] [if] infra first choice i
+
+
+    Has the effect of grabbing a copy of the stack on which to run the
+    if-part using infra.
+    '''
+    else_, then, if_, stack = get_n_items(3, stack)
+    e = (S_infra, (S_first, (S_choice, (S_i, ()))))
+    expr = push_quote(e, expr)
+    stack = (if_, (stack, (then, (else_, stack))))
+    return stack, expr, dictionary
+
+
 if __name__ == '__main__':
     import sys
 
@@ -2009,5 +2041,5 @@ if __name__ == '__main__':
 ##        stack = J(dictionary=dictionary)
 ##    except SystemExit:
 ##        pass
-    stack, _ = run("5  [1]  [*]  primrec", (), dictionary)
+    stack, _ = run("5 10 [>][++][*]ifte", (), dictionary)
     print(stack_to_string(stack), '•')
