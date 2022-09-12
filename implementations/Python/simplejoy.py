@@ -2046,7 +2046,7 @@ def cond(stack, expr, dictionary):
     It works by rewriting into a chain of nested `ifte` expressions, e.g.::
 
            [[D]] cond
-        ----------------  (Kind of pointless)
+        ----------------
              D
 
            [[[IF] THEN] [D]] cond
@@ -2057,6 +2057,7 @@ def cond(stack, expr, dictionary):
               [[[IF] THEN] ...] cond
         ----------------------------------- (multiple conditions)
            [IF] [THEN] [[...] cond] ifte
+
 
     The middle case isn't actually implemented.  It's implied by the
     base case and the "multiple conditions" case.
@@ -2078,6 +2079,69 @@ def cond(stack, expr, dictionary):
         stack = (else_, (then, (if_, stack)))
         expr = push_quote((S_ifte, ()), expr)
 
+    return stack, expr, dictionary
+
+
+@inscribe
+def dipd(stack, expr, dictionary):
+    '''
+    The dipd combinator is like dip but expects two items.
+
+           ... y x [Q] dipd
+        ----------------------
+             ... Q y x
+
+    '''
+    quote, x, y, stack = get_n_items(3, stack)
+    isnt_stack(quote)
+    expr = push_quote((y, (x, ())), expr)
+    expr = push_quote(quote, expr)
+    return stack, expr, dictionary
+
+
+@inscribe
+def dipdd(stack, expr, dictionary):
+    '''
+    The dipdd combinator is like dip but expects three items.
+
+           ... y x z [Q] dipdd
+        -------------------------
+             ... Q y x z
+
+    '''
+    quote, x, y, z, stack = get_n_items(3, stack)
+    isnt_stack(quote)
+    expr = push_quote((z, (y, (x, ()))), expr)
+    expr = push_quote(quote, expr)
+    return stack, expr, dictionary
+
+
+@inscribe
+def cmp_(stack, expr, dictionary):
+    '''
+    cmp takes two values and three quoted programs on the stack and runs
+    one of the three depending on the results of comparing the two values:
+    ::
+
+           a b [G] [E] [L] cmp
+        ------------------------- a > b
+            G
+
+           a b [G] [E] [L] cmp
+        ------------------------- a = b
+                E
+
+           a b [G] [E] [L] cmp
+        ------------------------- a < b
+                L
+    '''
+    L, E, G, b, a, stack = get_n_items(5, stack)
+    isnt_stack(L)
+    isnt_stack(E)
+    isnt_stack(G)
+    isnt_int(b)
+    isnt_int(a)
+    expr = push_quote(G if a > b else L if a < b else E, expr)
     return stack, expr, dictionary
 
 
