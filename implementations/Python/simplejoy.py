@@ -1731,6 +1731,28 @@ def pm(stack):
 
 
 @inscribe
+@SimpleFunctionWrapper
+def divmod_(S):
+    '''
+    Similarly to pm ("Plus or minus") this function computes
+    both the
+    ::
+
+              a b divmod
+        ---------------------
+           a b div a b mod
+        ---------------------
+                 q r
+
+    Where: q * b + r == a
+
+    '''
+    y, (x, stack) = S
+    q, r = divmod(x, y)
+    return r, (q, stack)
+
+
+@inscribe
 def sharing(stack, expression, dictionary):
     '''Print redistribution information.'''
     print("You may convey verbatim copies of the Program's source code as"
@@ -2038,7 +2060,7 @@ S_cond = Symbol('cond')
 def cond(stack, expr, dictionary):
     '''
     This combinator works like a case statement.  It expects a single quote
-    on the stack that must contain zero or more condition quotes and a 
+    on the stack that must contain zero or more condition quotes and a
     default quote.  Each condition clause should contain a quoted predicate
     followed by the function expression to run if that predicate returns
     true.  If no predicates return true the default function runs.

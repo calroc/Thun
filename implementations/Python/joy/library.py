@@ -7,33 +7,6 @@ ALIASES = (
     ('id', [u'•']),
     )
 
-def floor(n):
-    return int(math.floor(n))
-
-floor.__doc__ = math.floor.__doc__
-
-
-@inscribe
-@SimpleFunctionWrapper
-def divmod_(S):
-    '''
-    divmod(x, y) -> (quotient, remainder)
-
-    Return the tuple (x//y, x%y).  Invariant: q * y + r == x.
-    '''
-    y, (x, stack) = S
-    q, r = divmod(x, y)
-    return r, (q, stack)
-
-
-@inscribe
-@SimpleFunctionWrapper
-def id_(stack):
-    '''The identity function.'''
-    return stack
-
-
-
 #
 # § Combinators
 #
