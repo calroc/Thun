@@ -2031,6 +2031,56 @@ def ifte(stack, expr, dictionary):
     return stack, expr, dictionary
 
 
+S_cond = Symbol('cond')
+
+
+@inscribe
+def cond(stack, expr, dictionary):
+    '''
+    This combinator works like a case statement.  It expects a single quote
+    on the stack that must contain zero or more condition quotes and a 
+    default quote.  Each condition clause should contain a quoted predicate
+    followed by the function expression to run if that predicate returns
+    true.  If no predicates return true the default function runs.
+
+    It works by rewriting into a chain of nested `ifte` expressions, e.g.::
+
+           [[D]] cond
+        ----------------  (Kind of pointless)
+             D
+
+           [[[IF] THEN] [D]] cond
+        ---------------------------- (with single condition, same as ifte)
+            [IF] [THEN] [D] ifte
+
+
+              [[[IF] THEN] ...] cond
+        ----------------------------------- (multiple conditions)
+           [IF] [THEN] [[...] cond] ifte
+
+    The middle case isn't actually implemented.  It's implied by the
+    base case and the "multiple conditions" case.
+    '''
+    conditions, stack = get_n_items(1, stack)
+    isnt_stack(conditions)
+    if not conditions:
+        raise StackUnderflowError('cond without default clause')
+
+    condition_clause, conditions = conditions
+    isnt_stack(condition_clause)
+
+    if not conditions: # This is the default clause, run it.
+        expr = push_quote(condition_clause, expr)
+    else:
+        if_, then = get_n_items(1, condition_clause)
+        isnt_stack(if_)
+        else_ = (conditions, (S_cond, ()))
+        stack = (else_, (then, (if_, stack)))
+        expr = push_quote((S_ifte, ()), expr)
+
+    return stack, expr, dictionary
+
+
 if __name__ == '__main__':
     import sys
 
@@ -2041,5 +2091,10 @@ if __name__ == '__main__':
 ##        stack = J(dictionary=dictionary)
 ##    except SystemExit:
 ##        pass
-    stack, _ = run("5 10 [>][++][*]ifte", (), dictionary)
+    jcode = "5 10 [>][++][*]ifte"
+    jcode = '1 2 [[+]] cond'
+    jcode = '1 2 [[[>] -] [[<] +] [*]] cond'
+    jcode = '2 1 [[[>] -] [[<] +] [*]] cond'
+    jcode = '3 3 [[[>] -] [[<] +] [*]] cond'
+    stack, _ = run(jcode, (), dictionary)
     print(stack_to_string(stack), '•')
