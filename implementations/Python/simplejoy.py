@@ -2145,20 +2145,97 @@ def cmp_(stack, expr, dictionary):
     return stack, expr, dictionary
 
 
+S_step = Symbol('step')
+S_times = Symbol('times')
+
+
+@inscribe
+def step(stack, expr, dictionary):
+    '''
+    Run a quoted program on each item in a sequence.
+    ::
+
+           ... [] [Q] step
+        ---------------------
+                 ...
+
+
+           ... [a] [Q] step
+        ----------------------
+               ... a Q
+
+
+            ... [a b c] [Q] step
+        ----------------------------
+           ... a Q [b c] [Q] step
+
+    The step combinator executes the quotation on each member of the list
+    on top of the stack.
+    '''
+    quote, aggregate, stack = get_n_items(2, stack)
+    isnt_stack(quote)
+    isnt_stack(aggregate)
+    if not aggregate:
+        return stack, expr, dictionary
+
+    head, tail = aggregate
+    stack = head, stack
+    if tail:
+        expr = push_quote((tail, (quote, (S_step, ()))), expr)
+    expr = push_quote(quote, expr)
+    return stack, expr, dictionary
+
+
+@inscribe
+def times(stack, expr, dictionary):
+    '''
+    times == [-- dip] cons [swap] infra [0 >] swap while pop
+    ::
+
+           ... n [Q] times
+        ---------------------  w/ n <= 0
+                 ...
+
+
+           ... 1 [Q] times
+        ---------------------
+                ... Q
+
+
+              ... n [Q] times
+        ---------------------------  w/ n > 1
+           ... Q (n-1) [Q] times
+
+    '''
+    # times == [-- dip] cons [swap] infra [0 >] swap while pop
+    quote, n, stack = get_n_items(2, stack)
+    isnt_stack(quote)
+    isnt_int(n)
+    if n <= 0:
+        return stack, expr, dictionary
+    n -= 1
+    if n:
+        expr = push_quote((n, (quote, (S_times, ()))), expr)
+    expr = push_quote(quote, expr)
+    return stack, expr, dictionary
+
+
 if __name__ == '__main__':
     import sys
 
     J = interp if '-q' in sys.argv else repl
     dictionary = initialize()
     Def.load_definitions(__doc__.splitlines(), dictionary)
-##    try:
-##        stack = J(dictionary=dictionary)
-##    except SystemExit:
-##        pass
-    jcode = "5 10 [>][++][*]ifte"
-    jcode = '1 2 [[+]] cond'
-    jcode = '1 2 [[[>] -] [[<] +] [*]] cond'
-    jcode = '2 1 [[[>] -] [[<] +] [*]] cond'
-    jcode = '3 3 [[[>] -] [[<] +] [*]] cond'
-    stack, _ = run(jcode, (), dictionary)
+    try:
+        stack = J(dictionary=dictionary)
+    except SystemExit:
+        pass
+##    jcode = "5 10 [>][++][*]ifte"
+##    jcode = '1 2 [[+]] cond'
+##    jcode = '1 2 [[[>] -] [[<] +] [*]] cond'
+##    jcode = '2 1 [[[>] -] [[<] +] [*]] cond'
+##    jcode = '3 3 [[[>] -] [[<] +] [*]] cond'
+##    jcode = '3 dup [dup mul] times'
+##    jcode = '0 [1 2 3] [add] step'
+##    stack, _ = run(jcode, (), dictionary)
     print(stack_to_string(stack), '•')
