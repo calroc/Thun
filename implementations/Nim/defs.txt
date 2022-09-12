@@ -21,6 +21,7 @@ ccons cons cons
 clear [] swaack pop
 cleave fork popdd
 clop cleave popdd
+cmp [[>] swap] dipd [ifte] ccons [=] swons ifte
 codi cons dip
 codireco codi reco
 dinfrirst dip infrst
