@@ -325,6 +325,17 @@ proc branch(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType)
   return (s2, push_quote(false_body_node, expression), dictionary)
 
 
+proc dip(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  let (body_node, s0) = pop_list_node(stack)
+  let tos_as_list_of_one = s0.head ^^ empty_list.listVal
+  return (
+    s0.tail,
+    push_quote(body_node, push_quote_list(tos_as_list_of_one, expression)),
+    dictionary
+    )
+
+
 #[
  ██████╗ ██████╗ ██████╗ ███████╗    ██╗    ██╗ ██████╗ ██████╗ ██████╗ ███████╗
 ██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██║    ██║██╔═══██╗██╔══██╗██╔══██╗██╔════╝
@@ -346,6 +357,13 @@ proc concat(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType)
   let (second, s1) = pop_list(s0)
   return (push_list((second ++ tos), s1), expression, dictionary)
 
+
+proc cons(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  let (tos, s0) = pop_list(stack)
+  if s0.isEmpty:
+    raise newException(ValueError, "Not enough values on stack.")
+  return (push_list((s0.head ^^ tos), s0.tail), expression, dictionary)
 
 # ██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
 # ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
@@ -420,6 +438,10 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType,
     return clear(stack, expression, dictionary)
   of "concat":
     return concat(stack, expression, dictionary)
+  of "cons":
+    return cons(stack, expression, dictionary)
+  of "dip":
+    return dip(stack, expression, dictionary)
 
   else:
     raise newException(UnknownWordError, "Unknown: " & sym)
