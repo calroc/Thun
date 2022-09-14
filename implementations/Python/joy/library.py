@@ -3,8 +3,6 @@ ALIASES = (
     ('mod', ['%', 'rem', 'remainder', 'modulus']),
     ('getitem', ['pick', 'at']),
     ('xor', ['^']),
-    ('eh', ['?']),
-    ('id', [u'•']),
     )
 
 #

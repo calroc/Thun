@@ -130,10 +130,10 @@ x ≡ dup i
 pam ≡ [i] map
 
 
-nullary ≡ [stack] dinfrirst
-unary ≡ nullary popd
-binary ≡ unary popd
-ternary ≡ binary popd
+    nullary ≡ [stack] dip infra first
+    unary ≡ nullary popd
+    binary ≡ unary popd
+    ternary ≡ binary popd
 
 ccccons ≡ ccons ccons
 ccons ≡ cons cons
@@ -558,7 +558,9 @@ def text_to_expression(text):
     '''
     frame = []
     stack = []
+
     for tok in text.replace('[', ' [ ').replace(']', ' ] ').split():
+
         if tok == '[':
             stack.append(frame)
             frame = []
@@ -899,7 +901,7 @@ def i(stack, expr, dictionary):
     return stack, push_quote(quote, expr), dictionary
 
 
-LOOP = Symbol('loop')
+S_loop = Symbol('loop')
 
 
 @inscribe
@@ -921,7 +923,7 @@ def loop(stack, expr, dictionary):
     isnt_bool(flag)
     isnt_stack(quote)
     if flag:
-        expr = push_quote((quote, (LOOP, ())), expr)
+        expr = push_quote((quote, (S_loop, ())), expr)
         expr = push_quote(quote, expr)
     return stack, expr, dictionary
 
@@ -1347,6 +1349,21 @@ inscribe(UnaryWrapper(isnt_stack))
 ███████╗██╔╝ ██╗   ██║   ██║  ██║██║  ██║
 ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝
 '''
+
+
+S_swaack = Symbol('swaack')
+S_genrec = Symbol('genrec')
+S_ifte = Symbol('ifte')
+S_infra = Symbol('infra')
+S_first = Symbol('first')
+S_primrec = Symbol('primrec')
+S_choice = Symbol('choice')
+S_i = Symbol('i')
+S_cond = Symbol('cond')
+S_step = Symbol('step')
+S_times = Symbol('times')
+
+_ifte_ = (S_infra, (S_first, (S_choice, (S_i, ()))))
 
 
 def dnd(stack, from_index, to_index):
@@ -1857,9 +1874,6 @@ def dupdip(stack, expr, dictionary):
     return stack, expr, dictionary
 
 
-S_swaack = Symbol('swaack')
-
-
 @inscribe
 def infra(stack, expr, dictionary):
     '''
@@ -1878,10 +1892,6 @@ def infra(stack, expr, dictionary):
     expr = push_quote((stack, (S_swaack, ())), expr)
     expr = push_quote(quote, expr)
     return aggregate, expr, dictionary
-
-
-S_genrec = Symbol('genrec')
-S_ifte = Symbol('ifte')
 
 
 @inscribe
@@ -1949,10 +1959,6 @@ def genrec(stack, expr, dictionary):
     return stack, expr, dictionary
 
 
-S_infra = Symbol('infra')
-S_first = Symbol('first')
-
-
 @inscribe
 def map_(stack, expr, dictionary):
     '''
@@ -1971,9 +1977,6 @@ def map_(stack, expr, dictionary):
     stack = (batch, ((), stack))
     expr = push_quote((S_infra, ()), expr)
     return stack, expr, dictionary
-
-
-S_primrec = Symbol('primrec')
 
 
 @inscribe
@@ -2021,21 +2024,10 @@ def primrec(stack, expr, dictionary):
     return stack, expr, dictionary
 
 
-S_choice = Symbol('choice')
-S_i = Symbol('i')
-
-
 @inscribe
 def ifte(stack, expr, dictionary):
     '''
     If-Then-Else Combinator
-    ::
-
-                  ... [if] [then] [else] ifte
-       ---------------------------------------------------
-          ... [[else] [then]] [...] [if] infra select i
-
-
 
 
                 ... [if] [then] [else] ifte
@@ -2047,13 +2039,9 @@ def ifte(stack, expr, dictionary):
     if-part using infra.
     '''
     else_, then, if_, stack = get_n_items(3, stack)
-    e = (S_infra, (S_first, (S_choice, (S_i, ()))))
-    expr = push_quote(e, expr)
+    expr = push_quote(_ifte_, expr)
     stack = (if_, (stack, (then, (else_, stack))))
     return stack, expr, dictionary
-
-
-S_cond = Symbol('cond')
 
 
 @inscribe
@@ -2165,10 +2153,6 @@ def cmp_(stack, expr, dictionary):
     isnt_int(a)
     expr = push_quote(G if a > b else L if a < b else E, expr)
     return stack, expr, dictionary
-
-
-S_step = Symbol('step')
-S_times = Symbol('times')
 
 
 @inscribe
