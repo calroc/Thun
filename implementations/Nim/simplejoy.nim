@@ -83,7 +83,28 @@ let empty_list = JoyType(kind: joyList, listVal: Nil[JoyType]())
 ██║   ██║   ██║   ██║██║     ╚════██║
 ╚██████╔╝   ██║   ██║███████╗███████║
  ╚═════╝    ╚═╝   ╚═╝╚══════╝╚══════╝
+]#
 
+
+#[
+
+Convert from nodes to values (or raise errors!)
+
+]#
+
+proc as_list(thing: JoyType): JoyListType =
+  # You've got a node, you want the list or it's an error.
+  case thing.kind
+  of joyList:
+    return thing.listVal
+  else:
+    raise newException(ValueError, "Only lists!")
+
+
+
+
+
+#[
 Push values onto stacks wrapping them in the correct node kinds.
 
 ]#
@@ -135,11 +156,7 @@ proc pop_list(stack: JoyListType): (JoyListType, JoyListType) =
   # we want the List.
   if stack.isEmpty:
     raise newException(ValueError, "Not enough values on stack.")
-  case stack.head.kind:
-  of joyList:
-    return (stack.head.listVal, stack.tail)
-  else:
-    raise newException(ValueError, "Not a list.")
+  return (as_list(stack.head), stack.tail)
 
 
 proc pop_bool(stack: JoyListType): (bool, JoyListType) =
@@ -161,7 +178,6 @@ proc pop_bool(stack: JoyListType): (bool, JoyListType) =
 
 
 
-
 # ███████╗██╗  ██╗██████╗ ██████╗ ███████╗███████╗███████╗██╗ ██████╗ ███╗   ██╗
 # ██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝██║██╔═══██╗████╗  ██║
 # █████╗   ╚███╔╝ ██████╔╝██████╔╝█████╗  ███████╗███████╗██║██║   ██║██╔██╗ ██║
@@ -176,14 +192,6 @@ proc pop_bool(stack: JoyListType): (bool, JoyListType) =
 # Instead, let's keep a stack of sub-expressions, reading from them
 # one-by-one, and prepending new sub-expressions to the stack rather than
 # concatenating them.
-
-
-proc as_list(thing: JoyType): JoyListType =
-  case thing.kind
-  of joyList:
-    return thing.listVal
-  else:
-    raise newException(ValueError, "Only lists!")
 
 
 proc push_quote(quote: JoyType, expression: JoyType): JoyType =
