@@ -1,26 +1,63 @@
 import rdstdin, strutils
 import bigints, fp
 
+
 type
 
+#[
+███████╗████████╗ █████╗  ██████╗██╗  ██╗
+██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
+███████╗   ██║   ███████║██║     █████╔╝
+╚════██║   ██║   ██╔══██║██║     ██╔═██╗
+███████║   ██║   ██║  ██║╚██████╗██║  ██╗
+╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
+
+When talking about Joy we use the terms "stack", "quote", "sequence",
+"list", and others to mean the same thing: a simple linear datatype that
+permits certain operations such as iterating and pushing and popping
+values from (at least) one end.
+
+    In describing Joy I have used the term quotation to describe all of the
+    above, because I needed a word to describe the arguments to combinators
+    which fulfill the same role in Joy as lambda abstractions (with
+    variables) fulfill in the more familiar functional languages. I use the
+    term list for those quotations whose members are what I call literals:
+    numbers, characters, truth values, sets, strings and other quotations.
+    All these I call literals because their occurrence in code results in
+    them being pushed onto the stack. But I also call [London Paris] a list.
+    So, [dup *] is a quotation but not a list.
+
+`"A Conversation with Manfred von Thun" w/ Stevan Apter <http://archive.vector.org.uk/art10000350>`_
+
+In Nim we use the cons list provided by nimfp: https://github.com/vegansk/nimfp
+
+Cons list: https://en.wikipedia.org/wiki/Cons#Lists
+
+The nodes in the list must be of one type (JoyType) of four kinds (JoyTypeType) corresponding to
+the four kinds of values in Joy: symbols, Booleans, integers, and lists.  Note that true and false each are
+given their own JoyTypeType and singleton constant values (so technically there are five kinds.)
+
+It will be important to keep clear the distinction between a list (instance of JoyListType) vs. a
+list node (instance of JoyType) containing a list.
+
+]#
   JoyListType* = List[JoyType]
   JoyMapType* = Map[string, JoyListType]
 
   JoyTypeType* = enum
-    joyAtom,
+    joySymbol,
+    joyTrue,
     joyFalse,
     joyInt,
-    joyList,
-    joyTrue
+    joyList
 
   JoyType* = ref object
     case kind*: JoyTypeType
-    of joyAtom: atomVal*: string
+    of joySymbol: symVal*: string
     of joyFalse, joyTrue: nil
     of joyInt: intVal*: BigInt
     of joyList: listVal*: JoyListType
 
-  Token = string
 
   ParseError* = object of ValueError
   UnknownWordError* = object of ValueError
@@ -32,9 +69,97 @@ let j_false* = JoyType(kind: joyFalse)
 
 # Singleton values for Symbols.
 
-let j_loop* = JoyType(kind: joyAtom, atomVal: "loop")
+let j_loop* = JoyType(kind: joySymbol, symVal: "loop")
+
+# Singleton value for the empty list node.  The
+# singleton value for the empty list itself is empty_list.listVal
 
 let empty_list = JoyType(kind: joyList, listVal: Nil[JoyType]())
+
+#[
+██╗   ██╗████████╗██╗██╗     ███████╗
+██║   ██║╚══██╔══╝██║██║     ██╔════╝
+██║   ██║   ██║   ██║██║     ███████╗
+██║   ██║   ██║   ██║██║     ╚════██║
+╚██████╔╝   ██║   ██║███████╗███████║
+ ╚═════╝    ╚═╝   ╚═╝╚══════╝╚══════╝
+
+Push values onto stacks wrapping them in the correct node kinds.
+
+]#
+
+proc push_int(n: BigInt, stack: JoyListType): JoyListType =
+  JoyType(kind: joyInt, intVal: n) ^^ stack
+
+proc push_list(el: JoyListType, stack: JoyListType): JoyListType =
+  JoyType(kind: joyList, listVal: el) ^^ stack
+
+proc push_bool(a: bool, stack: JoyListType): JoyListType =
+  if a:
+    return j_true ^^ stack
+  return j_false ^^ stack
+
+# Whence push_symbol()?  We do not push symbols onto stacks.
+
+
+#[
+
+Pop values from stacks.
+
+]#
+
+proc pop_int(stack: JoyListType): (BigInt, JoyListType) =
+  if stack.isEmpty:
+    raise newException(ValueError, "Not enough values on stack.")
+  case stack.head.kind:
+  of joyInt:
+    return (stack.head.intVal, stack.tail)
+  else:
+    raise newException(ValueError, "Not an integer.")
+
+
+proc pop_list_node(stack: JoyListType): (JoyType, JoyListType) =
+  # For quotes that will be added to the expression we want to
+  # keep the node wrapper.
+  if stack.isEmpty:
+    raise newException(ValueError, "Not enough values on stack.")
+  case stack.head.kind:
+  of joyList:
+    return (stack.head, stack.tail)
+  else:
+    raise newException(ValueError, "Not a list.")
+
+
+proc pop_list(stack: JoyListType): (JoyListType, JoyListType) =
+  # For stacks that will be used (e.g. concat'd or something)
+  # we want the List.
+  if stack.isEmpty:
+    raise newException(ValueError, "Not enough values on stack.")
+  case stack.head.kind:
+  of joyList:
+    return (stack.head.listVal, stack.tail)
+  else:
+    raise newException(ValueError, "Not a list.")
+
+
+proc pop_bool(stack: JoyListType): (bool, JoyListType) =
+  if stack.isEmpty:
+    raise newException(ValueError, "Not enough values on stack.")
+  case stack.head.kind:
+  of joyTrue:
+    return (true, stack.tail)
+  of joyFalse:
+    return (false, stack.tail)
+  else:
+    raise newException(ValueError, "Not a list.")
+
+# We might not need to reify to bool?  Just "if foo == j_true" everywhere?
+
+
+
+
+
+
 
 
 # ███████╗██╗  ██╗██████╗ ██████╗ ███████╗███████╗███████╗██╗ ██████╗ ███╗   ██╗
@@ -51,55 +176,6 @@ let empty_list = JoyType(kind: joyList, listVal: Nil[JoyType]())
 # Instead, let's keep a stack of sub-expressions, reading from them
 # one-by-one, and prepending new sub-expressions to the stack rather than
 # concatenating them.
-
-
-proc push_int(n: BigInt, stack: JoyListType): JoyListType =
-  JoyType(kind: joyInt, intVal: n) ^^ stack
-
-
-proc push_list(el: JoyListType, stack: JoyListType): JoyListType =
-  JoyType(kind: joyList, listVal: el) ^^ stack
-
-
-proc pop_int(stack: JoyListType): (BigInt, JoyListType) =
-  if stack.isEmpty:
-    raise newException(ValueError, "Not enough values on stack.")
-  let a = stack.head
-  case a.kind:
-  of joyInt:
-    return (a.intVal, stack.tail)
-  else:
-    raise newException(ValueError, "Not an integer.")
-
-
-proc pop_list(stack: JoyListType): (JoyListType, JoyListType) =
-  if stack.isEmpty:
-    raise newException(ValueError, "Not enough values on stack.")
-  let a = stack.head
-  case a.kind:
-  of joyList:
-    return (a.listVal, stack.tail)
-  else:
-    raise newException(ValueError, "Not a list.")
-
-
-proc pop_bool(stack: JoyListType): (bool, JoyListType) =
-  if stack.isEmpty:
-    raise newException(ValueError, "Not enough values on stack.")
-  let a = stack.head
-  case a.kind:
-  of joyTrue:
-    return (true, stack.tail)
-  of joyFalse:
-    return (false, stack.tail)
-  else:
-    raise newException(ValueError, "Not a list.")
-
-
-proc push_bool(a: bool, stack: JoyListType): JoyListType =
-  if a:
-    return j_true ^^ stack
-  return j_false ^^ stack
 
 
 proc as_list(thing: JoyType): JoyListType =
@@ -196,7 +272,7 @@ proc text_to_expression(text: string): JoyType =
       try:
         thing = JoyType(kind: joyInt, intVal: tok.initBigInt)
       except ValueError:
-        thing = JoyType(kind: joyAtom, atomVal: tok)
+        thing = JoyType(kind: joySymbol, symVal: tok)
 
     frame.add(thing)
 
@@ -221,7 +297,7 @@ proc joystr(s: JoyListType): string =
 
 proc pr_str(thing: JoyType): string =
   case thing.kind
-  of joyAtom: thing.atomVal
+  of joySymbol: thing.symVal
   of joyInt: thing.intVal.toString
   of joyList: "[" & joystr(thing.listVal) & "]"
   of joyTrue: "true"
@@ -244,14 +320,12 @@ proc print_stack*(stack: JoyListType): string =
 
 proc branch(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
     JoyListType, JoyType, JoyMapType) =
-  let (true_body, s0) = pop_list(stack)
-  let (false_body, s1) = pop_list(s0)
+  let (true_body_node, s0) = pop_list_node(stack)
+  let (false_body_node, s1) = pop_list_node(s0)
   let (flag, s2) = pop_bool(s1)
   if flag:
-    return (s2, push_quote_list(true_body, expression), dictionary)
-  return (s2, push_quote_list(false_body, expression), dictionary)
-  # I don't like how this extracts the quotes only to immediately
-  # re-wrap one of them in a joytype wrapper.
+    return (s2, push_quote(true_body_node, expression), dictionary)
+  return (s2, push_quote(false_body_node, expression), dictionary)
 
 
 proc clear(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
@@ -363,8 +437,8 @@ proc joy(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
     (term, e) = next_term(e)
     #echo pr_str(term)
     case term.kind
-    of joyAtom:
-      (s, e, d) = joy_eval(term.atomVal, s, e, d)
+    of joySymbol:
+      (s, e, d) = joy_eval(term.symVal, s, e, d)
     else:
       s = term ^^ s
 
