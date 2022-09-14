@@ -1,6 +1,7 @@
 import rdstdin, strutils
 import bigints, fp
 
+# TODO: rewrite expression to use list instead of list node.
 
 type
 
@@ -83,12 +84,8 @@ let empty_list = JoyType(kind: joyList, listVal: Nil[JoyType]())
 ██║   ██║   ██║   ██║██║     ╚════██║
 ╚██████╔╝   ██║   ██║███████╗███████║
  ╚═════╝    ╚═╝   ╚═╝╚══════╝╚══════╝
-]#
 
-
-#[
-
-Convert from nodes to values (or raise errors!)
+Convert from nodes to values or raise errors.
 
 ]#
 
@@ -101,12 +98,17 @@ proc as_list(thing: JoyType): JoyListType =
     raise newException(ValueError, "Only lists!")
 
 
-
+proc as_int(i: JoyType): BigInt =
+  # You've got a node, you want the int or it's an error.
+  case i.kind
+  of joyInt:
+    return i.intVal
+  else:
+    raise newException(ValueError, "Not an integer.")
 
 
 #[
 Push values onto stacks wrapping them in the correct node kinds.
-
 ]#
 
 proc push_int(n: BigInt, stack: JoyListType): JoyListType =
@@ -124,19 +126,13 @@ proc push_bool(a: bool, stack: JoyListType): JoyListType =
 
 
 #[
-
 Pop values from stacks.
-
 ]#
 
 proc pop_int(stack: JoyListType): (BigInt, JoyListType) =
   if stack.isEmpty:
     raise newException(ValueError, "Not enough values on stack.")
-  case stack.head.kind:
-  of joyInt:
-    return (stack.head.intVal, stack.tail)
-  else:
-    raise newException(ValueError, "Not an integer.")
+  return (as_int(stack.head), stack.tail)
 
 
 proc pop_list_node(stack: JoyListType): (JoyType, JoyListType) =
@@ -177,26 +173,27 @@ proc pop_bool(stack: JoyListType): (bool, JoyListType) =
 
 
 
+#[
+███████╗██╗  ██╗██████╗ ██████╗ ███████╗███████╗███████╗██╗ ██████╗ ███╗   ██╗
+██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝██║██╔═══██╗████╗  ██║
+█████╗   ╚███╔╝ ██████╔╝██████╔╝█████╗  ███████╗███████╗██║██║   ██║██╔██╗ ██║
+██╔══╝   ██╔██╗ ██╔═══╝ ██╔══██╗██╔══╝  ╚════██║╚════██║██║██║   ██║██║╚██╗██║
+███████╗██╔╝ ██╗██║     ██║  ██║███████╗███████║███████║██║╚██████╔╝██║ ╚████║
+╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
 
-# ███████╗██╗  ██╗██████╗ ██████╗ ███████╗███████╗███████╗██╗ ██████╗ ███╗   ██╗
-# ██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝██║██╔═══██╗████╗  ██║
-# █████╗   ╚███╔╝ ██████╔╝██████╔╝█████╗  ███████╗███████╗██║██║   ██║██╔██╗ ██║
-# ██╔══╝   ██╔██╗ ██╔═══╝ ██╔══██╗██╔══╝  ╚════██║╚════██║██║██║   ██║██║╚██╗██║
-# ███████╗██╔╝ ██╗██║     ██║  ██║███████╗███████║███████║██║╚██████╔╝██║ ╚████║
-# ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
-#
-# As elegant as it is to model the expression as a stack, it's not very
-# efficient, as concatenating definitions and other quoted programs to
-# the expression is a common and expensive operation.
-#
-# Instead, let's keep a stack of sub-expressions, reading from them
-# one-by-one, and prepending new sub-expressions to the stack rather than
-# concatenating them.
+As elegant as it is to model the expression as a stack, it's not very
+ficient, as concatenating definitions and other quoted programs to
+the expression is a common and expensive operation.
+
+Instead, let's keep a stack of sub-expressions, reading from them
+one-by-one, and prepending new sub-expressions to the stack rather than
+concatenating them.
+]#
 
 
 proc push_quote(quote: JoyType, expression: JoyType): JoyType =
   #[
-  Put the quoted program onto the stack-of-stacks.
+  Put the quoted program NODE onto the stack-of-stacks.
   ]#
   let ql = as_list(quote)
   if ql.isEmpty:
@@ -207,7 +204,7 @@ proc push_quote(quote: JoyType, expression: JoyType): JoyType =
 
 proc push_quote_list(quote: JoyListType, expression: JoyType): JoyType =
   #[
-  Put the quoted program onto the stack-of-stacks.
+  Put the quoted program LIST onto the stack-of-stacks.
   ]#
   return push_quote(JoyType(kind: joyList, listVal: quote), expression)
 
@@ -336,6 +333,16 @@ proc branch(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
   return (s2, push_quote(false_body_node, expression), dictionary)
 
 
+#[
+ ██████╗ ██████╗ ██████╗ ███████╗    ██╗    ██╗ ██████╗ ██████╗ ██████╗ ███████╗
+██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██║    ██║██╔═══██╗██╔══██╗██╔══██╗██╔════╝
+██║     ██║   ██║██████╔╝█████╗      ██║ █╗ ██║██║   ██║██████╔╝██║  ██║███████╗
+██║     ██║   ██║██╔══██╗██╔══╝      ██║███╗██║██║   ██║██╔══██╗██║  ██║╚════██║
+╚██████╗╚██████╔╝██║  ██║███████╗    ╚███╔███╔╝╚██████╔╝██║  ██║██████╔╝███████║
+ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝     ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝
+]#
+
+
 proc clear(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
     JoyListType, JoyType, JoyMapType) =
   return (empty_list.listVal, expression, dictionary)
@@ -428,12 +435,6 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyType,
   return (stack, expression, dictionary)
 
 
-
-#    = ≡ eq
-#    != ≡ ne
-#    <> ≡ ne
-
-
 proc joy(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
     JoyListType, JoyMapType) =
   var s = stack
@@ -453,13 +454,7 @@ proc joy(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
   return (s, d)
 
 
-#
 
-
-
-
-let stack = empty_list.listVal
-let dict = newMap[string, JoyListType]()
  #let exp = text_to_expression("2 3 add 23 mul 45 gt")
  #let exp = text_to_expression("2 3 false [add] [mul] branch")
  #let exp = text_to_expression("2 3 true [add] [mul] branch")
@@ -468,8 +463,8 @@ let dict = newMap[string, JoyListType]()
 
  #echo print_stack(s)
 
-var s = stack
-var d = dict
+var s = empty_list.listVal
+var d = newMap[string, JoyListType]()
 var exp: JoyType
 while true:
   try:
@@ -477,11 +472,9 @@ while true:
   except IOError:
     break
   try:
-    (s, d) = joy(s, exp, dict)
+    (s, d) = joy(s, exp, d)
   except:
     echo getCurrentExceptionMsg()
-    echo print_stack(s)
-    continue
   echo print_stack(s)
 
 
