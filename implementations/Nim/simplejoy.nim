@@ -2,8 +2,6 @@ import rdstdin, strutils
 import bigints, fp
 
 
-type
-
 #[
 ███████╗████████╗ █████╗  ██████╗██╗  ██╗
 ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
@@ -41,6 +39,9 @@ It will be important to keep clear the distinction between a list (instance of J
 list node (instance of JoyType) containing a list.
 
 ]#
+
+type
+
   JoyListType* = List[JoyType]
   JoyMapType* = Map[string, JoyListType]
 
@@ -168,10 +169,6 @@ proc pop_bool(stack: JoyListType): (bool, JoyListType) =
 # We might not need to reify to bool?  Just "if foo == j_true" everywhere?
 
 
-
-
-
-
 #[
 ███████╗██╗  ██╗██████╗ ██████╗ ███████╗███████╗███████╗██╗ ██████╗ ███╗   ██╗
 ██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝██║██╔═══██╗████╗  ██║
@@ -224,12 +221,14 @@ proc next_term(expression: JoyListType): (JoyType, JoyListType) =
     return (item, push_list(quote, etail))
 
 
-#██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
-#██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
-#██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝
-#██╔═══╝ ██╔══██║██╔══██╗╚════██║██╔══╝  ██╔══██╗
-#██║     ██║  ██║██║  ██║███████║███████╗██║  ██║
-#╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
+#[
+██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
+██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
+██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝
+██╔═══╝ ██╔══██║██╔══██╗╚════██║██╔══╝  ██╔══██╗
+██║     ██║  ██║██║  ██║███████║███████╗██║  ██║
+╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
+]#
 
 
 proc text_to_expression(text: string): JoyListType =
@@ -336,6 +335,28 @@ proc dip(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
     )
 
 
+proc i(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  let (body_node, s0) = pop_list_node(stack)
+  return (
+    s0,
+    push_quote(body_node, expression),
+    dictionary
+    )
+
+
+proc loop(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  let (body_node, s0) = pop_list_node(stack)
+  let (flag, s1) = pop_bool(s0)
+  if flag:
+    let l1 = body_node ^^ j_loop ^^ empty_list.listVal
+    let e0 = push_quote_list(l1, expression)
+    let e1 = push_quote(body_node, e0)
+    return (s1, e1, dictionary)
+  return (s1, expression, dictionary)
+
+
 #[
  ██████╗ ██████╗ ██████╗ ███████╗    ██╗    ██╗ ██████╗ ██████╗ ██████╗ ███████╗
 ██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██║    ██║██╔═══██╗██╔══██╗██╔══██╗██╔════╝
@@ -365,17 +386,33 @@ proc cons(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): 
     raise newException(ValueError, "Not enough values on stack.")
   return (push_list((s0.head ^^ tos), s0.tail), expression, dictionary)
 
-# ██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
-# ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
-# ██║██╔██╗ ██║   ██║   █████╗  ██████╔╝██████╔╝██████╔╝█████╗     ██║   █████╗  ██████╔╝
-# ██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗██╔═══╝ ██╔══██╗██╔══╝     ██║   ██╔══╝  ██╔══██╗
-# ██║██║ ╚████║   ██║   ███████╗██║  ██║██║     ██║  ██║███████╗   ██║   ███████╗██║  ██║
-# ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
-#
-# The joy() interpreter function is extrememly simple. It accepts a stack,
-# an expression, and a dictionary, and it iterates through the expression
-# putting values onto the stack and delegating execution to functions which
-# it looks up in the dictionary.
+
+proc dup(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  if stack.isEmpty:
+    raise newException(ValueError, "Cannot dup empty stack.")
+  return (stack.head ^^ stack, expression, dictionary)
+
+
+proc first(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  let (tos, s0) = pop_list(stack)
+  return (tos.head ^^ s0, expression, dictionary)
+
+
+#[
+██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
+██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
+██║██╔██╗ ██║   ██║   █████╗  ██████╔╝██████╔╝██████╔╝█████╗     ██║   █████╗  ██████╔╝
+██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗██╔═══╝ ██╔══██╗██╔══╝     ██║   ██╔══╝  ██╔══██╗
+██║██║ ╚████║   ██║   ███████╗██║  ██║██║     ██║  ██║███████╗   ██║   ███████╗██║  ██║
+╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+
+The joy() interpreter function is extrememly simple. It accepts a stack,
+an expression, and a dictionary, and it iterates through the expression
+putting values onto the stack and delegating execution to functions which
+it looks up in the dictionary.
+]#
 
 
 proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType,
@@ -442,6 +479,14 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType,
     return cons(stack, expression, dictionary)
   of "dip":
     return dip(stack, expression, dictionary)
+  of "dup":
+    return dup(stack, expression, dictionary)
+  of "first":
+    return first(stack, expression, dictionary)
+  of "i":
+    return i(stack, expression, dictionary)
+  of "loop":
+    return loop(stack, expression, dictionary)
 
   else:
     raise newException(UnknownWordError, "Unknown: " & sym)
