@@ -1,7 +1,6 @@
 import rdstdin, strutils
 import bigints, fp
 
-# TODO: rewrite expression to use list instead of list node.
 
 type
 
@@ -191,25 +190,23 @@ concatenating them.
 ]#
 
 
-proc push_quote(quote: JoyType, expression: JoyType): JoyType =
+proc push_quote(quote: JoyType, expression: JoyListType): JoyListType =
   #[
   Put the quoted program NODE onto the stack-of-stacks.
   ]#
-  let ql = as_list(quote)
-  if ql.isEmpty:
+  if as_list(quote).isEmpty:
     return expression
-  let el = as_list(expression)
-  return JoyType(kind: joyList, listVal: (quote ^^ el))
+  return quote ^^ expression
 
 
-proc push_quote_list(quote: JoyListType, expression: JoyType): JoyType =
+proc push_quote_list(quote: JoyListType, expression: JoyListType): JoyListType =
   #[
   Put the quoted program LIST onto the stack-of-stacks.
   ]#
   return push_quote(JoyType(kind: joyList, listVal: quote), expression)
 
 
-proc next_term(expression: JoyType): (JoyType, JoyType) =
+proc next_term(expression: JoyListType): (JoyType, JoyListType) =
   #[
   Return the next term from the expression and the new expression.
   Raises ValueError if called on an empty expression.
@@ -218,18 +215,13 @@ proc next_term(expression: JoyType): (JoyType, JoyType) =
     return item, push_quote(quote, expression)
 
   ]#
-  let el = as_list(expression) ## JoyListType
-  let ehead = el.head ## JoyType
-  let eheadl = as_list(ehead) ## JoyListType
+  let (eheadl, etail) = pop_list(expression)
   let item = eheadl.head ## JoyType
   let quote = eheadl.tail ## JoyListType
   if quote.isEmpty:
-    let t = JoyType(kind: joyList, listVal: el.tail)
-    return (item, t)
+    return (item, etail)
   else:
-    let q = JoyType(kind: joyList, listVal: quote)
-    let t = JoyType(kind: joyList, listVal: (q ^^ el.tail))
-    return (item, t)
+    return (item, push_list(quote, etail))
 
 
 #██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
@@ -240,7 +232,7 @@ proc next_term(expression: JoyType): (JoyType, JoyType) =
 #╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
 
 
-proc text_to_expression(text: string): JoyType =
+proc text_to_expression(text: string): JoyListType =
   #[
     Convert a string to a Joy expression.
 
@@ -284,7 +276,7 @@ proc text_to_expression(text: string): JoyType =
   if stack.len() != 0:
     raise newException(ParseError, "Unclosed bracket.")
 
-  JoyType(kind: joyList, listVal: frame.asList)
+  frame.asList
 
 
 #██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
@@ -323,8 +315,8 @@ proc print_stack*(stack: JoyListType): string =
 # ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
 
 
-proc branch(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
-    JoyListType, JoyType, JoyMapType) =
+proc branch(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
   let (true_body_node, s0) = pop_list_node(stack)
   let (false_body_node, s1) = pop_list_node(s0)
   let (flag, s2) = pop_bool(s1)
@@ -343,13 +335,13 @@ proc branch(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
 ]#
 
 
-proc clear(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
-    JoyListType, JoyType, JoyMapType) =
+proc clear(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
   return (empty_list.listVal, expression, dictionary)
 
 
-proc concat(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
-    JoyListType, JoyType, JoyMapType) =
+proc concat(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
   let (tos, s0) = pop_list(stack)
   let (second, s1) = pop_list(s0)
   return (push_list((second ++ tos), s1), expression, dictionary)
@@ -368,8 +360,8 @@ proc concat(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
 # it looks up in the dictionary.
 
 
-proc joy_eval(sym: string, stack: JoyListType, expression: JoyType,
-    dictionary: JoyMapType): (JoyListType, JoyType, JoyMapType) =
+proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType,
+    dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   case sym
 
   of "add":
@@ -435,14 +427,14 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyType,
   return (stack, expression, dictionary)
 
 
-proc joy(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
+proc joy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
     JoyListType, JoyMapType) =
   var s = stack
   var d = dictionary
-  var e = push_quote(expression, empty_list)
+  var e = push_quote_list(expression, empty_list.listVal)
   var term: JoyType
 
-  while not e.listVal.isEmpty:
+  while not e.isEmpty:
     (term, e) = next_term(e)
     #echo pr_str(term)
     case term.kind
@@ -465,7 +457,7 @@ proc joy(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
 
 var s = empty_list.listVal
 var d = newMap[string, JoyListType]()
-var exp: JoyType
+var exp: JoyListType
 while true:
   try:
     exp = text_to_expression(readLineFromStdin("joy? "))
