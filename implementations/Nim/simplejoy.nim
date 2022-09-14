@@ -137,11 +137,11 @@ proc next_term(expression: JoyType): (JoyType, JoyType) =
     return item, push_quote(quote, expression)
 
   ]#
-  let el = as_list(expression)  ## JoyListType
-  let ehead = el.head  ## JoyType
-  let eheadl = as_list(ehead)  ## JoyListType
-  let item = eheadl.head  ## JoyType
-  let quote = eheadl.tail  ## JoyListType
+  let el = as_list(expression) ## JoyListType
+  let ehead = el.head ## JoyType
+  let eheadl = as_list(ehead) ## JoyListType
+  let item = eheadl.head ## JoyType
+  let quote = eheadl.tail ## JoyListType
   if quote.isEmpty:
     let t = JoyType(kind: joyList, listVal: el.tail)
     return (item, t)
@@ -160,7 +160,7 @@ proc next_term(expression: JoyType): (JoyType, JoyType) =
 
 
 proc text_to_expression(text: string): JoyType =
-    #[
+  #[
     Convert a string to a Joy expression.
 
     When supplied with a string this function returns a Python datastructure
@@ -171,39 +171,39 @@ proc text_to_expression(text: string): JoyType =
     :rtype: stack
     :raises ParseError: if the parse fails.
     ]#
-    var frame : seq[JoyType] = @[]
-    var stack : seq[seq[JoyType]] = @[]
-    var thing : JoyType
+  var frame: seq[JoyType] = @[]
+  var stack: seq[seq[JoyType]] = @[]
+  var thing: JoyType
 
-    for tok in text.replace("[", " [ ").replace("]", " ] ").splitWhitespace():
+  for tok in text.replace("[", " [ ").replace("]", " ] ").splitWhitespace():
 
-        if tok == "[":
-            stack.add(frame)
-            frame = newSeq[JoyType](0)
-            continue
+    if tok == "[":
+      stack.add(frame)
+      frame = newSeq[JoyType](0)
+      continue
 
-        if tok == "]":
-            thing = JoyType(kind: joyList, listVal: frame.asList)
-            try:
-                frame = stack.pop()
-            except IndexDefect:
-                raise newException(ParseError, "Extra closing bracket.")
-        elif tok == "true":
-            thing = j_true
-        elif tok == "false":
-            thing = j_false
-        else:
-            try:
-                thing = JoyType(kind: joyInt, intVal: tok.initBigInt)
-            except ValueError:
-                thing = JoyType(kind: joyAtom, atomVal: tok)
+    if tok == "]":
+      thing = JoyType(kind: joyList, listVal: frame.asList)
+      try:
+        frame = stack.pop()
+      except IndexDefect:
+        raise newException(ParseError, "Extra closing bracket.")
+    elif tok == "true":
+      thing = j_true
+    elif tok == "false":
+      thing = j_false
+    else:
+      try:
+        thing = JoyType(kind: joyInt, intVal: tok.initBigInt)
+      except ValueError:
+        thing = JoyType(kind: joyAtom, atomVal: tok)
 
-        frame.add(thing)
-    
-    if stack.len() != 0:
-        raise newException(ParseError, "Unclosed bracket.")
+    frame.add(thing)
 
-    JoyType(kind: joyList, listVal: frame.asList)
+  if stack.len() != 0:
+    raise newException(ParseError, "Unclosed bracket.")
+
+  JoyType(kind: joyList, listVal: frame.asList)
 
 
 #██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
@@ -242,7 +242,8 @@ proc print_stack*(stack: JoyListType): string =
 # ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
 
 
-proc branch(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (JoyListType, JoyType, JoyMapType) =
+proc branch(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
+    JoyListType, JoyType, JoyMapType) =
   let (true_body, s0) = pop_list(stack)
   let (false_body, s1) = pop_list(s0)
   let (flag, s2) = pop_bool(s1)
@@ -253,11 +254,13 @@ proc branch(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (J
   # re-wrap one of them in a joytype wrapper.
 
 
-proc clear(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (JoyListType, JoyType, JoyMapType) =
+proc clear(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
+    JoyListType, JoyType, JoyMapType) =
   return (empty_list.listVal, expression, dictionary)
 
 
-proc concat(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (JoyListType, JoyType, JoyMapType) =
+proc concat(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
+    JoyListType, JoyType, JoyMapType) =
   let (tos, s0) = pop_list(stack)
   let (second, s1) = pop_list(s0)
   return (push_list((second ++ tos), s1), expression, dictionary)
@@ -276,7 +279,8 @@ proc concat(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (J
 # it looks up in the dictionary.
 
 
-proc joy_eval(sym: string, stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (JoyListType, JoyType, JoyMapType) =
+proc joy_eval(sym: string, stack: JoyListType, expression: JoyType,
+    dictionary: JoyMapType): (JoyListType, JoyType, JoyMapType) =
   case sym
 
   of "add":
@@ -348,11 +352,12 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyType, dictionary: 
 #    <> ≡ ne
 
 
-proc joy(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (JoyListType, JoyMapType) =
+proc joy(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (
+    JoyListType, JoyMapType) =
   var s = stack
   var d = dictionary
   var e = push_quote(expression, empty_list)
-  var term : JoyType
+  var term: JoyType
 
   while not e.listVal.isEmpty:
     (term, e) = next_term(e)
@@ -373,24 +378,24 @@ proc joy(stack: JoyListType, expression: JoyType, dictionary: JoyMapType): (JoyL
 
 let stack = empty_list.listVal
 let dict = newMap[string, JoyListType]()
-#let exp = text_to_expression("2 3 add 23 mul 45 gt")
-#let exp = text_to_expression("2 3 false [add] [mul] branch")
-#let exp = text_to_expression("2 3 true [add] [mul] branch")
-#let exp = text_to_expression("[add] [mul] concat")
-#let (s,d) = joy(stack, exp, dict)
+ #let exp = text_to_expression("2 3 add 23 mul 45 gt")
+ #let exp = text_to_expression("2 3 false [add] [mul] branch")
+ #let exp = text_to_expression("2 3 true [add] [mul] branch")
+ #let exp = text_to_expression("[add] [mul] concat")
+ #let (s,d) = joy(stack, exp, dict)
 
-#echo print_stack(s)
+ #echo print_stack(s)
 
 var s = stack
 var d = dict
-var exp : JoyType
+var exp: JoyType
 while true:
   try:
     exp = text_to_expression(readLineFromStdin("joy? "))
   except IOError:
     break
   try:
-    (s,d) = joy(s, exp, dict)
+    (s, d) = joy(s, exp, dict)
   except:
     echo getCurrentExceptionMsg()
     echo print_stack(s)
