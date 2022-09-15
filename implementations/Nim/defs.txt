@@ -16,7 +16,6 @@ at drop first
 average [sum] [size] cleave /
 b [i] dip i
 binary unary popd
-bool truthy
 ccccons ccons ccons
 ccons cons cons
 clear [] swaack pop

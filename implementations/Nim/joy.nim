@@ -552,7 +552,7 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType,
     return swaack(stack, expression, dictionary)
   of "swap":
     return swap(stack, expression, dictionary)
-  of "truthy":
+  of "bool":  # bool is a reserved word in Nim.
     return truthy(stack, expression, dictionary)
 
   else:
