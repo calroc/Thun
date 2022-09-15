@@ -95,7 +95,7 @@ proc as_list(thing: JoyType): JoyListType =
   of joyList:
     return thing.listVal
   else:
-    raise newException(ValueError, "Only lists!")
+    raise newException(ValueError, "Not a list.")
 
 
 proc as_int(i: JoyType): BigInt =
@@ -184,7 +184,7 @@ proc pop_bool(stack: JoyListType): (bool, JoyListType) =
 ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
 
 As elegant as it is to model the expression as a stack, it's not very
-ficient, as concatenating definitions and other quoted programs to
+efficient, as concatenating definitions and other quoted programs to
 the expression is a common and expensive operation.
 
 Instead, let's keep a stack of sub-expressions, reading from them
@@ -294,22 +294,19 @@ proc text_to_expression(text: string): JoyListType =
 
 proc pr_str(thing: JoyType): string
 
-proc joystr(s: JoyListType): string =
+proc print_expression(s: JoyListType): string =
   s.map(pr_str).asSeq.join(" ")
 
 proc pr_str(thing: JoyType): string =
   case thing.kind
   of joySymbol: thing.symVal
   of joyInt: thing.intVal.toString
-  of joyList: "[" & joystr(thing.listVal) & "]"
+  of joyList: "[" & print_expression(thing.listVal) & "]"
   of joyTrue: "true"
   of joyFalse: "false"
 
-proc print_expression*(stack: JoyListType): string =
-  joystr(stack)
-
 proc print_stack*(stack: JoyListType): string =
-  joystr(stack.reverse)
+  print_expression(stack.reverse)
 
 
 # ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ████████╗ ██████╗ ██████╗ ███████╗
@@ -320,8 +317,7 @@ proc print_stack*(stack: JoyListType): string =
 # ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
 
 
-proc branch(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc branch(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (true_body_node, s0) = pop_list_node(stack)
   let (false_body_node, s1) = pop_list_node(s0)
   let (flag, s2) = pop_bool(s1)
@@ -330,9 +326,10 @@ proc branch(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType)
   return (s2, push_quote(false_body_node, expression), dictionary)
 
 
-proc dip(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc dip(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (body_node, s0) = pop_list_node(stack)
+  if s0.isEmpty:
+    raise newException(ValueError, "Not enough values on stack.")
   let tos_as_list_of_one = s0.head ^^ empty_list.listVal
   return (
     s0.tail,
@@ -341,8 +338,7 @@ proc dip(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
     )
 
 
-proc i(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc i(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (body_node, s0) = pop_list_node(stack)
   return (
     s0,
@@ -351,8 +347,7 @@ proc i(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
     )
 
 
-proc loop(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc loop(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (body_node, s0) = pop_list_node(stack)
   let (flag, s1) = pop_bool(s0)
   if flag:
@@ -373,76 +368,65 @@ proc loop(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): 
 ]#
 
 
-proc clear(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc clear(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   return (empty_list.listVal, expression, dictionary)
 
 
-proc concat(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc concat(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (tos, s0) = pop_list(stack)
   let (second, s1) = pop_list(s0)
   return (push_list((second ++ tos), s1), expression, dictionary)
 
 
-proc cons(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc cons(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (tos, s0) = pop_list(stack)
   if s0.isEmpty:
     raise newException(ValueError, "Not enough values on stack.")
   return (push_list((s0.head ^^ tos), s0.tail), expression, dictionary)
 
 
-proc dup(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc dup(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   if stack.isEmpty:
     raise newException(ValueError, "Cannot dup empty stack.")
   return (stack.head ^^ stack, expression, dictionary)
 
 
-proc first(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc first(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (tos, s0) = pop_list(stack)
   if tos.isEmpty:
     raise newException(ValueError, "Cannot take first of empty list.")
   return (tos.head ^^ s0, expression, dictionary)
 
 
-proc pop(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc pop(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   if stack.isEmpty:
     raise newException(ValueError, "Cannot pop empty stack.")
   return (stack.tail, expression, dictionary)
 
 
-proc rest(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc rest(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (tos, s0) = pop_list(stack)
   if tos.isEmpty:
     raise newException(ValueError, "Cannot take rest of empty list.")
   return (push_list(tos.tail, s0), expression, dictionary)
 
 
-proc stack(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc stack(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   return (push_list(stack, stack), expression, dictionary)
 
 
-proc swaack(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc swaack(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (tos, s0) = pop_list(stack)
   return (push_list(s0, tos), expression, dictionary)
 
 
-proc swap(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc swap(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (tos, s0) = pop_any(stack)
   let (second, s1) = pop_any(s0)
   return ((second ^^ tos ^^ s1), expression, dictionary)
 
 
-proc truthy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyListType, JoyMapType) =
+proc truthy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (tos, s0) = pop_any(stack)
   case tos.kind:
   of joyTrue, joyFalse:
@@ -470,59 +454,63 @@ it looks up in the dictionary.
 ]#
 
 
-proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType,
-    dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
+proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   case sym
 
-  of "add":
+  of "+":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_int(a + b, s1), expression, dictionary)
 
-  of "mul":
+  of "-":
+    let (a, s0) = pop_int(stack)
+    let (b, s1) = pop_int(s0)
+    return (push_int(b - a, s1), expression, dictionary)
+
+  of "*":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_int(a * b, s1), expression, dictionary)
 
-  of "div":
+  of "/":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_int(b div a, s1), expression, dictionary)
 
-  of "mod":
+  of "%":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_int(b mod a, s1), expression, dictionary)
 
-  of "gt":
+  of ">":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_bool(b > a, s1), expression, dictionary)
 
-  of "lt":
+  of "<":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_bool(b < a, s1), expression, dictionary)
 
-  of "ge":
+  of ">=":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_bool(b >= a, s1), expression, dictionary)
 
-  of "le":
+  of "<=":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_bool(b <= a, s1), expression, dictionary)
 
-  of "ne":
+  of "!=", "<>":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_bool(b != a, s1), expression, dictionary)
 
-  of "eq":
+  of "=":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
-    return (push_bool(b != a, s1), expression, dictionary)
+    return (push_bool(b == a, s1), expression, dictionary)
 
   of "branch":
     return branch(stack, expression, dictionary)
@@ -552,7 +540,7 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType,
     return swaack(stack, expression, dictionary)
   of "swap":
     return swap(stack, expression, dictionary)
-  of "bool":  # bool is a reserved word in Nim.
+  of "bool": # bool is a reserved word in Nim.
     return truthy(stack, expression, dictionary)
 
   else:
@@ -562,8 +550,7 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType,
     return (stack, push_quote_list(def.get(), expression), dictionary)
 
 
-proc joy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
-    JoyListType, JoyMapType) =
+proc joy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyMapType) =
   var s = stack
   var d = dictionary
   var e = push_quote_list(expression, empty_list.listVal)
@@ -581,7 +568,6 @@ proc joy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
   return (s, d)
 
 
-
 proc add_def(def: string, dictionary: var JoyMapType) =
   let d = text_to_expression(def)
   let sym = d.head
@@ -592,26 +578,17 @@ proc add_def(def: string, dictionary: var JoyMapType) =
     raise newException(ValueError, def)
 
 
-proc defs_file2dict(defs_filename: string = "defs.txt"): JoyMapType =
-  var strm = newFileStream(defs_filename, fmRead)
-  var dictionary = newMap[string, JoyListType]()
-  var line = ""
-  if not isNil(strm):
-    while strm.readLine(line):
-      if line.isEmptyOrWhitespace:
-        continue
-      add_def(line, dictionary)
-    strm.close()
-  return dictionary
-
-
- #let exp = text_to_expression("2 3 add 23 mul 45 gt")
- #let exp = text_to_expression("2 3 false [add] [mul] branch")
- #let exp = text_to_expression("2 3 true [add] [mul] branch")
- #let exp = text_to_expression("[add] [mul] concat")
- #let (s,d) = joy(stack, exp, dict)
-
-#echo print_stack(s)
+#proc defs_file2dict(defs_filename: string = "defs.txt"): JoyMapType =
+#  var strm = newFileStream(defs_filename, fmRead)
+#  var dictionary = newMap[string, JoyListType]()
+#  var line = ""
+#  if not isNil(strm):
+#    while strm.readLine(line):
+#      if line.isEmptyOrWhitespace:
+#        continue
+#      add_def(line, dictionary)
+#    strm.close()
+#  return dictionary
 
 
 #let dictionary = defs_file2dict()
@@ -637,40 +614,3 @@ while true:
   except:
     echo getCurrentExceptionMsg()
   echo print_stack(s)
-
-
-
-#echo pr_str(text_to_expression("""
-#    [   [[abs] ii <=]
-#        [
-#            [<>] [pop !-] ||
-#        ] &&
-#    ]
-#    [[    !-] [[++]] [[--]] ifte dip]
-#    [[pop !-]  [--]   [++]  ifte    ]
-#    ifte
-#    true false 23
-#"""))
-
-# we could start with an empty list and add two expressions
-# but instead let's preload a few "commands":
-#let e = text_to_expression("[55 true][42]")
-#let t = text_to_expression("23")
-#
-#let f = push_quote(t, e)
-
-#echo pr_str(t)
-#echo pr_str(e)
-#echo pr_str(f)
-#
-#var (a, b) = next_term(f)
-#echo pr_str(a)
-#(a, b) = next_term(b)
-#echo pr_str(a)
-#(a, b) = next_term(b)
-#echo pr_str(a)
-#(a, b) = next_term(b)
-#echo pr_str(a)
-
-
-#text_to_expression("""[] [[]]""")

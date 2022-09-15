@@ -1,6 +1,5 @@
-SOURCES = defs.nim joy.nim joylib.nim printer.nim reader.nim types.nim utils.nim
 
-joy: $(SOURCES) defs.txt
+joy: joy.nim defs.txt
 	nim c joy.nim
 
 defs.txt: ../defs.txt

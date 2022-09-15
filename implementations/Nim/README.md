@@ -1,5 +1,7 @@
 # Joy interpreter in Nim
 
+> Simple pleasures are the best.
+
 This interpreter written in Nim is part of the Thun project, which
 includes interpreters written in Python and Prolog, and some explorations
 towards compilers for Joy written in Prolog.
