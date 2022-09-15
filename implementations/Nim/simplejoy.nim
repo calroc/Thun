@@ -1,4 +1,4 @@
-import rdstdin, strutils
+import rdstdin, streams, strutils
 import bigints, fp
 
 
@@ -556,9 +556,10 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType,
     return truthy(stack, expression, dictionary)
 
   else:
-    raise newException(UnknownWordError, "Unknown: " & sym)
-
-  return (stack, expression, dictionary)
+    let def = dictionary.get(sym)
+    if def.isEmpty:
+      raise newException(UnknownWordError, "Unknown: " & sym)
+    return (stack, push_quote_list(def.get(), expression), dictionary)
 
 
 proc joy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
@@ -581,16 +582,50 @@ proc joy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
 
 
 
+proc add_def(def: string, dictionary: var JoyMapType) =
+  let d = text_to_expression(def)
+  let sym = d.head
+  case sym.kind:
+  of joySymbol:
+    dictionary = dictionary + (sym.symVal, d.tail)
+  else:
+    raise newException(ValueError, def)
+
+
+proc defs_file2dict(defs_filename: string = "defs.txt"): JoyMapType =
+  var strm = newFileStream(defs_filename, fmRead)
+  var dictionary = newMap[string, JoyListType]()
+  var line = ""
+  if not isNil(strm):
+    while strm.readLine(line):
+      if line.isEmptyOrWhitespace:
+        continue
+      add_def(line, dictionary)
+    strm.close()
+  return dictionary
+
+
  #let exp = text_to_expression("2 3 add 23 mul 45 gt")
  #let exp = text_to_expression("2 3 false [add] [mul] branch")
  #let exp = text_to_expression("2 3 true [add] [mul] branch")
  #let exp = text_to_expression("[add] [mul] concat")
  #let (s,d) = joy(stack, exp, dict)
 
- #echo print_stack(s)
+#echo print_stack(s)
+
+
+#let dictionary = defs_file2dict()
+#var d = dictionary
+
+
+const defs_text = staticRead"defs.txt"
+var d = newMap[string, JoyListType]()
+for line in defs_text.splitLines:
+  if line.isEmptyOrWhitespace:
+    continue
+  add_def(line, d)
 
 var s = empty_list.listVal
-var d = newMap[string, JoyListType]()
 var exp: JoyListType
 while true:
   try:
