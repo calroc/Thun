@@ -270,6 +270,8 @@ proc text_to_expression(text: string): JoyListType =
       thing = j_true
     elif tok == "false":
       thing = j_false
+    elif tok == "-":  # see https://github.com/nim-lang/bigints/issues/116
+      thing = JoyType(kind: joySymbol, symVal: tok)
     else:
       try:
         thing = JoyType(kind: joyInt, intVal: tok.initBigInt)
