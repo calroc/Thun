@@ -11,3 +11,4 @@ build
 Thun.egg-info
 dist
 __pycache__
+implementations/Nim/joy
