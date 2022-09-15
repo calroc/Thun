@@ -129,6 +129,12 @@ proc push_bool(a: bool, stack: JoyListType): JoyListType =
 Pop values from stacks.
 ]#
 
+proc pop_any(stack: JoyListType): (JoyType, JoyListType) =
+  if stack.isEmpty:
+    raise newException(ValueError, "Not enough values on stack.")
+  return (stack.head, stack.tail)
+
+
 proc pop_int(stack: JoyListType): (BigInt, JoyListType) =
   if stack.isEmpty:
     raise newException(ValueError, "Not enough values on stack.")
@@ -397,7 +403,56 @@ proc dup(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
 proc first(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
     JoyListType, JoyListType, JoyMapType) =
   let (tos, s0) = pop_list(stack)
+  if tos.isEmpty:
+    raise newException(ValueError, "Cannot take first of empty list.")
   return (tos.head ^^ s0, expression, dictionary)
+
+
+proc pop(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  if stack.isEmpty:
+    raise newException(ValueError, "Cannot pop empty stack.")
+  return (stack.tail, expression, dictionary)
+
+
+proc rest(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  let (tos, s0) = pop_list(stack)
+  if tos.isEmpty:
+    raise newException(ValueError, "Cannot take rest of empty list.")
+  return (push_list(tos.tail, s0), expression, dictionary)
+
+
+proc stack(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  return (push_list(stack, stack), expression, dictionary)
+
+
+proc swaack(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  let (tos, s0) = pop_list(stack)
+  return (push_list(s0, tos), expression, dictionary)
+
+
+proc swap(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  let (tos, s0) = pop_any(stack)
+  let (second, s1) = pop_any(s0)
+  return ((second ^^ tos ^^ s1), expression, dictionary)
+
+
+proc truthy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
+    JoyListType, JoyListType, JoyMapType) =
+  let (tos, s0) = pop_any(stack)
+  case tos.kind:
+  of joyTrue, joyFalse:
+    return (stack, expression, dictionary)
+  of joyInt:
+    return (push_bool(tos.intVal != zero, s0), expression, dictionary)
+  of joyList:
+    return (push_bool(not tos.listVal.isEmpty, s0), expression, dictionary)
+  else:
+    raise newException(ValueError, "Cannot Boolify.")
 
 
 #[
@@ -487,6 +542,18 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType,
     return i(stack, expression, dictionary)
   of "loop":
     return loop(stack, expression, dictionary)
+  of "pop":
+    return pop(stack, expression, dictionary)
+  of "rest":
+    return rest(stack, expression, dictionary)
+  of "stack":
+    return stack(stack, expression, dictionary)
+  of "swaack":
+    return swaack(stack, expression, dictionary)
+  of "swap":
+    return swap(stack, expression, dictionary)
+  of "truthy":
+    return truthy(stack, expression, dictionary)
 
   else:
     raise newException(UnknownWordError, "Unknown: " & sym)
