@@ -4,7 +4,7 @@
 
 Function
 
-Expect a number on the top of the satck and put that many items from uner it onto a new list.
+Expect a number on the top of the stack and [cons] that many items from under it onto a new list.
 
 ### Example
 

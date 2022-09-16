@@ -33,14 +33,14 @@ Joy and its deeper facets as well as how to program in it and several
 interesting aspects.  It's quite a treasure trove.</p>
 <h2>Example Code</h2>
 <p>Here is an example of Joy code:</p>
-<pre><code>[   [[abs] ii &lt;=]
-    [
-        [&lt;&gt;] [pop !-] ||
-    ] &amp;&amp;
-]
-[[    !-] [[++]] [[--]] ifte dip]
-[[pop !-]  [--]   [++]  ifte    ]
-ifte
+<pre><code>square_spiral ≡ [_p] [_then] [_else] ifte
+
+_p  ≡ [_p0] [_p1] &amp;&amp;
+_p0 ≡ [abs] ii &lt;=
+_p1 ≡ [&lt;&gt;] [pop !-] ||
+
+_then ≡ [    !-] [[++]] [[--]] ifte dip
+_else ≡ [pop !-]  [--]   [++]  ifte
 </code></pre>
 <p>It might seem unreadable but with a little familiarity it becomes just as legible as any other notation.</p>
 <p>This function accepts two integers on the stack and increments or
@@ -88,8 +88,8 @@ coordinate pair in a square spiral (like the kind used to construct an
 <h3>Jupyter Notebooks</h3>
 <p><a href="/notebooks/index.html">Notebooks</a></p>
 <p>The docs/notebooks dir contains Jupyter notebooks, ... TODO</p>
-<h2>Function Reference</h2>
-<p><a href="/FR.html">Function Reference</a></p>
+<h3>Function Reference</h3>
+<p><a href="/FuncRef.html">Function Reference</a></p>
 <h3>Building the Docs</h3>
 <p>Run <code>make</code> in the <code>docs</code> directory.</p>
 <h2>Basics of Joy</h2>

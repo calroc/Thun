@@ -32,14 +32,14 @@ interesting aspects.  It's quite a treasure trove.
 
 Here is an example of Joy code:
 
-    [   [[abs] ii <=]
-        [
-            [<>] [pop !-] ||
-        ] &&
-    ]
-    [[    !-] [[++]] [[--]] ifte dip]
-    [[pop !-]  [--]   [++]  ifte    ]
-    ifte
+    square_spiral ≡ [_p] [_then] [_else] ifte
+
+    _p  ≡ [_p0] [_p1] &&
+    _p0 ≡ [abs] ii <=
+    _p1 ≡ [<>] [pop !-] ||
+
+    _then ≡ [    !-] [[++]] [[--]] ifte dip
+    _else ≡ [pop !-]  [--]   [++]  ifte
 
 It might seem unreadable but with a little familiarity it becomes just as legible as any other notation.
 
@@ -97,9 +97,9 @@ coordinate pair in a square spiral (like the kind used to construct an
 
 The docs/notebooks dir contains Jupyter notebooks, ... TODO
 
-## Function Reference
+### Function Reference
 
-[Function Reference](/FR.html)
+[Function Reference](/FuncRef.html)
 
 ### Building the Docs
 
