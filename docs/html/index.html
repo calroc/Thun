@@ -91,9 +91,9 @@ coordinate pair in a square spiral (like the kind used to construct an
 <p>Run <code>make</code> in the <code>docs</code> directory.</p>
 <h2>Basics of Joy</h2>
 <p>Joy is stack-based.  There is a main stack that holds data items:
-integers, floats, strings, functions, and sequences or quotes which hold
+integers, bools, symbols, and sequences or quotes which hold
 data items themselves.</p>
-<pre><code>23 1.8 'a string' "another" dup [21 18 /] [1 [2 [3]]]
+<pre><code>23 dup [21 18 /] [1 [2 [3]]]
 </code></pre>
 <p>A Joy expression is just a sequence (a.k.a. "list") of items.  Sequences
 intended as programs are called "quoted programs".  Evaluation proceeds

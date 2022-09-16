@@ -2,6 +2,7 @@ README=../README.md
 BUILD_SCRIPT=build_index.py
 GENERATOR=python $(BUILD_SCRIPT)
 HTML_OUTPUT_DIR=./html
+NOTEBOOK_OUTPUT_DIR=$(HTML_OUTPUT_DIR)/notebooks
 
 
 all: $(HTML_OUTPUT_DIR)/index.html
