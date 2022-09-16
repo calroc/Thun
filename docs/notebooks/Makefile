@@ -8,9 +8,9 @@ docs_html = $(patsubst %.ipynb,%.html,$(docs))
 all: mov
 
 clean:
-	$(RM) -v $(docs_html)
+	$(RM) -v $(docs_html) index.html
 
-index.html: build_index.py
+index.html: build_index.py $(docs_html)
 	python build_index.py > index.html
 
 $(docs_html): %.html : %.ipynb
