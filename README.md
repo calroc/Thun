@@ -93,7 +93,13 @@ coordinate pair in a square spiral (like the kind used to construct an
 
 ### Jupyter Notebooks
 
+[Notebooks](/notebooks/index.html)
+
 The docs/notebooks dir contains Jupyter notebooks, ... TODO
+
+## Function Reference
+
+[Function Reference](/FR.html)
 
 ### Building the Docs
 

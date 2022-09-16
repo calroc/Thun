@@ -1,21 +1,23 @@
+# Docs notebook makefile.
+
 docs      = $(wildcard *.ipynb)
 docs_html = $(patsubst %.ipynb,%.html,$(docs))
 
-.PHONY: clean sdist test docs
+.PHONY: clean
 
-
-all: $(docs_html)
-
+all: mov
 
 clean:
 	$(RM) -v $(docs_html)
 
+index.html: build_index.py
+	python build_index.py > index.html
 
 $(docs_html): %.html : %.ipynb
-	python -m nbconvert --to html $<
+	jupyter nbconvert --to html --template lab $<
+
+mov: $(docs_html) index.html
+	cp -v $? ../html/notebooks/
 
 
-
-mov: $(move_us)
-	cp -v $? ./sphinx_docs/notebooks/
-
+# markdown Functor-Reference.md | tidy5 -utf8 --add-meta-charset yes > ../../html/FR.html

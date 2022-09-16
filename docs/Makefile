@@ -1,3 +1,5 @@
+# Docs toplevel makefile.
+
 README=../README.md
 BUILD_SCRIPT=build_index.py
 GENERATOR=python $(BUILD_SCRIPT)
@@ -12,4 +14,3 @@ $(HTML_OUTPUT_DIR)/index.html: $(README) $(BUILD_SCRIPT)
 
 
 #	python -m markdown -f index.html -o html $(README)
-
