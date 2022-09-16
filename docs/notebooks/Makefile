@@ -17,7 +17,7 @@ $(docs_html): %.html : %.ipynb
 	jupyter nbconvert --to html --template lab $<
 
 mov: $(docs_html) index.html
-	cp -v $? ../html/notebooks/
+	mv -v $? ../html/notebooks/
 
 
 # markdown Functor-Reference.md | tidy5 -utf8 --add-meta-charset yes > ../../html/FR.html

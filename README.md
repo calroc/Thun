@@ -27,7 +27,6 @@ and a great deal of fascinating material mostly written by Von Thun on
 Joy and its deeper facets as well as how to program in it and several
 interesting aspects.  It's quite a treasure trove.
 
-
 ## Example Code
 
 Here is an example of Joy code:
@@ -185,6 +184,7 @@ by changing the pending expression and intermediate state is put there.
 
 [Homepage at La Trobe University](http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language)
 
+[The original Thun/Joypy site](https://web.archive.org/web/20220411010035/https://joypy.osdn.io/)
 
 
 --------------------------------------------------
