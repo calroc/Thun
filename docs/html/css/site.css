@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond&family=Inconsolata&display=swap');
+
+
+body {
+ background: #fff;
+ color: black;
+ font-family: 'EB Garamond 12';
+}
+
+footer {
+ margin-top: 2em;
+ font-family: 'EB Garamond SC 08';
+ font-size: x-small;
+ text-align: center;
+}
+
+pre {
+ font-size: large;
+ margin-left: 2em;
+ margin-bottom: 1em;
+ font-family: 'Inconsolata';
+}
+
+blockquote {
+ background: #eee;
+ background: #eee;
+ border-left: 0.2em solid black;
+ padding: 0.5em;
+}
+
+img {
+ width: 30%;
+}

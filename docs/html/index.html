@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Thun</title>
+<link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+<h1>Thun</h1>
+<p>A Dialect of Joy.</p>
+<p>version 0.5.0</p>
+<blockquote>
+<p>Simple pleasures are the best.</p>
+</blockquote>
+<p>Joy is a programming language created by Manfred von Thun that is easy to
+use and understand and has many other nice properties.  This project
+implements interpreters for a dialect that attempts to stay very close to
+the spirit of Joy but does not precisely match the behaviour of the
+original version written in C.</p>
+<p>Joy is:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Purely_functional_programming">Purely Functional</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Stack-oriented_programming_language">Stack-based</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Concatenative_programming_language">Concatinative</a> (See also <a href="http://www.concatenative.org/wiki/view/Concatenative%20language">concatenative.org</a>)</li>
+<li><a href="https://joypy.osdn.io/notebooks/Categorical.html">Categorical</a></li>
+</ul>
+<p>The best source (no pun intended) for learning about Joy is the
+information made available at the
+<a href="http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language">website of La Trobe University</a>
+which contains source code for the original C interpreter, Joy language source code for various functions,
+and a great deal of fascinating material mostly written by Von Thun on
+Joy and its deeper facets as well as how to program in it and several
+interesting aspects.  It's quite a treasure trove.</p>
+<h2>Example Code</h2>
+<p>Here is an example of Joy code:</p>
+<pre><code>[   [[abs] ii &lt;=]
+    [
+        [&lt;&gt;] [pop !-] ||
+    ] &amp;&amp;
+]
+[[    !-] [[++]] [[--]] ifte dip]
+[[pop !-]  [--]   [++]  ifte    ]
+ifte
+</code></pre>
+<p>It might seem unreadable but with a little familiarity it becomes just as legible as any other notation.</p>
+<p>This function accepts two integers on the stack and increments or
+decrements one of them such that the new pair of numbers is the next
+coordinate pair in a square spiral (like the kind used to construct an
+<a href="https://en.wikipedia.org/wiki/Ulam_spiral">Ulam Spiral</a>
+).  For more information see <a href="/notebooks/Square_Spiral.html">Square Spiral Example Joy Code</a></p>
+<h2>Project Hosted on <a href="https://osdn.net/projects/joypy/">OSDN</a></h2>
+<ul>
+<li><a href="https://osdn.net/projects/joypy/scm/git/Thun/">Source Repository</a> (<a href="https://github.com/calroc/Thun">mirror</a>)</li>
+<li><a href="https://todo.sr.ht/~sforman/thun-der">Bug tracker</a> (<a href="https://osdn.net/projects/joypy/ticket/">old tracker</a>)</li>
+<li><a href="https://osdn.net/projects/joypy/forums/">Forums</a></li>
+<li><a href="https://osdn.net/projects/joypy/lists/">Mailing list</a></li>
+</ul>
+<h2>Directory structure</h2>
+<pre><code>Thun
+ |
+ |-- LICENSE - GPLv3
+ |-- README.md - this file
+ |
+ |-- archive
+ |   |-- Joy-Programming.zip
+ |   `-- README
+ |
+ |-- docs
+ |   |-- Makefile - Generate https://joypy.osdn.io/ site.
+ |   |-- notebooks - Jupyter Notebooks and supporting modules
+ |   |-- reference - Docs for each function.
+ |   |-- dep-graphs - Generated dependency graphs.
+ |   `-- README - Table of Contents
+ |
+ `-- implementations
+     |
+     |-- Nim - interpreter
+     |
+     |-- Prolog - interpreter
+     |            type inference
+     |            work-in-progress compiler
+     |
+     |-- Python - interpreter
+     |
+     `-- defs.txt - common Joy definitions for all interpreters
+</code></pre>
+<h2>Documentation</h2>
+<h3>Jupyter Notebooks</h3>
+<p>The docs/notebooks dir contains Jupyter notebooks, ... TODO</p>
+<h3>Building the Docs</h3>
+<p>Run <code>make</code> in the <code>docs</code> directory.</p>
+<h2>Basics of Joy</h2>
+<p>Joy is stack-based.  There is a main stack that holds data items:
+integers, floats, strings, functions, and sequences or quotes which hold
+data items themselves.</p>
+<pre><code>23 1.8 'a string' "another" dup [21 18 /] [1 [2 [3]]]
+</code></pre>
+<p>A Joy expression is just a sequence (a.k.a. "list") of items.  Sequences
+intended as programs are called "quoted programs".  Evaluation proceeds
+by iterating through the terms in the expression, putting all literals
+onto the main stack and executing functions as they are encountered.
+Functions receive the current stack and return the next stack.</p>
+<h3>Literals and Simple Functions</h3>
+<pre><code>joy? 1 2 3
+      . 1 2 3
+    1 . 2 3
+  1 2 . 3
+1 2 3 .
+
+1 2 3 &lt;-top
+
+joy? + +
+1 2 3 . + +
+  1 5 . +
+    6 .
+
+6 &lt;-top
+
+joy? 7 *
+  6 . 7 *
+6 7 . *
+ 42 .
+
+42 &lt;-top
+
+joy?
+</code></pre>
+<h3>Combinators</h3>
+<p>The main loop is very simple as most of the action happens through what
+are called "combinators": functions which accept quoted programs on the
+stack and run them in various ways.  These combinators factor specific
+patterns that provide the effect of control-flow in other languages (such
+as ifte which is like if..then..else..)  Combinators receive the current
+expession in addition to the stack and return the next expression.  They
+work by changing the pending expression the interpreter is about to
+execute.  The combinators could work by making recursive calls to the
+interpreter and all intermediate state would be held in the call stack of
+the implementation language, in this joy implementation they work instead
+by changing the pending expression and intermediate state is put there.</p>
+<pre><code>joy? 23 [0 &gt;] [dup --] while
+
+...
+
+-&gt; 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+</code></pre>
+<h2>TODO:</h2>
+<p>§.4.4 Definitions and More Elaborate Functions</p>
+<p>§.4.5 Programming and Metaprogramming</p>
+<p>§.4.6 Refactoring</p>
+<p>§.6 References &amp; Further Reading</p>
+<p><a href="https://en.wikipedia.org/wiki/Joy_%28programming_language%29">Wikipedia entry for Joy</a></p>
+<p><a href="http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language">Homepage at La Trobe University</a></p>
+<hr>
+<p>Misc...</p>
+<p>Stack based - literals (as functions) - functions - combinators -
+Refactoring and making new definitions - traces and comparing
+performance - metaprogramming as programming, even the lowly integer
+range function can be expressed in two phases: building a specialized
+program and then executing it with a combinator - ?Partial evaluation?
+- ?memoized dynamic dependency graphs? - algebra</p>
+<hr>
+<p>Copyright © 2014-2022 Simon Forman</p>
+<p>This file is part of Thun</p>
+<p>Thun is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any
+later version.</p>
+<p>Thun is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.</p>
+<p>You should have received a copy of the GNU General Public License along
+with Thun.  If not see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+</body>
+</html>
+
