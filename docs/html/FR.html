@@ -1,0 +1,2605 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="generator" content=
+"HTML Tidy for HTML5 for FreeBSD version 5.8.0">
+<meta charset="utf-8">
+<title></title>
+</head>
+<body>
+<p>Version -10.0.0</p>
+<p>Each function, combinator, or definition should be documented
+here.</p>
+<hr>
+<h2>&</h2>
+<p>See <a href="#and">and</a>.</p>
+<hr>
+<h2>&amp;&</h2>
+<p>Combinator</p>
+<p>Short-circuiting Boolean AND</p>
+<p>Accept two quoted programs, run the first and expect a Boolean
+value, if it's <code>true</code> pop it and run the second program
+(which should also return a Boolean value) otherwise pop the second
+program (leaving <code>false</code> on the stack.)</p>
+<pre><code>   [A] [B] &amp;&
+---------------- true
+        B
+
+
+   [A] [B] &amp;&
+---------------- false
+     false
+</code></pre>
+<h3>Definition</h3>
+<pre><code>nulco [nullary [false]] dip branch
+</code></pre>
+<h3>Derivation</h3>
+<p>TODO: this is derived in one of the notebooks I think, look it
+up and link to it, or copy the content here.</p>
+<h3>Discussion</h3>
+<p>This is seldom useful, I suspect, but this way you have it.</p>
+<h3>Crosslinks</h3>
+<p><a href="#section-25">||</a></p>
+<hr>
+<h2>*</h2>
+<p>See <a href="#mul">mul</a>.</p>
+<hr>
+<h2>•</h2>
+<p>See <a href="#id">id</a>.</p>
+<hr>
+<h2>^</h2>
+<p>See <a href="#xor">xor</a>.</p>
+<hr>
+<h2>=</h2>
+<p>See <a href="#eq">eq</a>.</p>
+<hr>
+<h2>!=</h2>
+<p>See <a href="#ne">ne</a>.</p>
+<hr>
+<h2>!-</h2>
+<p>Function</p>
+<p>Not negative.</p>
+<pre><code>    n !-
+----------- n &lt; 0
+   false
+
+
+   n !-
+---------- n &gt;= 0
+   true
+</code></pre>
+<h3>Definition</h3>
+<pre><code>0 \&gt;=
+</code></pre>
+<h3>Discussion</h3>
+<p>Return a Boolean value indicating if a number is greater than or
+equal to zero.</p>
+<hr>
+<h2>&gt;</h2>
+<p>See <a href="#gt">gt</a>.</p>
+<hr>
+<h2>&gt;=</h2>
+<p>See <a href="#ge">ge</a>.</p>
+<hr>
+<h2>&gt;&gt;</h2>
+<p>See <a href="#rshift">rshift</a>.</p>
+<hr>
+<h2>-</h2>
+<p>See <a href="#sub">sub</a>.</p>
+<hr>
+<h2>--</h2>
+<p>See <a href="#pred">pred</a>.</p>
+<hr>
+<h2>&lt;</h2>
+<p>See <a href="#lt">lt</a>.</p>
+<hr>
+<h2>&lt;=</h2>
+<p>See <a href="#le">le</a>.</p>
+<hr>
+<h2>&lt;&gt;</h2>
+<p>See <a href="#ne">ne</a>.</p>
+<hr>
+<h2>\&lt;{}</h2>
+<p>Function</p>
+<pre><code>   ... a &lt;{}
+----------------
+   ... [] a
+</code></pre>
+<h3>Definition</h3>
+<pre><code>[] swap
+</code></pre>
+<h3>Discussion</h3>
+<p>Tuck an empty list just under the first item on the stack.</p>
+<h3>Crosslinks</h3>
+<p><a href="#section-18">&lt;&lt;{}</a></p>
+<hr>
+<h2>&lt;&lt;</h2>
+<p>See <a href="#lshift">lshift</a>.</p>
+<hr>
+<h2>\&lt;\&lt;{}</h2>
+<p>Function</p>
+<pre><code>   ... b a &lt;{}
+-----------------
+   ... [] b a
+</code></pre>
+<h3>Definition</h3>
+<pre><code>[] rollup
+</code></pre>
+<h3>Discussion</h3>
+<p>Tuck an empty list just under the first two items on the
+stack.</p>
+<h3>Crosslinks</h3>
+<p><a href="#section-16">&lt;{}</a></p>
+<hr>
+<h2>%</h2>
+<p>See <a href="#mod">mod</a>.</p>
+<hr>
+<h2>+</h2>
+<p>See <a href="#add">add</a>.</p>
+<hr>
+<h2>++</h2>
+<p>See <a href="#succ">succ</a>.</p>
+<hr>
+<h2>?</h2>
+<p>Function</p>
+<p>Is the item on the top of the stack "truthy"?</p>
+<h3>Definition</h3>
+<blockquote>
+<p><a href="#dup">dup</a> <a href="#bool">bool</a></p>
+</blockquote>
+<h3>Discussion</h3>
+<p>You often want to test the truth value of an item on the stack
+without consuming the item.</p>
+<h3>Crosslinks</h3>
+<p><a href="#bool">bool</a></p>
+<hr>
+<h2>/</h2>
+<p>See <a href="#floordiv">floordiv</a>.</p>
+<hr>
+<h2>//</h2>
+<p>See <a href="#floordiv">floordiv</a>.</p>
+<hr>
+<h2>/floor</h2>
+<p>See <a href="#floordiv">floordiv</a>.</p>
+<hr>
+<h2>\|\|</h2>
+<p>Combinator</p>
+<p>Short-circuiting Boolean OR</p>
+<h3>Definition</h3>
+<blockquote>
+<p><a href="#nulco">nulco</a> [<a href="#nullary">nullary</a>]
+<a href="#dip">dip</a> [true] <a href="#branch">branch</a></p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Accept two quoted programs, run the first and expect a Boolean
+value, if it’s <code>false</code> pop it and run the second program
+(which should also return a Boolean value) otherwise pop the second
+program (leaving <code>true</code> on the stack.)</p>
+<pre><code>   [A] [B] ||
+---------------- A -&gt; false
+        B
+
+
+   [A] [B] ||
+---------------- A -&gt; true
+      true
+</code></pre>
+<h3>Crosslinks</h3>
+<p><a href="#section-1">&amp;&</a></p>
+<hr>
+<h2>abs</h2>
+<p>Function</p>
+<p>Return the absolute value of the argument.</p>
+<h3>Definition</h3>
+<blockquote>
+<p><a href="#dup">dup</a> 0 &lt; [] [<a href="#neg">neg</a>]
+<a href="#branch">branch</a></p>
+</blockquote>
+<hr>
+<h2>add</h2>
+<p>Basis Function</p>
+<p>Add two numbers together: a + b.</p>
+<hr>
+<h2>anamorphism</h2>
+<p>Combinator</p>
+<p>Build a list of values from a generator program <code>G</code>
+and a stopping predicate <code>P</code>.</p>
+<pre><code>           [P] [G] anamorphism
+-----------------------------------------
+   [P] [pop []] [G] [dip swons] genrec
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[<a href="#pop">pop</a> []] <a href="#swap">swap</a> [<a href=
+"#dip">dip</a> <a href="#swons">swons</a>] <a href=
+"#genrec">genrec</a></p>
+</blockquote>
+<h3>Example</h3>
+<p>The <code>range</code> function generates a list of the integers
+from 0 to n - 1:</p>
+<blockquote>
+<p>[0 &lt;=] [-- dup] anamorphism</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>See the <a href=
+"https://joypy.osdn.io/notebooks/Recursion_Combinators.html">Recursion
+Combinators notebook</a>.</p>
+<hr>
+<h2>and</h2>
+<p>Basis Function</p>
+<p>Logical bit-wise AND.</p>
+<h3>Crosslinks</h3>
+<p><a href="#or">or</a> <a href="#xor">xor</a></p>
+<hr>
+<h2>app1</h2>
+<p>"apply one"</p>
+<p>Combinator</p>
+<p>Given a quoted program on TOS and anything as the second stack
+item run the program without disturbing the stack and replace the
+two args with the first result of the program.</p>
+<pre><code>         ... x [Q] app1
+---------------------------------
+   ... [x ...] [Q] infra first
+</code></pre>
+<p>This is the same effect as the <a href="#unary">unary</a>
+combinator.</p>
+<h3>Definition</h3>
+<blockquote>
+<p><a href="#nullary">nullary</a> <a href="#popd">popd</a></p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Just a specialization of <code>nullary</code> really. Its
+parallelizable cousins are more useful.</p>
+<h3>Crosslinks</h3>
+<p><a href="#app2">app2</a> <a href="#app3">app3</a> <a href=
+"#appN">appN</a> <a href="#unary">unary</a></p>
+<hr>
+<h2>app2</h2>
+<p>Combinator</p>
+<p>Like <a href="#app1">app1</a> with two items.</p>
+<pre><code>   ... y x [Q] . app2
+-----------------------------------
+   ... [y ...] [Q] . infra first
+       [x ...] [Q]   infra first
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[grba] [swap] [grba] [swap]] [dip] [[infrst]] [cons] [ii]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Unlike <a href="#app1">app1</a>, which is essentially an alias
+for <a href="#unary">unary</a>, this function is not the same as
+<a href="#binary">binary</a>. Instead of running one program using
+exactly two items from the stack and pushing one result (as
+<a href="#binary">binary</a> does) this function takes two items
+from the stack and runs the program twice, separately for each of
+the items, then puts both results onto the stack.</p>
+<p>This is not currently implemented as parallel processes but it
+can (and should) be done.</p>
+<h3>Crosslinks</h3>
+<p><a href="#app1">app1</a> <a href="#app3">app3</a> <a href=
+"#appN">appN</a> <a href="#unary">unary</a></p>
+<hr>
+<h2>app3</h2>
+<p>Combinator</p>
+<p>Like [app1] with three items.</p>
+<pre><code>     ... z y x [Q] . app3
+-----------------------------------
+   ... [z ...] [Q] . infra first
+       [y ...] [Q]   infra first
+       [x ...] [Q]   infra first
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>3 [appN]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>See [app2].</p>
+<h3>Crosslinks</h3>
+<p><a href="#app1">app1</a> <a href="#app2">app2</a> <a href=
+"#appN">appN</a> <a href="#unary">unary</a></p>
+<hr>
+<h2>appN</h2>
+<p>Combinator</p>
+<p>Like [app1] with any number of items.</p>
+<pre><code>   ... xN ... x2 x1 x0 [Q] n . appN
+--------------------------------------
+   ... [xN ...] [Q] . infra first
+                   ...
+       [x2 ...] [Q]   infra first
+       [x1 ...] [Q]   infra first
+       [x0 ...] [Q]   infra first
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[grabN]] [codi] [map] [disenstacken]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This function takes a quoted function <code>Q</code> and an
+integer and runs the function that many times on that many stack
+items. See also [app2].</p>
+<h3>Crosslinks</h3>
+<p><a href="#app1">app1</a> <a href="#app2">app2</a> <a href=
+"#app3">app3</a> <a href="#unary">unary</a></p>
+<hr>
+<h2>at</h2>
+<p>See <a href="#getitem">getitem</a>.</p>
+<hr>
+<h2>average</h2>
+<p>Function</p>
+<p>Compute the average of a list of numbers. (Currently broken
+until I can figure out what to do about "numeric tower" in
+Thun.)</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[[sum]] [[size]] [cleave] [/]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Theoretically this function would compute the sum and the size
+in two separate threads, then divide. This works but a compiled
+version would probably do better to sum and count the list once, in
+one thread, eh?</p>
+<p>As an exercise in Functional Programming in Joy it would be fun
+to convert this into a catamorphism. See the <a href=
+"https://joypy.osdn.io/notebooks/Recursion_Combinators.html">Recursion
+Combinators notebook</a>.</p>
+<hr>
+<h2>b</h2>
+<p>Combinator</p>
+<p>Run two quoted programs</p>
+<pre><code>   [P] [Q] b
+---------------
+      P Q
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[i]] [dip] [i]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This combinator may seem trivial but it comes in handy.</p>
+<h3>Crosslinks</h3>
+<p><a href="#dupdip">dupdip</a> <a href="#ii">ii</a></p>
+<hr>
+<h2>binary</h2>
+<p>Combinator</p>
+<p>Run a quoted program using exactly two stack values and leave
+the first item of the result on the stack.</p>
+<pre><code>   ... y x [P] binary
+-----------------------
+        ... a
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[unary] [popd]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Runs any other quoted function and returns its first result
+while consuming exactly two items from the stack.</p>
+<h3>Crosslinks</h3>
+<p><a href="#nullary">nullary</a> <a href="#ternary">ternary</a>
+<a href="#unary">unary</a></p>
+<hr>
+<h2>bool</h2>
+<p>Basis Function</p>
+<p>Convert the item on the top of the stack to a Boolean value.</p>
+<h3>Discussion</h3>
+<p>For integers 0 is <code>false</code> and any other number is
+<code>true</code>; for lists the empty list is <code>false</code>
+and all other lists are <code>true</code>.</p>
+<h3>Crosslinks</h3>
+<p>[not]</p>
+<hr>
+<h2>branch</h2>
+<p>Basis Combinator</p>
+<p>Use a Boolean value to select and run one of two quoted
+programs.</p>
+<pre><code>   false [F] [T] branch
+--------------------------
+          F
+
+   true [F] [T] branch
+-------------------------
+             T
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[rolldown] [choice] [i]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This is one of the fundamental operations (although it can be
+defined in terms of [choice] as above). The more common
+"if..then..else" construct [ifte] adds a predicate function that is
+evaluated [nullary].</p>
+<h3>Crosslinks</h3>
+<p>[choice] [ifte] [select]</p>
+<hr>
+<h2>ccccons</h2>
+<p>Function</p>
+<pre><code>   a b c d [...] ccccons
+---------------------------
+       [a b c d ...]
+</code></pre>
+<p>Do [cons] four times.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[ccons] [ccons]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[ccons] [cons] [times]</p>
+<hr>
+<h2>ccons</h2>
+<p>Function</p>
+<pre><code>   a b [...] ccons
+---------------------
+      [a b ...]
+</code></pre>
+<p>Do [cons] two times.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[cons] [cons]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[cons] [ccons]</p>
+<hr>
+<h2>choice</h2>
+<p>Basis Function</p>
+<p>Use a Boolean value to select one of two items.</p>
+<pre><code>   a b false choice
+----------------------
+          a
+
+   a b true choice
+---------------------
+          b
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[pop]] [[popd]] [branch]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>It's a matter of taste whether you implement this in terms of
+[branch] or the other way around.</p>
+<h3>Crosslinks</h3>
+<p>[branch] [select]</p>
+<hr>
+<h2>clear</h2>
+<p>Basis Function</p>
+<p>Clear everything from the stack.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[stack] [bool] [[pop] [stack] [bool]] [loop]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[stack] [swaack]</p>
+<hr>
+<h2>cleave</h2>
+<p>Combinator</p>
+<p>Run two programs in parallel, consuming one additional item, and
+put their results on the stack.</p>
+<pre><code>   ... x [A] [B] cleave
+------------------------
+        ... a b
+</code></pre>
+<h3>Derivation</h3>
+<blockquote>
+<p>[fork] [popdd]</p>
+</blockquote>
+<h3>Example</h3>
+<pre><code>   1 2 3 [+] [-] cleave
+--------------------------
+         1 2 5 -1
+</code></pre>
+<h3>Discussion</h3>
+<p>One of a handful of useful parallel combinators.</p>
+<h3>Crosslinks</h3>
+<p>[clop] [fork] [map]</p>
+<hr>
+<h2>clop</h2>
+<p>Combinator</p>
+<p>Run two programs in parallel, consuming two additional items,
+and put their results on the stack.</p>
+<pre><code>   ... x y [A] [B] clop
+--------------------------
+        ... a b
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[cleave] [popdd]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Like [cleave] but consumes an additional item from the
+stack.</p>
+<pre><code>   1 2 3 4 [+] [-] clop
+--------------------------
+         1 2 7 -1
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[cleave] [fork] [map]</p>
+<hr>
+<h2>cmp</h2>
+<p>Combinator</p>
+<p>Take two values and three quoted programs on the stack and run
+one of the three depending on the results of comparing the two
+values.</p>
+<pre><code>   a b [G] [E] [L] cmp
+------------------------- a &gt; b
+        G
+
+   a b [G] [E] [L] cmp
+------------------------- a = b
+            E
+
+   a b [G] [E] [L] cmp
+------------------------- a &lt; b
+                L
+</code></pre>
+<h3>Discussion</h3>
+<p>This is useful sometimes, and you can [dup] or [dupd] with two
+quoted programs to handle the cases when you just want to deal with
+[&lt;=] or [&gt;=] and not all three possibilities, e.g.:</p>
+<pre><code>[G] [EL] dup cmp
+
+[GE] [L] dupd cmp
+</code></pre>
+<p>Or even:</p>
+<pre><code>[GL] [E] over cmp
+</code></pre>
+<h3>Crosslinks</h3>
+<p>TODO: link to tree notebooks where this was used.</p>
+<hr>
+<h2>codi</h2>
+<p>Combinator</p>
+<p>Take a quoted program from the stack, [cons] the next item onto
+it, then [dip] the whole thing under what was the third item on the
+stack.</p>
+<pre><code>   a b [F] . codi
+--------------------
+         b . F a
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[cons] [dip]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This is one of those weirdly specific functions that turns out
+to be useful in a few places.</p>
+<h3>Crosslinks</h3>
+<p>[appN] [codireco]</p>
+<hr>
+<h2>codireco</h2>
+<p>Combinator</p>
+<p>This is part of the [make_generator] function. You would not use
+this combinator directly.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[codi] [reco]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>See [make_generator] and the <a href=
+"https://joypy.osdn.io/notebooks/Generator_Programs.html#an-interesting-variation">
+"Using <code>x</code> to Generate Values" notebook</a> as well as
+<a href=
+"https://www.kevinalbrecht.com/code/joy-mirror/j05cmp.html">Recursion
+Theory and Joy</a> by Manfred von Thun.</p>
+<h3>Crosslinks</h3>
+<p>[make_generator]</p>
+<hr>
+<h2>concat</h2>
+<p>Function</p>
+<p>Concatinate two lists.</p>
+<pre><code>   [a b c] [d e f] concat
+----------------------------
+       [a b c d e f]
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[first] [first<em>two] [flatten] [fourth] [getitem] [remove]
+[rest] [reverse] [rrest] [second] [shift] [shunt] [size] [sort]
+[split</em>at] [split_list] [swaack] [third] [zip]</p>
+<hr>
+<h2>cond</h2>
+<p>Combinator</p>
+<p>This combinator works like a case statement. It expects a single
+quote on the stack that must contain zero or more condition quotes
+and a default quote. Each condition quote should contain a quoted
+predicate followed by the function expression to run if that
+predicate returns <code>true</code>. If no predicates return
+<code>true</code> the default function runs.</p>
+<pre><code>[
+    [ [Predicate0] Function0 ]
+    [ [Predicate1] Function1 ]
+    ...
+    [ [PredicateN] FunctionN ]
+    [Default]
+]
+cond
+</code></pre>
+<h3>Discussion</h3>
+<p>It works by rewriting into a chain of nested [ifte]{.title-ref}
+expressions, e.g.:</p>
+<pre><code>      [[[B0] T0] [[B1] T1] [D]] cond
+-----------------------------------------
+   [B0] [T0] [[B1] [T1] [D] ifte] ifte
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[ifte]</p>
+<hr>
+<h2>cons</h2>
+<p>Basis Function</p>
+<p>Given an item and a list, append the item to the list to make a
+new list.</p>
+<pre><code>   a [...] cons
+------------------
+     [a ...]
+</code></pre>
+<h3>Discussion</h3>
+<p>Cons is a <a href=
+"https://en.wikipedia.org/wiki/Cons#Lists">venerable old function
+from Lisp</a>. Its inverse operation is [uncons].</p>
+<h3>Crosslinks</h3>
+<p>[uncons]</p>
+<hr>
+<h2>dinfrirst</h2>
+<p>Combinator</p>
+<p>Specialist function (that means I forgot what it does and
+why.)</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[dip] [infrst]</p>
+</blockquote>
+<hr>
+<h2>dip</h2>
+<p>Basis Combinator</p>
+<p>The <code>dip</code> combinator expects a quoted program on the
+stack and below it some item, it hoists the item into the
+expression and runs the program on the rest of the stack.</p>
+<pre><code>   ... x [Q] . dip
+---------------------
+         ... . Q x
+</code></pre>
+<h3>Discussion</h3>
+<p>This along with [infra] are enough to update any datastructure.
+See the <a href=
+"https://joypy.osdn.io/notebooks/Zipper.html">"Traversing
+Datastructures with Zippers" notebook</a>.</p>
+<p>Note that the item that was on the top of the stack
+(<code>x</code> in the example above) will not be treated specially
+by the interpreter when it is reached again. This is something of a
+footgun. My advice is to avoid putting bare unquoted symbols onto
+the stack, but then you can't use symbols as "atoms" and also use
+<code>dip</code> and <code>infra</code> to operate on compound
+datastructures with atoms in them. This is a kind of side-effect of
+the Continuation-Passing Style. The <code>dip</code> combinator
+could "set aside" the item and replace it after running
+<code>Q</code> but that means that there is an "extra space" where
+the item resides while <code>Q</code> runs. One of the nice things
+about CPS is that the whole state is recorded in the stack and
+pending expression (not counting modifications to the
+dictionary.)</p>
+<h3>Crosslinks</h3>
+<p>[dipd] [dipdd] [dupdip] [dupdipd] [infra]</p>
+<hr>
+<h2>dipd</h2>
+<p>Combinator</p>
+<p>Like [dip] but expects two items.</p>
+<pre><code>   ... y x [Q] . dipd
+-------------------------
+           ... . Q y x
+</code></pre>
+<h3>Discussion</h3>
+<p>See [dip].</p>
+<h3>Crosslinks</h3>
+<p>[dip] [dipdd] [dupdip] [dupdipd] [infra]</p>
+<hr>
+<h2>dipdd</h2>
+<p>Combinator</p>
+<p>Like [dip] but expects three items. :</p>
+<pre><code>   ... z y x [Q] . dip
+-----------------------------
+             ... . Q z y x
+</code></pre>
+<h3>Discussion</h3>
+<p>See [dip].</p>
+<h3>Crosslinks</h3>
+<p>[dip] [dipd] [dupdip] [dupdipd] [infra]</p>
+<hr>
+<h2>disenstacken</h2>
+<p>Function</p>
+<p>The <code>disenstacken</code> function expects a list on top of
+the stack and makes that the stack discarding the rest of the
+stack.</p>
+<pre><code>   1 2 3 [4 5 6] disenstacken
+--------------------------------
+            6 5 4
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[clear]] [dip] [reverse] <a href="#unstack">unstack</a></p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Note that the order of the list is not changed, it just looks
+that way because the stack is printed with the top on the right
+while lists are printed with the top or head on the left.</p>
+<h3>Crosslinks</h3>
+<p>[enstacken] [stack] <a href="#unstack">unstack</a></p>
+<hr>
+<h2>div</h2>
+<p>See <a href="#floordiv">floordiv</a>.</p>
+<hr>
+<h2>divmod</h2>
+<p>Function</p>
+<pre><code>    x y divmod
+------------------
+     q      r
+   (x/y)  (x%y)
+</code></pre>
+<p>Invariant: <code>qy + r = x</code>.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[[floordiv]] [[mod]] [clop]</p>
+</blockquote>
+<hr>
+<h2>down<em>to</em>zero</h2>
+<p>Function</p>
+<p>Given a number greater than zero put all the Natural numbers
+(including zero) less than that onto the stack.</p>
+<h3>Example</h3>
+<pre><code>   3 down_to_zero
+--------------------
+      3 2 1 0
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[0 &gt;] [[dup] [--]] [while]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[range]</p>
+<hr>
+<h2>drop</h2>
+<p>Function</p>
+<p>Expects an integer and a quote on the stack and returns the
+quote with n items removed off the top.</p>
+<h3>Example</h3>
+<pre><code>   [a b c d] 2 drop
+----------------------
+       [c d]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[rest]] [times]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[take]</p>
+<hr>
+<h2>dup</h2>
+<p>Basis Function</p>
+<p>"Dup"licate the top item on the stack.</p>
+<pre><code>   a dup
+-----------
+    a a
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[dupd] [dupdd] [dupdip] [dupdipd]</p>
+<hr>
+<h2>dupd</h2>
+<p>Function</p>
+<p>[dup] the second item down on the stack.</p>
+<pre><code>   a b dupd
+--------------
+    a a b
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[dup]] [dip]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[dup] [dupdd] [dupdip] [dupdipd]</p>
+<hr>
+<h2>dupdd</h2>
+<p>Function</p>
+<p>[dup] the third item down on the stack.</p>
+<pre><code>   a b c dupdd
+-----------------
+     a a b c
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[dup]] [dipd]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[dup] [dupd] [dupdip] [dupdipd]</p>
+<hr>
+<h2>dupdip</h2>
+<p>Combinator</p>
+<p>Apply a function <code>F</code> and [dup] the item under it on
+the stack.</p>
+<pre><code>   a [F] dupdip
+------------------
+      a F a
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[dupd] [dip]</p>
+</blockquote>
+<h3>Derivation</h3>
+<pre><code>a [F] dupdip
+a [F] dupd dip
+a [F] [dup] dip dip
+a dup [F] dip
+a a [F] dip
+a F a
+</code></pre>
+<h3>Discussion</h3>
+<p>A very common and useful combinator.</p>
+<h3>Crosslinks</h3>
+<p>[dupdipd]</p>
+<hr>
+<h2>dupdipd</h2>
+<p>Combinator</p>
+<p>Run a copy of program <code>F</code> under the next item down on
+the stack.</p>
+<pre><code>   a [F] dupdipd
+-------------------
+      F a [F]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[dup] [dipd]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[dupdip]</p>
+<hr>
+<h2>enstacken</h2>
+<p>Function</p>
+<p>Put the stack onto the stack replacing the contents of the
+stack.</p>
+<pre><code>   ... a b c enstacken
+-------------------------
+       [c b a ...]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[stack] [[clear]] [dip]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This is a destructive version of [stack]. See the note under
+[disenstacken] about the apparent but illusory reversal of the
+stack.</p>
+<h3>Crosslinks</h3>
+<p>[stack] [unstack] [disenstacken]</p>
+<hr>
+<h2>eq</h2>
+<p>Basis Function</p>
+<p>Compare the two items on the top of the stack for equality and
+replace them with a Boolean value.</p>
+<pre><code>   a b eq
+-------------
+   Boolean
+   (a = b)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[cmp] [ge] [gt] [le] [lt] [ne]</p>
+<hr>
+<h2>first</h2>
+<p>Function</p>
+<p>Replace a list with its first item.</p>
+<pre><code>   [a ...]
+--------------
+      a
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[uncons] [pop]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[second] [third] [fourth] [rest]</p>
+<hr>
+<h2>first_two</h2>
+<p>Function</p>
+<p>Replace a list with its first two items.</p>
+<pre><code>   [a b ...] first_two
+-------------------------
+           a b
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[uncons] [first]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[first] [second] [third] [fourth] [rest]</p>
+<hr>
+<h2>flatten</h2>
+<p>Function</p>
+<p>Given a list of lists, concatinate them.</p>
+<h3>Example</h3>
+<pre><code>   [[1 2] [3 [4] 5] [6 7]] flatten
+-------------------------------------
+          [1 2 3 [4] 5 6 7]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[\&lt;{}] [[concat]] [step]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Note that only one "level" of lists is flattened. In the example
+above <code>[4]</code> is not unquoted.</p>
+<h3>Crosslinks</h3>
+<p>[concat] [first] [first<em>two] [fourth] [getitem] [remove]
+[rest] [reverse] [rrest] [second] [shift] [shunt] [size] [sort]
+[split</em>at] [split_list] [swaack] [third] [zip]</p>
+<hr>
+<h2>floor</h2>
+<p>Basis Function</p>
+<p>Return the largest integer \&lt;= x.</p>
+<h3>Discussion</h3>
+<p>This function doesn't make sense (yet) to have because there are
+(as yet) only integers in the system.</p>
+<hr>
+<h2>floordiv</h2>
+<p>Basis Function</p>
+<p>I don't know why this is called "floor" div, I think it rounds
+its result down (not towards zero or up.)</p>
+<pre><code>   a b floordiv
+------------------
+      (a/b)
+</code></pre>
+<h3>Discussion</h3>
+<p>All the division commands need to be revisited when the "numeric
+tower" for Thun gets nailed down.</p>
+<h3>Crosslinks</h3>
+<p>[divmod]</p>
+<hr>
+<h2>fork</h2>
+<p>Combinator</p>
+<p>Run two quoted programs in parallel and replace them with their
+results.</p>
+<pre><code>   ... [F] [G] fork
+----------------------
+       ... f g
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[i]] [app2]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>The basic parallelism combinator, the two programs are run
+independently.</p>
+<h3>Crosslinks</h3>
+<p>[cleave] [clop] [map]</p>
+<hr>
+<h2>fourth</h2>
+<p>Function</p>
+<p>Replace a list with its fourth item.</p>
+<pre><code>   [a b c d ...] fourth
+--------------------------
+          d
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[rest] [third]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[first] [second] [third] [rest]</p>
+<hr>
+<h2>gcd</h2>
+<p>Function</p>
+<p>Take two integers from the stack and replace them with their
+Greatest Common Denominator.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>true [[tuck] [mod] [dup] 0 [&gt;]] [loop] [pop]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Euclid's Algorithm</p>
+<hr>
+<h2>gcd2</h2>
+<p>Function</p>
+<p>Compiled GCD function.</p>
+<h3>Discussion</h3>
+<p>See [gcd].</p>
+<h3>Crosslinks</h3>
+<p>[gcd]</p>
+<hr>
+<h2>ge</h2>
+<p>Basis Function</p>
+<p>Greater-than-or-equal-to comparison of two numbers.</p>
+<pre><code>   a b ge
+--------------
+   Boolean
+   (a &gt;= b)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[cmp] [eq] [gt] [le] [lt] [ne]</p>
+<hr>
+<h2>genrec</h2>
+<p>Combinator</p>
+<p><strong>Gen</strong>eral <strong>Rec</strong>ursion
+Combinator.</p>
+<pre><code>                      [if] [then] [rec1] [rec2] genrec
+---------------------------------------------------------------------
+   [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[[genrec]] [ccccons]] [nullary] [swons] [concat] [ifte]</p>
+</blockquote>
+<p>(Note that this definition includes the <code>genrec</code>
+symbol itself, it is self-referential. This is possible because the
+definition machinery does not check that symbols in defs are in the
+dictionary. <code>genrec</code> is the only self-referential
+definition.)</p>
+<h3>Discussion</h3>
+<p>See the <a href=
+"https://joypy.osdn.io/notebooks/Recursion_Combinators.html">Recursion
+Combinators notebook</a>.</p>
+<p>From <a href=
+"https://www.kevinalbrecht.com/code/joy-mirror/j05cmp.html">"Recursion
+Theory and Joy"</a> by Manfred von Thun:</p>
+<blockquote>
+<p>"The genrec combinator takes four program parameters in addition
+to whatever data parameters it needs. Fourth from the top is an
+if-part, followed by a then-part. If the if-part yields true, then
+the then-part is executed and the combinator terminates. The other
+two parameters are the rec1-part and the rec2-part. If the if-part
+yields false, the rec1-part is executed. Following that the four
+program parameters and the combinator are again pushed onto the
+stack bundled up in a quoted form. Then the rec2-part is executed,
+where it will find the bundled form. Typically it will then execute
+the bundled form, either with i or with app2, or some other
+combinator."</p>
+</blockquote>
+<p>The way to design one of these is to fix your base case
+<code>[then]</code> and the test <code>[if]</code>, and then treat
+<code>rec1</code> and <code>rec2</code> as an else-part
+"sandwiching" a quotation of the whole function.</p>
+<p>For example, given a (general recursive) function
+<code>F</code>:</p>
+<pre><code>F == [I] [T] [R1] [R2] genrec
+</code></pre>
+<p>If the <code>[I]</code> if-part fails you must derive
+<code>R1</code> and <code>R2</code> from: :</p>
+<pre><code>... R1 [F] R2
+</code></pre>
+<p>Just set the stack arguments in front, and figure out what
+<code>R1</code> and <code>R2</code> have to do to apply the quoted
+<code>[F]</code> in the proper way. In effect, the
+<code>genrec</code> combinator turns into an [ifte] combinator with
+a quoted copy of the original definition in the else-part:</p>
+<pre><code>F == [I] [T] [R1]   [R2] genrec
+  == [I] [T] [R1 [F] R2] ifte
+</code></pre>
+<p>Tail recursive functions are those where <code>R2</code> is the
+<code>i</code> combinator:</p>
+<pre><code>P == [I] [T] [R] tailrec
+  == [I] [T] [R [P] i] ifte
+  == [I] [T] [R P] ifte
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[anamorphism] [tailrec] [x]</p>
+<hr>
+<h2>getitem</h2>
+<p>Function</p>
+<p>Expects an integer and a quote on the stack and returns the item
+at the nth position in the quote counting from 0.</p>
+<h3>Example</h3>
+<pre><code>   [a b c d] 2 getitem
+-------------------------
+        c
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[drop] [first]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>If the number isn't a valid index into the quote
+<code>getitem</code> will cause some sort of problem (the exact
+nature of which is implementation-dependant.)</p>
+<h3>Crosslinks</h3>
+<p>[concat] [first] [first<em>two] [flatten] [fourth] [remove]
+[rest] [reverse] [rrest] [second] [shift] [shunt] [size] [sort]
+[split</em>at] [split_list] [swaack] [third] [zip]</p>
+<hr>
+<h2>grabN</h2>
+<p>Function</p>
+<p>Expect a number on the top of the satck and put that many items
+from uner it onto a new list.</p>
+<h3>Example</h3>
+<pre><code>   a b c d e 3 grabN
+-----------------------
+      a b [c d e]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[\&lt;{}] [[cons]] [times]</p>
+</blockquote>
+<hr>
+<h2>grba</h2>
+<p>Function</p>
+<p>A weird function used in [app2] that does this:</p>
+<pre><code>      ... 1 2 3 4 5 grba
+-------------------------------
+   ... 1 2 3 [4 3 2 1 ...] 5
+</code></pre>
+<p>It grabs the stack under the top item, and substitutes it for
+the second item down on the stack.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[[stack] [popd]] [dip]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This function "grabs" an item from the stack along with a copy
+of the stack. It's part of the [app2] definition.</p>
+<h3>Crosslinks</h3>
+<p>[app2]</p>
+<hr>
+<h2>gt</h2>
+<p>Basis Function</p>
+<p>Greater-than comparison of two numbers.</p>
+<pre><code>   a b gt
+--------------
+   Boolean
+   (a &gt; b)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[cmp] [eq] [ge] [le] [lt] [ne]</p>
+<hr>
+<h2>help</h2>
+<p>Function</p>
+<p>Accepts a quoted symbol on the top of the stack and prints its
+documentation.</p>
+<pre><code>   [foo] help
+----------------
+</code></pre>
+<h3>Discussion</h3>
+<p>Technically this is equivalent to <code>pop</code>, but it will
+only work if the item on the top of the stack is a quoted
+symbol.</p>
+<hr>
+<h2>hypot</h2>
+<p>Function</p>
+<pre><code>         x y hypot
+---------------------------
+   sqrt(sqr(x) + sqr(y))
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[sqr]] [ii] [+] [sqrt]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This is another function that has to wait on the numeric
+tower.</p>
+<h3>Crosslinks</h3>
+<p>[sqrt]</p>
+<hr>
+<h2>i</h2>
+<p>Basis Combinator</p>
+<p>Append a quoted expression onto the pending expression.</p>
+<pre><code>   [Q] . i
+-------------
+       . Q
+</code></pre>
+<h3>Discussion</h3>
+<p>This is a fundamental combinator. It is used in all kinds of
+places. For example, the [x] combinator can be defined as <code>dup
+i</code>.</p>
+<hr>
+<h2>id</h2>
+<p>Basis Function</p>
+<p>The identity function.</p>
+<h3>Discussion</h3>
+<p>Does nothing. It's kind of a mathematical thing, but it
+occasionally comes in handy.</p>
+<hr>
+<h2>ifte</h2>
+<p>Combinator</p>
+<p>If-Then-Else combinator, a common and convenient specialization
+of [branch].</p>
+<pre><code>        [if] [then] [else] ifte
+---------------------------------------
+   [if] nullary [else] [then] branch
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[nullary]] [dipd] [swap] [branch]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[branch] [loop] [while]</p>
+<hr>
+<h2>ii</h2>
+<p>Combinator</p>
+<p>Take a quoted program from the stack and run it twice, first
+under the top item, then again with the top item.</p>
+<pre><code>... a [Q] ii
+------------------
+ ... Q a Q
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[dip]] [dupdip] [i]</p>
+</blockquote>
+<h3>Example</h3>
+<p>It's a little tricky to understand how this works so here's an
+example trace:</p>
+<pre><code>      1 2 3 4 [++] • [dip] dupdip i
+1 2 3 4 [++] [dip] • dupdip i
+      1 2 3 4 [++] • dip [++] i
+             1 2 3 • ++ 4 [++] i
+             1 2 4 • 4 [++] i
+           1 2 4 4 • [++] i
+      1 2 4 4 [++] • i
+           1 2 4 4 • ++
+           1 2 4 5 •
+</code></pre>
+<h3>Discussion</h3>
+<p>In some cases (like the example above) this is the same effect
+as using [app2] but most of the time it's not:</p>
+<pre><code>   1 2 3 4 [+] ii
+--------------------
+        1 9
+
+   1 2 3 4 [+] app2
+----------------------
+       1 2 5 6
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[app2] [b]</p>
+<hr>
+<h2>infra</h2>
+<p>Combinator</p>
+<p>Accept a quoted program and a list on the stack and run the
+program with the list as its stack. Does not affect the stack
+(below the list.)</p>
+<pre><code>   ... x y z [a b c] [Q] infra
+---------------------------------
+    c b a Q [z y x ...] swaack
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[swons] [swaack] [[i]] [dip] [swaack]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This is one of the more useful combinators. It allows a quoted
+expression to serve as a stack for a program, effectively running
+it in a kind of "pocket universe". If the list represents a
+datastructure then <code>infra</code> lets you work on its internal
+structure.</p>
+<h3>Crosslinks</h3>
+<p><a href="#swaack">swaack</a></p>
+<hr>
+<h2>infrst</h2>
+<p>Combinator</p>
+<p>Does [infra] and then extracts the [first] item from the
+resulting list.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[infra] [first]</p>
+</blockquote>
+<hr>
+<h2>inscribe</h2>
+<p>Create a new Joy function definition in the Joy dictionary. A
+definition is given as a quote with a name followed by a Joy
+expression.</p>
+<h3>Example</h3>
+<pre><code>[sqr dup mul] inscribe
+</code></pre>
+<h3>Discussion</h3>
+<p>This is the only function that modifies the dictionary. It's
+provided as a convenience, for tinkering with new definitions
+before entering them into the <code>defs.txt</code> file. It can be
+abused, which you should avoid unless you know what you're
+doing.</p>
+<hr>
+<h2>le</h2>
+<p>Basis Function</p>
+<p>Less-Than-or-Equal-to comparison of the two items on the top of
+the stack, replacing them with a Boolean value.</p>
+<pre><code>   a b le
+-------------
+   Boolean
+   (a &lt;= b)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[cmp] [eq] [ge] [gt] [lt] [ne]</p>
+<hr>
+<h2>loop</h2>
+<p>Basis Combinator</p>
+<p>Expect a quoted program <code>Q</code> and a Boolean value on
+the stack. If the value is false discard the quoted program,
+otherwise run a copy of <code>Q</code> and <code>loop</code>
+again.</p>
+<pre><code>   false [Q] loop
+--------------------
+
+
+   true [Q] . loop
+--------------------------
+            . Q [Q] loop
+</code></pre>
+<h3>Discussion</h3>
+<p>This, along with [branch] and [fork], is one of the four main
+combinators of all programming. The fourth, sequence, is implied by
+juxtaposition. That is to say, in Joy <code>F G</code> is like
+<code>G(F(...))</code> in a language bassed on function
+application. Or again, to quote the <a href=
+"https://en.wikipedia.org/wiki/Joy_(programming_language">Joy
+Wikipedia entry</a>#Mathematical_purity),</p>
+<blockquote>
+<p>In Joy, the meaning function is a homomorphism from the
+syntactic monoid onto the semantic monoid. That is, the syntactic
+relation of concatenation of symbols maps directly onto the
+semantic relation of composition of functions.</p>
+</blockquote>
+<p>Anyway, [branch], [fork], amd [loop] are the fundamental
+combinators in Joy. Just as [branch] has it's more common and
+convenient form [ifte], [loop] has [while].</p>
+<h3>Crosslinks</h3>
+<p>[branch] [fork] [while]</p>
+<hr>
+<h2>lshift</h2>
+<p>Basis Function</p>
+<p><a href="https://en.wikipedia.org/wiki/Logical_shift">Logical
+Left-Shift</a></p>
+<pre><code>   a n lshift
+----------------
+     (a×2ⁿ)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[rshift]</p>
+<hr>
+<h2>lt</h2>
+<p>Basis Function</p>
+<p>Less-Than comparison of the two items on the top of the stack,
+replacing them with a Boolean value.</p>
+<pre><code>   a b lt
+-------------
+   Boolean
+   (a &lt; b)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[cmp] [eq] [ge] [gt] [le] [ne]</p>
+<hr>
+<h2>make_generator</h2>
+<p>Function</p>
+<p>Given an initial state value and a quoted generator function
+build a generator quote.</p>
+<pre><code>   state [generator function] make_generator
+-----------------------------------------------
+     [state [generator function] codireco]
+</code></pre>
+<h3>Example</h3>
+<pre><code>   230 [dup ++] make_generator
+---------------------------------
+     [230 [dup ++] codireco]
+</code></pre>
+<p>And then:</p>
+<pre><code>   [230 [dup ++] codireco] 5 [x] times pop
+---------------------------------------------
+             230 231 232 233 234
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[codireco]] [ccons]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>See the <a href=
+"https://joypy.osdn.io/notebooks/Generator_Programs.html#an-interesting-variation">
+"Using <code>x</code> to Generate Values" notebook</a>.</p>
+<h3>Crosslinks</h3>
+<p>[codireco]</p>
+<hr>
+<h2>map</h2>
+<p>Combinator</p>
+<p>Given a list of items and a quoted program run the program for
+each item in the list (with the rest of the stack) and replace the
+old list and the program with a list of the results.</p>
+<h3>Example</h3>
+<pre><code>   5 [1 2 3] [++ *] map
+--------------------------
+       5 [10 15 20]
+</code></pre>
+<h3>Discussion</h3>
+<p>This is a common operation in many languages. In Joy it can be a
+parallelism combinator due to the "pure" nature of the
+language.</p>
+<h3>Crosslinks</h3>
+<p>[app1] [app2] [app3] <a href="#appn">appN</a> [fork]</p>
+<hr>
+<h2>max</h2>
+<p>Basis Function</p>
+<p>Given a list find the maximum.</p>
+<h3>Example</h3>
+<pre><code>   [1 2 3 4] max
+-------------------
+         4
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[min] [size] [sum]</p>
+<hr>
+<h2>min</h2>
+<p>Basis Function</p>
+<p>Given a list find the minimum.</p>
+<h3>Example</h3>
+<pre><code>   [1 2 3 4] min
+-------------------
+         1
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[max] [size] [sum]</p>
+<hr>
+<h2>mod</h2>
+<p>Basis Function</p>
+<p>Return the remainder of <code>a</code> divided by
+<code>b</code>.</p>
+<pre><code>   a b mod
+-------------
+    (a%b)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[divmod] [mul]</p>
+<hr>
+<h2>modulus</h2>
+<p>See <a href="#mod">mod</a>.</p>
+<hr>
+<h2>mul</h2>
+<p>Basis Function</p>
+<p>Multiply two numbers.</p>
+<pre><code>   a b mul
+-------------
+    (a×b)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[div] [product]</p>
+<hr>
+<h2>ne</h2>
+<p>Basis Function</p>
+<p>Not-Equal comparison of the two items on the top of the stack,
+replacing them with a Boolean value.</p>
+<pre><code>   a b ne
+-------------
+   Boolean
+   (a = b)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[cmp] [eq] [ge] [gt] [le] [lt]</p>
+<hr>
+<h2>neg</h2>
+<p>Function</p>
+<p>Invert the sign of a number.</p>
+<pre><code>   a neg
+-----------
+    -a
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>0 [swap] [-]</p>
+</blockquote>
+<hr>
+<h2>not</h2>
+<p>Function</p>
+<p>Like [bool] but convert the item on the top of the stack to the
+inverse Boolean value.</p>
+<pre><code>   true not
+--------------
+    false
+
+   false not
+---------------
+     true
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[bool] [true] [false] [branch]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[bool]</p>
+<hr>
+<h2>nulco</h2>
+<p>Function</p>
+<p>Take the item on the top of the stack and [cons] it onto
+<code>[nullary]</code>.</p>
+<pre><code>     [F] nulco
+-------------------
+   [[F] nullary]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[nullary]] [cons]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Helper function for [\|\|] and [&amp;&amp;].</p>
+<h3>Crosslinks</h3>
+<p>[&amp;&amp;] [\|\|]</p>
+<hr>
+<h2>nullary</h2>
+<p>Combinator</p>
+<p>Run a quoted program without using any stack values and leave
+the first item of the result on the stack.</p>
+<pre><code>   ... [P] nullary
+---------------------
+        ... a
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[stack]] [dip] [infra] [first]</p>
+</blockquote>
+<h3>Example</h3>
+<pre><code>... [P] nullary
+... [P] [stack] dip infra first
+... stack [P] infra first
+... [...] [P] infra first
+... [a ...] first
+...  a
+</code></pre>
+<h3>Discussion</h3>
+<p>A very useful function that runs any other quoted function and
+returns it's first result without disturbing the stack (under the
+quoted program.)</p>
+<h3>Crosslinks</h3>
+<p><a href="#unary">unary</a> <a href="#binary">binary</a> <a href=
+"#ternary">ternary</a></p>
+<hr>
+<h2>of</h2>
+<p>Function</p>
+<p>Like [getitem] but [swap]s the order of arguments.</p>
+<h3>Example</h3>
+<pre><code>   2 [a b c d] of
+--------------------
+         c
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[swap] [getitem]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[getitem]</p>
+<hr>
+<h2>or</h2>
+<p>Basis Function</p>
+<p>Logical bit-wise OR.</p>
+<h3>Crosslinks</h3>
+<p>[and] [xor]</p>
+<hr>
+<h2>over</h2>
+<p>Function</p>
+<p>[dup] the second item on the stack <code>over</code> the
+first.</p>
+<pre><code>   a b over
+--------------
+    a b a
+</code></pre>
+<h3>Definition</h3>
+<p>There are many many ways to define this function.</p>
+<blockquote>
+<p>[swap] [tuck]</p>
+<p>[[pop]] [nullary]</p>
+<p>[[dup]] [dip] [swap]</p>
+<p>[unit] [dupdip]</p>
+<p>[unit] [dupdipd] [first]</p>
+</blockquote>
+<p>And so on...</p>
+<h3>Discussion</h3>
+<p>A fine old word from Forth.</p>
+<h3>Crosslinks</h3>
+<p>[tuck]</p>
+<hr>
+<h2>pam</h2>
+<p>Combinator</p>
+<p>Take a list of quoted functions from the stack and replace it
+with a list of the [first] results from running those functions (on
+copies of the rest of the stack.)</p>
+<h3>Example</h3>
+<pre><code>   5 7 [[+][-][*][/][%]] pam
+-------------------------------
+      5 7 [12 -2 35 0 5]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[i]] [map]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>A specialization of [map] that runs a list of functions in
+parallel (if the underlying [map] function is so implemented, of
+course.)</p>
+<h3>Crosslinks</h3>
+<p>[map]</p>
+<hr>
+<h2>pick</h2>
+<p>See <a href="#getitem">getitem</a>.</p>
+<hr>
+<h2>pm</h2>
+<p>Function</p>
+<p>Plus or minus. Replace two numbers with their sum and
+difference.</p>
+<pre><code>      a b pm
+-----------------
+   (a+b) (a-b)
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[+] [-] [clop]</p>
+</blockquote>
+<hr>
+<h2>pop</h2>
+<p>Basis Function</p>
+<p>Pop the top item from the stack and discard it.</p>
+<pre><code>   a pop
+-----------
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[popd] [popdd] [popop] [popopd] [popopdd] [popopop]</p>
+<hr>
+<h2>popd</h2>
+<p>Function</p>
+<p>[pop] the second item down on the stack.</p>
+<pre><code>   a b popd
+--------------
+      b
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[swap] [pop]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[pop] [popdd] [popop] [popopd] [popopdd] [popopop]</p>
+<hr>
+<h2>popdd</h2>
+<p>Function</p>
+<p>[pop] the third item on the stack.</p>
+<pre><code>   a b c popdd
+-----------------
+       b c
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[rolldown] [pop]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[pop] [popd] [popop] [popopd] [popopdd] [popopop]</p>
+<hr>
+<h2>popop</h2>
+<p>Function</p>
+<p>[pop] two items from the stack.</p>
+<pre><code>   a b popop
+---------------
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[pop] [pop]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[pop] [popd] [popdd] [popopd] [popopdd] [popopop]</p>
+<hr>
+<h2>popopd</h2>
+<p>Function</p>
+<p>[pop] the second and third items from the stack.</p>
+<pre><code>   a b c popopd
+------------------
+        c
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[rollup] [popop]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[pop] [popd] [popdd] [popop] [popopdd] [popopop]</p>
+<hr>
+<h2>popopdd</h2>
+<p>Function</p>
+<pre><code>   a b c d popopdd
+---------------------
+        c d
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[popop]] [dipd]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[pop] [popd] [popdd] [popop] [popopd] [popopop]</p>
+<hr>
+<h2>popopop</h2>
+<p>Function</p>
+<p>[pop] three items from the stack.</p>
+<pre><code>   a b c popopop
+-------------------
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[pop] [popop]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[pop] [popd] [popdd] [popop] [popopd] [popopdd]</p>
+<hr>
+<h2>pow</h2>
+<p>Basis Function</p>
+<p>Take two numbers <code>a</code> and <code>b</code> from the
+stack and raise <code>a</code> to the <code>n</code>th power.
+(<code>b</code> is on the top of the stack.)</p>
+<pre><code>   a n pow
+-------------
+    (aⁿ)
+</code></pre>
+<h3>Example</h3>
+<pre><code>   2 [2 3 4 5 6 7 8 9] [pow] map
+-----------------------------------
+    2 [4 8 16 32 64 128 256 512]
+</code></pre>
+<hr>
+<h2>pred</h2>
+<p>Function</p>
+<p>Predecessor. Decrement TOS.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>1 -</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[succ]</p>
+<hr>
+<h2>primrec</h2>
+<p>Combinator</p>
+<p>From the <a href=
+"https://www.kevinalbrecht.com/code/joy-mirror/j00ovr.html">"Overview
+of the language JOY"</a></p>
+<blockquote>
+<p>The primrec combinator expects two quoted programs in addition
+to a data parameter. For an integer data parameter it works like
+this: If the data parameter is zero, then the first quotation has
+to produce the value to be returned. If the data parameter is
+positive then the second has to combine the data parameter with the
+result of applying the function to its predecessor.</p>
+<p>5 [1] [*] primrec</p>
+<p>Then primrec tests whether the top element on the stack
+(initially the 5) is equal to zero. If it is, it pops it off and
+executes one of the quotations, the [1] which leaves 1 on the stack
+as the result. Otherwise it pushes a decremented copy of the top
+element and recurses. On the way back from the recursion it uses
+the other quotation, [*], to multiply what is now a factorial on
+top of the stack by the second element on the stack.</p>
+</blockquote>
+<pre><code>   0 [Base] [Recur] primrec
+------------------------------
+      Base
+
+         n [Base] [Recur] primrec
+------------------------------------------ n &gt; 0
+   n (n-1) [Base] [Recur] primrec Recur
+</code></pre>
+<h3>Discussion</h3>
+<p>Simple and useful specialization of the [genrec] combinator from
+the <a href=
+"https://www.kevinalbrecht.com/code/joy-mirror/index.html">original
+Joy system</a>.</p>
+<h3>Crosslinks</h3>
+<p>[genrec] [tailrec]</p>
+<hr>
+<h2>product</h2>
+<p>Function</p>
+<p>Just as [sum] sums a list of numbers, this function multiplies
+them together.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>1 [swap] [[mul]] [step]</p>
+</blockquote>
+<p>Or,</p>
+<blockquote>
+<p>[1] [[mul]] [primrec]</p>
+</blockquote>
+<hr>
+<h2>quoted</h2>
+<p>Function</p>
+<p>"Quote D" Wrap the second item on the stack in a list.</p>
+<pre><code>   a b quoted
+----------------
+     [a] b
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[unit]] [dip]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This comes from the original Joy stuff.</p>
+<h3>Crosslinks</h3>
+<p>[unit]</p>
+<hr>
+<h2>range</h2>
+<p>Function</p>
+<p>Expect a number <code>n</code> on the stack and replace it with
+a list: <code>[(n-1)...0]</code>.</p>
+<h3>Example</h3>
+<pre><code>     5 range
+-----------------
+   [4 3 2 1 0]
+
+   -5 range
+--------------
+      []
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[0 \&lt;=] [1 - [dup]] [anamorphism]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>If <code>n</code> is less than 1 the resulting list is
+empty.</p>
+<h3>Crosslinks</h3>
+<p>[range<em>to</em>zero]</p>
+<hr>
+<h2>range<em>to</em>zero</h2>
+<p>Function</p>
+<p>Take a number <code>n</code> from the stack and replace it with
+a list <code>[0...n]</code>.</p>
+<h3>Example</h3>
+<pre><code>   5 range_to_zero
+---------------------
+    [0 1 2 3 4 5]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[unit] [[down<em>to</em>zero]] [infra]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Note that the order is reversed compared to [range].</p>
+<h3>Crosslinks</h3>
+<p>[down<em>to</em>zero] [range]</p>
+<hr>
+<h2>reco</h2>
+<p>Function</p>
+<p>Replace the first item in a list with the item under it.</p>
+<pre><code>   a [b ...] reco
+--------------------
+     [a ...]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[rest] [cons]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[codireco] [make_generator]</p>
+<hr>
+<h2>rem</h2>
+<p>See <a href="#mod">mod</a>.</p>
+<hr>
+<h2>remainder</h2>
+<p>See <a href="#mod">mod</a>.</p>
+<hr>
+<h2>remove</h2>
+<p>Function</p>
+<p>Expects an item on the stack and a quote under it and removes
+that item from the the quote. The item is only removed once. If the
+list is empty or the item isn't in the list then the list is
+unchanged.</p>
+<pre><code>   [1 2 3 1] 1 remove
+------------------------
+        [2 3 1]
+</code></pre>
+<h3>Definition</h3>
+<p>See the <a href=
+"https://osdn.net/projects/joypy/scm/git/Thun/blobs/master/docs/notebooks/Remove-Function.ipynb">
+"Remove Function" notebook</a>.</p>
+<hr>
+<h2>rest</h2>
+<p>Basis Function</p>
+<pre><code>   [a ...] rest
+------------------
+      [...]
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[first] [uncons]</p>
+<hr>
+<h2>reverse</h2>
+<p>Function</p>
+<p>Reverse the list on the top of the stack.</p>
+<h3>Example</h3>
+<pre><code>   [1 2 3] reverse
+---------------------
+       [3 2 1]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[\&lt;{}] [shunt]</p>
+</blockquote>
+<hr>
+<h2>rolldown</h2>
+<p>Function</p>
+<pre><code>   a b c rolldown
+--------------------
+       b c a
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[swapd] [swap]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[rollup]</p>
+<hr>
+<h2>rollup</h2>
+<p>Function</p>
+<pre><code>   a b c rollup
+------------------
+      c a b
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[swap] [swapd]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[rolldown]</p>
+<hr>
+<h2>roll&gt;</h2>
+<p>See <a href="#rollup">rollup</a>.</p>
+<hr>
+<h2>roll&lt;</h2>
+<p>See <a href="#rolldown">rolldown</a>.</p>
+<hr>
+<h2>round</h2>
+<p>Function</p>
+<p>Round a number to a given precision in decimal digits.</p>
+<h3>Discussion</h3>
+<p>Another one that won't make sense until the "numeric tower" is
+nailed down.</p>
+<hr>
+<h2>rrest</h2>
+<p>Function</p>
+<pre><code>   [a b ...] rrest
+---------------------
+        [...]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[rest] [rest]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[rest]</p>
+<hr>
+<h2>rshift</h2>
+<p>Basis Function</p>
+<p><a href="https://en.wikipedia.org/wiki/Logical_shift">Logical
+Right-Shift</a></p>
+<pre><code>   a n rshift
+----------------
+     (a∕2ⁿ)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[lshift]</p>
+<hr>
+<h2>run</h2>
+<p>Function</p>
+<p>Run a quoted program in a list.</p>
+<h3>Example</h3>
+<pre><code>   [1 2 +] run
+-----------------
+       [3]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[\&lt;{}] [infra]</p>
+</blockquote>
+<hr>
+<h2>second</h2>
+<p>Function</p>
+<pre><code>   [a b ...] second
+----------------------
+          b
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[rest] [first]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[first] [third] [fourth]</p>
+<hr>
+<h2>select</h2>
+<p>Basis Function</p>
+<p>Use a Boolean value to select one of two items from a sequence.
+:</p>
+<pre><code>   [a b] false select
+------------------------
+           a
+
+   [a b] true select
+-----------------------
+           b
+</code></pre>
+<h3>Discussion</h3>
+<p>The sequence can contain more than two items but not fewer.</p>
+<h3>Crosslinks</h3>
+<p>[choice]</p>
+<hr>
+<h2>sharing</h2>
+<p>Function</p>
+<p>Print redistribution information.</p>
+<h3>Discussion</h3>
+<p>Mathematically this is a form of [id], but it has the
+side-effect of printing out the GPL notice.</p>
+<h3>Crosslinks</h3>
+<p>[warranty]</p>
+<hr>
+<h2>shift</h2>
+<p>Function</p>
+<p>Move the top item from one list to another.</p>
+<h3>Example</h3>
+<pre><code>   [x y z] [a b c] shift
+---------------------------
+      [a x y z] [b c]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[uncons] [[swons]] [dip]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[shunt]</p>
+<hr>
+<h2>shunt</h2>
+<p>Function</p>
+<p>Like [concat] but [reverse] the top list into the second.</p>
+<h3>Example</h3>
+<pre><code>   [a b c] [d e f] shunt
+---------------------------
+       [f e d a b c]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[swons]] [step]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This is more efficient than [concat] so prefer it if you don't
+need to preserve order.</p>
+<h3>Crosslinks</h3>
+<p>[concat] [reverse] [shift]</p>
+<hr>
+<h2>size</h2>
+<p>Function</p>
+<p>Replace a list with its size.</p>
+<h3>Example</h3>
+<pre><code>   [23 [cats] 4] size
+------------------------
+           3
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[pop] [++]] [step_zero]</p>
+</blockquote>
+<hr>
+<h2>sort</h2>
+<p>Function</p>
+<p>Given a list return it sorted.</p>
+<h3>Example</h3>
+<pre><code>   [4 2 5 7 1] sort
+----------------------
+      [1 2 4 5 7]
+</code></pre>
+<hr>
+<h2>spiral_next</h2>
+<p>Function</p>
+<p>Example code.</p>
+<h3>Discussion</h3>
+<p>See the <a href=
+"https://joypy.osdn.io/notebooks/Square_Spiral.html">"Square Spiral
+Example Joy Code" notebook</a>.</p>
+<hr>
+<h2>split_at</h2>
+<p>Function</p>
+<p>Split a list (second on the stack) at the position given by the
+number on the top of the stack.</p>
+<h3>Example</h3>
+<pre><code>   [1 2 3 4 5 6 7] 4 split_at
+--------------------------------
+       [5 6 7] [4 3 2 1]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[drop]] [[take]] [clop]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Take a list and a number <code>n</code> from the stack, take
+<code>n</code> items from the top of the list and [shunt] them onto
+a new list that replaces the number <code>n</code> on the top of
+the stack.</p>
+<h3>Crosslinks</h3>
+<p>[split_list]</p>
+<hr>
+<h2>split_list</h2>
+<p>Function</p>
+<p>Split a list (second on the stack) at the position given by the
+number on the top of the stack such that [concat] would reconstruct
+the original list.</p>
+<pre><code>   [1 2 3 4 5 6 7] 4 split_list
+----------------------------------
+        [1 2 3 4] [5 6 7]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[take] [reverse]] [[drop]] [clop]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Compare with [split_at]. This function does extra work to ensure
+that [concat] would reconstruct the original list.</p>
+<h3>Crosslinks</h3>
+<p>[split_at]</p>
+<hr>
+<h2>sqr</h2>
+<p>Function</p>
+<p>Square the number on the top of the stack.</p>
+<pre><code>   n  sqr
+------------
+     n²
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[dup] [mul]</p>
+</blockquote>
+<hr>
+<h2>sqrt</h2>
+<p>Basis Function Combinator</p>
+<p>Return the square root of the number a. Negative numbers return
+complex roots.</p>
+<h3>Discussion</h3>
+<p>Another "numeric tower" hatch...</p>
+<hr>
+<h2>stack</h2>
+<p>Function</p>
+<p>Put the stack onto the stack.</p>
+<pre><code>      ... c b a stack
+---------------------------
+   ... c b a [a b c ...]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[] [swaack] [dup] [swaack] [first]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This function forms a pair with [unstack], and together they
+form the complement to the "destructive" pair [enstacken] and
+[disenstacken].</p>
+<h3>Crosslinks</h3>
+<p>[unstack] [enstacken] [disenstacken]</p>
+<hr>
+<h2>stackd</h2>
+<p>Function</p>
+<p>Grab the stack under the top item and put it onto the stack.</p>
+<h3>Example</h3>
+<pre><code>   ... 1 2 3 stackd
+------------------------
+  ... 1 2 [2 1 ...] 3
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[stack]] [dip]</p>
+</blockquote>
+<hr>
+<h2>step</h2>
+<p>Combinator</p>
+<p>Run a quoted program on each item in a sequence.</p>
+<pre><code>   ... [] [Q] step
+---------------------
+         ...
+
+
+   ... [a] [Q] step
+----------------------
+      ... a Q
+
+
+   ... [a b c] [Q] . step
+----------------------------------------
+             ... a . Q [b c] [Q] step
+</code></pre>
+<h3>Discussion</h3>
+<p>See the <a href=
+"https://joypy.osdn.io/notebooks/Recursion_Combinators.html">Recursion
+Combinators notebook</a>.</p>
+<h3>Crosslinks</h3>
+<p>[step_zero]</p>
+<hr>
+<h2>step_zero</h2>
+<p>Combinator</p>
+<p>Like [step] but with 0 as the initial value.</p>
+<pre><code>   [...] [F] step_zero
+-------------------------
+     0 [...] [F] step
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>0 [roll&gt;] [step]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>[size] and [sum] can both be defined in terms of this
+specialization of [step].</p>
+<h3>Crosslinks</h3>
+<p>[step]</p>
+<hr>
+<h2>stuncons</h2>
+<p>Function</p>
+<p>Take the [stack] and [uncons] the top item.</p>
+<h3>Example</h3>
+<pre><code>   1 2 3 stuncons
+--------------------
+   1 2 3 3 [2 1]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[stack] [uncons]</p>
+</blockquote>
+<hr>
+<h2>stununcons</h2>
+<p>Function</p>
+<p>Take the [stack] and [uncons] the top two items.</p>
+<h3>Example</h3>
+<pre><code>   1 2 3 stununcons
+----------------------
+    1 2 3 3 2 [1]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[stack] [uncons] [uncons]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[stuncons]</p>
+<hr>
+<h2>sub</h2>
+<p>Basis Function</p>
+<p>Subtract the number on the top of the stack from the number
+below it.</p>
+<pre><code>   a b sub
+-------------
+    (a-b)
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[add]</p>
+<hr>
+<h2>succ</h2>
+<p>Function</p>
+<p>Successor. Increment TOS.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>1 +</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[pred]</p>
+<hr>
+<h2>sum</h2>
+<p>Combinator</p>
+<p>Given a quoted sequence of numbers return the sum.</p>
+<h3>Example</h3>
+<pre><code>   [1 2 3 4 5] sum
+---------------------
+         15
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[+] [step_zero]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[size]</p>
+<hr>
+<h2>swaack</h2>
+<p>Basis Function</p>
+<p>Swap stack. Take a list from the top of the stack, replace the
+stack with the list, and put the old stack onto it.</p>
+<h3>Example</h3>
+<pre><code>   1 2 3 [4 5 6] swaack
+--------------------------
+   6 5 4 [3 2 1]
+</code></pre>
+<h3>Discussion</h3>
+<p>This function works as a kind of "context switch". It's used in
+the definition of [infra].</p>
+<h3>Crosslinks</h3>
+<p>[infra]</p>
+<hr>
+<h2>swap</h2>
+<p>Basis Function</p>
+<p>Swap the top two items on the stack.</p>
+<pre><code>   a b swap
+--------------
+     b a
+</code></pre>
+<h3>Crosslinks</h3>
+<p>[swapd]</p>
+<hr>
+<h2>swapd</h2>
+<p>Function</p>
+<p>Swap the second and third items on the stack.</p>
+<pre><code>   a b c swapd
+-----------------
+      b a c
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[swap]] [dip]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[over] [tuck]</p>
+<hr>
+<h2>swoncat</h2>
+<p>Function</p>
+<p>[concat] two lists, but [swap] the lists first.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[swap] [concat]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[concat]</p>
+<hr>
+<h2>swons</h2>
+<p>Function</p>
+<p>Like [cons] but [swap] the item and list.</p>
+<pre><code>   [...] a swons
+-------------------
+      [a ...]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[swap] [cons]</p>
+</blockquote>
+<hr>
+<h2>tailrec</h2>
+<p>Combinator</p>
+<p>A specialization of the [genrec] combinator.</p>
+<h3>Definition</h3>
+<blockquote>
+<p>[[i]] [genrec]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Some recursive functions do not need to store additional data or
+pending actions per-call. These are called <a href=
+"https://en.wikipedia.org/wiki/Tail_recursive">"tail recursive"
+functions</a>. In Joy, they appear as [genrec] definitions that
+have [i] for the second half of their recursive branch.</p>
+<p>See the <a href=
+"https://joypy.osdn.io/notebooks/Recursion_Combinators.html">Recursion
+Combinators notebook</a>.</p>
+<h3>Crosslinks</h3>
+<p>[genrec]</p>
+<hr>
+<h2>take</h2>
+<p>Function</p>
+<p>Expects an integer <code>n</code> and a list on the stack and
+replace them with a list with just the top <code>n</code> items in
+reverse order.</p>
+<pre><code>   [a b c d] 2 take
+----------------------
+        [b a]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[\&lt;\&lt;{}] [[shift]] [times] [pop]</p>
+</blockquote>
+<hr>
+<h2>ternary</h2>
+<p>Combinator</p>
+<p>Run a quoted program using exactly three stack values and leave
+the first item of the result on the stack.</p>
+<pre><code>   ... z y x [P] ternary
+-------------------------
+         ... a
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[binary] [popd]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Runs any other quoted function and returns its first result
+while consuming exactly three items from the stack.</p>
+<h3>Crosslinks</h3>
+<p><a href="#binary">binary</a> <a href="#nullary">nullary</a>
+<a href="#unary">unary</a></p>
+<hr>
+<h2>third</h2>
+<p>Function</p>
+<pre><code>   [a b c ...] third
+-----------------------
+           c
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[rest] [second]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[first] [second] [fourth] [rest]</p>
+<hr>
+<h2>times</h2>
+<p>Combinator</p>
+<p>Expect a quoted program and an integer <code>n</code> on the
+stack and do the program <code>n</code> times.</p>
+<pre><code>   ... n [Q] . times
+-----------------------  w/ n &lt;= 0
+         ... .
+
+   ... 1 [Q] . times
+-----------------------
+         ... . Q
+
+   ... n [Q] . times
+-------------------------------------  w/ n &gt; 1
+         ... . Q (n-1) [Q] times
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[-- dip] cons [swap] infra [0 &gt;] swap while pop :</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>This works by building a little [while] program and running
+it:</p>
+<pre><code>                 1 3 [++] • [-- dip] cons [swap] infra [0 &gt;] swap while pop                                                                                                                 
+        1 3 [++] [-- dip] • cons [swap] infra [0 &gt;] swap while pop                                                                                                                          
+        1 3 [[++] -- dip] • [swap] infra [0 &gt;] swap while pop                                                                                                                               
+ 1 3 [[++] -- dip] [swap] • infra [0 &gt;] swap while pop                                                                                                                                      
+              dip -- [++] • swap [3 1] swaack [0 &gt;] swap while pop                                                                                                                          
+              dip [++] -- • [3 1] swaack [0 &gt;] swap while pop                                                                                                                               
+        dip [++] -- [3 1] • swaack [0 &gt;] swap while pop                                                                                                                                     
+        1 3 [-- [++] dip] • [0 &gt;] swap while pop                                                                                                                                            
+  1 3 [-- [++] dip] [0 &gt;] • swap while pop                                                                                                                                                  
+  1 3 [0 &gt;] [-- [++] dip] • while pop
+</code></pre>
+<p>This is a common pattern in Joy. You accept some parameters from
+the stack which typically include qouted programs and use them to
+build another program which does the actual work. This is kind of
+like macros in Lisp, or preprocessor directives in C.</p>
+<hr>
+<h2>truthy</h2>
+<p>See <a href="#bool">bool</a>.</p>
+<hr>
+<h2>tuck</h2>
+<p>Function</p>
+<p>[dup] the item on the top of the stack under the second item on
+the stack.</p>
+<pre><code>   a b tuck
+--------------
+    b a b
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[dup] [[swap]] [dip]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[over]</p>
+<hr>
+<h2>unary</h2>
+<p>(Combinator)</p>
+<p>Run a quoted program using exactly one stack value and leave the
+first item of the result on the stack.</p>
+<pre><code>   ... x [P] unary
+---------------------
+       ... a
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[nullary] [popd]</p>
+</blockquote>
+<h3>Discussion</h3>
+<p>Runs any other quoted function and returns its first result
+while consuming exactly one item from the stack.</p>
+<h3>Crosslinks</h3>
+<p><a href="#binary">binary</a> <a href="#nullary">nullary</a>
+<a href="#ternary">ternary</a></p>
+<hr>
+<h2>uncons</h2>
+<p>Basis Function</p>
+<p>Removes an item from a list and leaves it on the stack under the
+rest of the list. You cannot <code>uncons</code> an item from an
+empty list.</p>
+<pre><code>   [a ...] uncons
+--------------------
+      a [...]
+</code></pre>
+<h3>Discussion</h3>
+<p>This is the inverse of [cons].</p>
+<h3>Crosslinks</h3>
+<p>[cons]</p>
+<hr>
+<h2>unique</h2>
+<p>Function</p>
+<p>Given a list remove duplicate items.</p>
+<hr>
+<h2>unit</h2>
+<p>Function</p>
+<pre><code>   a unit
+------------
+    [a]
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[] [cons]</p>
+</blockquote>
+<hr>
+<h2>unquoted</h2>
+<p>Combinator</p>
+<p>Unquote (using [i]) the list that is second on the stack.</p>
+<h3>Example</h3>
+<pre><code>   1 2 [3 4] 5 unquoted
+--------------------------
+         1 2 3 4 5
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[[i]] [dip]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[unit]</p>
+<hr>
+<h2>unswons</h2>
+<p>Function</p>
+<pre><code>   [a ...] unswons
+---------------------
+       [...] a
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[uncons] [swap]</p>
+</blockquote>
+<hr>
+<h2>void</h2>
+<p>Basis Function</p>
+<p>True if the form on TOS is void otherwise False.</p>
+<h3>Discussion</h3>
+<p>A form is any Joy expression composed solely of lists. This
+represents a binary Boolean logical formula in the arithmetic of
+the "Laws of Form", see <a href="http://www.markability.net/">The
+Markable Mark</a></p>
+<hr>
+<h2>warranty</h2>
+<p>Basis Function</p>
+<p>Print warranty information.</p>
+<hr>
+<h2>while</h2>
+<p>Combinator</p>
+<p>A specialization of [loop] that accepts a quoted predicate
+program <code>P</code> and runs it [nullary].</p>
+<pre><code>   [P] [F] while
+------------------- P -&gt; false
+
+    [P] [F] while
+--------------------- P -&gt; true
+   F [P] [F] while
+</code></pre>
+<h3>Definition</h3>
+<blockquote>
+<p>[swap] [nulco] [dupdipd] [concat] [loop]</p>
+</blockquote>
+<h3>Crosslinks</h3>
+<p>[loop]</p>
+<hr>
+<h2>words</h2>
+<p>Basis Function</p>
+<p>Print all the words in alphabetical order.</p>
+<h3>Discussion</h3>
+<p>Mathematically this is a form of [id].</p>
+<h3>Crosslinks</h3>
+<p>[help]</p>
+<hr>
+<h2>x</h2>
+<p>Combinator</p>
+<p>Take a quoted function <code>F</code> and run it with itself as
+the first item on the stack.</p>
+<pre><code>   [F] x
+-----------
+   [F] F
+</code></pre>
+<h3>Definition</h3>
+<pre><code>dup i
+</code></pre>
+<h3>Discussion</h3>
+<p>The simplest recursive pattern.</p>
+<p>See the <a href=
+"https://joypy.osdn.io/notebooks/Recursion_Combinators.html">Recursion
+Combinators notebook</a>. as well as <a href=
+"https://www.kevinalbrecht.com/code/joy-mirror/j05cmp.html">Recursion
+Theory and Joy</a> by Manfred von</p>
+<hr>
+<h2>xor</h2>
+<p>Basis Function</p>
+<p>Logical bit-wise eXclusive OR.</p>
+<h3>Crosslinks</h3>
+<p>[and] [or]</p>
+<hr>
+<h2>zip</h2>
+<p>Function</p>
+<p>Replace the two lists on the top of the stack with a list of the
+pairs from each list. The smallest list sets the length of the
+result list.</p>
+<h3>Example</h3>
+<pre><code>   [1 2 3] [4 5 6] zip
+-------------------------
+   [[4 1] [5 2] [6 3]]
+</code></pre>
+</body>
+</html>
