@@ -115,7 +115,7 @@ anamorphism ≡ [pop []] swap [dip swons] genrec
 app1 ≡ grba infrst
 app2 ≡ [grba swap grba swap] dip [infrst] cons ii
 app3 ≡ 3 appN
-appN ≡ [grabN] codi map disenstacken
+appN ≡ [grabN] codi map reverse disenstacken
 
 at ≡ drop first
 
@@ -307,9 +307,9 @@ def joy(stack, expression, dictionary):
     '''
     expr = push_quote(expression)  # We keep a stack-of-stacks, see below.
     while expr:
-        print(
-            f'{stack_to_string(stack)} • {expr_to_string(expr)}'
-            )
+##        print(
+##            f'{stack_to_string(stack)} • {expr_to_string(expr)}'
+##            )
         term, expr = next_term(expr)
         if isinstance(term, Symbol):
             try:
@@ -2226,12 +2226,16 @@ def times(stack, expr, dictionary):
     return stack, expr, dictionary
 
 
+def default_defs(dictionary):
+    Def.load_definitions(__doc__.splitlines(), dictionary)
+
+
 if __name__ == '__main__':
     import sys
 
     J = interp if '-q' in sys.argv else repl
     dictionary = initialize()
-    Def.load_definitions(__doc__.splitlines(), dictionary)
+    default_defs(dictionary)
     try:
         stack = J(dictionary=dictionary)
     except SystemExit:

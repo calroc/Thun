@@ -1,12 +1,16 @@
 import sys
 from ipykernel.kernelbase import Kernel
-from joy.library import default_defs, initialize, inscribe
-from joy.joy import run
-from joy.utils.stack import stack_to_string
-from joy.utils.pretty_print import trace
+from simplejoy import (
+    default_defs,
+    initialize,
+    inscribe,
+    run,
+    stack_to_string,
+    )
+#from joy.utils.pretty_print import trace
 
 
-inscribe(trace)
+#inscribe(trace)
 
 
 class FileFaker:
@@ -35,13 +39,13 @@ class JoyKernel(Kernel):
     implementation = 'Joypy'
     implementation_version = '1.0'
     language = 'Joy'
-    language_version = '0.1'
+    language_version = '0.5'
     language_info = {
         'name': 'Joy',
         'mimetype': 'text/plain',
         'file_extension': '.joy',
     }
-    banner = "Echo kernel - as useful as a parrot"
+    banner = "Joy kernel"
 
     def __init__(self, *a, **b):
       self.D = initialize()

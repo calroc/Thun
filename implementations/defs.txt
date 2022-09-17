@@ -11,7 +11,7 @@ anamorphism [pop []] swap [dip swons] genrec
 app1 grba infrst
 app2 [grba swap grba swap] dip [infrst] cons ii
 app3 3 appN
-appN [grabN] codi map disenstacken
+appN [grabN] codi map reverse disenstacken
 at drop first
 average [sum] [size] cleave /
 b [i] dip i
