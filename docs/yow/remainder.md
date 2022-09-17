@@ -1,6 +1,0 @@
---------------
-
-# remainder
-
-See [mod](#mod).
-

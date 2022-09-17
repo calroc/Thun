@@ -1,6 +1,0 @@
---------------
-
-# div
-
-See [floordiv](#floordiv).
-

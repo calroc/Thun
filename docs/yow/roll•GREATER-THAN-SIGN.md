@@ -1,6 +1,0 @@
---------------
-
-# roll>
-
-See [rollup](#rollup).
-

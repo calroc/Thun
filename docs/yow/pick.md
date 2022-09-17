@@ -1,6 +1,0 @@
---------------
-
-# pick
-
-See [getitem](#getitem).
-
