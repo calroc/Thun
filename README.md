@@ -135,6 +135,9 @@ available functions of the Joy system.  Together the stack, expression, and dict
 are the entire state of the Joy interpreter.
 
 
+![joy_interpreter_flowchart.svg](/joy_interpreter_flowchart.svg)
+
+
 ### Stack / Quote / List / Sequence
 
 When talking about Joy we use the terms "stack", "quote", "sequence",
