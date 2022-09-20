@@ -5,7 +5,7 @@ Phase 0: build the initial program:
                                        [5] • [down_to_zero] infra
                         [5] [down_to_zero] • infra
 
-Phase 1: Build a while loop:
+Phase 1: It is a while loop:
 
                                          5 • down_to_zero [] swaack
                                          5 • [0 >] [dup --] while [] swaack
