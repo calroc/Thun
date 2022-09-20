@@ -134,6 +134,7 @@ The __dictionary__ associates symbols (strings) with Joy expressions that define
 available functions of the Joy system.  Together the stack, expression, and dictionary
 are the entire state of the Joy interpreter.
 
+### Interpreter
 
 ![joy_interpreter_flowchart.svg](/joy_interpreter_flowchart.svg)
 
@@ -155,7 +156,7 @@ values from (at least) one end.
 > them being pushed onto the stack. But I also call [London Paris] a list.
 > So, [dup *] is a quotation but not a list.
 
-From ["A Conversation with Manfred von Thun" w/ Stevan Apter](http://archive.vector.org.uk/art10000350
+From ["A Conversation with Manfred von Thun" w/ Stevan Apter](http://archive.vector.org.uk/art10000350)
 
 
 

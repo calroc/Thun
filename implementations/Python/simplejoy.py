@@ -307,9 +307,9 @@ def joy(stack, expression, dictionary):
     '''
     expr = push_quote(expression)  # We keep a stack-of-stacks, see below.
     while expr:
-##        print(
-##            f'{stack_to_string(stack)} • {expr_to_string(expr)}'
-##            )
+        print(
+            f'{stack_to_string(stack)} • {expr_to_string(expr)}'
+            )
         term, expr = next_term(expr)
         if isinstance(term, Symbol):
             try:
