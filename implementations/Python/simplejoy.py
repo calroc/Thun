@@ -307,9 +307,9 @@ def joy(stack, expression, dictionary):
     '''
     expr = push_quote(expression)  # We keep a stack-of-stacks, see below.
     while expr:
-        print(
-            f'{stack_to_string(stack)} • {expr_to_string(expr)}'
-            )
+        #print(
+        #    f'{stack_to_string(stack)} • {expr_to_string(expr)}'
+        #    )
         term, expr = next_term(expr)
         if isinstance(term, Symbol):
             try:
@@ -1351,6 +1351,57 @@ inscribe(UnaryWrapper(isnt_stack))
 '''
 
 
+@inscribe
+def trace(stack, expr, dictionary):
+    '''Evaluate a Joy expression on a stack and print a trace.
+
+    This function is just like the `i` combinator but it also prints a
+    trace of the evaluation
+
+    :param stack stack: The stack.
+    :param stack expression: The expression to evaluate.
+    :param dict dictionary: A ``dict`` mapping names to Joy functions.
+    :rtype: (stack, (), dictionary)
+
+    '''
+    quote, stack = get_n_items(1, stack)
+    isnt_stack(quote)
+    history = []
+    append = history.append
+    local_expr = push_quote(quote)
+    while local_expr:
+        append((stack, local_expr))
+        term, local_expr = next_term(local_expr)
+        if isinstance(term, Symbol):
+            try:
+                func = dictionary[term]
+            except KeyError:
+                print(trace_to_string(history))
+                raise UnknownSymbolError(term) from None
+            stack, local_expr, dictionary = func(stack, local_expr, dictionary)
+        else:
+            stack = term, stack
+    append((stack, local_expr))
+    print(trace_to_string(history))
+    return stack, expr, dictionary
+
+
+def trace_to_string(history):
+    max_stack_length = 0
+    lines = []
+    for stack, expression in history:
+        stack = stack_to_string(stack)
+        expression = expr_to_string(expression)
+        length = len(stack)
+        max_stack_length = max(max_stack_length, length)
+        lines.append((length, stack, expression))
+    return '\n'.join(
+        # Prefix spaces to line up '•'s.
+        (' ' * (max_stack_length - length) + f'{stack} • {expression}')
+        for i, (length, stack, expression) in enumerate(lines)
+        )
+
+
 S_swaack = Symbol('swaack')
 S_genrec = Symbol('genrec')
 S_ifte = Symbol('ifte')
@@ -2224,6 +2275,471 @@ def times(stack, expr, dictionary):
         expr = push_quote((n, (quote, (S_times, ()))), expr)
     expr = push_quote(quote, expr)
     return stack, expr, dictionary
+
+
+@inscribe
+@SimpleFunctionWrapper
+def _Tree_add_Ee(stack):
+  """
+  ::
+
+    ([a4 a5 ...1] a3 a2 a1 -- [a2 a3 ...1])
+
+  """
+  (a1, (a2, (a3, ((a4, (a5, s1)), s2)))) = stack
+  return ((a2, (a3, s1)), s2)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def _Tree_delete_R0(stack):
+  """
+  ::
+
+    ([a2 ...1] a1 -- [a2 ...1] a2 a1 a1)
+
+  """
+  (a1, ((a2, s1), s2)) = stack
+  return (a1, (a1, (a2, ((a2, s1), s2))))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def _Tree_delete_clear_stuff(stack):
+  """
+  ::
+
+    (a3 a2 [a1 ...1] -- [...1])
+
+  """
+  ((a1, s1), (a2, (a3, s2))) = stack
+  return (s1, s2)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def _Tree_get_E(stack):
+  """
+  ::
+
+    ([a3 a4 ...1] a2 a1 -- a4)
+
+  """
+  (a1, (a2, ((a3, (a4, s1)), s2))) = stack
+  return (a4, s2)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def ccons(stack):
+  """
+  ::
+
+    (a2 a1 [...1] -- [a2 a1 ...1])
+
+  """
+  (s1, (a1, (a2, s2))) = stack
+  return ((a2, (a1, s1)), s2)
+
+
+##def cons(stack):
+##  """
+##  ::
+##
+##    (a1 [...0] -- [a1 ...0])
+##
+##  """
+##  try: s0, stack = stack
+##  except ValueError: raise StackUnderflowError('Not enough values on stack.')
+##  if not isinstance(s0, tuple): raise NotAListError('Not a list.')
+##  try: a1, s23 = stack
+##  except ValueError: raise StackUnderflowError('Not enough values on stack.')
+##  return ((a1, s0), s23)
+
+
+##def dup(stack):
+##  """
+##  ::
+##
+##    (a1 -- a1 a1)
+##
+##  """
+##  (a1, s23) = stack
+##  return (a1, (a1, s23))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def dupd(stack):
+  """
+  ::
+
+    (a2 a1 -- a2 a2 a1)
+
+  """
+  (a1, (a2, s23)) = stack
+  return (a1, (a2, (a2, s23)))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def dupdd(stack):
+  """
+  ::
+
+    (a3 a2 a1 -- a3 a3 a2 a1)
+
+  """
+  (a1, (a2, (a3, s23))) = stack
+  return (a1, (a2, (a3, (a3, s23))))
+
+
+##def first(stack):
+##  """
+##  ::
+##
+##    ([a1 ...1] -- a1)
+##
+##  """
+##  ((a1, s1), s23) = stack
+##  return (a1, s23)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def first_two(stack):
+  """
+  ::
+
+    ([a1 a2 ...1] -- a1 a2)
+
+  """
+  ((a1, (a2, s1)), s2) = stack
+  return (a2, (a1, s2))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def fourth(stack):
+  """
+  ::
+
+    ([a1 a2 a3 a4 ...1] -- a4)
+
+  """
+  ((a1, (a2, (a3, (a4, s1)))), s2) = stack
+  return (a4, s2)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def over(stack):
+  """
+  ::
+
+    (a2 a1 -- a2 a1 a2)
+
+  """
+  (a1, (a2, s23)) = stack
+  return (a2, (a1, (a2, s23)))
+
+
+##def pop(stack):
+##  """
+##  ::
+##
+##    (a1 --)
+##
+##  """
+##  try:
+##    (a1, s23) = stack
+##  except ValueError:
+##    raise StackUnderflowError('Cannot pop empty stack.')
+##  return s23
+
+
+@inscribe
+@SimpleFunctionWrapper
+def popd(stack):
+  """
+  ::
+
+    (a2 a1 -- a1)
+
+  """
+  (a1, (a2, s23)) = stack
+  return (a1, s23)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def popdd(stack):
+  """
+  ::
+
+    (a3 a2 a1 -- a2 a1)
+
+  """
+  (a1, (a2, (a3, s23))) = stack
+  return (a1, (a2, s23))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def popop(stack):
+  """
+  ::
+
+    (a2 a1 --)
+
+  """
+  (a1, (a2, s23)) = stack
+  return s23
+
+
+@inscribe
+@SimpleFunctionWrapper
+def popopd(stack):
+  """
+  ::
+
+    (a3 a2 a1 -- a1)
+
+  """
+  (a1, (a2, (a3, s23))) = stack
+  return (a1, s23)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def popopdd(stack):
+  """
+  ::
+
+    (a4 a3 a2 a1 -- a2 a1)
+
+  """
+  (a1, (a2, (a3, (a4, s23)))) = stack
+  return (a1, (a2, s23))
+
+
+##def rest(stack):
+##  """
+##  ::
+##
+##    ([a1 ...0] -- [...0])
+##
+##  """
+##  try:
+##    s0, stack = stack
+##  except ValueError:
+##    raise StackUnderflowError
+##  if not isinstance(s0, tuple):
+##    raise NotAListError('Not a list.')
+##  try:
+##    _, s1 = s0
+##  except ValueError:
+##    raise StackUnderflowError('Cannot take rest of empty list.')
+##  return (s1, stack)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def rolldown(stack):
+  """
+  ::
+
+    (a1 a2 a3 -- a2 a3 a1)
+
+  """
+  (a3, (a2, (a1, s23))) = stack
+  return (a1, (a3, (a2, s23)))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def rollup(stack):
+  """
+  ::
+
+    (a1 a2 a3 -- a3 a1 a2)
+
+  """
+  (a3, (a2, (a1, s23))) = stack
+  return (a2, (a1, (a3, s23)))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def rrest(stack):
+  """
+  ::
+
+    ([a1 a2 ...1] -- [...1])
+
+  """
+  ((a1, (a2, s1)), s2) = stack
+  return (s1, s2)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def second(stack):
+  """
+  ::
+
+    ([a1 a2 ...1] -- a2)
+
+  """
+  ((a1, (a2, s1)), s2) = stack
+  return (a2, s2)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def stack(stack):
+  """
+  ::
+
+    (... -- ... [...])
+
+  """
+  s0 = stack
+  return (s0, s0)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def stuncons(stack):
+  """
+  ::
+
+    (... a1 -- ... a1 a1 [...])
+
+  """
+  (a1, s1) = stack
+  return (s1, (a1, (a1, s1)))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def stununcons(stack):
+  """
+  ::
+
+    (... a2 a1 -- ... a2 a1 a1 a2 [...])
+
+  """
+  (a1, (a2, s1)) = stack
+  return (s1, (a2, (a1, (a1, (a2, s1)))))
+
+
+##def swaack(stack):
+##  """
+##  ::
+##
+##    ([...1] -- [...0])
+##
+##  """
+##  try:
+##    (s1, s0) = stack
+##  except ValueError:
+##    raise StackUnderflowError('Not enough values on stack.')
+##  if not isinstance(s1, tuple):
+##    raise NotAListError('Not a list.')
+##  return (s0, s1)
+
+
+##def swap(stack):
+##  """
+##  ::
+##
+##    (a1 a2 -- a2 a1)
+##
+##  """
+##  try:
+##    (a2, (a1, s23)) = stack
+##  except ValueError:
+##    raise StackUnderflowError('Not enough values on stack.')
+##  return (a1, (a2, s23))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def swons(stack):
+  """
+  ::
+
+    ([...1] a1 -- [a1 ...1])
+
+  """
+  (a1, (s1, s2)) = stack
+  return ((a1, s1), s2)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def third(stack):
+  """
+  ::
+
+    ([a1 a2 a3 ...1] -- a3)
+
+  """
+  ((a1, (a2, (a3, s1))), s2) = stack
+  return (a3, s2)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def tuck(stack):
+  """
+  ::
+
+    (a2 a1 -- a1 a2 a1)
+
+  """
+  (a1, (a2, s23)) = stack
+  return (a1, (a2, (a1, s23)))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def uncons(stack):
+  """
+  ::
+
+    ([a1 ...0] -- a1 [...0])
+
+  """
+  ((a1, s0), s23) = stack
+  return (s0, (a1, s23))
+
+
+@inscribe
+@SimpleFunctionWrapper
+def unit(stack):
+  """
+  ::
+
+    (a1 -- [a1 ])
+
+  """
+  (a1, s23) = stack
+  return ((a1, ()), s23)
+
+
+@inscribe
+@SimpleFunctionWrapper
+def unswons(stack):
+  """
+  ::
+
+    ([a1 ...1] -- [...1] a1)
+
+  """
+  ((a1, s1), s2) = stack
+  return (a1, (s1, s2))
 
 
 def default_defs(dictionary):

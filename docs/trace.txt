@@ -1,0 +1,165 @@
+Phase 0: build the initial program:
+
+                                         5 • range_to_zero
+                                         5 • unit [down_to_zero] infra
+                                       [5] • [down_to_zero] infra
+                        [5] [down_to_zero] • infra
+
+Phase 1: Build a while loop:
+
+                                         5 • down_to_zero [] swaack
+                                         5 • [0 >] [dup --] while [] swaack
+                                   5 [0 >] • [dup --] while [] swaack
+                          5 [0 >] [dup --] • while [] swaack
+
+Phase 2: While loop converts to loop loop:
+
+                          5 [0 >] [dup --] • swap nulco dupdipd concat loop [] swaack
+                          5 [dup --] [0 >] • nulco dupdipd concat loop [] swaack
+                          5 [dup --] [0 >] • [nullary] cons dupdipd concat loop [] swaack
+                5 [dup --] [0 >] [nullary] • cons dupdipd concat loop [] swaack
+                5 [dup --] [[0 >] nullary] • dupdipd concat loop [] swaack
+                5 [dup --] [[0 >] nullary] • dup dipd concat loop [] swaack
+5 [dup --] [[0 >] nullary] [[0 >] nullary] • dipd concat loop [] swaack
+                                         5 • [0 >] nullary [dup --] [[0 >] nullary] concat loop [] swaack
+
+Phase 3: Compute first loop Boolean:
+
+                                   5 [0 >] • nullary [dup --] [[0 >] nullary] concat loop [] swaack
+                                   5 [0 >] • [stack] dip infra first [dup --] [[0 >] nullary] concat loop [] swaack
+                           5 [0 >] [stack] • dip infra first [dup --] [[0 >] nullary] concat loop [] swaack
+                                         5 • stack [0 >] infra first [dup --] [[0 >] nullary] concat loop [] swaack
+                                     5 [5] • [0 >] infra first [dup --] [[0 >] nullary] concat loop [] swaack
+                               5 [5] [0 >] • infra first [dup --] [[0 >] nullary] concat loop [] swaack
+                                         5 • 0 > [5] swaack first [dup --] [[0 >] nullary] concat loop [] swaack
+                                       5 0 • > [5] swaack first [dup --] [[0 >] nullary] concat loop [] swaack
+                                       5 0 • gt [5] swaack first [dup --] [[0 >] nullary] concat loop [] swaack
+                                      true • [5] swaack first [dup --] [[0 >] nullary] concat loop [] swaack
+                                  true [5] • swaack first [dup --] [[0 >] nullary] concat loop [] swaack
+                                  5 [true] • first [dup --] [[0 >] nullary] concat loop [] swaack
+                                    5 true • [dup --] [[0 >] nullary] concat loop [] swaack
+
+Phase 4a: Finish constructing main body of loop (this function [dup -- [0 >] nullary] seems easily compilable.):
+
+                           5 true [dup --] • [[0 >] nullary] concat loop [] swaack
+           5 true [dup --] [[0 >] nullary] • concat loop [] swaack
+             5 true [dup -- [0 >] nullary] • loop [] swaack
+
+Phase 4b: Enter main body of loop:
+
+                                         5 • dup -- [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                       5 5 • -- [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                       5 5 • 1 - [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                     5 5 1 • - [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                     5 5 1 • sub [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                       5 4 • [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 [0 >] • nullary [dup -- [0 >] nullary] loop [] swaack
+
+                                 5 4 [0 >] • [stack] dip infra first [dup -- [0 >] nullary] loop [] swaack
+                         5 4 [0 >] [stack] • dip infra first [dup -- [0 >] nullary] loop [] swaack
+                                       5 4 • stack [0 >] infra first [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 [4 5] • [0 >] infra first [dup -- [0 >] nullary] loop [] swaack
+                           5 4 [4 5] [0 >] • infra first [dup -- [0 >] nullary] loop [] swaack
+                                       5 4 • 0 > [4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                                     5 4 0 • > [4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                                     5 4 0 • gt [4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                                    5 true • [4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                              5 true [4 5] • swaack first [dup -- [0 >] nullary] loop [] swaack
+                              5 4 [true 5] • first [dup -- [0 >] nullary] loop [] swaack
+                                  5 4 true • [dup -- [0 >] nullary] loop [] swaack
+
+           5 4 true [dup -- [0 >] nullary] • loop [] swaack
+
+                                       5 4 • dup -- [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                     5 4 4 • -- [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                     5 4 4 • 1 - [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                   5 4 4 1 • - [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                   5 4 4 1 • sub [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                     5 4 3 • [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 [0 >] • nullary [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 [0 >] • [stack] dip infra first [dup -- [0 >] nullary] loop [] swaack
+                       5 4 3 [0 >] [stack] • dip infra first [dup -- [0 >] nullary] loop [] swaack
+                                     5 4 3 • stack [0 >] infra first [dup -- [0 >] nullary] loop [] swaack
+                             5 4 3 [3 4 5] • [0 >] infra first [dup -- [0 >] nullary] loop [] swaack
+                       5 4 3 [3 4 5] [0 >] • infra first [dup -- [0 >] nullary] loop [] swaack
+                                     5 4 3 • 0 > [3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                                   5 4 3 0 • > [3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                                   5 4 3 0 • gt [3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                                  5 4 true • [3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                          5 4 true [3 4 5] • swaack first [dup -- [0 >] nullary] loop [] swaack
+                          5 4 3 [true 4 5] • first [dup -- [0 >] nullary] loop [] swaack
+                                5 4 3 true • [dup -- [0 >] nullary] loop [] swaack
+
+         5 4 3 true [dup -- [0 >] nullary] • loop [] swaack
+
+                                     5 4 3 • dup -- [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                   5 4 3 3 • -- [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                   5 4 3 3 • 1 - [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 3 3 1 • - [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 3 3 1 • sub [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                   5 4 3 2 • [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                             5 4 3 2 [0 >] • nullary [dup -- [0 >] nullary] loop [] swaack
+                             5 4 3 2 [0 >] • [stack] dip infra first [dup -- [0 >] nullary] loop [] swaack
+                     5 4 3 2 [0 >] [stack] • dip infra first [dup -- [0 >] nullary] loop [] swaack
+                                   5 4 3 2 • stack [0 >] infra first [dup -- [0 >] nullary] loop [] swaack
+                         5 4 3 2 [2 3 4 5] • [0 >] infra first [dup -- [0 >] nullary] loop [] swaack
+                   5 4 3 2 [2 3 4 5] [0 >] • infra first [dup -- [0 >] nullary] loop [] swaack
+                                   5 4 3 2 • 0 > [2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 3 2 0 • > [2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 3 2 0 • gt [2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                                5 4 3 true • [2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                      5 4 3 true [2 3 4 5] • swaack first [dup -- [0 >] nullary] loop [] swaack
+                      5 4 3 2 [true 3 4 5] • first [dup -- [0 >] nullary] loop [] swaack
+                              5 4 3 2 true • [dup -- [0 >] nullary] loop [] swaack
+
+       5 4 3 2 true [dup -- [0 >] nullary] • loop [] swaack
+
+                                   5 4 3 2 • dup -- [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 3 2 2 • -- [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 3 2 2 • 1 - [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 2 2 1 • - [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 2 2 1 • sub [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 3 2 1 • [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                           5 4 3 2 1 [0 >] • nullary [dup -- [0 >] nullary] loop [] swaack
+                           5 4 3 2 1 [0 >] • [stack] dip infra first [dup -- [0 >] nullary] loop [] swaack
+                   5 4 3 2 1 [0 >] [stack] • dip infra first [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 3 2 1 • stack [0 >] infra first [dup -- [0 >] nullary] loop [] swaack
+                     5 4 3 2 1 [1 2 3 4 5] • [0 >] infra first [dup -- [0 >] nullary] loop [] swaack
+               5 4 3 2 1 [1 2 3 4 5] [0 >] • infra first [dup -- [0 >] nullary] loop [] swaack
+                                 5 4 3 2 1 • 0 > [1 2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 2 1 0 • > [1 2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 2 1 0 • gt [1 2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                              5 4 3 2 true • [1 2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                  5 4 3 2 true [1 2 3 4 5] • swaack first [dup -- [0 >] nullary] loop [] swaack
+                  5 4 3 2 1 [true 2 3 4 5] • first [dup -- [0 >] nullary] loop [] swaack
+                            5 4 3 2 1 true • [dup -- [0 >] nullary] loop [] swaack
+
+     5 4 3 2 1 true [dup -- [0 >] nullary] • loop [] swaack
+
+                                 5 4 3 2 1 • dup -- [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 2 1 1 • -- [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 2 1 1 • 1 - [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                             5 4 3 2 1 1 1 • - [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                             5 4 3 2 1 1 1 • sub [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 2 1 0 • [0 >] nullary [dup -- [0 >] nullary] loop [] swaack
+                         5 4 3 2 1 0 [0 >] • nullary [dup -- [0 >] nullary] loop [] swaack
+                         5 4 3 2 1 0 [0 >] • [stack] dip infra first [dup -- [0 >] nullary] loop [] swaack
+                 5 4 3 2 1 0 [0 >] [stack] • dip infra first [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 2 1 0 • stack [0 >] infra first [dup -- [0 >] nullary] loop [] swaack
+                 5 4 3 2 1 0 [0 1 2 3 4 5] • [0 >] infra first [dup -- [0 >] nullary] loop [] swaack
+           5 4 3 2 1 0 [0 1 2 3 4 5] [0 >] • infra first [dup -- [0 >] nullary] loop [] swaack
+                               5 4 3 2 1 0 • 0 > [0 1 2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                             5 4 3 2 1 0 0 • > [0 1 2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                             5 4 3 2 1 0 0 • gt [0 1 2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+                           5 4 3 2 1 false • [0 1 2 3 4 5] swaack first [dup -- [0 >] nullary] loop [] swaack
+             5 4 3 2 1 false [0 1 2 3 4 5] • swaack first [dup -- [0 >] nullary] loop [] swaack
+             5 4 3 2 1 0 [false 1 2 3 4 5] • first [dup -- [0 >] nullary] loop [] swaack
+                         5 4 3 2 1 0 false • [dup -- [0 >] nullary] loop [] swaack
+
+  5 4 3 2 1 0 false [dup -- [0 >] nullary] • loop [] swaack
+
+Phase 5: Loop finished, complete original infra:
+
+                               5 4 3 2 1 0 • [] swaack
+                            5 4 3 2 1 0 [] • swaack
+                             [0 1 2 3 4 5] • 
