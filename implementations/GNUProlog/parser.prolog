@@ -1,6 +1,12 @@
 
 
-joy_lex([tok(Token)|Ls]) --> chars(TokenCodes), !,  {atom_codes(Token, TokenCodes)}, joy_lex(Ls).
+% For number_codes/2 we want to just fail if the codes do not represent an integer.
+% gprolog.html#number-atom%2F2
+% > Number is a variable, Atom (or Chars or Codes) cannot be parsed as a number and the value of the syntax_error Prolog flag is error (section 8.22.1)
+:- set_prolog_flag(syntax_error, fail).
+
+
+joy_lex([tok(Token)|Ls]) --> chars(Token), !, joy_lex(Ls).
 joy_lex([  lbracket|Ls]) --> "[",          !, joy_lex(Ls).
 joy_lex([  rbracket|Ls]) --> "]",          !, joy_lex(Ls).
 
@@ -12,21 +18,20 @@ joy_lex([]) --> [].
 % Then parse the tokens converting them to Prolog values and building up
 % the list structures (if any.)
 
-%joy_parse([J|Js]) --> joy_term(J), !, joy_parse(Js).
-%joy_parse([]) --> [].
-%
-%joy_term(list(J)) --> [lbracket], !, joy_parse(J), [rbracket].
-%joy_term(Token) --> [tok(Codes)], {joy_token(Token, Codes)}.
-%
-%joy_token(int(I), Codes) :- number(I, Codes, []), !.  % See dcg/basics.
-%joy_token(bool(true), `true`) :- !.
-%joy_token(bool(false), `false`) :- !.
-%joy_token(symbol(S), Codes) :- atom_codes(S, Codes).
-%
-%
-%text_to_expression(Text, Expression) :-
-%    phrase(joy_lex(Tokens), Text), !,
-%    phrase(joy_parse(Expression), Tokens).
+joy_parse([J|Js]) --> joy_term(J), !, joy_parse(Js).
+joy_parse([]) --> [].
+
+joy_term(list(J)) --> [lbracket], !, joy_parse(J), [rbracket].
+joy_term(Token) --> [tok(Codes)], {joy_token(Token, Codes)}.
+
+joy_token(int(I), Codes) :- write(Codes) ,number_codes(I, Codes), !.
+joy_token(bool(true), "true") :- !.
+joy_token(bool(false), "false") :- !.
+joy_token(symbol(S), Codes) :- atom_codes(S, Codes).
+
+text_to_expression(Text, Expression) :-
+    phrase(joy_lex(Tokens), Text), !,
+    phrase(joy_parse(Expression), Tokens).
 
 % Apologies for all the (green, I hope) cuts.  The strength of the Joy
 % syntax is that it's uninteresting.
@@ -62,7 +67,3 @@ blank --> [226, 128, 169].
 blank --> [226, 128, 175].
 blank --> [226, 129, 159].
 blank --> [227, 128, 128].
-
-
-
-do :- phrase(joy_lex(Tokens), "23[15]").
