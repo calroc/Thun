@@ -1,9 +1,9 @@
-# dune exec helloworld
+# dune build --auto-promote @fmt
 # OCAMLPARAM: unset
 # Shared cache: disabled
 # Workspace root: /usr/home/sforman/src/Joypy/implementations/Ocaml/helloworld
 # Auto-detected concurrency: 8
-$ /usr/home/sforman/.opam/default/bin/ocamlc.opt -config > /tmp/dune_31d5e4_output
+$ /usr/home/sforman/.opam/default/bin/ocamlc.opt -config > /tmp/dune_9b5fa0_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -116,3 +116,28 @@ $ /usr/home/sforman/.opam/default/bin/ocamlc.opt -config > /tmp/dune_31d5e4_outp
 #      ; windows_unicode = false
 #      }
 #  }
+$ (cd _build/default && /usr/home/sforman/.opam/default/bin/ocamlformat --impl bin/main.ml) > _build/default/bin/.formatted/main.ml
+$ /usr/local/bin/git --no-pager diff --no-index --color=always -u _build/default/bin/main.ml _build/default/bin/.formatted/main.ml
+> diff --git a/_build/default/bin/main.ml b/_build/default/bin/.formatted/main.ml
+> index 2fcd04c..fd4a636 100644
+> --- a/_build/default/bin/main.ml
+> +++ b/_build/default/bin/.formatted/main.ml
+> @@ -14,11 +14,11 @@ let zero = JoyInt 0
+>  let dummy = JoyList [ joy_true; joy_false; j_loop; zero ]
+>  
+>  let rec joy_to_string jt =
+> -    match jt with
+> -    | JoySymbol sym -> sym
+> -    | JoyTrue -> "true"
+> -    | JoyFalse -> "false"
+> -    | JoyInt i -> string_of_int i
+> -    | JoyList el -> "[" ^ (String.concat " " (List.map joy_to_string el)) ^ "]";;
+> +  match jt with
+> +  | JoySymbol sym -> sym
+> +  | JoyTrue -> "true"
+> +  | JoyFalse -> "false"
+> +  | JoyInt i -> string_of_int i
+> +  | JoyList el -> "[" ^ String.concat " " (List.map joy_to_string el) ^ "]"
+>  
+>  let () = print_endline (joy_to_string dummy)
+[1]
