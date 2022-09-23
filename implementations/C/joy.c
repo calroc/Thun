@@ -1,31 +1,57 @@
 #include <gc.h>
 #include <gmp.h>
 
+
+enum JoyTypeType {
+    joySymbol,
+    joyTrue,
+    joyFalse,
+    joyInt,
+    joyList
+};
+
+typedef struct list_node* JoyList;
+
+typedef struct JoyType {
+  enum JoyTypeType kind;
+  union {
+    int b; // bool
+    mpz_t i;
+    JoyList el;
+  };
+} name ;
+
+typedef struct list_node {
+  struct JoyType head;
+  struct list_node* tail;
+} *JoyList;
+
+
 // Example S-exprs
 // https://www.hboehm.info/gc/04tutorial.pdf
-
-typedef union se
-{
-  struct cons * cp;
-  mpz_t i;
-} sexpr;
-
-struct cons
-{
-  union se head;
-  union se tail;
-};
-
-#define car(s) (s).cp->head
-#define cdr(s) (s).cp->tail
-#define from_i(z) ({sexpr tmp; tmp.i=z; tmp;})
-#define to_i(s) (s).i
-
-sexpr cons(sexpr a, sexpr b) {
-    sexpr tmp = {GC_MALLOC(sizeof(struct cons))};
-    car(tmp) = a; cdr(tmp) = b;
-    return (tmp);
-};
+/**/
+/*typedef union se*/
+/*{*/
+/*  struct cons * cp;*/
+/*  mpz_t i;*/
+/*} sexpr;*/
+/**/
+/*struct cons*/
+/*{*/
+/*  union se head;*/
+/*  union se tail;*/
+/*};*/
+/**/
+/*#define car(s) (s).cp->head*/
+/*#define cdr(s) (s).cp->tail*/
+/*#define from_i(z) ({sexpr tmp; tmp.i=z; tmp;})*/
+/*#define to_i(s) (s).i*/
+/**/
+/*sexpr cons(sexpr a, sexpr b) {*/
+/*    sexpr tmp = {GC_MALLOC(sizeof(struct cons))};*/
+/*    car(tmp) = a; cdr(tmp) = b;*/
+/*    return (tmp);*/
+/*};*/
 
 void* reallocate_function (void *ptr, size_t old_size, size_t new_size) {
     return GC_realloc(ptr, new_size);
@@ -40,12 +66,12 @@ void my_callback(GC_PTR void_obj, GC_PTR void_environment) {
     mpz_clear(*obj);
 }
 
-sexpr new_int(void) {
-  sexpr tmp = {GC_MALLOC(sizeof(struct cons))};
-  mpz_init(tmp.i);
-  GC_register_finalizer(tmp.i, my_callback, NULL, NULL, NULL);
-  return (tmp);
-}
+/*sexpr new_int(void) {*/
+/*  sexpr node = {GC_MALLOC(sizeof(struct cons))};*/
+/*  mpz_init(node.i);*/
+/*  GC_register_finalizer(node.i, my_callback, NULL, NULL, NULL);*/
+/*  return (node);*/
+/*}*/
 
 
 int main(void)
@@ -60,10 +86,10 @@ int main(void)
     mpz_init_set_str (pi, "25d0c79fe247f31777d922627a74624", 16);
     gmp_printf ("%Zd = %Zx\n", pi, pi);
     GC_register_finalizer(pi, my_callback, NULL, NULL, NULL);
-    
-    sexpr i = new_int();
-    mpz_add(i.i, pi, pi);
-    gmp_printf ("%Zd\n", i.i);
+
+    /*sexpr i = new_int();*/
+    /*mpz_add(i.i, pi, pi);*/
+    /*gmp_printf ("%Zd\n", i.i);*/
     return 0;
 
     //return to_i(car(cons(from_i(0),from_i(1))));
