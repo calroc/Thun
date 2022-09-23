@@ -40,6 +40,14 @@ void my_callback(GC_PTR void_obj, GC_PTR void_environment) {
     mpz_clear(*obj);
 }
 
+sexpr new_int(void) {
+  sexpr tmp = {GC_MALLOC(sizeof(struct cons))};
+  mpz_init(tmp.i);
+  GC_register_finalizer(tmp.i, my_callback, NULL, NULL, NULL);
+  return (tmp);
+}
+
+
 int main(void)
 {
     mp_set_memory_functions(
@@ -47,11 +55,15 @@ int main(void)
         &reallocate_function,
         &deallocate_function
         );
-    mpz_t pie;
-    //mpz_init_set_str (pie, "3141592653589793238462643383279502884", 10);
-    mpz_init_set_str (pie, "25d0c79fe247f31777d922627a74624", 16);
-    gmp_printf ("%Zd = %Zx\n", pie, pie);
-    GC_register_finalizer(pie, my_callback, NULL, NULL, NULL);
+    mpz_t pi;
+    //mpz_init_set_str (pi, "3141592653589793238462643383279502884", 10);
+    mpz_init_set_str (pi, "25d0c79fe247f31777d922627a74624", 16);
+    gmp_printf ("%Zd = %Zx\n", pi, pi);
+    GC_register_finalizer(pi, my_callback, NULL, NULL, NULL);
+    
+    sexpr i = new_int();
+    mpz_add(i.i, pi, pi);
+    gmp_printf ("%Zd\n", i.i);
     return 0;
 
     //return to_i(car(cons(from_i(0),from_i(1))));
