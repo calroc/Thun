@@ -19,6 +19,8 @@ let rec joy_to_string jt =
   | JoyTrue -> "true"
   | JoyFalse -> "false"
   | JoyInt i -> string_of_int i
-  | JoyList el -> "[" ^ String.concat " " (List.map joy_to_string el) ^ "]"
+  | JoyList el -> "[" ^ expression_to_joy el ^ "]"
+
+and expression_to_joy el = String.concat " " (List.map joy_to_string el)
 
 let () = print_endline (joy_to_string dummy)
