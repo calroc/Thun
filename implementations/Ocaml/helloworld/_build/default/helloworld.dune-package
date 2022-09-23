@@ -1,0 +1,4 @@
+(lang dune 3.4)
+(name helloworld)
+(sections (lib .) (bin ../../bin))
+(files (lib (META dune-package opam)) (bin (helloworld)))

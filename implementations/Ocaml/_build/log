@@ -1,0 +1,5 @@
+# dune init project helloworld
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Workspace root: /usr/home/sforman/src/Joypy/implementations/Ocaml
+# Auto-detected concurrency: 8
