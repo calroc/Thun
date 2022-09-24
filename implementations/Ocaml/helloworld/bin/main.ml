@@ -81,7 +81,9 @@ let rec expect_right_bracket tokens acc =
   match head with
     | Right_bracket -> acc, tail
     | Left_bracket ->
+      (* extract the sub-list *)
       let sub_list, rest = expect_right_bracket tail [] in
+        (* continue looking for the expected "]" *)
         let el, rrest = expect_right_bracket rest acc in
           JoyList sub_list :: el, rrest
     | Token tok ->
