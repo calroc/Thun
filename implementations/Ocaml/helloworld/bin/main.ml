@@ -5,7 +5,9 @@ type joy_type =
   | JoyInt of int
   | JoyList of joy_type list
 
+(*
 type joy_list = joy_type list
+*)
 
 let joy_true = JoyTrue
 let joy_false = JoyFalse
@@ -52,6 +54,9 @@ let token_to_string token =
   | Left_bracket -> "["
   | Right_bracket -> "]"
   | Token str -> str
+
+let s = String.concat "" (List.map token_to_string (text_to_expression "1 [2]3" ))
+let s = String.concat " " (List.map token_to_string (tokenize "1 Pat [2]3"))
 *)
 
 exception ParseError of string
@@ -72,7 +77,10 @@ let rec parse : token list -> joy_list = fun tokens ->
 
 *)
 
-(* Get the prefix of the list as joy type and return rest of list*)
+(* Get the prefix of the list as joy type and return rest of list.
+
+    token list -> joy_type list -> joy_type list * token list
+*)
 let rec expect_right_bracket tokens acc =
   match tokens with
   | [] -> raise (ParseError "Missing closing bracket.")
@@ -92,40 +100,33 @@ let rec expect_right_bracket tokens acc =
           | "false" -> (joy_false :: el, rest)
           | _ -> (JoySymbol tok :: el, rest)))
 
-let foo head tail =
-  match head with
-  | Left_bracket ->
-      let el, rest = expect_right_bracket tail [] in
-      (JoyList el, rest)
+(* token -> token list -> joy_type * token list *)
+let one_token_lookahead token tokens =
+  match token with
   | Right_bracket -> raise (ParseError "Extra closing bracket.")
+  | Left_bracket ->
+      let el, rest = expect_right_bracket tokens [] in
+      (JoyList el, rest)
   | Token tok -> (
       match tok with
-      | "true" -> (joy_true, tail)
-      | "false" -> (joy_false, tail)
-      | _ -> (JoySymbol tok, tail))
+      | "true" -> (joy_true, tokens)
+      | "false" -> (joy_false, tokens)
+      | _ -> (JoySymbol tok, tokens))
 
+(* token list -> joy_type list -> joy_type list *)
 let rec parse0 tokens acc =
   match tokens with
   | [] -> acc
   | head :: tail ->
-      let item, rest = foo head tail in
+      let item, rest = one_token_lookahead head tail in
       item :: parse0 rest acc
 
-let parse : token list -> joy_list = fun tokens -> parse0 tokens []
-
-(*
-
-let text_to_expression str =
-  let tokens = tokenize str in
-    tokens
-    
-let s = String.concat "" (List.map token_to_string (text_to_expression "1 [2]3" ))
-let s = String.concat " " (List.map token_to_string (tokenize "1 Pat [2]3"))
-*)
-
-(* let () = print_endline (joy_to_string dummy) *)
+let parse tokens = parse0 tokens []
+let text_to_expression text = parse (tokenize text)
 
 let () =
-  print_endline (expression_to_string (parse (tokenize "1 2 3[4 5 6[7 8]9 10]11[][][[]]")));
-  print_endline (expression_to_string (parse (tokenize "true [ false]true")));
+  print_endline
+    (expression_to_string
+       (text_to_expression "1 2 3[4 5 6[7 8]9 10]11[][][[]]"));
+  print_endline (expression_to_string (text_to_expression "true [ false]true"));
   print_endline (joy_to_string dummy)
