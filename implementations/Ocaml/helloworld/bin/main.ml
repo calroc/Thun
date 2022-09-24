@@ -9,11 +9,11 @@ type joy_list = joy_type list
 
 let joy_true = JoyTrue
 let joy_false = JoyFalse
+
+(*
 let j_loop = JoySymbol "loop"
 let zero = JoyInt 0
 let dummy = JoyList [ joy_true; joy_false; j_loop; zero ]
-
-(*
 let joy_nil = JoyList []
 ██████╗ ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗ █████╗ ██████╗ ██╗   ██╗
 ██╔══██╗██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔══██╗██╔══██╗╚██╗ ██╔╝
@@ -196,6 +196,11 @@ let clear s e d = (Joy_nil, e, d)
 
 *)
 
+let concat s e d =
+  match s with
+  | JoyList tos :: JoyList second :: s0 -> (JoyList (second @ tos) :: s0, e, d)
+  | _ -> raise (ValueError "some damn thing.")
+
 (*
 ██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
 ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
@@ -216,6 +221,7 @@ let joy_eval sym stack expression dictionary =
       let b, s1 = pop_int s0 in
       (JoyInt (b - a) :: s1, expression, dictionary)
   | "clear" -> ([], expression, dictionary)
+  | "concat" -> concat stack expression dictionary
   | _ ->
       let func = dictionary sym in
       (stack, func @ expression, dictionary)
@@ -233,16 +239,15 @@ let rec joy : joy_list -> joy_list -> joy_dict -> joy_list * joy_dict =
 
 (*
 let expr = text_to_expression "1 2 + 3 4 + 5 6 + 7 8 + 9 10 + 11 + + + + + - "
-*)
 let expr = text_to_expression "1 2 3 4 clear 5"
+*)
+let expr = text_to_expression "clear [23] [18] concat"
 let s = text_to_expression "23 [18 99] "
 let stack, _ = joy s expr d
-
-let () =
-  print_endline (expression_to_string stack);
-  (* print_endline
-       (expression_to_string
-          (text_to_expression "1 2 3[4 5 6[7 8]9 10]11[][][[]]"));
-     print_endline (expression_to_string (text_to_expression "true [ false]true"));
-  *)
-  print_endline (joy_to_string dummy)
+let () = print_endline (expression_to_string stack)
+(* print_endline
+        (expression_to_string
+           (text_to_expression "1 2 3[4 5 6[7 8]9 10]11[][][[]]"));
+      print_endline (expression_to_string (text_to_expression "true [ false]true"));
+   print_endline (joy_to_string dummy)
+*)
