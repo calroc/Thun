@@ -15,25 +15,46 @@ let j_loop = JoySymbol "loop"
 let zero = JoyInt 0
 let dummy = JoyList [ joy_true; joy_false; j_loop; zero ]
 let joy_nil = JoyList []
+
+
 ██████╗ ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗ █████╗ ██████╗ ██╗   ██╗
 ██╔══██╗██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔══██╗██╔══██╗╚██╗ ██╔╝
 ██║  ██║██║██║        ██║   ██║██║   ██║██╔██╗ ██║███████║██████╔╝ ╚████╔╝ 
 ██║  ██║██║██║        ██║   ██║██║   ██║██║╚██╗██║██╔══██║██╔══██╗  ╚██╔╝  
 ██████╔╝██║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║██║  ██║██║  ██║   ██║   
 ╚═════╝ ╚═╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+
 https://stackoverflow.com/questions/13708701/how-to-implement-a-dictionary-as-a-function-in-ocaml
+
+Note that when you call dict_add you omit the lookup parameter!
+It becomes the input parameter to a curried function (closure)
+that performs the key lookup at a later time when you call it,
+
+> Remember that our definition of a dictionary here is function
+> from key to values so this closure is a dictionary.
+
+Just to really spell it out, the call:
+
+    dict_add dictionary key value
+
+returns a function of signature:
+
+    string -> joy_list
+
+That either return its own value (if the string arg equals its stored key)
+or delegates to the (stored) dictionary function (itself string -> joy_list).
+
+This is really cute, but a little too magical for my taste.  Is this how you FP?
 *)
 
 exception UnknownWordError of string
 
 let empty_dict (key : string) : joy_list = raise (UnknownWordError key)
 
-let dict_add dictionary key value key' =
-  if key = key' then value else dictionary key'
+let dict_add dictionary key value lookup =
+  if key = lookup then value else dictionary lookup
 
 type joy_dict = string -> joy_list
-
-let d = dict_add empty_dict "foo" []
 
 (*
 ██╗   ██╗████████╗██╗██╗     ███████╗
@@ -237,11 +258,15 @@ let rec joy : joy_list -> joy_list -> joy_dict -> joy_list * joy_dict =
           joy s e d
       | _ -> joy (head :: stack) tail dictionary)
 
+(* Of course this could be a fold over a list of strings or something... *)
+let d0 = dict_add empty_dict "++" (text_to_expression "1 +")
+let d = dict_add d0 "sqr" (text_to_expression "dup mul")
+
 (*
 let expr = text_to_expression "1 2 + 3 4 + 5 6 + 7 8 + 9 10 + 11 + + + + + - "
 let expr = text_to_expression "1 2 3 4 clear 5"
 *)
-let expr = text_to_expression "clear [23] [18] concat"
+let expr = text_to_expression "clear [23] [18] concat 32 ++"
 let s = text_to_expression "23 [18 99] "
 let stack, _ = joy s expr d
 let () = print_endline (expression_to_string stack)
