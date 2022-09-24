@@ -5,15 +5,27 @@ type joy_type =
   | JoyInt of int
   | JoyList of joy_type list
 
-(*
 type joy_list = joy_type list
-*)
+
 
 let joy_true = JoyTrue
 let joy_false = JoyFalse
 let j_loop = JoySymbol "loop"
 let zero = JoyInt 0
 let dummy = JoyList [ joy_true; joy_false; j_loop; zero ]
+
+
+(* https://stackoverflow.com/questions/13708701/how-to-implement-a-dictionary-as-a-function-in-ocaml *)
+
+exception UnknownWordError of string
+
+let empty_dict (key : string) : joy_list = raise (UnknownWordError key)
+let dict_add dictionary key value =
+    fun key' -> if key = key' then value else dictionary key'
+
+type joy_dict = string -> joy_list
+
+let d = dict_add empty_dict "foo" []
 
 (*
 ██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
@@ -33,7 +45,14 @@ let rec joy_to_string jt =
 
 and expression_to_string el = String.concat " " (List.map joy_to_string el)
 
-(* *)
+(*
+██╗     ███████╗██╗  ██╗███████╗██████╗
+██║     ██╔════╝╚██╗██╔╝██╔════╝██╔══██╗
+██║     █████╗   ╚███╔╝ █████╗  ██████╔╝
+██║     ██╔══╝   ██╔██╗ ██╔══╝  ██╔══██╗
+███████╗███████╗██╔╝ ██╗███████╗██║  ██║
+╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+*)
 
 type token = Left_bracket | Right_bracket | Token of string
 
@@ -73,6 +92,7 @@ let () = print_endline s
 
 let s = String.concat "" (List.map token_to_string (text_to_expression "1 [2]3" ))
 *)
+
 
 (*
 ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
@@ -136,9 +156,33 @@ let rec parse0 tokens acc =
 let parse tokens = parse0 tokens []
 let text_to_expression text = parse (tokenize text)
 
+(*
+
+██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
+██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
+██║██╔██╗ ██║   ██║   █████╗  ██████╔╝██████╔╝██████╔╝█████╗     ██║   █████╗  ██████╔╝
+██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗██╔═══╝ ██╔══██╗██╔══╝     ██║   ██╔══╝  ██╔══██╗
+██║██║ ╚████║   ██║   ███████╗██║  ██║██║     ██║  ██║███████╗   ██║   ███████╗██║  ██║
+╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+
+let joy stack expression dictionary = (stack @ expression, dictionary)
+*)
+
+let joy : joy_list -> joy_list -> joy_dict -> joy_list * joy_dict = fun stack expression dictionary ->
+  match expression with
+  | [] -> (stack, dictionary)
+  | _ -> (*head :: tail ->*)
+  (stack @ expression, dictionary)
+
+let expr = text_to_expression "1 2 3[4 5 6[7 8]9 10]11[][][[]]"
+let s = text_to_expression "23 [18 99] "
+let stack, _ = joy s expr d
+
 let () =
-  print_endline
+  print_endline (expression_to_string stack);
+(*  print_endline
     (expression_to_string
        (text_to_expression "1 2 3[4 5 6[7 8]9 10]11[][][[]]"));
   print_endline (expression_to_string (text_to_expression "true [ false]true"));
+*)
   print_endline (joy_to_string dummy)
