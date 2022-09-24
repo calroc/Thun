@@ -54,22 +54,64 @@ let token_to_string token =
   | Token str -> str
 *)
 
+exception ParseError of string
 
+(*
 let rec parse : token list -> joy_list = fun tokens ->
   match tokens with
   | [] -> []
   | head :: tail ->
     match head with
-    | Left_bracket -> zero :: parse tail
-    | Right_bracket -> JoyInt 1 :: parse tail
+    | Left_bracket ->  let (el, rest) = parse_list tail in el :: parse rest
+    | Right_bracket -> raise  (ParseError "Extra closing bracket.")
     | Token tok ->
       match tok with
       | "true" -> joy_true :: parse tail
       | "false"-> joy_false :: parse tail
       | _ -> JoySymbol tok :: parse tail
 
+*)
 
 
+(* Get the prefix of the list as joy type and return rest of list*)
+let rec expect_right_bracket tokens acc =
+  match tokens with
+  | [] -> raise (ParseError "Missing closing bracket.")
+  | head :: tail ->
+  match head with
+    | Right_bracket -> acc, tail
+    | Left_bracket ->
+      let sub_list, rest = expect_right_bracket tail [] in
+        let el, rrest = expect_right_bracket rest acc in
+          JoyList sub_list :: el, rrest
+    | Token tok ->
+      let el, rest = expect_right_bracket tail acc in
+      match tok with
+      | "true" -> joy_true :: el, rest
+      | "false"-> joy_false :: el, rest
+      | _ -> (JoySymbol tok) :: el, rest
+
+let foo head tail =
+  match head with
+    | Left_bracket ->
+      let el, rest = expect_right_bracket tail [] in
+      JoyList el, rest
+    | Right_bracket -> raise (ParseError "Extra closing bracket.")
+    | Token tok ->
+      match tok with
+      | "true" -> joy_true, tail
+      | "false"-> joy_false, tail
+      | _ -> JoySymbol tok, tail
+
+
+let rec parse0 tokens acc =
+  match tokens with
+  | [] -> acc
+  | head :: tail ->
+    let item, rest = foo head tail in 
+    item :: parse0 rest acc
+
+let parse : token list -> joy_list = fun tokens -> parse0 tokens []
 
 
 
@@ -88,5 +130,6 @@ let s = String.concat " " (List.map token_to_string (tokenize "1 Pat [2]3"))
 
 
 let () =
+  print_endline (expression_to_string (parse (tokenize "1[2[3]4]5[][][[]]"))) ;
   print_endline (expression_to_string (parse (tokenize "true [ false]true"))) ;
   print_endline (joy_to_string dummy)
