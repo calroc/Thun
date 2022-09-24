@@ -168,13 +168,19 @@ let text_to_expression text = parse (tokenize text)
 let joy stack expression dictionary = (stack @ expression, dictionary)
 *)
 
-let joy : joy_list -> joy_list -> joy_dict -> joy_list * joy_dict = fun stack expression dictionary ->
+let joy_eval _ s e d = (s, e, d)
+
+let rec joy : joy_list -> joy_list -> joy_dict -> joy_list * joy_dict = fun stack expression dictionary ->
   match expression with
   | [] -> (stack, dictionary)
-  | _ -> (*head :: tail ->*)
-  (stack @ expression, dictionary)
+  | head :: tail ->
+    match head with
+    | JoySymbol sym ->
+        let (s, e, d) = joy_eval sym stack tail dictionary in
+        joy s e d
+    | _ -> joy (head :: stack) tail dictionary
 
-let expr = text_to_expression "1 2 3[4 5 6[7 8]9 10]11[][][[]]"
+let expr = text_to_expression "1 2 + 3[4 5 6[7 8]9 10]11[][][[]]"
 let s = text_to_expression "23 [18 99] "
 let stack, _ = joy s expr d
 
