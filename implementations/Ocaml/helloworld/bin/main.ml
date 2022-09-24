@@ -169,26 +169,28 @@ let joy stack expression dictionary = (stack @ expression, dictionary)
 exception StackUnderflow of string
 exception ValueError of string
 
-let pop_int : joy_list -> int * joy_list = fun stack ->
+let pop_int : joy_list -> int * joy_list =
+ fun stack ->
   match stack with
   | [] -> raise (StackUnderflow "Not enough values on stack.")
-  | head :: tail ->
-    match head with
-    | JoyInt i -> (i, tail)
-    | _ -> raise (ValueError "Not an integer.")
+  | head :: tail -> (
+      match head with
+      | JoyInt i -> (i, tail)
+      | _ -> raise (ValueError "Not an integer."))
 
 let joy_eval sym stack expression dictionary =
   match sym with
   | "+" ->
-    let (a, s0) = pop_int(stack) in
-    let (b, s1) = pop_int(s0) in
-    ((JoyInt (a + b) :: s1), expression, dictionary)
+      let a, s0 = pop_int stack in
+      let b, s1 = pop_int s0 in
+      (JoyInt (a + b) :: s1, expression, dictionary)
   | "-" ->
-    let (a, s0) = pop_int(stack) in
-    let (b, s1) = pop_int(s0) in
-    ((JoyInt (b - a) :: s1), expression, dictionary)
-  | _ -> let func = dictionary sym in
-    (stack, (func @ expression), dictionary)
+      let a, s0 = pop_int stack in
+      let b, s1 = pop_int s0 in
+      (JoyInt (b - a) :: s1, expression, dictionary)
+  | _ ->
+      let func = dictionary sym in
+      (stack, func @ expression, dictionary)
 
 let rec joy : joy_list -> joy_list -> joy_dict -> joy_list * joy_dict =
  fun stack expression dictionary ->
