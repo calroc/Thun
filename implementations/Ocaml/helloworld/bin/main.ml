@@ -7,21 +7,20 @@ type joy_type =
 
 type joy_list = joy_type list
 
-
 let joy_true = JoyTrue
 let joy_false = JoyFalse
 let j_loop = JoySymbol "loop"
 let zero = JoyInt 0
 let dummy = JoyList [ joy_true; joy_false; j_loop; zero ]
 
-
 (* https://stackoverflow.com/questions/13708701/how-to-implement-a-dictionary-as-a-function-in-ocaml *)
 
 exception UnknownWordError of string
 
 let empty_dict (key : string) : joy_list = raise (UnknownWordError key)
-let dict_add dictionary key value =
-    fun key' -> if key = key' then value else dictionary key'
+
+let dict_add dictionary key value key' =
+  if key = key' then value else dictionary key'
 
 type joy_dict = string -> joy_list
 
@@ -92,7 +91,6 @@ let () = print_endline s
 
 let s = String.concat "" (List.map token_to_string (text_to_expression "1 [2]3" ))
 *)
-
 
 (*
 ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
@@ -168,27 +166,50 @@ let text_to_expression text = parse (tokenize text)
 let joy stack expression dictionary = (stack @ expression, dictionary)
 *)
 
-let joy_eval _ s e d = (s, e, d)
+exception StackUnderflow of string
+exception ValueError of string
 
-let rec joy : joy_list -> joy_list -> joy_dict -> joy_list * joy_dict = fun stack expression dictionary ->
-  match expression with
-  | [] -> (stack, dictionary)
+let pop_int : joy_list -> int * joy_list = fun stack ->
+  match stack with
+  | [] -> raise (StackUnderflow "Not enough values on stack.")
   | head :: tail ->
     match head with
-    | JoySymbol sym ->
-        let (s, e, d) = joy_eval sym stack tail dictionary in
-        joy s e d
-    | _ -> joy (head :: stack) tail dictionary
+    | JoyInt i -> (i, tail)
+    | _ -> raise (ValueError "Not an integer.")
 
-let expr = text_to_expression "1 2 + 3[4 5 6[7 8]9 10]11[][][[]]"
+let joy_eval sym stack expression dictionary =
+  match sym with
+  | "+" ->
+    let (a, s0) = pop_int(stack) in
+    let (b, s1) = pop_int(s0) in
+    ((JoyInt (a + b) :: s1), expression, dictionary)
+  | "-" ->
+    let (a, s0) = pop_int(stack) in
+    let (b, s1) = pop_int(s0) in
+    ((JoyInt (b - a) :: s1), expression, dictionary)
+  | _ -> let func = dictionary sym in
+    (stack, (func @ expression), dictionary)
+
+let rec joy : joy_list -> joy_list -> joy_dict -> joy_list * joy_dict =
+ fun stack expression dictionary ->
+  match expression with
+  | [] -> (stack, dictionary)
+  | head :: tail -> (
+      match head with
+      | JoySymbol sym ->
+          let s, e, d = joy_eval sym stack tail dictionary in
+          joy s e d
+      | _ -> joy (head :: stack) tail dictionary)
+
+let expr = text_to_expression "1 2 + 3 4 + 5 6 + 7 8 + 9 10 + 11 + + + + + - "
 let s = text_to_expression "23 [18 99] "
 let stack, _ = joy s expr d
 
 let () =
   print_endline (expression_to_string stack);
-(*  print_endline
-    (expression_to_string
-       (text_to_expression "1 2 3[4 5 6[7 8]9 10]11[][][[]]"));
-  print_endline (expression_to_string (text_to_expression "true [ false]true"));
-*)
+  (* print_endline
+       (expression_to_string
+          (text_to_expression "1 2 3[4 5 6[7 8]9 10]11[][][[]]"));
+     print_endline (expression_to_string (text_to_expression "true [ false]true"));
+  *)
   print_endline (joy_to_string dummy)
