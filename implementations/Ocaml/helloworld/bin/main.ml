@@ -23,42 +23,35 @@ let rec joy_to_string jt =
 
 and expression_to_string el = String.concat " " (List.map joy_to_string el)
 
+type token = Left_bracket | Right_bracket | Token of string
 
-
-type token =
-  | Left_bracket
-  | Right_bracket
-  | Token of string
-
-let delimiter ch = String.contains "[] " ch
+let delimiter str last =
+  last >= String.length str || String.contains "[] " (String.get str last)
 
 (* string -> int -> int -> token * int *)
 let rec tokenize1 str start last =
-  if last >= String.length str || delimiter (String.get str last)
-  then (Token (String.sub str start (last - start)), last)
+  if delimiter str last then (Token (String.sub str start (last - start)), last)
   else tokenize1 str start (last + 1)
 
 let rec tokenize0 str start acc =
-  if start >= String.length str
-  then acc
+  if start >= String.length str then acc
   else
     let ch = String.get str start in
-      match ch with
-      | '[' -> Left_bracket :: (tokenize0 str (start + 1) acc)
-      | ']' -> Right_bracket :: (tokenize0 str (start + 1) acc)
-      | ' ' -> tokenize0 str (start + 1) acc
-      | _ -> let (token, n) = tokenize1 str start (start + 1) in
-        token :: (tokenize0 str n acc)
+    match ch with
+    | '[' -> Left_bracket :: tokenize0 str (start + 1) acc
+    | ']' -> Right_bracket :: tokenize0 str (start + 1) acc
+    | ' ' -> tokenize0 str (start + 1) acc
+    | _ ->
+        let token, n = tokenize1 str start (start + 1) in
+        token :: tokenize0 str n acc
 
 let tokenize str = tokenize0 str 0 []
-
 
 let token_to_string token =
   match token with
   | Left_bracket -> "["
   | Right_bracket -> "]"
   | Token str -> str
-
 
 (*
 let char_tok ch acc =
@@ -86,9 +79,8 @@ let s = String.concat "" (List.map token_to_string (text_to_expression "1 [2]3" 
 
 (* let () = print_endline (joy_to_string dummy) *)
 
-let s = String.concat " " (List.map token_to_string (tokenize "1 [2]3" ))
+let s = String.concat " " (List.map token_to_string (tokenize "1 [2]3"))
 
-
-let () = 
-  print_endline s ;
+let () =
+  print_endline s;
   print_endline (joy_to_string dummy)
