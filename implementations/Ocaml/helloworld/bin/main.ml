@@ -13,7 +13,6 @@ let j_loop = JoySymbol "loop"
 let zero = JoyInt 0
 let dummy = JoyList [ joy_true; joy_false; j_loop; zero ]
 
-
 (*
 let joy_nil = JoyList []
 ██████╗ ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗ █████╗ ██████╗ ██╗   ██╗
@@ -36,7 +35,6 @@ type joy_dict = string -> joy_list
 
 let d = dict_add empty_dict "foo" []
 
-
 (*
 ██╗   ██╗████████╗██╗██╗     ███████╗
 ██║   ██║╚══██╔══╝██║██║     ██╔════╝
@@ -57,7 +55,6 @@ let pop_int : joy_list -> int * joy_list =
       match head with
       | JoyInt i -> (i, tail)
       | _ -> raise (ValueError "Not an integer."))
-
 
 (*
 ██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
@@ -92,8 +89,7 @@ type token = Left_bracket | Right_bracket | Token of string
 let delimiter str i =
   i >= String.length str || String.contains "[] " (String.get str i)
 
-let make_token str index i =
-  (Token (String.sub str index (i - index)), i)
+let make_token str index i = (Token (String.sub str index (i - index)), i)
 
 (* string -> int -> int -> token * int *)
 let rec tokenize1 str index i =
@@ -200,7 +196,6 @@ let clear s e d = (Joy_nil, e, d)
 
 *)
 
-
 (*
 ██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
 ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
@@ -220,8 +215,7 @@ let joy_eval sym stack expression dictionary =
       let a, s0 = pop_int stack in
       let b, s1 = pop_int s0 in
       (JoyInt (b - a) :: s1, expression, dictionary)
-  | "clear" ->
-      ([], expression, dictionary)
+  | "clear" -> ([], expression, dictionary)
   | _ ->
       let func = dictionary sym in
       (stack, func @ expression, dictionary)
