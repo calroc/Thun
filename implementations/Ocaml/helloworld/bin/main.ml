@@ -15,6 +15,14 @@ let j_loop = JoySymbol "loop"
 let zero = JoyInt 0
 let dummy = JoyList [ joy_true; joy_false; j_loop; zero ]
 
+(*
+██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
+██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
+██████╔╝██████╔╝██║██╔██╗ ██║   ██║   █████╗  ██████╔╝
+██╔═══╝ ██╔══██╗██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗
+██║     ██║  ██║██║██║ ╚████║   ██║   ███████╗██║  ██║
+╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+*)
 let rec joy_to_string jt =
   match jt with
   | JoySymbol sym -> sym
@@ -25,25 +33,29 @@ let rec joy_to_string jt =
 
 and expression_to_string el = String.concat " " (List.map joy_to_string el)
 
+(* *)
+
 type token = Left_bracket | Right_bracket | Token of string
 
-let delimiter str last =
-  last >= String.length str || String.contains "[] " (String.get str last)
+let delimiter str i =
+  i >= String.length str || String.contains "[] " (String.get str i)
+
+let make_token str index last =
+  (Token (String.sub str index (last - index)), last)
 
 (* string -> int -> int -> token * int *)
-let rec tokenize1 str start last =
-  if delimiter str last then (Token (String.sub str start (last - start)), last)
-  else tokenize1 str start (last + 1)
+let rec tokenize1 str index i =
+  if delimiter str i then make_token str index i else tokenize1 str index (i + 1)
 
-let rec tokenize0 str start acc =
-  if start >= String.length str then acc
+let rec tokenize0 str index acc =
+  if index >= String.length str then acc
   else
-    match String.get str start with
-    | '[' -> Left_bracket :: tokenize0 str (start + 1) acc
-    | ']' -> Right_bracket :: tokenize0 str (start + 1) acc
-    | ' ' -> tokenize0 str (start + 1) acc
+    match String.get str index with
+    | '[' -> Left_bracket :: tokenize0 str (index + 1) acc
+    | ']' -> Right_bracket :: tokenize0 str (index + 1) acc
+    | ' ' -> tokenize0 str (index + 1) acc
     | _ ->
-        let token, n = tokenize1 str start (start + 1) in
+        let token, n = tokenize1 str index (index + 1) in
         token :: tokenize0 str n acc
 
 let tokenize str = tokenize0 str 0 []
@@ -55,50 +67,52 @@ let token_to_string token =
   | Right_bracket -> "]"
   | Token str -> str
 
-let s = String.concat "" (List.map token_to_string (text_to_expression "1 [2]3" ))
 let s = String.concat " " (List.map token_to_string (tokenize "1 Pat [2]3"))
+
+let () = print_endline s
+
+let s = String.concat "" (List.map token_to_string (text_to_expression "1 [2]3" ))
+*)
+
+(*
+██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
+██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
+██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝
+██╔═══╝ ██╔══██║██╔══██╗╚════██║██╔══╝  ██╔══██╗
+██║     ██║  ██║██║  ██║███████║███████╗██║  ██║
+╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
 *)
 
 exception ParseError of string
 
-(*
-let rec parse : token list -> joy_list = fun tokens ->
-  match tokens with
-  | [] -> []
-  | head :: tail ->
-    match head with
-    | Left_bracket ->  let (el, rest) = parse_list tail in el :: parse rest
-    | Right_bracket -> raise  (ParseError "Extra closing bracket.")
-    | Token tok ->
-      match tok with
-      | "true" -> joy_true :: parse tail
-      | "false"-> joy_false :: parse tail
-      | _ -> JoySymbol tok :: parse tail
+let tokenator tok =
+  if String.equal tok "true" then joy_true
+  else if String.equal tok "false" then joy_false
+  else
+    match int_of_string_opt tok with
+    | Some i -> JoyInt i
+    | None -> JoySymbol tok
 
-*)
-
-(* Get the prefix of the list as joy type and return rest of list.
-
-    token list -> joy_type list -> joy_type list * token list
-*)
+(* Get the prefix of the list as JoyList and return rest of list.
+   token list -> joy_list -> joy_list * token list *)
 let rec expect_right_bracket tokens acc =
   match tokens with
   | [] -> raise (ParseError "Missing closing bracket.")
-  | head :: tail -> (
-      match head with
-      | Right_bracket -> (acc, tail)
-      | Left_bracket ->
-          (* extract the sub-list *)
-          let sub_list, rest = expect_right_bracket tail [] in
-          (* continue looking for the expected "]" *)
-          let el, rrest = expect_right_bracket rest acc in
-          (JoyList sub_list :: el, rrest)
-      | Token tok -> (
-          let el, rest = expect_right_bracket tail acc in
-          match tok with
-          | "true" -> (joy_true :: el, rest)
-          | "false" -> (joy_false :: el, rest)
-          | _ -> (JoySymbol tok :: el, rest)))
+  | head :: tail -> expect_right_bracket_one_token_lookahead head tail acc
+
+and expect_right_bracket_one_token_lookahead token tokens acc =
+  match token with
+  | Right_bracket -> (acc, tokens)
+  | Left_bracket ->
+      (* extract the sub-list *)
+      let sub_list, rest = expect_right_bracket tokens [] in
+      (* continue looking for the expected "]" *)
+      let el, rrest = expect_right_bracket rest acc in
+      (JoyList sub_list :: el, rrest)
+  | Token tok ->
+      let el, rest = expect_right_bracket tokens acc in
+      let jt = tokenator tok in
+      (jt :: el, rest)
 
 (* token -> token list -> joy_type * token list *)
 let one_token_lookahead token tokens =
@@ -107,11 +121,9 @@ let one_token_lookahead token tokens =
   | Left_bracket ->
       let el, rest = expect_right_bracket tokens [] in
       (JoyList el, rest)
-  | Token tok -> (
-      match tok with
-      | "true" -> (joy_true, tokens)
-      | "false" -> (joy_false, tokens)
-      | _ -> (JoySymbol tok, tokens))
+  | Token tok ->
+      let jt = tokenator tok in
+      (jt, tokens)
 
 (* token list -> joy_type list -> joy_type list *)
 let rec parse0 tokens acc =
