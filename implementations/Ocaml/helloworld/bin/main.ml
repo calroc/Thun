@@ -276,6 +276,17 @@ let concat s e d =
   | JoyList tos :: JoyList second :: s0 -> (JoyList (second @ tos) :: s0, e, d)
   | _ -> raise (ValueError "some damn thing.")
 
+let cons s e d =
+  let body, s0 = pop_list s in
+  match s0 with
+  | item :: s1 -> (JoyList (item :: body) :: s1, e, d)
+  | [] -> raise (StackUnderflow "Not enough values on stack.")
+
+let swap s e d =
+  match s with
+  | tos :: second :: s0 -> (second :: tos :: s0, e, d)
+  | _ :: [] | [] -> raise (StackUnderflow "Not enough values on stack.")
+
 (*
 ██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
 ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
@@ -287,11 +298,11 @@ let concat s e d =
 
 let joy_eval sym stack expression dictionary =
   match sym with
-  | "+" ->
+  | "+" | "add" ->
       let a, s0 = pop_int stack in
       let b, s1 = pop_int s0 in
       (JoyInt (a + b) :: s1, expression, dictionary)
-  | "-" ->
+  | "-" | "sub" ->
       let a, s0 = pop_int stack in
       let b, s1 = pop_int s0 in
       (JoyInt (b - a) :: s1, expression, dictionary)
@@ -325,6 +336,8 @@ let joy_eval sym stack expression dictionary =
   | "dip" -> dip stack expression dictionary
   | "clear" -> ([], expression, dictionary)
   | "concat" -> concat stack expression dictionary
+  | "cons" -> cons stack expression dictionary
+  | "swap" -> swap stack expression dictionary
   | _ ->
       let func = dictionary sym in
       (stack, func @ expression, dictionary)
