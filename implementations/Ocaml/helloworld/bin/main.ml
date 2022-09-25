@@ -9,9 +9,9 @@ type joy_list = joy_type list
 
 let joy_true = JoyTrue
 let joy_false = JoyFalse
+let j_loop = JoySymbol "loop"
 
 (*
-let j_loop = JoySymbol "loop"
 let zero = JoyInt 0
 let dummy = JoyList [ joy_true; joy_false; j_loop; zero ]
 let joy_nil = JoyList []
@@ -77,6 +77,25 @@ let pop_int : joy_list -> int * joy_list =
       | JoyInt i -> (i, tail)
       | _ -> raise (ValueError "Not an integer."))
 
+let pop_list : joy_list -> joy_list * joy_list =
+ fun stack ->
+  match stack with
+  | [] -> raise (StackUnderflow "Not enough values on stack.")
+  | head :: tail -> (
+      match head with
+      | JoyList el -> (el, tail)
+      | _ -> raise (ValueError "Not a list."))
+
+let pop_bool : joy_list -> bool * joy_list =
+ fun stack ->
+  match stack with
+  | [] -> raise (StackUnderflow "Not enough values on stack.")
+  | head :: tail -> (
+      match head with
+      | JoyTrue -> (true, tail)
+      | JoyFalse -> (false, tail)
+      | _ -> raise (ValueError "Not a Boolean value."))
+
 (*
 ██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
 ██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
@@ -95,6 +114,8 @@ let rec joy_to_string jt =
   | JoyList el -> "[" ^ expression_to_string el ^ "]"
 
 and expression_to_string el = String.concat " " (List.map joy_to_string el)
+
+let stack_to_string stack = expression_to_string (List.rev stack)
 
 (*
 ██╗     ███████╗██╗  ██╗███████╗██████╗
@@ -206,6 +227,39 @@ let parse tokens = parse0 tokens []
 let text_to_expression text = parse (tokenize text)
 
 (*
+ ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ████████╗ ██████╗ ██████╗ ███████╗
+██╔════╝██╔═══██╗████╗ ████║██╔══██╗██║████╗  ██║██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝
+██║     ██║   ██║██╔████╔██║██████╔╝██║██╔██╗ ██║███████║   ██║   ██║   ██║██████╔╝███████╗
+██║     ██║   ██║██║╚██╔╝██║██╔══██╗██║██║╚██╗██║██╔══██║   ██║   ██║   ██║██╔══██╗╚════██║
+╚██████╗╚██████╔╝██║ ╚═╝ ██║██████╔╝██║██║ ╚████║██║  ██║   ██║   ╚██████╔╝██║  ██║███████║
+ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
+*)
+
+let branch s e d =
+  (* check_stack 3 or something to ensure there are enough items *)
+  let true_body, s0 = pop_list s in
+  let false_body, s1 = pop_list s0 in
+  let flag, s2 = pop_bool s1 in
+  if flag then (s2, true_body @ e, d) else (s2, false_body @ e, d)
+
+let dip s e d =
+  let body, s0 = pop_list s in
+  match s0 with
+  | item :: s1 -> (s1, body @ (item :: e), d)
+  | [] -> raise (StackUnderflow "Not enough values on stack.")
+
+let i s e d =
+  let body, s0 = pop_list s in
+  (s0, body @ e, d)
+
+let loop s e d =
+  let body, s0 = pop_list s in
+  let flag, s1 = pop_bool s0 in
+  if flag then
+  (s1, body @ (JoyList body :: j_loop :: e), d)
+  else (s1, e, d)
+
+(*
  ██████╗ ██████╗ ██████╗ ███████╗    ██╗    ██╗ ██████╗ ██████╗ ██████╗ ███████╗
 ██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██║    ██║██╔═══██╗██╔══██╗██╔══██╗██╔════╝
 ██║     ██║   ██║██████╔╝█████╗      ██║ █╗ ██║██║   ██║██████╔╝██║  ██║███████╗
@@ -241,6 +295,10 @@ let joy_eval sym stack expression dictionary =
       let a, s0 = pop_int stack in
       let b, s1 = pop_int s0 in
       (JoyInt (b - a) :: s1, expression, dictionary)
+  | "branch" -> branch stack expression dictionary
+  | "i" -> i stack expression dictionary
+  | "loop" -> loop stack expression dictionary
+  | "dip" -> dip stack expression dictionary
   | "clear" -> ([], expression, dictionary)
   | "concat" -> concat stack expression dictionary
   | _ ->
@@ -273,7 +331,7 @@ let rec main_loop stack dictionary =
   | Some line ->
       let expr = text_to_expression line in
       let stack0, dictionary0 = joy stack expr dictionary in
-      let () = print_endline (expression_to_string stack0) in
+      let () = print_endline (stack_to_string stack0) in
       main_loop stack0 dictionary0
   | None -> exit 0
 

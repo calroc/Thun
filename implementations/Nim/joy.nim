@@ -170,7 +170,7 @@ proc pop_bool(stack: JoyListType): (bool, JoyListType) =
   of joyFalse:
     return (false, stack.tail)
   else:
-    raise newException(ValueError, "Not a list.")
+    raise newException(ValueError, "Not a Boolean value.")
 
 # We might not need to reify to bool?  Just "if foo == j_true" everywhere?
 

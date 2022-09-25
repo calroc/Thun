@@ -857,9 +857,9 @@ def branch(stack, expr, dictionary):
 
     '''
     then, else_, flag, stack = get_n_items(3, stack)
-    isnt_bool(flag)
-    isnt_stack(else_)
     isnt_stack(then)
+    isnt_stack(else_)
+    isnt_bool(flag)
     expr = push_quote((then if flag else else_), expr)
     return stack, expr, dictionary
 
