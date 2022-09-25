@@ -96,6 +96,8 @@ let pop_bool : joy_list -> bool * joy_list =
       | JoyFalse -> (false, tail)
       | _ -> raise (ValueError "Not a Boolean value."))
 
+let push_bool b stack = if b then JoyTrue :: stack else JoyFalse :: stack
+
 (*
 ██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
 ██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
@@ -255,9 +257,7 @@ let i s e d =
 let loop s e d =
   let body, s0 = pop_list s in
   let flag, s1 = pop_bool s0 in
-  if flag then
-  (s1, body @ (JoyList body :: j_loop :: e), d)
-  else (s1, e, d)
+  if flag then (s1, body @ (JoyList body :: j_loop :: e), d) else (s1, e, d)
 
 (*
  ██████╗ ██████╗ ██████╗ ███████╗    ██╗    ██╗ ██████╗ ██████╗ ██████╗ ███████╗
@@ -295,6 +295,30 @@ let joy_eval sym stack expression dictionary =
       let a, s0 = pop_int stack in
       let b, s1 = pop_int s0 in
       (JoyInt (b - a) :: s1, expression, dictionary)
+  | "<" ->
+      let a, s0 = pop_int stack in
+      let b, s1 = pop_int s0 in
+      (push_bool (b < a) s1, expression, dictionary)
+  | ">" ->
+      let a, s0 = pop_int stack in
+      let b, s1 = pop_int s0 in
+      (push_bool (b > a) s1, expression, dictionary)
+  | "<=" ->
+      let a, s0 = pop_int stack in
+      let b, s1 = pop_int s0 in
+      (push_bool (b <= a) s1, expression, dictionary)
+  | ">=" ->
+      let a, s0 = pop_int stack in
+      let b, s1 = pop_int s0 in
+      (push_bool (b >= a) s1, expression, dictionary)
+  | "!=" ->
+      let a, s0 = pop_int stack in
+      let b, s1 = pop_int s0 in
+      (push_bool (b != a) s1, expression, dictionary)
+  | "=" ->
+      let a, s0 = pop_int stack in
+      let b, s1 = pop_int s0 in
+      (push_bool (b = a) s1, expression, dictionary)
   | "branch" -> branch stack expression dictionary
   | "i" -> i stack expression dictionary
   | "loop" -> loop stack expression dictionary

@@ -339,7 +339,6 @@ proc dip(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
     dictionary
     )
 
-
 proc i(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (body_node, s0) = pop_list_node(stack)
   return (
@@ -347,7 +346,6 @@ proc i(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (Jo
     push_quote(body_node, expression),
     dictionary
     )
-
 
 proc loop(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   let (body_node, s0) = pop_list_node(stack)
