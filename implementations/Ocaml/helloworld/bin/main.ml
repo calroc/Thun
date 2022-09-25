@@ -263,37 +263,18 @@ let d0 = dict_add empty_dict "++" (text_to_expression "1 +")
 let d = dict_add d0 "sqr" (text_to_expression "dup mul")
 
 (*
-let expr = text_to_expression "1 2 + 3 4 + 5 6 + 7 8 + 9 10 + 11 + + + + + - "
-let expr = text_to_expression "1 2 3 4 clear 5"
-
 https://riptutorial.com/ocaml/example/9450/read-from-standard-input-and-print-to-standard-output
 *)
 
-let maybe_read_line () =
-  try Some(read_line())
-  with End_of_file -> None
-
-
-(*
-let expr = text_to_expression "clear [23] [18] concat 32 ++"
-let s = text_to_expression "23 [18 99] "
-let stack, _ = joy s expr d
-let () = print_endline (expression_to_string stack)
-print_endline
-        (expression_to_string
-           (text_to_expression "1 2 3[4 5 6[7 8]9 10]11[][][[]]"));
-      print_endline (expression_to_string (text_to_expression "true [ false]true"));
-   print_endline (joy_to_string dummy)
-*)
+let maybe_read_line () = try Some (read_line ()) with End_of_file -> None
 
 let rec main_loop stack dictionary =
   match maybe_read_line () with
-  | Some(line) ->
+  | Some line ->
       let expr = text_to_expression line in
-      let (stack0, dictionary0) = joy stack expr dictionary in
+      let stack0, dictionary0 = joy stack expr dictionary in
       let () = print_endline (expression_to_string stack0) in
       main_loop stack0 dictionary0
   | None -> exit 0
 
 let () = main_loop [] d
-
