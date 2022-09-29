@@ -1,0 +1,98 @@
+  | JoyInt i -> string_of_int i
+  | JoyList el -> "[" ^  ^ "]"
+Secret happy robot^
+
+
+let lex = Genlex.make_lexer ["["; "]"];;
+let s = Stream.of_string "1[2]3";;
+let t = lex s;;
+
+val t : Genlex.token Stream.t = <abstr>
+Stream.next t;;
+
+Genlex.token = Genlex.Int 1
+Genlex.token = Genlex.Kwd "["
+
+
+
+let rec parse_one : token list -> joy_type * token list = fun tokens ->
+  match tokens with
+  | [] -> raise (ParseError "Empty list.")
+  | head :: tail ->
+    match head with
+    | Left_bracket ->  parse_list tail []
+    | Right_bracket -> raise (ParseError "Extra closing bracket.")
+    | Token tok ->
+      match tok with
+      | "true" -> (joy_true, tail)
+      | "false"-> (joy_false, tail)
+      | _ -> (JoySymbol tok, tail)
+
+and parse_list : token list -> joy_list -> joy_type * token list = fun tokens acc ->
+  (* collect terms until ']' *)
+  match tokens with
+  | [] -> raise (ParseError "Missing closing bracket.")
+  | _ -> let item, rest = parse_one tokens in
+    JoyList (item :: acc), parse_list rest acc
+
+    match head with
+    | Left_bracket ->  parse_list tail []
+    | Right_bracket -> raise  (ParseError "Extra closing bracket.")
+    | Token tok ->
+
+
+
+
+let foo n = n + 1
+
+(* parameterize foo and you have map *)
+
+let rec poo tokens acc =
+  match tokens with
+  | [] -> acc
+  | head :: tail ->
+    let item = foo head in 
+    item :: poo tail acc
+
+
+
+
+
+(* Let's generalize foo to get and return tails *)
+
+
+let bar n = n + 1
+let baz tail = tail
+
+let foo head tail =
+  bar head, baz tail
+
+let rec poo tokens acc =
+  match tokens with
+  | [] -> acc
+  | head :: tail ->
+    let item, rest = foo head tail in 
+    item :: poo rest acc
+.
+
+
+
+
+
+
+   * for Vim, add this line to ~/.vimrc:
+     set rtp^="/usr/home/sforman/.opam/default/share/ocp-indent/vim"
+
+
+<><> merlin.4.6-414 installed successfully ><><><><><><><><><><><><><><><><><><>
+=> merlin installed.
+
+   Quick setup for VIM
+   -------------------
+   Append this to your .vimrc to add merlin to vim's runtime-path:
+     let g:opamshare = substitute(system('opam var share'),'\n$','','''')
+     execute "set rtp+=" . g:opamshare . "/merlin/vim"
+
+   Also run the following line in vim to index the documentation:
+     :execute "helptags " . g:opamshare . "/merlin/vim/doc"
+
