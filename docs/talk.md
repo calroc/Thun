@@ -1,0 +1,31 @@
+Joy
+
+- Motivation
+  - Simple, elegant, useful, combines good features of Lisp and Forth.
+  - "Provably Correct Constructs" Margaret Hamilton, James Martin
+  - Backus' Functional Programming (doing math to derive programs)
+- A brief introduction to Joy
+  - the language
+    - stack, literals
+    - functions
+    - combinators
+  - the runtime
+    - CLI interpreters
+    - Jupyter Notebook kernel
+  - Extensions?
+    - "Snippets" [hash offset length]
+    - Numerical Tower
+    - additional datatypes
+    - "under the hood" optimizing
+- Implementation of Joy Interpreters
+  - Compare and contrast Py, Nim, OCaml, Prolog
+- Categorical Paradigm
+  - Symbolic Interpreter
+  - Constraint-based Interpreter
+  - "Calculator Mode" Interpreter
+  - Type Checking and Inference
+  - Compiling
+- Compilers (Work-in-Progress)
+  - To Python (or other "high" level langauges)
+  - To machine code or at least e.g. LLVM IR.
+  - Prolog research on 
