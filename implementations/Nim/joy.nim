@@ -1,4 +1,4 @@
-import rdstdin, streams, strutils
+import rdstdin, strutils
 import bigints, fp
 
 
