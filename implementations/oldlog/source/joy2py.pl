@@ -613,6 +613,8 @@ compile_fn(Name) --> gronk_fn(Name), cg, !.
 ╚██████╔╝██║  ██║╚██████╔╝██║ ╚████║██║  ██╗
  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝
 
+(GRONK stands for "I am bad at naming things.")
+
 With gronk we're juggling four things:
 
     The incoming joy expression
@@ -694,8 +696,8 @@ gronk_fn_list(
     gronk_fn_list(Js,   [Term|Stack], StackOut, CGTail, Ck, IndentLevel).
 
 gronk_fn_list(
-    [list(Body), symbol(step)|Js],
-    [list(B)|Stack0],
+    [symbol(step)|Js],
+    [list(Body), list(B)|Stack0],
     Stack,
     CGTail,
     CodeGens,

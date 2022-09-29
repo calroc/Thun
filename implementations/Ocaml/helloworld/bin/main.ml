@@ -130,14 +130,13 @@ let stack_to_string stack = expression_to_string (List.rev stack)
 
 type token = Left_bracket | Right_bracket | Token of string
 
-let delimiter str i =
-  i >= String.length str || String.contains "[] " (String.get str i)
-
+let delimiter : char -> bool = String.contains "[] "
+let delimits str i = i >= String.length str || delimiter (String.get str i)
 let make_token str index i = (Token (String.sub str index (i - index)), i)
 
 (* string -> int -> int -> token * int *)
 let rec tokenize1 str index i =
-  if delimiter str i then make_token str index i else tokenize1 str index (i + 1)
+  if delimits str i then make_token str index i else tokenize1 str index (i + 1)
 
 let rec tokenize0 str index acc =
   if index >= String.length str then acc
