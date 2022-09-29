@@ -202,8 +202,7 @@ and expect_right_bracket_one_token_lookahead token tokens acc =
       (JoyList sub_list :: el, rrest)
   | Token tok ->
       let el, rest = expect_right_bracket tokens acc in
-      let jt = tokenator tok in
-      (jt :: el, rest)
+      (tokenator tok :: el, rest)
 
 (* token -> token list -> joy_type * token list *)
 let one_token_lookahead token tokens =
@@ -212,9 +211,7 @@ let one_token_lookahead token tokens =
   | Left_bracket ->
       let el, rest = expect_right_bracket tokens [] in
       (JoyList el, rest)
-  | Token tok ->
-      let jt = tokenator tok in
-      (jt, tokens)
+  | Token tok -> (tokenator tok, tokens)
 
 (* token list -> joy_type list -> joy_type list *)
 let rec parse0 tokens acc =
