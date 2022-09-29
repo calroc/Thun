@@ -68,34 +68,34 @@ type joy_dict = string -> joy_list
 exception StackUnderflow of string
 exception ValueError of string
 
-let pop_int : joy_list -> int * joy_list =
+let pop_item : joy_list -> joy_type * joy_list =
  fun stack ->
   match stack with
   | [] -> raise (StackUnderflow "Not enough values on stack.")
-  | head :: tail -> (
-      match head with
-      | JoyInt i -> (i, tail)
-      | _ -> raise (ValueError "Not an integer."))
+  | head :: tail -> (head, tail)
 
-let pop_list : joy_list -> joy_list * joy_list =
- fun stack ->
-  match stack with
-  | [] -> raise (StackUnderflow "Not enough values on stack.")
-  | head :: tail -> (
-      match head with
-      | JoyList el -> (el, tail)
-      | _ -> raise (ValueError "Not a list."))
+let is_int : joy_type -> int =
+ fun jt ->
+  match jt with JoyInt i -> i | _ -> raise (ValueError "Not an integer.")
 
-let pop_bool : joy_list -> bool * joy_list =
- fun stack ->
-  match stack with
-  | [] -> raise (StackUnderflow "Not enough values on stack.")
-  | head :: tail -> (
-      match head with
-      | JoyTrue -> (true, tail)
-      | JoyFalse -> (false, tail)
-      | _ -> raise (ValueError "Not a Boolean value."))
+let is_list : joy_type -> joy_list =
+ fun jt ->
+  match jt with JoyList el -> el | _ -> raise (ValueError "Not a list.")
 
+let is_bool : joy_type -> bool =
+ fun jt ->
+  match jt with
+  | JoyTrue -> true
+  | JoyFalse -> false
+  | _ -> raise (ValueError "Not a Boolean value.")
+
+let pop_thing func stack =
+  let jt, stack = pop_item stack in
+  (func jt, stack)
+
+let pop_int : joy_list -> int * joy_list = pop_thing is_int
+let pop_list : joy_list -> joy_list * joy_list = pop_thing is_list
+let pop_bool : joy_list -> bool * joy_list = pop_thing is_bool
 let push_bool b stack = if b then JoyTrue :: stack else JoyFalse :: stack
 
 (*
