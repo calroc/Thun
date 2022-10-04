@@ -202,6 +202,15 @@ class BigIntTest(unittest.TestCase):
         t = z.to_int()
         self.assertEqual(t, n + m)
 
+    def test_Addition_of_two_negatives(self):
+        n = -12345678901234567898090123445678990
+        m = -901234567898090
+        x = BigInt(n)
+        y = BigInt(m)
+        z = x + y
+        t = z.to_int()
+        self.assertEqual(t, n + m)
+
 
 
 if __name__ == '__main__':
