@@ -1,6 +1,6 @@
 import sys
 from ipykernel.kernelbase import Kernel
-from simplejoy import (
+from joy import (
     default_defs,
     initialize,
     inscribe,
