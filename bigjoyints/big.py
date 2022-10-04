@@ -1,8 +1,45 @@
-import ctypes
+import ctypes, unittest
 
 
 def is_i32(n):
     return -2**31 <= n < 2**31
+
+
+class BigInt:
+
+    def __init__(self, initial=0):
+        # We store a sign bit (True == non-negative)
+        # and a list of OberonInt, least significant digit
+        # to most.
+        self.sign = initial >= 0
+        if not self.sign:
+            initial = -initial
+        self.digits = list(self.digitize(initial))  # List of OberonInt.
+
+    @staticmethod
+    def digitize(n):
+        if n < 0:
+            raise ValueError(f'Non-negative only: {n}')
+        if not n:
+            yield OberonInt(0)
+            return  # Not strictly needed as the following while
+                    # will not do anything for n == 0.
+        while n:
+            n, digit = divmod(n, 2**31)
+            yield OberonInt(digit)
+
+    def __str__(self):
+        return str(self.to_int())
+
+    def to_int(self):
+        power = 1
+        n = 0
+        for digit in self.digits:
+            n += digit.value.value * power
+            power <<= 31
+        if not self.sign:
+            n = -n
+        return n
 
 
 class OberonInt:
@@ -32,7 +69,11 @@ class OberonInt:
 
     def negate(self):
         # Instead of binary ops, just cheat:
-        return OberonInt(-self.value.value)
+        return OberonInt(
+            0  # Handle negation of obmin.
+            if self.value.value == -(2**31)
+            else -self.value.value
+            )
 
     def __sub__(self, other):
         if not isinstance(other, OberonInt):
@@ -58,33 +99,55 @@ obmin, zero, one, obmax = map(OberonInt, (
     ))
 
 
-# Addition
-carry, z = obmax + one
-assert carry
-assert z == zero
+class OberonIntTest(unittest.TestCase):
 
-# Negation
-negative_one = one.negate()
-carry, m = obmin + negative_one
-assert carry
-assert m == obmax
+    def test_Addition(self):
+        carry, z = obmax + one
+        self.assertTrue(carry)
+        self.assertEqual(z, zero)
 
-# Ergo, subtraction.
-carry, m = obmin - one
-assert carry
-assert m == obmax
+    def test_Negation(self):
+        negative_one = one.negate()
+        carry, m = obmin + negative_one
+        self.assertTrue(carry)
+        self.assertEqual(m, obmax)
+
+    def test_Subtraction(self):
+        # Ergo, subtraction.
+        carry, m = obmin - one
+        self.assertTrue(carry)
+        self.assertEqual(m, obmax)
+
+    def test_twice_max(self):
+        carry, hmm = obmax + obmax
+        self.assertTrue(carry)
+        self.assertEqual(hmm.value.value, 2**31 - 2)
+
+        carry, eh = obmax - hmm
+        self.assertFalse(carry)
+        self.assertEqual(eh, one)
+        self.assertEqual( (hmm + one)[1] , obmax )
 
 
-carry, hmm = obmax + obmax
-assert carry
-assert hmm.value.value == 2**31 - 2
-carry, eh = obmax - hmm
-assert not carry
-assert eh == one
-assert (hmm + one)[1] == obmax
+class BigIntTest(unittest.TestCase):
+
+    def test_to_int(self):
+        n = 12345678901234567898090123445678990
+        x = BigInt(n).to_int()
+        self.assertEqual(n, x)
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+
+
 
 
 ##        if initial >= 2**31:
 ##            raise ValueError(f'too big: {initial!r}')
 ##        if initial < -2**31:
 ##            raise ValueError(f'too small: {initial!r}')
+
+
