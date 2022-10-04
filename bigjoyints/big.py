@@ -1,6 +1,10 @@
 import ctypes
 
 
+def is_i32(n):
+    return -2**31 <= n < 2**31
+
+
 class OberonInt:
     '''
     Let's model the Oberon RISC integers,
@@ -8,7 +12,7 @@ class OberonInt:
     '''
 
     def __init__(self, initial=0):
-        assert -2**31 <= initial < 2**31
+        assert is_i32(initial)
         self.value = ctypes.c_int32(initial)
         assert self.value.value == initial
 
@@ -18,14 +22,18 @@ class OberonInt:
         '''
         assert isinstance(other, OberonInt)
         n = self.value.value + other.value.value
-        carry = not (-2**31 <= n < 2**31)
+        carry = not is_i32(n)
         if carry:
             n &= (2**31-1)
-        return carry, OberonInt(n)
+        return int(carry), OberonInt(n)
 
     def negate(self):
         # Instead of binary ops, just cheat:
         return OberonInt(-self.value.value)
+
+    def sub(self, other):
+        assert isinstance(other, OberonInt)
+        return self.add(other.negate())
 
     def __repr__(self):
         #b = bin(self.value.value & (2**32-1))
@@ -36,22 +44,39 @@ class OberonInt:
         return self.value.value == other.value.value
 
 
-one = OberonInt(1)
-obmin, zero, obmax = map(OberonInt, (
+obmin, zero, one, obmax = map(OberonInt, (
     -(2**31),
     0,
+    1,
     2**31-1,
     ))
 
 
+# Addition
 carry, z = obmax.add(one)
 assert carry
 assert z == zero
 
+# Negation
 negative_one = one.negate()
 carry, m = obmin.add(negative_one)
 assert carry
 assert m == obmax
+
+# Ergo, subtraction.
+carry, m = obmin.sub(one)
+assert carry
+assert m == obmax
+
+
+carry, hmm = obmax.add(obmax)
+assert carry
+assert hmm.value.value == 2**31 - 2
+carry, eh = obmax.sub(hmm)
+assert not carry
+assert eh == one
+assert hmm.add(one)[1] == obmax
+
 
 ##        if initial >= 2**31:
 ##            raise ValueError(f'too big: {initial!r}')
