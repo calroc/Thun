@@ -1,3 +1,5 @@
+from itertools import zip_longest
+from pprint import pprint as P
 import  unittest
 
 
@@ -48,7 +50,26 @@ class BigInt:
             return self.add_like_signs(other)
 
     def add_like_signs(self, other):
-        return BigInt(23)
+        '''
+        Add a BigInt of the same sign as self.
+        '''
+        assert self.sign == other.sign
+        out = []
+        carry = 0
+        Z = zip_longest(
+            self.digits,
+            other.digits,
+            fillvalue=zero,  # Elegant, but not efficient?
+            )
+        for a, b in Z:
+            carry, digit = a.add_with_carry(b, carry)
+            out.append(digit)
+        if carry:
+            out.append(one)
+        result = BigInt()
+        result.sign = self.sign
+        result.digits = out
+        return result
 
 
 class OberonInt:
@@ -56,6 +77,22 @@ class OberonInt:
     Let's model the Oberon RISC integers,
     32-bit, two's complement.
     '''
+
+    def add_with_carry(self, other, carry):
+        '''
+        In terms of single base-10 skool arithmetic:
+
+        a, b in {0..9}
+        carry in {0..1}
+
+        9 + 9 + 1 = 18 + 1  = 19
+        aka       = 1,(8+1) = 1, 9
+        '''
+        c, digit = self + other
+        if carry:
+            z, digit = digit + one
+            assert not z, repr(z)
+        return c, digit
 
     def __init__(self, initial=0):
         assert is_i32(initial)
