@@ -16,7 +16,7 @@ class OberonInt:
         self.value = ctypes.c_int32(initial)
         assert self.value.value == initial
 
-    def add(self, other):
+    def __add__(self, other):
         '''
         Return carry bit and new value.
         '''
@@ -31,9 +31,9 @@ class OberonInt:
         # Instead of binary ops, just cheat:
         return OberonInt(-self.value.value)
 
-    def sub(self, other):
+    def __sub__(self, other):
         assert isinstance(other, OberonInt)
-        return self.add(other.negate())
+        return self + other.negate()
 
     def __repr__(self):
         #b = bin(self.value.value & (2**32-1))
@@ -53,29 +53,29 @@ obmin, zero, one, obmax = map(OberonInt, (
 
 
 # Addition
-carry, z = obmax.add(one)
+carry, z = obmax + one
 assert carry
 assert z == zero
 
 # Negation
 negative_one = one.negate()
-carry, m = obmin.add(negative_one)
+carry, m = obmin + negative_one
 assert carry
 assert m == obmax
 
 # Ergo, subtraction.
-carry, m = obmin.sub(one)
+carry, m = obmin - one
 assert carry
 assert m == obmax
 
 
-carry, hmm = obmax.add(obmax)
+carry, hmm = obmax + obmax
 assert carry
 assert hmm.value.value == 2**31 - 2
-carry, eh = obmax.sub(hmm)
+carry, eh = obmax - hmm
 assert not carry
 assert eh == one
-assert hmm.add(one)[1] == obmax
+assert (hmm + one)[1] == obmax
 
 
 ##        if initial >= 2**31:
