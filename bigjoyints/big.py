@@ -19,6 +19,9 @@ class BigInt:
             initial = -initial
         self.digits = list(self.digitize(initial))  # List of OberonInt.
 
+    def __repr__(self):
+        return f'BigInt({self.to_int()})'
+
     @staticmethod
     def digitize(n):
         if n < 0:
@@ -125,7 +128,7 @@ class BigInt:
         if not a.abs_gt_abs(b):
             #print(f'abs({a.to_int()}) < abs({b.to_int()})')
             x = b._subtract_smaller(a)
-            x.sign = not x.sign
+            #x.sign = not x.sign
             return x
         #print(f'abs({a.to_int()}) > abs({b.to_int()})')
         return a._subtract_smaller(b)
@@ -139,7 +142,6 @@ class BigInt:
             other.digits,
             fillvalue=zero,
             )
-        #P(list(Z))
         for a, b in Z:
             carry, digit = a.sub_with_carry(b, carry)
             out.append(digit)
@@ -372,9 +374,18 @@ class BigIntTest(unittest.TestCase):
         print()
         print(x + y)
 
-    def test_Subtraction(self):
+    def test_Subtraction_small_from_large(self):
         n = 12345678901234567898090123445678990
         m = 901234567898090
+        x = BigInt(n)
+        y = BigInt(m)
+        z = x - y
+        t = z.to_int()
+        self.assertEqual(t, n - m)
+
+    def test_Subtraction_large_from_small(self):
+        n = 901234567898090
+        m = 12345678901234567898090123445678990
         x = BigInt(n)
         y = BigInt(m)
         z = x - y
