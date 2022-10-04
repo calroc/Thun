@@ -28,4 +28,4 @@ Joy
 - Compilers (Work-in-Progress)
   - To Python (or other "high" level langauges)
   - To machine code or at least e.g. LLVM IR.
-  - Prolog research on 
+  - Prolog research on compilers
