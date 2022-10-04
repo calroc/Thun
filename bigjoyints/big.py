@@ -1,4 +1,4 @@
-import ctypes, unittest
+import  unittest
 
 
 def is_i32(n):
@@ -35,7 +35,7 @@ class BigInt:
         power = 1
         n = 0
         for digit in self.digits:
-            n += digit.value.value * power
+            n += digit.value * power
             power <<= 31
         if not self.sign:
             n = -n
@@ -50,8 +50,7 @@ class OberonInt:
 
     def __init__(self, initial=0):
         assert is_i32(initial)
-        self.value = ctypes.c_int32(initial)
-        assert self.value.value == initial
+        self.value = initial
 
     def __add__(self, other):
         '''
@@ -59,10 +58,10 @@ class OberonInt:
         '''
         if not isinstance(other, OberonInt):
             other = OberonInt(other)
-        n = self.value.value + other.value.value
+        n = self.value + other.value
         carry = not is_i32(n)
         if carry:
-            n &= (2**31-1)
+            n &= 2**31 - 1
         return int(carry), OberonInt(n)
 
     __radd__ = __add__
@@ -71,8 +70,8 @@ class OberonInt:
         # Instead of binary ops, just cheat:
         return OberonInt(
             0  # Handle negation of obmin.
-            if self.value.value == -(2**31)
-            else -self.value.value
+            if self.value == -(2**31)
+            else -self.value
             )
 
     def __sub__(self, other):
@@ -84,11 +83,11 @@ class OberonInt:
 
     def __repr__(self):
         #b = bin(self.value.value & (2**32-1))
-        return f'OberonInt({self.value.value})'
+        return f'OberonInt({self.value})'
 
     def __eq__(self, other):
         assert isinstance(other, OberonInt)
-        return self.value.value == other.value.value
+        return self.value == other.value
 
 
 obmin, zero, one, obmax = map(OberonInt, (
@@ -121,12 +120,17 @@ class OberonIntTest(unittest.TestCase):
     def test_twice_max(self):
         carry, hmm = obmax + obmax
         self.assertTrue(carry)
-        self.assertEqual(hmm.value.value, 2**31 - 2)
+        self.assertEqual(hmm.value, 2**31 - 2)
 
         carry, eh = obmax - hmm
         self.assertFalse(carry)
         self.assertEqual(eh, one)
         self.assertEqual( (hmm + one)[1] , obmax )
+
+    def test_twice_min(self):
+        carry, n = obmin + obmin
+        self.assertTrue(carry)
+        self.assertEqual(n, zero)
 
 
 class BigIntTest(unittest.TestCase):
