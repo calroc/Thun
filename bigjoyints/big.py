@@ -20,20 +20,26 @@ class OberonInt:
         '''
         Return carry bit and new value.
         '''
-        assert isinstance(other, OberonInt)
+        if not isinstance(other, OberonInt):
+            other = OberonInt(other)
         n = self.value.value + other.value.value
         carry = not is_i32(n)
         if carry:
             n &= (2**31-1)
         return int(carry), OberonInt(n)
 
+    __radd__ = __add__
+
     def negate(self):
         # Instead of binary ops, just cheat:
         return OberonInt(-self.value.value)
 
     def __sub__(self, other):
-        assert isinstance(other, OberonInt)
+        if not isinstance(other, OberonInt):
+            other = OberonInt(other)
         return self + other.negate()
+
+    __rsub__ = __sub__
 
     def __repr__(self):
         #b = bin(self.value.value & (2**32-1))
