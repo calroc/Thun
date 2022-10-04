@@ -41,6 +41,15 @@ class BigInt:
             n = -n
         return n
 
+    def __add__(self, other):
+        if not isinstance(other, BigInt):
+            other = BigInt(other)
+        if self.sign == other.sign:
+            return self.add_like_signs(other)
+
+    def add_like_signs(self, other):
+        return BigInt(23)
+
 
 class OberonInt:
     '''
@@ -139,6 +148,23 @@ class BigIntTest(unittest.TestCase):
         n = 12345678901234567898090123445678990
         x = BigInt(n).to_int()
         self.assertEqual(n, x)
+
+    def test_2_to_100th_power(self):
+        digits = list(BigInt.digitize(2**100))
+        self.assertEqual(
+            digits,
+            [OberonInt(0), OberonInt(0), OberonInt(0), OberonInt(128)],
+            )
+
+    def test_Addition(self):
+        n = 12345678901234567898090123445678990
+        m = 901234567898090
+        x = BigInt(n)
+        y = BigInt(m)
+        z = x + y
+        t = z.to_int()
+        self.assertEqual(t, n + m)
+
 
 
 if __name__ == '__main__':
