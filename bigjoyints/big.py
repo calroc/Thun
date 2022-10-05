@@ -87,36 +87,8 @@ class BigInt:
     def __mul__(self, other):
         if not isinstance(other, BigInt):
             other = BigInt(other)
-
         if len(self.digits) < len(other.digits):
             return other.__mul__(self)
-
-        # We now multiple the digits of self by the digits of other.
-        #
-        #     128
-        #    * 12
-        #   ------
-        #
-        #     128
-        #    *  2
-        #   ------
-        #       8
-        #       2
-        #       -
-        #      16
-        #      2|
-        #      2|
-        #      -|
-        #      46
-        # carry1
-        #      56
-        #     1||
-        #     2||
-        #     -||
-        #     256
-        #
-        # Hmm...
-
         acc = BigInt()
         for i, digit in enumerate(other.digits):
             acc = acc + self._mul_one_digit(i, digit)
