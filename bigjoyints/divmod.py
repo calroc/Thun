@@ -6,6 +6,8 @@ For now we will deal with both positive
 
 
 '''
+from random import randint
+
 
 def div_mod(A, B):
     '''
@@ -16,7 +18,7 @@ def div_mod(A, B):
     if not B:
         raise ZeroDivisionError()
     a_len, b_len = len(A), len(B)
-    if a_len < b_len or (a_len == b_len and  A[-1] < B[-1]):
+    if -1 == cmp_digits(A, B):  # A < B
         return [], A
 
     # Whew! Okay, we got all that out of the way.
@@ -30,8 +32,11 @@ def div_mod(A, B):
         # digit in A:
         assert a_len > b_len
         A_digits.insert(0, A.pop())
-        assert -1 < cmp_digits(A_digits, B)
+
+    assert -1 < cmp_digits(A_digits, B)  # A_digits >= B
+
     q, R = lil_divmod(A_digits, B)
+
     # So we have divided a prefix of A by B
     # resulting in a digit q of the answer Q
     # and a remainder R that must be extended
@@ -59,7 +64,7 @@ def div_mod(A, B):
 
 
 def foo(Digits, Divisor, Prefix):
-    '''
+    '''E.g.:
 
       ___2___
     72)145000
@@ -70,13 +75,16 @@ def foo(Digits, Divisor, Prefix):
     Digits = 000
     Divisor = 72
     Prefix = 1
+    '''
 
-    Q = []
-    while Prefix < Divisor and Digits isn't empty:
-        take a digit from Digits
-        append it to Prefix
-        add a zero to Q       <--  but only if new Prefix < Divisor
+    Quotient = []
+    while Digits:
+        Prefix.insert(0, Digits.pop())
+        if -1 < cmp_digits(Prefix, Divisor):  # Prefix >= Divisor
+            break
+        Quotient.insert(0, 0)
 
+    '''
     One iteration through the while loop:
 
       ___20__
@@ -87,7 +95,7 @@ def foo(Digits, Divisor, Prefix):
 
     Another iteration through the while loop:
 
-      ___20?_
+      ___20__
     72)145000
       -144||   = 72 * 2
        ---||
@@ -98,16 +106,27 @@ def foo(Digits, Divisor, Prefix):
     Prefix = 100
 
     At this point Prefix >= Divisor OR Digits == []  OR BOTH
+
     if Prefix < Divisor AND not Digits:
         the remainder is Prefix
-        return Q, Prefix
+        return Quotient, Prefix
+    '''
+
+    if -1 == cmp_digits(Prefix, Divisor) and not Digits:
+        return Quotient, Prefix
+
+    '''
     if Prefix < Divisor AND Digits:
         Can't get here
-    assert Prefix >= Divisor
+    '''
 
-    q, R = lil_divmod(Prefix, Divisor)
+    assert -1 < cmp_digits(Prefix, Divisor)  # Prefix >= Divisor
 
-      ___200q
+    q, Remainder = lil_divmod(Prefix, Divisor)
+    Quotient.insert(0, q)
+
+    '''
+      ___20q_
     72)145000
       -144||   = 72 * 2
        ---||
@@ -116,41 +135,38 @@ def foo(Digits, Divisor, Prefix):
          ---
           28   = (100 - N) = (100 - 72q)
 
-    R = 28
-    New_Prefix = R
+    Remainder = 28
+    New_Prefix = Remainder
     Digits = 0 (still)
     Divisor = 72 (still)
-
     '''
 
+    if Digits:
+        Q, Remainder = foo(Digits, Divisor, Remainder)
+        Quotient = Q + Quotient
+    return Quotient, Remainder
 
-##    Q = []
-##    N = R
-##    while A and -1 == cmp_digits(N, B):
-##        N.insert(0, A.pop())
-##        Q.insert(0, 0)
-##    Q.append(q)
-##    if not A:
-##        return Q, N
-##
-##    Qz, R = div_mod(N, B)
-##    return Qz + Q, R
 
 def lil_divmod(A, B):
-    assert -1 < cmp_digits(A, B)
+    assert -1 < cmp_digits(A, B)  # A >= B
     assert A and B
-    # There is a greatest digit between 0..9 such that:
+    # There is a greatest digit in 1..9 such that:
     # B * digit <= A
     # The obvious thing to do here is a bisect search,
-    # if we were really just doing 0..9 we could go linear.
+    # if we were really just doing 1..9 we could go linear.
+    # Maybe drive it by the bits in digit?
     digit = 9
     Q = mul_digit_by_list_of_digits(digit, B)
-    while 1 == cmp_digits(Q, A):
+    while 1 == cmp_digits(Q, A):  # Q > A
         digit = digit - 1
         if not digit:
             raise ValueError('huh?')
         Q = mul_digit_by_list_of_digits(digit, B)
-    return digit, subtract(A, Q)
+    assert -1 < cmp_digits(A, Q)
+    assert list_to_int(A) >= list_to_int(Q)
+    remainder = subtract(A, Q)
+    assert -1 == cmp_digits(remainder, B)  # Remainder < Divisor
+    return digit, remainder
 
 def mul_digit_by_list_of_digits(digit, A):
     assert 0 <= digit <= 9
@@ -169,16 +185,17 @@ def list_to_int(A):
     return i
 
 def cmp_digits(A, B):
-    if len(A) > len(B):
-        return 1
-    if len(A) < len(B):
-        return -1
-    for a, b in zip(reversed(A), reversed(B)):
-        if a > b: return 1
-        if a < b: return -1
-    else:
-        return 0
-
+    a, b = list_to_int(A), list_to_int(B)
+    return 1 if a > b else 0 if a == b else -1
+##    if len(A) > len(B):
+##        return 1
+##    if len(A) < len(B):
+##        return -1
+##    for a, b in zip(reversed(A), reversed(B)):
+##        if a > b: return 1
+##        if a < b: return -1
+##    else:
+##        return 0
 
 def subtract(A, B):
     return int_to_list(list_to_int(A) - list_to_int(B))
@@ -200,12 +217,28 @@ B = int_to_list(72)
 def try_it(a, b):
     A = int_to_list(a)
     B = int_to_list(b)
+    print(f'divmod({list_to_int(A)}, {list_to_int(B)}) = ', end='')
     Q, R = div_mod(A, B)
-    print(f'divmod({list_to_int(A)}, {list_to_int(B)}) = {list_to_int(Q)}, {list_to_int(R)}')
+    q, r = divmod(a, b)
+    assert q == list_to_int(Q)
+    assert r == list_to_int(R)
+    print(f'{list_to_int(Q)}, {list_to_int(R)}')
 
-try_it(145, 72)
-try_it(1450, 72)
-try_it(145000, 72)
+for _ in range(20):
+    try_it(
+        randint(0, 10**30),
+        randint(0, 10**4)
+        )
+
+#div_mod(int_to_list(829569806932507641866449807296), int_to_list(296))
+
+##try_it(145, 72)
+##try_it(1450, 72)
+##try_it(14500, 72)
+##try_it(145000, 72)
+##try_it(1450000, 72)
+##try_it(14500000, 72)
+##try_it(100000000000000, 3)
 
 
 ##print(cmp_digits([], []))
@@ -213,11 +246,3 @@ try_it(145000, 72)
 ##print(cmp_digits([1], []))
 ##print(cmp_digits([1], [1]))
 ##print(cmp_digits([0,1], [1]))
-
-
-
-
-
-
-
-
