@@ -37,18 +37,104 @@ def div_mod(A, B):
     # and a remainder R that must be extended
     # with the more digits of A to make a new
     # number N >= B
+    # what I want to do here is...
+    '''
+
+      ___2___
+    72)145000
+      -144     = 72 * 2
+       ---
+         1
+
+    B = 72
+    A_digits = 145
+    A = 000
+    q = 2
+    R = 1
+
+    '''
+    Q, Remainder = foo(A, B, R)
+    Q.append(q)
+    return Q, Remainder
+
+
+def foo(Digits, Divisor, Prefix):
+    '''
+
+      ___2___
+    72)145000
+      -144     = 72 * 2
+       ---
+         1
+
+    Digits = 000
+    Divisor = 72
+    Prefix = 1
 
     Q = []
-    N = R
-    while A and -1 == cmp_digits(N, B):
-        N.insert(0, A.pop())
-        Q.insert(0, 0)
-    Q.append(q)
-    if not A:
-        return Q, N
+    while Prefix < Divisor and Digits isn't empty:
+        take a digit from Digits
+        append it to Prefix
+        add a zero to Q       <--  but only if new Prefix < Divisor
 
-    Qz, R = div_mod(N, B)
-    return Qz + Q, R
+    One iteration through the while loop:
+
+      ___20__
+    72)145000
+      -144|    = 72 * 2
+       ---|
+         10
+
+    Another iteration through the while loop:
+
+      ___20?_
+    72)145000
+      -144||   = 72 * 2
+       ---||
+         100  >= 72
+
+    Digits = 0
+    Divisor = 72 (still)
+    Prefix = 100
+
+    At this point Prefix >= Divisor OR Digits == []  OR BOTH
+    if Prefix < Divisor AND not Digits:
+        the remainder is Prefix
+        return Q, Prefix
+    if Prefix < Divisor AND Digits:
+        Can't get here
+    assert Prefix >= Divisor
+
+    q, R = lil_divmod(Prefix, Divisor)
+
+      ___200q
+    72)145000
+      -144||   = 72 * 2
+       ---||
+         100  >= 72
+           N   = 72 * q
+         ---
+          28   = (100 - N) = (100 - 72q)
+
+    R = 28
+    New_Prefix = R
+    Digits = 0 (still)
+    Divisor = 72 (still)
+
+    '''
+
+
+##    Q = []
+##    N = R
+##    while A and -1 == cmp_digits(N, B):
+##        N.insert(0, A.pop())
+##        Q.insert(0, 0)
+##    Q.append(q)
+##    if not A:
+##        return Q, N
+##
+##    Qz, R = div_mod(N, B)
+##    return Qz + Q, R
 
 def lil_divmod(A, B):
     assert -1 < cmp_digits(A, B)
