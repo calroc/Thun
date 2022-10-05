@@ -99,33 +99,28 @@ class BigInt:
 
         acc = BigInt()
         for i, digit in enumerate(other.digits):
-            intermediate_result = self._mul_one_digit(i, digit)
-            #print(intermediate_result)
-            acc = acc + intermediate_result
+            acc = acc + self._mul_one_digit(i, digit)
         acc.sign = not (self.sign ^ other.sign)
         return acc
 
     def _mul_one_digit(self, power, n):
         # Some of this should go in a method of OberonInt?
-        out = [zero] * power
+        digits = [zero] * power
         carry = zero
         for digit in self.digits:
-            # In the Oberon RISC the high half of multiplication
-            # is put into the special H register.
-            H, product = digit * n
-            c, p = product + carry
-            out.append(p)
-            carry = H
+            high, low = digit * n
+            c, p = low + carry
+            digits.append(p)
+            carry = high
             if c:
                 z, carry = carry + one
                 assert not z, repr(z)
         if carry.value:
             assert carry.value > 0
-            out.append(carry)
+            digits.append(carry)
         result = BigInt()
-        result.digits = out
+        result.digits = digits
         return result
-
 
     def add_like_signs(self, other):
         '''
