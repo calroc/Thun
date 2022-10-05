@@ -1,3 +1,23 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#    Copyright © 2022 Simon Forman
+#
+#    This file is part of Thun
+#
+#    Thun is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Thun is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Thun.  If not see <http://www.gnu.org/licenses/>.
+#
 '''
 Let's grok division (and modulus.)
 
@@ -187,32 +207,9 @@ def list_to_int(A):
 def cmp_digits(A, B):
     a, b = list_to_int(A), list_to_int(B)
     return 1 if a > b else 0 if a == b else -1
-##    if len(A) > len(B):
-##        return 1
-##    if len(A) < len(B):
-##        return -1
-##    for a, b in zip(reversed(A), reversed(B)):
-##        if a > b: return 1
-##        if a < b: return -1
-##    else:
-##        return 0
 
 def subtract(A, B):
     return int_to_list(list_to_int(A) - list_to_int(B))
-
-
-##A = int_to_list(123)
-##B = int_to_list(72)
-##print(A, B)
-##Q = mul_digit_by_list_of_digits(9, A)
-##print(Q)
-
-A = int_to_list(145)
-B = int_to_list(72)
-
-##q, R = lil_divmod(A, B)
-##print(f'divmod({list_to_int(A)}, {list_to_int(B)}) = ',
-##      q, list_to_int(R))
 
 def try_it(a, b):
     A = int_to_list(a)
@@ -229,20 +226,3 @@ for _ in range(20):
         randint(0, 10**30),
         randint(0, 10**4)
         )
-
-#div_mod(int_to_list(829569806932507641866449807296), int_to_list(296))
-
-##try_it(145, 72)
-##try_it(1450, 72)
-##try_it(14500, 72)
-##try_it(145000, 72)
-##try_it(1450000, 72)
-##try_it(14500000, 72)
-##try_it(100000000000000, 3)
-
-
-##print(cmp_digits([], []))
-##print(cmp_digits([], [1]))
-##print(cmp_digits([1], []))
-##print(cmp_digits([1], [1]))
-##print(cmp_digits([0,1], [1]))
