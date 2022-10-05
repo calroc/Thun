@@ -35,20 +35,20 @@ def div_mod(A, B):
     # So we have divided a prefix of A by B
     # resulting in a digit q of the answer Q
     # and a remainder R that must be extended
-    # with the rest of the digits of A to make
-    # a new number N
+    # with the more digits of A to make a new
+    # number N >= B
 
-    N = A + R
+    Q = []
+    N = R
+    while A and -1 == cmp_digits(N, B):
+        N.insert(0, A.pop())
+        Q.insert(0, 0)
+    Q.append(q)
+    if not A:
+        return Q, N
 
-    # which then must either be the remainder of
-    # the whole thing if N < B...
-    if -1 == cmp_digits(N, B):
-        return [q], N
-    # Otherwise, we find the rest of the digits
-    # by
-    Q, R = div_mod(N, B)
-    Q.append(digit)
-    return Q, R
+    Qz, R = div_mod(N, B)
+    return Qz + Q, R
 
 def lil_divmod(A, B):
     assert -1 < cmp_digits(A, B)
@@ -119,6 +119,7 @@ def try_it(a, b):
 
 try_it(145, 72)
 try_it(1450, 72)
+try_it(145000, 72)
 
 
 ##print(cmp_digits([], []))
