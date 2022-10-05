@@ -196,6 +196,7 @@ def mul_digit_by_list_of_digits(digit, A):
 
 def int_to_list(i):
     assert i >= 0
+    if not i: return []
     return list(map(int, str(i)[::-1]))
 
 def list_to_int(A):
@@ -221,8 +222,8 @@ def try_it(a, b):
     assert r == list_to_int(R)
     print(f'{list_to_int(Q)}, {list_to_int(R)}')
 
-for _ in range(20):
+for _ in range(10**6):
     try_it(
-        randint(0, 10**30),
-        randint(0, 10**4)
+        randint(0, 10**randint(3, 15)),
+        randint(1, 10**randint(1, 15))
         )
