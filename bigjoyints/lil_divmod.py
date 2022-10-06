@@ -1,36 +1,96 @@
 import  unittest
 
+max_digit = 2**31 - 1
 
 def lil_divmod(A, B):
+    '''
+    Return the greatest digit in 1..max_digit such that B * digit <= A
+    and the remainder A - B * digit.
+    '''
+    assert A > 0 and B > 0
     assert A >= B
-    assert A and B
-    # There is a greatest digit in 1..9 such that:
-    # B * digit <= A
-    # The obvious thing to do here is a bisect search,
-    # if we were really just doing 1..9 we could go linear.
-    # Maybe drive it by the bits in digit?
-    digit = 9
+    assert B * (max_digit + 1) > A
+    digit = max_digit
     Q = digit * B
     while Q > A:
-        digit = digit - 1
+        digit >>= 1
         if not digit:
             raise ValueError('huh?')
         Q = digit * B
-    assert A >= Q
+
+    if max_digit == digit:
+        return digit, A - Q
+
     remainder = A - Q
-    assert remainder < B
+    if remainder < B:
+        return digit, remainder
+
+    # if remainder >= B the interval to search is
+    # range(digit + 1, digit << 1), eh?
+    low, high = digit + 1, digit << 1
+    range_ = high - low
+    print(f'{digit + 1}..{digit << 1} = {range_}')
+    if range_ < 8190:
+        while remainder >= B:
+            digit += 1
+            remainder -= B
+    else:
+        1/0
     return digit, remainder
 
 
-class BigIntTest(unittest.TestCase):
+def find_greatest(low, high, f):
+    '''
+    Return the highest number n: low <= n <= high
+    for which f(n) and not f(n+1) is True.
+    The greatest n which makes f(n) True.
+    '''
 
-    def test_to_int(self):
-        a = 123
-        b = 45
-        digit, remainder = lil_divmod(a, b)
-        self.assertLessEqual(b * digit, a)
-        self.assertGreater(b * (digit + 1), a)
-        self.assertEqual(b * digit + remainder, a)
+    assert low <= high
+
+    # Maybe the high number is already the one?
+    if f(high):
+        return high
+
+    # No such luck, let's pick a number between low and high
+    pivot = (low + high) >> 1
+    #print(low, pivot, high)
+
+    # If there isn't any such number in between low and high,
+    # that means there's only two numbers it could be: low or high
+    # and we already know it isn't high from the test above
+    # so it must be low.
+    if low == pivot:
+        assert f(low) and not f(low + 1)
+        return low
+
+    assert low < pivot < high
+    return (
+        find_greatest(pivot, high - 1, f)
+        if f(pivot) else
+        find_greatest(low, pivot - 1, f)
+        )
+
+
+class find_greatest_Test(unittest.TestCase):
+
+    def test_find_greatest(self):
+        k = 23300
+        a = 1
+        b = 2**31-1
+        f = lambda n: n <= k
+        n = find_greatest(a, b, f)
+        self.assertEqual(n, k)
+
+##class BigIntTest(unittest.TestCase):
+##
+##    def test_to_int(self):
+##        a = 10*max_digit-3
+##        b = 123
+##        a = (max_digit-3) * b
+##        digit, remainder = lil_divmod(a, b)
+##        #print(f'divmod({a}, {b}) == ({digit}, {remainder})  # ? ')
+##        self.assertEqual((digit, remainder), divmod(a, b))
 
 
 if __name__ == '__main__':
