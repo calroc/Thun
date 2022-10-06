@@ -224,6 +224,6 @@ def try_it(a, b):
 
 for _ in range(10**6):
     try_it(
-        randint(0, 10**randint(3, 15)),
+        randint(0, 10**randint(8, 15)),
         randint(1, 10**randint(1, 15))
         )
