@@ -10,32 +10,9 @@ def lil_divmod(A, B):
     assert A > 0 and B > 0
     assert A >= B
     assert B * (max_digit + 1) > A
-    digit = max_digit
-    Q = digit * B
-    while Q > A:
-        digit >>= 1
-        if not digit:
-            raise ValueError('huh?')
-        Q = digit * B
-
-    if max_digit == digit:
-        return digit, A - Q
-
-    remainder = A - Q
-    if remainder < B:
-        return digit, remainder
-
-    # if remainder >= B the interval to search is
-    # range(digit + 1, digit << 1), eh?
-    low, high = digit + 1, digit << 1
-    range_ = high - low
-    print(f'{digit + 1}..{digit << 1} = {range_}')
-    if range_ < 8190:
-        while remainder >= B:
-            digit += 1
-            remainder -= B
-    else:
-        1/0
+    predicate = lambda n: B * n <= A
+    digit = find_greatest(1, max_digit, predicate)
+    remainder = A - digit * B
     return digit, remainder
 
 
@@ -82,15 +59,16 @@ class find_greatest_Test(unittest.TestCase):
         n = find_greatest(a, b, f)
         self.assertEqual(n, k)
 
-##class BigIntTest(unittest.TestCase):
-##
-##    def test_to_int(self):
-##        a = 10*max_digit-3
-##        b = 123
-##        a = (max_digit-3) * b
-##        digit, remainder = lil_divmod(a, b)
-##        #print(f'divmod({a}, {b}) == ({digit}, {remainder})  # ? ')
-##        self.assertEqual((digit, remainder), divmod(a, b))
+
+class BigIntTest(unittest.TestCase):
+
+    def test_to_int(self):
+        a = 10*max_digit-3
+        b = 123
+        a = (max_digit-3) * b
+        digit, remainder = lil_divmod(a, b)
+        #print(f'divmod({a}, {b}) == ({digit}, {remainder})  # ? ')
+        self.assertEqual((digit, remainder), divmod(a, b))
 
 
 if __name__ == '__main__':
