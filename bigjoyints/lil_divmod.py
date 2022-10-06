@@ -22,27 +22,13 @@ def find_greatest(low, high, f):
     for which f(n) and not f(n+1) is True.
     The greatest n which makes f(n) True.
     '''
-
     assert low <= high
-
-    # Maybe the high number is already the one?
     if f(high):
         return high
-
-    # No such luck, let's pick a number between low and high
     pivot = (low + high) >> 1
-    #print(low, pivot, high)
-
-    # If there isn't any such number in between low and high,
-    # that means there's only two numbers it could be: low or high
-    # and we already know it isn't high from the test above
-    # so it must be low.
-    if low == pivot:
-        assert f(low) and not f(low + 1)
-        return low
-
-    assert low < pivot < high
     return (
+        low
+        if low == pivot else
         find_greatest(pivot, high - 1, f)
         if f(pivot) else
         find_greatest(low, pivot - 1, f)
