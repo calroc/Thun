@@ -1369,18 +1369,24 @@ def trace(stack, expr, dictionary):
     history = []
     append = history.append
     local_expr = push_quote(quote)
-    while local_expr:
-        append((stack, local_expr))
-        term, local_expr = next_term(local_expr)
-        if isinstance(term, Symbol):
-            try:
-                func = dictionary[term]
-            except KeyError:
-                print(trace_to_string(history))
-                raise UnknownSymbolError(term) from None
-            stack, local_expr, dictionary = func(stack, local_expr, dictionary)
-        else:
-            stack = term, stack
+    try:
+        while local_expr:
+            if len(history) > 1000:
+                break
+            append((stack, local_expr))
+            term, local_expr = next_term(local_expr)
+            if isinstance(term, Symbol):
+                try:
+                    func = dictionary[term]
+                except KeyError:
+                    print(trace_to_string(history))
+                    raise UnknownSymbolError(term) from None
+                stack, local_expr, dictionary = func(stack, local_expr, dictionary)
+            else:
+                stack = term, stack
+    except:
+        print(trace_to_string(history))
+        raise
     append((stack, local_expr))
     print(trace_to_string(history))
     return stack, expr, dictionary

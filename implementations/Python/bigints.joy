@@ -1,0 +1,20 @@
+[base 2147483648] inscribe
+[valid_digit [0 >] [base <] &&] inscribe
+[_add_p [bool not] ii &] inscribe
+[_add_then pop swap [] [1 swons] branch] inscribe
+[_add_rec_pred [bool] ii &] inscribe
+[bool_to_int [0] [1] branch] inscribe
+[_add-with-carry0 [bool_to_int] dipd + +] inscribe
+[_add-with-carry1 base [mod] [>=] clop] inscribe
+[add-with-carry _add-with-carry0 _add-with-carry1] inscribe
+[uncons-two [uncons] ii swapd] inscribe
+[ditch-empty-list [bool] [popd] [pop] ifte] inscribe
+[add-carry-to-digits [pop not] [popd] [[bool not] [1 swons popd]] [[0 swap uncons [add-with-carry] dip] swoncat ifte] genrec] inscribe
+[THEN0 uncons-two [add-with-carry] dipd] inscribe
+[THEN1 i cons] inscribe
+[ELSE ditch-empty-list add-carry-to-digits] inscribe
+[_add_R0 [_add_rec_pred] [THEN0]] inscribe
+[_add_R1 [THEN1] cons concat [ELSE] ifte cons] inscribe
+[add_digits [_add_p] [_add_then] [_add_R0] [_add_R1] genrec cons ] inscribe
+clear false base -- unit dup concat dup concat [1]
+[add_digits] trace

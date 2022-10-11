@@ -171,8 +171,7 @@ class BigInt:
         for a, b in Z:
             carry, digit = a.sub_with_carry(b, carry)
             out.append(digit)
-        if carry:
-            out.append(one)
+        assert not carry  # a >= b, eh?
         result = BigInt()
         result.sign = self.sign
         result.digits = out
