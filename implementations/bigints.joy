@@ -1,0 +1,34 @@
+base 2147483648
+ditch-empty-list [bool] [popd] [pop] ifte
+bool_to_int [0] [1] branch
+uncons-two [uncons] ii swapd
+
+add-with-carry _add-with-carry0 _add-with-carry1
+_add-with-carry0 [bool_to_int] dipd + +
+_add-with-carry1 base [mod] [>=] clop
+
+add-carry-to-digits [_actd_P] [_actd_THEN] [_actd_R0] [_actd_R1] genrec
+_actd_P pop not
+_actd_THEN popd
+_actd_R0 [bool] [_actd_R0.then] [_actd_R0.else] ifte
+_actd_R0.else popd 1 false rolldown
+_actd_R0.then 0 swap uncons [add-with-carry] dip
+_actd_R1 i cons
+
+add-digits initial-carry add-digits'
+initial-carry false rollup
+add-digits' [P] [THEN] [R0] [R1] genrec
+P [bool] ii & not
+THEN [P'] [THEN'] [ELSE] ifte
+R0 uncons-two [add-with-carry] dipd
+R1 i cons
+P' [bool] ii |
+THEN' ditch-empty-list add-carry-to-digits
+ELSE pop swap [] [1 swons] branch
+
+
+add-bigints 
+[[first] ii =]                       # are they the same sign?
+[[uncons] dip rest add-digits cons]  # add the digits and set the sign.
+[neg-bigint sub-bigints]             # adding unlikes is actually subtraction.
+ifte
