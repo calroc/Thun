@@ -18,6 +18,8 @@ clear
 [neg-if-necessary swap [neg] [] branch]
 [from-bigint sign-int neg-if-necessary]
 
+[neg-bigint [not] infra]
+
 [add-with-carry _add-with-carry0 _add-with-carry1]
 [_add-with-carry0 [bool-to-int] dipd + +]
 [_add-with-carry1 base [mod] [>=] clop]
@@ -41,9 +43,9 @@ clear
 
 [same-sign [first] ii xor not]
 [add-like-bigints [uncons] dip rest add-digits cons]
-[add-bigints [same-sign] [add-like-bigints] [1 0 /] ifte]
+[add-bigints [same-sign] [add-like-bigints] [neg-bigint sub-like-bigints] ifte]
 
-[build-two-list-combiner _btlc0 _btlc1 [i cons]]
+[build-two-list-combiner _btlc0 _btlc1 [[i cons] genrec] ccons cons]
 [_btlc0.0 [[ditch-empty-list] swoncat] dip]
 [_btlc0.1 [pop] swoncat]
 [_btlc0.3 [_btlc0.0 _btlc0.1] dip]
@@ -73,13 +75,14 @@ clear
 [sub-like-bigints [uncons] dip rest check-gt sub-digits cons]
 [sub-digits initial-carry sub-digits']
 
+[sub-bigints [same-sign] [sub-like-bigints] [neg-bigint add-like-bigints] ifte]
+
 enstacken [inscribe] step
 
 [add-carry-to-digits]
 [swap carry]
 [add-with-carry]
 build-two-list-combiner
-[genrec] ccons ccons
 [add-digits'] swoncat
 inscribe
 
@@ -87,8 +90,5 @@ inscribe
 [swap sub-carry]
 [sub-with-carry]
 build-two-list-combiner
-[genrec] ccons ccons
 [sub-digits'] swoncat
 inscribe
-
-
