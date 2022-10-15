@@ -62,10 +62,13 @@ clear
 
 [sub-carry pop]
 
-[sub-carry-from-digits popd]
+[sub-carry-from-digits [pop not] [popd] [_scfd_R0] [i cons-but-not-leading-zeroes] genrec] inscribe
+[_scfd_R0 uncons 0 swap [sub-with-carry] dip] inscribe
+[cons-but-not-leading-zeroes [[bool] ii | not] [popd] [cons] ifte]
+
+[sub-with-carry _sub-with-carry0 _sub-with-carry1]
 [_sub-with-carry0 rolldown bool-to-int [-] ii]
 [_sub-with-carry1 [base + base mod] [0 <] cleave]
-[sub-with-carry _sub-with-carry0 _sub-with-carry1]
 
 [sub-like-bigints [uncons] dip rest check-gt sub-digits cons]
 [sub-digits initial-carry sub-digits']
@@ -89,5 +92,6 @@ build-two-list-combiner
 inscribe
 
 
+true [0 1] sub-carry-from-digits
 
-[true 456] [true 123] sub-like-bigints
+
