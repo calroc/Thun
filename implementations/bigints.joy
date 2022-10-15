@@ -4,19 +4,20 @@ clear
 [bool-to-int [0] [1] branch]
 [uncons-two [uncons] ii swapd]
 [sandwich swap [cons] dip swoncat]
+[build-list [i cons] genrec]
 
-[digitalize [0 <=] [pop []] [base divmod swap] [i cons] genrec]
+[digitalize [0 <=] [pop []] [base divmod swap] build-list]
 [to-bigint [!-] [abs digitalize] cleave cons]
 
+[from-bigint sign-int neg-if-necessary]
+
+[sign-int [first] [prep from-bigint'] cleave]
+[neg-if-necessary swap [neg] [] branch]
 [prep rest 1 0 rolldown]
 [from-bigint' [next-digit] step popd]
 [next-digit [increase-power] [accumulate-digit] clop popdd]
 [increase-power popop base *]
 [accumulate-digit rolldown * +]
-
-[sign-int [first] [prep from-bigint'] cleave]
-[neg-if-necessary swap [neg] [] branch]
-[from-bigint sign-int neg-if-necessary]
 
 [neg-bigint [not] infra]
 
@@ -24,14 +25,13 @@ clear
 [_add-with-carry0 [bool-to-int] dipd + +]
 [_add-with-carry1 base [mod] [>=] clop]
 
-[add-carry-to-digits [pop not] [popd] [_actd_R0] [i cons] genrec]
+[add-carry-to-digits [pop not] [popd] [_actd_R0] build-list]
 [_actd_R0 [bool] [_actd_R0.then] [_actd_R0.else] ifte]
 [_actd_R0.else popd 1 false rolldown]
 [_actd_R0.then 0 swap uncons [add-with-carry] dip]
 
 [add-digits initial-carry add-digits']
 [initial-carry false rollup]
-
 [add-digits' [P] [THEN] [R0] [R1] genrec]
 [P [bool] ii & not]
 [THEN [P'] [THEN'] [ELSE] ifte]
@@ -42,7 +42,9 @@ clear
 [ELSE pop swap [] [1 swons] branch]
 
 [same-sign [first] ii xor not]
-[add-like-bigints [uncons] dip rest add-digits cons]
+[extract-sign [uncons] dip rest]
+
+[add-like-bigints extract-sign add-digits cons]
 [add-bigints [same-sign] [add-like-bigints] [neg-bigint sub-like-bigints] ifte]
 
 [build-two-list-combiner _btlc0 _btlc1 [[i cons] genrec] ccons cons]
@@ -55,24 +57,26 @@ clear
 
 [carry [] [1 swons] branch]
 
-[compare-pairs [bool not] [pop false] [[first [>=] infrst] [pop true]] [[rest] swoncat ifte] genrec]
-[xR1 uncons-two [unit cons swons] dipd]
-[xP [bool] ii & not]
-[BASE [bool] [popop pop true] [[pop bool] [popop pop false] [popop compare-pairs] ifte] ifte]
-[gt-bigint <<{} [xP] [BASE] [xR1] tailrec]
-[check-gt [gt-bigint] [swap [not] dipd] [] ifte]
+[compare-pairs [bool not] [pop false] [_comp-pairs0] [_comp-pairs1] genrec]
+[_comp-pairs0 [first [>=] infrst] [pop true]]
+[_comp-pairs1 [rest] swoncat ifte]
 
-[sub-carry pop]
+[check-gt [gt-bigint] [swap [not] dipd] [] ifte]
+[gt-bigint <<{} [_gtb_P] [_gtb_BASE] [_gtb_R1] tailrec]
+[_gtb_R1 uncons-two [unit cons swons] dipd]
+[_gtb_P [bool] ii & not]
+[_gtb_BASE [bool] [popop pop true] [_gtb_BASE'] ifte]
+[_gtb_BASE' [pop bool] [popop pop false] [popop compare-pairs] ifte]
 
 [sub-carry-from-digits [pop not] [popd] [_scfd_R0] [i cons-but-not-leading-zeroes] genrec] inscribe
-[_scfd_R0 uncons 0 swap [sub-with-carry] dip] inscribe
+[_scfd_R0 uncons 0 swap [sub-with-carry] dip]
 [cons-but-not-leading-zeroes [P'] [cons] [popd] ifte]
 
 [sub-with-carry _sub-with-carry0 _sub-with-carry1]
 [_sub-with-carry0 rolldown bool-to-int [-] ii]
 [_sub-with-carry1 [base + base mod] [0 <] cleave]
 
-[sub-like-bigints [uncons] dip rest check-gt sub-digits cons]
+[sub-like-bigints extract-sign check-gt sub-digits cons]
 [sub-digits initial-carry sub-digits']
 
 [sub-bigints [same-sign] [sub-like-bigints] [neg-bigint add-like-bigints] ifte]
@@ -87,8 +91,10 @@ build-two-list-combiner
 inscribe
 
 [sub-carry-from-digits]
-[swap sub-carry]
+[swap pop]
 [sub-with-carry]
 build-two-list-combiner
 [sub-digits'] swoncat
 inscribe
+
+1234 to-bigint dup sub-bigints
