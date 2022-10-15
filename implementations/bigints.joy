@@ -64,7 +64,7 @@ clear
 
 [sub-carry-from-digits [pop not] [popd] [_scfd_R0] [i cons-but-not-leading-zeroes] genrec] inscribe
 [_scfd_R0 uncons 0 swap [sub-with-carry] dip] inscribe
-[cons-but-not-leading-zeroes [[bool] ii | not] [popd] [cons] ifte]
+[cons-but-not-leading-zeroes [P'] [cons] [popd] ifte]
 
 [sub-with-carry _sub-with-carry0 _sub-with-carry1]
 [_sub-with-carry0 rolldown bool-to-int [-] ii]
@@ -90,8 +90,5 @@ build-two-list-combiner
 [genrec] ccons ccons
 [sub-digits'] swoncat
 inscribe
-
-
-true [0 1] sub-carry-from-digits
 
 
