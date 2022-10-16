@@ -32,14 +32,7 @@ clear
 
 [add-digits initial-carry add-digits']
 [initial-carry false rollup]
-[add-digits' [P] [THEN] [R0] [R1] genrec]
-[P [bool] ii & not]
-[THEN [P'] [THEN'] [ELSE] ifte]
-[R0 uncons-two [add-with-carry] dipd]
-[R1 i cons]
-[P' [bool] ii |]
-[THEN' ditch-empty-list add-carry-to-digits]
-[ELSE pop swap [] [1 swons] branch]
+
 
 [same-sign [first] ii xor not]
 [extract-sign [uncons] dip rest]
@@ -54,6 +47,8 @@ clear
 [_btlc0.4 [uncons-two] [dipd] sandwich]
 [_btlc0 _btlc0.3 _btlc0.4]
 [_btlc1 [[ifte] ccons [P'] swons [P] swap] dip]
+[P [bool] ii & not]
+[P' [bool] ii |]
 
 [carry [] [1 swons] branch]
 
