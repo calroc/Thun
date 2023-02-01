@@ -3,27 +3,27 @@
 
 
 enum JoyTypeType {
-    joySymbol,
-    joyTrue,
-    joyFalse,
-    joyInt,
-    joyList
+	joySymbol,
+	joyTrue,
+	joyFalse,
+	joyInt,
+	joyList
 };
 
 typedef struct list_node* JoyList;
 
 typedef struct JoyType {
-  enum JoyTypeType kind;
-  union {
-    int b; // bool
-    mpz_t i;
-    JoyList el;
-  };
+	enum JoyTypeType kind;
+	union {
+		int b; // bool
+		mpz_t i;
+		JoyList el;
+	};
 } name ;
 
 typedef struct list_node {
-  struct JoyType head;
-  struct list_node* tail;
+	struct JoyType head;
+	struct list_node* tail;
 } *JoyList;
 
 
@@ -54,16 +54,17 @@ typedef struct list_node {
 /*};*/
 
 void* reallocate_function (void *ptr, size_t old_size, size_t new_size) {
-    return GC_realloc(ptr, new_size);
+	return GC_REALLOC(ptr, new_size);
 }
+
 void deallocate_function (void *ptr, size_t size) {
-    GC_free(ptr);
+	GC_FREE(ptr);
 }
 
 void my_callback(GC_PTR void_obj, GC_PTR void_environment) {
-    //MY_ENVIRONMENT *env = (MY_ENVIRONMENT)void_environment;
-    mpz_t *obj = (mpz_t*)void_obj;
-    mpz_clear(*obj);
+	//MY_ENVIRONMENT *env = (MY_ENVIRONMENT)void_environment;
+	mpz_t *obj = (mpz_t*)void_obj;
+	mpz_clear(*obj);
 }
 
 /*sexpr new_int(void) {*/
@@ -74,24 +75,28 @@ void my_callback(GC_PTR void_obj, GC_PTR void_environment) {
 /*}*/
 
 
-int main(void)
+int
+main(void)
 {
-    mp_set_memory_functions(
-        &GC_malloc,
-        &reallocate_function,
-        &deallocate_function
-        );
-    mpz_t pi;
-    //mpz_init_set_str (pi, "3141592653589793238462643383279502884", 10);
-    mpz_init_set_str (pi, "25d0c79fe247f31777d922627a74624", 16);
-    gmp_printf ("%Zd = %Zx\n", pi, pi);
-    GC_register_finalizer(pi, my_callback, NULL, NULL, NULL);
+	mp_set_memory_functions(
+		&GC_malloc,
+		&reallocate_function,
+		&deallocate_function
+	);
+	mpz_t pi;
+	mpz_init_set_str(pi, "3141592653589793238462643383279502884", 10);
+	//mpz_init_set_str(pi, "25d0c79fe247f31777d922627a74624", 16);
+	GC_register_finalizer(pi, my_callback, NULL, NULL, NULL);
 
-    /*sexpr i = new_int();*/
-    /*mpz_add(i.i, pi, pi);*/
-    /*gmp_printf ("%Zd\n", i.i);*/
-    return 0;
+	gmp_printf("%Zd = %Zx\n", pi, pi);
+	mpz_mul(pi, pi, pi);
+	gmp_printf("%Zd = %Zx\n", pi, pi);
 
-    //return to_i(car(cons(from_i(0),from_i(1))));
+
+	/*sexpr i = new_int();*/
+	/*mpz_add(i.i, pi, pi);*/
+	/*gmp_printf ("%Zd\n", i.i);*/
+	return 0;
+
+	//return to_i(car(cons(from_i(0),from_i(1))));
 }
-
