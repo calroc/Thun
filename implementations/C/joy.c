@@ -10,21 +10,21 @@ enum JoyTypeType {
 	joyList
 };
 
-typedef struct list_node* JoyList;
 
 struct JoyType {
 	enum JoyTypeType kind;
 	union {
 		int boolean;
 		mpz_t i;
-		JoyList el;
+		struct list_node* el;
 	} value;
 } name ;
+
 
 struct list_node {
 	struct JoyType head;
 	struct list_node* tail;
-};
+} JoyList;
 
 
 void*
@@ -32,10 +32,12 @@ reallocate_function (void *ptr, __attribute__((unused)) size_t old_size, size_t 
 	return GC_REALLOC(ptr, new_size);
 }
 
+
 void
 deallocate_function (void *ptr, __attribute__((unused)) size_t size) {
 	GC_FREE(ptr);
 }
+
 
 void
 my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
@@ -45,10 +47,25 @@ my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
 }
 
 
+struct list_node*
+push_integer_from_str(char *str, struct list_node* tail)
+{
+	struct list_node* el;
+	el = GC_malloc(sizeof(struct list_node));
+	el->head.kind = joyInt;
+	mpz_init_set_str((mpz_ptr)&(el->head.value), str, 10);
+	GC_register_finalizer((mpz_ptr)&(el->head.value), my_callback, NULL, NULL, NULL);
+	el->tail = tail;
+	return el;
+}
+
+
 int
 main(void)
 {
 	mpz_t pi;
+	struct list_node* el;
+
 	mp_set_memory_functions(
 		&GC_malloc,
 		&reallocate_function,
@@ -62,6 +79,7 @@ main(void)
 	mpz_mul(pi, pi, pi);
 	gmp_printf("%Zd = %Zx\n", pi, pi);
 
+	el = push_integer_from_str("3141592653589793238462643383279502884", 0);
 
 	/*sexpr i = new_int();*/
 	/*mpz_add(i.i, pi, pi);*/
