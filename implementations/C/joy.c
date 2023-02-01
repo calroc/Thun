@@ -27,15 +27,18 @@ struct list_node {
 };
 
 
-void* reallocate_function (void *ptr, __attribute__((unused)) size_t old_size, size_t new_size) {
+void*
+reallocate_function (void *ptr, __attribute__((unused)) size_t old_size, size_t new_size) {
 	return GC_REALLOC(ptr, new_size);
 }
 
-void deallocate_function (void *ptr, __attribute__((unused)) size_t size) {
+void
+deallocate_function (void *ptr, __attribute__((unused)) size_t size) {
 	GC_FREE(ptr);
 }
 
-void my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
+void
+my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
 	/*MY_ENVIRONMENT *env = (MY_ENVIRONMENT)void_environment;*/
 	mpz_t *obj = (mpz_t*)void_obj;
 	mpz_clear(*obj);
