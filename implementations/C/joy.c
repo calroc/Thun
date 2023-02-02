@@ -1,5 +1,13 @@
+#include <stddef.h>
+#include <stdio.h>
+#include <string.h>
+
 #include <gc.h>
 #include <gmp.h>
+
+
+const char *BLANKS = " \t";
+const char *TEXT = " 23 [dup   *] i hi there  fr  [[]  ie]nd]  []    23      ";
 
 
 enum JoyTypeType {
@@ -61,6 +69,100 @@ push_integer_from_str(char *str, struct list_node* tail)
 }
 
 
+char *
+trim_leading_blanks(char *str)
+{
+	size_t offset = strspn(str, BLANKS);
+	return (offset == strlen(str)) ? NULL : (str + offset);
+}
+
+
+/* Create a new list_node with a joySymbol head. */
+struct list_node*
+make_symbol_node(char *text, size_t size)
+{
+	struct list_node *node;
+	node = GC_malloc(sizeof(struct list_node));
+	node->head.kind = joySymbol;
+	node->head.value.symbol = (char *)GC_malloc(size + 1);
+	strncat(node->head.value.symbol, text, size);
+	printf("%s\n", node->head.value.symbol);
+	return node;
+}
+
+
+struct list_node*
+text_to_expression(char *text)
+{
+	char *rest;
+	ptrdiff_t diff;
+	struct list_node *current_list_node;
+	struct list_node *result;
+	struct list_node *head = NULL;
+
+	if (NULL == text) {
+		/* NULL string input. */
+		return (struct list_node*)NULL;
+	}
+	text = trim_leading_blanks(text);
+	if (NULL == text) {
+		/* All blanks. */
+		return (struct list_node*)NULL;
+	}
+
+	rest = strpbrk(text, " []");
+	/*
+	rest now points to a space or '[' or ']' after a term,
+	-or- it is NULL if the rest of the string is a single term
+	with no spaces nor brackets.
+	*/
+
+	while (NULL != rest) {
+
+		/* How many chars have we got? */
+		diff = rest - text;
+		/*
+		diff can be zero when there is more than one space in
+		a sequence in the input string.  This won't happen on
+		the first iteration but it can on later iterations.
+		*/
+
+		if (diff) {
+			/* Allocate space and copy out the substring. */
+
+			current_list_node = make_symbol_node(text, diff);
+			if (head) {
+				head->tail = current_list_node;
+			} else {
+				/* There is no head now, so this must be the first
+				   result, the head that we will eventually return. */
+				result = current_list_node;
+			}
+			head = current_list_node;
+		}
+
+		/* The next char is a space or '[' or ']'. */
+		if ('[' == rest[0] || ']' == rest[0]) {
+			printf("%c\n", rest[0]);
+		}
+
+		text = trim_leading_blanks(++rest);
+
+		/* calling strpbrk on NULL caused segfault! */
+		rest = (NULL != text) ? strpbrk(text, " []") : text;
+	}
+	if (text) {
+                current_list_node = make_symbol_node(text, strlen(text));
+                if (head) {
+                        head->tail = current_list_node;
+                } else {
+                        result = current_list_node;
+                }
+	}
+	return result;
+}
+
+
 int
 main(void)
 {
@@ -81,6 +183,7 @@ main(void)
 	gmp_printf("%Zd = %Zx\n", pi, pi);
 
 	el = push_integer_from_str("3141592653589793238462643383279502884", 0);
+	el = text_to_expression("char *te xt");
 
 	/*sexpr i = new_int();*/
 	/*mpz_add(i.i, pi, pi);*/
