@@ -129,7 +129,6 @@ text_to_expression(char *text)
 
 		if (diff) {
 			/* Allocate space and copy out the substring. */
-
 			current_list_node = make_symbol_node(text, diff);
 			if (head) {
 				head->tail = current_list_node;
@@ -163,6 +162,33 @@ text_to_expression(char *text)
 }
 
 
+void
+print_node(struct JoyType j)
+{
+        switch (j.kind) {
+        case joySymbol:
+                printf("%s", j.value.symbol);
+                break;
+        default:
+                printf("wtf");
+        }
+}
+
+
+void
+print_list(struct list_node* el)
+{
+        while (NULL != el) {
+                print_node(el->head);
+                el = el->tail;
+                if (NULL != el) {
+                        printf(" ");
+                }
+        }
+        printf("\n");
+}
+
+
 int
 main(void)
 {
@@ -184,7 +210,7 @@ main(void)
 
 	el = push_integer_from_str("3141592653589793238462643383279502884", 0);
 	el = text_to_expression("char *te xt");
-
+        print_list(el);
 	/*sexpr i = new_int();*/
 	/*mpz_add(i.i, pi, pi);*/
 	/*gmp_printf ("%Zd\n", i.i);*/
