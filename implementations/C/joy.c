@@ -10,7 +10,7 @@
 const char *BLANKS = " \t";
 /*const char *TEXT = " 23 [dup   *] i hi there  fr  [[]  ie]nd  []    23      ";*/
 /*const char *TEXT = " 23 33 []     ";*/
-const char *TEXT = "   23   45  88 ok wow simple terms already work eh?   ";
+const char *TEXT = "ok [wow] [23 45][1[2]3]simple terms already work eh?   ";
 
 
 enum JoyTypeType {
@@ -162,17 +162,17 @@ parse_list(char **text)
 	char *rest;
 	ptrdiff_t diff;
 	struct list_node *result = NULL;
-	/* NULL string input? */
 
+	/* NULL string input? */
 	if (NULL == *text) {
-		printf("Missing ']' bracket.");
+		printf("Missing ']' bracket. A\n");
 		exit(1);
 	};
 
 	*text = trim_leading_blanks(*text);
 
 	if (NULL == *text) {
-		printf("Missing ']' bracket.");
+		printf("Missing ']' bracket. B\n");
 		exit(1);
 	};
 
@@ -185,7 +185,7 @@ parse_list(char **text)
 	missing a closing bracket!
 	*/
 	if (NULL == rest) {
-		printf("Missing ']' bracket.");
+		printf("Missing ']' bracket. C\n");
 		exit(1);
 	};
 
@@ -196,10 +196,10 @@ parse_list(char **text)
 		result = make_symbol_node(*text, diff);
 		*text = rest;
 	} else if ('[' == rest[0]) {
-		*text = rest++;
+		*text = ++rest;
 		result = make_list_node(parse_list(text));
 	} else if (']' == rest[0]) {
-		*text = rest++;
+		*text = ++rest;
 		return result;
 	}
 	result->tail = parse_list(text);
@@ -217,7 +217,6 @@ parse_node(char **text)
 	ptrdiff_t diff;
 	struct list_node *thing;
 
-	printf("enter parse_node: >%s<\n", *text);
 	/* NULL string input? */
 	if (NULL == *text) return EMPTY_LIST;
 
@@ -245,11 +244,11 @@ parse_node(char **text)
 		return thing;
 	}
 	if ('[' == rest[0]) {
-		*text = rest++;
+		*text = ++rest;
 		return make_list_node(parse_list(text));
 	}
 	if (']' == rest[0]) {
-		printf("Extra ']' bracket.");
+		printf("Extra ']' bracket.\n");
 		exit(1);
 	}
 	printf("Should be unreachable.");
@@ -261,16 +260,11 @@ struct list_node*
 text_to_expression(char *text)
 {
 	struct list_node *result, *head, *tail;
-	printf("1\n");
+
 	result = parse_node(&text);
-	printf("2\n");
-	print_list(result);
-	printf(" <- eh?\n");
 	head = result;
 	tail = parse_node(&text);
 	while (NULL != tail) {
-		print_list(tail);
-		printf("<- ooh?\n");
 		head->tail = tail;
 		head = tail;
 		tail = parse_node(&text);
@@ -296,7 +290,6 @@ main(void)
 	GC_register_finalizer(pi, my_callback, NULL, NULL, NULL);
 
 	el = push_integer_from_str("3141592653589793238462643383279502884", 0);
-	printf("BEGIN\n");
 	el->tail = text_to_expression(text);
 	print_list(el);
 	printf("\n");
