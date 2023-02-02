@@ -17,6 +17,7 @@ struct JoyType {
 		int boolean;
 		mpz_t i;
 		struct list_node* el;
+		char *symbol;
 	} value;
 } name ;
 
