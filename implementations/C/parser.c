@@ -1,9 +1,11 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <gc.h>
+
 
 const char *BLANKS = " \t";
-const char *TEXT = " hi there friend";
+const char *TEXT = " hi there fr[ie]nd";
 /*                  01234567890123456789
                        ^     ^
 */
@@ -22,15 +24,19 @@ trim_leading_blanks(char *str)
 int
 main(void)
 {
-	char *rest, *text;
+	char *rest, *text, *snip;
 	ptrdiff_t diff;
 
         text = trim_leading_blanks((char *)TEXT);
 	rest = strpbrk(text, " []");
 	while (NULL != rest) {
 		diff = rest - text;
-                text = rest;
                 printf("%ld\n", diff);
-                rest = strpbrk(++rest, " []");
+                snip = (char *)GC_malloc(diff + 1);
+                strncat(snip, text, diff);
+                printf("%s <%c>\n", snip, rest[0]);
+                text = ++rest;
+                rest = strpbrk(text, " []");
 	}
+        printf("%s\n", text);
 }
