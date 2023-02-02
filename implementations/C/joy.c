@@ -1,3 +1,57 @@
+/*
+    Copyright © 2023 Simon Forman
+
+    This file is part of Thun
+
+    Thun is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Thun is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Thun.  If not see <http://www.gnu.org/licenses/>.
+
+
+████████╗██╗  ██╗██╗   ██╗███╗   ██╗
+╚══██╔══╝██║  ██║██║   ██║████╗  ██║
+   ██║   ███████║██║   ██║██╔██╗ ██║
+   ██║   ██╔══██║██║   ██║██║╚██╗██║
+   ██║   ██║  ██║╚██████╔╝██║ ╚████║
+   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+This program implements an interpreter for a dialect of Joy.
+
+Joy is a programming language created by Manfred von Thun that is easy to
+use and understand and has many other nice properties. This Python
+package implements an interpreter for a dialect of Joy that attempts to
+stay very close to the spirit of Joy but does not precisely match the
+behaviour of the original version(s) written in C. The main difference
+between Thun and the originals, other than being written in Python, is
+that it works by the “Continuation-Passing Style”.
+
+Here is an example of Joy code:
+
+
+    [   [[abs] ii <=]
+        [
+            [<>] [pop !-] ||
+        ] &&
+    ]
+    [[    !-] [[++]] [[--]] ifte dip]
+    [[pop !-]  [--]   [++]  ifte    ]
+    ifte
+
+This function accepts two integers on the stack and increments or
+decrements one of them such that the new pair of numbers is the next
+coordinate pair in a square spiral (like the kind used to construct an
+Ulam Spiral).
+
+*/
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
