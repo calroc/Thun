@@ -202,3 +202,20 @@ text_to_expression(char *text)
 	return result;
 }
 '
+
+	/*mpz_t pi;*/
+	/*char *text = (char *)TEXT;*/
+	/*mpz_init_set_str(pi, "3141592653589793238462643383279502884", 10);*/
+	/*mpz_init_set_str(pi, "25d0c79fe247f31777d922627a74624", 16);*/
+	/*GC_register_finalizer(pi, my_callback, NULL, NULL, NULL);*/
+
+	/*el = push_integer_from_str("3141592653589793238462643383279502884", 0);*/
+	/*el->tail = text_to_expression(text);*/
+	/*el = text_to_expression(text);*/
+	/*print_list(el);*/
+	/*printf("\n");*/
+
+  
+  /*const char *TEXT = " 23 [dup   *] i hi there  fr  [[]  ie]nd  []    23      ";*/
+/*const char *TEXT = " 23 33 []     ";*/
+const char *TEXT = "ok [wow] [23 45][1[2]3]simple terms already work eh?   ";

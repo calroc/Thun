@@ -8,9 +8,6 @@
 
 
 const char *BLANKS = " \t";
-/*const char *TEXT = " 23 [dup   *] i hi there  fr  [[]  ie]nd  []    23      ";*/
-/*const char *TEXT = " 23 33 []     ";*/
-const char *TEXT = "ok [wow] [23 45][1[2]3]simple terms already work eh?   ";
 
 
 enum JoyTypeType {
@@ -233,7 +230,11 @@ parse_node(char **text)
 	with no spaces nor brackets.  If that's the case then we're
 	done, and we can just return a list with one symbol in it.
 	*/
-	if (NULL == rest) return make_symbol_node(*text, strlen(*text));
+	if (NULL == rest) {
+		thing = make_symbol_node(*text, strlen(*text));
+		*text = rest;
+		return thing;
+	}
 
 	/* How many chars have we got? */
 	diff = rest - *text;
@@ -276,22 +277,25 @@ text_to_expression(char *text)
 int
 main(void)
 {
-	mpz_t pi;
-	struct list_node* el;
-	char *text = (char *)TEXT;
+	char *line;
+	char *status;
 
 	mp_set_memory_functions(
 		&GC_malloc,
 		&reallocate_function,
 		&deallocate_function
 	);
-	mpz_init_set_str(pi, "3141592653589793238462643383279502884", 10);
-	/*mpz_init_set_str(pi, "25d0c79fe247f31777d922627a74624", 16);*/
-	GC_register_finalizer(pi, my_callback, NULL, NULL, NULL);
 
-	el = push_integer_from_str("3141592653589793238462643383279502884", 0);
-	el->tail = text_to_expression(text);
-	print_list(el);
-	printf("\n");
+	line = (char *)GC_malloc(1025);
+
+	while (1) {
+		status = gets_s(line, 1025);
+		if (NULL == status) {
+			printf("bye\n");
+			break;
+		}
+		print_list(text_to_expression(line));
+		printf("\n");
+	}
 	return 0;
 }
