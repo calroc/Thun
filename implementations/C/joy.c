@@ -203,7 +203,6 @@ print_list(struct list_node* el)
                         printf(" ");
                 }
         }
-        printf("\n");
 }
 
 
@@ -226,5 +225,6 @@ main(void)
 	el = push_integer_from_str("3141592653589793238462643383279502884", 0);
 	el->tail = text_to_expression(text);
         print_list(el);
+        printf("\n");
 	return 0;
 }
