@@ -62,6 +62,8 @@ Ulam Spiral).
 
 
 const char *BLANKS = " \t";
+const char *FALSE = "false";
+const char *TRUE = "true";
 
 
 enum JoyTypeType {
@@ -85,7 +87,7 @@ struct JoyType {
 
 
 struct list_node {
-	struct JoyType head;
+	struct JoyType head;  /* Should this be a pointer? */
 	struct list_node* tail;
 } JoyList;
 
@@ -182,11 +184,24 @@ struct list_node*
 make_symbol_node(char *text, size_t size)
 {
 	struct list_node *node;
+	char * sym;
+
+	sym = GC_malloc(size + 1);  /* one more for the zero, right? */
+	strncat(sym, text, size);
+
 	node = GC_malloc(sizeof(struct list_node));
-	node->head.kind = joySymbol;
-	node->head.value.symbol = (char *)GC_malloc(size + 1);
-	strncat(node->head.value.symbol, text, size);
-	/*printf("%s\n", node->head.value.symbol);*/
+	if (!strncmp(sym, FALSE, 6)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
+		/* If head was a pointer we could reuse Boolean singletons... */
+		node->head.kind = joyFalse;
+		node->head.value.boolean = 0;
+	} else if (!strncmp(sym, TRUE, 5)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
+		node->head.kind = joyTrue;
+		node->head.value.boolean = 1;
+	} else {
+		node->head.kind = joySymbol;
+		node->head.value.symbol = sym;
+	}
+
 	return node;
 }
 
@@ -327,7 +342,6 @@ text_to_expression(char *text)
 	return result;
 }
 
-
 int
 main(void)
 {
@@ -345,6 +359,20 @@ main(void)
 	while (1) {
 		status = gets_s(line, 1025);
 		if (NULL == status) {
+			/*
+			From the man page:
+
+			> Upon successful completion, fgets(), gets_s(), and gets() return a
+			pointer to the string.  If end-of-file occurs before any characters are
+			read, they return NULL and the buffer contents remain unchanged.  If an
+			error occurs, they return NULL and the buffer contents are indeterminate.
+			The fgets(), gets_s(), and gets() functions do not distinguish between
+			end-of-file and error, and callers must use feof(3) and ferror(3) to
+			determine which occurred.
+
+			TODO: "use feof(3) and ferror(3)"...
+
+			*/
 			printf("bye\n");
 			break;
 		}
