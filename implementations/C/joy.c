@@ -161,6 +161,10 @@ text_to_expression(char *text)
 	return result;
 }
 
+/* Pre-declare so we can use it in print_node(). */
+void
+print_list(struct list_node* el);
+
 
 void
 print_node(struct JoyType j)
@@ -171,6 +175,17 @@ print_node(struct JoyType j)
                 break;
         case joySymbol:
                 printf("%s", j.value.symbol);
+                break;
+        case joyTrue:
+                printf("true");
+                break;
+        case joyFalse:
+                printf("false");
+                break;
+        case joyList:
+                printf("[");
+                print_list(j.value.el);
+                printf("]");
                 break;
         default:
                 printf("wtf");
