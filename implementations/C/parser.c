@@ -5,7 +5,7 @@
 
 
 const char *BLANKS = " \t";
-const char *TEXT = " hi there  fr  [  ie]nd";
+const char *TEXT = "hi there  fr  [[]  ie]nd]  []    23    ";
 /*                  01234567890123456789
                        ^     ^
 */
@@ -32,10 +32,9 @@ main(void)
 	while (NULL != rest) {
                 /* How many chars have we got? */
 		diff = rest - text;
-                /*printf("%ld\n", diff);*/
 
                 if (diff) {
-                        /* Allocate and copy out the substring. */
+                        /* Allocate space and copy out the substring. */
                         snip = (char *)GC_malloc(diff + 1);
                         strncat(snip, text, diff);
                         printf("%s\n", snip);
@@ -49,7 +48,11 @@ main(void)
                 /*  */
                 text = trim_leading_blanks(++rest);
                 /*printf(">>>%s\n\n", text);*/
-                rest = strpbrk(text, " []");
+
+                /* calling strpbrk on NULL caused segfault! */
+                rest = (NULL != text) ? strpbrk(text, " []") : text;
 	}
-        printf("%s\n", text);
+        if (text) {
+                printf("%s\n", text);
+        }
 }
