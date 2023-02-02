@@ -62,8 +62,8 @@ push_integer_from_str(char *str, struct list_node* tail)
 	struct list_node* el;
 	el = GC_malloc(sizeof(struct list_node));
 	el->head.kind = joyInt;
-	mpz_init_set_str((mpz_ptr)&(el->head.value), str, 10);
-	GC_register_finalizer((mpz_ptr)&(el->head.value), my_callback, NULL, NULL, NULL);
+	mpz_init_set_str(el->head.value.i, str, 10);
+	GC_register_finalizer(el->head.value.i, my_callback, NULL, NULL, NULL);
 	el->tail = tail;
 	return el;
 }
