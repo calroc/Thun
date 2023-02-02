@@ -10,7 +10,7 @@
 const char *BLANKS = " \t";
 /*const char *TEXT = " 23 [dup   *] i hi there  fr  [[]  ie]nd  []    23      ";*/
 /*const char *TEXT = " 23 33 []     ";*/
-const char *TEXT = "";
+const char *TEXT = "   23   45  88 ok wow simple terms already work eh?   ";
 
 
 enum JoyTypeType {
@@ -217,6 +217,7 @@ parse_node(char **text)
 	ptrdiff_t diff;
 	struct list_node *thing;
 
+	printf("enter parse_node: >%s<\n", *text);
 	/* NULL string input? */
 	if (NULL == *text) return EMPTY_LIST;
 
