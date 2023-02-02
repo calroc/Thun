@@ -86,7 +86,7 @@ make_symbol_node(char *text, size_t size)
 	node->head.kind = joySymbol;
 	node->head.value.symbol = (char *)GC_malloc(size + 1);
 	strncat(node->head.value.symbol, text, size);
-	printf("%s\n", node->head.value.symbol);
+	/*printf("%s\n", node->head.value.symbol);*/
 	return node;
 }
 
@@ -166,6 +166,9 @@ void
 print_node(struct JoyType j)
 {
         switch (j.kind) {
+        case joyInt:
+                gmp_printf("%Zd", j.value.i);
+                break;
         case joySymbol:
                 printf("%s", j.value.symbol);
                 break;
@@ -194,6 +197,7 @@ main(void)
 {
 	mpz_t pi;
 	struct list_node* el;
+        char *text = (char *)TEXT;
 
 	mp_set_memory_functions(
 		&GC_malloc,
@@ -204,17 +208,8 @@ main(void)
 	/*mpz_init_set_str(pi, "25d0c79fe247f31777d922627a74624", 16);*/
 	GC_register_finalizer(pi, my_callback, NULL, NULL, NULL);
 
-	gmp_printf("%Zd = %Zx\n", pi, pi);
-	mpz_mul(pi, pi, pi);
-	gmp_printf("%Zd = %Zx\n", pi, pi);
-
 	el = push_integer_from_str("3141592653589793238462643383279502884", 0);
-	el = text_to_expression("char *te xt");
+	el->tail = text_to_expression(text);
         print_list(el);
-	/*sexpr i = new_int();*/
-	/*mpz_add(i.i, pi, pi);*/
-	/*gmp_printf ("%Zd\n", i.i);*/
 	return 0;
-
-	/*return to_i(car(cons(from_i(0),from_i(1))));*/
 }

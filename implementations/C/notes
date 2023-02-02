@@ -1,0 +1,49 @@
+
+// Example S-exprs
+// https://www.hboehm.info/gc/04tutorial.pdf
+/**/
+/*typedef union se*/
+/*{*/
+/*  struct cons * cp;*/
+/*  mpz_t i;*/
+/*} sexpr;*/
+/**/
+/*struct cons*/
+/*{*/
+/*  union se head;*/
+/*  union se tail;*/
+/*};*/
+/**/
+/*#define car(s) (s).cp->head*/
+/*#define cdr(s) (s).cp->tail*/
+/*#define from_i(z) ({sexpr tmp; tmp.i=z; tmp;})*/
+/*#define to_i(s) (s).i*/
+/**/
+/*sexpr cons(sexpr a, sexpr b) {*/
+/*    sexpr tmp = {GC_MALLOC(sizeof(struct cons))};*/
+/*    car(tmp) = a; cdr(tmp) = b;*/
+/*    return (tmp);*/
+/*};*/
+
+
+
+/*sexpr new_int(void) {*/
+/*  sexpr node = {GC_MALLOC(sizeof(struct cons))};*/
+/*  mpz_init(node.i);*/
+/*  GC_register_finalizer(node.i, my_callback, NULL, NULL, NULL);*/
+/*  return (node);*/
+/*}*/
+
+
+typedef struct list_node* JoyList;
+
+
+
+	/*sexpr i = new_int();*/
+	/*mpz_add(i.i, pi, pi);*/
+	/*gmp_printf ("%Zd\n", i.i);*/
+	/*return to_i(car(cons(from_i(0),from_i(1))));*/
+
+	/*gmp_printf("%Zd = %Zx\n", pi, pi);*/
+	/*mpz_mul(pi, pi, pi);*/
+	/*gmp_printf("%Zd = %Zx\n", pi, pi);*/
