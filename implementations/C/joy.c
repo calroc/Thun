@@ -179,9 +179,8 @@ trim_leading_blanks(char *str)
 }
 
 
-/* Create a new list_node with a joySymbol head. */
 struct list_node*
-make_symbol_node(char *text, size_t size)
+make_non_list_node(char *text, size_t size)
 {
 	struct list_node *node;
 	char * sym;
@@ -190,16 +189,25 @@ make_symbol_node(char *text, size_t size)
 	strncat(sym, text, size);
 
 	node = GC_malloc(sizeof(struct list_node));
+
 	if (!strncmp(sym, FALSE, 6)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
 		/* If head was a pointer we could reuse Boolean singletons... */
 		node->head.kind = joyFalse;
 		node->head.value.boolean = 0;
+
 	} else if (!strncmp(sym, TRUE, 5)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
 		node->head.kind = joyTrue;
 		node->head.value.boolean = 1;
-	} else {
+
+	} else if (mpz_init_set_str(node->head.value.i, sym, 10)) {
+		/* Non-zero (-1) return value means the string is not an int. */
+		mpz_clear(node->head.value.i);
 		node->head.kind = joySymbol;
 		node->head.value.symbol = sym;
+
+	} else {
+		node->head.kind = joyInt;
+		GC_register_finalizer(node->head.value.i, my_callback, NULL, NULL, NULL);
 	}
 
 	return node;
@@ -259,7 +267,7 @@ parse_list(char **text)
 	diff = rest - *text;
 
 	if (diff) {
-		result = make_symbol_node(*text, diff);
+		result = make_non_list_node(*text, diff);
 		*text = rest;
 	} else if ('[' == rest[0]) {
 		*text = ++rest;
@@ -300,7 +308,7 @@ parse_node(char **text)
 	done, and we can just return a list with one symbol in it.
 	*/
 	if (NULL == rest) {
-		thing = make_symbol_node(*text, strlen(*text));
+		thing = make_non_list_node(*text, strlen(*text));
 		*text = rest;
 		return thing;
 	}
@@ -309,7 +317,7 @@ parse_node(char **text)
 	diff = rest - *text;
 
 	if (diff) {
-		thing = make_symbol_node(*text, diff);
+		thing = make_non_list_node(*text, diff);
 		*text = rest;
 		return thing;
 	}
