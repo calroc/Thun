@@ -183,7 +183,7 @@ struct list_node*
 make_non_list_node(char *text, size_t size)
 {
 	struct list_node *node;
-	char * sym;
+	char *sym;
 
 	sym = GC_malloc(size + 1);  /* one more for the zero, right? */
 	strncat(sym, text, size);
