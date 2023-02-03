@@ -1,55 +1,20 @@
 /*
-    Copyright © 2023 Simon Forman
+Copyright © 2023 Simon Forman
 
-    This file is part of Thun
+This file is part of Thun
 
-    Thun is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+Thun is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    Thun is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+Thun is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with Thun.  If not see <http://www.gnu.org/licenses/>.
-
-
-████████╗██╗  ██╗██╗   ██╗███╗   ██╗
-╚══██╔══╝██║  ██║██║   ██║████╗  ██║
-   ██║   ███████║██║   ██║██╔██╗ ██║
-   ██║   ██╔══██║██║   ██║██║╚██╗██║
-   ██║   ██║  ██║╚██████╔╝██║ ╚████║
-   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
-
-This program implements an interpreter for a dialect of Joy.
-
-Joy is a programming language created by Manfred von Thun that is easy to
-use and understand and has many other nice properties. This Python
-package implements an interpreter for a dialect of Joy that attempts to
-stay very close to the spirit of Joy but does not precisely match the
-behaviour of the original version(s) written in C. The main difference
-between Thun and the originals, other than being written in Python, is
-that it works by the “Continuation-Passing Style”.
-
-Here is an example of Joy code:
-
-
-    [   [[abs] ii <=]
-        [
-            [<>] [pop !-] ||
-        ] &&
-    ]
-    [[    !-] [[++]] [[--]] ifte dip]
-    [[pop !-]  [--]   [++]  ifte    ]
-    ifte
-
-This function accepts two integers on the stack and increments or
-decrements one of them such that the new pair of numbers is the next
-coordinate pair in a square spiral (like the kind used to construct an
-Ulam Spiral).
+You should have received a copy of the GNU General Public License
+along with Thun.  If not see <http://www.gnu.org/licenses/>.
 
 */
 #include <stddef.h>
@@ -59,6 +24,8 @@ Ulam Spiral).
 
 #include <gc.h>
 #include <gmp.h>
+
+# include "keywords.h"
 
 
 const char *BLANKS = " \t";
@@ -90,6 +57,9 @@ struct list_node {
 	struct JoyType head;  /* Should this be a pointer? */
 	struct list_node* tail;
 } JoyList;
+
+
+#define EMPTY_LIST (struct list_node*)NULL
 
 
 void*
@@ -184,11 +154,19 @@ make_non_list_node(char *text, size_t size)
 {
 	struct list_node *node;
 	char *sym;
+	const char *interned;
+
+	node = GC_malloc(sizeof(struct list_node));
+
+	interned = in_word_set(text, size);
+	if (interned) {
+		node->head.kind = joySymbol;
+		node->head.value.symbol = (char *)interned;
+		return node;
+	}
 
 	sym = GC_malloc(size + 1);  /* one more for the zero, right? */
 	strncat(sym, text, size);
-
-	node = GC_malloc(sizeof(struct list_node));
 
 	if (!strncmp(sym, FALSE, 6)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
 		/* If head was a pointer we could reuse Boolean singletons... */
@@ -225,14 +203,23 @@ make_list_node(struct list_node *el)
 	return node;
 }
 
-#define EMPTY_LIST (struct list_node*)NULL
 
 /*
-Extract terms from the text until a closing bracket is found.
+██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
+██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
+██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝
+██╔═══╝ ██╔══██║██╔══██╗╚════██║██╔══╝  ██╔══██╗
+██║     ██║  ██║██║  ██║███████║███████╗██║  ██║
+╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
 */
+
+
 struct list_node*
 parse_list(char **text)
 {
+/*
+Extract terms from the text until a closing bracket is found.
+*/
 	char *rest;
 	ptrdiff_t diff;
 	struct list_node *result = NULL;

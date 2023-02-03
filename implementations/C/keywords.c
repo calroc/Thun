@@ -144,7 +144,7 @@ in_word_set (register const char *str, register size_t len)
         {
           register const char *s = wordlist[key];
 
-          if (*str == *s && !strcmp (str + 1, s + 1))
+          if (*str == *s && !strncmp (str + 1, s + 1, len - 1) && s[len] == '\0')
             return s;
         }
     }
