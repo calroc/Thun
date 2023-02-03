@@ -34,7 +34,7 @@ typedef JoyList* JoyListPtr;
 typedef struct {
 	enum JoyTypeType kind;
 	union {
-		int boolean;
+		int boolean;  /* TODO: Remoce this field, we don't use it. */
 		mpz_t i;
 		JoyList el;
 		char *symbol;
@@ -71,7 +71,10 @@ void sub(JoyList *stack, JoyList *expression);
 void truthy(JoyList *stack, JoyList *expression);
 
 
-struct dict_entry  { char *name; JoyFunc func; };
+struct dict_entry  {
+	char *name;
+	JoyFunc func;
+};
 
 const struct dict_entry *
 in_word_set (register const char *str, register size_t len);
