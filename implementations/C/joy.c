@@ -25,7 +25,7 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #include <gc.h>
 #include <gmp.h>
 
-#include "keywords.h"
+#include "joy.h"
 
 
 const char *BLANKS = " \t";
@@ -33,37 +33,12 @@ const char *FALSE = "false";
 const char *TRUE = "true";
 
 
-enum JoyTypeType {
-	joySymbol,
-	joyTrue,
-	joyFalse,
-	joyInt,
-	joyList
-};
 
-typedef struct list_node* JoyList;
-
-typedef struct {
-	enum JoyTypeType kind;
-	union {
-		int boolean;
-		mpz_t i;
-		JoyList el;
-		char *symbol;
-	} value;
-} JoyType;
-
-
-struct list_node {
-	JoyType head;  /* Should this be a pointer? */
-	JoyList tail;
-};
-
-#define EMPTY_LIST (JoyList)NULL
-
-
-
-
+/*
+void
+dup(JoyList *stack, JoyList *expression) {
+}
+*/
 
 
 void*
@@ -157,14 +132,14 @@ make_non_list_node(char *text, size_t size)
 {
 	struct list_node *node;
 	char *sym;
-	const char *interned;
+	const struct dict_entry *interned;
 
 	node = GC_malloc(sizeof(struct list_node));
 
 	interned = in_word_set(text, size);
 	if (interned) {
 		node->head.kind = joySymbol;
-		node->head.value.symbol = (char *)interned;
+		node->head.value.symbol = interned->name;
 		return node;
 	}
 
@@ -339,6 +314,23 @@ text_to_expression(char *text)
 	}
 	return result;
 }
+
+
+void add(JoyList *stack, JoyList *expression) {stack = expression;}
+void branch(JoyList *stack, JoyList *expression) {stack = expression;}
+void clear(JoyList *stack, JoyList *expression) {stack = expression;}
+void div_joyfunc(JoyList *stack, JoyList *expression) {stack = expression;}
+void eq(JoyList *stack, JoyList *expression) {stack = expression;}
+void ge(JoyList *stack, JoyList *expression) {stack = expression;}
+void gt(JoyList *stack, JoyList *expression) {stack = expression;}
+void le(JoyList *stack, JoyList *expression) {stack = expression;}
+void lt(JoyList *stack, JoyList *expression) {stack = expression;}
+void mod(JoyList *stack, JoyList *expression) {stack = expression;}
+void mul(JoyList *stack, JoyList *expression) {stack = expression;}
+void neq(JoyList *stack, JoyList *expression) {stack = expression;}
+void sub(JoyList *stack, JoyList *expression) {stack = expression;}
+void truthy(JoyList *stack, JoyList *expression) {stack = expression;}
+
 
 int
 main(void)

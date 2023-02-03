@@ -1,5 +1,5 @@
 /* ANSI-C code produced by gperf version 3.1 */
-/* Command-line: gperf --output-file=keywords.c --hash-function-name=keyword_hash --readonly-tables --enum --includes --global-table KEYWORDS.txt  */
+/* Command-line: gperf --output-file=keywords.c --hash-function-name=keyword_hash --readonly-tables --enum --includes KEYWORDS.txt  */
 /* Computed positions: -k'1-2' */
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \
@@ -29,17 +29,13 @@
 #error "gperf generated tables don't work with this execution character set. Please report a bug to <bug-gperf@gnu.org>."
 #endif
 
-#include <string.h>
-enum
-  {
-    TOTAL_KEYWORDS = 27,
-    MIN_WORD_LENGTH = 1,
-    MAX_WORD_LENGTH = 6,
-    MIN_HASH_VALUE = 1,
-    MAX_HASH_VALUE = 37
-  };
+#line 4 "KEYWORDS.txt"
 
-/* maximum key range = 37, duplicates = 0 */
+#include "joy.h"
+#line 7 "KEYWORDS.txt"
+struct dict_entry;
+#include <string.h>
+/* maximum key range = 22, duplicates = 0 */
 
 #ifdef __GNUC__
 __inline
@@ -53,32 +49,32 @@ keyword_hash (register const char *str, register size_t len)
 {
   static const unsigned char asso_values[] =
     {
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 30, 38, 38, 38, 31, 38, 38,
-      38, 38, 26, 21, 38,  1, 38,  3, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      10,  5,  0, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 15,  5,
-       0, 15,  0, 38, 38, 25, 38, 38,  0, 38,
-      38,  5,  0, 38, 10, 10,  0,  0, 38,  5,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38, 38, 38, 38, 38,
-      38, 38, 38, 38, 38, 38
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 15, 23, 23, 23,  2, 23, 23,
+      23, 23, 13,  3, 23, 14, 23,  9, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      10,  5,  0, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23,  5,  0,
+      23, 23, 23, 23, 23, 23, 23, 23,  0, 23,
+      23,  0, 23, 23,  5, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+      23, 23, 23, 23, 23, 23
     };
   register unsigned int hval = len;
 
@@ -94,58 +90,67 @@ keyword_hash (register const char *str, register size_t len)
   return hval;
 }
 
-static const char * const wordlist[] =
-  {
-    "",
-    ">",
-    "-",
-    "dup",
-    "/",
-    "",
-    "=",
-    ">=",
-    "pop",
-    "loop",
-    "clear",
-    "<",
-    "<>",
-    "",
-    "cons",
-    "stack",
-    "concat",
-    "<=",
-    "",
-    "swap",
-    "",
-    "swaack",
-    "+",
-    "",
-    "bool",
-    "",
-    "i",
-    "*",
-    "dip",
-    "rest",
-    "first",
-    "branch",
-    "%",
-    "", "", "", "",
-    "!="
-  };
-
-const char *
+const struct dict_entry *
 in_word_set (register const char *str, register size_t len)
 {
+  enum
+    {
+      TOTAL_KEYWORDS = 15,
+      MIN_WORD_LENGTH = 1,
+      MAX_WORD_LENGTH = 6,
+      MIN_HASH_VALUE = 1,
+      MAX_HASH_VALUE = 22
+    };
+
+  static const struct dict_entry wordlist[] =
+    {
+      {""},
+#line 19 "KEYWORDS.txt"
+      {">", gt},
+      {""},
+#line 10 "KEYWORDS.txt"
+      {"%", mod},
+#line 12 "KEYWORDS.txt"
+      {"+", add},
+#line 23 "KEYWORDS.txt"
+      {"clear", clear},
+#line 18 "KEYWORDS.txt"
+      {"=", eq},
+#line 20 "KEYWORDS.txt"
+      {">=", ge},
+      {""},
+#line 21 "KEYWORDS.txt"
+      {"bool", truthy},
+#line 14 "KEYWORDS.txt"
+      {"/", div_joyfunc},
+#line 15 "KEYWORDS.txt"
+      {"<", lt},
+#line 17 "KEYWORDS.txt"
+      {"<>", neq},
+      {""},
+#line 11 "KEYWORDS.txt"
+      {"*", mul},
+#line 13 "KEYWORDS.txt"
+      {"-", sub},
+#line 22 "KEYWORDS.txt"
+      {"branch", branch},
+#line 16 "KEYWORDS.txt"
+      {"<=", le},
+      {""}, {""}, {""}, {""},
+#line 9 "KEYWORDS.txt"
+      {"!=", neq}
+    };
+
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {
       register unsigned int key = keyword_hash (str, len);
 
       if (key <= MAX_HASH_VALUE)
         {
-          register const char *s = wordlist[key];
+          register const char *s = wordlist[key].name;
 
           if (*str == *s && !strncmp (str + 1, s + 1, len - 1) && s[len] == '\0')
-            return s;
+            return &wordlist[key];
         }
     }
   return 0;

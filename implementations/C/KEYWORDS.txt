@@ -1,29 +1,23 @@
 %compare-strncmp
+%readonly-tables
+%struct-type
+%{
+#include "joy.h"
+%}
+struct dict_entry;
 %%
-!=
-"%"
-*
-+
--
-/
-<
-<=
-<>
-=
->
->=
-bool
-branch
-clear
-concat
-cons
-dip
-dup
-first
-i
-loop
-pop
-rest
-stack
-swaack
-swap
+!=, neq
+"%", mod
+*, mul
++, add
+-, sub
+/, div_joyfunc
+<, lt
+<=, le
+<>, neq
+=, eq
+>, gt
+>=, ge
+bool, truthy
+branch, branch
+clear, clear
