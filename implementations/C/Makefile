@@ -14,3 +14,6 @@ keywords.c: KEYWORDS.txt keywords.h
 
 # keywords.c doesn't strictly depend on keywords.h, but I want make to
 # remake if keywords.h is touched.
+
+clean:
+	rm -vf *.o
