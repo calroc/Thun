@@ -1,24 +1,28 @@
 OBJS=joy.o keywords.o
+
+# On FreeBSD gc and gmp are installed in /usr/local/:
 STATIC_GCLIB=/usr/local/lib/libgc.a /usr/local/lib/libgmp.a
 
-CFLAGS = -ansi -Wall -Wextra -Werror -pedantic -Wstrict-overflow -fno-strict-aliasing -pedantic-errors -I/usr/local/include
+# Hold my hand, in fact, hold both of them, and pat my head too please.
+CFLAGS = -ansi -Wall -Wextra -Werror -pedantic -Wstrict-overflow -fno-strict-aliasing -pedantic-errors
 
-#COPTS=-I/usr/local/include
-# $(STATIC_GCLIB)
+CFLAGS += -I/usr/local/include
 
-GPERF_OPTS = --readonly-tables --enum --includes
+# TODO: move these to KEYWORDS.txt.
+GPERF_OPTS = --readonly-tables --enum --includes --hash-function-name=keyword_hash
 #--global-table
 
 
 joy: ${OBJS} $(STATIC_GCLIB)
 
-# Gperf doesn't add anything to '{""}' unused entries in the worlist.
+# Gperf doesn't add anything to '{""}' unused entries in the wordlist.
 # This causes "warning: missing field 'func' initializer [-Wmissing-field-initializers]"
-# But we can turn off that warning for this here:
+# which is promoted to an error and holds up the show.
+# But we can turn off that warning for the keyword code like so:
 keywords.o: CFLAGS+=-Wno-missing-field-initializers
 
 keywords.c: KEYWORDS.txt
-	gperf --output-file=$@ --hash-function-name=keyword_hash $(GPERF_OPTS) KEYWORDS.txt
+	gperf --output-file=$@ $(GPERF_OPTS) $<
 
 clean:
-	rm -vf *.o
+	rm -vf *.o joy
