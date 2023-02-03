@@ -302,7 +302,51 @@ text_to_expression(char *text)
 }
 
 
-void add(JoyList *stack, JoyList *expression) {stack = expression;}
+JoyList
+pop_any(JoyList *stack) {
+	JoyList result;
+	if (!(*stack)) {
+		printf("Not enough values on stack.\n");
+		exit(1);
+	}
+	result = *stack;
+	*stack = (*stack)->tail;
+	return result;
+}
+
+mpz_t *
+pop_int(JoyList *stack) {
+	JoyList node;
+	node = pop_any(stack);
+	switch (node->head.kind) {
+	case joyInt:
+		return &(node->head.value.i);
+	default:
+		printf("Not an integer.\n");
+		exit(1);
+	}
+}
+
+void
+add(JoyList *stack, __attribute__((unused)) JoyList *expression)
+{
+	mpz_t *a, *b;
+	JoyList node;
+
+	a = pop_int(stack);
+	b = pop_int(stack);
+
+	node = newJoyList;
+	node->head.kind = joyInt;
+	mpz_init(node->head.value.i);
+	GC_register_finalizer(node->head.value.i, my_callback, NULL, NULL, NULL);
+	mpz_add(node->head.value.i, *a, *b);
+
+	node->tail = *stack;
+	*stack = node;
+}
+
+
 void branch(JoyList *stack, JoyList *expression) {stack = expression;}
 void clear(JoyList *stack, JoyList *expression) {stack = expression;}
 void div_joyfunc(JoyList *stack, JoyList *expression) {stack = expression;}
