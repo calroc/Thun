@@ -25,7 +25,7 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #include <gc.h>
 #include <gmp.h>
 
-# include "keywords.h"
+#include "keywords.h"
 
 
 const char *BLANKS = " \t";
@@ -41,25 +41,29 @@ enum JoyTypeType {
 	joyList
 };
 
+typedef struct list_node* JoyList;
 
-struct JoyType {
+typedef struct {
 	enum JoyTypeType kind;
 	union {
 		int boolean;
 		mpz_t i;
-		struct list_node* el;
+		JoyList el;
 		char *symbol;
 	} value;
-} name ;
+} JoyType;
 
 
 struct list_node {
-	struct JoyType head;  /* Should this be a pointer? */
-	struct list_node* tail;
-} JoyList;
+	JoyType head;  /* Should this be a pointer? */
+	JoyList tail;
+};
+
+#define EMPTY_LIST (JoyList)NULL
 
 
-#define EMPTY_LIST (struct list_node*)NULL
+
+
 
 
 void*
@@ -82,10 +86,10 @@ my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
 }
 
 
-struct list_node*
-push_integer_from_str(char *str, struct list_node* tail)
+JoyList
+push_integer_from_str(char *str, JoyList tail)
 {
-	struct list_node* el;
+	JoyList el;
 	el = GC_malloc(sizeof(struct list_node));
 	el->head.kind = joyInt;
 	mpz_init_set_str(el->head.value.i, str, 10);
@@ -95,14 +99,13 @@ push_integer_from_str(char *str, struct list_node* tail)
 }
 
 
-
 /* Pre-declare so we can use it in print_node(). */
 void
-print_list(struct list_node* el);
+print_list(JoyList el);
 
 
 void
-print_node(struct JoyType j)
+print_node(JoyType j)
 {
 	switch (j.kind) {
 	case joyInt:
@@ -129,7 +132,7 @@ print_node(struct JoyType j)
 
 
 void
-print_list(struct list_node* el)
+print_list(JoyList el)
 {
 	while (NULL != el) {
 		print_node(el->head);
@@ -149,7 +152,7 @@ trim_leading_blanks(char *str)
 }
 
 
-struct list_node*
+JoyList
 make_non_list_node(char *text, size_t size)
 {
 	struct list_node *node;
@@ -193,7 +196,7 @@ make_non_list_node(char *text, size_t size)
 
 
 /* Create a new list_node with a joyList head. */
-struct list_node*
+JoyList
 make_list_node(struct list_node *el)
 {
 	struct list_node *node;
@@ -214,7 +217,7 @@ make_list_node(struct list_node *el)
 */
 
 
-struct list_node*
+JoyList
 parse_list(char **text)
 {
 /*
@@ -271,7 +274,7 @@ Extract terms from the text until a closing bracket is found.
 Get the next node from the text, updating text
 to point to the rest of the, uh, text.
 */
-struct list_node*
+JoyList
 parse_node(char **text)
 {
 	char *rest;
@@ -321,7 +324,7 @@ parse_node(char **text)
 }
 
 
-struct list_node*
+JoyList
 text_to_expression(char *text)
 {
 	struct list_node *result, *head, *tail;
