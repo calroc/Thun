@@ -64,8 +64,7 @@ my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
 JoyList
 push_integer_from_str(char *str, JoyList tail)
 {
-	JoyList el;
-	el = GC_malloc(sizeof(struct list_node));
+	JoyList el = newJoyList;
 	el->head.kind = joyInt;
 	mpz_init_set_str(el->head.value.i, str, 10);
 	GC_register_finalizer(el->head.value.i, my_callback, NULL, NULL, NULL);
@@ -130,11 +129,9 @@ trim_leading_blanks(char *str)
 JoyList
 make_non_list_node(char *text, size_t size)
 {
-	struct list_node *node;
 	char *sym;
 	const struct dict_entry *interned;
-
-	node = GC_malloc(sizeof(struct list_node));
+	JoyList node = newJoyList;
 
 	interned = in_word_set(text, size);
 	if (interned) {
@@ -169,13 +166,11 @@ make_non_list_node(char *text, size_t size)
 	return node;
 }
 
-
 /* Create a new list_node with a joyList head. */
 JoyList
-make_list_node(struct list_node *el)
+make_list_node(JoyList el)
 {
-	struct list_node *node;
-	node = GC_malloc(sizeof(struct list_node));
+	JoyList node = newJoyList;
 	node->head.kind = joyList;
 	node->head.value.el = el;
 	return node;

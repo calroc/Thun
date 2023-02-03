@@ -49,6 +49,8 @@ struct list_node {
 
 #define EMPTY_LIST (JoyList)NULL
 
+#define newJoyList GC_malloc(sizeof(struct list_node))
+
 
 typedef void (*JoyFunc)(struct list_node**, struct list_node**);
 
