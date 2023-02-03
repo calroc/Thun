@@ -195,7 +195,7 @@ Extract terms from the text until a closing bracket is found.
 */
 	char *rest;
 	ptrdiff_t diff;
-	struct list_node *result = NULL;
+	JoyList result = EMPTY_LIST;
 
 	/* NULL string input? */
 	if (NULL == *text) {
@@ -249,7 +249,7 @@ parse_node(char **text)
 {
 	char *rest;
 	ptrdiff_t diff;
-	struct list_node *thing;
+	JoyList thing;
 
 	/* NULL string input? */
 	if (NULL == *text) return EMPTY_LIST;
@@ -297,7 +297,7 @@ parse_node(char **text)
 JoyList
 text_to_expression(char *text)
 {
-	struct list_node *result, *head, *tail;
+	JoyList result, head, tail;
 
 	result = parse_node(&text);
 	head = result;
