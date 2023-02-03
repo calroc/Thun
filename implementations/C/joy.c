@@ -33,14 +33,6 @@ const char *FALSE = "false";
 const char *TRUE = "true";
 
 
-
-/*
-void
-dup(JoyList *stack, JoyList *expression) {
-}
-*/
-
-
 void*
 reallocate_function (void *ptr, __attribute__((unused)) size_t old_size, size_t new_size) {
 	return GC_REALLOC(ptr, new_size);
@@ -55,7 +47,6 @@ deallocate_function (void *ptr, __attribute__((unused)) size_t size) {
 
 void
 my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
-	/*MY_ENVIRONMENT *env = (MY_ENVIRONMENT)void_environment;*/
 	mpz_t *obj = (mpz_t*)void_obj;
 	mpz_clear(*obj);
 }
@@ -315,7 +306,10 @@ void add(JoyList *stack, JoyList *expression) {stack = expression;}
 void branch(JoyList *stack, JoyList *expression) {stack = expression;}
 void clear(JoyList *stack, JoyList *expression) {stack = expression;}
 void div_joyfunc(JoyList *stack, JoyList *expression) {stack = expression;}
-void eq(JoyList *stack, JoyList *expression) {stack = expression;}
+void eq(JoyList *stack, JoyList *expression) {
+	printf("Hey there from eq!\n");
+	stack = expression;
+}
 void ge(JoyList *stack, JoyList *expression) {stack = expression;}
 void gt(JoyList *stack, JoyList *expression) {stack = expression;}
 void le(JoyList *stack, JoyList *expression) {stack = expression;}
@@ -327,11 +321,52 @@ void sub(JoyList *stack, JoyList *expression) {stack = expression;}
 void truthy(JoyList *stack, JoyList *expression) {stack = expression;}
 
 
+void
+push_thing(JoyType *term, JoyList *stack) {
+	JoyList node = newJoyList;
+	node->head = *term;  /* Copies data, right? */
+	node->tail = *stack;
+	*stack = node;
+}
+
+
+void
+joy(JoyList *stack, JoyList *expression)
+{
+	char *sym;
+	JoyType *term;
+	const struct dict_entry *interned;
+
+	while (*expression) {
+		term = &((*expression)->head);
+		*expression = (*expression)->tail;
+		switch (term->kind) {
+		case joyInt:
+		case joyTrue:
+		case joyFalse:
+		case joyList:
+			push_thing(term, stack);
+			break;
+
+		case joySymbol:
+			sym = term->value.symbol;
+			interned = in_word_set(sym, strlen(sym));
+			if (!interned) {
+				printf("Unknown: %s\n", sym);
+				exit(1);
+			}
+			interned->func(stack, expression);
+		}
+	}
+}
+
 int
 main(void)
 {
 	char *line;
 	char *status;
+	JoyList stack = EMPTY_LIST;
+	JoyList expression = EMPTY_LIST;
 
 	mp_set_memory_functions(
 		&GC_malloc,
@@ -342,6 +377,7 @@ main(void)
 	line = (char *)GC_malloc(1025);
 
 	while (1) {
+		printf("\njoy? ");
 		status = gets_s(line, 1025);
 		if (NULL == status) {
 			/*
@@ -361,7 +397,9 @@ main(void)
 			printf("bye\n");
 			break;
 		}
-		print_list(text_to_expression(line));
+		expression = text_to_expression(line);
+		joy(&stack, &expression);
+		print_list(stack);
 		printf("\n");
 	}
 	return 0;
