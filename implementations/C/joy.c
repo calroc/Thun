@@ -327,24 +327,33 @@ pop_int(JoyList *stack) {
 	}
 }
 
-void
-add(JoyList *stack, __attribute__((unused)) JoyList *expression)
-{
-	mpz_t *a, *b;
-	JoyList node;
 
-	a = pop_int(stack);
-	b = pop_int(stack);
-
-	node = newJoyList;
+JoyList
+newIntNode(void) {
+	JoyList node = newJoyList;
 	node->head.kind = joyInt;
 	mpz_init(node->head.value.i);
 	GC_register_finalizer(node->head.value.i, my_callback, NULL, NULL, NULL);
-	mpz_add(node->head.value.i, *a, *b);
-
-	node->tail = *stack;
-	*stack = node;
+	return node;
 }
+
+#define BINARY_MATH_OP(name) \
+void \
+name(JoyList *stack, __attribute__((unused)) JoyList *expression) \
+{ \
+	mpz_t *a, *b; \
+	JoyList node; \
+	a = pop_int(stack); \
+	b = pop_int(stack); \
+	node = newIntNode(); \
+	mpz_ ## name(node->head.value.i, *a, *b); \
+	node->tail = *stack; \
+	*stack = node; \
+}
+
+BINARY_MATH_OP(add)
+BINARY_MATH_OP(sub)
+BINARY_MATH_OP(mul)
 
 
 void branch(JoyList *stack, JoyList *expression) {stack = expression;}
@@ -359,9 +368,7 @@ void gt(JoyList *stack, JoyList *expression) {stack = expression;}
 void le(JoyList *stack, JoyList *expression) {stack = expression;}
 void lt(JoyList *stack, JoyList *expression) {stack = expression;}
 void mod(JoyList *stack, JoyList *expression) {stack = expression;}
-void mul(JoyList *stack, JoyList *expression) {stack = expression;}
 void neq(JoyList *stack, JoyList *expression) {stack = expression;}
-void sub(JoyList *stack, JoyList *expression) {stack = expression;}
 void truthy(JoyList *stack, JoyList *expression) {stack = expression;}
 
 
