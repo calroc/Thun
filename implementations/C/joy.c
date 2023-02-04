@@ -303,7 +303,7 @@ text_to_expression(char *text)
 
 
 JoyList
-pop_any(JoyList *stack) {
+pop_any(JoyListPtr stack) {
 	JoyList result;
 	if (!(*stack)) {
 		printf("Not enough values on stack.\n");
@@ -315,7 +315,7 @@ pop_any(JoyList *stack) {
 }
 
 mpz_t *
-pop_int(JoyList *stack) {
+pop_int(JoyListPtr stack) {
 	JoyList node;
 	node = pop_any(stack);
 	switch (node->head.kind) {
@@ -339,7 +339,7 @@ newIntNode(void) {
 
 #define BINARY_MATH_OP(name) \
 void \
-name(JoyList *stack, __attribute__((unused)) JoyList *expression) \
+name(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression) \
 { \
 	mpz_t *a, *b; \
 	JoyList node; \
@@ -356,24 +356,24 @@ BINARY_MATH_OP(sub)
 BINARY_MATH_OP(mul)
 
 
-void branch(JoyList *stack, JoyList *expression) {stack = expression;}
-void clear(JoyList *stack, JoyList *expression) {stack = expression;}
-void div_joyfunc(JoyList *stack, JoyList *expression) {stack = expression;}
-void eq(JoyList *stack, JoyList *expression) {
+void branch(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void clear(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void div_joyfunc(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void eq(JoyListPtr stack, JoyListPtr expression) {
 	printf("Hey there from eq!\n");
 	stack = expression;
 }
-void ge(JoyList *stack, JoyList *expression) {stack = expression;}
-void gt(JoyList *stack, JoyList *expression) {stack = expression;}
-void le(JoyList *stack, JoyList *expression) {stack = expression;}
-void lt(JoyList *stack, JoyList *expression) {stack = expression;}
-void mod(JoyList *stack, JoyList *expression) {stack = expression;}
-void neq(JoyList *stack, JoyList *expression) {stack = expression;}
-void truthy(JoyList *stack, JoyList *expression) {stack = expression;}
+void ge(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void gt(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void le(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void lt(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void mod(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void neq(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void truthy(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 
 
 void
-push_thing(JoyType *term, JoyList *stack) {
+push_thing(JoyType *term, JoyListPtr stack) {
 	JoyList node = newJoyList;
 	node->head = *term;  /* Copies data, right? */
 	node->tail = *stack;
@@ -382,7 +382,7 @@ push_thing(JoyType *term, JoyList *stack) {
 
 
 void
-joy(JoyList *stack, JoyList *expression)
+joy(JoyListPtr stack, JoyListPtr expression)
 {
 	char *sym;
 	JoyType *term;
