@@ -308,7 +308,8 @@ text_to_expression(char *text)
 
 
 JoyList
-pop_any(JoyListPtr stack) {
+pop_any(JoyListPtr stack)
+{
 	JoyList result;
 	if (!(*stack)) {
 		printf("Not enough values on stack.\n");
@@ -320,7 +321,8 @@ pop_any(JoyListPtr stack) {
 }
 
 mpz_t *
-pop_int(JoyListPtr stack) {
+pop_int(JoyListPtr stack)
+{
 	JoyList node;
 	node = pop_any(stack);
 	switch (node->head->kind) {
@@ -467,16 +469,7 @@ cmp_joyfunc(JoyListPtr stack, JoyListPtr expression)
 void branch(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void clear(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void div_joyfunc(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
-void eq(JoyListPtr stack, JoyListPtr expression) {
-	printf("Hey there from eq!\n");
-	stack = expression;
-}
-void ge(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
-void gt(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
-void le(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
-void lt(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void mod(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
-void neq(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void truthy(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 
 
