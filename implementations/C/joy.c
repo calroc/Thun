@@ -127,10 +127,11 @@ make_non_list_node(char *text, size_t size)
 	char *sym;
 	const struct dict_entry *interned;
 	JoyList node = newJoyList;
-	node->head = newJoyType;
 
 	interned = in_word_set(text, size);
 	if (interned) {
+		/* TODO: pre-compute and reuse whole JoyType in wordlist? */
+		node->head = newJoyType;
 		node->head->kind = joySymbol;
 		node->head->value.symbol = interned->name;
 		return node;
@@ -139,22 +140,22 @@ make_non_list_node(char *text, size_t size)
 	sym = GC_malloc(size + 1);  /* one more for the zero, right? */
 	strncat(sym, text, size);
 
-	if (!strncmp(sym, FALSE, 6)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
-		/* If head was a pointer we could reuse Boolean singletons... */
-		node->head->kind = joyFalse;
-
-	} else if (!strncmp(sym, TRUE, 5)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
-		node->head->kind = joyTrue;
-
-	} else if (mpz_init_set_str(node->head->value.i, sym, 10)) {
-		/* Non-zero (-1) return value means the string is not an int. */
-		mpz_clear(node->head->value.i);
-		node->head->kind = joySymbol;
-		node->head->value.symbol = sym;
-
+	if (!strcmp(sym, FALSE)) {
+		node->head = JoyFalse;
+	} else if (!strcmp(sym, TRUE)) {
+		node->head = JoyTrue;
 	} else {
-		node->head->kind = joyInt;
-		GC_register_finalizer(node->head->value.i, my_callback, NULL, NULL, NULL);
+		node->head = newJoyType;
+		if (mpz_init_set_str(node->head->value.i, sym, 10)) {
+			/* Non-zero (-1) return value means the string is not an int. */
+			mpz_clear(node->head->value.i);
+			node->head->kind = joySymbol;
+			node->head->value.symbol = sym;
+
+		} else {
+			node->head->kind = joyInt;
+			GC_register_finalizer(node->head->value.i, my_callback, NULL, NULL, NULL);
+		}
 	}
 
 	return node;
@@ -424,10 +425,16 @@ main(void)
 	JoyList stack = EMPTY_LIST;
 	JoyList expression = EMPTY_LIST;
 
+	/* Initialize Boolean singleton values. */
 	JoyTrue = newJoyType;
 	JoyTrue->kind = joyTrue;
 	JoyFalse= newJoyType;
 	JoyFalse->kind = joyFalse;
+	/*
+	I would like to define this at compile-time, but I
+	couldn't figure out the right syntax for initializer
+	for JoyType.value.  (T_T)
+	*/
 
 	mp_set_memory_functions(
 		&GC_malloc,
