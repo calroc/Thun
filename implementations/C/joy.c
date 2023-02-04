@@ -362,6 +362,39 @@ BINARY_MATH_OP(sub)
 BINARY_MATH_OP(mul)
 
 
+/*
+With mpz_cmp we can implement the rest of the comparison functions as definitions:
+
+     G       E       L
+ eq [false] [true] [false] cmp
+ gt [true] [false] [false] cmp
+ lt [false] [false] [true] cmp
+neq [true] [false] [true] cmp
+ le [false] [true] [true] cmp
+ ge [true] [true] [false] cmp
+*/
+void
+cmp_joyfunc(JoyListPtr stack, JoyListPtr expression)
+{
+	int hmm;
+	mpz_t *a, *b;
+	JoyList G, E, L;
+	L = pop_list_node(stack);
+	E = pop_list_node(stack);
+	G = pop_list_node(stack);
+	b = pop_int(stack);
+	a = pop_int(stack);
+	hmm = mpz_cmp(*a, *b);
+	if (hmm > 0) {
+		push_quote(G, expression);
+	} else if (hmm < 0) {
+		push_quote(L, expression);
+	} else {
+		push_quote(E, expression);
+	}
+}
+
+
 void branch(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void clear(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void div_joyfunc(JoyListPtr stack, JoyListPtr expression) {stack = expression;}

@@ -9,3 +9,30 @@
 	/*el = text_to_expression(text);*/
 	/*print_list(el);*/
 	/*printf("\n");*/
+
+  concat
+cons
+dip
+dup
+first
+i
+loop
+pop
+rest
+stack
+swaack
+swap
+
+
+pop_any(), pop_int(), and add
+
+With cmp (provided by the GMP lib) we can implement the rest of
+the comparison functions as definitions:
+
+     G       E       L
+ eq [false] [true] [false] cmp
+ gt [true] [false] [false] cmp
+ lt [false] [false] [true] cmp
+neq [true] [false] [true] cmp
+ le [false] [true] [true] cmp
+ ge [true] [true] [false] cmp

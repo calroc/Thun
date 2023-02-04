@@ -59,15 +59,10 @@ typedef void (*JoyFunc)(JoyListPtr, JoyListPtr);
 void add(JoyListPtr stack, JoyListPtr expression);
 void branch(JoyListPtr stack, JoyListPtr expression);
 void clear(JoyListPtr stack, JoyListPtr expression);
+void cmp_joyfunc(JoyListPtr stack, JoyListPtr expression);
 void div_joyfunc(JoyListPtr stack, JoyListPtr expression);
-void eq(JoyListPtr stack, JoyListPtr expression);
-void ge(JoyListPtr stack, JoyListPtr expression);
-void gt(JoyListPtr stack, JoyListPtr expression);
-void le(JoyListPtr stack, JoyListPtr expression);
-void lt(JoyListPtr stack, JoyListPtr expression);
 void mod(JoyListPtr stack, JoyListPtr expression);
 void mul(JoyListPtr stack, JoyListPtr expression);
-void neq(JoyListPtr stack, JoyListPtr expression);
 void sub(JoyListPtr stack, JoyListPtr expression);
 void truthy(JoyListPtr stack, JoyListPtr expression);
 

@@ -6,18 +6,12 @@
 %}
 struct dict_entry;
 %%
-!=, neq
 "%", mod
 *, mul
 +, add
 -, sub
 /, div_joyfunc
-<, lt
-<=, le
-<>, neq
-=, eq
->, gt
->=, ge
 bool, truthy
 branch, branch
 clear, clear
+cmp, cmp_joyfunc
