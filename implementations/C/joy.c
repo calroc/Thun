@@ -334,6 +334,75 @@ pop_int(JoyListPtr stack) {
 
 
 JoyList
+pop_list(JoyListPtr stack)
+{
+	JoyList node;
+	node = pop_any(stack);
+	switch (node->head->kind) {
+	case joyList:
+		return node;
+	default:
+		printf("Not a list.\n");
+		exit(1);
+	}
+}
+
+
+JoyList
+pop_list_node(JoyListPtr stack)
+{
+	return pop_list(stack)->head->value.el;
+}
+
+
+void
+push_quote(JoyList el, JoyListPtr expression)
+{
+	JoyList node;
+
+	if (!el) return;
+	node = newJoyList;
+	node->head = newJoyType;
+	node->head->kind = joyList;
+	node->head->value.el = el;
+	node->tail = *expression;
+	*expression = node;
+}
+
+
+/*
+Return the next term from the expression and the new expression.
+
+(item, quote), expression = expression
+return item, push_quote(quote, expression)
+
+*/
+JoyTypePtr
+next_term(JoyListPtr expression)
+{
+	JoyList quote;
+	JoyTypePtr term;
+	if (!(*expression)) {
+		printf("Do not call next_term on an empty expression.\n");
+		exit(1);
+	}
+	quote = pop_list_node(expression);
+	if (!quote) {
+		printf("How did an empty list get onto the expression!?\n");
+		exit(1);
+	}
+	term = quote->head;
+	quote = quote->tail;
+	if (quote) {
+		push_quote(quote, expression);
+	}
+		print_list(*expression);
+		printf(" <--\n");
+	return term;
+}
+
+
+JoyList
 newIntNode(void) {
 	JoyList node = newJoyList;
 	node->head = newJoyType;
@@ -426,10 +495,13 @@ joy(JoyListPtr stack, JoyListPtr expression)
 	char *sym;
 	JoyTypePtr term;
 	const struct dict_entry *interned;
+	JoyList e = EMPTY_LIST;
+	JoyListPtr ePtr = &e;
+	push_quote(*expression, ePtr);
+	expression = ePtr;
 
 	while (*expression) {
-		term = (*expression)->head;
-		*expression = (*expression)->tail;
+		term = next_term(expression);
 		switch (term->kind) {
 		case joyInt:
 		case joyTrue:

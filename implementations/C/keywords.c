@@ -1,6 +1,6 @@
 /* ANSI-C code produced by gperf version 3.1 */
 /* Command-line: gperf --output-file=keywords.c --readonly-tables --enum --includes --hash-function-name=keyword_hash KEYWORDS.txt  */
-/* Computed positions: -k'1-2' */
+/* Computed positions: -k'1' */
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \
       && ('%' == 37) && ('&' == 38) && ('\'' == 39) && ('(' == 40) \
@@ -35,7 +35,7 @@
 #line 7 "KEYWORDS.txt"
 struct dict_entry;
 #include <string.h>
-/* maximum key range = 22, duplicates = 0 */
+/* maximum key range = 16, duplicates = 0 */
 
 #ifdef __GNUC__
 __inline
@@ -49,45 +49,34 @@ keyword_hash (register const char *str, register size_t len)
 {
   static const unsigned char asso_values[] =
     {
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 15, 23, 23, 23,  2, 23, 23,
-      23, 23, 13,  3, 23, 14, 23,  9, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      10,  5,  0, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23,  5,  0,
-      23, 23, 23, 23, 23, 23, 23, 23,  0, 23,
-      23,  0, 23, 23,  5, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-      23, 23, 23, 23, 23, 23
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 14, 17, 17,
+      17, 17,  9, 15, 17, 10, 17,  0, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17,  0,  0,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17, 17
     };
-  register unsigned int hval = len;
-
-  switch (hval)
-    {
-      default:
-        hval += asso_values[(unsigned char)str[1]];
-      /*FALLTHROUGH*/
-      case 1:
-        hval += asso_values[(unsigned char)str[0]];
-        break;
-    }
-  return hval;
+  return len + asso_values[(unsigned char)str[0]];
 }
 
 const struct dict_entry *
@@ -95,50 +84,37 @@ in_word_set (register const char *str, register size_t len)
 {
   enum
     {
-      TOTAL_KEYWORDS = 15,
+      TOTAL_KEYWORDS = 9,
       MIN_WORD_LENGTH = 1,
       MAX_WORD_LENGTH = 6,
       MIN_HASH_VALUE = 1,
-      MAX_HASH_VALUE = 22
+      MAX_HASH_VALUE = 16
     };
 
   static const struct dict_entry wordlist[] =
     {
       {""},
-#line 19 "KEYWORDS.txt"
-      {">", gt},
-      {""},
-#line 10 "KEYWORDS.txt"
-      {"%", mod},
-#line 12 "KEYWORDS.txt"
-      {"+", add},
-#line 23 "KEYWORDS.txt"
-      {"clear", clear},
-#line 18 "KEYWORDS.txt"
-      {"=", eq},
-#line 20 "KEYWORDS.txt"
-      {">=", ge},
-      {""},
-#line 21 "KEYWORDS.txt"
-      {"bool", truthy},
-#line 14 "KEYWORDS.txt"
-      {"/", div_joyfunc},
-#line 15 "KEYWORDS.txt"
-      {"<", lt},
-#line 17 "KEYWORDS.txt"
-      {"<>", neq},
-      {""},
-#line 11 "KEYWORDS.txt"
-      {"*", mul},
 #line 13 "KEYWORDS.txt"
-      {"-", sub},
-#line 22 "KEYWORDS.txt"
-      {"branch", branch},
+      {"/", div_joyfunc},
+      {""},
+#line 17 "KEYWORDS.txt"
+      {"cmp", cmp_joyfunc},
+#line 14 "KEYWORDS.txt"
+      {"bool", truthy},
 #line 16 "KEYWORDS.txt"
-      {"<=", le},
-      {""}, {""}, {""}, {""},
+      {"clear", clear},
+#line 15 "KEYWORDS.txt"
+      {"branch", branch},
+      {""}, {""}, {""},
+#line 10 "KEYWORDS.txt"
+      {"*", mul},
+#line 12 "KEYWORDS.txt"
+      {"-", sub},
+      {""}, {""}, {""},
 #line 9 "KEYWORDS.txt"
-      {"!=", neq}
+      {"%", mod},
+#line 11 "KEYWORDS.txt"
+      {"+", add}
     };
 
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
