@@ -32,6 +32,9 @@ const char *BLANKS = " \t";
 const char *FALSE = "false";
 const char *TRUE = "true";
 
+JoyTypePtr JoyTrue;
+JoyTypePtr JoyFalse;
+
 
 void*
 reallocate_function (void *ptr, __attribute__((unused)) size_t old_size, size_t new_size) {
@@ -139,11 +142,9 @@ make_non_list_node(char *text, size_t size)
 	if (!strncmp(sym, FALSE, 6)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
 		/* If head was a pointer we could reuse Boolean singletons... */
 		node->head->kind = joyFalse;
-		node->head->value.boolean = 0;
 
 	} else if (!strncmp(sym, TRUE, 5)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
 		node->head->kind = joyTrue;
-		node->head->value.boolean = 1;
 
 	} else if (mpz_init_set_str(node->head->value.i, sym, 10)) {
 		/* Non-zero (-1) return value means the string is not an int. */
@@ -389,7 +390,7 @@ void
 joy(JoyListPtr stack, JoyListPtr expression)
 {
 	char *sym;
-	JoyType *term;
+	JoyTypePtr term;
 	const struct dict_entry *interned;
 
 	while (*expression) {
@@ -422,6 +423,11 @@ main(void)
 	char *status;
 	JoyList stack = EMPTY_LIST;
 	JoyList expression = EMPTY_LIST;
+
+	JoyTrue = newJoyType;
+	JoyTrue->kind = joyTrue;
+	JoyFalse= newJoyType;
+	JoyFalse->kind = joyFalse;
 
 	mp_set_memory_functions(
 		&GC_malloc,

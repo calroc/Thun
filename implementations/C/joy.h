@@ -34,7 +34,6 @@ typedef JoyList* JoyListPtr;
 typedef struct {
 	enum JoyTypeType kind;
 	union {
-		int boolean;  /* TODO: Remoce this field, we don't use it. */
 		mpz_t i;
 		JoyList el;
 		char *symbol;
