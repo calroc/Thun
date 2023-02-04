@@ -55,20 +55,20 @@ struct list_node {
 typedef void (*JoyFunc)(struct list_node**, struct list_node**);
 
 
-void add(JoyList *stack, JoyList *expression);
-void branch(JoyList *stack, JoyList *expression);
-void clear(JoyList *stack, JoyList *expression);
-void div_joyfunc(JoyList *stack, JoyList *expression);
-void eq(JoyList *stack, JoyList *expression);
-void ge(JoyList *stack, JoyList *expression);
-void gt(JoyList *stack, JoyList *expression);
-void le(JoyList *stack, JoyList *expression);
-void lt(JoyList *stack, JoyList *expression);
-void mod(JoyList *stack, JoyList *expression);
-void mul(JoyList *stack, JoyList *expression);
-void neq(JoyList *stack, JoyList *expression);
-void sub(JoyList *stack, JoyList *expression);
-void truthy(JoyList *stack, JoyList *expression);
+void add(JoyListPtr stack, JoyListPtr expression);
+void branch(JoyListPtr stack, JoyListPtr expression);
+void clear(JoyListPtr stack, JoyListPtr expression);
+void div_joyfunc(JoyListPtr stack, JoyListPtr expression);
+void eq(JoyListPtr stack, JoyListPtr expression);
+void ge(JoyListPtr stack, JoyListPtr expression);
+void gt(JoyListPtr stack, JoyListPtr expression);
+void le(JoyListPtr stack, JoyListPtr expression);
+void lt(JoyListPtr stack, JoyListPtr expression);
+void mod(JoyListPtr stack, JoyListPtr expression);
+void mul(JoyListPtr stack, JoyListPtr expression);
+void neq(JoyListPtr stack, JoyListPtr expression);
+void sub(JoyListPtr stack, JoyListPtr expression);
+void truthy(JoyListPtr stack, JoyListPtr expression);
 
 
 struct dict_entry  {
