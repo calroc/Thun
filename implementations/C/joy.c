@@ -56,9 +56,10 @@ JoyList
 push_integer_from_str(char *str, JoyList tail)
 {
 	JoyList el = newJoyList;
-	el->head.kind = joyInt;
-	mpz_init_set_str(el->head.value.i, str, 10);
-	GC_register_finalizer(el->head.value.i, my_callback, NULL, NULL, NULL);
+	el->head = newJoyType;
+	el->head->kind = joyInt;
+	mpz_init_set_str(el->head->value.i, str, 10);
+	GC_register_finalizer(el->head->value.i, my_callback, NULL, NULL, NULL);
 	el->tail = tail;
 	return el;
 }
@@ -100,7 +101,7 @@ void
 print_list(JoyList el)
 {
 	while (NULL != el) {
-		print_node(el->head);
+		print_node(*(el->head));
 		el = el->tail;
 		if (NULL != el) {
 			printf(" ");
@@ -123,11 +124,12 @@ make_non_list_node(char *text, size_t size)
 	char *sym;
 	const struct dict_entry *interned;
 	JoyList node = newJoyList;
+	node->head = newJoyType;
 
 	interned = in_word_set(text, size);
 	if (interned) {
-		node->head.kind = joySymbol;
-		node->head.value.symbol = interned->name;
+		node->head->kind = joySymbol;
+		node->head->value.symbol = interned->name;
 		return node;
 	}
 
@@ -136,22 +138,22 @@ make_non_list_node(char *text, size_t size)
 
 	if (!strncmp(sym, FALSE, 6)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
 		/* If head was a pointer we could reuse Boolean singletons... */
-		node->head.kind = joyFalse;
-		node->head.value.boolean = 0;
+		node->head->kind = joyFalse;
+		node->head->value.boolean = 0;
 
 	} else if (!strncmp(sym, TRUE, 5)) {  /* I know it's wrong to hardcode the length here.  Sorry. */
-		node->head.kind = joyTrue;
-		node->head.value.boolean = 1;
+		node->head->kind = joyTrue;
+		node->head->value.boolean = 1;
 
-	} else if (mpz_init_set_str(node->head.value.i, sym, 10)) {
+	} else if (mpz_init_set_str(node->head->value.i, sym, 10)) {
 		/* Non-zero (-1) return value means the string is not an int. */
-		mpz_clear(node->head.value.i);
-		node->head.kind = joySymbol;
-		node->head.value.symbol = sym;
+		mpz_clear(node->head->value.i);
+		node->head->kind = joySymbol;
+		node->head->value.symbol = sym;
 
 	} else {
-		node->head.kind = joyInt;
-		GC_register_finalizer(node->head.value.i, my_callback, NULL, NULL, NULL);
+		node->head->kind = joyInt;
+		GC_register_finalizer(node->head->value.i, my_callback, NULL, NULL, NULL);
 	}
 
 	return node;
@@ -162,8 +164,9 @@ JoyList
 make_list_node(JoyList el)
 {
 	JoyList node = newJoyList;
-	node->head.kind = joyList;
-	node->head.value.el = el;
+	node->head = newJoyType;
+	node->head->kind = joyList;
+	node->head->value.el = el;
 	return node;
 }
 
@@ -318,9 +321,9 @@ mpz_t *
 pop_int(JoyListPtr stack) {
 	JoyList node;
 	node = pop_any(stack);
-	switch (node->head.kind) {
+	switch (node->head->kind) {
 	case joyInt:
-		return &(node->head.value.i);
+		return &(node->head->value.i);
 	default:
 		printf("Not an integer.\n");
 		exit(1);
@@ -331,9 +334,10 @@ pop_int(JoyListPtr stack) {
 JoyList
 newIntNode(void) {
 	JoyList node = newJoyList;
-	node->head.kind = joyInt;
-	mpz_init(node->head.value.i);
-	GC_register_finalizer(node->head.value.i, my_callback, NULL, NULL, NULL);
+	node->head = newJoyType;
+	node->head->kind = joyInt;
+	mpz_init(node->head->value.i);
+	GC_register_finalizer(node->head->value.i, my_callback, NULL, NULL, NULL);
 	return node;
 }
 
@@ -346,7 +350,7 @@ name(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression) \
 	a = pop_int(stack); \
 	b = pop_int(stack); \
 	node = newIntNode(); \
-	mpz_ ## name(node->head.value.i, *a, *b); \
+	mpz_ ## name(node->head->value.i, *a, *b); \
 	node->tail = *stack; \
 	*stack = node; \
 }
@@ -373,9 +377,9 @@ void truthy(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 
 
 void
-push_thing(JoyType *term, JoyListPtr stack) {
+push_thing(JoyTypePtr term, JoyListPtr stack) {
 	JoyList node = newJoyList;
-	node->head = *term;  /* Copies data, right? */
+	node->head = term;
 	node->tail = *stack;
 	*stack = node;
 }
@@ -389,7 +393,7 @@ joy(JoyListPtr stack, JoyListPtr expression)
 	const struct dict_entry *interned;
 
 	while (*expression) {
-		term = &((*expression)->head);
+		term = (*expression)->head;
 		*expression = (*expression)->tail;
 		switch (term->kind) {
 		case joyInt:

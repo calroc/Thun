@@ -41,18 +41,20 @@ typedef struct {
 	} value;
 } JoyType;
 
+typedef JoyType* JoyTypePtr;
 
 struct list_node {
-	JoyType head;  /* Should this be a pointer? */
+	JoyTypePtr head;
 	JoyList tail;
 };
 
 #define EMPTY_LIST (JoyList)NULL
 
 #define newJoyList GC_malloc(sizeof(struct list_node))
+#define newJoyType GC_malloc(sizeof(JoyType))
 
 
-typedef void (*JoyFunc)(struct list_node**, struct list_node**);
+typedef void (*JoyFunc)(JoyListPtr, JoyListPtr);
 
 
 void add(JoyListPtr stack, JoyListPtr expression);
