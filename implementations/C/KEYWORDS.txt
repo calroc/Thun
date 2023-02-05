@@ -19,6 +19,7 @@ cons, cons
 dip, dip
 dup, dup
 i, i_joyfunc
+pop, pop
 abs, def_abs
 anamorphism, def_anamorphism
 app1, def_app1

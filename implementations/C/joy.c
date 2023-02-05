@@ -590,6 +590,13 @@ cons(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 
 
 void
+pop(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	pop_any(stack);
+}
+
+
+void
 dip(JoyListPtr stack, JoyListPtr expression)
 {
 	JoyList quote = pop_list_node(stack);

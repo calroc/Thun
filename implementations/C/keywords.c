@@ -58,10 +58,10 @@ keyword_hash (register const char *str, register size_t len)
       52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
       52, 52, 52, 52, 52, 52, 52, 52, 20, 52,
       52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
-      52, 52, 52, 52, 52, 52, 52, 52,  5,  0,
-      25,  5, 52, 52, 20,  0, 52, 52, 10,  5,
-       0,  0, 10, 52,  0, 15,  0, 15,  5, 52,
-      52,  5, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52,  0,  0,
+      15,  5, 52, 52, 10,  5, 52, 52, 15, 10,
+       0,  0, 10, 52,  0,  0,  0, 15,  0, 52,
+      52,  0, 52, 52, 52, 52, 52, 52, 52, 52,
       52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
       52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
       52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
@@ -94,7 +94,7 @@ in_word_set (register const char *str, register size_t len)
 {
   enum
     {
-      TOTAL_KEYWORDS = 32,
+      TOTAL_KEYWORDS = 33,
       MIN_WORD_LENGTH = 1,
       MAX_WORD_LENGTH = 12,
       MIN_HASH_VALUE = 1,
@@ -104,25 +104,37 @@ in_word_set (register const char *str, register size_t len)
   static const struct dict_entry wordlist[] =
     {
       {""},
+#line 31 "KEYWORDS.txt"
+      {"b", def_b},
+#line 29 "KEYWORDS.txt"
+      {"at", def_at},
+#line 23 "KEYWORDS.txt"
+      {"abs", def_abs},
+#line 18 "KEYWORDS.txt"
+      {"cons", cons},
+#line 34 "KEYWORDS.txt"
+      {"ccons", def_ccons},
 #line 21 "KEYWORDS.txt"
       {"i", i_joyfunc},
-#line 28 "KEYWORDS.txt"
-      {"at", def_at},
-      {""},
-#line 36 "KEYWORDS.txt"
+#line 33 "KEYWORDS.txt"
+      {"ccccons", def_ccccons},
+#line 38 "KEYWORDS.txt"
+      {"codireco", def_codireco},
+#line 37 "KEYWORDS.txt"
       {"codi", def_codi},
       {""},
+#line 32 "KEYWORDS.txt"
+      {"binary", def_binary},
 #line 30 "KEYWORDS.txt"
-      {"b", def_b},
-      {""},
-#line 37 "KEYWORDS.txt"
-      {"codireco", def_codireco},
-#line 38 "KEYWORDS.txt"
+      {"average", def_average},
+#line 22 "KEYWORDS.txt"
+      {"pop", pop},
+#line 39 "KEYWORDS.txt"
       {"dinfrirst", def_dinfrirst},
       {""},
-#line 31 "KEYWORDS.txt"
-      {"binary", def_binary},
-#line 40 "KEYWORDS.txt"
+#line 15 "KEYWORDS.txt"
+      {"branch", branch},
+#line 41 "KEYWORDS.txt"
       {"disenstacken", def_disenstacken},
 #line 19 "KEYWORDS.txt"
       {"dip", dip},
@@ -130,55 +142,44 @@ in_word_set (register const char *str, register size_t len)
       {"bool", truthy},
 #line 16 "KEYWORDS.txt"
       {"clear", clear},
-#line 23 "KEYWORDS.txt"
+#line 24 "KEYWORDS.txt"
       {"anamorphism", def_anamorphism},
-#line 29 "KEYWORDS.txt"
-      {"average", def_average},
+      {""},
 #line 17 "KEYWORDS.txt"
       {"cmp", cmp_joyfunc},
-#line 18 "KEYWORDS.txt"
-      {"cons", cons},
-#line 33 "KEYWORDS.txt"
-      {"ccons", def_ccons},
-#line 34 "KEYWORDS.txt"
-      {"cleave", def_cleave},
-#line 32 "KEYWORDS.txt"
-      {"ccccons", def_ccccons},
-#line 22 "KEYWORDS.txt"
-      {"abs", def_abs},
-#line 35 "KEYWORDS.txt"
-      {"clop", def_clop},
+#line 40 "KEYWORDS.txt"
+      {"dipd", def_dipd},
       {""},
-#line 15 "KEYWORDS.txt"
-      {"branch", branch},
+#line 35 "KEYWORDS.txt"
+      {"cleave", def_cleave},
       {""},
 #line 20 "KEYWORDS.txt"
       {"dup", dup},
-#line 39 "KEYWORDS.txt"
-      {"dipd", def_dipd},
+#line 36 "KEYWORDS.txt"
+      {"clop", def_clop},
       {""},
 #line 13 "KEYWORDS.txt"
       {"/", tdiv_q},
       {""}, {""},
-#line 27 "KEYWORDS.txt"
+#line 28 "KEYWORDS.txt"
       {"appN", def_appN},
       {""},
 #line 12 "KEYWORDS.txt"
       {"-", sub},
       {""}, {""},
-#line 26 "KEYWORDS.txt"
+#line 27 "KEYWORDS.txt"
       {"app3", def_app3},
       {""},
 #line 11 "KEYWORDS.txt"
       {"+", add},
       {""}, {""},
-#line 25 "KEYWORDS.txt"
+#line 26 "KEYWORDS.txt"
       {"app2", def_app2},
       {""},
 #line 10 "KEYWORDS.txt"
       {"*", mul},
       {""}, {""},
-#line 24 "KEYWORDS.txt"
+#line 25 "KEYWORDS.txt"
       {"app1", def_app1},
       {""},
 #line 9 "KEYWORDS.txt"
