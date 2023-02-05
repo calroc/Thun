@@ -545,15 +545,12 @@ neq [true] [false] [true] cmp
 void
 cmp_joyfunc(JoyListPtr stack, JoyListPtr expression)
 {
-	int hmm;
-	mpz_t *a, *b;
-	JoyList G, E, L;
-	L = pop_list_node(stack);
-	E = pop_list_node(stack);
-	G = pop_list_node(stack);
-	b = pop_int(stack);
-	a = pop_int(stack);
-	hmm = mpz_cmp(*a, *b);
+	JoyList L = pop_list_node(stack);
+	JoyList E = pop_list_node(stack);
+	JoyList G = pop_list_node(stack);
+	mpz_t *b = pop_int(stack);
+	mpz_t *a = pop_int(stack);
+	int hmm = mpz_cmp(*a, *b);
 	push_quote(((hmm > 0) ? G : (hmm < 0) ? L : E), expression);
 }
 
@@ -568,9 +565,8 @@ i_joyfunc(JoyListPtr stack, JoyListPtr expression)
 void
 branch(JoyListPtr stack, JoyListPtr expression)
 {
-	JoyList T, F;
-	T = pop_list_node(stack);
-	F = pop_list_node(stack);
+	JoyList T = pop_list_node(stack);
+	JoyList F = pop_list_node(stack);
 	push_quote((pop_bool(stack) ? T : F), expression);
 }
 
