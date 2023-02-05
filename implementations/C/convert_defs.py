@@ -36,7 +36,9 @@ codi cons dip
 codireco codi reco
 dinfrirst dip infrst
 dipd [dip] codi
-disenstacken ? [uncons ?] loop pop'''.splitlines()
+disenstacken ? [uncons ?] loop pop
+swons swap cons
+infra swons swaack [i] dip swaack'''.splitlines()
 
 
 for line in defs:
@@ -72,5 +74,5 @@ print()
 print()
 for line in defs:
     name, body = line.split(None, 1)
-    print(f'void def_{name}(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) {{ push_quote(def_{name}_body, expression); }}')
+    print(f'void def_{name}(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) {{ push_quote_onto_expression(def_{name}_body, expression); }}')
 

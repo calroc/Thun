@@ -147,6 +147,15 @@ make_list_node(JoyList el)
 }
 
 
+void
+push_quote(JoyList el, JoyListPtr stack)
+{
+	JoyList node = make_list_node(el);
+	node->tail = *stack;
+	*stack = node;
+}
+
+
 JoyList
 pop_any(JoyListPtr stack)
 {
@@ -215,7 +224,7 @@ pop_list_node(JoyListPtr stack)
 
 
 void
-push_quote(JoyList el, JoyListPtr expression)
+push_quote_onto_expression(JoyList el, JoyListPtr expression)
 {
 	JoyList node;
 
@@ -480,12 +489,6 @@ Instead, let's keep a stack of sub-expressions, reading from them
 one-by-one, and prepending new sub-expressions to the stack rather than
 concatenating them.
 
-
-Return the next term from the expression and the new expression.
-
-(item, quote), expression = expression
-return item, push_quote(quote, expression)
-
 */
 
 
@@ -506,7 +509,7 @@ next_term(JoyListPtr expression)
 	term = quote->head;
 	quote = quote->tail;
 	if (quote) {
-		push_quote(quote, expression);
+		push_quote_onto_expression(quote, expression);
 	}
 	return term;
 }
@@ -563,14 +566,14 @@ cmp_joyfunc(JoyListPtr stack, JoyListPtr expression)
 	mpz_t *b = pop_int(stack);
 	mpz_t *a = pop_int(stack);
 	int hmm = mpz_cmp(*a, *b);
-	push_quote(((hmm > 0) ? G : (hmm < 0) ? L : E), expression);
+	push_quote_onto_expression(((hmm > 0) ? G : (hmm < 0) ? L : E), expression);
 }
 
 
 void
 i_joyfunc(JoyListPtr stack, JoyListPtr expression)
 {
-	push_quote(pop_list_node(stack), expression);
+	push_quote_onto_expression(pop_list_node(stack), expression);
 }
 
 
@@ -579,7 +582,7 @@ branch(JoyListPtr stack, JoyListPtr expression)
 {
 	JoyList T = pop_list_node(stack);
 	JoyList F = pop_list_node(stack);
-	push_quote((pop_bool(stack) ? T : F), expression);
+	push_quote_onto_expression((pop_bool(stack) ? T : F), expression);
 }
 
 
@@ -652,8 +655,8 @@ dip(JoyListPtr stack, JoyListPtr expression)
 	JoyList x = EMPTY_LIST;
 	JoyListPtr xPtr = &x;
 	push_thing(node->head, xPtr);
-	push_quote(*xPtr, expression);
-	push_quote(quote, expression);
+	push_quote_onto_expression(*xPtr, expression);
+	push_quote_onto_expression(quote, expression);
 }
 
 
@@ -725,26 +728,26 @@ JoyList def_dipd_body;
 JoyList def_disenstacken_body;
 
 
-void def_abs(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_abs_body, expression); }
-void def_anamorphism(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_anamorphism_body, expression); }
-void def_app1(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_app1_body, expression); }
-void def_app2(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_app2_body, expression); }
-void def_app3(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_app3_body, expression); }
-void def_appN(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_appN_body, expression); }
-void def_at(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_at_body, expression); }
-void def_average(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_average_body, expression); }
-void def_b(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_b_body, expression); }
-void def_binary(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_binary_body, expression); }
-void def_ccccons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_ccccons_body, expression); }
-void def_ccons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_ccons_body, expression); }
-void def_cleave(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_cleave_body, expression); }
-void def_clop(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_clop_body, expression); }
-void def_cmp(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_cmp_body, expression); }
-void def_codi(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_codi_body, expression); }
-void def_codireco(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_codireco_body, expression); }
-void def_dinfrirst(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_dinfrirst_body, expression); }
-void def_dipd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_dipd_body, expression); }
-void def_disenstacken(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_disenstacken_body, expression); }
+void def_abs(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_abs_body, expression); }
+void def_anamorphism(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_anamorphism_body, expression); }
+void def_app1(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_app1_body, expression); }
+void def_app2(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_app2_body, expression); }
+void def_app3(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_app3_body, expression); }
+void def_appN(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_appN_body, expression); }
+void def_at(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_at_body, expression); }
+void def_average(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_average_body, expression); }
+void def_b(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_b_body, expression); }
+void def_binary(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_binary_body, expression); }
+void def_ccccons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_ccccons_body, expression); }
+void def_ccons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_ccons_body, expression); }
+void def_cleave(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_cleave_body, expression); }
+void def_clop(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_clop_body, expression); }
+void def_cmp(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_cmp_body, expression); }
+void def_codi(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_codi_body, expression); }
+void def_codireco(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_codireco_body, expression); }
+void def_dinfrirst(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_dinfrirst_body, expression); }
+void def_dipd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_dipd_body, expression); }
+void def_disenstacken(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_disenstacken_body, expression); }
 
 
 void
@@ -791,7 +794,7 @@ joy(JoyListPtr stack, JoyListPtr expression)
 	const struct dict_entry *interned;
 	JoyList e = EMPTY_LIST;
 	JoyListPtr ePtr = &e;
-	push_quote(*expression, ePtr);
+	push_quote_onto_expression(*expression, ePtr);
 	expression = ePtr;
 
 	while (*expression) {
