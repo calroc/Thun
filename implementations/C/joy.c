@@ -684,7 +684,6 @@ JoyList def_b_body;
 JoyList def_binary_body;
 JoyList def_ccccons_body;
 JoyList def_ccons_body;
-JoyList def_clear_body;
 JoyList def_cleave_body;
 JoyList def_clop_body;
 JoyList def_cmp_body;
@@ -707,7 +706,6 @@ void def_b(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { pu
 void def_binary(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_binary_body, expression); }
 void def_ccccons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_ccccons_body, expression); }
 void def_ccons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_ccons_body, expression); }
-void def_clear(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_clear_body, expression); }
 void def_cleave(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_cleave_body, expression); }
 void def_clop(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_clop_body, expression); }
 void def_cmp(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote(def_cmp_body, expression); }
@@ -733,7 +731,6 @@ init_defs(void)
 	def_binary_body = text_to_expression("unary popd");
 	def_ccccons_body = text_to_expression("ccons ccons");
 	def_ccons_body = text_to_expression("cons cons");
-	def_clear_body = text_to_expression("[] swaack pop");
 	def_cleave_body = text_to_expression("fork popdd");
 	def_clop_body = text_to_expression("cleave popdd");
 	def_cmp_body = text_to_expression("[[>] swap] dipd [ifte] ccons [=] swons ifte");
