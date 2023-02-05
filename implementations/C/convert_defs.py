@@ -36,7 +36,7 @@ print('init_defs(void)')
 print('{')
 for line in defs:
     name, body = line.split(None, 1)
-    print(f'\tdef_{name}_body = text_to_expression({repr(body)});')
+    print(f'\tdef_{name}_body = text_to_expression("{body}");')
 print('}')
 
 
@@ -45,7 +45,14 @@ print()
 print()
 for line in defs:
     name, body = line.split(None, 1)
-    print(f'void def_{name}(JoyListPtr stack, JoyListPtr expression)')
+    print(f'JoyList def_{name}_body;')
+
+
+print()
+print()
+for line in defs:
+    name, body = line.split(None, 1)
+    print(f'void def_{name}(JoyListPtr stack, JoyListPtr expression);')
 
 print()
 print()
