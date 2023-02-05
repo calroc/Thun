@@ -65,6 +65,7 @@ void dip(JoyListPtr stack, JoyListPtr expression);
 void dup(JoyListPtr stack, JoyListPtr expression);
 void i_joyfunc(JoyListPtr stack, JoyListPtr expression);
 void pop(JoyListPtr stack, JoyListPtr expression);
+void swaack(JoyListPtr stack, JoyListPtr expression);
 void mul(JoyListPtr stack, JoyListPtr expression);
 void sub(JoyListPtr stack, JoyListPtr expression);
 void tdiv_q(JoyListPtr stack, JoyListPtr expression);

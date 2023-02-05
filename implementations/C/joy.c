@@ -597,6 +597,16 @@ pop(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 
 
 void
+swaack(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	JoyList quote = pop_list_node(stack);
+	JoyListPtr qPtr = &quote;
+	push_quote(*stack, qPtr);
+	*stack = *qPtr;
+}
+
+
+void
 dip(JoyListPtr stack, JoyListPtr expression)
 {
 	JoyList quote = pop_list_node(stack);
