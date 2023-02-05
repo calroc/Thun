@@ -1,4 +1,12 @@
 /*
+
+████████╗██╗  ██╗██╗   ██╗███╗   ██╗
+╚══██╔══╝██║  ██║██║   ██║████╗  ██║
+   ██║   ███████║██║   ██║██╔██╗ ██║
+   ██║   ██╔══██║██║   ██║██║╚██╗██║
+   ██║   ██║  ██║╚██████╔╝██║ ╚████║
+   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
 Copyright © 2023 Simon Forman
 
 This file is part of Thun
@@ -55,6 +63,16 @@ my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
 }
 
 
+/*
+██╗   ██╗████████╗██╗██╗     ███████╗
+██║   ██║╚══██╔══╝██║██║     ██╔════╝
+██║   ██║   ██║   ██║██║     ███████╗
+██║   ██║   ██║   ██║██║     ╚════██║
+╚██████╔╝   ██║   ██║███████╗███████║
+ ╚═════╝    ╚═╝   ╚═╝╚══════╝╚══════╝
+*/
+
+
 JoyList
 push_integer_from_str(char *str, JoyList tail)
 {
@@ -65,51 +83,6 @@ push_integer_from_str(char *str, JoyList tail)
 	GC_register_finalizer(el->head->value.i, my_callback, NULL, NULL, NULL);
 	el->tail = tail;
 	return el;
-}
-
-
-/* Pre-declare so we can use it in print_node(). */
-void
-print_list(JoyList el);
-
-
-void
-print_node(JoyType j)
-{
-	switch (j.kind) {
-	case joyInt:
-		gmp_printf("%Zd", j.value.i);
-		break;
-	case joySymbol:
-		printf("%s", j.value.symbol);
-		break;
-	case joyTrue:
-		printf("true");
-		break;
-	case joyFalse:
-		printf("false");
-		break;
-	case joyList:
-		printf("[");
-		print_list(j.value.el);
-		printf("]");
-		break;
-	default:
-		printf("wtf");
-	}
-}
-
-
-void
-print_list(JoyList el)
-{
-	while (NULL != el) {
-		print_node(*(el->head));
-		el = el->tail;
-		if (NULL != el) {
-			printf(" ");
-		}
-	}
 }
 
 
@@ -161,6 +134,7 @@ make_non_list_node(char *text, size_t size)
 	return node;
 }
 
+
 /* Create a new list_node with a joyList head. */
 JoyList
 make_list_node(JoyList el)
@@ -170,6 +144,160 @@ make_list_node(JoyList el)
 	node->head->kind = joyList;
 	node->head->value.el = el;
 	return node;
+}
+
+
+JoyList
+pop_any(JoyListPtr stack)
+{
+	JoyList result;
+	if (!(*stack)) {
+		printf("Not enough values on stack.\n");
+		exit(1);
+	}
+	result = *stack;
+	*stack = (*stack)->tail;
+	return result;
+}
+
+
+mpz_t *
+pop_int(JoyListPtr stack)
+{
+	JoyList node;
+	node = pop_any(stack);
+	switch (node->head->kind) {
+	case joyInt:
+		return &(node->head->value.i);
+	default:
+		printf("Not an integer.\n");
+		exit(1);
+	}
+}
+
+
+JoyList
+pop_list(JoyListPtr stack)
+{
+	JoyList node;
+	node = pop_any(stack);
+	switch (node->head->kind) {
+	case joyList:
+		return node;
+	default:
+		printf("Not a list.\n");
+		exit(1);
+	}
+}
+
+
+JoyList
+pop_list_node(JoyListPtr stack)
+{
+	return pop_list(stack)->head->value.el;
+}
+
+
+void
+push_quote(JoyList el, JoyListPtr expression)
+{
+	JoyList node;
+
+	if (!el) return;
+	node = newJoyList;
+	node->head = newJoyType;
+	node->head->kind = joyList;
+	node->head->value.el = el;
+	node->tail = *expression;
+	*expression = node;
+}
+
+
+JoyList
+newIntNode(void) {
+	JoyList node = newJoyList;
+	node->head = newJoyType;
+	node->head->kind = joyInt;
+	mpz_init(node->head->value.i);
+	GC_register_finalizer(node->head->value.i, my_callback, NULL, NULL, NULL);
+	return node;
+}
+
+
+void
+push_thing(JoyTypePtr term, JoyListPtr stack) {
+	JoyList node = newJoyList;
+	node->head = term;
+	node->tail = *stack;
+	*stack = node;
+}
+
+
+/*
+██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
+██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
+██████╔╝██████╔╝██║██╔██╗ ██║   ██║   █████╗  ██████╔╝
+██╔═══╝ ██╔══██╗██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗
+██║     ██║  ██║██║██║ ╚████║   ██║   ███████╗██║  ██║
+╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+*/
+
+
+/* Pre-declare so we can use it in print_node(). */
+void
+print_list(JoyList el);
+
+
+void
+print_node(JoyType j)
+{
+	switch (j.kind) {
+	case joyInt:
+		gmp_printf("%Zd", j.value.i);
+		break;
+	case joySymbol:
+		printf("%s", j.value.symbol);
+		break;
+	case joyTrue:
+		printf("true");
+		break;
+	case joyFalse:
+		printf("false");
+		break;
+	case joyList:
+		printf("[");
+		print_list(j.value.el);
+		printf("]");
+		break;
+	default:
+		printf("wtf");
+	}
+}
+
+
+void
+print_list(JoyList el)
+{
+	while (NULL != el) {
+		print_node(*(el->head));
+		el = el->tail;
+		if (NULL != el) {
+			printf(" ");
+		}
+	}
+}
+
+
+void
+print_stack(JoyList el)
+{
+	if (el) {
+		if (el->tail) {
+			print_stack(el->tail);
+			printf(" ");
+		}
+		print_node(*(el->head));
+	}
 }
 
 
@@ -235,6 +363,7 @@ Extract terms from the text until a closing bracket is found.
 	result->tail = parse_list(text);
 	return result;
 }
+
 
 /*
 Get the next node from the text, updating text
@@ -307,78 +436,31 @@ text_to_expression(char *text)
 }
 
 
-JoyList
-pop_any(JoyListPtr stack)
-{
-	JoyList result;
-	if (!(*stack)) {
-		printf("Not enough values on stack.\n");
-		exit(1);
-	}
-	result = *stack;
-	*stack = (*stack)->tail;
-	return result;
-}
-
-mpz_t *
-pop_int(JoyListPtr stack)
-{
-	JoyList node;
-	node = pop_any(stack);
-	switch (node->head->kind) {
-	case joyInt:
-		return &(node->head->value.i);
-	default:
-		printf("Not an integer.\n");
-		exit(1);
-	}
-}
-
-
-JoyList
-pop_list(JoyListPtr stack)
-{
-	JoyList node;
-	node = pop_any(stack);
-	switch (node->head->kind) {
-	case joyList:
-		return node;
-	default:
-		printf("Not a list.\n");
-		exit(1);
-	}
-}
-
-
-JoyList
-pop_list_node(JoyListPtr stack)
-{
-	return pop_list(stack)->head->value.el;
-}
-
-
-void
-push_quote(JoyList el, JoyListPtr expression)
-{
-	JoyList node;
-
-	if (!el) return;
-	node = newJoyList;
-	node->head = newJoyType;
-	node->head->kind = joyList;
-	node->head->value.el = el;
-	node->tail = *expression;
-	*expression = node;
-}
-
-
 /*
+███████╗██╗  ██╗██████╗ ██████╗ ███████╗███████╗███████╗██╗ ██████╗ ███╗   ██╗
+██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝██║██╔═══██╗████╗  ██║
+█████╗   ╚███╔╝ ██████╔╝██████╔╝█████╗  ███████╗███████╗██║██║   ██║██╔██╗ ██║
+██╔══╝   ██╔██╗ ██╔═══╝ ██╔══██╗██╔══╝  ╚════██║╚════██║██║██║   ██║██║╚██╗██║
+███████╗██╔╝ ██╗██║     ██║  ██║███████╗███████║███████║██║╚██████╔╝██║ ╚████║
+╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+As elegant as it is to model the expression as a stack, it's not very
+efficient, as concatenating definitions and other quoted programs to
+the expression is a common and expensive operation.
+
+Instead, let's keep a stack of sub-expressions, reading from them
+one-by-one, and prepending new sub-expressions to the stack rather than
+concatenating them.
+
+
 Return the next term from the expression and the new expression.
 
 (item, quote), expression = expression
 return item, push_quote(quote, expression)
 
 */
+
+
 JoyTypePtr
 next_term(JoyListPtr expression)
 {
@@ -398,21 +480,19 @@ next_term(JoyListPtr expression)
 	if (quote) {
 		push_quote(quote, expression);
 	}
-		print_list(*expression);
-		printf(" <--\n");
 	return term;
 }
 
 
-JoyList
-newIntNode(void) {
-	JoyList node = newJoyList;
-	node->head = newJoyType;
-	node->head->kind = joyInt;
-	mpz_init(node->head->value.i);
-	GC_register_finalizer(node->head->value.i, my_callback, NULL, NULL, NULL);
-	return node;
-}
+/*
+ ██████╗ ██████╗ ██████╗ ███████╗    ██╗    ██╗ ██████╗ ██████╗ ██████╗ ███████╗
+██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██║    ██║██╔═══██╗██╔══██╗██╔══██╗██╔════╝
+██║     ██║   ██║██████╔╝█████╗      ██║ █╗ ██║██║   ██║██████╔╝██║  ██║███████╗
+██║     ██║   ██║██╔══██╗██╔══╝      ██║███╗██║██║   ██║██╔══██╗██║  ██║╚════██║
+╚██████╗╚██████╔╝██║  ██║███████╗    ╚███╔███╔╝╚██████╔╝██║  ██║██████╔╝███████║
+ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝     ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝
+*/
+
 
 #define BINARY_MATH_OP(name) \
 void \
@@ -473,13 +553,14 @@ void mod(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void truthy(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 
 
-void
-push_thing(JoyTypePtr term, JoyListPtr stack) {
-	JoyList node = newJoyList;
-	node->head = term;
-	node->tail = *stack;
-	*stack = node;
-}
+/*
+██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
+██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
+██║██╔██╗ ██║   ██║   █████╗  ██████╔╝██████╔╝██████╔╝█████╗     ██║   █████╗  ██████╔╝
+██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗██╔═══╝ ██╔══██╗██╔══╝     ██║   ██╔══╝  ██╔══██╗
+██║██║ ╚████║   ██║   ███████╗██║  ██║██║     ██║  ██║███████╗   ██║   ███████╗██║  ██║
+╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+*/
 
 
 void
@@ -565,7 +646,7 @@ main(void)
 		}
 		expression = text_to_expression(line);
 		joy(&stack, &expression);
-		print_list(stack);
+		print_stack(stack);
 		printf("\n");
 	}
 	return 0;
