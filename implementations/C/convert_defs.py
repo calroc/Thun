@@ -29,7 +29,6 @@ b [i] dip i
 binary unary popd
 ccccons ccons ccons
 ccons cons cons
-clear [] swaack pop
 cleave fork popdd
 clop cleave popdd
 cmp [[>] swap] dipd [ifte] ccons [=] swons ifte
