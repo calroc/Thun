@@ -3,15 +3,14 @@ Auto-generated file by convert_defs.py
 Do not edit.
 */
 
+#include "joy.h"
+#include "definitions.h"
 
-    #include "joy.h"
-    #include "definitions.h"
 
-
-    /*
-    Declare a bunch of list pointers to eventually hold the body expressions
-    of the definitions.
-    */
+/*
+Declare a bunch of list pointers to eventually hold the body expressions
+of the definitions.
+*/
     
 JoyList def_abs_body;
 JoyList def_anamorphism_body;
@@ -36,13 +35,13 @@ JoyList def_swons_body;
 JoyList def_infra_body;
 
 
-    /*
-    Next, we want an initializer function to fill out the body pointers.
-    */
+/*
+Next, we want an initializer function to fill out the body pointers.
+*/
 
-    void
-    init_defs(void)
-    {
+void
+init_defs(void)
+{
     
 	def_abs_body = text_to_expression("dup 0 < [] [neg] branch");
 	def_anamorphism_body = text_to_expression("[pop []] swap [dip swons] genrec");
@@ -68,9 +67,9 @@ JoyList def_infra_body;
 }
 
 
-    /*
-    Last, a set of functions to go in the wordlist, one for each definition.
-    */
+/*
+Last, a set of functions to go in the wordlist, one for each definition.
+*/
     
 void def_abs(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_abs_body, expression); }
 void def_anamorphism(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_anamorphism_body, expression); }

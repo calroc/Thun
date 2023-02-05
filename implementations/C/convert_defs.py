@@ -39,13 +39,6 @@ disenstacken ? [uncons ?] loop pop
 swons swap cons
 infra swons swaack [i] dip swaack'''.splitlines()
 
-##
-##for line in defs:
-##    name, body = line.split(None, 1)
-##    print(f'{name}, def_{name}')
-##
-##print()
-##print()
 
 print(f'''\
 /*
@@ -60,7 +53,6 @@ if sys.argv[-1] == '--header':
         name, body = line.split(None, 1)
         print(f'void def_{name}(JoyListPtr stack, JoyListPtr expression);')
 
-
 elif sys.argv[-1] == '--keywords':
     sys.stdout.write(open('KEYWORDS.in').read())
     for line in defs:
@@ -68,16 +60,15 @@ elif sys.argv[-1] == '--keywords':
         print(f'{name}, def_{name}')
 
 else:
+    print('''\
+#include "joy.h"
+#include "definitions.h"
 
-    print('''
-    #include "joy.h"
-    #include "definitions.h"
 
-
-    /*
-    Declare a bunch of list pointers to eventually hold the body expressions
-    of the definitions.
-    */
+/*
+Declare a bunch of list pointers to eventually hold the body expressions
+of the definitions.
+*/
     ''')
     for line in defs:
         name, body = line.split(None, 1)
@@ -87,13 +78,13 @@ else:
 
     print('''
 
-    /*
-    Next, we want an initializer function to fill out the body pointers.
-    */
+/*
+Next, we want an initializer function to fill out the body pointers.
+*/
 
-    void
-    init_defs(void)
-    {
+void
+init_defs(void)
+{
     ''')
     for line in defs:
         name, body = line.split(None, 1)
@@ -104,9 +95,9 @@ else:
 
     print('''
 
-    /*
-    Last, a set of functions to go in the wordlist, one for each definition.
-    */
+/*
+Last, a set of functions to go in the wordlist, one for each definition.
+*/
     ''')
     for line in defs:
         name, body = line.split(None, 1)
