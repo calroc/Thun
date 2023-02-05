@@ -579,6 +579,16 @@ clear(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 
 
 void
+dup(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	JoyList s = *stack;
+	JoyList node = pop_any(stack);
+	*stack = s;
+	push_thing(node->head, stack);
+}
+
+
+void
 truthy(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
 	/*
@@ -611,16 +621,6 @@ truthy(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 		printf("Cannot Boolify.\n");
 		exit(1);
 	}
-}
-
-
-void
-dup(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
-{
-	JoyList s = *stack;
-	JoyList node = pop_any(stack);
-	*stack = s;
-	push_thing(node->head, stack);
 }
 
 
