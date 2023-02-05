@@ -35,7 +35,7 @@
 #line 7 "KEYWORDS.txt"
 struct dict_entry;
 #include <string.h>
-/* maximum key range = 44, duplicates = 0 */
+/* maximum key range = 51, duplicates = 0 */
 
 #ifdef __GNUC__
 __inline
@@ -49,32 +49,32 @@ keyword_hash (register const char *str, register size_t len)
 {
   static const unsigned char asso_values[] =
     {
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45,  9, 45, 45,
-      45, 45, 31, 26, 45, 21, 45, 30, 45, 30,
-      25, 20, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 15, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 20,  0,
-      15, 10, 45, 45,  5,  0, 45, 45, 10,  5,
-       0,  0, 10, 45,  0,  0,  0, 15,  0, 45,
-      45,  0, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
-      45, 45, 45, 45, 45, 45
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 50, 52, 52,
+      52, 52, 45, 40, 52, 35, 52, 30, 52, 35,
+      30, 25, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 20, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52,  5,  0,
+      25,  5, 52, 52, 20,  0, 52, 52, 10,  5,
+       0,  0, 10, 52,  0, 15,  0, 15,  5, 52,
+      52,  5, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+      52, 52, 52, 52, 52, 52
     };
   register unsigned int hval = len;
 
@@ -94,85 +94,95 @@ in_word_set (register const char *str, register size_t len)
 {
   enum
     {
-      TOTAL_KEYWORDS = 31,
+      TOTAL_KEYWORDS = 32,
       MIN_WORD_LENGTH = 1,
       MAX_WORD_LENGTH = 12,
       MIN_HASH_VALUE = 1,
-      MAX_HASH_VALUE = 44
+      MAX_HASH_VALUE = 51
     };
 
   static const struct dict_entry wordlist[] =
     {
       {""},
-#line 20 "KEYWORDS.txt"
+#line 21 "KEYWORDS.txt"
       {"i", i_joyfunc},
-#line 27 "KEYWORDS.txt"
+#line 28 "KEYWORDS.txt"
       {"at", def_at},
       {""},
-#line 35 "KEYWORDS.txt"
-      {"codi", def_codi},
-#line 32 "KEYWORDS.txt"
-      {"ccons", def_ccons},
-#line 30 "KEYWORDS.txt"
-      {"binary", def_binary},
-#line 31 "KEYWORDS.txt"
-      {"ccccons", def_ccccons},
 #line 36 "KEYWORDS.txt"
-      {"codireco", def_codireco},
+      {"codi", def_codi},
+      {""},
+#line 30 "KEYWORDS.txt"
+      {"b", def_b},
+      {""},
 #line 37 "KEYWORDS.txt"
+      {"codireco", def_codireco},
+#line 38 "KEYWORDS.txt"
       {"dinfrirst", def_dinfrirst},
-#line 9 "KEYWORDS.txt"
-      {"%", tdiv_r},
-#line 15 "KEYWORDS.txt"
-      {"branch", branch},
-#line 39 "KEYWORDS.txt"
+      {""},
+#line 31 "KEYWORDS.txt"
+      {"binary", def_binary},
+#line 40 "KEYWORDS.txt"
       {"disenstacken", def_disenstacken},
-#line 18 "KEYWORDS.txt"
+#line 19 "KEYWORDS.txt"
       {"dip", dip},
 #line 14 "KEYWORDS.txt"
       {"bool", truthy},
 #line 16 "KEYWORDS.txt"
       {"clear", clear},
-#line 22 "KEYWORDS.txt"
+#line 23 "KEYWORDS.txt"
       {"anamorphism", def_anamorphism},
-#line 28 "KEYWORDS.txt"
+#line 29 "KEYWORDS.txt"
       {"average", def_average},
 #line 17 "KEYWORDS.txt"
       {"cmp", cmp_joyfunc},
-#line 38 "KEYWORDS.txt"
-      {"dipd", def_dipd},
-      {""},
-#line 29 "KEYWORDS.txt"
-      {"b", def_b},
-#line 12 "KEYWORDS.txt"
-      {"-", sub},
-#line 21 "KEYWORDS.txt"
-      {"abs", def_abs},
+#line 18 "KEYWORDS.txt"
+      {"cons", cons},
+#line 33 "KEYWORDS.txt"
+      {"ccons", def_ccons},
 #line 34 "KEYWORDS.txt"
+      {"cleave", def_cleave},
+#line 32 "KEYWORDS.txt"
+      {"ccccons", def_ccccons},
+#line 22 "KEYWORDS.txt"
+      {"abs", def_abs},
+#line 35 "KEYWORDS.txt"
       {"clop", def_clop},
       {""},
-#line 33 "KEYWORDS.txt"
-      {"cleave", def_cleave},
-#line 11 "KEYWORDS.txt"
-      {"+", add},
-#line 19 "KEYWORDS.txt"
+#line 15 "KEYWORDS.txt"
+      {"branch", branch},
+      {""},
+#line 20 "KEYWORDS.txt"
       {"dup", dup},
-#line 26 "KEYWORDS.txt"
-      {"appN", def_appN},
+#line 39 "KEYWORDS.txt"
+      {"dipd", def_dipd},
       {""},
 #line 13 "KEYWORDS.txt"
       {"/", tdiv_q},
+      {""}, {""},
+#line 27 "KEYWORDS.txt"
+      {"appN", def_appN},
+      {""},
+#line 12 "KEYWORDS.txt"
+      {"-", sub},
+      {""}, {""},
+#line 26 "KEYWORDS.txt"
+      {"app3", def_app3},
+      {""},
+#line 11 "KEYWORDS.txt"
+      {"+", add},
+      {""}, {""},
+#line 25 "KEYWORDS.txt"
+      {"app2", def_app2},
+      {""},
 #line 10 "KEYWORDS.txt"
       {"*", mul},
-      {""},
-#line 25 "KEYWORDS.txt"
-      {"app3", def_app3},
-      {""}, {""}, {""}, {""},
+      {""}, {""},
 #line 24 "KEYWORDS.txt"
-      {"app2", def_app2},
-      {""}, {""}, {""}, {""},
-#line 23 "KEYWORDS.txt"
-      {"app1", def_app1}
+      {"app1", def_app1},
+      {""},
+#line 9 "KEYWORDS.txt"
+      {"%", tdiv_r}
     };
 
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)

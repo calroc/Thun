@@ -579,6 +579,17 @@ clear(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 
 
 void
+cons(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	JoyList quote = pop_list_node(stack);
+	JoyListPtr qPtr = &quote;
+	JoyList node = pop_any(stack);
+	push_thing(node->head, qPtr);
+	push_quote(*qPtr, stack);
+}
+
+
+void
 dip(JoyListPtr stack, JoyListPtr expression)
 {
 	JoyList quote = pop_list_node(stack);
