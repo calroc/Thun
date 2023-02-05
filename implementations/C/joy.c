@@ -546,6 +546,13 @@ cmp_joyfunc(JoyListPtr stack, JoyListPtr expression)
 }
 
 
+void
+i_joyfunc(JoyListPtr stack, JoyListPtr expression)
+{
+	push_quote(pop_list_node(stack), expression);
+}
+
+
 void branch(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void clear(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void div_joyfunc(JoyListPtr stack, JoyListPtr expression) {stack = expression;}

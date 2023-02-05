@@ -15,3 +15,4 @@ bool, truthy
 branch, branch
 clear, clear
 cmp, cmp_joyfunc
+i, i_joyfunc

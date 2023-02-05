@@ -52,14 +52,14 @@ keyword_hash (register const char *str, register size_t len)
       17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
       17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
       17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 14, 17, 17,
-      17, 17,  9, 15, 17, 10, 17,  0, 17, 17,
+      17, 17, 17, 17, 17, 17, 17,  8, 17, 17,
+      17, 17, 14,  9, 17, 15, 17, 10, 17, 17,
       17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
       17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
       17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
       17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
       17, 17, 17, 17, 17, 17, 17, 17,  0,  0,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+      17, 17, 17, 17, 17,  0, 17, 17, 17, 17,
       17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
       17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
       17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
@@ -84,7 +84,7 @@ in_word_set (register const char *str, register size_t len)
 {
   enum
     {
-      TOTAL_KEYWORDS = 9,
+      TOTAL_KEYWORDS = 10,
       MIN_WORD_LENGTH = 1,
       MAX_WORD_LENGTH = 6,
       MIN_HASH_VALUE = 1,
@@ -94,8 +94,8 @@ in_word_set (register const char *str, register size_t len)
   static const struct dict_entry wordlist[] =
     {
       {""},
-#line 13 "KEYWORDS.txt"
-      {"/", div_joyfunc},
+#line 18 "KEYWORDS.txt"
+      {"i", i_joyfunc},
       {""},
 #line 17 "KEYWORDS.txt"
       {"cmp", cmp_joyfunc},
@@ -105,16 +105,18 @@ in_word_set (register const char *str, register size_t len)
       {"clear", clear},
 #line 15 "KEYWORDS.txt"
       {"branch", branch},
+      {""}, {""},
+#line 9 "KEYWORDS.txt"
+      {"%", mod},
+#line 11 "KEYWORDS.txt"
+      {"+", add},
+#line 13 "KEYWORDS.txt"
+      {"/", div_joyfunc},
       {""}, {""}, {""},
 #line 10 "KEYWORDS.txt"
       {"*", mul},
 #line 12 "KEYWORDS.txt"
-      {"-", sub},
-      {""}, {""}, {""},
-#line 9 "KEYWORDS.txt"
-      {"%", mod},
-#line 11 "KEYWORDS.txt"
-      {"+", add}
+      {"-", sub}
     };
 
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
