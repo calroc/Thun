@@ -583,26 +583,39 @@ clear(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 
 
 void
-truthy(JoyListPtr stack, JoyListPtr expression)
+truthy(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
-	stack = expression;
-}
-/*
-	JoyListPtr s = stack;
+	/*
+	Keep the original stack in case	the top item is already a Boolean value.
+	*/
+	JoyList s = *stack;
 	JoyList node = pop_any(stack);
 	switch (node->head->kind) {
 	case joyTrue:
-		stack = s;
+		*stack = s;
+		break;
 	case joyFalse:
-		stack = s;
+		*stack = s;
+		break;
 	case joyInt:
-		push_thing(
-		if (node->head->value.i);
+		if mpz_cmp_si(node->head->value.i, 0) {
+			push_thing(JoyTrue, stack);
+		} else {
+			push_thing(JoyFalse, stack);
+		}
+		break;
+	case joyList:
+		if (node->head->value.el) {
+			push_thing(JoyTrue, stack);
+		} else {
+			push_thing(JoyFalse, stack);
+		}
+		break;
 	default:
-
-	stack = expression;
+		printf("Cannot Boolify.\n");
+		exit(1);
+	}
 }
-*/
 
 
 JoyList def_abs_body;

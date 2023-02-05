@@ -1,3 +1,18 @@
+'''
+It's cheap, but it works.
+
+Doesn't handle non-alnum names.
+
+Because the strings are parsed at start time, rather than compile time,
+it's basically the same as implementing an inscribe command
+and using it to write a simple Joy script to load the defs:
+
+    for line in defs:
+        print(f'[{line}] inscribe')
+
+Eh?
+
+'''
 import sys
 
 #list(open('../defs.txt'))
