@@ -102,5 +102,3 @@ Last, a set of functions to go in the wordlist, one for each definition.
     for line in defs:
         name, body = line.split(None, 1)
         print(f'void def_{name}(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) {{ push_quote_onto_expression(def_{name}_body, expression); }}')
-
-
