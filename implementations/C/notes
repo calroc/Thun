@@ -15,7 +15,6 @@ cons
 dip
 dup
 first
-i
 loop
 pop
 rest

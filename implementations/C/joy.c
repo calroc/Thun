@@ -164,13 +164,29 @@ pop_any(JoyListPtr stack)
 mpz_t *
 pop_int(JoyListPtr stack)
 {
-	JoyList node;
-	node = pop_any(stack);
+	JoyList node = pop_any(stack);
 	switch (node->head->kind) {
 	case joyInt:
 		return &(node->head->value.i);
 	default:
 		printf("Not an integer.\n");
+		exit(1);
+	}
+}
+
+
+int
+pop_bool(JoyListPtr stack)
+{
+	JoyList node = pop_any(stack);
+	/* TODO: Look for just the singletons? */
+	switch (node->head->kind) {
+	case joyTrue:
+		return 1;
+	case joyFalse:
+		return 0;
+	default:
+		printf("Not a Boolean.\n");
 		exit(1);
 	}
 }
@@ -536,13 +552,7 @@ cmp_joyfunc(JoyListPtr stack, JoyListPtr expression)
 	b = pop_int(stack);
 	a = pop_int(stack);
 	hmm = mpz_cmp(*a, *b);
-	if (hmm > 0) {
-		push_quote(G, expression);
-	} else if (hmm < 0) {
-		push_quote(L, expression);
-	} else {
-		push_quote(E, expression);
-	}
+	push_quote(((hmm > 0) ? G : (hmm < 0) ? L : E), expression);
 }
 
 
@@ -553,7 +563,16 @@ i_joyfunc(JoyListPtr stack, JoyListPtr expression)
 }
 
 
-void branch(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void
+branch(JoyListPtr stack, JoyListPtr expression)
+{
+	JoyList T, F;
+	T = pop_list_node(stack);
+	F = pop_list_node(stack);
+	push_quote((pop_bool(stack) ? T : F), expression);
+}
+
+
 void clear(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void div_joyfunc(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void mod(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
