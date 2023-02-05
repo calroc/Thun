@@ -34,6 +34,8 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #include <gmp.h>
 
 #include "joy.h"
+#include "definitions.h"
+
 
 
 const char *BLANKS = " \t";

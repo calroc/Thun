@@ -47,53 +47,64 @@ infra swons swaack [i] dip swaack'''.splitlines()
 ##
 ##print()
 ##print()
-##for line in defs:
-##    name, body = line.split(None, 1)
-##    print(f'void def_{name}(JoyListPtr stack, JoyListPtr expression);')
 
-print(f'''
+print(f'''\
 /*
-Auto-generated file by {sys.argv[0]}
-*/
-
-#include "joy.h"
-
-
-/*
-Declare a bunch of list pointers to eventually hold the body expressions
-of the definitions.
+Auto-generated file by {' '.join(sys.argv)}
+Do not edit.
 */
 ''')
-for line in defs:
-    name, body = line.split(None, 1)
-    print(f'JoyList def_{name}_body;')
+
+
+if sys.argv[-1] == '--header':
+    for line in defs:
+        name, body = line.split(None, 1)
+        print(f'void def_{name}(JoyListPtr stack, JoyListPtr expression);')
+
+
+else:
+
+    print('''
+    #include "joy.h"
+    #include "definitions.h"
+
+
+    /*
+    Declare a bunch of list pointers to eventually hold the body expressions
+    of the definitions.
+    */
+    ''')
+    for line in defs:
+        name, body = line.split(None, 1)
+        print(f'JoyList def_{name}_body;')
 
 
 
-print('''
+    print('''
 
-/*
-Next, we want an initializer function to fill out the body pointers.
-*/
+    /*
+    Next, we want an initializer function to fill out the body pointers.
+    */
 
-void
-init_defs(void)
-{
-''')
-for line in defs:
-    name, body = line.split(None, 1)
-    print(f'\tdef_{name}_body = text_to_expression("{body}");')
-print('}')
+    void
+    init_defs(void)
+    {
+    ''')
+    for line in defs:
+        name, body = line.split(None, 1)
+        print(f'\tdef_{name}_body = text_to_expression("{body}");')
+    print('}')
 
 
 
-print('''
+    print('''
 
-/*
-Last, a set of functions to go in the wordlist, one for each definition.
-*/
-''')
-for line in defs:
-    name, body = line.split(None, 1)
-    print(f'void def_{name}(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) {{ push_quote_onto_expression(def_{name}_body, expression); }}')
+    /*
+    Last, a set of functions to go in the wordlist, one for each definition.
+    */
+    ''')
+    for line in defs:
+        name, body = line.split(None, 1)
+        print(f'void def_{name}(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) {{ push_quote_onto_expression(def_{name}_body, expression); }}')
+
 

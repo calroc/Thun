@@ -20,6 +20,10 @@ joy.o: joy.h
 definitions.c: defs.txt convert_defs.py
 	python convert_defs.py > definitions.c
 
+definitions.h: defs.txt convert_defs.py
+	python convert_defs.py --header > definitions.h
+
+definitions.o: definitions.h
 
 # Gperf doesn't add anything to '{""}' unused entries in the wordlist.
 # This causes "warning: missing field 'func' initializer [-Wmissing-field-initializers]"
