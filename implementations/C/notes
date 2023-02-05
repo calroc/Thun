@@ -1,3 +1,11 @@
+With a little bit of complexity we could improve efficiency (e.g. using
+VList instead of singly-linked list.)  But I want to tackle efficiency by
+compilation, and write the compiler(s) in Prolog.  I think that avoids
+complexity compared to intricating the guts of the interpreter by hand,
+and moves the unavoidable complexity into formal statements of logic that
+can be evaulated by machine (aka Prolog.)
+
+---------------------------------------
 
 So how do we want to handle definitions?  Read a defs.txt file at
 compile time?  Build defs.c from defs.txt?

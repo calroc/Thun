@@ -60,6 +60,7 @@ void add(JoyListPtr stack, JoyListPtr expression);
 void branch(JoyListPtr stack, JoyListPtr expression);
 void clear(JoyListPtr stack, JoyListPtr expression);
 void cmp_joyfunc(JoyListPtr stack, JoyListPtr expression);
+void dip(JoyListPtr stack, JoyListPtr expression);
 void dup(JoyListPtr stack, JoyListPtr expression);
 void i_joyfunc(JoyListPtr stack, JoyListPtr expression);
 void mul(JoyListPtr stack, JoyListPtr expression);

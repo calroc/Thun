@@ -579,6 +579,19 @@ clear(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 
 
 void
+dip(JoyListPtr stack, JoyListPtr expression)
+{
+	JoyList quote = pop_list_node(stack);
+	JoyList node = pop_any(stack);
+	JoyList x = EMPTY_LIST;
+	JoyListPtr xPtr = &x;
+	push_thing(node->head, xPtr);
+	push_quote(*xPtr, expression);
+	push_quote(quote, expression);
+}
+
+
+void
 dup(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
 	JoyList s = *stack;

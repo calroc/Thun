@@ -15,6 +15,7 @@ bool, truthy
 branch, branch
 clear, clear
 cmp, cmp_joyfunc
+dip, dip
 dup, dup
 i, i_joyfunc
 abs, def_abs
