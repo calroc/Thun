@@ -249,6 +249,18 @@ push_thing(JoyTypePtr term, JoyListPtr stack) {
 }
 
 
+JoyList
+concat_lists(JoyList a, JoyList b)
+{
+	JoyList node;
+	if (!a) return b;
+	node = newJoyList;
+	node->head = a->head;
+	node->tail = concat_lists(a->tail, b);
+	return node;
+}
+
+
 /*
 ██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
 ██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
@@ -620,6 +632,15 @@ swap(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 	JoyList b = pop_any(stack);
 	push_thing(a->head, stack);
 	push_thing(b->head, stack);
+}
+
+
+void
+concat(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	JoyList b = pop_list_node(stack);
+	JoyList a = pop_list_node(stack);
+	push_quote(concat_lists(a, b), stack);
 }
 
 

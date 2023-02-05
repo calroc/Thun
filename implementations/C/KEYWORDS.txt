@@ -16,6 +16,7 @@ branch, branch
 clear, clear
 cmp, cmp_joyfunc
 cons, cons
+concat, concat
 dip, dip
 dup, dup
 i, i_joyfunc
