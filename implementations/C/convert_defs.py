@@ -31,7 +31,6 @@ ccccons ccons ccons
 ccons cons cons
 cleave fork popdd
 clop cleave popdd
-cmp [[>] swap] dipd [ifte] ccons [=] swons ifte
 codi cons dip
 codireco codi reco
 dinfrirst dip infrst
@@ -61,6 +60,12 @@ if sys.argv[-1] == '--header':
         name, body = line.split(None, 1)
         print(f'void def_{name}(JoyListPtr stack, JoyListPtr expression);')
 
+
+elif sys.argv[-1] == '--keywords':
+    sys.stdout.write(open('KEYWORDS.in').read())
+    for line in defs:
+        name, body = line.split(None, 1)
+        print(f'{name}, def_{name}')
 
 else:
 

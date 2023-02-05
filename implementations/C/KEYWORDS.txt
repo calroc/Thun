@@ -1,3 +1,8 @@
+/*
+Auto-generated file by convert_defs.py --keywords
+Do not edit.
+*/
+
 %compare-strncmp
 %readonly-tables
 %struct-type
@@ -25,7 +30,6 @@ pop, pop
 stack, stack
 swaack, swaack
 swap, swap
-swons, def_swons
 abs, def_abs
 anamorphism, def_anamorphism
 app1, def_app1
@@ -45,3 +49,5 @@ codireco, def_codireco
 dinfrirst, def_dinfrirst
 dipd, def_dipd
 disenstacken, def_disenstacken
+swons, def_swons
+infra, def_infra

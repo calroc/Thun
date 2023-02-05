@@ -18,12 +18,15 @@ joy: ${OBJS} $(STATIC_GCLIB)
 joy.o: joy.h
 
 definitions.c: defs.txt convert_defs.py
-	python convert_defs.py > definitions.c
+	python convert_defs.py > $@
 
 definitions.h: defs.txt convert_defs.py
-	python convert_defs.py --header > definitions.h
+	python convert_defs.py --header > $@
 
 definitions.o: definitions.h
+
+KEYWORDS.txt: KEYWORDS.in defs.txt convert_defs.py
+	python convert_defs.py --keywords > $@
 
 # Gperf doesn't add anything to '{""}' unused entries in the wordlist.
 # This causes "warning: missing field 'func' initializer [-Wmissing-field-initializers]"

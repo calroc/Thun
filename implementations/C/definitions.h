@@ -17,7 +17,6 @@ void def_ccccons(JoyListPtr stack, JoyListPtr expression);
 void def_ccons(JoyListPtr stack, JoyListPtr expression);
 void def_cleave(JoyListPtr stack, JoyListPtr expression);
 void def_clop(JoyListPtr stack, JoyListPtr expression);
-void def_cmp(JoyListPtr stack, JoyListPtr expression);
 void def_codi(JoyListPtr stack, JoyListPtr expression);
 void def_codireco(JoyListPtr stack, JoyListPtr expression);
 void def_dinfrirst(JoyListPtr stack, JoyListPtr expression);

@@ -27,7 +27,6 @@ JoyList def_ccccons_body;
 JoyList def_ccons_body;
 JoyList def_cleave_body;
 JoyList def_clop_body;
-JoyList def_cmp_body;
 JoyList def_codi_body;
 JoyList def_codireco_body;
 JoyList def_dinfrirst_body;
@@ -59,7 +58,6 @@ JoyList def_infra_body;
 	def_ccons_body = text_to_expression("cons cons");
 	def_cleave_body = text_to_expression("fork popdd");
 	def_clop_body = text_to_expression("cleave popdd");
-	def_cmp_body = text_to_expression("[[>] swap] dipd [ifte] ccons [=] swons ifte");
 	def_codi_body = text_to_expression("cons dip");
 	def_codireco_body = text_to_expression("codi reco");
 	def_dinfrirst_body = text_to_expression("dip infrst");
@@ -88,7 +86,6 @@ void def_ccccons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression
 void def_ccons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_ccons_body, expression); }
 void def_cleave(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_cleave_body, expression); }
 void def_clop(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_clop_body, expression); }
-void def_cmp(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_cmp_body, expression); }
 void def_codi(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_codi_body, expression); }
 void def_codireco(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_codireco_body, expression); }
 void def_dinfrirst(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_dinfrirst_body, expression); }

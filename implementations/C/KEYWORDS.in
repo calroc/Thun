@@ -1,0 +1,27 @@
+%compare-strncmp
+%readonly-tables
+%struct-type
+%{
+#include "joy.h"
+#include "definitions.h"
+%}
+struct dict_entry;
+%%
+"%", tdiv_r
+*, mul
++, add
+-, sub
+/, tdiv_q
+bool, truthy
+branch, branch
+clear, clear
+cmp, cmp_joyfunc
+cons, cons
+concat, concat
+dip, dip
+dup, dup
+i, i_joyfunc
+pop, pop
+stack, stack
+swaack, swaack
+swap, swap
