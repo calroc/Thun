@@ -1,3 +1,31 @@
+
+So how do we want to handle definitions?  Read a defs.txt file at
+compile time?  Build defs.c from defs.txt?
+
+void
+defname(JoyListPtr stack, JoyListPtr expression)
+{
+	def_node = some C initializer?
+	def_node = text_to_expression("dup mul");
+	push_quote(def_node, expression);
+}
+
+...?
+
+I think the easiest thing to do at the mo' would be to hardcode the defs
+as an array of strings and then read them and convert at start time?
+
+
+
+
+
+
+
+
+
+
+
+
 	/*mpz_t pi;*/
 	/*char *text = (char *)TEXT;*/
 	/*mpz_init_set_str(pi, "3141592653589793238462643383279502884", 10);*/

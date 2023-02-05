@@ -582,9 +582,27 @@ clear(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 }
 
 
-void div_joyfunc(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
-void mod(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
-void truthy(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void
+truthy(JoyListPtr stack, JoyListPtr expression)
+{
+	*stack = EMPTY_LIST;
+}
+/*
+	JoyListPtr s = stack;
+	JoyList node = pop_any(stack);
+	switch (node->head->kind) {
+	case joyTrue:
+		stack = s;
+	case joyFalse:
+		stack = s;
+	case joyInt:
+		push_thing(
+		if (node->head->value.i);
+	default:
+
+	stack = expression;
+}
+*/
 
 
 /*
