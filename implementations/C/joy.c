@@ -516,8 +516,8 @@ name(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression) \
 { \
 	mpz_t *a, *b; \
 	JoyList node; \
-	a = pop_int(stack); \
 	b = pop_int(stack); \
+	a = pop_int(stack); \
 	node = newIntNode(); \
 	mpz_ ## name(node->head->value.i, *a, *b); \
 	node->tail = *stack; \
@@ -527,6 +527,8 @@ name(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression) \
 BINARY_MATH_OP(add)
 BINARY_MATH_OP(sub)
 BINARY_MATH_OP(mul)
+BINARY_MATH_OP(tdiv_q)
+BINARY_MATH_OP(tdiv_r)
 
 
 /*

@@ -60,11 +60,11 @@ void add(JoyListPtr stack, JoyListPtr expression);
 void branch(JoyListPtr stack, JoyListPtr expression);
 void clear(JoyListPtr stack, JoyListPtr expression);
 void cmp_joyfunc(JoyListPtr stack, JoyListPtr expression);
-void div_joyfunc(JoyListPtr stack, JoyListPtr expression);
 void i_joyfunc(JoyListPtr stack, JoyListPtr expression);
-void mod(JoyListPtr stack, JoyListPtr expression);
 void mul(JoyListPtr stack, JoyListPtr expression);
 void sub(JoyListPtr stack, JoyListPtr expression);
+void tdiv_q(JoyListPtr stack, JoyListPtr expression);
+void tdiv_r(JoyListPtr stack, JoyListPtr expression);
 void truthy(JoyListPtr stack, JoyListPtr expression);
 
 

@@ -107,11 +107,11 @@ in_word_set (register const char *str, register size_t len)
       {"branch", branch},
       {""}, {""},
 #line 9 "KEYWORDS.txt"
-      {"%", mod},
+      {"%", tdiv_r},
 #line 11 "KEYWORDS.txt"
       {"+", add},
 #line 13 "KEYWORDS.txt"
-      {"/", div_joyfunc},
+      {"/", tdiv_q},
       {""}, {""}, {""},
 #line 10 "KEYWORDS.txt"
       {"*", mul},

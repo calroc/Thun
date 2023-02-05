@@ -6,11 +6,11 @@
 %}
 struct dict_entry;
 %%
-"%", mod
+"%", tdiv_r
 *, mul
 +, add
 -, sub
-/, div_joyfunc
+/, tdiv_q
 bool, truthy
 branch, branch
 clear, clear
