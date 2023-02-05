@@ -22,6 +22,7 @@ i, i_joyfunc
 pop, pop
 stack, stack
 swaack, swaack
+swap, swap
 abs, def_abs
 anamorphism, def_anamorphism
 app1, def_app1
