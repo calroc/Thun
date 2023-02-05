@@ -40,16 +40,46 @@ disenstacken ? [uncons ?] loop pop
 swons swap cons
 infra swons swaack [i] dip swaack'''.splitlines()
 
+##
+##for line in defs:
+##    name, body = line.split(None, 1)
+##    print(f'{name}, def_{name}')
+##
+##print()
+##print()
+##for line in defs:
+##    name, body = line.split(None, 1)
+##    print(f'void def_{name}(JoyListPtr stack, JoyListPtr expression);')
 
+print(f'''
+/*
+Auto-generated file by {sys.argv[0]}
+*/
+
+#include "joy.h"
+
+
+/*
+Declare a bunch of list pointers to eventually hold the body expressions
+of the definitions.
+*/
+''')
 for line in defs:
     name, body = line.split(None, 1)
-    print(f'{name}, def_{name}')
+    print(f'JoyList def_{name}_body;')
 
-print()
-print()
-print('void')
-print('init_defs(void)')
-print('{')
+
+
+print('''
+
+/*
+Next, we want an initializer function to fill out the body pointers.
+*/
+
+void
+init_defs(void)
+{
+''')
 for line in defs:
     name, body = line.split(None, 1)
     print(f'\tdef_{name}_body = text_to_expression("{body}");')
@@ -57,21 +87,12 @@ print('}')
 
 
 
-print()
-print()
-for line in defs:
-    name, body = line.split(None, 1)
-    print(f'JoyList def_{name}_body;')
+print('''
 
-
-print()
-print()
-for line in defs:
-    name, body = line.split(None, 1)
-    print(f'void def_{name}(JoyListPtr stack, JoyListPtr expression);')
-
-print()
-print()
+/*
+Last, a set of functions to go in the wordlist, one for each definition.
+*/
+''')
 for line in defs:
     name, body = line.split(None, 1)
     print(f'void def_{name}(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) {{ push_quote_onto_expression(def_{name}_body, expression); }}')

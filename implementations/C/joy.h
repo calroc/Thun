@@ -56,6 +56,11 @@ struct list_node {
 typedef void (*JoyFunc)(JoyListPtr, JoyListPtr);
 
 
+JoyList text_to_expression(char *text);
+void push_quote_onto_expression(JoyList el, JoyListPtr expression);
+void init_defs(void);
+
+
 void add(JoyListPtr stack, JoyListPtr expression);
 void branch(JoyListPtr stack, JoyListPtr expression);
 void clear(JoyListPtr stack, JoyListPtr expression);

@@ -1,0 +1,93 @@
+abs dup 0 < [] [neg] branch
+anamorphism [pop []] swap [dip swons] genrec
+app1 grba infrst
+app2 [grba swap grba swap] dip [infrst] cons ii
+app3 3 appN
+appN [grabN] codi map reverse disenstacken
+at drop first
+average [sum] [size] cleave /
+b [i] dip i
+binary unary popd
+ccccons ccons ccons
+ccons cons cons
+clear [] swaack pop
+cleave fork popdd
+clop cleave popdd
+cmp [[>] swap] dipd [ifte] ccons [=] swons ifte
+codi cons dip
+codireco codi reco
+dinfrirst dip infrst
+dipd [dip] codi
+disenstacken ? [uncons ?] loop pop
+down_to_zero [0 >] [dup --] while
+drop [rest] times
+dupd [dup] dip
+dupdd [dup] dipd
+dupdip dupd dip
+dupdipd dup dipd
+enstacken stack [clear] dip
+first uncons pop
+flatten <{} [concat] step
+fork [i] app2
+fourth rest third
+gcd true [tuck mod dup 0 >] loop pop
+genrec [[genrec] ccccons] nullary swons concat ifte
+grabN <{} [cons] times
+grba [stack popd] dip
+hypot [sqr] ii + sqrt
+ifte [nullary] dipd swap branch
+ii [dip] dupdip i
+infra swons swaack [i] dip swaack
+infrst infra first
+make_generator [codireco] ccons
+mod %
+neg 0 swap -
+not [true] [false] branch
+nulco [nullary] cons
+nullary [stack] dinfrirst
+of swap at
+pam [i] map
+pm [+] [-] clop
+popd [pop] dip
+popdd [pop] dipd
+popop pop pop
+popopop pop popop
+popopd [popop] dip
+popopdd [popop] dipd
+product 1 swap [*] step
+quoted [unit] dip
+range [0 <=] [1 - dup] anamorphism
+range_to_zero unit [down_to_zero] infra
+reco rest cons
+rest uncons popd
+reverse <{} shunt
+rrest rest rest
+run <{} infra
+second rest first
+shift uncons [swons] dip
+shunt [swons] step
+size [pop ++] step_zero
+spiral_next [[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
+split_at [drop] [take] clop
+split_list [take reverse] [drop] clop
+sqr dup *
+stackd [stack] dip
+step_zero 0 roll> step
+stuncons stack uncons
+sum [+] step_zero
+swapd [swap] dip
+swons swap cons
+swoncat swap concat
+sqr dup mul
+tailrec [i] genrec
+take <<{} [shift] times pop
+ternary binary popd
+third rest second
+tuck dup swapd
+unary nullary popd
+uncons [first] [rest] cleave
+unit [] cons
+unquoted [i] dip
+unswons uncons swap
+while swap nulco dupdipd concat loop
+x dup i

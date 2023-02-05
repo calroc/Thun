@@ -1,4 +1,4 @@
-OBJS=joy.o keywords.o
+OBJS=joy.o keywords.o definitions.o
 
 # On FreeBSD gc and gmp are installed in /usr/local/:
 STATIC_GCLIB=/usr/local/lib/libgc.a /usr/local/lib/libgmp.a
@@ -16,6 +16,9 @@ GPERF_OPTS = --readonly-tables --enum --includes --hash-function-name=keyword_ha
 joy: ${OBJS} $(STATIC_GCLIB)
 
 joy.o: joy.h
+
+definitions.c: defs.txt convert_defs.py
+	python convert_defs.py > definitions.c
 
 
 # Gperf doesn't add anything to '{""}' unused entries in the wordlist.
