@@ -573,7 +573,13 @@ branch(JoyListPtr stack, JoyListPtr expression)
 }
 
 
-void clear(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
+void
+clear(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	*stack = EMPTY_LIST;
+}
+
+
 void div_joyfunc(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void mod(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
 void truthy(JoyListPtr stack, JoyListPtr expression) {stack = expression;}
