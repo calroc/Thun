@@ -614,6 +614,16 @@ truthy(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 }
 
 
+void
+dup(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	JoyList s = *stack;
+	JoyList node = pop_any(stack);
+	*stack = s;
+	push_thing(node->head, stack);
+}
+
+
 JoyList def_abs_body;
 JoyList def_anamorphism_body;
 JoyList def_app1_body;
