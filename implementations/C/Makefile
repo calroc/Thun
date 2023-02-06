@@ -39,4 +39,4 @@ keywords.c: KEYWORDS.txt
 	gperf --output-file=$@ $(GPERF_OPTS) $<
 
 clean:
-	rm -vf *.o joy
+	rm -vf *.o joy KEYWORDS.txt
