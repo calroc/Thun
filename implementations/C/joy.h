@@ -34,9 +34,9 @@ typedef JoyList* JoyListPtr;
 typedef struct {
 	enum JoyTypeType kind;
 	union {
+		char *symbol;
 		mpz_t i;
 		JoyList el;
-		char *symbol;
 	} value;
 } JoyType;
 
@@ -71,6 +71,7 @@ void dip(JoyListPtr stack, JoyListPtr expression);
 void dup(JoyListPtr stack, JoyListPtr expression);
 void first(JoyListPtr stack, JoyListPtr expression);
 void i_joyfunc(JoyListPtr stack, JoyListPtr expression);
+void loop(JoyListPtr stack, JoyListPtr expression);
 void pop(JoyListPtr stack, JoyListPtr expression);
 void rest(JoyListPtr stack, JoyListPtr expression);
 void stack(JoyListPtr stack, JoyListPtr expression);

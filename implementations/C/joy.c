@@ -45,6 +45,8 @@ const char *TRUE = "true";
 JoyTypePtr JoyTrue;
 JoyTypePtr JoyFalse;
 
+JoyType loop_symbol = {joySymbol, {"loop"}};
+
 
 void*
 reallocate_function (void *ptr, __attribute__((unused)) size_t old_size, size_t new_size) {
@@ -252,7 +254,8 @@ newIntNode(void) {
 
 
 void
-push_thing(JoyTypePtr term, JoyListPtr stack) {
+push_thing(JoyTypePtr term, JoyListPtr stack)
+{
 	JoyList node = newJoyList;
 	node->head = term;
 	node->tail = *stack;
@@ -269,6 +272,16 @@ concat_lists(JoyList a, JoyList b)
 	node->head = a->head;
 	node->tail = concat_lists(a->tail, b);
 	return node;
+}
+
+
+void
+push_thing_in_unit_list(JoyTypePtr term, JoyListPtr expression)
+{
+	JoyList x = EMPTY_LIST;
+	JoyListPtr xPtr = &x;
+	push_thing(term, xPtr);
+	push_quote_onto_expression(*xPtr, expression);
 }
 
 
@@ -589,6 +602,22 @@ branch(JoyListPtr stack, JoyListPtr expression)
 
 
 void
+loop(JoyListPtr stack, JoyListPtr expression)
+{
+	JoyList body = pop_list_node(stack);
+	JoyList x = EMPTY_LIST;
+
+	if (pop_bool(stack)) {
+		JoyListPtr xPtr = &x;
+		push_thing(&loop_symbol, xPtr);
+		push_quote(body, xPtr);
+		push_quote_onto_expression(*xPtr, expression);
+		push_quote_onto_expression(body, expression);
+	}
+}
+
+
+void
 clear(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
 	*stack = EMPTY_LIST;
@@ -678,10 +707,7 @@ dip(JoyListPtr stack, JoyListPtr expression)
 {
 	JoyList quote = pop_list_node(stack);
 	JoyList node = pop_any(stack);
-	JoyList x = EMPTY_LIST;
-	JoyListPtr xPtr = &x;
-	push_thing(node->head, xPtr);
-	push_quote_onto_expression(*xPtr, expression);
+	push_thing_in_unit_list(node->head, expression);
 	push_quote_onto_expression(quote, expression);
 }
 
