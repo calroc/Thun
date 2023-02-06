@@ -20,8 +20,10 @@ cons, cons
 concat, concat
 dip, dip
 dup, dup
+first, first
 i, i_joyfunc
 pop, pop
+rest, rest
 stack, stack
 swaack, swaack
 swap, swap

@@ -650,6 +650,30 @@ concat(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 
 
 void
+first(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	JoyList quote = pop_list_node(stack);
+	if (!quote) {
+		printf("Cannot take first of empty list.\n");
+		exit(1);
+	}
+	push_thing(quote->head, stack);
+}
+
+
+void
+rest(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	JoyList quote = pop_list_node(stack);
+	if (!quote) {
+		printf("Cannot take rest of empty list.\n");
+		exit(1);
+	}
+	push_quote(quote->tail, stack);
+}
+
+
+void
 dip(JoyListPtr stack, JoyListPtr expression)
 {
 	JoyList quote = pop_list_node(stack);

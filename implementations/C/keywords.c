@@ -54,15 +54,15 @@ keyword_hash (register const char *str, register size_t len)
       62, 62, 62, 62, 62, 62, 62, 62, 62, 62,
       62, 62, 62, 62, 62, 62, 62, 62, 62, 62,
       62, 62, 62, 62, 62, 62, 62, 60, 62, 62,
-      62, 62, 55, 50, 62, 45, 62, 40, 62, 45,
+      62, 62, 55, 50, 62, 45, 62,  0, 62, 45,
       40, 35, 62, 62, 62, 62, 62, 62, 62, 62,
       62, 62, 62, 62, 62, 62, 62, 62, 62, 62,
       62, 62, 62, 62, 62, 62, 62, 62, 30, 62,
       62, 62, 62, 62, 62, 62, 62, 62, 62, 62,
-      62, 62, 62, 62, 62, 62, 62, 15,  0,  0,
-      20,  0, 62, 62, 30, 10, 62,  5, 25,  5,
-       0,  0, 10, 62,  0,  0,  0, 15,  5, 10,
-      62, 10, 62, 62, 62, 62, 62, 62, 62, 62,
+      62, 62, 62, 62, 62, 62, 62,  0, 25, 15,
+      20,  0, 62, 62, 35, 10, 62,  5, 25,  5,
+       0,  0, 10, 62,  0,  5,  0, 15,  0, 10,
+      62, 20, 62, 62, 62, 62, 62, 62, 62, 62,
       62, 62, 62, 62, 62, 62, 62, 62, 62, 62,
       62, 62, 62, 62, 62, 62, 62, 62, 62, 62,
       62, 62, 62, 62, 62, 62, 62, 62, 62, 62,
@@ -95,7 +95,7 @@ in_word_set (register const char *str, register size_t len)
 {
   enum
     {
-      TOTAL_KEYWORDS = 39,
+      TOTAL_KEYWORDS = 41,
       MIN_WORD_LENGTH = 1,
       MAX_WORD_LENGTH = 12,
       MIN_HASH_VALUE = 1,
@@ -105,96 +105,99 @@ in_word_set (register const char *str, register size_t len)
   static const struct dict_entry wordlist[] =
     {
       {""},
+#line 19 "KEYWORDS.txt"
+      {"/", tdiv_q},
 #line 41 "KEYWORDS.txt"
-      {"b", def_b},
-#line 39 "KEYWORDS.txt"
       {"at", def_at},
-#line 33 "KEYWORDS.txt"
-      {"abs", def_abs},
-#line 24 "KEYWORDS.txt"
-      {"cons", cons},
-#line 44 "KEYWORDS.txt"
-      {"ccons", def_ccons},
+      {""},
+#line 31 "KEYWORDS.txt"
+      {"rest", rest},
+#line 55 "KEYWORDS.txt"
+      {"infra", def_infra},
 #line 25 "KEYWORDS.txt"
       {"concat", concat},
-#line 43 "KEYWORDS.txt"
-      {"ccccons", def_ccccons},
-#line 48 "KEYWORDS.txt"
+#line 42 "KEYWORDS.txt"
+      {"average", def_average},
+#line 50 "KEYWORDS.txt"
       {"codireco", def_codireco},
+#line 24 "KEYWORDS.txt"
+      {"cons", cons},
+#line 32 "KEYWORDS.txt"
+      {"stack", stack},
+#line 29 "KEYWORDS.txt"
+      {"i", i_joyfunc},
       {""},
 #line 30 "KEYWORDS.txt"
-      {"stack", stack},
-#line 28 "KEYWORDS.txt"
-      {"i", i_joyfunc},
-#line 40 "KEYWORDS.txt"
-      {"average", def_average},
-#line 29 "KEYWORDS.txt"
       {"pop", pop},
-#line 47 "KEYWORDS.txt"
+#line 49 "KEYWORDS.txt"
       {"codi", def_codi},
-#line 52 "KEYWORDS.txt"
-      {"swons", def_swons},
-#line 34 "KEYWORDS.txt"
+#line 28 "KEYWORDS.txt"
+      {"first", first},
+#line 36 "KEYWORDS.txt"
       {"anamorphism", def_anamorphism},
       {""},
 #line 23 "KEYWORDS.txt"
       {"cmp", cmp_joyfunc},
-#line 49 "KEYWORDS.txt"
-      {"dinfrirst", def_dinfrirst},
-#line 53 "KEYWORDS.txt"
-      {"infra", def_infra},
-#line 31 "KEYWORDS.txt"
-      {"swaack", swaack},
 #line 51 "KEYWORDS.txt"
+      {"dinfrirst", def_dinfrirst},
+#line 54 "KEYWORDS.txt"
+      {"swons", def_swons},
+#line 33 "KEYWORDS.txt"
+      {"swaack", swaack},
+#line 53 "KEYWORDS.txt"
       {"disenstacken", def_disenstacken},
 #line 26 "KEYWORDS.txt"
       {"dip", dip},
-#line 32 "KEYWORDS.txt"
+#line 34 "KEYWORDS.txt"
       {"swap", swap},
-      {""},
-#line 42 "KEYWORDS.txt"
-      {"binary", def_binary},
-      {""},
+#line 46 "KEYWORDS.txt"
+      {"ccons", def_ccons},
+#line 43 "KEYWORDS.txt"
+      {"b", def_b},
+#line 45 "KEYWORDS.txt"
+      {"ccccons", def_ccccons},
 #line 27 "KEYWORDS.txt"
       {"dup", dup},
 #line 20 "KEYWORDS.txt"
       {"bool", truthy},
 #line 22 "KEYWORDS.txt"
       {"clear", clear},
-#line 45 "KEYWORDS.txt"
+#line 47 "KEYWORDS.txt"
       {"cleave", def_cleave},
-      {""}, {""},
-#line 50 "KEYWORDS.txt"
+      {""},
+#line 35 "KEYWORDS.txt"
+      {"abs", def_abs},
+#line 52 "KEYWORDS.txt"
       {"dipd", def_dipd},
+      {""},
+#line 44 "KEYWORDS.txt"
+      {"binary", def_binary},
+      {""}, {""},
+#line 48 "KEYWORDS.txt"
+      {"clop", def_clop},
       {""},
 #line 21 "KEYWORDS.txt"
       {"branch", branch},
       {""}, {""},
-#line 46 "KEYWORDS.txt"
-      {"clop", def_clop},
-      {""},
-#line 19 "KEYWORDS.txt"
-      {"/", tdiv_q},
-      {""}, {""},
-#line 38 "KEYWORDS.txt"
+#line 40 "KEYWORDS.txt"
       {"appN", def_appN},
       {""},
 #line 18 "KEYWORDS.txt"
       {"-", sub},
       {""}, {""},
-#line 37 "KEYWORDS.txt"
+#line 39 "KEYWORDS.txt"
       {"app3", def_app3},
       {""},
 #line 17 "KEYWORDS.txt"
       {"+", add},
       {""}, {""},
-#line 36 "KEYWORDS.txt"
+#line 38 "KEYWORDS.txt"
       {"app2", def_app2},
       {""},
 #line 16 "KEYWORDS.txt"
       {"*", mul},
       {""}, {""},
-#line 35 "KEYWORDS.txt"
+#line 37 "KEYWORDS.txt"
       {"app1", def_app1},
       {""},
 #line 15 "KEYWORDS.txt"
