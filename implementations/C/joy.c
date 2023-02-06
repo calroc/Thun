@@ -206,7 +206,7 @@ pop_bool(JoyListPtr stack)
 
 
 JoyList
-pop_list(JoyListPtr stack)
+pop_list_node(JoyListPtr stack)
 {
 	JoyList node;
 	node = pop_any(stack);
@@ -221,9 +221,9 @@ pop_list(JoyListPtr stack)
 
 
 JoyList
-pop_list_node(JoyListPtr stack)
+pop_list(JoyListPtr stack)
 {
-	return pop_list(stack)->head->value.el;
+	return pop_list_node(stack)->head->value.el;
 }
 
 
@@ -512,7 +512,7 @@ next_term(JoyListPtr expression)
 		printf("Do not call next_term on an empty expression.\n");
 		exit(1);
 	}
-	quote = pop_list_node(expression);
+	quote = pop_list(expression);
 	if (!quote) {
 		printf("How did an empty list get onto the expression!?\n");
 		exit(1);
@@ -571,9 +571,9 @@ neq [true] [false] [true] cmp
 void
 cmp_joyfunc(JoyListPtr stack, JoyListPtr expression)
 {
-	JoyList L = pop_list_node(stack);
-	JoyList E = pop_list_node(stack);
-	JoyList G = pop_list_node(stack);
+	JoyList L = pop_list(stack);
+	JoyList E = pop_list(stack);
+	JoyList G = pop_list(stack);
 	mpz_t *b = pop_int(stack);
 	mpz_t *a = pop_int(stack);
 	int hmm = mpz_cmp(*a, *b);
@@ -584,15 +584,15 @@ cmp_joyfunc(JoyListPtr stack, JoyListPtr expression)
 void
 i_joyfunc(JoyListPtr stack, JoyListPtr expression)
 {
-	push_quote_onto_expression(pop_list_node(stack), expression);
+	push_quote_onto_expression(pop_list(stack), expression);
 }
 
 
 void
 branch(JoyListPtr stack, JoyListPtr expression)
 {
-	JoyList T = pop_list_node(stack);
-	JoyList F = pop_list_node(stack);
+	JoyList T = pop_list(stack);
+	JoyList F = pop_list(stack);
 	push_quote_onto_expression((pop_bool(stack) ? T : F), expression);
 }
 
@@ -600,7 +600,7 @@ branch(JoyListPtr stack, JoyListPtr expression)
 void
 loop(JoyListPtr stack, JoyListPtr expression)
 {
-	JoyList body = pop_list_node(stack);
+	JoyList body = pop_list(stack);
 	JoyList x = EMPTY_LIST;
 
 	if (pop_bool(stack)) {
@@ -623,7 +623,7 @@ clear(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 void
 cons(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
-	JoyList quote = pop_list_node(stack);
+	JoyList quote = pop_list(stack);
 	JoyListPtr qPtr = &quote;
 	JoyList node = pop_any(stack);
 	push_thing(node->head, qPtr);
@@ -641,7 +641,7 @@ pop(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 void
 swaack(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
-	JoyList quote = pop_list_node(stack);
+	JoyList quote = pop_list(stack);
 	JoyListPtr qPtr = &quote;
 	push_quote(*stack, qPtr);
 	*stack = *qPtr;
@@ -668,8 +668,8 @@ swap(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 void
 concat(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
-	JoyList b = pop_list_node(stack);
-	JoyList a = pop_list_node(stack);
+	JoyList b = pop_list(stack);
+	JoyList a = pop_list(stack);
 	push_quote(concat_lists(a, b), stack);
 }
 
@@ -677,7 +677,7 @@ concat(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 void
 first(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
-	JoyList quote = pop_list_node(stack);
+	JoyList quote = pop_list(stack);
 	if (!quote) {
 		printf("Cannot take first of empty list.\n");
 		exit(1);
@@ -689,7 +689,7 @@ first(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 void
 rest(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
-	JoyList quote = pop_list_node(stack);
+	JoyList quote = pop_list(stack);
 	if (!quote) {
 		printf("Cannot take rest of empty list.\n");
 		exit(1);
@@ -701,7 +701,7 @@ rest(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 void
 dip(JoyListPtr stack, JoyListPtr expression)
 {
-	JoyList quote = pop_list_node(stack);
+	JoyList quote = pop_list(stack);
 	JoyList node = pop_any(stack);
 	push_thing_in_unit_list(node->head, expression);
 	push_quote_onto_expression(quote, expression);
