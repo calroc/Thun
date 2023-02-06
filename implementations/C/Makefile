@@ -15,7 +15,7 @@ GPERF_OPTS = --readonly-tables --enum --includes --hash-function-name=keyword_ha
 
 joy: ${OBJS} $(STATIC_GCLIB)
 
-joy.o: joy.h
+joy.o: joy.h definitions.h
 
 definitions.c: defs.txt convert_defs.py
 	python convert_defs.py > $@

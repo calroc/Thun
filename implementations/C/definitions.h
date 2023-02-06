@@ -3,6 +3,12 @@ Auto-generated file by convert_defs.py --header
 Do not edit.
 */
 
+void def_eq(JoyListPtr stack, JoyListPtr expression);
+void def_gt(JoyListPtr stack, JoyListPtr expression);
+void def_lt(JoyListPtr stack, JoyListPtr expression);
+void def_neq(JoyListPtr stack, JoyListPtr expression);
+void def_le(JoyListPtr stack, JoyListPtr expression);
+void def_ge(JoyListPtr stack, JoyListPtr expression);
 void def_abs(JoyListPtr stack, JoyListPtr expression);
 void def_anamorphism(JoyListPtr stack, JoyListPtr expression);
 void def_app1(JoyListPtr stack, JoyListPtr expression);

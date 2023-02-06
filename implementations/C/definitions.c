@@ -12,6 +12,12 @@ Declare a bunch of list pointers to eventually hold the body expressions
 of the definitions.
 */
     
+JoyList def_eq_body;
+JoyList def_gt_body;
+JoyList def_lt_body;
+JoyList def_neq_body;
+JoyList def_le_body;
+JoyList def_ge_body;
 JoyList def_abs_body;
 JoyList def_anamorphism_body;
 JoyList def_app1_body;
@@ -110,6 +116,12 @@ void
 init_defs(void)
 {
     
+	def_eq_body = text_to_expression("[false] [true] [false] cmp");
+	def_gt_body = text_to_expression("[true] [false] [false] cmp");
+	def_lt_body = text_to_expression("[false] [false] [true] cmp");
+	def_neq_body = text_to_expression("[true] [false] [true] cmp");
+	def_le_body = text_to_expression("[false] [true] [true] cmp");
+	def_ge_body = text_to_expression("[true] [true] [false] cmp");
 	def_abs_body = text_to_expression("dup 0 < [] [neg] branch");
 	def_anamorphism_body = text_to_expression("[pop []] swap [dip swons] genrec");
 	def_app1_body = text_to_expression("grba infrst");
@@ -205,6 +217,12 @@ init_defs(void)
 Last, a set of functions to go in the wordlist, one for each definition.
 */
     
+void def_eq(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_eq_body, expression); }
+void def_gt(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_gt_body, expression); }
+void def_lt(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_lt_body, expression); }
+void def_neq(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_neq_body, expression); }
+void def_le(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_le_body, expression); }
+void def_ge(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_ge_body, expression); }
 void def_abs(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_abs_body, expression); }
 void def_anamorphism(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_anamorphism_body, expression); }
 void def_app1(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_app1_body, expression); }

@@ -1,3 +1,9 @@
+eq [false] [true] [false] cmp
+gt [true] [false] [false] cmp
+lt [false] [false] [true] cmp
+neq [true] [false] [true] cmp
+le [false] [true] [true] cmp
+ge [true] [true] [false] cmp
 abs dup 0 < [] [neg] branch
 anamorphism [pop []] swap [dip swons] genrec
 app1 grba infrst
