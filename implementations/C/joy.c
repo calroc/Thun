@@ -231,12 +231,8 @@ void
 push_quote_onto_expression(JoyList el, JoyListPtr expression)
 {
 	JoyList node;
-
 	if (!el) return;
-	node = newJoyList;
-	node->head = newJoyType;
-	node->head->kind = joyList;
-	node->head->value.el = el;
+	node = make_list_node(el);
 	node->tail = *expression;
 	*expression = node;
 }
