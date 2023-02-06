@@ -15,29 +15,29 @@ Eh?
 '''
 import sys
 
-#list(open('../defs.txt'))
-defs = '''\
-abs dup 0 < [] [neg] branch
-anamorphism [pop []] swap [dip swons] genrec
-app1 grba infrst
-app2 [grba swap grba swap] dip [infrst] cons ii
-app3 3 appN
-appN [grabN] codi map reverse disenstacken
-at drop first
-average [sum] [size] cleave /
-b [i] dip i
-binary unary popd
-ccccons ccons ccons
-ccons cons cons
-cleave fork popdd
-clop cleave popdd
-codi cons dip
-codireco codi reco
-dinfrirst dip infrst
-dipd [dip] codi
-disenstacken ? [uncons ?] loop pop
-swons swap cons
-infra swons swaack [i] dip swaack'''.splitlines()
+defs = [line.strip() for line in open('./defs.txt')]
+##defs = '''\
+##abs dup 0 < [] [neg] branch
+##anamorphism [pop []] swap [dip swons] genrec
+##app1 grba infrst
+##app2 [grba swap grba swap] dip [infrst] cons ii
+##app3 3 appN
+##appN [grabN] codi map reverse disenstacken
+##at drop first
+##average [sum] [size] cleave /
+##b [i] dip i
+##binary unary popd
+##ccccons ccons ccons
+##ccons cons cons
+##cleave fork popdd
+##clop cleave popdd
+##codi cons dip
+##codireco codi reco
+##dinfrirst dip infrst
+##dipd [dip] codi
+##disenstacken ? [uncons ?] loop pop
+##swons swap cons
+##infra swons swaack [i] dip swaack'''.splitlines()
 
 
 print(f'''\
