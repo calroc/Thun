@@ -29,6 +29,7 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <setjmp.h>
 
 #include <gc.h>
 #include <gmp.h>
@@ -37,6 +38,7 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #include "definitions.h"
 
 
+static jmp_buf jbuf;
 
 const char *BLANKS = " \t";
 const char *FALSE = "false";
@@ -166,7 +168,7 @@ pop_any(JoyListPtr stack)
 	JoyList result;
 	if (!(*stack)) {
 		printf("Not enough values on stack.\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	}
 	result = *stack;
 	*stack = (*stack)->tail;
@@ -183,7 +185,7 @@ pop_int(JoyListPtr stack)
 		return &(node->head->value.i);
 	default:
 		printf("Not an integer.\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	}
 }
 
@@ -200,7 +202,7 @@ pop_bool(JoyListPtr stack)
 		return 0;
 	default:
 		printf("Not a Boolean.\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	}
 }
 
@@ -215,7 +217,7 @@ pop_list_node(JoyListPtr stack)
 		return node;
 	default:
 		printf("Not a list.\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	}
 }
 
@@ -372,14 +374,14 @@ Extract terms from the text until a closing bracket is found.
 	/* NULL string input? */
 	if (NULL == *text) {
 		printf("Missing ']' bracket. A\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	};
 
 	*text = trim_leading_blanks(*text);
 
 	if (NULL == *text) {
 		printf("Missing ']' bracket. B\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	};
 
 	/* Look for blanks or brackets. */
@@ -392,7 +394,7 @@ Extract terms from the text until a closing bracket is found.
 	*/
 	if (NULL == rest) {
 		printf("Missing ']' bracket. C\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	};
 
 	/* How many chars have we got? */
@@ -460,7 +462,7 @@ parse_node(char **text)
 	}
 	if (']' == rest[0]) {
 		printf("Extra ']' bracket.\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	}
 	printf("Should be unreachable.");
 	exit(1);
@@ -680,7 +682,7 @@ first(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 	JoyList quote = pop_list(stack);
 	if (!quote) {
 		printf("Cannot take first of empty list.\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	}
 	push_thing(quote->head, stack);
 }
@@ -692,7 +694,7 @@ rest(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 	JoyList quote = pop_list(stack);
 	if (!quote) {
 		printf("Cannot take rest of empty list.\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	}
 	push_quote(quote->tail, stack);
 }
@@ -749,7 +751,7 @@ truthy(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 		break;
 	default:
 		printf("Cannot Boolify.\n");
-		exit(1);
+		longjmp(jbuf, 1);
 	}
 }
 
@@ -790,7 +792,7 @@ joy(JoyListPtr stack, JoyListPtr expression)
 			interned = in_word_set(sym, strlen(sym));
 			if (!interned) {
 				printf("Unknown: %s\n", sym);
-				exit(1);
+				longjmp(jbuf, 1);
 			}
 			interned->func(stack, expression);
 		}
@@ -804,6 +806,7 @@ main(void)
 	char *status;
 	JoyList stack = EMPTY_LIST;
 	JoyList expression = EMPTY_LIST;
+	JoyList s;
 
 	/* Initialize Boolean singleton values. */
 	JoyTrue = newJoyType;
@@ -847,8 +850,14 @@ main(void)
 			printf("bye\n");
 			break;
 		}
-		expression = text_to_expression(line);
-		joy(&stack, &expression);
+		s = stack;
+		if (!setjmp(jbuf)) {
+			expression = text_to_expression(line);
+			joy(&stack, &expression);
+		} else {
+			/* err */
+			stack = s;
+		}
 		print_stack(stack);
 		printf("\n");
 	}
