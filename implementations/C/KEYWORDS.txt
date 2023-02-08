@@ -12,11 +12,23 @@ Do not edit.
 %}
 struct dict_entry;
 %%
+"=", def_eq
+">", def_gt
+"<", def_lt
+"!=", def_neq
+"<>", def_neq
+"<=", def_le
+">=", def_ge
 "%", tdiv_r
+mod, tdiv_r
 *, mul
+mul, mul
 +, add
+add, add
 -, sub
+sub, sub
 /, tdiv_q
+div, tdiv_q
 bool, truthy
 branch, branch
 clear, clear
@@ -78,7 +90,6 @@ ii, def_ii
 infra, def_infra
 infrst, def_infrst
 make_generator, def_make_generator
-mod, def_mod
 neg, def_neg
 not, def_not
 nulco, def_nulco

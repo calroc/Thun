@@ -43,7 +43,6 @@ ii [dip] dupdip i
 infra swons swaack [i] dip swaack
 infrst infra first
 make_generator [codireco] ccons
-mod %
 neg 0 swap -
 not [true] [false] branch
 nulco [nullary] cons

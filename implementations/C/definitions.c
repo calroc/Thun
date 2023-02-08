@@ -57,7 +57,6 @@ JoyList def_ii_body;
 JoyList def_infra_body;
 JoyList def_infrst_body;
 JoyList def_make_generator_body;
-JoyList def_mod_body;
 JoyList def_neg_body;
 JoyList def_not_body;
 JoyList def_nulco_body;
@@ -161,7 +160,6 @@ init_defs(void)
 	def_infra_body = text_to_expression("swons swaack [i] dip swaack");
 	def_infrst_body = text_to_expression("infra first");
 	def_make_generator_body = text_to_expression("[codireco] ccons");
-	def_mod_body = text_to_expression("%");
 	def_neg_body = text_to_expression("0 swap -");
 	def_not_body = text_to_expression("[true] [false] branch");
 	def_nulco_body = text_to_expression("[nullary] cons");
@@ -262,7 +260,6 @@ void def_ii(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { p
 void def_infra(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_infra_body, expression); }
 void def_infrst(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_infrst_body, expression); }
 void def_make_generator(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_make_generator_body, expression); }
-void def_mod(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_mod_body, expression); }
 void def_neg(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_neg_body, expression); }
 void def_not(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_not_body, expression); }
 void def_nulco(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_nulco_body, expression); }

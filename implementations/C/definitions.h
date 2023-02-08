@@ -48,7 +48,6 @@ void def_ii(JoyListPtr stack, JoyListPtr expression);
 void def_infra(JoyListPtr stack, JoyListPtr expression);
 void def_infrst(JoyListPtr stack, JoyListPtr expression);
 void def_make_generator(JoyListPtr stack, JoyListPtr expression);
-void def_mod(JoyListPtr stack, JoyListPtr expression);
 void def_neg(JoyListPtr stack, JoyListPtr expression);
 void def_not(JoyListPtr stack, JoyListPtr expression);
 void def_nulco(JoyListPtr stack, JoyListPtr expression);

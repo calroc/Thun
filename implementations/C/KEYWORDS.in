@@ -7,11 +7,23 @@
 %}
 struct dict_entry;
 %%
+"=", def_eq
+">", def_gt
+"<", def_lt
+"!=", def_neq
+"<>", def_neq
+"<=", def_le
+">=", def_ge
 "%", tdiv_r
+mod, tdiv_r
 *, mul
+mul, mul
 +, add
+add, add
 -, sub
+sub, sub
 /, tdiv_q
+div, tdiv_q
 bool, truthy
 branch, branch
 clear, clear
