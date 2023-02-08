@@ -1,7 +1,6 @@
 OBJS=joy.o keywords.o definitions.o
 
-# On FreeBSD gc and gmp are installed in /usr/local/:
-STATIC_GCLIB=/usr/local/lib/libgc.a /usr/local/lib/libgmp.a
+LDFLAGS=-L/usr/local/lib -lgc -lgmp
 
 # Hold my hand, in fact, hold both of them, and pat my head too please.
 CFLAGS = -ansi -Wall -Wextra -Werror -pedantic -Wstrict-overflow -fno-strict-aliasing -pedantic-errors

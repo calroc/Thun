@@ -236,6 +236,7 @@ concat_lists(JoyList a, JoyList b)
 {
 	JoyList node;
 	if (!a) return b;
+	if (!b) return a;
 	node = newJoyList;
 	node->head = a->head;
 	node->tail = concat_lists(a->tail, b);
