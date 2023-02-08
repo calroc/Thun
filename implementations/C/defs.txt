@@ -30,7 +30,7 @@ codi cons dip
 codireco codi reco
 dinfrirst dip infrst
 dipd [dip] codi
-disenstacken ? [uncons ?] loop pop
+disenstacken swaack pop
 down_to_zero [0 >] [dup --] while
 drop [rest] times
 dupd [dup] dip
@@ -100,6 +100,7 @@ unary nullary popd
 uncons [first] [rest] cleave
 unit [] cons
 unquoted [i] dip
+unstack [[] swaack] dip swoncat swaack pop
 unswons uncons swap
 while swap nulco dupdipd concat loop
 x dup i

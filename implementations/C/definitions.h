@@ -105,6 +105,7 @@ void def_unary(JoyListPtr stack, JoyListPtr expression);
 void def_uncons(JoyListPtr stack, JoyListPtr expression);
 void def_unit(JoyListPtr stack, JoyListPtr expression);
 void def_unquoted(JoyListPtr stack, JoyListPtr expression);
+void def_unstack(JoyListPtr stack, JoyListPtr expression);
 void def_unswons(JoyListPtr stack, JoyListPtr expression);
 void def_while(JoyListPtr stack, JoyListPtr expression);
 void def_x(JoyListPtr stack, JoyListPtr expression);

@@ -114,6 +114,7 @@ JoyList def_unary_body;
 JoyList def_uncons_body;
 JoyList def_unit_body;
 JoyList def_unquoted_body;
+JoyList def_unstack_body;
 JoyList def_unswons_body;
 JoyList def_while_body;
 JoyList def_x_body;
@@ -173,7 +174,7 @@ init_defs(void)
 	def_codireco_body = text_to_expression("codi reco");
 	def_dinfrirst_body = text_to_expression("dip infrst");
 	def_dipd_body = text_to_expression("[dip] codi");
-	def_disenstacken_body = text_to_expression("? [uncons ?] loop pop");
+	def_disenstacken_body = text_to_expression("swaack pop");
 	def_down_to_zero_body = text_to_expression("[0 >] [dup --] while");
 	def_drop_body = text_to_expression("[rest] times");
 	def_dupd_body = text_to_expression("[dup] dip");
@@ -243,6 +244,7 @@ init_defs(void)
 	def_uncons_body = text_to_expression("[first] [rest] cleave");
 	def_unit_body = text_to_expression("[] cons");
 	def_unquoted_body = text_to_expression("[i] dip");
+	def_unstack_body = text_to_expression("[[] swaack] dip swoncat swaack pop");
 	def_unswons_body = text_to_expression("uncons swap");
 	def_while_body = text_to_expression("swap nulco dupdipd concat loop");
 	def_x_body = text_to_expression("dup i");
@@ -369,6 +371,7 @@ void def_unary(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) 
 void def_uncons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_uncons_body, expression); }
 void def_unit(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_unit_body, expression); }
 void def_unquoted(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_unquoted_body, expression); }
+void def_unstack(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_unstack_body, expression); }
 void def_unswons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_unswons_body, expression); }
 void def_while(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_while_body, expression); }
 void def_x(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_x_body, expression); }

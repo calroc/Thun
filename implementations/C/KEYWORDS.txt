@@ -147,6 +147,7 @@ unary, def_unary
 uncons, def_uncons
 unit, def_unit
 unquoted, def_unquoted
+unstack, def_unstack
 unswons, def_unswons
 while, def_while
 x, def_x
