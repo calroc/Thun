@@ -364,9 +364,9 @@ print_stack(JoyList el)
 JoyList
 parse_list(char **text)
 {
-/*
-Extract terms from the text until a closing bracket is found.
-*/
+	/*
+	 * Extract terms from the text until a closing bracket is found.
+	 */
 	char *rest;
 	ptrdiff_t diff;
 	JoyList result = EMPTY_LIST;
@@ -386,12 +386,12 @@ Extract terms from the text until a closing bracket is found.
 
 	/* Look for blanks or brackets. */
 	rest = strpbrk(*text, " []");
-	/*
-	rest now points to a space or '[' or ']' after a term,
-	-or- it is NULL if the rest of the string is a single term
-	with no spaces nor brackets.  If that's the case then we're
-	missing a closing bracket!
-	*/
+	/* rest now points to a space or '[' or ']' after a term, -or- it
+	 * is NULL if the rest of the string is a single term with no
+	 * spaces nor brackets.  If that's the case then we're missing a
+	 * closing bracket!
+	 */
+
 	if (NULL == rest) {
 		printf("Missing ']' bracket. C\n");
 		longjmp(jbuf, 1);
@@ -767,11 +767,22 @@ truthy(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 
 
 void
+dispatch(char *sym, JoyListPtr stack, JoyListPtr expression)
+{
+	const struct dict_entry *word = in_word_set(sym, strlen(sym));
+	if (!word) {
+		printf("Unknown: %s\n", sym);
+		longjmp(jbuf, 1);
+	}
+	/* longjmp() is as good as return, no need for else clause. */
+	word->func(stack, expression);
+}
+
+
+void
 joy(JoyListPtr stack, JoyListPtr expression)
 {
-	char *sym;
 	JoyTypePtr term;
-	const struct dict_entry *interned;
 	JoyList e = EMPTY_LIST;
 	JoyListPtr ePtr = &e;
 	push_quote_onto_expression(*expression, ePtr);
@@ -786,18 +797,12 @@ joy(JoyListPtr stack, JoyListPtr expression)
 		case joyList:
 			push_thing(term, stack);
 			break;
-
 		case joySymbol:
-			sym = term->value.symbol;
-			interned = in_word_set(sym, strlen(sym));
-			if (!interned) {
-				printf("Unknown: %s\n", sym);
-				longjmp(jbuf, 1);
-			}
-			interned->func(stack, expression);
+			dispatch(term->value.symbol, stack, expression);
 		}
 	}
 }
+
 
 int
 main(void)
