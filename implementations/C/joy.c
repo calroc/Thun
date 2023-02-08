@@ -44,10 +44,12 @@ const char *BLANKS = " \t";
 const char *FALSE = "false";
 const char *TRUE = "true";
 
-JoyTypePtr JoyTrue;
-JoyTypePtr JoyFalse;
-
 JoyType loop_symbol = {joySymbol, {"loop"}};
+JoyType JoyTrueVal = {joyTrue, {NULL}};
+JoyType JoyFalseVal = {joyFalse, {NULL}};
+
+JoyTypePtr JoyTrue = &JoyTrueVal;
+JoyTypePtr JoyFalse = &JoyFalseVal;
 
 
 void*
@@ -799,17 +801,6 @@ main(void)
 	JoyList stack = EMPTY_LIST;
 	JoyList expression = EMPTY_LIST;
 	JoyList s;
-
-	/* Initialize Boolean singleton values. */
-	JoyTrue = newJoyType;
-	JoyTrue->kind = joyTrue;
-	JoyFalse= newJoyType;
-	JoyFalse->kind = joyFalse;
-	/*
-	I would like to define this at compile-time, but I
-	couldn't figure out the right syntax for initializer
-	for JoyType.value.  (T_T)
-	*/
 
 	mp_set_memory_functions(
 		&GC_malloc,
