@@ -80,27 +80,6 @@ my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
 
 
 JoyList
-push_integer_from_str(char *str, JoyList tail)
-{
-	JoyList el = newJoyList;
-	el->head = newJoyType;
-	el->head->kind = joyInt;
-	mpz_init_set_str(el->head->value.i, str, 10);
-	GC_register_finalizer(el->head->value.i, my_callback, NULL, NULL, NULL);
-	el->tail = tail;
-	return el;
-}
-
-
-char *
-trim_leading_blanks(char *str)
-{
-	size_t offset = strspn(str, BLANKS);
-	return (offset == strlen(str)) ? NULL : (str + offset);
-}
-
-
-JoyList
 make_non_list_node(char *text, size_t size)
 {
 	char *sym;
@@ -229,17 +208,6 @@ pop_list(JoyListPtr stack)
 }
 
 
-void
-push_quote_onto_expression(JoyList el, JoyListPtr expression)
-{
-	JoyList node;
-	if (!el) return;
-	node = make_list_node(el);
-	node->tail = *expression;
-	*expression = node;
-}
-
-
 JoyList
 newIntNode(void) {
 	JoyList node = newJoyList;
@@ -359,6 +327,14 @@ print_stack(JoyList el)
 ██║     ██║  ██║██║  ██║███████║███████╗██║  ██║
 ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
 */
+
+
+char *
+trim_leading_blanks(char *str)
+{
+	size_t offset = strspn(str, BLANKS);
+	return (offset == strlen(str)) ? NULL : (str + offset);
+}
 
 
 JoyList
@@ -503,6 +479,17 @@ one-by-one, and prepending new sub-expressions to the stack rather than
 concatenating them.
 
 */
+
+
+void
+push_quote_onto_expression(JoyList el, JoyListPtr expression)
+{
+	JoyList node;
+	if (!el) return;
+	node = make_list_node(el);
+	node->tail = *expression;
+	*expression = node;
+}
 
 
 JoyTypePtr
