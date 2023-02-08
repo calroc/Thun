@@ -13,31 +13,51 @@ and using it to write a simple Joy script to load the defs:
 Eh?
 
 '''
-import sys
+import sys, unicodedata
+
+
+def filt(name):
+    '''
+    Pass alphanumeric chars and underscores, convert other chars
+    to their Unicode names so they can work as (portions of) C
+    identifiers.
+    '''
+    alnum = True
+    for i, ch in enumerate(name):
+        if alnum:
+            if ch.isalnum() or ch == '_':
+                yield ch
+            else:
+                alnum = False
+                if i:
+                    yield '_'
+                yield (
+                    unicodedata
+                    .name(ch)
+                    .replace(' ', '_')
+                    .replace('-', '_')
+                    )
+        else:
+            if ch.isalnum() or ch == '_':
+                alnum = True
+                yield '_'
+                yield ch
+            else:
+                yield '_'
+                yield (
+                    unicodedata
+                    .name(ch)
+                    .replace(' ', '_')
+                    .replace('-', '_')
+                    )
+
+
+def convert_name(name):
+    return name if name.isidentifier() else ''.join(filt(name))
+
 
 defs = [line.strip() for line in open('./defs.txt')]
-##defs = '''\
-##abs dup 0 < [] [neg] branch
-##anamorphism [pop []] swap [dip swons] genrec
-##app1 grba infrst
-##app2 [grba swap grba swap] dip [infrst] cons ii
-##app3 3 appN
-##appN [grabN] codi map reverse disenstacken
-##at drop first
-##average [sum] [size] cleave /
-##b [i] dip i
-##binary unary popd
-##ccccons ccons ccons
-##ccons cons cons
-##cleave fork popdd
-##clop cleave popdd
-##codi cons dip
-##codireco codi reco
-##dinfrirst dip infrst
-##dipd [dip] codi
-##disenstacken ? [uncons ?] loop pop
-##swons swap cons
-##infra swons swaack [i] dip swaack'''.splitlines()
+
 
 
 print(f'''\
@@ -51,13 +71,14 @@ Do not edit.
 if sys.argv[-1] == '--header':
     for line in defs:
         name, body = line.split(None, 1)
+        name = convert_name(name)
         print(f'void def_{name}(JoyListPtr stack, JoyListPtr expression);')
 
 elif sys.argv[-1] == '--keywords':
     sys.stdout.write(open('KEYWORDS.in').read())
     for line in defs:
         name, body = line.split(None, 1)
-        print(f'{name}, def_{name}')
+        print(f'{name}, def_{convert_name(name)}')
 
 else:
     print('''\
@@ -72,6 +93,7 @@ of the definitions.
     ''')
     for line in defs:
         name, body = line.split(None, 1)
+        name = convert_name(name)
         print(f'JoyList def_{name}_body;')
 
 
@@ -88,6 +110,7 @@ init_defs(void)
     ''')
     for line in defs:
         name, body = line.split(None, 1)
+        name = convert_name(name)
         print(f'\tdef_{name}_body = text_to_expression("{body}");')
     print('}')
 
@@ -101,4 +124,5 @@ Last, a set of functions to go in the wordlist, one for each definition.
     ''')
     for line in defs:
         name, body = line.split(None, 1)
+        name = convert_name(name)
         print(f'void def_{name}(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) {{ push_quote_onto_expression(def_{name}_body, expression); }}')

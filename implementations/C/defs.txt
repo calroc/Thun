@@ -4,6 +4,14 @@ lt [false] [false] [true] cmp
 neq [true] [false] [true] cmp
 le [false] [true] [true] cmp
 ge [true] [true] [false] cmp
+-- 1 -
+? dup bool
+&& nulco [nullary [false]] dip branch
+++ 1 +
+|| nulco [nullary] dip [true] branch
+!- 0 >=
+<{} [] swap
+<<{} [] rollup
 abs dup 0 < [] [neg] branch
 anamorphism [pop []] swap [dip swons] genrec
 app1 grba infrst
@@ -62,6 +70,10 @@ range [0 <=] [1 - dup] anamorphism
 range_to_zero unit [down_to_zero] infra
 reco rest cons
 reverse <{} shunt
+roll> swap swapd
+roll< swapd swap
+rollup roll>
+rolldown roll<
 rrest rest rest
 run <{} infra
 second rest first
@@ -71,7 +83,7 @@ size [pop ++] step_zero
 spiral_next [[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
 split_at [drop] [take] clop
 split_list [take reverse] [drop] clop
-sqr dup *
+sqr dup mul
 stackd [stack] dip
 step_zero 0 roll> step
 stuncons stack uncons
@@ -91,3 +103,17 @@ unquoted [i] dip
 unswons uncons swap
 while swap nulco dupdipd concat loop
 x dup i
+step [_step0] x
+_step0 _step1 [popopop] [_stept] branch
+_step1 [?] dipd roll<
+_stept [uncons] dipd [dupdipd] dip x
+times [_times0] x
+_times0 _times1 [popopop] [_timest] branch
+_times1 [dup 0 >] dipd roll<
+_timest [[--] dip dupdipd] dip x
+map [_map0] cons [[] [_map?] [_mape]] dip tailrec
+_map? pop bool not
+_mape popd reverse
+_map0 [_map1] dipd _map2
+_map1 stackd shift
+_map2 [infrst] cons dipd roll< swons

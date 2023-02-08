@@ -18,6 +18,14 @@ JoyList def_lt_body;
 JoyList def_neq_body;
 JoyList def_le_body;
 JoyList def_ge_body;
+JoyList def_HYPHEN_MINUS_HYPHEN_MINUS_body;
+JoyList def_QUESTION_MARK_body;
+JoyList def_AMPERSAND_AMPERSAND_body;
+JoyList def_PLUS_SIGN_PLUS_SIGN_body;
+JoyList def_VERTICAL_LINE_VERTICAL_LINE_body;
+JoyList def_EXCLAMATION_MARK_HYPHEN_MINUS_body;
+JoyList def_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body;
+JoyList def_LESS_THAN_SIGN_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body;
 JoyList def_abs_body;
 JoyList def_anamorphism_body;
 JoyList def_app1_body;
@@ -76,6 +84,10 @@ JoyList def_range_body;
 JoyList def_range_to_zero_body;
 JoyList def_reco_body;
 JoyList def_reverse_body;
+JoyList def_roll_GREATER_THAN_SIGN_body;
+JoyList def_roll_LESS_THAN_SIGN_body;
+JoyList def_rollup_body;
+JoyList def_rolldown_body;
 JoyList def_rrest_body;
 JoyList def_run_body;
 JoyList def_second_body;
@@ -105,6 +117,20 @@ JoyList def_unquoted_body;
 JoyList def_unswons_body;
 JoyList def_while_body;
 JoyList def_x_body;
+JoyList def_step_body;
+JoyList def__step0_body;
+JoyList def__step1_body;
+JoyList def__stept_body;
+JoyList def_times_body;
+JoyList def__times0_body;
+JoyList def__times1_body;
+JoyList def__timest_body;
+JoyList def_map_body;
+JoyList def__map_QUESTION_MARK_body;
+JoyList def__mape_body;
+JoyList def__map0_body;
+JoyList def__map1_body;
+JoyList def__map2_body;
 
 
 /*
@@ -121,6 +147,14 @@ init_defs(void)
 	def_neq_body = text_to_expression("[true] [false] [true] cmp");
 	def_le_body = text_to_expression("[false] [true] [true] cmp");
 	def_ge_body = text_to_expression("[true] [true] [false] cmp");
+	def_HYPHEN_MINUS_HYPHEN_MINUS_body = text_to_expression("1 -");
+	def_QUESTION_MARK_body = text_to_expression("dup bool");
+	def_AMPERSAND_AMPERSAND_body = text_to_expression("nulco [nullary [false]] dip branch");
+	def_PLUS_SIGN_PLUS_SIGN_body = text_to_expression("1 +");
+	def_VERTICAL_LINE_VERTICAL_LINE_body = text_to_expression("nulco [nullary] dip [true] branch");
+	def_EXCLAMATION_MARK_HYPHEN_MINUS_body = text_to_expression("0 >=");
+	def_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body = text_to_expression("[] swap");
+	def_LESS_THAN_SIGN_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body = text_to_expression("[] rollup");
 	def_abs_body = text_to_expression("dup 0 < [] [neg] branch");
 	def_anamorphism_body = text_to_expression("[pop []] swap [dip swons] genrec");
 	def_app1_body = text_to_expression("grba infrst");
@@ -179,6 +213,10 @@ init_defs(void)
 	def_range_to_zero_body = text_to_expression("unit [down_to_zero] infra");
 	def_reco_body = text_to_expression("rest cons");
 	def_reverse_body = text_to_expression("<{} shunt");
+	def_roll_GREATER_THAN_SIGN_body = text_to_expression("swap swapd");
+	def_roll_LESS_THAN_SIGN_body = text_to_expression("swapd swap");
+	def_rollup_body = text_to_expression("roll>");
+	def_rolldown_body = text_to_expression("roll<");
 	def_rrest_body = text_to_expression("rest rest");
 	def_run_body = text_to_expression("<{} infra");
 	def_second_body = text_to_expression("rest first");
@@ -188,7 +226,7 @@ init_defs(void)
 	def_spiral_next_body = text_to_expression("[[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte");
 	def_split_at_body = text_to_expression("[drop] [take] clop");
 	def_split_list_body = text_to_expression("[take reverse] [drop] clop");
-	def_sqr_body = text_to_expression("dup *");
+	def_sqr_body = text_to_expression("dup mul");
 	def_stackd_body = text_to_expression("[stack] dip");
 	def_step_zero_body = text_to_expression("0 roll> step");
 	def_stuncons_body = text_to_expression("stack uncons");
@@ -208,6 +246,20 @@ init_defs(void)
 	def_unswons_body = text_to_expression("uncons swap");
 	def_while_body = text_to_expression("swap nulco dupdipd concat loop");
 	def_x_body = text_to_expression("dup i");
+	def_step_body = text_to_expression("[_step0] x");
+	def__step0_body = text_to_expression("_step1 [popopop] [_stept] branch");
+	def__step1_body = text_to_expression("[?] dipd roll<");
+	def__stept_body = text_to_expression("[uncons] dipd [dupdipd] dip x");
+	def_times_body = text_to_expression("[_times0] x");
+	def__times0_body = text_to_expression("_times1 [popopop] [_timest] branch");
+	def__times1_body = text_to_expression("[dup 0 >] dipd roll<");
+	def__timest_body = text_to_expression("[[--] dip dupdipd] dip x");
+	def_map_body = text_to_expression("[_map0] cons [[] [_map?] [_mape]] dip tailrec");
+	def__map_QUESTION_MARK_body = text_to_expression("pop bool not");
+	def__mape_body = text_to_expression("popd reverse");
+	def__map0_body = text_to_expression("[_map1] dipd _map2");
+	def__map1_body = text_to_expression("stackd shift");
+	def__map2_body = text_to_expression("[infrst] cons dipd roll< swons");
 }
 
 
@@ -221,6 +273,14 @@ void def_lt(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { p
 void def_neq(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_neq_body, expression); }
 void def_le(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_le_body, expression); }
 void def_ge(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_ge_body, expression); }
+void def_HYPHEN_MINUS_HYPHEN_MINUS(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_HYPHEN_MINUS_HYPHEN_MINUS_body, expression); }
+void def_QUESTION_MARK(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_QUESTION_MARK_body, expression); }
+void def_AMPERSAND_AMPERSAND(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_AMPERSAND_AMPERSAND_body, expression); }
+void def_PLUS_SIGN_PLUS_SIGN(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_PLUS_SIGN_PLUS_SIGN_body, expression); }
+void def_VERTICAL_LINE_VERTICAL_LINE(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_VERTICAL_LINE_VERTICAL_LINE_body, expression); }
+void def_EXCLAMATION_MARK_HYPHEN_MINUS(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_EXCLAMATION_MARK_HYPHEN_MINUS_body, expression); }
+void def_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body, expression); }
+void def_LESS_THAN_SIGN_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_LESS_THAN_SIGN_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body, expression); }
 void def_abs(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_abs_body, expression); }
 void def_anamorphism(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_anamorphism_body, expression); }
 void def_app1(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_app1_body, expression); }
@@ -279,6 +339,10 @@ void def_range(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) 
 void def_range_to_zero(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_range_to_zero_body, expression); }
 void def_reco(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_reco_body, expression); }
 void def_reverse(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_reverse_body, expression); }
+void def_roll_GREATER_THAN_SIGN(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_roll_GREATER_THAN_SIGN_body, expression); }
+void def_roll_LESS_THAN_SIGN(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_roll_LESS_THAN_SIGN_body, expression); }
+void def_rollup(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_rollup_body, expression); }
+void def_rolldown(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_rolldown_body, expression); }
 void def_rrest(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_rrest_body, expression); }
 void def_run(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_run_body, expression); }
 void def_second(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_second_body, expression); }
@@ -308,3 +372,17 @@ void def_unquoted(__attribute__((unused)) JoyListPtr stack, JoyListPtr expressio
 void def_unswons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_unswons_body, expression); }
 void def_while(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_while_body, expression); }
 void def_x(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_x_body, expression); }
+void def_step(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_step_body, expression); }
+void def__step0(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__step0_body, expression); }
+void def__step1(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__step1_body, expression); }
+void def__stept(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__stept_body, expression); }
+void def_times(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_times_body, expression); }
+void def__times0(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__times0_body, expression); }
+void def__times1(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__times1_body, expression); }
+void def__timest(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__timest_body, expression); }
+void def_map(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_map_body, expression); }
+void def__map_QUESTION_MARK(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map_QUESTION_MARK_body, expression); }
+void def__mape(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__mape_body, expression); }
+void def__map0(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map0_body, expression); }
+void def__map1(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map1_body, expression); }
+void def__map2(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map2_body, expression); }

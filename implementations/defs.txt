@@ -82,7 +82,7 @@ size [pop ++] step_zero
 spiral_next [[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
 split_at [drop] [take] clop
 split_list [take reverse] [drop] clop
-sqr dup *
+sqr dup mul
 stackd [stack] dip
 step_zero 0 roll> step
 stuncons stack uncons
@@ -90,7 +90,6 @@ sum [+] step_zero
 swapd [swap] dip
 swons swap cons
 swoncat swap concat
-sqr dup mul
 tailrec [i] genrec
 take <<{} [shift] times pop
 ternary binary popd
