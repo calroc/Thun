@@ -768,11 +768,12 @@ add_user_def(char *name, JoyList body)
 {
 	struct user_def *s;
 	HASH_FIND_STR(user_defs, name, s);
-	if (s) return; /* no overwrite */
-	s = GC_malloc(sizeof *s);
-	s->name = name;
+	if (!s) {
+		s = GC_malloc(sizeof *s);
+		s->name = name;
+		HASH_ADD_KEYPTR(hh, user_defs, s->name, strlen(s->name), s);
+	}
 	s->body = body;
-	HASH_ADD_KEYPTR(hh, user_defs, s->name, strlen(s->name), s);
 }
 
 
@@ -780,6 +781,8 @@ void
 inscribe(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
 	JoyList quote = pop_list(stack);
+	if (!quote) return;
+	if (joySymbol != quote->head->kind) return;
 	add_user_def(quote->head->value.symbol, quote->tail);
 }
 
