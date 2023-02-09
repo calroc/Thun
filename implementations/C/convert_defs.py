@@ -1,7 +1,9 @@
 '''
 It's cheap, but it works.
 
-Doesn't handle non-alnum names.
+I'd really like to replace this with, like, Awk or something, Python
+is a big dependency for what is really a small text munging task, eh?
+
 
 Because the strings are parsed at start time, rather than compile time,
 it's basically the same as implementing an inscribe command
@@ -11,6 +13,14 @@ and using it to write a simple Joy script to load the defs:
         print(f'[{line}] inscribe')
 
 Eh?
+
+But this way the defs get entered into the Gperf wordlist at compile time
+at least.
+
+I wonder if it would be possible, and worth it, to render the definition
+bodies as C literals?  To avoid parsing them at start time?  We don't want
+to GC them anyway, so the fact that they wouldn't be allocated by the GC
+shouldn't matter.
 
 '''
 import sys, unicodedata

@@ -55,6 +55,7 @@ make_generator [codireco] ccons
 neg 0 swap -
 not [true] [false] branch
 nulco [nullary] cons
+null [] concat bool not
 nullary [stack] dinfrirst
 of swap at
 pam [i] map
@@ -81,6 +82,7 @@ second rest first
 shift uncons [swons] dip
 shunt [swons] step
 size [pop ++] step_zero
+small dup null [rest null] [pop true] branch
 spiral_next [[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
 split_at [drop] [take] clop
 split_list [take reverse] [drop] clop

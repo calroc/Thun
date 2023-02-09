@@ -36,7 +36,7 @@
 #line 13 "KEYWORDS.txt"
 struct dict_entry;
 #include <string.h>
-/* maximum key range = 294, duplicates = 0 */
+/* maximum key range = 354, duplicates = 0 */
 
 #ifdef __GNUC__
 __inline
@@ -50,32 +50,32 @@ keyword_hash (register const char *str, register size_t len)
 {
   static const unsigned short asso_values[] =
     {
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 140, 295, 295, 295, 105,  90, 295,
-      295, 295, 100,  85, 295,  70, 295,  30,  15,  45,
-       35,  20, 295, 295, 295, 295, 295, 295, 295, 295,
-      125,  25,   0,  80, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295,   0, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295,  15, 295, 100,  10,   0,
-        5,  30,  40, 110,   5,  15, 295,   5,  40,  60,
-        0,  15,   0,  85,  70,  30,  25,   0,  95,  35,
-       20,  85,   0,   0,  75,   0, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295, 295, 295, 295, 295,
-      295, 295, 295, 295, 295, 295
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355,  15, 355, 355, 355, 105, 100, 355,
+      355, 355,  30,  95, 355,  75, 355,  25,  15,  45,
+       35,  20, 355, 355, 355, 355, 355, 355, 355, 355,
+       10,  90,   0,  85, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355,   0, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355,  15, 355, 100,  70,   0,
+        5,  30,  40, 110,   5,  15, 355,   5,  40,  60,
+        0,  15,   0,  85,  70,  30,  25,   0,  85,  35,
+       20,   5,   0,  40,  80,   0, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355, 355, 355, 355, 355,
+      355, 355, 355, 355, 355, 355
     };
   register unsigned int hval = len;
 
@@ -99,11 +99,11 @@ in_word_set (register const char *str, register size_t len)
 {
   enum
     {
-      TOTAL_KEYWORDS = 160,
+      TOTAL_KEYWORDS = 162,
       MIN_WORD_LENGTH = 1,
       MAX_WORD_LENGTH = 14,
       MIN_HASH_VALUE = 1,
-      MAX_HASH_VALUE = 294
+      MAX_HASH_VALUE = 354
     };
 
   static const struct dict_entry wordlist[] =
@@ -117,7 +117,9 @@ in_word_set (register const char *str, register size_t len)
       {""}, {""},
 #line 89 "KEYWORDS.txt"
       {"dupdip", def_dupdip},
-      {""}, {""},
+#line 19 "KEYWORDS.txt"
+      {"<>", def_neq},
+      {""},
 #line 87 "KEYWORDS.txt"
       {"dupd", def_dupd},
 #line 88 "KEYWORDS.txt"
@@ -128,21 +130,21 @@ in_word_set (register const char *str, register size_t len)
 #line 46 "KEYWORDS.txt"
       {"pop", pop},
       {""},
-#line 114 "KEYWORDS.txt"
-      {"popop", def_popop},
-#line 73 "KEYWORDS.txt"
-      {"b", def_b},
 #line 115 "KEYWORDS.txt"
+      {"popop", def_popop},
+#line 17 "KEYWORDS.txt"
+      {"<", def_lt},
+#line 116 "KEYWORDS.txt"
       {"popopop", def_popopop},
 #line 40 "KEYWORDS.txt"
       {"dip", dip},
-#line 112 "KEYWORDS.txt"
-      {"popd", def_popd},
 #line 113 "KEYWORDS.txt"
+      {"popd", def_popd},
+#line 114 "KEYWORDS.txt"
       {"popdd", def_popdd},
-#line 116 "KEYWORDS.txt"
-      {"popopd", def_popopd},
 #line 117 "KEYWORDS.txt"
+      {"popopd", def_popopd},
+#line 118 "KEYWORDS.txt"
       {"popopdd", def_popopdd},
       {""},
 #line 82 "KEYWORDS.txt"
@@ -151,24 +153,25 @@ in_word_set (register const char *str, register size_t len)
 #line 43 "KEYWORDS.txt"
       {"i", i_joyfunc},
       {""}, {""},
-#line 149 "KEYWORDS.txt"
+#line 151 "KEYWORDS.txt"
       {"tuck", def_tuck},
       {""},
-#line 151 "KEYWORDS.txt"
+#line 153 "KEYWORDS.txt"
       {"uncons", def_uncons},
 #line 75 "KEYWORDS.txt"
       {"ccccons", def_ccccons},
       {""},
 #line 79 "KEYWORDS.txt"
       {"codi", def_codi},
-      {""},
-#line 157 "KEYWORDS.txt"
+#line 99 "KEYWORDS.txt"
+      {"hypot", def_hypot},
+#line 159 "KEYWORDS.txt"
       {"x", def_x},
-#line 154 "KEYWORDS.txt"
+#line 156 "KEYWORDS.txt"
       {"unstack", def_unstack},
 #line 80 "KEYWORDS.txt"
       {"codireco", def_codireco},
-#line 152 "KEYWORDS.txt"
+#line 154 "KEYWORDS.txt"
       {"unit", def_unit},
       {""},
 #line 39 "KEYWORDS.txt"
@@ -180,316 +183,321 @@ in_word_set (register const char *str, register size_t len)
       {"cons", cons},
 #line 76 "KEYWORDS.txt"
       {"ccons", def_ccons},
-#line 15 "KEYWORDS.txt"
-      {"=", def_eq},
-#line 21 "KEYWORDS.txt"
-      {">=", def_ge},
-#line 31 "KEYWORDS.txt"
-      {"sub", sub},
+#line 32 "KEYWORDS.txt"
+      {"/", tdiv_q},
+#line 109 "KEYWORDS.txt"
+      {"nullary", def_nullary},
+#line 63 "KEYWORDS.txt"
+      {"<{}", def_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET},
 #line 81 "KEYWORDS.txt"
       {"dinfrirst", def_dinfrirst},
-#line 148 "KEYWORDS.txt"
+#line 150 "KEYWORDS.txt"
       {"third", def_third},
       {""}, {""}, {""},
 #line 78 "KEYWORDS.txt"
       {"clop", def_clop},
 #line 107 "KEYWORDS.txt"
       {"nulco", def_nulco},
-#line 32 "KEYWORDS.txt"
-      {"/", tdiv_q},
+#line 26 "KEYWORDS.txt"
+      {"*", mul},
 #line 83 "KEYWORDS.txt"
       {"disenstacken", def_disenstacken},
 #line 37 "KEYWORDS.txt"
       {"cmp", cmp_joyfunc},
-      {""},
-#line 132 "KEYWORDS.txt"
+#line 64 "KEYWORDS.txt"
+      {"<<{}", def_LESS_THAN_SIGN_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET},
+#line 133 "KEYWORDS.txt"
       {"shunt", def_shunt},
 #line 94 "KEYWORDS.txt"
       {"fourth", def_fourth},
-#line 155 "KEYWORDS.txt"
+#line 157 "KEYWORDS.txt"
       {"unswons", def_unswons},
 #line 106 "KEYWORDS.txt"
       {"not", def_not},
 #line 91 "KEYWORDS.txt"
       {"enstacken", def_enstacken},
       {""},
-#line 130 "KEYWORDS.txt"
+#line 131 "KEYWORDS.txt"
       {"second", def_second},
       {""},
-#line 129 "KEYWORDS.txt"
+#line 130 "KEYWORDS.txt"
       {"run", def_run},
 #line 45 "KEYWORDS.txt"
       {"loop", loop},
       {""}, {""},
-#line 163 "KEYWORDS.txt"
+#line 165 "KEYWORDS.txt"
       {"_times0", def__times0},
       {""},
-#line 133 "KEYWORDS.txt"
-      {"size", def_size},
-#line 131 "KEYWORDS.txt"
-      {"shift", def_shift},
 #line 134 "KEYWORDS.txt"
+      {"size", def_size},
+#line 132 "KEYWORDS.txt"
+      {"shift", def_shift},
+#line 136 "KEYWORDS.txt"
       {"spiral_next", def_spiral_next},
 #line 85 "KEYWORDS.txt"
       {"down_to_zero", def_down_to_zero},
 #line 44 "KEYWORDS.txt"
       {"inscribe", inscribe},
-#line 34 "KEYWORDS.txt"
-      {"bool", truthy},
+#line 108 "KEYWORDS.txt"
+      {"null", def_null},
       {""},
 #line 103 "KEYWORDS.txt"
       {"infrst", def_infrst},
-#line 165 "KEYWORDS.txt"
+#line 167 "KEYWORDS.txt"
       {"_timest", def__timest},
 #line 25 "KEYWORDS.txt"
       {"mod", tdiv_r},
-#line 158 "KEYWORDS.txt"
+#line 160 "KEYWORDS.txt"
       {"step", def_step},
-#line 156 "KEYWORDS.txt"
+#line 158 "KEYWORDS.txt"
       {"while", def_while},
-#line 159 "KEYWORDS.txt"
+#line 161 "KEYWORDS.txt"
       {"_step0", def__step0},
 #line 53 "KEYWORDS.txt"
       {"lt", def_lt},
-#line 140 "KEYWORDS.txt"
+#line 142 "KEYWORDS.txt"
       {"stuncons", def_stuncons},
 #line 86 "KEYWORDS.txt"
       {"drop", def_drop},
-      {""}, {""},
-#line 109 "KEYWORDS.txt"
+      {""},
+#line 74 "KEYWORDS.txt"
+      {"binary", def_binary},
+#line 110 "KEYWORDS.txt"
       {"of", def_of},
-#line 153 "KEYWORDS.txt"
+#line 155 "KEYWORDS.txt"
       {"unquoted", def_unquoted},
       {""}, {""},
-#line 161 "KEYWORDS.txt"
+#line 163 "KEYWORDS.txt"
       {"_stept", def__stept},
 #line 55 "KEYWORDS.txt"
       {"le", def_le},
-#line 135 "KEYWORDS.txt"
+#line 137 "KEYWORDS.txt"
       {"split_at", def_split_at},
 #line 70 "KEYWORDS.txt"
       {"appN", def_appN},
-#line 136 "KEYWORDS.txt"
+#line 138 "KEYWORDS.txt"
       {"split_list", def_split_list},
 #line 77 "KEYWORDS.txt"
       {"cleave", def_cleave},
-#line 164 "KEYWORDS.txt"
+#line 166 "KEYWORDS.txt"
       {"_times1", def__times1},
       {""},
-#line 139 "KEYWORDS.txt"
+#line 141 "KEYWORDS.txt"
       {"step_zero", def_step_zero},
-      {""},
-#line 119 "KEYWORDS.txt"
+#line 152 "KEYWORDS.txt"
+      {"unary", def_unary},
+#line 120 "KEYWORDS.txt"
       {"quoted", def_quoted},
-#line 144 "KEYWORDS.txt"
+#line 146 "KEYWORDS.txt"
       {"swoncat", def_swoncat},
-#line 173 "KEYWORDS.txt"
+#line 175 "KEYWORDS.txt"
       {"and", def_and},
 #line 100 "KEYWORDS.txt"
       {"ifte", def_ifte},
-#line 143 "KEYWORDS.txt"
+#line 145 "KEYWORDS.txt"
       {"swons", def_swons},
-#line 74 "KEYWORDS.txt"
-      {"binary", def_binary},
-#line 118 "KEYWORDS.txt"
+#line 84 "KEYWORDS.txt"
+      {"divmod", def_divmod},
+#line 119 "KEYWORDS.txt"
       {"product", def_product},
 #line 29 "KEYWORDS.txt"
       {"add", add},
-#line 122 "KEYWORDS.txt"
+#line 123 "KEYWORDS.txt"
       {"reco", def_reco},
-#line 99 "KEYWORDS.txt"
-      {"hypot", def_hypot},
-#line 160 "KEYWORDS.txt"
+      {""},
+#line 162 "KEYWORDS.txt"
       {"_step1", def__step1},
-#line 111 "KEYWORDS.txt"
+#line 112 "KEYWORDS.txt"
       {"pm", def_pm},
 #line 95 "KEYWORDS.txt"
       {"gcd", def_gcd},
 #line 69 "KEYWORDS.txt"
       {"app3", def_app3},
-      {""},
-#line 84 "KEYWORDS.txt"
-      {"divmod", def_divmod},
-#line 19 "KEYWORDS.txt"
-      {"<>", def_neq},
-#line 63 "KEYWORDS.txt"
-      {"<{}", def_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET},
-      {""},
-#line 124 "KEYWORDS.txt"
+      {""}, {""}, {""}, {""}, {""},
+#line 125 "KEYWORDS.txt"
       {"roll>", def_roll_GREATER_THAN_SIGN},
-#line 126 "KEYWORDS.txt"
-      {"rollup", def_rollup},
-#line 108 "KEYWORDS.txt"
-      {"nullary", def_nullary},
 #line 127 "KEYWORDS.txt"
+      {"rollup", def_rollup},
+      {""},
+#line 128 "KEYWORDS.txt"
       {"rolldown", def_rolldown},
 #line 93 "KEYWORDS.txt"
       {"fork", def_fork},
-#line 162 "KEYWORDS.txt"
+#line 164 "KEYWORDS.txt"
       {"times", def_times},
-      {""}, {""}, {""},
+      {""},
+#line 149 "KEYWORDS.txt"
+      {"ternary", def_ternary},
+      {""},
 #line 68 "KEYWORDS.txt"
       {"app2", def_app2},
-      {""},
-#line 30 "KEYWORDS.txt"
-      {"-", sub},
+#line 126 "KEYWORDS.txt"
+      {"roll<", def_roll_LESS_THAN_SIGN},
+#line 73 "KEYWORDS.txt"
+      {"b", def_b},
       {""},
 #line 27 "KEYWORDS.txt"
       {"mul", mul},
-      {""},
+#line 34 "KEYWORDS.txt"
+      {"bool", truthy},
 #line 36 "KEYWORDS.txt"
       {"clear", clear},
 #line 96 "KEYWORDS.txt"
       {"genrec", def_genrec},
-#line 145 "KEYWORDS.txt"
+#line 147 "KEYWORDS.txt"
       {"tailrec", def_tailrec},
       {""},
 #line 67 "KEYWORDS.txt"
       {"app1", def_app1},
       {""},
-#line 23 "KEYWORDS.txt"
-      {"|", def_or},
+#line 30 "KEYWORDS.txt"
+      {"-", sub},
 #line 71 "KEYWORDS.txt"
       {"at", def_at},
-#line 141 "KEYWORDS.txt"
+#line 143 "KEYWORDS.txt"
       {"sum", def_sum},
       {""},
 #line 42 "KEYWORDS.txt"
       {"first", first},
       {""},
-#line 174 "KEYWORDS.txt"
+#line 176 "KEYWORDS.txt"
       {"or", def_or},
       {""},
 #line 47 "KEYWORDS.txt"
       {"rest", rest},
 #line 102 "KEYWORDS.txt"
       {"infra", def_infra},
-#line 58 "KEYWORDS.txt"
-      {"?", def_QUESTION_MARK},
+#line 23 "KEYWORDS.txt"
+      {"|", def_or},
 #line 52 "KEYWORDS.txt"
       {"gt", def_gt},
-#line 166 "KEYWORDS.txt"
+#line 168 "KEYWORDS.txt"
       {"map", def_map},
-#line 146 "KEYWORDS.txt"
+#line 148 "KEYWORDS.txt"
       {"take", def_take},
 #line 48 "KEYWORDS.txt"
       {"stack", stack},
-#line 138 "KEYWORDS.txt"
+#line 140 "KEYWORDS.txt"
       {"stackd", def_stackd},
-      {""}, {""},
+#line 62 "KEYWORDS.txt"
+      {"!-", def_EXCLAMATION_MARK_HYPHEN_MINUS},
+      {""},
 #line 50 "KEYWORDS.txt"
       {"swap", swap},
       {""},
-#line 28 "KEYWORDS.txt"
-      {"+", add},
+#line 58 "KEYWORDS.txt"
+      {"?", def_QUESTION_MARK},
 #line 56 "KEYWORDS.txt"
       {"ge", def_ge},
-#line 65 "KEYWORDS.txt"
-      {"abs", def_abs},
+#line 31 "KEYWORDS.txt"
+      {"sub", sub},
       {""},
-#line 142 "KEYWORDS.txt"
+#line 144 "KEYWORDS.txt"
       {"swapd", def_swapd},
 #line 49 "KEYWORDS.txt"
       {"swaack", swaack},
-#line 20 "KEYWORDS.txt"
-      {"<=", def_le},
-#line 172 "KEYWORDS.txt"
+      {""},
+#line 174 "KEYWORDS.txt"
       {"xor", def_xor},
       {""}, {""},
-#line 22 "KEYWORDS.txt"
-      {"&", def_and},
-      {""}, {""}, {""}, {""}, {""},
+#line 15 "KEYWORDS.txt"
+      {"=", def_eq},
+#line 21 "KEYWORDS.txt"
+      {">=", def_ge},
+      {""}, {""}, {""}, {""},
 #line 92 "KEYWORDS.txt"
       {"flatten", def_flatten},
-      {""}, {""},
-#line 150 "KEYWORDS.txt"
-      {"unary", def_unary},
-#line 35 "KEYWORDS.txt"
-      {"branch", branch},
+      {""}, {""}, {""},
+#line 28 "KEYWORDS.txt"
+      {"+", add},
+#line 20 "KEYWORDS.txt"
+      {"<=", def_le},
+#line 33 "KEYWORDS.txt"
+      {"div", tdiv_q},
+      {""},
+#line 171 "KEYWORDS.txt"
+      {"_map0", def__map0},
+      {""},
 #line 18 "KEYWORDS.txt"
       {"!=", def_neq},
-      {""}, {""},
-#line 169 "KEYWORDS.txt"
-      {"_map0", def__map0},
-      {""}, {""},
-#line 121 "KEYWORDS.txt"
+#line 122 "KEYWORDS.txt"
       {"range_to_zero", def_range_to_zero},
       {""},
-#line 128 "KEYWORDS.txt"
+#line 129 "KEYWORDS.txt"
       {"rrest", def_rrest},
-#line 26 "KEYWORDS.txt"
-      {"*", mul},
+#line 22 "KEYWORDS.txt"
+      {"&", def_and},
 #line 51 "KEYWORDS.txt"
       {"eq", def_eq},
 #line 54 "KEYWORDS.txt"
       {"neq", def_neq},
       {""},
-#line 120 "KEYWORDS.txt"
+#line 121 "KEYWORDS.txt"
       {"range", def_range},
       {""}, {""}, {""}, {""},
-#line 168 "KEYWORDS.txt"
+#line 170 "KEYWORDS.txt"
       {"_mape", def__mape},
 #line 24 "KEYWORDS.txt"
       {"%", tdiv_r},
-#line 57 "KEYWORDS.txt"
-      {"--", def_HYPHEN_MINUS_HYPHEN_MINUS},
-#line 33 "KEYWORDS.txt"
-      {"div", tdiv_q},
-      {""},
-#line 171 "KEYWORDS.txt"
+      {""}, {""}, {""},
+#line 173 "KEYWORDS.txt"
       {"_map2", def__map2},
-      {""},
-#line 147 "KEYWORDS.txt"
-      {"ternary", def_ternary},
-      {""}, {""}, {""}, {""}, {""},
-#line 110 "KEYWORDS.txt"
+      {""}, {""}, {""}, {""}, {""}, {""},
+#line 124 "KEYWORDS.txt"
+      {"reverse", def_reverse},
+#line 111 "KEYWORDS.txt"
       {"pam", def_pam},
       {""},
-#line 170 "KEYWORDS.txt"
+#line 172 "KEYWORDS.txt"
       {"_map1", def__map1},
       {""},
+#line 57 "KEYWORDS.txt"
+      {"--", def_HYPHEN_MINUS_HYPHEN_MINUS},
+      {""}, {""}, {""}, {""}, {""},
+#line 65 "KEYWORDS.txt"
+      {"abs", def_abs},
+      {""},
+#line 135 "KEYWORDS.txt"
+      {"small", def_small},
+      {""}, {""}, {""}, {""}, {""}, {""},
 #line 61 "KEYWORDS.txt"
       {"||", def_VERTICAL_LINE_VERTICAL_LINE},
-      {""}, {""}, {""}, {""},
-#line 123 "KEYWORDS.txt"
-      {"reverse", def_reverse},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""},
 #line 104 "KEYWORDS.txt"
       {"make_generator", def_make_generator},
       {""},
-#line 17 "KEYWORDS.txt"
-      {"<", def_lt},
-      {""},
+#line 35 "KEYWORDS.txt"
+      {"branch", branch},
+#line 72 "KEYWORDS.txt"
+      {"average", def_average},
 #line 105 "KEYWORDS.txt"
       {"neg", def_neg},
-#line 64 "KEYWORDS.txt"
-      {"<<{}", def_LESS_THAN_SIGN_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET},
-#line 125 "KEYWORDS.txt"
-      {"roll<", def_roll_LESS_THAN_SIGN},
+      {""}, {""}, {""}, {""},
+#line 139 "KEYWORDS.txt"
+      {"sqr", def_sqr},
+      {""}, {""}, {""}, {""}, {""}, {""},
+#line 169 "KEYWORDS.txt"
+      {"_map?", def__map_QUESTION_MARK},
+      {""}, {""}, {""}, {""}, {""},
+#line 66 "KEYWORDS.txt"
+      {"anamorphism", def_anamorphism},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""},
+#line 97 "KEYWORDS.txt"
+      {"grabN", def_grabN},
       {""},
 #line 60 "KEYWORDS.txt"
       {"++", def_PLUS_SIGN_PLUS_SIGN},
-#line 137 "KEYWORDS.txt"
-      {"sqr", def_sqr},
-      {""},
-#line 167 "KEYWORDS.txt"
-      {"_map?", def__map_QUESTION_MARK},
-      {""},
-#line 72 "KEYWORDS.txt"
-      {"average", def_average},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-#line 66 "KEYWORDS.txt"
-      {"anamorphism", def_anamorphism},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""},
 #line 59 "KEYWORDS.txt"
       {"&&", def_AMPERSAND_AMPERSAND},
       {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-#line 62 "KEYWORDS.txt"
-      {"!-", def_EXCLAMATION_MARK_HYPHEN_MINUS},
-      {""}, {""},
-#line 97 "KEYWORDS.txt"
-      {"grabN", def_grabN},
-      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+      {""}, {""}, {""}, {""}, {""}, {""},
 #line 98 "KEYWORDS.txt"
       {"grba", def_grba}
     };

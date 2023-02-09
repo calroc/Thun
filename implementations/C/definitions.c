@@ -69,6 +69,7 @@ JoyList def_make_generator_body;
 JoyList def_neg_body;
 JoyList def_not_body;
 JoyList def_nulco_body;
+JoyList def_null_body;
 JoyList def_nullary_body;
 JoyList def_of_body;
 JoyList def_pam_body;
@@ -95,6 +96,7 @@ JoyList def_second_body;
 JoyList def_shift_body;
 JoyList def_shunt_body;
 JoyList def_size_body;
+JoyList def_small_body;
 JoyList def_spiral_next_body;
 JoyList def_split_at_body;
 JoyList def_split_list_body;
@@ -203,6 +205,7 @@ init_defs(void)
 	def_neg_body = text_to_expression("0 swap -");
 	def_not_body = text_to_expression("[true] [false] branch");
 	def_nulco_body = text_to_expression("[nullary] cons");
+	def_null_body = text_to_expression("[] concat bool not");
 	def_nullary_body = text_to_expression("[stack] dinfrirst");
 	def_of_body = text_to_expression("swap at");
 	def_pam_body = text_to_expression("[i] map");
@@ -229,6 +232,7 @@ init_defs(void)
 	def_shift_body = text_to_expression("uncons [swons] dip");
 	def_shunt_body = text_to_expression("[swons] step");
 	def_size_body = text_to_expression("[pop ++] step_zero");
+	def_small_body = text_to_expression("dup null [rest null] [pop true] branch");
 	def_spiral_next_body = text_to_expression("[[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte");
 	def_split_at_body = text_to_expression("[drop] [take] clop");
 	def_split_list_body = text_to_expression("[take reverse] [drop] clop");
@@ -334,6 +338,7 @@ void def_make_generator(__attribute__((unused)) JoyListPtr stack, JoyListPtr exp
 void def_neg(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_neg_body, expression); }
 void def_not(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_not_body, expression); }
 void def_nulco(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_nulco_body, expression); }
+void def_null(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_null_body, expression); }
 void def_nullary(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_nullary_body, expression); }
 void def_of(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_of_body, expression); }
 void def_pam(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_pam_body, expression); }
@@ -360,6 +365,7 @@ void def_second(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression)
 void def_shift(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_shift_body, expression); }
 void def_shunt(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_shunt_body, expression); }
 void def_size(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_size_body, expression); }
+void def_small(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_small_body, expression); }
 void def_spiral_next(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_spiral_next_body, expression); }
 void def_split_at(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_split_at_body, expression); }
 void def_split_list(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_split_list_body, expression); }

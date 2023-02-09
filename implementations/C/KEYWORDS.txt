@@ -105,6 +105,7 @@ make_generator, def_make_generator
 neg, def_neg
 not, def_not
 nulco, def_nulco
+null, def_null
 nullary, def_nullary
 of, def_of
 pam, def_pam
@@ -131,6 +132,7 @@ second, def_second
 shift, def_shift
 shunt, def_shunt
 size, def_size
+small, def_small
 spiral_next, def_spiral_next
 split_at, def_split_at
 split_list, def_split_list
