@@ -36,6 +36,7 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
 
 #include "joy.h"
 #include "definitions.h"
+#include "uthash.h"
 
 
 static jmp_buf jbuf;
@@ -69,6 +70,18 @@ my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
 	mpz_t *obj = (mpz_t*)void_obj;
 	mpz_clear(*obj);
 }
+
+
+
+
+
+struct user_def {
+	char *name;/* key */
+	JoyList body;
+	UT_hash_handle hh;         /* makes this structure hashable */
+};
+
+struct user_def *user_defs = NULL;
 
 
 /*
@@ -747,6 +760,31 @@ truthy(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 
 
 /*
+ *User definitions with inscribe command.
+ */
+
+void
+add_user_def(char *name, JoyList body)
+{
+	struct user_def *s;
+	HASH_FIND_STR(user_defs, name, s);
+	if (s) return; /* no overwrite */
+	s = GC_malloc(sizeof *s);
+	s->name = name;
+	s->body = body;
+	HASH_ADD_KEYPTR(hh, user_defs, s->name, strlen(s->name), s);
+}
+
+
+void
+inscribe(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	JoyList quote = pop_list(stack);
+	add_user_def(quote->head->value.symbol, quote->tail);
+}
+
+
+/*
 ██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
 ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
 ██║██╔██╗ ██║   ██║   █████╗  ██████╔╝██████╔╝██████╔╝█████╗     ██║   █████╗  ██████╔╝
@@ -759,13 +797,19 @@ truthy(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 void
 dispatch(char *sym, JoyListPtr stack, JoyListPtr expression)
 {
+	struct user_def *s;
 	const struct dict_entry *word = in_word_set(sym, strlen(sym));
-	if (!word) {
-		printf("Unknown: %s\n", sym);
-		longjmp(jbuf, 1);
+	if (word) {
+		word->func(stack, expression);
+		return;
 	}
-	/* longjmp() is as good as return, no need for else clause. */
-	word->func(stack, expression);
+	HASH_FIND_STR(user_defs, sym, s);
+	if (s) {
+		push_quote_onto_expression(s->body, expression);
+		return;
+	}
+	printf("Unknown: %s\n", sym);
+	longjmp(jbuf, 1);
 }
 
 

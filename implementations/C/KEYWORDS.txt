@@ -39,6 +39,7 @@ dip, dip
 dup, dup
 first, first
 i, i_joyfunc
+inscribe, inscribe
 loop, loop
 pop, pop
 rest, rest

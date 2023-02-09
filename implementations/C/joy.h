@@ -71,6 +71,7 @@ void dip(JoyListPtr stack, JoyListPtr expression);
 void dup(JoyListPtr stack, JoyListPtr expression);
 void first(JoyListPtr stack, JoyListPtr expression);
 void i_joyfunc(JoyListPtr stack, JoyListPtr expression);
+void inscribe(JoyListPtr stack, JoyListPtr expression);
 void loop(JoyListPtr stack, JoyListPtr expression);
 void pop(JoyListPtr stack, JoyListPtr expression);
 void rest(JoyListPtr stack, JoyListPtr expression);
