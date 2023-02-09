@@ -125,3 +125,5 @@ void def__map0(JoyListPtr stack, JoyListPtr expression);
 void def__map1(JoyListPtr stack, JoyListPtr expression);
 void def__map2(JoyListPtr stack, JoyListPtr expression);
 void def_xor(JoyListPtr stack, JoyListPtr expression);
+void def_and(JoyListPtr stack, JoyListPtr expression);
+void def_or(JoyListPtr stack, JoyListPtr expression);

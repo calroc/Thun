@@ -14,6 +14,8 @@ struct dict_entry;
 "<>", def_neq
 "<=", def_le
 ">=", def_ge
+"&", def_and
+"|", def_or
 "%", tdiv_r
 mod, tdiv_r
 *, mul

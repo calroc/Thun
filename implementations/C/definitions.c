@@ -134,6 +134,8 @@ JoyList def__map0_body;
 JoyList def__map1_body;
 JoyList def__map2_body;
 JoyList def_xor_body;
+JoyList def_and_body;
+JoyList def_or_body;
 
 
 /*
@@ -266,6 +268,8 @@ init_defs(void)
 	def__map1_body = text_to_expression("stackd shift");
 	def__map2_body = text_to_expression("[infrst] cons dipd roll< swons");
 	def_xor_body = text_to_expression("[not not] [not] branch");
+	def_and_body = text_to_expression("[pop false] [not not] branch");
+	def_or_body = text_to_expression("[not not] [pop true] branch");
 }
 
 
@@ -395,3 +399,5 @@ void def__map0(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) 
 void def__map1(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map1_body, expression); }
 void def__map2(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map2_body, expression); }
 void def_xor(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_xor_body, expression); }
+void def_and(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_and_body, expression); }
+void def_or(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_or_body, expression); }

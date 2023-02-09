@@ -19,6 +19,8 @@ struct dict_entry;
 "<>", def_neq
 "<=", def_le
 ">=", def_ge
+"&", def_and
+"|", def_or
 "%", tdiv_r
 mod, tdiv_r
 *, mul
@@ -168,3 +170,5 @@ _map0, def__map0
 _map1, def__map1
 _map2, def__map2
 xor, def_xor
+and, def_and
+or, def_or
