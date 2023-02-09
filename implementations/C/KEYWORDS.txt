@@ -79,6 +79,7 @@ codireco, def_codireco
 dinfrirst, def_dinfrirst
 dipd, def_dipd
 disenstacken, def_disenstacken
+divmod, def_divmod
 down_to_zero, def_down_to_zero
 drop, def_drop
 dupd, def_dupd
@@ -166,3 +167,4 @@ _mape, def__mape
 _map0, def__map0
 _map1, def__map1
 _map2, def__map2
+xor, def_xor

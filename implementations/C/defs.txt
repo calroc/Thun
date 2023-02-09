@@ -31,6 +31,7 @@ codireco codi reco
 dinfrirst dip infrst
 dipd [dip] codi
 disenstacken swaack pop
+divmod [/] [%] clop
 down_to_zero [0 >] [dup --] while
 drop [rest] times
 dupd [dup] dip
@@ -118,3 +119,4 @@ _mape popd reverse
 _map0 [_map1] dipd _map2
 _map1 stackd shift
 _map2 [infrst] cons dipd roll< swons
+xor [not not] [not] branch

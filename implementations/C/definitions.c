@@ -45,6 +45,7 @@ JoyList def_codireco_body;
 JoyList def_dinfrirst_body;
 JoyList def_dipd_body;
 JoyList def_disenstacken_body;
+JoyList def_divmod_body;
 JoyList def_down_to_zero_body;
 JoyList def_drop_body;
 JoyList def_dupd_body;
@@ -132,6 +133,7 @@ JoyList def__mape_body;
 JoyList def__map0_body;
 JoyList def__map1_body;
 JoyList def__map2_body;
+JoyList def_xor_body;
 
 
 /*
@@ -175,6 +177,7 @@ init_defs(void)
 	def_dinfrirst_body = text_to_expression("dip infrst");
 	def_dipd_body = text_to_expression("[dip] codi");
 	def_disenstacken_body = text_to_expression("swaack pop");
+	def_divmod_body = text_to_expression("[/] [%] clop");
 	def_down_to_zero_body = text_to_expression("[0 >] [dup --] while");
 	def_drop_body = text_to_expression("[rest] times");
 	def_dupd_body = text_to_expression("[dup] dip");
@@ -262,6 +265,7 @@ init_defs(void)
 	def__map0_body = text_to_expression("[_map1] dipd _map2");
 	def__map1_body = text_to_expression("stackd shift");
 	def__map2_body = text_to_expression("[infrst] cons dipd roll< swons");
+	def_xor_body = text_to_expression("[not not] [not] branch");
 }
 
 
@@ -302,6 +306,7 @@ void def_codireco(__attribute__((unused)) JoyListPtr stack, JoyListPtr expressio
 void def_dinfrirst(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_dinfrirst_body, expression); }
 void def_dipd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_dipd_body, expression); }
 void def_disenstacken(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_disenstacken_body, expression); }
+void def_divmod(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_divmod_body, expression); }
 void def_down_to_zero(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_down_to_zero_body, expression); }
 void def_drop(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_drop_body, expression); }
 void def_dupd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_dupd_body, expression); }
@@ -389,3 +394,4 @@ void def__mape(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) 
 void def__map0(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map0_body, expression); }
 void def__map1(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map1_body, expression); }
 void def__map2(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map2_body, expression); }
+void def_xor(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_xor_body, expression); }
