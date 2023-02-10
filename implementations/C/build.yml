@@ -1,0 +1,14 @@
+image: freebsd/13.x
+arch: amd64
+packages:
+  - python
+  - gperf
+  - gmake
+  - boehm-gc
+  - gmp
+sources:
+  - https://github.com/calroc/Thun
+tasks:
+  - setup: |
+      cd Thun/implementations/C
+      gmake
