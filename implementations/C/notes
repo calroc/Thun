@@ -1,3 +1,32 @@
+
+
+    >>> 23 * 12345.6789
+    283950.61470000003
+
+    joy? 23 123456789 *
+    2839506147
+
+    joy? 10000 /
+    283950
+
+eh?
+
+See that "0000003" at the end of the float?
+Floating point numbers /suck/, we only use them because
+computers were small and slow.  Now that they are large
+(sixty-four bits per word!?  Holy shit!) and fast, so
+floating point is no longer necessary.
+
+(However, in practice, we will still be using it, because
+it's been turd-polished to such a high sheen.  GPUs are
+monsters!  But most of us have no use for supercomputers
+outside of playing fancy games.)
+
+---------------------------------------
+
+
+
+
 With a little bit of complexity we could improve efficiency (e.g. using
 VList instead of singly-linked list.)  But I want to tackle efficiency by
 compilation, and write the compiler(s) in Prolog.  I think that avoids

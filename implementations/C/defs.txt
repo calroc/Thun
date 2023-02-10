@@ -68,7 +68,7 @@ popopd [popop] dip
 popopdd [popop] dipd
 product 1 swap [*] step
 quoted [unit] dip
-range [0 <=] [1 - dup] anamorphism
+range [0 <=] [-- dup] anamorphism
 range_to_zero unit [down_to_zero] infra
 reco rest cons
 reverse <{} shunt

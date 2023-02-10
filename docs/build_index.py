@@ -1,8 +1,8 @@
 import sys
 import markdown
 
-filename = '/usr/home/sforman/src/Joypy/README.md'
-##filename = sys.argv[-1]
+#filename = '/usr/home/sforman/src/Joypy/README.md'
+filename = sys.argv[-1]
 with open(filename) as f:
     text = f.read()
 

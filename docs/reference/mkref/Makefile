@@ -1,5 +1,5 @@
 FUNCDOCS = $(wildcard ../*.md)
-TITLE = --metadata title="Function Reference"
+TITLE = --metadata title="Thun Function Reference"
 TOC = --toc --toc-depth=2
 
 all: mov
