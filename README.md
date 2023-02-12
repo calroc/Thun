@@ -16,7 +16,8 @@ Joy is:
 
 * [Purely Functional](https://en.wikipedia.org/wiki/Purely_functional_programming)
 * [Stack-based](https://en.wikipedia.org/wiki/Stack-oriented_programming_language)
-* [Concatinative](https://en.wikipedia.org/wiki/Concatenative_programming_language) (See also [concatenative.org](http://www.concatenative.org/wiki/view/Concatenative%20language))
+* [Concatinative](https://en.wikipedia.org/wiki/Concatenative_programming_language)
+  (See also [concatenative.org](http://www.concatenative.org/wiki/view/Concatenative%20language))
 * [Categorical](https://joypy.osdn.io/notebooks/Categorical.html)
 
 The best source (no pun intended) for learning about Joy is the
@@ -58,8 +59,10 @@ coordinate pair in a square spiral (like the kind used to construct an
 
 ## Project Hosted on [OSDN](https://osdn.net/projects/joypy/)
 
-* [Source Repository](https://osdn.net/projects/joypy/scm/git/Thun/) ([mirror](https://github.com/calroc/Thun))
-* [Bug tracker](https://todo.sr.ht/~sforman/thun-der) ([old tracker](https://osdn.net/projects/joypy/ticket/))
+* [Source Repository](https://osdn.net/projects/joypy/scm/git/Thun/)
+  ([mirror](https://github.com/calroc/Thun))
+* [Bug tracker](https://todo.sr.ht/~sforman/thun-der)
+  ([old tracker](https://osdn.net/projects/joypy/ticket/))
 * [Forums](https://osdn.net/projects/joypy/forums/)
 * [Mailing list](https://osdn.net/projects/joypy/lists/)
 
