@@ -218,7 +218,7 @@ init_defs(void)
 	def_popopdd_body = text_to_expression("[popop] dipd");
 	def_product_body = text_to_expression("1 swap [*] step");
 	def_quoted_body = text_to_expression("[unit] dip");
-	def_range_body = text_to_expression("[0 <=] [1 - dup] anamorphism");
+	def_range_body = text_to_expression("[0 <=] [-- dup] anamorphism");
 	def_range_to_zero_body = text_to_expression("unit [down_to_zero] infra");
 	def_reco_body = text_to_expression("rest cons");
 	def_reverse_body = text_to_expression("<{} shunt");
