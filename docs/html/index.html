@@ -12,9 +12,10 @@
 <blockquote>
 <p>Simple pleasures are the best.</p>
 </blockquote>
-<p>Joy is a programming language created by Manfred von Thun that is easy to
-use and understand and has many other nice properties.  This project
-implements interpreters for a dialect that attempts to stay very close to
+<p><a href="https://en.wikipedia.org/wiki/Joy_%28programming_language%29">Joy</a>
+is a programming language created by Manfred von Thun that is easy to
+use and understand and has many other nice properties.
+<strong>Thun</strong> is a dialect of Joy that attempts to stay very close to
 the spirit of Joy but does not precisely match the behaviour of the
 original version written in C.</p>
 <p>Joy is:</p>
@@ -32,19 +33,21 @@ which contains source code for the original C interpreter, Joy language source c
 and a great deal of fascinating material mostly written by Von Thun on
 Joy and its deeper facets as well as how to program in it and several
 interesting aspects.  It's quite a treasure trove.</p>
-<p><a href="https://en.wikipedia.org/wiki/Joy_%28programming_language%29">Wikipedia entry for Joy</a></p>
-<p><a href="http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language">Homepage at La Trobe University</a></p>
-<p><a href="https://web.archive.org/web/20220411010035/https://joypy.osdn.io/">The original Thun/Joypy site</a></p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Joy_%28programming_language%29">Wikipedia entry for Joy</a></li>
+<li><a href="http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language">Homepage at La Trobe University</a></li>
+<li><a href="https://web.archive.org/web/20220411010035/https://joypy.osdn.io/">The original Thun/Joypy site</a></li>
+</ul>
 <h2>Example Code</h2>
 <p>Here is an example of Joy code:</p>
-<pre><code>square_spiral ≡ [_p] [_then] [_else] ifte
+<pre><code>square_spiral [_p] [_then] [_else] ifte
 
-_p  ≡ [_p0] [_p1] &amp;&amp;
-_p0 ≡ [abs] ii &lt;=
-_p1 ≡ [&lt;&gt;] [pop !-] ||
+_p  [_p0] [_p1] &amp;&amp;
+_p0 [abs] ii &lt;=
+_p1 [&lt;&gt;] [pop !-] ||
 
-_then ≡ [    !-] [[++]] [[--]] ifte dip
-_else ≡ [pop !-]  [--]   [++]  ifte
+_then [    !-] [[++]] [[--]] ifte dip
+_else [pop !-]  [--]   [++]  ifte
 </code></pre>
 <p>It might seem unreadable but with a little familiarity it becomes just as legible as any other notation.</p>
 <p>This function accepts two integers on the stack and increments or

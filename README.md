@@ -6,9 +6,10 @@ Version 0.5.0
 
 > Simple pleasures are the best.
 
-Joy is a programming language created by Manfred von Thun that is easy to
-use and understand and has many other nice properties.  This project
-implements interpreters for a dialect that attempts to stay very close to
+[Joy](https://en.wikipedia.org/wiki/Joy_%28programming_language%29)
+is a programming language created by Manfred von Thun that is easy to
+use and understand and has many other nice properties.
+**Thun** is a dialect of Joy that attempts to stay very close to
 the spirit of Joy but does not precisely match the behaviour of the
 original version written in C.
 
@@ -28,25 +29,23 @@ and a great deal of fascinating material mostly written by Von Thun on
 Joy and its deeper facets as well as how to program in it and several
 interesting aspects.  It's quite a treasure trove.
 
-[Wikipedia entry for Joy](https://en.wikipedia.org/wiki/Joy_%28programming_language%29)
-
-[Homepage at La Trobe University](http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language)
-
-[The original Thun/Joypy site](https://web.archive.org/web/20220411010035/https://joypy.osdn.io/)
+* [Wikipedia entry for Joy](https://en.wikipedia.org/wiki/Joy_%28programming_language%29)
+* [Homepage at La Trobe University](http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language)
+* [The original Thun/Joypy site](https://web.archive.org/web/20220411010035/https://joypy.osdn.io/)
 
 
 ## Example Code
 
 Here is an example of Joy code:
 
-    square_spiral ≡ [_p] [_then] [_else] ifte
+    square_spiral [_p] [_then] [_else] ifte
 
-    _p  ≡ [_p0] [_p1] &&
-    _p0 ≡ [abs] ii <=
-    _p1 ≡ [<>] [pop !-] ||
+    _p  [_p0] [_p1] &&
+    _p0 [abs] ii <=
+    _p1 [<>] [pop !-] ||
 
-    _then ≡ [    !-] [[++]] [[--]] ifte dip
-    _else ≡ [pop !-]  [--]   [++]  ifte
+    _then [    !-] [[++]] [[--]] ifte dip
+    _else [pop !-]  [--]   [++]  ifte
 
 It might seem unreadable but with a little familiarity it becomes just as legible as any other notation.
 
