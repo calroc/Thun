@@ -845,7 +845,7 @@ joy(JoyListPtr stack, JoyListPtr expression)
 }
 
 
-/* Set quiet mode by "-q as only command line option. "*/
+/* Set quiet mode by "-q" as only command line option. */
 int quiet = 0;
 
 #define SHH(message) \
@@ -876,7 +876,7 @@ main(int argc, char *argv[])
 	line = (char *)GC_malloc(1025);
 
 	while (1) {
-		SHH("\njoy? ")
+		SHH("joy? ")
 		status = gets_s(line, 1025);
 		if (NULL == status) {
 			/*
@@ -893,7 +893,7 @@ main(int argc, char *argv[])
 			TODO: "use feof(3) and ferror(3)"...
 
 			*/
-			SHH("bye\n")
+			SHH("\n")
 			break;
 		}
 		s = stack;

@@ -1311,7 +1311,7 @@ def isnt_int(i):
     (Booleans are not integers in Joy.)
     '''
     if not isinstance(i, int) or isinstance(i, bool):
-        raise NotAnIntError(f'Not an integer: {_s(i)}')
+        raise NotAnIntError('Not an integer.')
     return i
 
 
@@ -1320,7 +1320,7 @@ def isnt_bool(b):
     Raise NotABoolError if b isn't a Boolean.
     '''
     if not isinstance(b, bool):
-        raise NotABoolError(f'Not a Boolean value: {_s(b)}')
+        raise NotABoolError('Not a Boolean value.')
     return b
 
 
@@ -1329,7 +1329,7 @@ def isnt_stack(el):
     Raise NotAListError if el isn't a stack/quote/list.
     '''
     if not isinstance(el, tuple):
-        raise NotAListError(f'Not a list: {_s(el)}')
+        raise NotAListError('Not a list.')
     return el
 
 
@@ -2770,4 +2770,4 @@ if __name__ == '__main__':
 ##    jcode = '3 dup [dup mul] times'
 ##    jcode = '0 [1 2 3] [add] step'
 ##    stack, _ = run(jcode, (), dictionary)
-    print(stack_to_string(stack), '•')
+    ##print(stack_to_string(stack))
