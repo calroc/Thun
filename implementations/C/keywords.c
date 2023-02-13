@@ -184,7 +184,7 @@ in_word_set (register const char *str, register size_t len)
 #line 76 "KEYWORDS.txt"
       {"ccons", def_ccons},
 #line 32 "KEYWORDS.txt"
-      {"/", tdiv_q},
+      {"/", fdiv_q},
 #line 109 "KEYWORDS.txt"
       {"nullary", def_nullary},
 #line 63 "KEYWORDS.txt"
@@ -246,7 +246,7 @@ in_word_set (register const char *str, register size_t len)
 #line 167 "KEYWORDS.txt"
       {"_timest", def__timest},
 #line 25 "KEYWORDS.txt"
-      {"mod", tdiv_r},
+      {"mod", fdiv_r},
 #line 160 "KEYWORDS.txt"
       {"step", def_step},
 #line 158 "KEYWORDS.txt"
@@ -413,7 +413,7 @@ in_word_set (register const char *str, register size_t len)
 #line 20 "KEYWORDS.txt"
       {"<=", def_le},
 #line 33 "KEYWORDS.txt"
-      {"div", tdiv_q},
+      {"div", fdiv_q},
       {""},
 #line 171 "KEYWORDS.txt"
       {"_map0", def__map0},
@@ -438,7 +438,7 @@ in_word_set (register const char *str, register size_t len)
 #line 170 "KEYWORDS.txt"
       {"_mape", def__mape},
 #line 24 "KEYWORDS.txt"
-      {"%", tdiv_r},
+      {"%", fdiv_r},
       {""}, {""}, {""},
 #line 173 "KEYWORDS.txt"
       {"_map2", def__map2},

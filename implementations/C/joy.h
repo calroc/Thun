@@ -80,8 +80,8 @@ void swaack(JoyListPtr stack, JoyListPtr expression);
 void swap(JoyListPtr stack, JoyListPtr expression);
 void mul(JoyListPtr stack, JoyListPtr expression);
 void sub(JoyListPtr stack, JoyListPtr expression);
-void tdiv_q(JoyListPtr stack, JoyListPtr expression);
-void tdiv_r(JoyListPtr stack, JoyListPtr expression);
+void fdiv_q(JoyListPtr stack, JoyListPtr expression);
+void fdiv_r(JoyListPtr stack, JoyListPtr expression);
 void truthy(JoyListPtr stack, JoyListPtr expression);
 
 
