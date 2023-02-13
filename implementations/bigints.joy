@@ -40,7 +40,7 @@ clear
 [add-like-bigints extract-sign add-digits cons]
 [add-bigints [same-sign] [add-like-bigints] [neg-bigint sub-like-bigints] ifte]
 
-[build-two-list-combiner _btlc0 _btlc1 [[i cons] genrec] ccons cons]
+[build-two-list-combiner _btlc0 _btlc1 [build-list] ccons cons]
 [_btlc0.0 [[ditch-empty-list] swoncat] dip]
 [_btlc0.1 [pop] swoncat]
 [_btlc0.3 [_btlc0.0 _btlc0.1] dip]
