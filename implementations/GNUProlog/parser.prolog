@@ -168,4 +168,4 @@ assert_def(Symbol, Body) :-
         assertz(def(Symbol, Body))
     ) ; true.
 
-joydef("enstacken stack [clear] dip").
+:- initialization(joy_def("enstacken stack [clear] dip")).
