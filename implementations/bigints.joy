@@ -63,7 +63,7 @@ clear
 [_gtb_BASE [bool] [popop pop true] [_gtb_BASE'] ifte]
 [_gtb_BASE' [pop bool] [popop pop false] [popop compare-pairs] ifte]
 
-[sub-carry-from-digits [pop not] [popd] [_scfd_R0] [i cons-but-not-leading-zeroes] genrec] inscribe
+[sub-carry-from-digits [pop not] [popd] [_scfd_R0] [i cons-but-not-leading-zeroes] genrec]
 [_scfd_R0 uncons 0 swap [sub-with-carry] dip]
 [cons-but-not-leading-zeroes [P'] [cons] [popd] ifte]
 
@@ -92,4 +92,4 @@ build-two-list-combiner
 [sub-digits'] swoncat
 inscribe
 
-1234 to-bigint dup sub-bigints
+1000000000000000000000000000000000000000 to-bigint 1 to-bigint sub-bigints from-bigint
