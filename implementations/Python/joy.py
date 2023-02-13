@@ -682,9 +682,6 @@ def repl(stack=(), dictionary=None):
         dictionary = {}
     try:
         while True:
-            print()
-            print(stack_to_string(stack), '<-top')
-            print()
             try:
                 text = input('joy? ')
             except (EOFError, KeyboardInterrupt):
@@ -695,6 +692,7 @@ def repl(stack=(), dictionary=None):
                 raise SystemExit from e
             except:
                 print_exc()
+            print(stack_to_string(stack))
     except SystemExit as e:
         raise SystemExit from e
     except:
@@ -919,9 +917,10 @@ def loop(stack, expr, dictionary):
               ...
 
     '''
-    quote, flag, stack = get_n_items(2, stack)
-    isnt_bool(flag)
+    quote, stack = get_n_items(1, stack)
     isnt_stack(quote)
+    flag, stack = get_n_items(1, stack)
+    isnt_bool(flag)
     if flag:
         expr = push_quote((quote, (S_loop, ())), expr)
         expr = push_quote(quote, expr)
@@ -993,8 +992,9 @@ def cons(stack):
     ( https://en.wikipedia.org/wiki/Cons#Lists ).
     Its inverse operation is uncons.
     '''
-    s0, a1, stack = get_n_items(2, stack)
+    s0, stack = get_n_items(1, stack)
     isnt_stack(s0)
+    a1, stack = get_n_items(1, stack)
     return ((a1, s0), stack)
 
 
