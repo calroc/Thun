@@ -558,8 +558,8 @@ name(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression) \
 BINARY_MATH_OP(add)
 BINARY_MATH_OP(sub)
 BINARY_MATH_OP(mul)
-BINARY_MATH_OP(tdiv_q)
-BINARY_MATH_OP(tdiv_r)
+BINARY_MATH_OP(fdiv_q)
+BINARY_MATH_OP(fdiv_r)
 
 
 /*
@@ -639,6 +639,10 @@ cons(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 void
 pop(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
+	if (!(*stack)) {
+		printf("Cannot pop empty stack.\n");
+		longjmp(jbuf, 1);
+	}
 	pop_any(stack);
 }
 
