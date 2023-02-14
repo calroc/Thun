@@ -195,7 +195,7 @@ pop_bool(JoyListPtr stack)
 	case joyFalse:
 		return 0;
 	default:
-		printf("Not a Boolean.\n");
+		printf("Not a Boolean value.\n");
 		longjmp(jbuf, 1);
 	}
 }
