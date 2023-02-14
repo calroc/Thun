@@ -519,6 +519,8 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType, dictiona
     # > Nim Error: cannot instantiate: 'toInt[int]'; got 1 typeof(s) but expected 0
     # So just convert to string and back to int, and hope for the best...
     let n = parseInt($a)
+    if n < 0:
+      raise newException(ValueError, "Negative shift count.")
     let i = b shl n
     return (push_int(i, s1), expression, dictionary)
 
@@ -526,6 +528,8 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType, dictiona
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     let n = parseInt($a)
+    if n < 0:
+      raise newException(ValueError, "Negative shift count.")
     let i = b shr n
     return (push_int(i, s1), expression, dictionary)
 
