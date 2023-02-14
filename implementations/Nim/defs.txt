@@ -6,9 +6,9 @@ le [false] [true] [true] cmp
 ge [true] [true] [false] cmp
 -- 1 -
 ? dup bool
-&& nulco [nullary [false]] dip branch
+and nulco [nullary [false]] dip branch
 ++ 1 +
-|| nulco [nullary] dip [true] branch
+or nulco [nullary] dip [true] branch
 !- 0 >=
 <{} [] swap
 <<{} [] rollup
@@ -88,7 +88,7 @@ shift uncons [swons] dip
 shunt [swons] step
 size [pop ++] step_zero
 small dup null [rest null] [pop true] branch
-spiral_next [[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
+spiral_next [[[abs] ii <=] [[<>] [pop !-] or] and] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
 split_at [drop] [take] clop
 split_list [take reverse] [drop] clop
 sqr dup mul

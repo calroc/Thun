@@ -20,9 +20,9 @@ JoyList def_le_body;
 JoyList def_ge_body;
 JoyList def_HYPHEN_MINUS_HYPHEN_MINUS_body;
 JoyList def_QUESTION_MARK_body;
-JoyList def_AMPERSAND_AMPERSAND_body;
+JoyList def_and_body;
 JoyList def_PLUS_SIGN_PLUS_SIGN_body;
-JoyList def_VERTICAL_LINE_VERTICAL_LINE_body;
+JoyList def_or_body;
 JoyList def_EXCLAMATION_MARK_HYPHEN_MINUS_body;
 JoyList def_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body;
 JoyList def_LESS_THAN_SIGN_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body;
@@ -156,9 +156,9 @@ init_defs(void)
 	def_ge_body = text_to_expression("[true] [true] [false] cmp");
 	def_HYPHEN_MINUS_HYPHEN_MINUS_body = text_to_expression("1 -");
 	def_QUESTION_MARK_body = text_to_expression("dup bool");
-	def_AMPERSAND_AMPERSAND_body = text_to_expression("nulco [nullary [false]] dip branch");
+	def_and_body = text_to_expression("nulco [nullary [false]] dip branch");
 	def_PLUS_SIGN_PLUS_SIGN_body = text_to_expression("1 +");
-	def_VERTICAL_LINE_VERTICAL_LINE_body = text_to_expression("nulco [nullary] dip [true] branch");
+	def_or_body = text_to_expression("nulco [nullary] dip [true] branch");
 	def_EXCLAMATION_MARK_HYPHEN_MINUS_body = text_to_expression("0 >=");
 	def_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body = text_to_expression("[] swap");
 	def_LESS_THAN_SIGN_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body = text_to_expression("[] rollup");
@@ -233,7 +233,7 @@ init_defs(void)
 	def_shunt_body = text_to_expression("[swons] step");
 	def_size_body = text_to_expression("[pop ++] step_zero");
 	def_small_body = text_to_expression("dup null [rest null] [pop true] branch");
-	def_spiral_next_body = text_to_expression("[[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte");
+	def_spiral_next_body = text_to_expression("[[[abs] ii <=] [[<>] [pop !-] or] and] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte");
 	def_split_at_body = text_to_expression("[drop] [take] clop");
 	def_split_list_body = text_to_expression("[take reverse] [drop] clop");
 	def_sqr_body = text_to_expression("dup mul");
@@ -289,9 +289,9 @@ void def_le(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { p
 void def_ge(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_ge_body, expression); }
 void def_HYPHEN_MINUS_HYPHEN_MINUS(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_HYPHEN_MINUS_HYPHEN_MINUS_body, expression); }
 void def_QUESTION_MARK(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_QUESTION_MARK_body, expression); }
-void def_AMPERSAND_AMPERSAND(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_AMPERSAND_AMPERSAND_body, expression); }
+void def_and(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_and_body, expression); }
 void def_PLUS_SIGN_PLUS_SIGN(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_PLUS_SIGN_PLUS_SIGN_body, expression); }
-void def_VERTICAL_LINE_VERTICAL_LINE(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_VERTICAL_LINE_VERTICAL_LINE_body, expression); }
+void def_or(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_or_body, expression); }
 void def_EXCLAMATION_MARK_HYPHEN_MINUS(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_EXCLAMATION_MARK_HYPHEN_MINUS_body, expression); }
 void def_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body, expression); }
 void def_LESS_THAN_SIGN_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_LESS_THAN_SIGN_LESS_THAN_SIGN_LEFT_CURLY_BRACKET_RIGHT_CURLY_BRACKET_body, expression); }
