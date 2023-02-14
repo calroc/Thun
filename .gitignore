@@ -12,4 +12,6 @@ Thun.egg-info
 dist
 __pycache__
 implementations/Nim/joy
+implementations/Python/joy
 docs/notebooks/.ipynb_checkpoints
+joy.py.*
