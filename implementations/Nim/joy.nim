@@ -512,6 +512,23 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType, dictiona
     let (b, s1) = pop_int(s0)
     return (push_bool(b == a, s1), expression, dictionary)
 
+  of "lshift":
+    let (a, s0) = pop_int(stack)
+    let (b, s1) = pop_int(s0)
+    # I couldn't get toInt[int](a) to compile.
+    # > Nim Error: cannot instantiate: 'toInt[int]'; got 1 typeof(s) but expected 0
+    # So just convert to string and back to int, and hope for the best...
+    let n = parseInt($a)
+    let i = b shl n
+    return (push_int(i, s1), expression, dictionary)
+
+  of "rshift":
+    let (a, s0) = pop_int(stack)
+    let (b, s1) = pop_int(s0)
+    let n = parseInt($a)
+    let i = b shr n
+    return (push_int(i, s1), expression, dictionary)
+
   of "branch":
     return branch(stack, expression, dictionary)
   of "clear":
@@ -603,6 +620,7 @@ for line in defs_text.splitLines:
   if line.isEmptyOrWhitespace:
     continue
   add_def(line, d)
+
 
 var s = empty_list.listVal
 var exp: JoyListType
