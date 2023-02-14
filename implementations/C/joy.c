@@ -262,7 +262,15 @@ push_thing_in_unit_list(JoyTypePtr term, JoyListPtr expression)
 {
 	JoyList x = EMPTY_LIST;
 	JoyListPtr xPtr = &x;
-	push_thing(term, xPtr);
+	push_thing(term, xPtr);  /* TODO: is this some weird error?
+	you get a pointer x on the stack,
+	set it to NULL (EMPTY_LIST),
+	then take x's address and put it in another pointer xPtr,
+	doens't that leave the tail of the JoyList node created in push_thing
+	pointing to the x pointer on the C stack in this function?
+	And doesn't that variable go away when we return?
+	How and why does this work?  Is it an illusion, a bug waiting to bite?
+	*/
 	push_quote_onto_expression(*xPtr, expression);
 }
 
