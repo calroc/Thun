@@ -59,7 +59,7 @@ from traceback import print_exc
 import operator
 
 
-DEFS = '''
+DEFS = '''\
 '''.splitlines()
 
 
@@ -1065,9 +1065,7 @@ class Def(object):
         definitions (lines with '≡' in them) into the dictionary.
         '''
         for line in stream:
-            if '≡' not in line:
-                continue
-            name, body = text_to_expression(line.replace('≡', ''))
+            name, body = text_to_expression(line)
             if name not in dictionary:
                 inscribe(class_(name, body), dictionary)
 
@@ -2540,7 +2538,7 @@ def unswons(stack):
 
 
 def default_defs(dictionary):
-    Def.load_definitions(__doc__.splitlines(), dictionary)
+    Def.load_definitions(DEFS, dictionary)
 
 
 if __name__ == '__main__':
