@@ -127,5 +127,5 @@ _map0 [_map1] dipd _map2
 _map1 stackd shift
 _map2 [infrst] cons dipd roll< swons
 _\/_ [not not] [not] branch
-/\ [pop false] [not not] branch
-\/ [not not] [pop true] branch
+/\ [not not ] ii [pop false] [] branch
+\/ [not not ] ii [] [pop true] branch
