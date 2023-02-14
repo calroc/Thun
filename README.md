@@ -6,12 +6,14 @@ Version 0.5.0
 
 > Simple pleasures are the best.
 
-[Joy](https://en.wikipedia.org/wiki/Joy_%28programming_language%29)
-is a programming language created by Manfred von Thun that is easy to
-use and understand and has many other nice properties.
-**Thun** is a dialect of Joy that attempts to stay very close to
-the spirit of Joy but does not precisely match the behaviour of the
-original version written in C.
+[Joy](https://en.wikipedia.org/wiki/Joy_%28programming_language%29) is a
+programming language created by Manfred von Thun that is easy to use and
+understand and has many other nice properties.  **Thun** is a dialect of
+Joy that attempts to stay very close to the spirit of Joy but does not
+precisely match the behaviour of the original version written in C.  It
+started as a Python project called Joypy, but after someone claimed the
+name on PyPI before me I renamed it to Thun in honor of Manfred Von Thun
+who created Joy.
 
 Joy is:
 
@@ -24,6 +26,7 @@ Joy is:
 The best source (no pun intended) for learning about Joy is the
 information made available at the
 [website of La Trobe University](http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language)
+| [(mirror)](https://www.kevinalbrecht.com/code/joy-mirror/)
 which contains source code for the original C interpreter, Joy language source code for various functions,
 and a great deal of fascinating material mostly written by Von Thun on
 Joy and its deeper facets as well as how to program in it and several
@@ -31,7 +34,24 @@ interesting aspects.  It's quite a treasure trove.
 
 * [Wikipedia entry for Joy](https://en.wikipedia.org/wiki/Joy_%28programming_language%29)
 * [Homepage at La Trobe University](http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language)
+  [(Kevin Albrecht's mirror)](https://www.kevinalbrecht.com/code/joy-mirror/)
 * [The original Thun/Joypy site](https://web.archive.org/web/20220411010035/https://joypy.osdn.io/)
+
+
+## Differences of Thun to Joy
+
+Thun currently only uses four datatypes:
+
+* Integers, these are signed and are not bounded by machine word
+  length (they are
+  [bignums](https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic).)
+* Boolean values ``true`` and ``false``.
+* Lists quoted in **[** and **]** brackets.
+* Symbols (names).
+
+Thun works by [Continuation Passing Style](https://en.wikipedia.org/wiki/Continuation-passing_style).
+
+Something else I can't remember at the mo'.
 
 
 ## Example Code

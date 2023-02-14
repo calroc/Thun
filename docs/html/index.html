@@ -12,12 +12,14 @@
 <blockquote>
 <p>Simple pleasures are the best.</p>
 </blockquote>
-<p><a href="https://en.wikipedia.org/wiki/Joy_%28programming_language%29">Joy</a>
-is a programming language created by Manfred von Thun that is easy to
-use and understand and has many other nice properties.
-<strong>Thun</strong> is a dialect of Joy that attempts to stay very close to
-the spirit of Joy but does not precisely match the behaviour of the
-original version written in C.</p>
+<p><a href="https://en.wikipedia.org/wiki/Joy_%28programming_language%29">Joy</a> is a
+programming language created by Manfred von Thun that is easy to use and
+understand and has many other nice properties.  <strong>Thun</strong> is a dialect of
+Joy that attempts to stay very close to the spirit of Joy but does not
+precisely match the behaviour of the original version written in C.  It
+started as a Python project called Joypy, but after someone claimed the
+name on PyPI before me I renamed it to Thun in honor of Manfred Von Thun
+who created Joy.</p>
 <p>Joy is:</p>
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Purely_functional_programming">Purely Functional</a></li>
@@ -29,15 +31,29 @@ original version written in C.</p>
 <p>The best source (no pun intended) for learning about Joy is the
 information made available at the
 <a href="http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language">website of La Trobe University</a>
+| <a href="https://www.kevinalbrecht.com/code/joy-mirror/">(mirror)</a>
 which contains source code for the original C interpreter, Joy language source code for various functions,
 and a great deal of fascinating material mostly written by Von Thun on
 Joy and its deeper facets as well as how to program in it and several
 interesting aspects.  It's quite a treasure trove.</p>
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Joy_%28programming_language%29">Wikipedia entry for Joy</a></li>
-<li><a href="http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language">Homepage at La Trobe University</a></li>
+<li><a href="http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language">Homepage at La Trobe University</a>
+  <a href="https://www.kevinalbrecht.com/code/joy-mirror/">(Kevin Albrecht's mirror)</a></li>
 <li><a href="https://web.archive.org/web/20220411010035/https://joypy.osdn.io/">The original Thun/Joypy site</a></li>
 </ul>
+<h2>Differences of Thun to Joy</h2>
+<p>Thun currently only uses four datatypes:</p>
+<ul>
+<li>Integers, these are signed and are not bounded by machine word
+  length (they are
+  <a href="https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic">bignums</a>.)</li>
+<li>Boolean values <code>true</code> and <code>false</code>.</li>
+<li>Lists quoted in <strong>[</strong> and <strong>]</strong> brackets.</li>
+<li>Symbols (names).</li>
+</ul>
+<p>Thun works by <a href="https://en.wikipedia.org/wiki/Continuation-passing_style">Continuation Passing Style</a>.</p>
+<p>Something else I can't remember at the mo'.</p>
 <h2>Example Code</h2>
 <p>Here is an example of Joy code:</p>
 <pre><code>square_spiral [_p] [_then] [_else] ifte
