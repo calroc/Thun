@@ -558,7 +558,10 @@ def inscribe(function, d=_dictionary):
     '''
     A decorator to inscribe functions into the default dictionary.
     '''
-    d[function.__name__.rstrip('_')] = function
+    name = function.__name__
+    if name.endswith('_'):
+        name = name[:-1]
+    d[name] = function
     return function
 
 
@@ -1062,7 +1065,7 @@ class Def(object):
     '''
     Definitions are given by equations:
 
-        name ≡ foo bar baz ...
+        name foo bar baz ...
 
     When a definition symbol is evaluated its body expression is put onto
     the pending expression.
@@ -1071,7 +1074,7 @@ class Def(object):
     # tribar = '\u2261'  # '≡'
 
     def __init__(self, name, body):
-        self.__doc__ = f'{name} ≡ {expression_to_string(body)}'
+        self.__doc__ = f'{name} {expression_to_string(body)}'
         self.__name__ = name
         self.body = body
 
@@ -1081,12 +1084,27 @@ class Def(object):
     @classmethod
     def load_definitions(class_, stream, dictionary):
         '''
-        Given an iterable of lines (strings) and a dictionary put any
-        definitions (lines with '≡' in them) into the dictionary.
+        Given an iterable of lines (strings) and a dictionary put
+        definitions into the dictionary.
         '''
         for line in stream:
             name, body = text_to_expression(line)
             if name not in dictionary:
+                # filthy hack
+                if name.endswith('_'):
+                    name = name + '_'
+                    # See, I want to define some Python functions and use inscribe()
+                    # as a decorator and get the Joy symbol from the name of the
+                    # Python function.  But some Joy names are the same as some
+                    # Python names, so to differentiate them I decided on a convention
+                    # of putting an underscore after the Python function name and
+                    # stripping it off in inscribe().  But now that there's a definition
+                    # that ends with an underscore ('_\/_' logical Boolean xor) it's
+                    # getting stripped off (to make '_\/'.)  So, rather than deal with
+                    # all that in a reasonable way, I'm just going to hack it here and
+                    # add an extra underscore for inscribe() to pick off.
+                    # As I say, it's a filthy hack, but it works, and it took less time
+                    # to write than this note explaining it.  :)
                 inscribe(class_(name, body), dictionary)
 
 
