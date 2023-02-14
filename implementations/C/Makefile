@@ -16,6 +16,9 @@ joy: ${OBJS} $(STATIC_GCLIB)
 
 joy.o: joy.h definitions.h
 
+defs.txt: ../defs.txt
+	cp -fv ../defs.txt defs.txt
+
 definitions.c: defs.txt convert_defs.py
 	python convert_defs.py > $@
 

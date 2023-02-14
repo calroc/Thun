@@ -272,8 +272,8 @@ init_defs(void)
 	def__map1_body = text_to_expression("stackd shift");
 	def__map2_body = text_to_expression("[infrst] cons dipd roll< swons");
 	def___REVERSE_SOLIDUS_SOLIDUS___body = text_to_expression("[not not] [not] branch");
-	def_SOLIDUS_REVERSE_SOLIDUS_body = text_to_expression("[pop false] [not not] branch");
-	def_REVERSE_SOLIDUS_SOLIDUS_body = text_to_expression("[not not] [pop true] branch");
+	def_SOLIDUS_REVERSE_SOLIDUS_body = text_to_expression("[not not] ii [pop false] [] branch");
+	def_REVERSE_SOLIDUS_SOLIDUS_body = text_to_expression("[not not] ii [] [pop true] branch");
 }
 
 
