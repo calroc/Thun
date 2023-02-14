@@ -570,6 +570,42 @@ BINARY_MATH_OP(fdiv_q)
 BINARY_MATH_OP(fdiv_r)
 
 
+void
+lshift(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	mpz_t *a, *b;
+	JoyList node;
+	b = pop_int(stack);
+	if (-1 == mpz_sgn(*b)) {
+		printf("Negative shift count.\n");
+		longjmp(jbuf, 1);
+	}
+	a = pop_int(stack);
+	node = newIntNode();
+	mpz_mul_2exp(node->head->value.i, *a, mpz_get_ui(*b));
+	node->tail = *stack;
+	*stack = node;
+}
+
+
+void
+rshift(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	mpz_t *a, *b;
+	JoyList node;
+	b = pop_int(stack);
+	if (-1 == mpz_sgn(*b)) {
+		printf("Negative shift count.\n");
+		longjmp(jbuf, 1);
+	}
+	a = pop_int(stack);
+	node = newIntNode();
+	mpz_fdiv_q_2exp(node->head->value.i, *a, mpz_get_ui(*b));
+	node->tail = *stack;
+	*stack = node;
+}
+
+
 /*
 With mpz_cmp we can implement the rest of the comparison functions as definitions:
 

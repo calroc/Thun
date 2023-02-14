@@ -29,6 +29,8 @@ add, add
 sub, sub
 /, fdiv_q
 div, fdiv_q
+lshift, lshift
+rshift, rshift
 bool, truthy
 branch, branch
 clear, clear
