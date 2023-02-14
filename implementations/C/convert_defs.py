@@ -26,6 +26,17 @@ shouldn't matter.
 import sys, unicodedata
 
 
+#"&", def_and
+#"|", def_or
+
+SKIP = '''\
+clear
+cmp
+first
+mod
+rest'''.splitlines()
+
+
 def filt(name):
     '''
     Pass alphanumeric chars and underscores, convert other chars
@@ -81,6 +92,8 @@ Do not edit.
 if sys.argv[-1] == '--header':
     for line in defs:
         name, body = line.split(None, 1)
+        if name in SKIP:
+          continue
         name = convert_name(name)
         print(f'void def_{name}(JoyListPtr stack, JoyListPtr expression);')
 
@@ -88,6 +101,8 @@ elif sys.argv[-1] == '--keywords':
     sys.stdout.write(open('KEYWORDS.in').read())
     for line in defs:
         name, body = line.split(None, 1)
+        if name in SKIP:
+          continue
         print(f'{name}, def_{convert_name(name)}')
 
 else:
@@ -103,6 +118,8 @@ of the definitions.
     ''')
     for line in defs:
         name, body = line.split(None, 1)
+        if name in SKIP:
+          continue
         name = convert_name(name)
         print(f'JoyList def_{name}_body;')
 
@@ -120,6 +137,8 @@ init_defs(void)
     ''')
     for line in defs:
         name, body = line.split(None, 1)
+        if name in SKIP:
+          continue
         name = convert_name(name)
         print(f'\tdef_{name}_body = text_to_expression("{body}");')
     print('}')
@@ -134,5 +153,7 @@ Last, a set of functions to go in the wordlist, one for each definition.
     ''')
     for line in defs:
         name, body = line.split(None, 1)
+        if name in SKIP:
+          continue
         name = convert_name(name)
         print(f'void def_{name}(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) {{ push_quote_onto_expression(def_{name}_body, expression); }}')

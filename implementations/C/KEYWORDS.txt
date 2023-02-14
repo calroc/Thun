@@ -19,8 +19,6 @@ struct dict_entry;
 "<>", def_neq
 "<=", def_le
 ">=", def_ge
-"&", def_and
-"|", def_or
 "%", fdiv_r
 mod, fdiv_r
 *, mul
@@ -171,6 +169,6 @@ _mape, def__mape
 _map0, def__map0
 _map1, def__map1
 _map2, def__map2
-xor, def_xor
-and, def_and
-or, def_or
+_\/_, def___REVERSE_SOLIDUS_SOLIDUS__
+/\, def_SOLIDUS_REVERSE_SOLIDUS
+\/, def_REVERSE_SOLIDUS_SOLIDUS
