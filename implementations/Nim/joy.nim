@@ -573,7 +573,9 @@ proc add_def(def: string, dictionary: var JoyMapType) =
   let sym = d.head
   case sym.kind:
   of joySymbol:
-    dictionary = dictionary + (sym.symVal, d.tail)
+    let def = dictionary.get(sym.symVal)
+    if def.isEmpty:
+      dictionary = dictionary + (sym.symVal, d.tail)
   else:
     raise newException(ValueError, def)
 
