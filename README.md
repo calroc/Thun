@@ -11,9 +11,10 @@ programming language created by Manfred von Thun that is easy to use and
 understand and has many other nice properties.  **Thun** is a dialect of
 Joy that attempts to stay very close to the spirit of Joy but does not
 precisely match the behaviour of the original version written in C.  It
-started as a Python project called Joypy, but after someone claimed the
-name on PyPI before me I renamed it to Thun in honor of Manfred Von Thun
-who created Joy.
+started as a Python project called "Joypy", but after someone claimed that
+name on PyPI before me I renamed it to Thun in honor of Manfred Von Thun.
+Now there are interpreters implemented in several additional languages
+(C, Nim, Prolog, Rust).
 
 Joy is:
 
@@ -38,25 +39,13 @@ interesting aspects.  It's quite a treasure trove.
 * [The original Thun/Joypy site](https://web.archive.org/web/20220411010035/https://joypy.osdn.io/)
 
 
-## Differences of Thun to Joy
-
-Thun currently only uses four datatypes:
-
-* Integers, these are signed and are not bounded by machine word
-  length (they are
-  [bignums](https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic).)
-* Boolean values ``true`` and ``false``.
-* Lists quoted in **[** and **]** brackets.
-* Symbols (names).
-
-Thun works by [Continuation Passing Style](https://en.wikipedia.org/wiki/Continuation-passing_style).
-
-Something else I can't remember at the mo'.
-
-
 ## Example Code
 
-Here is an example of Joy code:
+Here is an example of Joy code.  This function `square_spiral` accepts
+two integers and increments or decrements one of them such that the new
+pair of numbers is the next coordinate pair in a square spiral (like the
+kind used to construct an [Ulam Spiral](https://en.wikipedia.org/wiki/Ulam_spiral)).
+For more information see [Square Spiral Example Joy Code](/notebooks/Square_Spiral.html).
 
     square_spiral [_p] [_then] [_else] ifte
 
@@ -67,13 +56,8 @@ Here is an example of Joy code:
     _then [    !-] [[++]] [[--]] ifte dip
     _else [pop !-]  [--]   [++]  ifte
 
-It might seem unreadable but with a little familiarity it becomes just as legible as any other notation.
+It might seem unreadable but with familiarity it becomes as legible as any other notation.
 
-This function accepts two integers on the stack and increments or
-decrements one of them such that the new pair of numbers is the next
-coordinate pair in a square spiral (like the kind used to construct an
-[Ulam Spiral](https://en.wikipedia.org/wiki/Ulam_spiral)
-).  For more information see [Square Spiral Example Joy Code](/notebooks/Square_Spiral.html)
 
 
 ## Project Hosted on [OSDN](https://osdn.net/projects/joypy/)
@@ -86,42 +70,21 @@ coordinate pair in a square spiral (like the kind used to construct an
 * [Mailing list](https://osdn.net/projects/joypy/lists/)
 
 
-## Directory structure
-
-    Thun
-     |
-     |-- LICENSE - GPLv3
-     |-- README.md - this file
-     |
-     |-- archive
-     |   |-- Joy-Programming.zip
-     |   `-- README
-     |
-     |-- docs
-     |   |-- Makefile - Generate https://joypy.osdn.io/ site.
-     |   |-- notebooks - Jupyter Notebooks and supporting modules
-     |   |-- reference - Docs for each function.
-     |   |-- dep-graphs - Generated dependency graphs.
-     |   `-- README - Table of Contents
-     |
-     `-- implementations
-         |
-         |-- Nim - interpreter
-         |
-         |-- Prolog - interpreter
-         |            type inference
-         |            work-in-progress compiler
-         |
-         |-- Python - interpreter
-         |
-         `-- defs.txt - common Joy definitions for all interpreters
-
-
 ## Documentation
+
+This document describes Joy in a general way below, however most of the
+documentation is in the form of [Jupyter Notebooks](/notebooks/index.html)
+that go into more detail.
 
 ### [Jupyter Notebooks](/notebooks/index.html)
 
+There's also a [Function Reference](/FuncRef.html) that lists each
+function and combinator by name and gives a brief description.  (It's
+usually out of date, I'm working on it.)
+
 ### [Function Reference](/FuncRef.html)
+
+
 
 ### Building the Docs
 
@@ -130,15 +93,67 @@ that.  Really you need to run (GNU) make in the `docs/notebooks` and
 `docs/reference` dirs first, _then_ run `make` in the `docs` directory.)
 
 
+## Directory structure
+    Thun
+    |-- LICENSE - GPLv3
+    |-- README.md - this file
+    |
+    |-- archive
+    |   |-- Joy-Programming.zip
+    |   `-- README
+    |
+    |-- docs
+    |   |-- dep-graphs - Generated dependency graphs.
+    |   |-- html - Generated HTML docs.
+    |   |-- notebooks - Jupyter Notebooks and supporting modules
+    |   `-- reference - Docs for each function.
+    |
+    |-- implementations
+    |   |-- defs.txt - common Joy definitions for all interpreters
+    |   |-- C - interpreter
+    |   |-- GNUProlog - interpreter
+        |               type inference
+        |               work-in-progress compiler
+    |   |-- Nim - interpreter
+    |   |-- Ocaml - work-in-progress interpreter
+    |   `-- Python - interpreter
+    |
+    `-- joy_code - Source code written in Joy.
+        `-- bigints
+            `-- bigints.joy
+
+
 ## Installation
 
-Clone the repo and follow the instructions in the individual `implementations` directories.
+Clone the repo and follow the instructions in the individual
+`implementations` directories.  There isn't really any installation.  You
+can put the binaries in your ``PATH``.
+
+(I had the Python package set up to upload to PyPI as "Thun", but the
+whole Python distribution story seems unsettled at the moment (2023) so
+I've gone back to the *old ways*: there is a single script ``joy.py``
+that gets modified (``defs.txt`` is inserted) to create a ``joy`` script
+that uses the "shebang" trick to pretend to be a binary.  In other words,
+run ``make`` and put the resulting ``joy`` script in your PATH, if that's
+what you want to do.  In a year or two the Python folks will have sorted
+things out and we can go back to ``pip install Thun`` or whatever.)
 
 
 ## Basics of Joy
 
+The original Joy has several datatypes (such as strings and sets)
+but the Thun dialect currently only uses four:
+
+* Integers, signed and unbounded by machine word length (they are
+  [bignums](https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic).)
+* Boolean values ``true`` and ``false``.
+* Lists quoted in **[** and **]** brackets.
+* Symbols (names).
+
 Joy is built around three things: a __stack__ of data items, an __expression__
 representing a program to evaluate, and a __dictionary__ of named functions.
+
+### Stack
 
 Joy is [stack-based](https://en.wikipedia.org/wiki/Stack-oriented_programming_language).
 There is a single main __stack__ that holds data items, which can be integers, bools,
@@ -146,22 +161,38 @@ symbols (names), or sequences of data items enclosed in square brackets (`[` or 
 
     23 dup [21 18 add] true false [1 [2 [3]]] cons
 
+### Expression
+
 A Joy __expression__ is just a sequence or list of items.  Sequences
 intended as programs are called "quoted programs".  Evaluation proceeds
-by iterating through the terms in an expression putting all literals (integers, bools, or lists)
-onto the main stack and executing functions named by symbols as they are encountered.
-Functions receive the current stack, expression, and dictionary and return the next stack.
+by iterating through the terms in an expression putting all literals
+(integers, bools, or lists) onto the main stack and executing functions
+named by symbols as they are encountered.  Functions receive the current
+stack, expression, and dictionary and return the next stack, expression,
+and dictionary.
 
-The __dictionary__ associates symbols (strings) with Joy expressions that define the
-available functions of the Joy system.  Together the stack, expression, and dictionary
-are the entire state of the Joy interpreter.
+### Dictionary
+
+The __dictionary__ associates symbols (names) with Joy expressions that
+define the available functions of the Joy system.  Together the stack,
+expression, and dictionary are the entire state of the Joy interpreter.
 
 ### Interpreter
+
+The Joy interpreter is extrememly simple. It accepts a stack, an
+expression, and a dictionary, and it iterates through the expression
+putting values onto the stack and delegating execution to functions which
+it looks up in the dictionary.
+
+All control flow works by
+[Continuation Passing Style](https://en.wikipedia.org/wiki/Continuation-passing_style).
+__Combinators__ (see below) alter control flow by prepending quoted programs to the pending
+expression (aka "continuation".)
 
 ![joy_interpreter_flowchart.svg](/joy_interpreter_flowchart.svg)
 
 
-### Stack / Quote / List / Sequence
+## Stack / Quote / List / Sequence
 
 When talking about Joy we use the terms "stack", "quote", "sequence",
 "list", and others to mean the same thing: a simple linear datatype that
@@ -181,7 +212,9 @@ values from (at least) one end.
 From ["A Conversation with Manfred von Thun" w/ Stevan Apter](http://archive.vector.org.uk/art10000350)
 
 
+-------------------------------
 
+From here it kinda falls apart...
 
 ### Literals and Simple Functions
 
@@ -209,7 +242,7 @@ by changing the pending expression and intermediate state is put there.)
 
 --------------------------------------------------
 
-Copyright © 2014-2022 Simon Forman
+Copyright © 2014 - 2023 Simon Forman
 
 This file is part of Thun
 

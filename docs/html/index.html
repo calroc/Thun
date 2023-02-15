@@ -17,9 +17,10 @@ programming language created by Manfred von Thun that is easy to use and
 understand and has many other nice properties.  <strong>Thun</strong> is a dialect of
 Joy that attempts to stay very close to the spirit of Joy but does not
 precisely match the behaviour of the original version written in C.  It
-started as a Python project called Joypy, but after someone claimed the
-name on PyPI before me I renamed it to Thun in honor of Manfred Von Thun
-who created Joy.</p>
+started as a Python project called "Joypy", but after someone claimed that
+name on PyPI before me I renamed it to Thun in honor of Manfred Von Thun.
+Now there are interpreters implemented in several additional languages
+(C, Nim, Prolog, Rust).</p>
 <p>Joy is:</p>
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Purely_functional_programming">Purely Functional</a></li>
@@ -42,20 +43,12 @@ interesting aspects.  It's quite a treasure trove.</p>
   <a href="https://www.kevinalbrecht.com/code/joy-mirror/">(Kevin Albrecht's mirror)</a></li>
 <li><a href="https://web.archive.org/web/20220411010035/https://joypy.osdn.io/">The original Thun/Joypy site</a></li>
 </ul>
-<h2>Differences of Thun to Joy</h2>
-<p>Thun currently only uses four datatypes:</p>
-<ul>
-<li>Integers, these are signed and are not bounded by machine word
-  length (they are
-  <a href="https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic">bignums</a>.)</li>
-<li>Boolean values <code>true</code> and <code>false</code>.</li>
-<li>Lists quoted in <strong>[</strong> and <strong>]</strong> brackets.</li>
-<li>Symbols (names).</li>
-</ul>
-<p>Thun works by <a href="https://en.wikipedia.org/wiki/Continuation-passing_style">Continuation Passing Style</a>.</p>
-<p>Something else I can't remember at the mo'.</p>
 <h2>Example Code</h2>
-<p>Here is an example of Joy code:</p>
+<p>Here is an example of Joy code.  This function <code>square_spiral</code> accepts
+two integers and increments or decrements one of them such that the new
+pair of numbers is the next coordinate pair in a square spiral (like the
+kind used to construct an <a href="https://en.wikipedia.org/wiki/Ulam_spiral">Ulam Spiral</a>).
+For more information see <a href="/notebooks/Square_Spiral.html">Square Spiral Example Joy Code</a>.</p>
 <pre><code>square_spiral [_p] [_then] [_else] ifte
 
 _p  [_p0] [_p1] &amp;&amp;
@@ -65,12 +58,7 @@ _p1 [&lt;&gt;] [pop !-] ||
 _then [    !-] [[++]] [[--]] ifte dip
 _else [pop !-]  [--]   [++]  ifte
 </code></pre>
-<p>It might seem unreadable but with a little familiarity it becomes just as legible as any other notation.</p>
-<p>This function accepts two integers on the stack and increments or
-decrements one of them such that the new pair of numbers is the next
-coordinate pair in a square spiral (like the kind used to construct an
-<a href="https://en.wikipedia.org/wiki/Ulam_spiral">Ulam Spiral</a>
-).  For more information see <a href="/notebooks/Square_Spiral.html">Square Spiral Example Joy Code</a></p>
+<p>It might seem unreadable but with familiarity it becomes as legible as any other notation.</p>
 <h2>Project Hosted on <a href="https://osdn.net/projects/joypy/">OSDN</a></h2>
 <ul>
 <li><a href="https://osdn.net/projects/joypy/scm/git/Thun/">Source Repository</a>
@@ -80,63 +68,101 @@ coordinate pair in a square spiral (like the kind used to construct an
 <li><a href="https://osdn.net/projects/joypy/forums/">Forums</a></li>
 <li><a href="https://osdn.net/projects/joypy/lists/">Mailing list</a></li>
 </ul>
-<h2>Directory structure</h2>
-<pre><code>Thun
- |
- |-- LICENSE - GPLv3
- |-- README.md - this file
- |
- |-- archive
- |   |-- Joy-Programming.zip
- |   `-- README
- |
- |-- docs
- |   |-- Makefile - Generate https://joypy.osdn.io/ site.
- |   |-- notebooks - Jupyter Notebooks and supporting modules
- |   |-- reference - Docs for each function.
- |   |-- dep-graphs - Generated dependency graphs.
- |   `-- README - Table of Contents
- |
- `-- implementations
-     |
-     |-- Nim - interpreter
-     |
-     |-- Prolog - interpreter
-     |            type inference
-     |            work-in-progress compiler
-     |
-     |-- Python - interpreter
-     |
-     `-- defs.txt - common Joy definitions for all interpreters
-</code></pre>
 <h2>Documentation</h2>
+<p>This document describes Joy in a general way below, however most of the
+documentation is in the form of <a href="/notebooks/index.html">Jupyter Notebooks</a>
+that go into more detail.</p>
 <h3><a href="/notebooks/index.html">Jupyter Notebooks</a></h3>
+<p>There's also a <a href="/FuncRef.html">Function Reference</a> that lists each
+function and combinator by name and gives a brief description.  (It's
+usually out of date, I'm working on it.)</p>
 <h3><a href="/FuncRef.html">Function Reference</a></h3>
 <h3>Building the Docs</h3>
 <p>Run <code>make</code> in the <code>docs</code> directory.  (This is a lie, it's more complex than
 that.  Really you need to run (GNU) make in the <code>docs/notebooks</code> and
 <code>docs/reference</code> dirs first, <em>then</em> run <code>make</code> in the <code>docs</code> directory.)</p>
+<h2>Directory structure</h2>
+<pre><code>Thun
+|-- LICENSE - GPLv3
+|-- README.md - this file
+|
+|-- archive
+|   |-- Joy-Programming.zip
+|   `-- README
+|
+|-- docs
+|   |-- dep-graphs - Generated dependency graphs.
+|   |-- html - Generated HTML docs.
+|   |-- notebooks - Jupyter Notebooks and supporting modules
+|   `-- reference - Docs for each function.
+|
+|-- implementations
+|   |-- defs.txt - common Joy definitions for all interpreters
+|   |-- C - interpreter
+|   |-- GNUProlog - interpreter
+    |               type inference
+    |               work-in-progress compiler
+|   |-- Nim - interpreter
+|   |-- Ocaml - work-in-progress interpreter
+|   `-- Python - interpreter
+|
+`-- joy_code - Source code written in Joy.
+    `-- bigints
+        `-- bigints.joy
+</code></pre>
 <h2>Installation</h2>
-<p>Clone the repo and follow the instructions in the individual <code>implementations</code> directories.</p>
+<p>Clone the repo and follow the instructions in the individual
+<code>implementations</code> directories.  There isn't really any installation.  You
+can put the binaries in your <code>PATH</code>.</p>
+<p>(I had the Python package set up to upload to PyPI as "Thun", but the
+whole Python distribution story seems unsettled at the moment (2023) so
+I've gone back to the <em>old ways</em>: there is a single script <code>joy.py</code>
+that gets modified (<code>defs.txt</code> is inserted) to create a <code>joy</code> script
+that uses the "shebang" trick to pretend to be a binary.  In other words,
+run <code>make</code> and put the resulting <code>joy</code> script in your PATH, if that's
+what you want to do.  In a year or two the Python folks will have sorted
+things out and we can go back to <code>pip install Thun</code> or whatever.)</p>
 <h2>Basics of Joy</h2>
+<p>The original Joy has several datatypes (such as strings and sets)
+but the Thun dialect currently only uses four:</p>
+<ul>
+<li>Integers, signed and unbounded by machine word length (they are
+  <a href="https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic">bignums</a>.)</li>
+<li>Boolean values <code>true</code> and <code>false</code>.</li>
+<li>Lists quoted in <strong>[</strong> and <strong>]</strong> brackets.</li>
+<li>Symbols (names).</li>
+</ul>
 <p>Joy is built around three things: a <strong>stack</strong> of data items, an <strong>expression</strong>
 representing a program to evaluate, and a <strong>dictionary</strong> of named functions.</p>
+<h3>Stack</h3>
 <p>Joy is <a href="https://en.wikipedia.org/wiki/Stack-oriented_programming_language">stack-based</a>.
 There is a single main <strong>stack</strong> that holds data items, which can be integers, bools,
 symbols (names), or sequences of data items enclosed in square brackets (<code>[</code> or <code>]</code>).</p>
 <pre><code>23 dup [21 18 add] true false [1 [2 [3]]] cons
 </code></pre>
+<h3>Expression</h3>
 <p>A Joy <strong>expression</strong> is just a sequence or list of items.  Sequences
 intended as programs are called "quoted programs".  Evaluation proceeds
-by iterating through the terms in an expression putting all literals (integers, bools, or lists)
-onto the main stack and executing functions named by symbols as they are encountered.
-Functions receive the current stack, expression, and dictionary and return the next stack.</p>
-<p>The <strong>dictionary</strong> associates symbols (strings) with Joy expressions that define the
-available functions of the Joy system.  Together the stack, expression, and dictionary
-are the entire state of the Joy interpreter.</p>
+by iterating through the terms in an expression putting all literals
+(integers, bools, or lists) onto the main stack and executing functions
+named by symbols as they are encountered.  Functions receive the current
+stack, expression, and dictionary and return the next stack, expression,
+and dictionary.</p>
+<h3>Dictionary</h3>
+<p>The <strong>dictionary</strong> associates symbols (names) with Joy expressions that
+define the available functions of the Joy system.  Together the stack,
+expression, and dictionary are the entire state of the Joy interpreter.</p>
 <h3>Interpreter</h3>
+<p>The Joy interpreter is extrememly simple. It accepts a stack, an
+expression, and a dictionary, and it iterates through the expression
+putting values onto the stack and delegating execution to functions which
+it looks up in the dictionary.</p>
+<p>All control flow works by
+<a href="https://en.wikipedia.org/wiki/Continuation-passing_style">Continuation Passing Style</a>.
+<strong>Combinators</strong> (see below) alter control flow by prepending quoted programs to the pending
+expression (aka "continuation".)</p>
 <p><img alt="joy_interpreter_flowchart.svg" src="/joy_interpreter_flowchart.svg"></p>
-<h3>Stack / Quote / List / Sequence</h3>
+<h2>Stack / Quote / List / Sequence</h2>
 <p>When talking about Joy we use the terms "stack", "quote", "sequence",
 "list", and others to mean the same thing: a simple linear datatype that
 permits certain operations such as iterating and pushing and popping
@@ -153,6 +179,8 @@ them being pushed onto the stack. But I also call [London Paris] a list.
 So, [dup *] is a quotation but not a list.</p>
 </blockquote>
 <p>From <a href="http://archive.vector.org.uk/art10000350">"A Conversation with Manfred von Thun" w/ Stevan Apter</a></p>
+<hr>
+<p>From here it kinda falls apart...</p>
 <h3>Literals and Simple Functions</h3>
 <p>TODO</p>
 <h3>Combinators</h3>
@@ -171,7 +199,7 @@ by changing the pending expression and intermediate state is put there.)</p>
 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
 </code></pre>
 <hr>
-<p>Copyright © 2014-2022 Simon Forman</p>
+<p>Copyright © 2014 - 2023 Simon Forman</p>
 <p>This file is part of Thun</p>
 <p>Thun is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
