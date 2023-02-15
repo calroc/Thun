@@ -161,7 +161,7 @@ pop_any(JoyListPtr stack)
 {
 	JoyList result;
 	if (!(*stack)) {
-		printf("Not enough values on stack.\n");
+		fprintf(stderr, "Not enough values on stack.\n");
 		longjmp(jbuf, 1);
 	}
 	result = *stack;
@@ -178,7 +178,7 @@ pop_int(JoyListPtr stack)
 	case joyInt:
 		return &(node->head->value.i);
 	default:
-		printf("Not an integer.\n");
+		fprintf(stderr, "Not an integer.\n");
 		longjmp(jbuf, 1);
 	}
 }
@@ -195,7 +195,7 @@ pop_bool(JoyListPtr stack)
 	case joyFalse:
 		return 0;
 	default:
-		printf("Not a Boolean value.\n");
+		fprintf(stderr, "Not a Boolean value.\n");
 		longjmp(jbuf, 1);
 	}
 }
@@ -210,7 +210,7 @@ pop_list_node(JoyListPtr stack)
 	case joyList:
 		return node;
 	default:
-		printf("Not a list.\n");
+		fprintf(stderr, "Not a list.\n");
 		longjmp(jbuf, 1);
 	}
 }
@@ -373,14 +373,14 @@ parse_list(char **text)
 
 	/* NULL string input? */
 	if (NULL == *text) {
-		printf("Missing ']' bracket. A\n");
+		fprintf(stderr, "Missing ']' bracket. A\n");
 		longjmp(jbuf, 1);
 	};
 
 	*text = trim_leading_blanks(*text);
 
 	if (NULL == *text) {
-		printf("Missing ']' bracket. B\n");
+		fprintf(stderr, "Missing ']' bracket. B\n");
 		longjmp(jbuf, 1);
 	};
 
@@ -393,7 +393,7 @@ parse_list(char **text)
 	 */
 
 	if (NULL == rest) {
-		printf("Missing ']' bracket. C\n");
+		fprintf(stderr, "Missing ']' bracket. C\n");
 		longjmp(jbuf, 1);
 	};
 
@@ -461,10 +461,10 @@ parse_node(char **text)
 		return make_list_node(parse_list(text));
 	}
 	if (']' == rest[0]) {
-		printf("Extra ']' bracket.\n");
+		fprintf(stderr, "Extra ']' bracket.\n");
 		longjmp(jbuf, 1);
 	}
-	printf("Should be unreachable.");
+	fprintf(stderr, "Should be unreachable.");
 	exit(1);
 }
 
@@ -522,12 +522,12 @@ next_term(JoyListPtr expression)
 	JoyList quote;
 	JoyTypePtr term;
 	if (!(*expression)) {
-		printf("Do not call next_term on an empty expression.\n");
+		fprintf(stderr, "Do not call next_term on an empty expression.\n");
 		exit(1);
 	}
 	quote = pop_list(expression);
 	if (!quote) {
-		printf("How did an empty list get onto the expression!?\n");
+		fprintf(stderr, "How did an empty list get onto the expression!?\n");
 		exit(1);
 	}
 	term = quote->head;
@@ -577,7 +577,7 @@ lshift(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 	JoyList node;
 	b = pop_int(stack);
 	if (-1 == mpz_sgn(*b)) {
-		printf("Negative shift count.\n");
+		fprintf(stderr, "Negative shift count.\n");
 		longjmp(jbuf, 1);
 	}
 	a = pop_int(stack);
@@ -595,7 +595,7 @@ rshift(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 	JoyList node;
 	b = pop_int(stack);
 	if (-1 == mpz_sgn(*b)) {
-		printf("Negative shift count.\n");
+		fprintf(stderr, "Negative shift count.\n");
 		longjmp(jbuf, 1);
 	}
 	a = pop_int(stack);
@@ -684,7 +684,7 @@ void
 pop(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
 	if (!(*stack)) {
-		printf("Cannot pop empty stack.\n");
+		fprintf(stderr, "Cannot pop empty stack.\n");
 		longjmp(jbuf, 1);
 	}
 	pop_any(stack);
@@ -732,7 +732,7 @@ first(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
 	JoyList quote = pop_list(stack);
 	if (!quote) {
-		printf("Cannot take first of empty list.\n");
+		fprintf(stderr, "Cannot take first of empty list.\n");
 		longjmp(jbuf, 1);
 	}
 	push_thing(quote->head, stack);
@@ -744,7 +744,7 @@ rest(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
 	JoyList quote = pop_list(stack);
 	if (!quote) {
-		printf("Cannot take rest of empty list.\n");
+		fprintf(stderr, "Cannot take rest of empty list.\n");
 		longjmp(jbuf, 1);
 	}
 	push_quote(quote->tail, stack);
@@ -801,7 +801,7 @@ truthy(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 		}
 		break;
 	default:
-		printf("Cannot Boolify.\n");
+		fprintf(stderr, "Cannot Boolify.\n");
 		longjmp(jbuf, 1);
 	}
 }
@@ -859,7 +859,7 @@ dispatch(char *sym, JoyListPtr stack, JoyListPtr expression)
 		push_quote_onto_expression(s->body, expression);
 		return;
 	}
-	printf("Unknown: %s\n", sym);
+	fprintf(stderr, "Unknown: %s\n", sym);
 	longjmp(jbuf, 1);
 }
 
