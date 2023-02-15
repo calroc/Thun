@@ -1,0 +1,7816 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>BigInts in Joy</title>
+<link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/css/notebook.css">
+<!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe"> </script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: {
+                    automatic: true
+                    }
+                }
+            });
+
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+    <!-- End of mathjax configuration --></head>
+</head>
+<body>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="BigInts-in-Joy">BigInts in Joy<a class="anchor-link" href="#BigInts-in-Joy">&#182;</a></h1><p>Part of the puzzle is implementing &quot;bigints&quot;, unbounded integers, by means of Oberon RISC signed 32-bit ints and their operations.</p>
+<p>We can model bigints as a pair of a Boolean value for the sign and a list of integers for the digits, to keep things simple let the bool be the first item on a list followed by zero or more int digits.  The Least Signifigant digit is at the top or head of the list.  Our <em>base</em> for the digits is:</p>
+$$2^{31}$$<p>Our digits are 0..2147483647 (our &quot;nine&quot;.)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>1 31 lshift 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2147483648</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can <code>inscribe</code> a constant function <code>base</code> to keep this value handy.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>unit 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[base] swoncat
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span> inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This also permits a kind of parameterization.  E.g. let's say we wanted to use base 10 for our digits, maybe during debugging.  All that requires is to rebind the symbol <code>base</code> to 10.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We could define a Boolean predicate that returns <code>true</code> for integers that are valid as digits and <code>false</code> otherwise:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[valid_digit [0 &gt;] [base &lt;] &amp;&amp;] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>32 valid_digit 1232147483648 valid_digit
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>32 true 1232147483648 false</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Converting-to-and-from-Python-Integers">Converting to and from Python Integers<a class="anchor-link" href="#Converting-to-and-from-Python-Integers">&#182;</a></h2><p>Because we are working with Python Joy right now we can convert ints to bigints and vice versa.  THis will be helpful to check our work.  Later we can deal with converting to and from strings (which this Joy doesn't have anyway, so it's probably fine to defer.)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To get the sign bool we can just use <code>!-</code> (&quot;not negative&quot;), to get the list of digits we repeatedly <code>divmod</code> the number by our <code>base</code>:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>12345678901234567890 base divmod swap
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1797196498 5748904729</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>base divmod swap
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1797196498 1453937433 2</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>base divmod swap
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1797196498 1453937433 2 0</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We keep it up until we get to zero.  This suggests a <code>while</code> loop:</p>
+<pre><code>[0 &gt;=] [base divmod swap] while
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear 1234567890123456789012345678901234567890
+
+[0 &gt;] [base divmod swap] while pop
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1312754386 1501085485 57659106 105448366 58</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>But we want these numbers in a list.  The naive way using <code>infra</code> generates them in the reverse order of what we would like.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [1234567890123456789012345678901234567890]
+
+[ [0 &gt;] [base divmod swap] while pop ]
+
+infra
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[58 105448366 57659106 1501085485 1312754386]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We could just reverse the list, but it's more efficient to build the result list in the order we want, LSB to MSB:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear 1234567890123456789012345678901234567890
+
+[0 &lt;=]
+[pop []]
+[base divmod swap]
+[i cons]
+genrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1312754386 1501085485 57659106 105448366 58]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Representing-Zero">Representing Zero<a class="anchor-link" href="#Representing-Zero">&#182;</a></h4><p>This will return the empty list for zero:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+0 [0 &lt;=] [pop []] [base divmod swap] [i cons] genrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I think this is better than returning <code>[0]</code> because that amounts to a single leading zero.</p>
+<pre><code>[bool]   is &quot;0&quot;
+[bool 0] is &quot;00&quot;
+
+</code></pre>
+<p>Eh?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="digitalize"><code>digitalize</code><a class="anchor-link" href="#digitalize">&#182;</a></h4><p>Let's <code>inscribe</code> this function under the name <code>digitalize</code>:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[digitalize [0 &lt;=] [pop []] [base divmod swap] [i cons] genrec] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Try it out:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+1234567890123456789012345678901234567890 digitalize
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1312754386 1501085485 57659106 105448366 58]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Putting it all together we have <code>!-</code> for the sign and <code>abs digitalize</code> for the digits, followed by <code>cons</code>:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear 1234567890123456789012345678901234567890
+
+[!-] [abs digitalize] cleave cons
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 1312754386 1501085485 57659106 105448366 58]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="to-bigint"><code>to-bigint</code><a class="anchor-link" href="#to-bigint">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[to-bigint [!-] [abs digitalize] cleave cons] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Try it out:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear 1234567890123456789012345678901234567890 to-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 1312754386 1501085485 57659106 105448366 58]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>With negative numbers:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear -1234567890123456789012345678901234567890 to-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[false 1312754386 1501085485 57659106 105448366 58]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Converting-from-bigint-to-Python-ints">Converting from bigint to Python ints<a class="anchor-link" href="#Converting-from-bigint-to-Python-ints">&#182;</a></h3><p>To convert a bigint into a Python integer we need to keep a &quot;power&quot; parameter on the stack, setting it up and discarding it at the end, as well as an accumulator value starting at zero:</p>
+<pre><code>prep == rest 1 0 rolldown
+
+[true 3 2 1] rest 1 0 rolldown
+1 0 [3 2 1]
+
+</code></pre>
+<p>We will deal with the sign bit later.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So the problem is to derive:</p>
+<pre><code>   1 0 [digits...] [F] step
+-------------------------
+       result
+
+</code></pre>
+<p>Where <code>F</code> is:</p>
+<pre><code>          power acc digit F
+---------------------------------------
+   (power*base) (acc + (power*digit)
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now this is an interesting function.  The first thing I noticed is that it has two results that can be computed independently, suggesting a form like:</p>
+<pre><code>F == [G] [H] clop
+
+</code></pre>
+<p>Then I noticed that <code>power *</code> is a sub-function of both <code>G</code> and <code>H</code>, but let's not overthink it, eh?</p>
+<pre><code>G == popop base *
+H == rolldown * +
+
+F == [G] [H] clop popdd
+
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear 1 0 23 [popop base *] trace
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>      1 0 23 • popop base *
+           1 • base *
+           1 • 2147483648 *
+1 2147483648 • *
+1 2147483648 • mul
+  2147483648 • 
+
+2147483648</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear 1 0 23 [rolldown * +] trace
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1 0 23 • rolldown * +
+0 23 1 • * +
+0 23 1 • mul +
+  0 23 • +
+  0 23 • add
+    23 • 
+
+23</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear 1 0 23
+
+[popop base *]
+[rolldown * +]
+clop
+popdd
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2147483648 23</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="prep-and-from-bigint'"><code>prep</code> and <code>from-bigint'</code><a class="anchor-link" href="#prep-and-from-bigint'">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[prep rest 1 0 rolldown] inscribe
+[from-bigint' [F] step popd] inscribe
+[F [G] [H] clop popdd] inscribe
+[G popop base *] inscribe
+[H rolldown * +] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>1 0 [1312754386 1501085485 57659106 105448366 58]
+
+from-bigint'
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1234567890123456789012345678901234567890</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>to-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 1312754386 1501085485 57659106 105448366 58]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>prep
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1 0 [1312754386 1501085485 57659106 105448366 58]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>from-bigint'
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1234567890123456789012345678901234567890</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>to-bigint prep from-bigint'
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1234567890123456789012345678901234567890</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>What about that sign bit?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>neg
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>-1234567890123456789012345678901234567890</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>to-bigint prep from-bigint'
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1234567890123456789012345678901234567890</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>That's no good, we lose the sign.  Time to deal with that.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>to-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 1312754386 1501085485 57659106 105448366 58]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We want to get the sign bit and the Python int,</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[first] [prep from-bigint'] cleave
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true 1234567890123456789012345678901234567890</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>and then use the sign bit to negate the Python int if the bigint was negative:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>swap [] [neg] branch
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>-1234567890123456789012345678901234567890</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This gives:</p>
+<pre><code>foo == [first] [prep from-bigint'] cleave
+bar == swap [] [neg] branch
+from-bigint == foo bar
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>(I just realize that if you pre-swap the two quoted programs in <code>foo</code> then you can omit <code>swap</code> from <code>bar</code>.)</p>
+<pre><code>foo == [prep from-bigint'] [first] cleave
+bar == [] [neg] branch
+from-bigint == foo bar
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="from-bigint"><code>from-bigint</code><a class="anchor-link" href="#from-bigint">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[foo [prep from-bigint'] [first] cleave] inscribe
+[bar [neg] [] branch] inscribe
+[from-bigint foo bar] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>1234567890123456789012345678901234567890 to-bigint from-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1234567890123456789012345678901234567890</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>neg to-bigint from-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>-1234567890123456789012345678901234567890</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Addition-of-Like-Signs-add-digits">Addition of Like Signs <code>add-digits</code><a class="anchor-link" href="#Addition-of-Like-Signs-add-digits">&#182;</a></h2><p>Let's figure out how to add two lists of digits (we will assume that the signs are the same.)  We need to put an inital <code>false</code> value for a carry flag, and then there's a <code>genrec</code>.</p>
+<pre><code>initial-carry == false rollup
+  add-digits' ≡ [P] [THEN] [R0] [R1] genrec
+
+   add-digits ≡ initial-carry add-digits'
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="The-predicate">The predicate<a class="anchor-link" href="#The-predicate">&#182;</a></h3><p>I think we're going to want a recursive function (duh!?) but it's not quite a standard <em>hylomorphism</em> for (at least) two reasons:</p>
+<ul>
+<li>We're tearing down two lists simultaneously.</li>
+<li>They might not be the same length.</li>
+</ul>
+<p>There are two base cases: two empty lists or one empty list, the recursive branch is taken only if both lists are non-empty.</p>
+<pre><code>bool [a ...] [b ...] P
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The first thing to do is convert them to Booleans.  Let's make a little truth table to work with:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[
+[[a] [b]]
+[[a] []]
+[[] [b]]
+[[] []]
+]
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[[a] [b]] [[a] []] [[] [b]] [[] []]]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Then we can <code>map</code> our predicate over this list to be sure ti does what we want:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[[[bool] ii] infra] map
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[true true] [true false] [false true] [false false]]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We want to <em>and</em> the bools and invert the result:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [[[a] [b]] [[a] []] [[] [b]] [[] []]] 
+
+[[[bool] ii &amp; not] infra] map
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[false] [true] [true] [true]]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So the predicate function we want here is:</p>
+<pre><code>P == [bool] ii &amp; not
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="The-base-cases">The base cases<a class="anchor-link" href="#The-base-cases">&#182;</a></h3><p>On the non-recursive branch of the <code>genrec</code> we have to decide between three cases, but because addition is commutative we can lump together the first two:</p>
+<pre><code>bool [] [b ...] THEN
+bool [a ...] [] THEN
+
+bool [] [] THEN
+
+</code></pre>
+<p>So we have an <code>ifte</code> expression:</p>
+<pre><code>THEN ≡ [P'] [THEN'] [ELSE] ifte
+
+</code></pre>
+<p>Let's define the predicate:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[
+[[a] []]
+[[] [b]]
+[[] []]
+]
+
+[[[bool] ii |] infra] map
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[true] [true] [false]]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<pre><code>P' ≡ [bool] ii |
+
+</code></pre>
+<p>So <code>THEN'</code> deals with one number (list of digits) being longer than the other, while the <code>ELSE</code> branch deals with the case of both lists being empty.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="One-list-empty">One list empty<a class="anchor-link" href="#One-list-empty">&#182;</a></h4><p>In the cases where one of the two lists (but not both) is empty:</p>
+<pre><code>carry [a ...] [] THEN'
+carry [] [b ...] THEN'
+
+</code></pre>
+<p>We first get rid of the empty list:</p>
+<pre><code>ditch-empty-list ≡ [bool] [popd] [pop] ifte
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[ditch-empty-list [bool] [popd] [pop] ifte] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Try it out:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[1][] ditch-empty-list
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[][1] ditch-empty-list
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<pre><code>THEN' ≡ ditch-empty-list THEN''
+
+</code></pre>
+<p>Now we have:</p>
+<pre><code>carry [n ...] THEN''
+
+</code></pre>
+<p>This is <code>add-carry-to-digits</code>...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="But-first--add-with-carry">But first  <code>add-with-carry</code><a class="anchor-link" href="#But-first--add-with-carry">&#182;</a></h4><p>We will want some function <code>F</code> that accepts a bool and two ints and leaves behind a new int and a new Boolean carry flag:</p>
+<pre><code>        carry0 a b F
+--------------------------
+     (a+b+carry0) carry
+
+</code></pre>
+<p>(I find it interesting that this function accepts the carry from below the int args but returns it above the result.  Hmm...)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="bool-to-int"><code>bool-to-int</code><a class="anchor-link" href="#bool-to-int">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[bool-to-int [0] [1] branch] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Try it out:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>false bool-to-int
+true bool-to-int
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0 1</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can use this function to convert the carry flag to an integer and then add it to the sum of the two digits:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+false 1 2 [bool-to-int] dipd + +
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>3</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[52]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true 1 2 [bool-to-int] dipd + +
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>4</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So the first part of <code>F</code> is <code>[bool-to-int] dipd + +</code> to get the total, then we need to do</p>
+<p><code>base mod</code> to get the new digit and <code>base &gt;=</code> to get the new carry flag:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[53]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+4 base [mod] [&gt;=] clop
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>4 false</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[54]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+base 100 +
+
+base [mod] [&gt;=] clop
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>100 true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Put it all together and we have:</p>
+<pre><code>_add-with-carry0 ≡ [bool-to-int] dipd + +
+_add-with-carry1 ≡ base [mod] [&gt;=] clop
+
+add-with-carry ≡ _add-with-carry0 _add-with-carry1
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="add-with-carry"><code>add-with-carry</code><a class="anchor-link" href="#add-with-carry">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[_add-with-carry0 [bool-to-int] dipd + +] inscribe
+[_add-with-carry1 base [mod] [&gt;=] clop] inscribe
+[add-with-carry _add-with-carry0 _add-with-carry1] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Try it out:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[56]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+false base 100 add-with-carry
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>100 true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[57]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true base 100 add-with-carry
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>101 true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[58]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+false 2 100 add-with-carry
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>102 false</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[59]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true 2 100 add-with-carry
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>103 false</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[60]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Now-back-to-add-carry-to-digits">Now back to <code>add-carry-to-digits</code><a class="anchor-link" href="#Now-back-to-add-carry-to-digits">&#182;</a></h3><p>This should be a very simple recursive function.</p>
+<pre><code>add-carry-to-digits ≡ [_actd_P] [_actd_THEN] [_actd_R0] [_actd_R1] genrec
+
+carry [n ...] add-carry-to-digits
+carry [n ...] [_actd_P] [_actd_THEN] [_actd_R0] [_actd_R1] genrec
+
+</code></pre>
+<p>The predicate is the carry flag itself inverted (but when we recur we will need to check if the list is non-empty because it may eventually be empty):</p>
+<pre><code>_actd_P ≡ pop not
+
+</code></pre>
+<p>The base case simply discards the carry flag:</p>
+<pre><code>_actd_THEN ≡ popd
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>That leaves the recursive branch:</p>
+<pre><code>true [n ...] R0 [add-carry-to-digits] R1
+
+</code></pre>
+<p>-or-</p>
+<pre><code>true [] R0 [add-carry-to-digits] R1
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We know that the Boolean value is <code>true</code>.  We also know that the list will be non-empty, but only on the first iteration of the <code>genrec</code>.  It may be that the list is empty on a later iteration.</p>
+<p>The <code>R0</code> function should check the list.</p>
+<pre><code>_actd_R0 ≡ [bool] [_actd_R0.then] [_actd_R0.else] ifte
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If it's empty...  (omitting the &quot;_actd_&quot; prefix for clarity)</p>
+<pre><code>   true [] R0.else [add-carry-to-digits] R1
+----------------------------------------------
+    1 false [] [add-carry-to-digits] i cons
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note that this implies:</p>
+<pre><code>R1 == i cons
+
+</code></pre>
+<p>We have <code>1 false []</code> (rather than some other arrangement) to be compatible (same types and order) with the result of the other branch, which we now derive.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If the list of digits isn't empty...</p>
+<pre><code>            true [a ...] R0.then [add-carry-to-digits] i cons
+----------------------------------------------------------------
+   true 0 a add-with-carry [...] [add-carry-to-digits] i cons
+----------------------------------------------------------------
+               (a+1) carry [...] [add-carry-to-digits] i cons
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>There we go.</p>
+<pre><code>_actd_R0.else ≡ popd 1 false rolldown
+
+_actd_R0.then ≡ 0 swap uncons [add-with-carry] dip
+
+_actd_R1 ≡ i cons
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="add-carry-to-digits"><code>add-carry-to-digits</code><a class="anchor-link" href="#add-carry-to-digits">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[61]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[add-carry-to-digits [_actd_P] [_actd_THEN] [_actd_R0] [_actd_R1] genrec] inscribe
+[_actd_P pop not] inscribe
+[_actd_THEN popd] inscribe
+[_actd_R0 [bool] [_actd_R0.then] [_actd_R0.else] ifte] inscribe
+[_actd_R0.else popd 1 false rolldown] inscribe
+[_actd_R0.then 0 swap uncons [add-with-carry] dip] inscribe
+[_actd_R1 i cons] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Try it out:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[62]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+false [3 2 1] add-carry-to-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[3 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[63]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true [] add-carry-to-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[64]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true [3 2 1] add-carry-to-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[4 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[65]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true base -- [2 1] cons 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true [2147483647 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>add-carry-to-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[0 3 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[67]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So that handles the cases where one of the two lists (but not both) is empty.</p>
+<h4 id="Both-lists-empty">Both lists empty<a class="anchor-link" href="#Both-lists-empty">&#182;</a></h4><p>If both lists are empty we discard one list and check the carry to determine our result as decribed above:</p>
+<pre><code>ELSE == pop swap [] [1 swons] branch
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[68]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[carry [] [1 swons] branch] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Try it out:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[69]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true [] [] pop swap carry
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[70]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+false [] [] pop swap carry
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[71]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The story so far...</p>
+<pre><code>add-digits == initial-carry add-digits'
+
+add-digits' == [P] [THEN] [R0] [R1] genrec
+
+initial-carry == false rollup
+
+P == [bool] ii &amp; not
+
+THEN == [P'] [THEN'] [ELSE] ifte
+
+P' == [bool] ii |
+
+THEN' == ditch-empty-list add-carry-to-digits
+
+carry == [] [1 swons] branch
+
+ELSE == pop swap carry
+
+</code></pre>
+<p>We just need to knock out those recursive functions <code>R0</code> and <code>R1</code> and we're done.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="And-recur...">And recur...<a class="anchor-link" href="#And-recur...">&#182;</a></h3><pre><code>bool [a ...] [b ...] R0 [add-digits'] R1
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>First we will want to <code>uncons</code> the digits</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[72]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+false [1 2 3] [4 5 6] [uncons] ii swapd
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false 1 4 [2 3] [5 6]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="uncons-two"><code>uncons-two</code><a class="anchor-link" href="#uncons-two">&#182;</a></h4><p>We could call this <code>uncons-two</code>:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[73]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[uncons-two [uncons] ii swapd] inscribe
+
+[1 2 3] [4 5 6] uncons-two
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1 4 [2 3] [5 6]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[74]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<pre><code>bool a b [...] [...] R0' [add-digits'] R1
+
+</code></pre>
+<p>It's at this point that we'll want to employ the <code>add-with-carry</code> function:</p>
+<pre><code>bool a b [...] [...] [add-with-carry] dipd R0'' [add-digits'] R1
+
+bool a b add-with-carry [...] [...] R0'' [add-digits'] R1
+
+(a+b) bool [...] [...] R0'' [add-digits'] R1
+
+</code></pre>
+<p>If we postulate a <code>cons</code> in our <code>R1</code> function...</p>
+<pre><code>(a+b) bool [...] [...] R0'' [add-digits'] i cons
+
+</code></pre>
+<p>Then it seems like we're done?  <code>R0''</code> is nothing?</p>
+<pre><code>R0 ≡ uncons-two [add-with-carry] dipd
+
+R1 ≡ i cons
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="add-digits"><code>add-digits</code><a class="anchor-link" href="#add-digits">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[75]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[add-digits initial-carry add-digits'] inscribe
+[add-digits' [P] [THEN] [R0] [R1] genrec] inscribe
+[initial-carry false rollup] inscribe
+[P [bool] ii &amp; not] inscribe
+[THEN [P'] [THEN'] [ELSE] ifte] inscribe
+[P' [bool] ii |] inscribe
+[THEN' ditch-empty-list add-carry-to-digits] inscribe
+[ELSE pop swap [] [1 swons] branch] inscribe
+[R0 uncons-two [add-with-carry] dipd] inscribe
+[R1 i cons] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[76]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[3 2 1] [1 1 1]
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[3 2 1] [1 1 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[77]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>add-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[4 3 2]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[78]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>base -- unit
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[4 3 2] [2147483647]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[79]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>add-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[3 4 2]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[80]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>base -- dup dup unit ccons
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[3 4 2] [2147483647 2147483647 2147483647]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[81]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>add-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[2 4 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>243 + 999 =</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[82]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear 243 999 +
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1242</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="add-bigints"><code>add-bigints</code><a class="anchor-link" href="#add-bigints">&#182;</a></h2><p>There is one more thing we have to do to use this: we have to deal with the signs.</p>
+<pre><code>add-bigints 
+[[first] ii xor not]                 # are they the same sign?
+[[uncons] dip rest add-digits cons]  # add the digits and set the sign.
+[neg-bigint sub-bigints]             # adding unlikes is actually subtraction.
+ifte
+
+</code></pre>
+<p>But we haven't implemented <code>neg-bigint</code> or <code>sub-bigints</code> yet...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[83]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+123 to-bigint 456 to-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 123] [true 456]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[84]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[first] ii xor not
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[85]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+123 to-bigint 456 to-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 123] [true 456]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[86]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[uncons] dip
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true [123] [true 456]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[87]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>rest 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true [123] [456]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[88]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>add-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true [579]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[89]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span> cons
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 579]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="add-bigints"><code>add-bigints</code><a class="anchor-link" href="#add-bigints">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[90]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[same-sign [first] ii xor not] inscribe
+[add-like-bigints [uncons] dip rest add-digits cons] inscribe
+[add-bigints [same-sign] [add-like-bigints] [1 0 /] ifte] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 579]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[91]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>base -- to-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 579] [true 2147483647]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[92]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>add-bigints
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 578 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[93]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Subtraction-of-Like-Signs-sub-digits">Subtraction of Like Signs <code>sub-digits</code><a class="anchor-link" href="#Subtraction-of-Like-Signs-sub-digits">&#182;</a></h2><p>Subtraction is similar to addition in that it's a simple recursive algorithm that works digit-by-digit.  It has the same four cases as well, we can reuse <code>P</code> and <code>P'</code>.</p>
+<pre><code>initial-carry == false rollup
+  sub-digits' == [P] [sub.THEN] [sub.R0] [sub.R1] genrec
+   sub-digits == initial-carry add-digits'
+     sub.THEN == [P'] [sub.THEN'] [sub.ELSE] ifte
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Refactoring-For-The-Win">Refactoring For The Win<a class="anchor-link" href="#Refactoring-For-The-Win">&#182;</a></h3><p>We noted above that the algorithm for subtraction is similar to that for addition.  Maybe we can reuse <em>more</em> than just <code>P</code> and <code>P'</code>?  In fact, I think we could refactor (prematurely, two cases is one too few) something like this?</p>
+<pre><code>             [sub.THEN'] [sub.ELSE] [sub.R0] [sub.R1] foo
+---------------------------------------------------------------------
+   [P] [[P'] [sub.THEN'] [sub.ELSE] ifte] [sub.R0] [sub.R1] genrec
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>or just</p>
+<pre><code>             [THEN] [ELSE] [R0] [R1] foo
+----------------------------------------------------
+   [P] [[P'] [THEN] [ELSE] ifte] [R0] [R1] genrec
+
+</code></pre>
+<p>eh?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>foo</code> is something like:</p>
+<pre><code>F == [ifte] ccons [P'] swons
+G == [F] dipdd
+
+[THEN] [ELSE] [R0] [R1] [F] dipdd foo'
+[THEN] [ELSE] F [R0] [R1] foo'
+[THEN] [ELSE] [ifte] ccons [P'] swons [R0] [R1] foo'
+[[THEN] [ELSE] ifte] [P'] swons [R0] [R1] foo'
+[[P'] [THEN] [ELSE] ifte] [R0] [R1] foo'
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>That leaves <code>[P]</code>...</p>
+<pre><code>F == [ifte] ccons [P'] swons [P] swap
+G == [F] dipdd
+
+[THEN] [ELSE] [ifte] ccons [P'] swons [P] swap [R0] [R1] foo'
+[[THEN] [ELSE] ifte] [P'] swons [P] swap [R0] [R1] foo'
+[[P'] [THEN] [ELSE] ifte] [P] swap [R0] [R1] foo'
+[P] [[P'] [THEN] [ELSE] ifte] [R0] [R1] genrec
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Ergo:</p>
+<pre><code>  F == [ifte] ccons [P'] swons [P] swap
+foo == [F] dipdd genrec
+combine-two-lists == [i cons] foo
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>-and-</p>
+<pre><code>add-digits' == [one-empty-list]
+               [both-empty]
+               [both-full]
+               combine-two-lists
+
+one-empty-list == ditch-empty-list add-carry-to-digits
+both-empty == pop swap carry
+both-full == uncons-two [add-with-carry] dipd
+
+</code></pre>
+<p>This illustrates how refactoring creates denser yet more readable code.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>But this doesn't go quite far enough, I think.</p>
+<pre><code>R0 == uncons-two [add-with-carry] dipd
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I think <code>R0</code> will pretty much always do:</p>
+<pre><code>uncons-two [combine-two-values] dipd
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And so it should be refactored further to something like:</p>
+<pre><code>         [F] R0
+-------------------------
+   uncons-two [F] dipd
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And then <code>add-digits'</code> becomes just:</p>
+<pre><code>add-digits' == [one-empty-list]
+               [both-empty]
+               [add-with-carry]
+               combine-two-lists
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If we factor <code>ditch-empty-list</code> out of <code>one-empty-list</code>, and <code>pop</code> from <code>both-empty</code>:</p>
+<pre><code>add-digits' == [add-carry-to-digits]
+               [swap carry]
+               [add-with-carry]
+               combine-two-lists
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's figure out the new form.</p>
+<pre><code>   [ONE-EMPTY] [BOTH-EMPTY] [COMBINE-VALUES] foo
+---------------------------------------------------
+   [P]
+   [
+       [P']
+       [ditch-empty-list ONE-EMPTY]
+       [pop BOTH-EMPTY]
+       ifte
+   ]
+   [uncons-two [COMBINE-VALUES] dipd]
+   [i cons] genrec
+
+</code></pre>
+<p>eh?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's not over think it.</p>
+<pre><code>   [ONE-EMPTY] [ditch-empty-list] swoncat [BOTH-EMPTY] [pop] swoncat [COMBINE-VALUES] 
+   [ditch-empty-list ONE-EMPTY] [pop BOTH-EMPTY] [COMBINE-VALUES]
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>With:</p>
+<pre><code>   [C] [A] [B] sandwich
+--------------------------
+        [A [C] B]
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[94]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[sandwich swap [cons] dip swoncat] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[95]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [B] [A] [C]
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[B] [A] [C]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[96]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>sandwich
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[A [B] C]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So to get from</p>
+<pre><code>[A] [B] [C]
+
+</code></pre>
+<p>to:</p>
+<pre><code>[ditch-empty-list A] [pop B] [uncons-two [C] dipd]
+
+</code></pre>
+<p>we use:</p>
+<pre><code>[[[ditch-empty-list] swoncat] dip [pop] swoncat] dip [uncons-two] [dipd] sandwich
+
+</code></pre>
+<p>It's gnarly, but simple:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[97]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[_foo0.0 [[ditch-empty-list] swoncat] dip] inscribe
+[_foo0.1 [pop] swoncat] inscribe
+[_foo0.3 [_foo0.0 _foo0.1] dip] inscribe
+[_foo0.4 [uncons-two] [dipd] sandwich] inscribe
+[_foo0 _foo0.3 _foo0.4] inscribe
+
+[_foo1 [
+  [ifte] ccons
+  [P'] swons 
+  [P] swap 
+  ] dip
+] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[98]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[A] [B] [C] _foo0
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[ditch-empty-list A] [pop B] [uncons-two [C] dipd]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[99]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>_foo1
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[P] [[P&#39;] [ditch-empty-list A] [pop B] ifte] [uncons-two [C] dipd]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[100]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[add-carry-to-digits]
+[swap carry]
+[add-with-carry]
+_foo0 _foo1
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[P] [[P&#39;] [ditch-empty-list add-carry-to-digits] [pop swap carry] ifte] [uncons-two [add-with-carry] dipd]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Compare the above with what we wanted:</p>
+<pre><code>[P]
+[
+   [P']
+   [ditch-empty-list ONE-EMPTY]
+   [pop BOTH-EMPTY]
+   ifte
+]
+[uncons-two [COMBINE-VALUES] dipd]
+
+</code></pre>
+<p>Allwe need to do is add:</p>
+<pre><code>[i cons] genrec
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[101]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[3 2 1] [6 5 4] initial-carry
+
+[add-carry-to-digits]
+[swap carry]
+[add-with-carry]
+_foo0 _foo1
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false [3 2 1] [6 5 4] [P] [[P&#39;] [ditch-empty-list add-carry-to-digits] [pop swap carry] ifte] [uncons-two [add-with-carry] dipd]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[102]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[i cons] genrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[9 7 5]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[103]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[build-two-list-combiner _foo0 _foo1 [i cons]] inscribe
+[combine-two-lists [add-carry-to-digits] [swap carry] [add-with-carry] build-two-list-combiner] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[104]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[3 2 1] [6 5 4] initial-carry
+combine-two-lists
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false [3 2 1] [6 5 4] [P] [[P&#39;] [ditch-empty-list add-carry-to-digits] [pop swap carry] ifte] [uncons-two [add-with-carry] dipd] [i cons]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[105]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>genrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[9 7 5]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[106]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[base 10] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[9 7 5]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[107]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+123456 to-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 6 5 4 3 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[108]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So that's nice.</p>
+<p>In order to avoid the overhead of rebuilding the whole thing each time we could pre-compute the function and store it in the dictionary.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[109]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[add-carry-to-digits]
+[swap carry]
+[add-with-carry]
+build-two-list-combiner
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[P] [[P&#39;] [ditch-empty-list add-carry-to-digits] [pop swap carry] ifte] [uncons-two [add-with-carry] dipd] [i cons]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now grab the definition, add the <code>genrec</code> and symbol (name) and inscribe it:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[110]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[genrec] ccons ccons [add-digits'] swoncat
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[add-digits&#39; [P] [[P&#39;] [ditch-empty-list add-carry-to-digits] [pop swap carry] ifte] [uncons-two [add-with-carry] dipd] [i cons] genrec]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[111]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span> inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Try it out...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[112]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>false [3 2 1] [4 3 2] add-digits'
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[7 5 3]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[113]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>false swap base -- unit
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false [7 5 3] [9]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[114]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>add-digits'
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[6 6 3]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[115]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Demonstrate-add-bigints">Demonstrate <code>add-bigints</code><a class="anchor-link" href="#Demonstrate-add-bigints">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[116]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>1234 999 [to-bigint] ii 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 4 3 2 1] [true 9 9 9]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[117]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>add-bigints
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 3 3 2 2]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[118]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>from-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2233</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[119]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>1234 999 +
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2233 2233</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[120]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Subtracting">Subtracting<a class="anchor-link" href="#Subtracting">&#182;</a></h3><p>Okay, we're almost ready to implement subtraction, but there's a wrinkle!  When we subtract a smaller (absolute) value from a larger (absolute) value there's no problem:</p>
+<pre><code>10 - 5 = 5
+
+</code></pre>
+<p>But I don't know the algorithm to subtract a larger number from a smaller one:</p>
+<pre><code>5 - 10 = ???
+
+</code></pre>
+<p>The answer is -5, of course, but what's the algorithm?  How to make the computer figure that out?  We make use of the simple algebraic identity:</p>
+<pre><code>a - b = -(b - a)
+
+</code></pre>
+<p>So if we want to subtract a larger number <code>a</code> from a smaller one <code>b</code> we can instead subtract the smaller from the larger and invert the sign:</p>
+<pre><code>5 - 10 = -(10 - 5)
+
+</code></pre>
+<p>To do this we need a function <code>gt-digits</code> that will tell us which of two digit lists represents the larger integer.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="gt-digits"><code>gt-digits</code><a class="anchor-link" href="#gt-digits">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I just realized I don't have a list length function yet!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[121]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[length [pop ++] step_zero] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[122]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[] length
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[123]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[this is a list] length
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>4</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[124]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[1 2 3] [4 5] over over [length] app2
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1 2 3] [4 5] 3 2</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[125]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[swap][6][7]cmp
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[4 5] [1 2 3]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>what about a function that iterates through two lists until one or the other ends, or they end at the same time (same length) and we walk back through comparing the digits?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[126]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[127]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[1 2 3] [4 5 6] [bool] ii &amp;
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[128]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[1 2 3] [4 5 6]
+[[bool] ii | not]
+[pop]
+[uncons-two]
+[i [unit cons] dip cons]
+genrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[1 4] [2 5] [3 6]]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[129]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[1 2 3] [4 5 6]
+[[bool] ii | not]
+[pop]
+[uncons-two]
+[i [unit cons] dip cons]
+genrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[1 4] [2 5] [3 6]]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[130]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So I guess that's <code>zip</code>?</p>
+<p>But we want something a little different.</p>
+<p>It's a weird function: compare lengths, if they are the same length then compare contents pairwise from the end.</p>
+<p>if the first list is empty and the second list isn't then the whole function should return false</p>
+<p>if the first list is non-empty and the second list is empty then the whole function should return true</p>
+<p>if both lists are non-empty we uncons some digits for later comparison?  Where to put them?  Leave them on the stack?  What about short-circuits?</p>
+<p>if both lists are empty we start comparing uncons'd pairs until we find an un-equal pair or run out of pairs.</p>
+<p>if we run out of pairs before we find an unequal pair then the function returns true (the numbers are identical, we should try to shortcut the actual subtraction here, but let's just get it working first, eh?)</p>
+<p>if we find an unequal pair we return a&gt;b and discard the rest of the pairs.  Or maybe this all happens in some sort of <code>infra first</code> situation?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So the predicate will be <code>[bool] ii &amp; not</code>, if one list is longer than the other we are done.
+We postulate a third list to contain the pairs:</p>
+<pre><code>[] [3 2 1] [4 5 6] [P] [BASE] [R0] [R1] genrec
+
+</code></pre>
+<p>The recursive branch seems simpler to figure out:</p>
+<pre><code>[] [3 2 1] [4 5 6] R0 [F] R1
+
+uncons-two [unit cons swons] dipd [F] i
+
+[] [3 2 1] [4 5 6] [P] [BASE] [uncons-two [unit cons swons] dipd] tailrec
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[131]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span> [xR1 uncons-two [unit cons swons] dipd] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[132]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[] [3 2 1] [4 5 6]
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[] [3 2 1] [4 5 6]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[133]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>xR1 xR1 xR1
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[1 6] [2 5] [3 4]] [] []</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[134]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[xP [bool] ii &amp; not] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[135]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[] [3 2 1] [5 4] [xP] [] [xR1] tailrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[2 4] [3 5]] [1] []</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[136]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[] [3 2] [4 5 1] [xP] [] [xR1] tailrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[2 5] [3 4]] [] [1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[137]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[] [3 2 1] [5 4 3] [xP] [] [xR1] tailrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[1 3] [2 4] [3 5]] [] []</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now comes the tricky part, that base case:</p>
+<p>we have three lists.  The first is a possibly-empty list of pairs to compare.</p>
+<p>The second two are the tails of the original lists.</p>
+<p>If the top list is non-empty then the second list must be empty so the whole function should return true</p>
+<p>If the top list is empty and the second list isn't then the whole function should return false</p>
+<p>If both lists are empty we start comparing uncons'd pairs until we find an un-equal pair or run out of pairs.</p>
+<pre><code>[bool]  # if the first list is non-empty
+[popop pop true]
+[
+    [pop bool]  # the second list is non-empty (the first list is empty)
+    [popop pop false]
+    [
+        # both lists are empty
+        popop
+        compare-pairs
+    ]
+    ifte
+]
+ifte
+
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[138]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[][][1]
+
+[bool]
+[popop pop true]
+[
+    [pop bool]
+    [popop pop false]
+    [popop 23 swons]
+    ifte
+]
+ifte
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[139]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[][1][]
+
+[bool]
+[popop pop true]
+[
+    [pop bool]
+    [popop pop false]
+    [popop 23 swons]
+    ifte
+]
+ifte
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[140]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[1][][]
+
+[bool]
+[popop pop true]
+[
+    [pop bool]
+    [popop pop false]
+    [popop 23 swons]
+    ifte
+]
+ifte
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[23 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="compare-pairs"><code>compare-pairs</code><a class="anchor-link" href="#compare-pairs">&#182;</a></h4><p>This should be a pretty simple recursive function</p>
+<pre><code>[P] [THEN] [R0] [R1] genrec
+
+</code></pre>
+<p>If the list is empty we return <code>false</code></p>
+<pre><code>P == bool not
+THEN == pop false
+
+</code></pre>
+<p>On the recursive branch we have an <code>ifte</code> expression:</p>
+<pre><code>            pairs R0 [compare-pairs] R1
+---------------------------------------------------
+   pairs [P.rec] [THEN.rec] [compare-pairs] ifte
+
+</code></pre>
+<p>We must compare the pair from the top of the list:</p>
+<pre><code>P.rec == first [&gt;] infrst
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[141]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[[1 3] [2 4] [3 5]] first [&gt;] infrst
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[142]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[[1 3] [2 4] [3 5]] [[&gt;] infrst] map
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true true true]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<pre><code>THEN.rec == pop true
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[143]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[compare-pairs
+  [bool not]
+  [pop false]
+  [
+    [first [&gt;] infrst]
+    [pop true]
+  ]
+  [ifte]
+  genrec
+] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[144]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [[1 3] [2 4] [3 5]] compare-pairs
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[145]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [[1 3] [3 3] [3 5]] compare-pairs
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Whoops!  I forgot to remove the already-checked pair from the list of pairs!  (Later on I discover that the logic is inverted here: <code>&gt;=</code> not <code>&lt;</code> d'oh!)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[146]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[compare-pairs
+  [bool not]
+  [pop false]
+  [
+    [first [&gt;=] infrst]
+    [pop true]
+  ]
+  [[rest] swoncat ifte]
+  genrec
+] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is clunky and inefficient but it works.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[147]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [[1 0] [2 2] [3 3]] compare-pairs
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[148]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [[1 1] [2 2] [3 3]] compare-pairs
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[149]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [[1 2] [2 2] [3 3]] compare-pairs
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[150]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[151]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [[1 1] [2 1] [3 3]] compare-pairs
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[152]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [[1 1] [2 2] [3 3]] compare-pairs
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[153]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [[1 1] [2 3] [3 3]] compare-pairs
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[154]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[[1 1] [2 1] [3 3]] [] []
+
+[bool]
+[popop pop true]
+[
+    [pop bool]
+    [popop pop false]
+    [popop compare-pairs]
+    ifte
+]
+ifte
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[155]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[BASE
+  [bool]
+  [popop pop true]
+  [
+    [pop bool]
+    [popop pop false]
+    [popop compare-pairs]
+    ifte
+  ]
+  ifte
+] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[156]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[] [3 2 1] [4 5 6]
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[] [3 2 1] [4 5 6]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[157]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[xP] [BASE] [xR1] tailrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[158]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[] [3 2 1] [4 5 6] swap
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[] [4 5 6] [3 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[159]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[xP] [BASE] [xR1] tailrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[160]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+[] [3 2 1] dup
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[] [3 2 1] [3 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[161]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[xP] [BASE] [xR1] tailrec
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[162]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[163]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[gt-bigint &lt;&lt;{} [xP] [BASE] [xR1] tailrec] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[164]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [3 2 1] [4 5 6] gt-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[165]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [3 2 1] [4 5 6] swap gt-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[166]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [3 2 1] dup gt-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[167]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [3 2 1] [4 5 6] [gt-bigint] [swap] [] ifte
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[4 5 6] [3 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[168]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear [4 5 6] [3 2 1] [gt-bigint] [swap] [] ifte
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[4 5 6] [3 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And so it goes.</p>
+<p>Now we can subtract, we just have to remember to invert the sign bit if we swap the digit lists.</p>
+<p>Maybe something like:</p>
+<pre><code>check-gt == [gt-bigint] [swap true rollup] [false rollup] ifte
+
+</code></pre>
+<p>To keep the decision around as a Boolean flag?  We can <code>xor</code> it with the sign bit?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[169]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[check-gt [gt-bigint] [swap [not] dipd] [] ifte] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[170]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>false [4 5 6] [3 2 1]
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false [4 5 6] [3 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[171]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>check-gt
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false [4 5 6] [3 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[172]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Subtraction,-at-last...">Subtraction, at last...<a class="anchor-link" href="#Subtraction,-at-last...">&#182;</a></h3><p>So now that we can compare digit lists to see if one is larger than the other we can subtract (inverting the sign if necessary) much like we did addition:</p>
+<pre><code>sub-bigints == [same-sign] [sub-like-bigints] [1 0 /] ifte
+
+sub-like-bigints == [uncons] dip rest   sub-digits cons
+                                      ^
+                                      |
+
+</code></pre>
+<p>At this point we would have the sign bit then the two digit lists.</p>
+<pre><code>sign [c b a] [z y x]
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We want to use <code>check-gt</code> here:</p>
+<pre><code>sign [c b a] [z y x] check-gt
+sign swapped? [c b a] [z y x] check-gt
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>It seems we should just flip the sign bit if we swap, eh?</p>
+<pre><code>check-gt == [gt-bigint] [swap [not] dipd] [] ifte
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we subtract the digits:</p>
+<pre><code>sign [c b a] [z y x] sub-digits cons
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So:</p>
+<pre><code>sub-like-bigints == [uncons] dip rest check-gt sub-digits cons
+
+sub-digits == initial-carry sub-digits'
+
+sub-digits' ==
+    [sub-carry-from-digits]
+    [swap sub-carry]
+    [sub-with-carry]
+    build-two-list-combiner
+    genrec
+
+</code></pre>
+<p>We just need to define the pieces.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="sub-with-carry"><code>sub-with-carry</code><a class="anchor-link" href="#sub-with-carry">&#182;</a></h4><p>We know we will never be subtracting a larger (absolute) number from a smaller (absolute) number (they might be equal) so the carry flag will never be true <em>at the end of a digit list subtraction.</em></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<pre><code>   carry a b sub-with-carry
+------------------------------
+     (a-b-carry)  new-carry
+
+_sub-with-carry0 ≡ [bool-to-int] dipd - -
+_sub-with-carry1 ≡ [base + base mod] [0 &lt;] clop
+
+sub-with-carry ≡ _sub-with-carry0 _sub-with-carry1
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[173]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[_sub-with-carry0 rolldown bool-to-int [-] ii] inscribe
+[_sub-with-carry1 [base + base mod] [0 &lt;] cleave] inscribe
+[sub-with-carry _sub-with-carry0 _sub-with-carry1] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[174]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear false 3 base --
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false 3 9</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[175]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>sub-with-carry
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>4 true</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[176]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="sub-carry-from-digits"><code>sub-carry-from-digits</code><a class="anchor-link" href="#sub-carry-from-digits">&#182;</a></h4><p>Should be easy to make modeled on <code>add-carry-to-digits</code>, another very simple recursive function.  The predicate, base case, and <code>R1</code> are the same:</p>
+<pre><code>carry [n ...] sub-carry-from-digits
+carry [n ...] [pop not] [popd] [_scfd_R0] [i cons] genrec
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>That leaves the recursive branch:</p>
+<pre><code>true [n ...] _scfd_R0 [sub-carry-from-digits] i cons
+
+</code></pre>
+<p>-or-</p>
+<pre><code>true [] _scfd_R0 [sub-carry-from-digits] i cons
+
+</code></pre>
+<p><strong>Except</strong> that this should should never happen when subtracting, because we already made sure that we're only ever subtracting a number less than or equal to the, uh, number we are subtracting from (TODO rewrite this trainwreck of a sentence).</p>
+<pre><code>         true [a ...] _scfd_R0 [sub-carry-from-digits] i cons
+----------------------------------------------------------------
+ true 0 a add-with-carry [...] [sub-carry-from-digits] i cons
+------------------------------------------------------------------
+             (a+1) carry [...] [sub-carry-from-digits] i cons
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<pre><code>true [a ...] _scfd_R0
+true [a ...] 0 swap uncons [sub-with-carry] dip
+true 0 [a ...] uncons [sub-with-carry] dip
+true 0 a [...] [sub-with-carry] dip
+true 0 a sub-with-carry [...]
+
+_scfd_R0 == 0 swap uncons [sub-with-carry] dip
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>But there's a problem!  This winds up subtracting <code>a</code> from 0 rather than the other way around:</p>
+<pre><code>_scfd_R0 == uncons 0 swap [sub-with-carry] dip
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[177]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[sub-carry-from-digits
+  [pop not]
+  [popd]
+  [_scfd_R0]
+  [i cons]
+  genrec
+] inscribe
+[_scfd_R0 uncons 0 swap [sub-with-carry] dip] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Try it out:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[178]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+false [3 2 1] sub-carry-from-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[3 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[179]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true [0 1] sub-carry-from-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[9 0]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[180]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true [3 2 1] sub-carry-from-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[2 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[181]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true [0 0 1] sub-carry-from-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[9 9 0]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[182]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>But what about those leading zeroes?</p>
+<p>We could use a version of <code>cons</code> that refuses to put 0 onto an empty list?</p>
+<pre><code>cons-but-not-leading-zeroes == [[bool] ii | not] [popd] [cons] ifte
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[183]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[cons-but-not-leading-zeroes [[bool] ii | not] [popd] [cons] ifte] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[184]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[sub-carry-from-digits
+  [pop not]
+  [popd]
+  [_scfd_R0]
+  [i cons-but-not-leading-zeroes]
+  genrec
+] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[185]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[_scfd_R0 uncons 0 swap [sub-with-carry] dip] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[186]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+
+true [0 0 1] sub-carry-from-digits
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[9 9]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[187]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="sub-carry"><code>sub-carry</code><a class="anchor-link" href="#sub-carry">&#182;</a></h4><pre><code>sub-carry == pop
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[188]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[sub-like-bigints [uncons] dip rest check-gt sub-digits cons] inscribe
+[sub-digits initial-carry sub-digits'] inscribe
+[sub-digits'
+    [sub-carry-from-digits]
+    [swap pop]
+    [sub-with-carry]
+    build-two-list-combiner
+    genrec
+] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[189]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+true [3 2 1] [6 5 4]
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>true [3 2 1] [6 5 4]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[190]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>check-gt initial-carry
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false false [6 5 4] [3 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[191]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>sub-digits'
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>false [3 3 3]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[192]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+12345 to-bigint 109 to-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 5 4 3 2 1] [true 9 0 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[193]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>sub-like-bigints
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[true 6 3 2 2 1]</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[194]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>from-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>12236</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[195]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="neg-bigint"><code>neg-bigint</code><a class="anchor-link" href="#neg-bigint">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[196]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>[neg-bigint [not] infra] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[197]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>123 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>123</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[198]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>to-bigint neg-bigint from-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>-123</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[199]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>to-bigint neg-bigint from-bigint
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>123</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[200]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span>clear
+[sub-bigints [same-sign] [sub-like-bigints] [neg-bigint add-like-bigints] ifte] inscribe
+[add-bigints [same-sign] [add-like-bigints] [neg-bigint sub-like-bigints] ifte] inscribe
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Multiplication">Multiplication<a class="anchor-link" href="#Multiplication">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-Joy"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Appendix:-Source-Code">Appendix: Source Code<a class="anchor-link" href="#Appendix:-Source-Code">&#182;</a></h2><pre><code>clear
+[base 2147483648]
+[ditch-empty-list [bool] [popd] [pop] ifte]
+[bool-to-int [0] [1] branch]
+[uncons-two [uncons] ii swapd]
+[sandwich swap [cons] dip swoncat]
+
+[digitalize [0 &lt;=] [pop []] [base divmod swap] [i cons] genrec]
+[to-bigint [!-] [abs digitalize] cleave cons]
+
+[prep rest 1 0 rolldown]
+[from-bigint' [next-digit] step popd]
+[next-digit [increase-power] [accumulate-digit] clop popdd]
+[increase-power popop base *]
+[accumulate-digit rolldown * +]
+
+[sign-int [first] [prep from-bigint'] cleave]
+[neg-if-necessary swap [neg] [] branch]
+[from-bigint sign-int neg-if-necessary]
+
+[add-with-carry _add-with-carry0 _add-with-carry1]
+[_add-with-carry0 [bool-to-int] dipd + +]
+[_add-with-carry1 base [mod] [&gt;=] clop]
+
+[add-carry-to-digits [pop not] [popd] [_actd_R0] [i cons] genrec]
+[_actd_R0 [bool] [_actd_R0.then] [_actd_R0.else] ifte]
+[_actd_R0.else popd 1 false rolldown]
+[_actd_R0.then 0 swap uncons [add-with-carry] dip]
+
+[add-digits initial-carry add-digits']
+[initial-carry false rollup]
+
+[add-digits' [P] [THEN] [R0] [R1] genrec]
+[P [bool] ii &amp; not]
+[THEN [P'] [THEN'] [ELSE] ifte]
+[R0 uncons-two [add-with-carry] dipd]
+[R1 i cons]
+[P' [bool] ii |]
+[THEN' ditch-empty-list add-carry-to-digits]
+[ELSE pop swap [] [1 swons] branch]
+
+[same-sign [first] ii xor not]
+[add-like-bigints [uncons] dip rest add-digits cons]
+[add-bigints [same-sign] [add-like-bigints] [neg-bigint sub-like-bigints] ifte]
+
+[build-two-list-combiner _btlc0 _btlc1 [i cons]]
+[_btlc0.0 [[ditch-empty-list] swoncat] dip]
+[_btlc0.1 [pop] swoncat]
+[_btlc0.3 [_btlc0.0 _btlc0.1] dip]
+[_btlc0.4 [uncons-two] [dipd] sandwich]
+[_btlc0 _btlc0.3 _btlc0.4]
+[_btlc1 [[ifte] ccons [P'] swons [P] swap] dip]
+
+[carry [] [1 swons] branch]
+
+[compare-pairs [bool not] [pop false] [[first [&gt;=] infrst] [pop true]] [[rest] swoncat ifte] genrec]
+[xR1 uncons-two [unit cons swons] dipd]
+[xP [bool] ii &amp; not]
+[BASE [bool] [popop pop true] [[pop bool] [popop pop false] [popop compare-pairs] ifte] ifte]
+[gt-bigint &lt;&lt;{} [xP] [BASE] [xR1] tailrec]
+[check-gt [gt-bigint] [swap [not] dipd] [] ifte]
+
+[sub-carry pop]
+
+[sub-carry-from-digits [pop not] [popd] [_scfd_R0] [i cons-but-not-leading-zeroes] genrec] inscribe
+[_scfd_R0 uncons 0 swap [sub-with-carry] dip] inscribe
+[cons-but-not-leading-zeroes [P'] [cons] [popd] ifte]
+
+[sub-with-carry _sub-with-carry0 _sub-with-carry1]
+[_sub-with-carry0 rolldown bool-to-int [-] ii]
+[_sub-with-carry1 [base + base mod] [0 &lt;] cleave]
+
+[sub-like-bigints [uncons] dip rest check-gt sub-digits cons]
+[sub-digits initial-carry sub-digits']
+
+enstacken [inscribe] step
+
+[add-carry-to-digits]
+[swap carry]
+[add-with-carry]
+build-two-list-combiner
+[genrec] ccons ccons
+[add-digits'] swoncat
+inscribe
+
+[sub-carry-from-digits]
+[swap sub-carry]
+[sub-with-carry]
+build-two-list-combiner
+[genrec] ccons ccons
+[sub-digits'] swoncat
+inscribe
+</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="notes">notes<a class="anchor-link" href="#notes">&#182;</a></h3><p>So far I have three formats for Joy source:</p>
+<ul>
+<li><code>def.txt</code> is a list of definitions (UTF-8), one per line, with no special marks.</li>
+<li><code>foo ≡ bar baz...</code> lines in the <code>joy.py</code> embedded definition text, because why not?  (Sometimes I use <code>==</code> instead of <code>≡</code> mostly because some tools can't handle the Unicode glyph.  Like converting this notebook to PDF via LaTeX just omitted them.)</li>
+<li><code>[name body] inscribe</code> Joy source code that literally defines new words in the dictionary at runtime.  A text of those commands can be fed to the interpreter to customize it without any special processing (like the other two formats require.)</li>
+</ul>
+<p>So far I prefer the <code>def.txt</code> style but that makes it tricky to embed them automatically into the <code>joy.py</code> file.</p>
+<h4 id="Refactoring">Refactoring<a class="anchor-link" href="#Refactoring">&#182;</a></h4><p>We have <code>i cons</code> but that's pretty tight already, eh?</p>
+<p>However, <code>[i cons] genrec</code> is an interesting combinator.  It's almost <code>tailrec</code> with that <code>i</code> combinator for the recursion, but then <code>cons</code> means it's a list-builder (an <em>anamorphism</em> if you go for that sort of thing.)</p>
+<pre><code>simple-list-builder == [i cons] genrec
+
+</code></pre>
+<p>And maybe:</p>
+<pre><code>boolii == [bool] ii
+
+   both? == boolii &amp;
+ one-of? == boolii |
+</code></pre>
+
+</div>
+</div>
+</div>
+
+
