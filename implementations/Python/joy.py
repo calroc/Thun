@@ -458,6 +458,21 @@ Read-Evaluate-Print Loop
 '''
 
 
+def hack_error_message(exception):
+    '''
+    Some of the Python exception messages (such as when you attempt to
+    shift a number by a negative amount of bits) are used as Joy error
+    messages.  They should start with a capital letter and end with a
+    period.  This function takes care of that.
+    '''
+    message = str(exception)
+    if message[0].islower():
+        message = message[0].swapcase() + message[1:]
+    if '.' != message[-1]:
+        message += '.'
+    print(message)
+
+
 def repl(stack=(), dictionary=None):
     '''
     Read-Evaluate-Print Loop
@@ -479,10 +494,12 @@ def repl(stack=(), dictionary=None):
                 break
             try:
                 stack, dictionary = run(text, stack, dictionary)
+            except UnknownSymbolError as sym:
+                print('Unknown:', sym)
             except SystemExit as e:
                 raise SystemExit from e
-            except:
-                print_exc()
+            except Exception as e:
+                hack_error_message(e)
             print(stack_to_string(stack))
     except SystemExit as e:
         raise SystemExit from e
@@ -530,8 +547,8 @@ def interp(stack=(), dictionary=None):
                 print(e)
             except SystemExit as e:
                 raise SystemExit from e
-            except:
-                print_exc()
+            except Exception as e:
+                hack_error_message(e)
             print(stack_to_string(stack))
     except SystemExit as e:
         raise SystemExit from e
