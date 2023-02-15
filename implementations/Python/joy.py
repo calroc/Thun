@@ -55,6 +55,7 @@ Ulam Spiral).
 '''
 from functools import wraps
 from inspect import getdoc
+from sys import stderr
 from traceback import print_exc
 import operator
 
@@ -470,7 +471,7 @@ def hack_error_message(exception):
         message = message[0].swapcase() + message[1:]
     if '.' != message[-1]:
         message += '.'
-    print(message)
+    print(message, file=stderr)
 
 
 def repl(stack=(), dictionary=None):
@@ -495,7 +496,7 @@ def repl(stack=(), dictionary=None):
             try:
                 stack, dictionary = run(text, stack, dictionary)
             except UnknownSymbolError as sym:
-                print('Unknown:', sym)
+                print('Unknown:', sym, file=stderr)
             except SystemExit as e:
                 raise SystemExit from e
             except Exception as e:
@@ -537,14 +538,14 @@ def interp(stack=(), dictionary=None):
             try:
                 stack, dictionary = run(text, stack, dictionary)
             except UnknownSymbolError as sym:
-                print('Unknown:', sym)
+                print('Unknown:', sym, file=stderr)
             except (
                 StackUnderflowError,
                 NotABoolError,
                 NotAListError,
                 NotAnIntError,
             ) as e:
-                print(e)
+                print(e, file=stderr)
             except SystemExit as e:
                 raise SystemExit from e
             except Exception as e:
