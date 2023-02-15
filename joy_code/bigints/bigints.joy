@@ -34,7 +34,7 @@ clear
 [initial-carry false rollup]
 
 
-[same-sign [first] ii xor not]
+[same-sign [first] ii _\/_ not]
 [extract-sign [uncons] dip rest]
 
 [add-like-bigints extract-sign add-digits cons]
@@ -47,8 +47,8 @@ clear
 [_btlc0.4 [uncons-two] [dipd] sandwich]
 [_btlc0 _btlc0.3 _btlc0.4]
 [_btlc1 [[ifte] ccons [P'] swons [P] swap] dip]
-[P [bool] ii & not]
-[P' [bool] ii |]
+[P [bool] ii /\ not]
+[P' [bool] ii \/]
 
 [carry [] [1 swons] branch]
 
@@ -59,7 +59,7 @@ clear
 [check-gt [gt-bigint] [swap [not] dipd] [] ifte]
 [gt-bigint <<{} [_gtb_P] [_gtb_BASE] [_gtb_R1] tailrec]
 [_gtb_R1 uncons-two [unit cons swons] dipd]
-[_gtb_P [bool] ii & not]
+[_gtb_P [bool] ii /\ not]
 [_gtb_BASE [bool] [popop pop true] [_gtb_BASE'] ifte]
 [_gtb_BASE' [pop bool] [popop pop false] [popop compare-pairs] ifte]
 
