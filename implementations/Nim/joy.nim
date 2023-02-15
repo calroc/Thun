@@ -77,6 +77,11 @@ let j_loop* = JoyType(kind: joySymbol, symVal: "loop")
 
 let empty_list = JoyType(kind: joyList, listVal: Nil[JoyType]())
 
+# Global dictionary.
+
+var dictionary = newMap[string, JoyListType]()
+
+
 #[
 ██╗   ██╗████████╗██╗██╗     ███████╗
 ██║   ██║╚══██╔══╝██║██║     ██╔════╝
@@ -439,6 +444,24 @@ proc truthy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType)
     raise newException(ValueError, "Cannot Boolify.")
 
 
+proc inscribe(stack: JoyListType, expression: JoyListType, d: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
+  let (def, s0) = pop_list(stack)
+  if def.isEmpty:
+    raise newException(ValueError, "No symbol in definition.")
+  let sym = def.head
+  case sym.kind:
+  of joySymbol:
+    # Check the global default dictionary.
+    let hmm = dictionary.get(sym.symVal)
+    if hmm.isEmpty:
+      let dd = d + (sym.symVal, def.tail)
+      return (s0, expression, dd)
+    else:
+      return (s0, expression, d)
+  else:
+    raise newException(ValueError, "Non-symbol as head of definition.")
+
+
 #[
 ██╗███╗   ██╗████████╗███████╗██████╗ ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
 ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
@@ -563,6 +586,8 @@ proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType, dictiona
     return swap(stack, expression, dictionary)
   of "bool": # bool is a reserved word in Nim.
     return truthy(stack, expression, dictionary)
+  of "inscribe":
+    return inscribe(stack, expression, dictionary)
 
   else:
     let def = dictionary.get(sym)
@@ -619,13 +644,13 @@ proc add_def(def: string, dictionary: var JoyMapType) =
 
 
 const defs_text = staticRead"defs.txt"
-var d = newMap[string, JoyListType]()
 for line in defs_text.splitLines:
   if line.isEmptyOrWhitespace:
     continue
-  add_def(line, d)
+  add_def(line, dictionary)
 
 
+var d = dictionary
 var s = empty_list.listVal
 var exp: JoyListType
 while true:
