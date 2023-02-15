@@ -636,5 +636,5 @@ while true:
   try:
     (s, d) = joy(s, exp, d)
   except:
-    echo getCurrentExceptionMsg()
+    writeLine(stderr, getCurrentExceptionMsg())
   echo print_stack(s)
