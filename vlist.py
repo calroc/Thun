@@ -33,8 +33,10 @@ o4 = (o3, 0, 1, [1], [9])
 p2 = (o4, 0)  # points to 9
 
 
-
 def cons(thing, vlist_ptr):
+    if not vlist_ptr:
+        return ((), 0, 1, [0], [thing]), 0
+
     (base, offset, size, last_used_list, data), pointer_offset = vlist_ptr
     [last_used] = last_used_list
 
@@ -72,20 +74,22 @@ p3 = cons(10, p0)
 
 
 def head(vlist_ptr):
+    if not vlist_ptr:
+        raise ValueError("Empty list has no head!")
     vlist, offset = vlist_ptr
-    if not vlist:
-        raise ValueError("empty list has no head!")
     return vlist[-1][offset]
 
 
 def tail(vlist_ptr):
+    if not vlist_ptr:
+        raise ValueError("Empty list has no tail!")
     vlist, offset = vlist_ptr
     offset -= 1
-    return vlist[:2] if offset < 0 else (vlist, offset)
+    return (vlist[:2] if vlist[0] else ()) if offset < 0 else (vlist, offset)
 
 
 def iter_vlist(vlist_ptr):
-    while vlist_ptr[0]:
+    while vlist_ptr:
         yield head(vlist_ptr)
         vlist_ptr = tail(vlist_ptr)
 
@@ -94,3 +98,14 @@ for i, p in enumerate((p0, p1, p2, p3)):
     print(f'p{i}')
     print(' '.join(map(str, iter_vlist(p))))
     print()
+
+
+p = ()
+p = cons(3, p)
+p = cons(4, p)
+p = cons(5, p)
+p = cons(6, p)
+p = cons(7, p)
+p = cons(8, p)
+print(' '.join(map(str, iter_vlist(p))))
+# There is no such thing as a vlist_ptr with a null () vlist.  That's an invariant.
