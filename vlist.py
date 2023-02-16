@@ -64,13 +64,13 @@ def cons(thing, vlist_ptr):
     '''
 
     # Is this where we increase the size x 2?
-    # size <<= 1 ; l = [None] * size ; l[0] = thing
-    # return (vlist_ptr[0], pointer_offset, size, [1], l), 0
+    size <<= 1 ; l = [None] * size ; l[0] = thing
+    return (vlist_ptr[0], pointer_offset, size, [1], l), 0
 
-    return (vlist_ptr[0], pointer_offset, 1, [1], [thing]), 0
+    #return (vlist_ptr[0], pointer_offset, 1, [1], [thing]), 0
 
 
-p3 = cons(10, p0)
+#p3 = cons(10, p0)
 
 
 def head(vlist_ptr):
@@ -94,18 +94,21 @@ def iter_vlist(vlist_ptr):
         vlist_ptr = tail(vlist_ptr)
 
 
-for i, p in enumerate((p0, p1, p2, p3)):
-    print(f'p{i}')
-    print(' '.join(map(str, iter_vlist(p))))
-    print()
+##for i, p in enumerate((p0, p1, p2, p3)):
+##    print(f'p{i}')
+##    print(' '.join(map(str, iter_vlist(p))))
+##    print()
 
 
 p = ()
-p = cons(3, p)
-p = cons(4, p)
-p = cons(5, p)
-p = cons(6, p)
-p = cons(7, p)
-p = cons(8, p)
+p = cons(3, p) ; print(p)
+p = cons(4, p) ; print(p)
+p = cons(5, p) ; print(p)
+p = cons(6, p) ; print(p)
+p = cons(7, p) ; print(p)
+p = cons(8, p) ; print(p)
 print(' '.join(map(str, iter_vlist(p))))
+assert p[0] == o3
+
+
 # There is no such thing as a vlist_ptr with a null () vlist.  That's an invariant.
