@@ -73,14 +73,67 @@ def repr_vlist(vlist_ptr):
     return ' '.join(map(str, iter_vlist(vlist_ptr)))
 
 
+def pick(n, vlist_ptr):
+    if not vlist_ptr:
+        raise ValueError("Empty list!")
+
+    '''
+
+    Consider starting with a list pointer in Fig 1 then to find the nth element subtract
+    n from the pointer offset. If the result is positive then the element is in the first
+    block of the list at the calculated offset from the base. If the result is negative then...
+
+    '''
+
+    vlist, pointer_offset = vlist_ptr
+    q = pointer_offset - n
+    if q >= 0:
+        return vlist[-1][q]
+
+    '''
+
+    ...move to the next block using the Base-Offset pointer. Add the Previous pointer
+    offset to the negative offset. While this remains negative keep moving onto the next
+    block. When it finally becomes positive the position of the required element has
+    been found
+
+    '''
+    while True:
+        assert q < 0
+        if not vlist:
+            raise ValueError(f'Pick index {n} greater than length of list.')
+        vlist, offset = vlist[:2]
+        q += offset + 1  # Offsets in the paper count from one, not zero?
+        if q >= 0:
+            return vlist[-1][q]
+
+
+def length(vlist_ptr):
+    if not vlist_ptr:
+        return 0
+    vlist, n = vlist_ptr
+    while vlist:
+        vlist, offset = vlist[:2]
+        n += offset + 1
+    return n
+
+
+
 p = ()
-p = cons(3, p) ; print(p)
-p = cons(4, p) ; print(p)
-p = cons(5, p) ; print(p)
-p = cons(6, p) ; print(p)
-p = cons(7, p) ; print(p)
-p = cons(8, p) ; print(p)
+p = cons(3, p)# ; print(p)
+p = cons(4, p)# ; print(p)
+p = cons(5, p)# ; print(p)
+p = cons(6, p)# ; print(p)
+p = cons(7, p)# ; print(p)
+p = cons(8, p)# ; print(p)
+
 print(repr_vlist(p))
+
+for n in range(length(p)):
+	print(pick(n, p), end=' ')
+
+
+
 
 
 # There is no such thing as a vlist_ptr with a null () vlist.  That's an invariant.
