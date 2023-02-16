@@ -54,19 +54,22 @@ JoyTypePtr JoyFalse = &JoyFalseVal;
 
 
 void*
-reallocate_function (void *ptr, __attribute__((unused)) size_t old_size, size_t new_size) {
+reallocate_function (void *ptr, __attribute__((unused)) size_t old_size, size_t new_size)
+{
 	return GC_REALLOC(ptr, new_size);
 }
 
 
 void
-deallocate_function (void *ptr, __attribute__((unused)) size_t size) {
+deallocate_function (void *ptr, __attribute__((unused)) size_t size)
+{
 	GC_FREE(ptr);
 }
 
 
 void
-my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment) {
+my_callback(GC_PTR void_obj, __attribute__((unused)) GC_PTR void_environment)
+{
 	mpz_t *obj = (mpz_t*)void_obj;
 	mpz_clear(*obj);
 }
@@ -224,7 +227,8 @@ pop_list(JoyListPtr stack)
 
 
 JoyList
-newIntNode(void) {
+newIntNode(void)
+{
 	JoyList node = newJoyList;
 	node->head = newJoyType;
 	node->head->kind = joyInt;
