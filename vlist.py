@@ -35,7 +35,7 @@ p2 = (o4, 0)  # points to 9
 
 def cons(thing, vlist_ptr):
     if not vlist_ptr:
-        return ((), 0, 1, [0], [thing]), 0
+        return ((), 0, 1, [1], [thing]), 0
 
     (base, offset, size, last_used_list, data), pointer_offset = vlist_ptr
     [last_used] = last_used_list
