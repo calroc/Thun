@@ -13,25 +13,6 @@ a Pointer to a VList is a pair of (VList and offset).
 
 '''
 
-def new_VList(base=(), offset=0, size=1):
-    assert size >= 1
-    return (base, offset, size, [0], [None] * length)
-
-
-# In Fig 2 a list has been created with the integers (8,7,6,5,4,3)
-
-o1 = ((), 0, 1, [1], [3])
-o2 = (o1, 0, 2, [2], [4, 5])
-o3 = (o2, 1, 4, [3], [6, 7, 8, None])
-
-p0 = (o3, 2)  # points to 8
-p1 = (o3, 0)  # points to 6
-
-# cons(9, p1) = o4
-
-o4 = (o3, 0, 1, [1], [9])
-p2 = (o4, 0)  # points to 9
-
 
 def cons(thing, vlist_ptr):
     if not vlist_ptr:
@@ -62,15 +43,9 @@ def cons(thing, vlist_ptr):
     entry can now be made and additional elements added.
 
     '''
-
     # Is this where we increase the size x 2?
     size <<= 1 ; l = [None] * size ; l[0] = thing
     return (vlist_ptr[0], pointer_offset, size, [1], l), 0
-
-    #return (vlist_ptr[0], pointer_offset, 1, [1], [thing]), 0
-
-
-#p3 = cons(10, p0)
 
 
 def head(vlist_ptr):
@@ -94,10 +69,8 @@ def iter_vlist(vlist_ptr):
         vlist_ptr = tail(vlist_ptr)
 
 
-##for i, p in enumerate((p0, p1, p2, p3)):
-##    print(f'p{i}')
-##    print(' '.join(map(str, iter_vlist(p))))
-##    print()
+def repr_vlist(vlist_ptr):
+    return ' '.join(map(str, iter_vlist(vlist_ptr)))
 
 
 p = ()
@@ -107,8 +80,32 @@ p = cons(5, p) ; print(p)
 p = cons(6, p) ; print(p)
 p = cons(7, p) ; print(p)
 p = cons(8, p) ; print(p)
-print(' '.join(map(str, iter_vlist(p))))
-assert p[0] == o3
+print(repr_vlist(p))
 
 
 # There is no such thing as a vlist_ptr with a null () vlist.  That's an invariant.
+
+
+##    # In Fig 2 a list has been created with the integers (8,7,6,5,4,3)
+##
+##    o1 = ((), 0, 1, [1], [3])
+##    o2 = (o1, 0, 2, [2], [4, 5])
+##    o3 = (o2, 1, 4, [3], [6, 7, 8, None])
+##
+##    p0 = (o3, 2)  # points to 8
+##    p1 = (o3, 0)  # points to 6
+##
+##    # cons(9, p1) = o4
+##
+##    o4 = (o3, 0, 1, [1], [9])
+##    p2 = (o4, 0)  # points to 9
+##
+##
+##    p3 = cons(10, p0)
+
+
+
+##for i, p in enumerate((p0, p1, p2, p3)):
+##    print(f'p{i}')
+##    print(' '.join(map(str, iter_vlist(p))))
+##    print()
