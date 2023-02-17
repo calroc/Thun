@@ -20,8 +20,12 @@ def cons(thing, vlist_ptr):
     if not vlist_ptr:
         return ((), 0, 1, [1], [thing]), 0
 
-    (base, _offset, size, last_used_list, data), pointer_offset = vlist_ptr
-    [last_used] = last_used_list
+    vlist, pointer_offset = vlist_ptr
+    base, _offset, size, last_used_list, data = vlist
+    [last_used] = last_used_list  # Note that we could do this pattern
+    # matching directly in the assignment statement on the previous line,
+    # however, we want to keep that length-one list "last_used_list"
+    # around so we can mutate the last_used value of "vlist".
 
     '''
     During the consing of (9) the pointer offset is compared with the
@@ -33,8 +37,8 @@ def cons(thing, vlist_ptr):
     if pointer_offset == last_used - 1 and last_used < size:
         pointer_offset += 1
         data[pointer_offset] = thing
-        last_used_list[0] = last_used + 1
-        return vlist_ptr[0], pointer_offset
+        last_used_list[0] += 1
+        return vlist, pointer_offset
 
     '''
     If on the other-hand the pointer offset is less than the LastUsed a
@@ -47,9 +51,10 @@ def cons(thing, vlist_ptr):
 
     # Is this where we increase the size x 2?
     size <<= 1
+    offset = 0
     data = [None] * size
-    data[0] = thing
-    return (vlist_ptr[0], pointer_offset, size, [1], data), 0
+    data[offset] = thing
+    return (vlist, pointer_offset, size, [1], data), offset
 
 
 def head(vlist_ptr):
@@ -155,3 +160,6 @@ print()
 ##    print(f'p{i}')
 ##    print(' '.join(map(str, iter_vlist(p))))
 ##    print()
+
+
+# https://pythontutor.com/visualize.html#code='''%0AAn%20exploration%20of%20Phil%20Bagwell's%20VList.%0A%0AA%20VList%20is%20modeled%20as%20a%205-tuple%3A%0A%20%20%20%20base%3A%20VList%0A%20%20%20%20offset%3A%20int,%20indexing%20%28from%200%29%20the%20base%20VList%20data%20list.%0A%20%20%20%20size%3A%20int,%20length%20of%20the%20data%20list.%0A%20%20%20%20last_used%3A%20to%20make%20a%20mutable%20int%20it's%20an%20int%20in%20a%20list%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20It's%20a%20count%20here%20rather%20than%20an%20offset!%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20That%20is,%20it%20starts%20from%201,%20rather%20than%200.%0A%20%20%20%20data%3A%20a%20list%20of%20length%20size.%0A%0AA%20pointer%20to%20a%20VList%20is%20a%20two-tuple%20of%20%28VList,%20offset%29%20where%0Athe%20offset%20is%20an%20index%20into%20the%20VList's%20data%20list.%0A%0A'''%0A%0A%0Adef%20cons%28thing,%20vlist_ptr%29%3A%0A%20%20%20%20if%20not%20vlist_ptr%3A%0A%20%20%20%20%20%20%20%20return%20%28%28%29,%200,%201,%20%5B1%5D,%20%5Bthing%5D%29,%200%0A%0A%20%20%20%20%28base,%20_offset,%20size,%20last_used_list,%20data%29,%20pointer_offset%20%3D%20vlist_ptr%0A%20%20%20%20%5Blast_used%5D%20%3D%20last_used_list%0A%0A%20%20%20%20'''%0A%20%20%20%20During%20the%20consing%20of%20%289%29%20the%20pointer%20offset%20is%20compared%20with%20the%0A%20%20%20%20last%20used%20offset,%20LastUsed.%20If%20it%20is%20the%20same%20and%20less%20than%20the%20block%0A%20%20%20%20size%20then%20it%20is%20simply%20incremented,%20the%20new%20entry%20made%20and%20LastUsed%0A%20%20%20%20updated.%0A%20%20%20%20'''%0A%0A%20%20%20%20if%20pointer_offset%20%3D%3D%20last_used%20-%201%20and%20last_used%20%3C%20size%3A%0A%20%20%20%20%20%20%20%20pointer_offset%20%2B%3D%201%0A%20%20%20%20%20%20%20%20data%5Bpointer_offset%5D%20%3D%20thing%0A%20%20%20%20%20%20%20%20last_used_list%5B0%5D%20%3D%20last_used%20%2B%201%0A%20%20%20%20%20%20%20%20return%20vlist_ptr%5B0%5D,%20pointer_offset%0A%0A%20%20%20%20'''%0A%20%20%20%20If%20on%20the%20other-hand%20the%20pointer%20offset%20is%20less%20than%20the%20LastUsed%20a%0A%20%20%20%20cons%20is%20being%20applied%20to%20the%20tail%20of%20a%20longer%20list,%20as%20is%20the%20case%0A%20%20%20%20with%20the%20%289%29.%20In%20this%20case%20a%20new%20list%20block%20must%20be%20allocated%20and%20its%0A%20%20%20%20Base-Offset%20pointer%20set%20to%20the%20tail%20contained%20in%20the%20original%20list.%0A%20%20%20%20The%20offset%20part%20being%20set%20to%20the%20point%20in%20tail%20that%20must%20be%20extended.%0A%20%20%20%20The%20new%20entry%20can%20now%20be%20made%20and%20additional%20elements%20added.%0A%20%20%20%20'''%0A%0A%20%20%20%20%23%20Is%20this%20where%20we%20increase%20the%20size%20x%202%3F%0A%20%20%20%20size%20%3C%3C%3D%201%0A%20%20%20%20data%20%3D%20%5BNone%5D%20*%20size%0A%20%20%20%20data%5B0%5D%20%3D%20thing%0A%20%20%20%20return%20%28vlist_ptr%5B0%5D,%20pointer_offset,%20size,%20%5B1%5D,%20data%29,%200%0A%0A%0A%0Ap%20%3D%20%28%29%0Ap%20%3D%20cons%283,%20p%29%23%20%3B%20print%28p%29%0Ap%20%3D%20cons%284,%20p%29%23%20%3B%20print%28p%29%0Ap%20%3D%20cons%285,%20p%29%23%20%3B%20print%28p%29%0Ap%20%3D%20cons%286,%20p%29%23%20%3B%20print%28p%29%0Ap%20%3D%20cons%287,%20p%29%23%20%3B%20print%28p%29%0Ap%20%3D%20cons%288,%20p%29%23%20%3B%20print%28p%29%0A&cumulative=false&heapPrimitives=nevernest&mode=edit&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false
