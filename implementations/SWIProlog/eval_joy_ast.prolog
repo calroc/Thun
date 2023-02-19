@@ -103,20 +103,18 @@ assert_def(Symbol, Body) :-
 foo(Var, Name=Var) :- gensym('A', Name).
 
 
-barzs([], []).
-barzs([Var|Bs], [(Name=Var)|Ls]) :-
+names_for_variables([], []).
+names_for_variables([Var|Bs], [(Name=Var)|Ls]) :-
     gensym('A', Name),
-    barzs(Bs, Ls).
+    names_for_variables(Bs, Ls).
 
 main :-
     read_term(Expression, []),
     thun(Expression, Si, So),
-    term_variables((Si, So), L),
-    barzs(L, LL),
-    %write_canonical(LL), writeln(""),
-    write_term(Si, [quoted(true),fullstop(true),variable_names(LL)]),
-    write_term(So, [quoted(true),fullstop(true),variable_names(LL)]),
-    writeln("").
+    term_variables((Si, So), Vars),
+    names_for_variables(Vars, Names),
+    write_term(Si, [quoted(true),variable_names(Names)]), writeln(","),
+    write_term(So, [quoted(true),variable_names(Names)]), writeln("").
     
     
     

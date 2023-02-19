@@ -34,8 +34,15 @@ joy_term(list(J)) --> [lbracket], !, joy_parse(J), [rbracket].
 joy_term(Token) --> [tok(Codes)], {joy_token(Token, Codes)}.
 
 joy_token(int(I), Codes) :- catch(number_codes(I, Codes), _Err, fail), !.
-joy_token(bool(true), "true") :- !.
-joy_token(bool(false), "false") :- !.
+% Leaving the literals below as "true" and "false" caused those
+% to be encoded as symbols instead of bools!  I tried '--traditional'
+% but then compilation failed with
+% > ERROR: atomics_to_string/3: Type error: `text' expected, found `[61]' (a list)
+% Which was less helpful than it sounds.
+% Anyway, since this is SWI-specific code anyway, why not use ``'s and get on with life?
+% https://www.swi-prolog.org/pldoc/man?section=string
+joy_token(bool(true), `true`) :- !.
+joy_token(bool(false), `false`) :- !.
 joy_token(symbol(S), Codes) :- atom_codes(S, Codes).
 
 text_to_expression(Text, Expression) :-
