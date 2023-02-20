@@ -1,4 +1,4 @@
-OBJS=joy.o keywords.o definitions.o
+OBJS=joy.o keywords.o definitions.o linenoise.o
 
 LDFLAGS=-L/usr/local/lib -lgc -lgmp
 
@@ -42,3 +42,6 @@ keywords.c: KEYWORDS.txt
 
 clean:
 	rm -vf *.o joy KEYWORDS.txt
+
+linenoise.o: linenoise.c linenoise.h
+	cc -c linenoise.c -o linenoise.o

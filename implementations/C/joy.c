@@ -37,6 +37,7 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
 #include "joy.h"
 #include "definitions.h"
 #include "uthash.h"
+#include "linenoise.h"
 
 
 static jmp_buf jbuf;
@@ -924,7 +925,6 @@ int
 main(int argc, char *argv[])
 {
 	char *line;
-	char *status;
 	JoyList stack = EMPTY_LIST;
 	JoyList expression = EMPTY_LIST;
 	JoyList s;
@@ -939,29 +939,13 @@ main(int argc, char *argv[])
 
 	quiet = ((2 == argc) && (!strcmp("-q", argv[1])));
 
-	line = (char *)GC_malloc(1025);
-
 	while (1) {
-		SHH("joy? ")
-		status = gets_s(line, 1025);
-		if (NULL == status) {
-			/*
-			From the man page:
-
-			> Upon successful completion, fgets(), gets_s(), and gets() return a
-			pointer to the string.  If end-of-file occurs before any characters are
-			read, they return NULL and the buffer contents remain unchanged.  If an
-			error occurs, they return NULL and the buffer contents are indeterminate.
-			The fgets(), gets_s(), and gets() functions do not distinguish between
-			end-of-file and error, and callers must use feof(3) and ferror(3) to
-			determine which occurred.
-
-			TODO: "use feof(3) and ferror(3)"...
-
-			*/
+		line = linenoise(quiet? "" : "joy? ");
+		if (NULL == line) {
 			SHH("\n")
 			break;
 		}
+		linenoiseHistoryAdd(line);
 		s = stack;
 		if (!setjmp(jbuf)) {
 			expression = text_to_expression(line);
@@ -970,6 +954,7 @@ main(int argc, char *argv[])
 			/* err */
 			stack = s;
 		}
+		free(line);
 		print_stack(stack);
 		printf("\n");
 	}
