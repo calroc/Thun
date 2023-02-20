@@ -53,7 +53,7 @@ struct list_node {
 #define newJoyType GC_malloc(sizeof(JoyType))
 
 
-typedef void (*JoyFunc)(JoyListPtr, JoyListPtr);
+typedef void JoyFunc(JoyListPtr, JoyListPtr);
 
 
 JoyList text_to_expression(char *text);
@@ -61,36 +61,36 @@ void push_quote_onto_expression(JoyList el, JoyListPtr expression);
 void init_defs(void);
 
 
-void add(JoyListPtr stack, JoyListPtr expression);
-void branch(JoyListPtr stack, JoyListPtr expression);
-void clear(JoyListPtr stack, JoyListPtr expression);
-void cmp_joyfunc(JoyListPtr stack, JoyListPtr expression);
-void cons(JoyListPtr stack, JoyListPtr expression);
-void concat(JoyListPtr stack, JoyListPtr expression);
-void dip(JoyListPtr stack, JoyListPtr expression);
-void dup(JoyListPtr stack, JoyListPtr expression);
-void first(JoyListPtr stack, JoyListPtr expression);
-void i_joyfunc(JoyListPtr stack, JoyListPtr expression);
-void inscribe(JoyListPtr stack, JoyListPtr expression);
-void loop(JoyListPtr stack, JoyListPtr expression);
-void lshift(JoyListPtr stack, JoyListPtr expression);
-void pop(JoyListPtr stack, JoyListPtr expression);
-void rest(JoyListPtr stack, JoyListPtr expression);
-void rshift(JoyListPtr stack, JoyListPtr expression);
-void stack(JoyListPtr stack, JoyListPtr expression);
-void swaack(JoyListPtr stack, JoyListPtr expression);
-void swap(JoyListPtr stack, JoyListPtr expression);
-void mul(JoyListPtr stack, JoyListPtr expression);
-void sub(JoyListPtr stack, JoyListPtr expression);
-void fdiv_q(JoyListPtr stack, JoyListPtr expression);
-void fdiv_r(JoyListPtr stack, JoyListPtr expression);
-void truthy(JoyListPtr stack, JoyListPtr expression);
-void fn(JoyListPtr stack, JoyListPtr expression);
+JoyFunc add;
+JoyFunc branch;
+JoyFunc clear;
+JoyFunc cmp_joyfunc;
+JoyFunc cons;
+JoyFunc concat;
+JoyFunc dip;
+JoyFunc dup;
+JoyFunc first;
+JoyFunc i_joyfunc;
+JoyFunc inscribe;
+JoyFunc loop;
+JoyFunc lshift;
+JoyFunc pop;
+JoyFunc rest;
+JoyFunc rshift;
+JoyFunc stack;
+JoyFunc swaack;
+JoyFunc swap;
+JoyFunc mul;
+JoyFunc sub;
+JoyFunc fdiv_q;
+JoyFunc fdiv_r;
+JoyFunc truthy;
+JoyFunc fn;
 
 
 struct dict_entry  {
 	char *name;
-	JoyFunc func;
+	JoyFunc *func;
 };
 
 const struct dict_entry *
