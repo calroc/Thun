@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <math.h>
 #include "linenoise.h"
 #include "rax.h"
@@ -11,19 +12,51 @@ rax *rt;
 #define INSERT(key) raxInsert(rt, (unsigned char*)(key), sizeof((key)), NULL, NULL);
 
 
+int
+index_of_last_symbol_char(const char *buf)
+{
+	int n = strlen(buf);
+	while (n) {
+		if (strchr(" []", buf[n - 1])) {
+			break;
+		}
+		n--;
+	}
+	return n;
+}
+
+
 void
 completion(const char *buf, linenoiseCompletions *lc)
 {
-	int n = strnlen(buf, 1024);
+	char *prefix;
+	int n = index_of_last_symbol_char(buf);
+	int buffer_length = strlen(buf);
+	if (n) {
+		prefix = malloc(1024);  /* Just assume 1k is enough for now... TODO: fix! */
+		if (prefix == NULL) return;
+		memcpy(prefix, buf, n);
+		buf += n;
+		buffer_length -= n;
+	}
 	raxIterator iter;
 	raxStart(&iter, rt);
-	raxSeek(&iter, ">=", (unsigned char*)buf, n);
+	raxSeek(&iter, ">=", (unsigned char*)buf, buffer_length);
 	while(raxNext(&iter)) {
-		if (strncmp((const char *)iter.key, buf, n))
+		if (strncmp((const char *)iter.key, buf, buffer_length))
 			break;
-		linenoiseAddCompletion(lc, (const char *)iter.key);
+		if (n) {
+			prefix[n] = 0;
+			strlcat(prefix + n, (const char *)iter.key, 1024 - n);
+			linenoiseAddCompletion(lc, (const char *)prefix);
+		} else {
+			linenoiseAddCompletion(lc, (const char *)iter.key);
+		}
 	}
 	raxStop(&iter);
+	if (n) {
+		free(prefix);
+	}
 }
 
 
