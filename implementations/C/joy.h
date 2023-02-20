@@ -61,31 +61,9 @@ void push_quote_onto_expression(JoyList el, JoyListPtr expression);
 void init_defs(void);
 
 
-JoyFunc add;
-JoyFunc branch;
-JoyFunc clear;
-JoyFunc cmp_joyfunc;
-JoyFunc cons;
-JoyFunc concat;
-JoyFunc dip;
-JoyFunc dup;
-JoyFunc first;
-JoyFunc i_joyfunc;
-JoyFunc inscribe;
-JoyFunc loop;
-JoyFunc lshift;
-JoyFunc pop;
-JoyFunc rest;
-JoyFunc rshift;
-JoyFunc stack;
-JoyFunc swaack;
-JoyFunc swap;
-JoyFunc mul;
-JoyFunc sub;
-JoyFunc fdiv_q;
-JoyFunc fdiv_r;
-JoyFunc truthy;
-JoyFunc fn;
+JoyFunc add, branch, clear, cmp_joyfunc, cons, concat, dip, dup, first,
+i_joyfunc, inscribe, loop, lshift, pop, rest, rshift, stack, swaack,
+swap, mul, sub, fdiv_q, fdiv_r, truthy, fn;
 
 
 struct dict_entry  {
