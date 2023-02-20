@@ -97,6 +97,9 @@ struct user_def *user_defs = NULL;
 */
 
 
+#define PUSH(node, stack) (node)->tail = *(stack); *(stack) = (node);
+
+
 JoyList
 make_non_list_node(char *text, size_t size)
 {
@@ -154,8 +157,7 @@ void
 push_quote(JoyList el, JoyListPtr stack)
 {
 	JoyList node = make_list_node(el);
-	node->tail = *stack;
-	*stack = node;
+	PUSH(node, stack)
 }
 
 
@@ -243,8 +245,7 @@ push_thing(JoyTypePtr term, JoyListPtr stack)
 {
 	JoyList node = newJoyList;
 	node->head = term;
-	node->tail = *stack;
-	*stack = node;
+	PUSH(node, stack)
 }
 
 
@@ -302,8 +303,7 @@ fn(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 		i1 = pop_int(s1Ptr);
 		mpz_add(node->head->value.i, node->head->value.i, *i1);
 	}
-	node->tail = *stack;
-	*stack = node;
+	PUSH(node, stack)
 }
 
 
@@ -544,8 +544,7 @@ push_quote_onto_expression(JoyList el, JoyListPtr expression)
 	JoyList node;
 	if (!el) return;
 	node = make_list_node(el);
-	node->tail = *expression;
-	*expression = node;
+	PUSH(node, expression)
 }
 
 
@@ -616,8 +615,7 @@ lshift(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 	a = pop_int(stack);
 	node = newIntNode();
 	mpz_mul_2exp(node->head->value.i, *a, mpz_get_ui(*b));
-	node->tail = *stack;
-	*stack = node;
+	PUSH(node, stack)
 }
 
 
@@ -634,8 +632,7 @@ rshift(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 	a = pop_int(stack);
 	node = newIntNode();
 	mpz_fdiv_q_2exp(node->head->value.i, *a, mpz_get_ui(*b));
-	node->tail = *stack;
-	*stack = node;
+	PUSH(node, stack)
 }
 
 
