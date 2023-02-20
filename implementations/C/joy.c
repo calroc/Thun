@@ -280,6 +280,39 @@ push_thing_in_unit_list(JoyTypePtr term, JoyListPtr expression)
 
 
 /*
+?- gronk("fn", `[+] step`).
+
+    def fn(stack, expression, dictionary):
+        (s1, (i1, stack)) = stack
+        while s1:
+            (i2, s1) = s1
+            i1 += i1 + i2
+        return (i1, stack), expression, dictionary
+*/
+
+void
+fn(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
+{
+	JoyList s1 = pop_list(stack);
+	mpz_t *i1 = pop_int(stack);
+	JoyList node = newIntNode();
+	mpz_set(node->head->value.i, *i1);
+	while (s1) {
+		if (joyInt == s1->head->kind) {
+			mpz_add(node->head->value.i, node->head->value.i, s1->head->value.i);
+			s1 = s1->tail;
+		} else {
+			fprintf(stderr, "Not an integer.\n");
+			longjmp(jbuf, 1);
+		}
+	}
+	node->tail = *stack;
+	*stack = node;
+}
+
+
+
+/*
 ██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
 ██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
 ██████╔╝██████╔╝██║██╔██╗ ██║   ██║   █████╗  ██████╔╝

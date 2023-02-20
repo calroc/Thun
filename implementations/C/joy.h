@@ -85,6 +85,7 @@ void sub(JoyListPtr stack, JoyListPtr expression);
 void fdiv_q(JoyListPtr stack, JoyListPtr expression);
 void fdiv_r(JoyListPtr stack, JoyListPtr expression);
 void truthy(JoyListPtr stack, JoyListPtr expression);
+void fn(JoyListPtr stack, JoyListPtr expression);
 
 
 struct dict_entry  {

@@ -48,6 +48,7 @@ rest, rest
 stack, stack
 swaack, swaack
 swap, swap
+fn, fn
 eq, def_eq
 gt, def_gt
 lt, def_lt
