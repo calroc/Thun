@@ -262,16 +262,6 @@ concat_lists(JoyList a, JoyList b)
 }
 
 
-void
-push_thing_in_unit_list(JoyTypePtr term, JoyListPtr expression)
-{
-	JoyList node = newJoyList;
-	node->head = term;
-	node->tail = EMPTY_LIST;
-	push_quote_onto_expression(node, expression);
-}
-
-
 /*
 ?- gronk("fn", `[+] step`).
 
@@ -540,6 +530,16 @@ push_quote_onto_expression(JoyList el, JoyListPtr expression)
 }
 
 
+void
+push_thing_onto_expression(JoyTypePtr term, JoyListPtr expression)
+{
+	JoyList node = newJoyList;
+	node->head = term;
+	node->tail = EMPTY_LIST;
+	push_quote_onto_expression(node, expression);
+}
+
+
 JoyTypePtr
 next_term(JoyListPtr expression)
 {
@@ -778,7 +778,7 @@ dip(JoyListPtr stack, JoyListPtr expression)
 {
 	JoyList quote = pop_list(stack);
 	JoyList node = pop_any(stack);
-	push_thing_in_unit_list(node->head, expression);
+	push_thing_onto_expression(node->head, expression);
 	push_quote_onto_expression(quote, expression);
 }
 
