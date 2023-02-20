@@ -42,14 +42,14 @@ typedef struct {
 
 typedef JoyType* JoyTypePtr;
 
-struct list_node {
+typedef struct list_node {
 	JoyTypePtr head;
 	JoyList tail;
-};
+} JoyListNode;
 
 #define EMPTY_LIST (JoyList)NULL
 
-#define newJoyList GC_malloc(sizeof(struct list_node))
+#define newJoyList GC_malloc(sizeof(JoyListNode))
 #define newJoyType GC_malloc(sizeof(JoyType))
 
 
