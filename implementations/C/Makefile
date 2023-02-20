@@ -47,4 +47,4 @@ linenoise.o: linenoise.c linenoise.h
 	cc -c linenoise.c -o linenoise.o
 
 tryrax: try_rax.c
-	cc try_rax.c rax.o -lm -o tryrax
+	cc try_rax.c rax.o linenoise.o -lm -o tryrax

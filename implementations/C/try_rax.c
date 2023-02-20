@@ -1,14 +1,38 @@
 #include <stddef.h>
+#include <stdio.h>
+#include <string.h>
 #include <math.h>
+#include "linenoise.h"
 #include "rax.h"
 
 
+rax *rt;
+
 #define INSERT(key) raxInsert(rt, (unsigned char*)(key), sizeof((key)), NULL, NULL);
+
+
+void
+completion(const char *buf, linenoiseCompletions *lc)
+{
+	int n = strnlen(buf, 1024);
+	raxIterator iter;
+	raxStart(&iter, rt);
+	raxSeek(&iter, ">=", (unsigned char*)buf, n);
+	while(raxNext(&iter)) {
+		if (strncmp((const char *)iter.key, buf, n))
+			break;
+		linenoiseAddCompletion(lc, (const char *)iter.key);
+	}
+	raxStop(&iter);
+}
+
 
 int
 main()
 {
-	rax *rt = raxNew();
+	char *line;
+	linenoiseSetCompletionCallback(completion);
+	rt = raxNew();
 	INSERT("=")
 	INSERT(">")
 	INSERT("<")
@@ -177,6 +201,16 @@ main()
 	INSERT("_\\/_")
 	INSERT("/\\")
 	INSERT("\\/")
+	/*
 	raxShow(rt);
-}
+	*/
 
+	while (1) {
+		line = linenoise("eh? ");
+		if (NULL == line) {
+			printf("\n");
+			break;
+		}
+		linenoiseHistoryAdd(line);
+	}
+}
