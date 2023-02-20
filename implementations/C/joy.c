@@ -294,17 +294,13 @@ void
 fn(JoyListPtr stack, __attribute__((unused)) JoyListPtr expression)
 {
 	JoyList s1 = pop_list(stack);
+	JoyListPtr s1Ptr = &s1;
 	mpz_t *i1 = pop_int(stack);
 	JoyList node = newIntNode();
 	mpz_set(node->head->value.i, *i1);
-	while (s1) {
-		if (joyInt == s1->head->kind) {
-			mpz_add(node->head->value.i, node->head->value.i, s1->head->value.i);
-			s1 = s1->tail;
-		} else {
-			fprintf(stderr, "Not an integer.\n");
-			longjmp(jbuf, 1);
-		}
+	while (*s1Ptr) {
+		i1 = pop_int(s1Ptr);
+		mpz_add(node->head->value.i, node->head->value.i, *i1);
 	}
 	node->tail = *stack;
 	*stack = node;
