@@ -21,11 +21,10 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
 
 
 enum JoyTypeType {
-	joySymbol,
-	joyTrue,
-	joyFalse,
 	joyInt,
-	joyList
+	joyList,
+	joySymbol,
+	joyTrue, joyFalse
 };
 
 typedef struct list_node* JoyList;
@@ -55,21 +54,19 @@ typedef struct list_node {
 
 typedef void JoyFunc(JoyListPtr, JoyListPtr);
 
-
-JoyList text_to_expression(char *text);
-void push_quote_onto_expression(JoyList el, JoyListPtr expression);
-void init_defs(void);
-
-
 JoyFunc add, branch, clear, cmp_joyfunc, cons, concat, dip, dup, first,
 i_joyfunc, inscribe, loop, lshift, pop, rest, rshift, stack, swaack,
 swap, mul, sub, fdiv_q, fdiv_r, truthy, fn;
 
 
-struct dict_entry  {
+struct dict_entry {
 	char *name;
 	JoyFunc *func;
 };
 
 const struct dict_entry *
 in_word_set (register const char *str, register size_t len);
+
+JoyList text_to_expression(char *text);
+void push_quote_onto_expression(JoyList el, JoyListPtr expression);
+void init_defs(void);
