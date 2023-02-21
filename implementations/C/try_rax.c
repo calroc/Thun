@@ -26,28 +26,53 @@ index_of_last_symbol_char(const char *buf)
 }
 
 
-void
-prefixed_completion(const char *buf, linenoiseCompletions *lc, int n)
+int
+longest_completion(const char *buf, int buffer_length)
 {
+	int longest = 0;
 	raxIterator iter;
-	char *prefix = malloc(1024);  /* Just assume 1k is enough for now... TODO: fix! */
-	if (NULL == prefix)
-		return;
-	int buffer_length = strlen(buf);
-	memcpy(prefix, buf, n);
-	buf += n;
-	buffer_length -= n;
 	raxStart(&iter, rt);
 	raxSeek(&iter, ">=", (unsigned char*)buf, buffer_length);
 	while(raxNext(&iter)) {
 		if (strncmp((const char *)iter.key, buf, buffer_length))
 			break;
-		prefix[n] = 0;
-		strlcat(prefix + n, (const char *)iter.key, 1024 - n);
-		linenoiseAddCompletion(lc, (const char *)prefix);
+		if (iter.key_len > longest) {
+			longest = iter.key_len;
+		};
 	}
 	raxStop(&iter);
-	free(prefix);
+	return longest;
+}
+
+
+void
+prefixed_completion(const char *buf, linenoiseCompletions *lc, int prefix_length)
+{
+	raxIterator iter;
+
+	/* Get a buffer large enough to hold the largest possible completion. */
+	int buffer_length = strlen(buf);
+	int completion_buffer_size = prefix_length + longest_completion(buf, buffer_length) + 1;
+	char *completion_buffer = malloc(completion_buffer_size);
+	if (NULL == completion_buffer)
+		return;
+
+	/* Prepare the prefix and trim it from the front of the buf. */
+	memcpy(completion_buffer, buf, prefix_length);
+	buf += prefix_length;
+	buffer_length -= prefix_length;
+
+	raxStart(&iter, rt);
+	raxSeek(&iter, ">=", (unsigned char*)buf, buffer_length);
+	while(raxNext(&iter)) {
+		if (strncmp((const char *)iter.key, buf, buffer_length))
+			break;
+		completion_buffer[prefix_length] = 0;
+		strlcat(completion_buffer + prefix_length, (const char *)iter.key, completion_buffer_size);
+		linenoiseAddCompletion(lc, (const char *)completion_buffer);
+	}
+	raxStop(&iter);
+	free(completion_buffer);
 }
 
 
@@ -70,9 +95,9 @@ simple_completion(const char *buf, linenoiseCompletions *lc)
 void
 completion(const char *buf, linenoiseCompletions *lc)
 {
-	int n = index_of_last_symbol_char(buf);
-	if (n) {
-		prefixed_completion(buf, lc, n);
+	int prefix_length = index_of_last_symbol_char(buf);
+	if (prefix_length) {
+		prefixed_completion(buf, lc, prefix_length);
 	} else {
 		simple_completion(buf, lc);
 	}
