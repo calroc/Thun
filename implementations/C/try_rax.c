@@ -27,35 +27,54 @@ index_of_last_symbol_char(const char *buf)
 
 
 void
-completion(const char *buf, linenoiseCompletions *lc)
+prefixed_completion(const char *buf, linenoiseCompletions *lc, int n)
 {
-	char *prefix;
-	int n = index_of_last_symbol_char(buf);
+	raxIterator iter;
+	char *prefix = malloc(1024);  /* Just assume 1k is enough for now... TODO: fix! */
+	if (NULL == prefix)
+		return;
 	int buffer_length = strlen(buf);
-	if (n) {
-		prefix = malloc(1024);  /* Just assume 1k is enough for now... TODO: fix! */
-		if (prefix == NULL) return;
-		memcpy(prefix, buf, n);
-		buf += n;
-		buffer_length -= n;
+	memcpy(prefix, buf, n);
+	buf += n;
+	buffer_length -= n;
+	raxStart(&iter, rt);
+	raxSeek(&iter, ">=", (unsigned char*)buf, buffer_length);
+	while(raxNext(&iter)) {
+		if (strncmp((const char *)iter.key, buf, buffer_length))
+			break;
+		prefix[n] = 0;
+		strlcat(prefix + n, (const char *)iter.key, 1024 - n);
+		linenoiseAddCompletion(lc, (const char *)prefix);
 	}
+	raxStop(&iter);
+	free(prefix);
+}
+
+
+void
+simple_completion(const char *buf, linenoiseCompletions *lc)
+{
+	int buffer_length = strlen(buf);
 	raxIterator iter;
 	raxStart(&iter, rt);
 	raxSeek(&iter, ">=", (unsigned char*)buf, buffer_length);
 	while(raxNext(&iter)) {
 		if (strncmp((const char *)iter.key, buf, buffer_length))
 			break;
-		if (n) {
-			prefix[n] = 0;
-			strlcat(prefix + n, (const char *)iter.key, 1024 - n);
-			linenoiseAddCompletion(lc, (const char *)prefix);
-		} else {
-			linenoiseAddCompletion(lc, (const char *)iter.key);
-		}
+		linenoiseAddCompletion(lc, (const char *)iter.key);
 	}
 	raxStop(&iter);
+}
+
+
+void
+completion(const char *buf, linenoiseCompletions *lc)
+{
+	int n = index_of_last_symbol_char(buf);
 	if (n) {
-		free(prefix);
+		prefixed_completion(buf, lc, n);
+	} else {
+		simple_completion(buf, lc);
 	}
 }
 
