@@ -13,20 +13,23 @@ u32 frame_buffer[393216];
 
 int wid;  // Window ID.
 
+// Current mouse pointer position
+size_t pos_x = 200;
+size_t pos_y = 200;
+
 
 void
 draw_char(u8 ch, u64 dest_x, u64 dest_y)
 {
 	// Check the inputs.
-	// Trust that the type "u-" means we don't have to check lower bounds?
-	if (ch > font_Inconsolata_22_number_of_characters) {
+	if (ch < 0 || ch > font_Inconsolata_22_number_of_characters) {
 		// No error message or anything, just decline to draw.
 		return;
 	}
-	if (dest_x >= (FRAME_WIDTH - font_Inconsolata_22_width)) {
+	if (dest_x < 0 || dest_x >= (FRAME_WIDTH - font_Inconsolata_22_width)) {
 		return;
 	}
-	if (dest_y >= (FRAME_HEIGHT - font_Inconsolata_22_height)) {
+	if (dest_y < 0 || dest_y >= (FRAME_HEIGHT - font_Inconsolata_22_height)) {
 		return;
 	}
 	carefree_alpha_blend_blit(
@@ -49,11 +52,20 @@ draw_char(u8 ch, u64 dest_x, u64 dest_y)
 
 
 void
-mousedown(u64 window_id, u64 new_x, u64 new_y)
+mousedown(u64 window_id, u8 btn_id)
 {
-	u32* pix_ptr = frame_buffer + FRAME_WIDTH * new_y + new_x;
-	*pix_ptr = GREEN;
+	u8 ch = rand() % font_Inconsolata_22_number_of_characters;
+	draw_char(ch, pos_x - font_Inconsolata_22_width, pos_y - font_Inconsolata_22_height);
 	window_draw_frame(window_id, frame_buffer);
+}
+
+
+void
+mousemove(u64 window_id, u64 new_x, u64 new_y)
+{
+	// Update the mouse position
+	pos_x = new_x;
+	pos_y = new_y;
 }
 
 
@@ -73,5 +85,6 @@ main()
 	window_draw_frame(wid, frame_buffer);
 	//window_on_keydown(wid, keydown);
 	window_on_mousedown(wid, mousedown);
+	window_on_mousemove(wid, mousemove);
 	enable_event_loop();
 }
