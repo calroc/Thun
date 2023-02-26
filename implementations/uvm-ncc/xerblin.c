@@ -13,7 +13,7 @@ int wid;
 
 
 void
-anim_callback()
+draw_background()
 {
 	// Clear the screen
 	memset(frame_buffer, 0, sizeof(frame_buffer));
@@ -29,7 +29,7 @@ anim_callback()
 	}
 	window_draw_frame(wid, frame_buffer);
 	// This rate of refresh of the whole screen caused ~60% CPU use.  :(
-	// time_delay_cb(100, anim_callback);
+	// time_delay_cb(100, draw_background);
 }
 
 
@@ -54,7 +54,7 @@ main()
 {
 	init_font_data();
 	wid = window_create(FRAME_WIDTH, FRAME_HEIGHT, "Bouncing Ball Example", 0);
-	time_delay_cb(0, anim_callback);
+	time_delay_cb(0, draw_background);
 	//window_on_keydown(wid, keydown);
 	window_on_mousemove(wid, mousemove);
 	enable_event_loop();
