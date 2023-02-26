@@ -13,13 +13,15 @@ int wid;
 
 
 void
-draw_char(u8 ch, u64 x, u64 y)
+draw_char(u8 ch, u64 dest_x, u64 dest_y)
 {
-	u32* pix_ptr = frame_buffer + FRAME_WIDTH * y + x;
+	u32* dest = frame_buffer + FRAME_WIDTH * dest_y + dest_x;
 	u32* character_data = font_data[ch];
 	for (size_t x = 0; x < font_width; ++x) {
 		for (size_t y = 0; y < font_height; ++y) {
-			*pix_ptr = *character_data;
+			u32 pixel = character_data[x + font_width * y];
+			u32* pix_ptr = dest + x + FRAME_WIDTH * y;
+			*pix_ptr = pixel;
 		}
 	}
 }
@@ -68,6 +70,7 @@ main()
 	wid = window_create(FRAME_WIDTH, FRAME_HEIGHT, "Bouncing Ball Example", 0);
 	draw_background();
 	draw_char(0, 0, 0);
+	window_draw_frame(wid, frame_buffer);
 	//window_on_keydown(wid, keydown);
 	window_on_mousemove(wid, mousemove);
 	enable_event_loop();
