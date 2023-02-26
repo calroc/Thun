@@ -1,5 +1,6 @@
 #include <uvm/syscalls.h>
 #include <uvm/utils.h>
+#include "/home/sforman/src/Joypy/implementations/uvm-ncc/font/font.h"
 
 #define   RED 0xFF_00_00
 #define GREEN 0x00_FF_00
@@ -51,6 +52,7 @@ mousemove(u64 window_id, u64 new_x, u64 new_y)
 void
 main()
 {
+	//init_font_data();
 	wid = window_create(FRAME_WIDTH, FRAME_HEIGHT, "Bouncing Ball Example", 0);
 	time_delay_cb(0, anim_callback);
 	//window_on_keydown(wid, keydown);
