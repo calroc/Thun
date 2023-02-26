@@ -13,6 +13,18 @@ int wid;
 
 
 void
+draw_char(u8 ch, u64 x, u64 y)
+{
+	u32* pix_ptr = frame_buffer + FRAME_WIDTH * y + x;
+	u32* character_data = font_data[ch];
+	for (size_t x = 0; x < font_width; ++x) {
+		for (size_t y = 0; y < font_height; ++y) {
+			*pix_ptr = *character_data;
+		}
+	}
+}
+
+void
 draw_background()
 {
 	// Clear the screen
@@ -54,7 +66,8 @@ main()
 {
 	init_font_data();
 	wid = window_create(FRAME_WIDTH, FRAME_HEIGHT, "Bouncing Ball Example", 0);
-	time_delay_cb(0, draw_background);
+	draw_background();
+	draw_char(0, 0, 0);
 	//window_on_keydown(wid, keydown);
 	window_on_mousemove(wid, mousemove);
 	enable_event_loop();
