@@ -20,12 +20,21 @@ draw_char(u8 ch, u64 dest_x, u64 dest_y)
 	for (size_t x = 0; x < font_width; ++x) {
 		for (size_t y = 0; y < font_height; ++y) {
 			u32* pix_ptr = dest + x + FRAME_WIDTH * y;
-			u32 dest_pixel = *pix_ptr;
 			u32 pixel = character_data[x + font_width * y];
-			if (!(pixel >> 24)) {  // no alpha
+			u8 alpha = pixel >> 24;
+			if (!alpha) {  // no alpha
 				continue;
 			}
-			*pix_ptr = pixel;
+			if (0xFF == alpha) {
+				*pix_ptr = pixel;
+				continue;
+			}
+			u32 dest_pixel = *pix_ptr;
+			u8 unalpha = 0xFF - alpha;
+			u8 red = (((dest_pixel >> 16) & 255) * unalpha + ((pixel >> 16) & 255) * alpha) / 0xff;
+			u8 green = (((dest_pixel >> 8) & 255) * unalpha + ((pixel >> 8) & 255) * alpha) / 0xff;
+			u8 blue = ((dest_pixel & 255) * unalpha + (pixel & 255) * alpha) / 0xff;
+			*pix_ptr = (alpha << 24) | (red << 16) | (green << 8) | blue;
 		}
 	}
 }
