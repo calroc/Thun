@@ -1,3 +1,4 @@
+import sys
 from PIL import Image
 
 txt = (
@@ -6,6 +7,9 @@ txt = (
   '''0123456789@#$&_~|`'"%^=-+*'''
    r'/\<>[]{}(),.;:!?'
     )
+
+font_name, pointsize = sys.argv[-2:] if len(sys.argv) >= 3 else ('Inconsolata', '24')
+
 
 g = ((i, ch) for i, ch in enumerate(txt))
 
@@ -18,15 +22,16 @@ for i, _ in enumerate(txt):
 
 print(f'''\
 
-int font_width = {w};
-int font_height = {h};
+int font_{font_name}_{pointsize}_width = {w};
+int font_{font_name}_{pointsize}_height = {h};
 
-u32 font_data[{len(txt)}][{w * h}];
+u32 font_{font_name}_{pointsize}_data[{len(txt)}][{w * h}];
+
 
 void
 init_font_data()
 {{
-\tmemset(font_data, 0, {4 * len(txt) * w * h});
+\tmemset(font_{font_name}_{pointsize}_data, 0, {4 * len(txt) * w * h});
 ''')
 
 for i, ch in enumerate(txt):
@@ -35,7 +40,7 @@ for i, ch in enumerate(txt):
         data = list(im.getdata())
     for n, (blue, green, red, alpha) in enumerate(data):
         if blue or green or red or alpha:
-            print(f'\tfont_data[{i}][{n}] = 0x{alpha:02x}_{red:02x}_{green:02x}_{blue:02x};')
+            print(f'\tfont_{font_name}_{pointsize}_data[{i}][{n}] = 0x{alpha:02x}_{red:02x}_{green:02x}_{blue:02x};')
 print(f'}}')
 
 ##

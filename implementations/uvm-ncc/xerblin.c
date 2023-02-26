@@ -16,11 +16,11 @@ void
 draw_char(u8 ch, u64 dest_x, u64 dest_y)
 {
 	u32* dest = frame_buffer + FRAME_WIDTH * dest_y + dest_x;
-	u32* character_data = font_data[ch];
-	for (size_t x = 0; x < font_width; ++x) {
-		for (size_t y = 0; y < font_height; ++y) {
+	u32* character_data = font_Inconsolata_14_data[ch];
+	for (size_t x = 0; x < font_Inconsolata_14_width; ++x) {
+		for (size_t y = 0; y < font_Inconsolata_14_height; ++y) {
 			u32* pix_ptr = dest + x + FRAME_WIDTH * y;
-			u32 pixel = character_data[x + font_width * y];
+			u32 pixel = character_data[x + font_Inconsolata_14_width * y];
 			u8 alpha = pixel >> 24;
 			if (!alpha) {  // no alpha
 				continue;
@@ -83,7 +83,7 @@ main()
 	wid = window_create(FRAME_WIDTH, FRAME_HEIGHT, "Bouncing Ball Example", 0);
 	draw_background();
 	for (size_t ch = 0; ch < 94; ++ch) {
-		draw_char(ch, (ch % 26) * font_width, (ch / 26) * font_height);
+		draw_char(ch, (ch % 26) * font_Inconsolata_14_width, (ch / 26) * font_Inconsolata_14_height);
 	}
 	window_draw_frame(wid, frame_buffer);
 	//window_on_keydown(wid, keydown);
