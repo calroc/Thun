@@ -1,6 +1,7 @@
 #include <uvm/syscalls.h>
 #include <uvm/utils.h>
 #include "/home/sforman/src/Joypy/implementations/uvm-ncc/font/font.h"
+#include "/home/sforman/src/Joypy/implementations/uvm-ncc/graphics.h"
 
 #define   RED 0xFF_00_00
 #define GREEN 0x00_FF_00
@@ -39,21 +40,6 @@ draw_char(u8 ch, u64 dest_x, u64 dest_y)
 	}
 }
 
-void
-draw_background()
-{
-	for (size_t x = 0; x < FRAME_WIDTH; ++x) {
-		for (size_t y = 0; y < FRAME_HEIGHT; ++y) {
-			u32* pix_ptr = frame_buffer + FRAME_WIDTH * y + x;
-			u8 blue = x & 255;
-			u8 green = y & 255;
-			u8 red = (x + y + 128) & 255;
-			u8 alpha = 123;
-			*pix_ptr = (alpha << 24) | (red << 16) | (green << 8) | blue;
-		}
-	}
-}
-
 
 //void
 //keydown(u64 window_id, u16 keycode)
@@ -76,7 +62,7 @@ main()
 {
 	init_font_data();
 	wid = window_create(FRAME_WIDTH, FRAME_HEIGHT, "Bouncing Ball Example", 0);
-	draw_background();
+	draw_background(frame_buffer, FRAME_WIDTH, FRAME_HEIGHT);
 	for (size_t ch = 0; ch < 94; ++ch) {
 		draw_char(
 			ch,
