@@ -82,7 +82,9 @@ main()
 	init_font_data();
 	wid = window_create(FRAME_WIDTH, FRAME_HEIGHT, "Bouncing Ball Example", 0);
 	draw_background();
-	draw_char(0, 0, 0);
+	for (size_t ch = 0; ch < 94; ++ch) {
+		draw_char(ch, (ch % 26) * font_width, (ch / 26) * font_height);
+	}
 	window_draw_frame(wid, frame_buffer);
 	//window_on_keydown(wid, keydown);
 	window_on_mousemove(wid, mousemove);
