@@ -19,8 +19,12 @@ draw_char(u8 ch, u64 dest_x, u64 dest_y)
 	u32* character_data = font_data[ch];
 	for (size_t x = 0; x < font_width; ++x) {
 		for (size_t y = 0; y < font_height; ++y) {
-			u32 pixel = character_data[x + font_width * y];
 			u32* pix_ptr = dest + x + FRAME_WIDTH * y;
+			u32 dest_pixel = *pix_ptr;
+			u32 pixel = character_data[x + font_width * y];
+			if (!(pixel >> 24)) {  // no alpha
+				continue;
+			}
 			*pix_ptr = pixel;
 		}
 	}
