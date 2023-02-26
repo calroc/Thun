@@ -16,16 +16,26 @@ for i, _ in enumerate(txt):
     with Image.open(f'{i:02}.bmp') as im:
         assert im.size == (w, h), f'bad size {i:02}.bmp {w} x {h}!'
 
-print(f'const int font_width = {w};')
-print(f'const int font_height = {h};')
-print(f'pixel_t font_data[{len(txt)}][{w * h}] = {{')
+print(f'''\
+
+int font_width = {w};
+int font_height = {h};
+
+u32 font_data[{len(txt)}][{w * h}];
+
+void
+init_font_data(void)
+{{
+\tmemset(font_data, 0, {4 * len(txt) * w * h});
+''')
+
 for i, ch in enumerate(txt):
-    print(f'\t{{ // {repr(ch)}')
+    print(f'\t// {repr(ch)}')
     with Image.open(f'{i:02}.bmp') as im:
         data = list(im.getdata())
-        for blue, green, red, alpha in data:
-            print(f'\t\t{{0x{blue:02x}, 0x{green:02x}, 0x{red:02x}, 0x{alpha:02x}}},')
-    print(f'\t}},')
+    for n, (blue, green, red, alpha) in enumerate(data):
+        if blue or green or red or alpha:
+            print(f'\tfont_data[{i}][{n}] = 0x{alpha:02x}_{red:02x}_{green:02x}_{blue:02x};')
 print(f'}};')
 
 ##

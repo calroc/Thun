@@ -29,14 +29,3 @@ clean:
 	$(RM) $(TXTS)
 	$(RM) $(BMPS)
 
-
-#	-size 1130x27 \
-#	label:@text.txt \
-
-# 1129 x 27 / 95 chars
-#>>> 1129 + 1
-#1130
-#>>> 1130 // 95
-#11
-#>>> 
-# so 11 pixels per character?

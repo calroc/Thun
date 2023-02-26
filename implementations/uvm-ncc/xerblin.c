@@ -43,7 +43,7 @@ void
 mousemove(u64 window_id, u64 new_x, u64 new_y)
 {
 	u32* pix_ptr = frame_buffer + FRAME_WIDTH * new_y + new_x;
-	*pix_ptr = RED;
+	*pix_ptr = GREEN;
 	window_draw_frame(window_id, frame_buffer);
 }
 
