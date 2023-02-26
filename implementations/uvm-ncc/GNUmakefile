@@ -7,7 +7,7 @@ UVM_VM=$(UVM)/vm
 run: $(UVM_NCC)/out.asm
 	cd $(UVM_VM) ; cargo run $(UVM_NCC)/out.asm
 
-$(UVM_NCC)/out.asm: $(UVM_JOY)/xerblin.c $(UVM_JOY)/font/font.h
+$(UVM_NCC)/out.asm: $(UVM_JOY)/xerblin.c $(UVM_JOY)/graphics.h $(UVM_JOY)/font/font.h
 	cd $(UVM_NCC) ; cargo run $(UVM_JOY)/xerblin.c
 
 $(UVM_JOY)/font/font.h:
