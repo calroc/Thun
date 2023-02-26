@@ -5,9 +5,9 @@
 #define   RED 0xFF_00_00
 #define GREEN 0x00_FF_00
 
-size_t FRAME_WIDTH = 640;
-size_t FRAME_HEIGHT = 480;
-u32 frame_buffer[307200];
+size_t FRAME_WIDTH = 768;
+size_t FRAME_HEIGHT = 512;
+u32 frame_buffer[393216];
 
 int wid;
 
@@ -42,8 +42,6 @@ draw_char(u8 ch, u64 dest_x, u64 dest_y)
 void
 draw_background()
 {
-	// Clear the screen
-	memset(frame_buffer, 0, sizeof(frame_buffer));
 	for (size_t x = 0; x < FRAME_WIDTH; ++x) {
 		for (size_t y = 0; y < FRAME_HEIGHT; ++y) {
 			u32* pix_ptr = frame_buffer + FRAME_WIDTH * y + x;
@@ -54,9 +52,6 @@ draw_background()
 			*pix_ptr = (alpha << 24) | (red << 16) | (green << 8) | blue;
 		}
 	}
-	window_draw_frame(wid, frame_buffer);
-	// This rate of refresh of the whole screen caused ~60% CPU use.  :(
-	// time_delay_cb(100, draw_background);
 }
 
 
