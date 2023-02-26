@@ -1,0 +1,10 @@
+setenv UVM_JOY $HOME/src/Joypy/implementations/uvm-ncc
+setenv UVM $HOME/src/uvm
+setenv UVM_NCC $UVM/ncc
+setenv UVM_VM $UVM/vm
+
+cd $UVM_NCC
+cargo run $UVM_JOY/xerblin.c
+cd $UVM_VM
+cargo run $UVM_NCC/out.asm
+cd $UVM_JOY
