@@ -24,7 +24,7 @@ int font_height = {h};
 u32 font_data[{len(txt)}][{w * h}];
 
 void
-init_font_data(void)
+init_font_data()
 {{
 \tmemset(font_data, 0, {4 * len(txt) * w * h});
 ''')
