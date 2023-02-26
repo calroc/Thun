@@ -4,11 +4,9 @@
 #define   RED 0xFF_00_00
 #define GREEN 0x00_FF_00
 
-size_t FRAME_WIDTH = 1280;
-size_t FRAME_HEIGHT = 800;
-
-// RGBA pixels: 800 * 600
-u32 frame_buffer[1024_000];
+size_t FRAME_WIDTH = 640;
+size_t FRAME_HEIGHT = 480;
+u32 frame_buffer[307200];
 
 int wid;
 
@@ -44,15 +42,8 @@ anim_callback()
 void
 mousemove(u64 window_id, u64 new_x, u64 new_y)
 {
-	// Redrawing the window on move seems to repair damage from
-	// dragging portion of the window offscreen then back on as
-	// you drag, without using too much CPU.
-	// No, weird, it doesn't.
-	// It did, once, but maybe that was teh X server somehow doing it for me?
-	// In any event, moving the mouse over the screen after drag damage
-	// works fine, as expected.
-	// (I just really would like to know why it stopped damaging the window
-	// in the previous try?  Ugh!)
+	u32* pix_ptr = frame_buffer + FRAME_WIDTH * new_y + new_x;
+	*pix_ptr = RED;
 	window_draw_frame(window_id, frame_buffer);
 }
 
