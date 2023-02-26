@@ -36,7 +36,7 @@ for i, ch in enumerate(txt):
     for n, (blue, green, red, alpha) in enumerate(data):
         if blue or green or red or alpha:
             print(f'\tfont_data[{i}][{n}] = 0x{alpha:02x}_{red:02x}_{green:02x}_{blue:02x};')
-print(f'}};')
+print(f'}}')
 
 ##
 ##if len(sys.argv) > 1:
