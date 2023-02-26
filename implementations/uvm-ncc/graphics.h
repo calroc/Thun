@@ -1,3 +1,4 @@
+#include <stddef.h>
 
 void
 draw_background(u32* buffer, size_t w, size_t h)
@@ -12,3 +13,32 @@ draw_background(u32* buffer, size_t w, size_t h)
 		}
 	}
 }
+
+void
+carefree_alpha_blend_blit(u32* dest, u32* source, size_t dest_stride, u64 dest_x, u64 dest_y, u64 w, u64 h)
+{
+	u32* d = dest + dest_stride * dest_y + dest_x;
+	for (u64 x = 0; x < w; ++x) {
+		for (u64 y = 0; y < h; ++y) {
+			u32* pix_ptr = d + x + dest_stride * y;
+			u32* spix_ptr = source + x + w * y;
+			u32 pixel = *spix_ptr;
+			u8 alpha = pixel >> 24;
+			if (!alpha) {  // no alpha
+				continue;
+			}
+			if (0xFF == alpha) {
+				*pix_ptr = pixel;
+				continue;
+			}
+			u32 dest_pixel = *pix_ptr;
+			u8 unalpha = 0xFF - alpha;
+			u8 red = (((dest_pixel >> 16) & 255) * unalpha + ((pixel >> 16) & 255) * alpha) / 0xff;
+			u8 green = (((dest_pixel >> 8) & 255) * unalpha + ((pixel >> 8) & 255) * alpha) / 0xff;
+			u8 blue = ((dest_pixel & 255) * unalpha + (pixel & 255) * alpha) / 0xff;
+			*pix_ptr = (alpha << 24) | (red << 16) | (green << 8) | blue;
+		}
+	}
+}
+
+

@@ -22,8 +22,9 @@ for i, _ in enumerate(txt):
 
 print(f'''\
 
-int font_{font_name}_{pointsize}_width = {w};
-int font_{font_name}_{pointsize}_height = {h};
+u64 font_{font_name}_{pointsize}_number_of_characters = {len(txt)};
+u64 font_{font_name}_{pointsize}_width = {w};
+u64 font_{font_name}_{pointsize}_height = {h};
 
 u32 font_{font_name}_{pointsize}_data[{len(txt)}][{w * h}];
 

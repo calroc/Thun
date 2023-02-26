@@ -1,6 +1,7 @@
 
-int font_Inconsolata_22_width = 12;
-int font_Inconsolata_22_height = 25;
+u64 font_Inconsolata_22_number_of_characters = 94;
+u64 font_Inconsolata_22_width = 12;
+u64 font_Inconsolata_22_height = 25;
 
 u32 font_Inconsolata_22_data[94][300];
 
