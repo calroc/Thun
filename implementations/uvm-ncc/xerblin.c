@@ -23,7 +23,7 @@ draw_char(u8 ch, u64 dest_x, u64 dest_y)
 {
 	// Check the inputs.
 	if (ch < 0 || ch > font_Inconsolata_22_number_of_characters
-		|| dest_x < 0 || dest_x >= (FRAME_WIDTH - font_Inconsolata_22_width )
+		|| dest_x < 0 || dest_x >= (FRAME_WIDTH - font_Inconsolata_22_width)
 		|| dest_y < 0 || dest_y >= (FRAME_HEIGHT - font_Inconsolata_22_height))
 		// No error message or anything, just decline to draw.
 		return;
@@ -39,11 +39,15 @@ draw_char(u8 ch, u64 dest_x, u64 dest_y)
 }
 
 
-//void
-//keydown(u64 window_id, u16 keycode)
-//{
-//	window_draw_frame(window_id, frame_buffer);
-//}
+void
+keydown(u64 window_id, u16 keycode)
+{
+	if (KEY_BACKSPACE == keycode) {
+		exit(0);
+	}
+	print_i64(keycode);
+	print_endl();
+}
 
 
 void
@@ -78,7 +82,7 @@ main()
 		);
 	}
 	window_draw_frame(wid, frame_buffer);
-	//window_on_keydown(wid, keydown);
+	window_on_keydown(wid, keydown);
 	window_on_mousedown(wid, mousedown);
 	window_on_mousemove(wid, mousemove);
 	enable_event_loop();
