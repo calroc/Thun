@@ -43,6 +43,9 @@ void
 keydown(u64 window_id, u16 keycode)
 {
 	if (KEY_BACKSPACE == keycode) {
+		print_str("bye! ");
+		print_i64(keycode);
+		print_endl();
 		exit(0);
 	}
 	if (KEY_BACKSPACE == keycode) {
@@ -108,7 +111,7 @@ main()
 		);
 	}
 	window_draw_frame(wid, frame_buffer);
-	window_on_keydown(wid, keydown);
+	//window_on_keydown(wid, keydown);
 	window_on_mousedown(wid, mousedown);
 	window_on_mousemove(wid, mousemove);
 	enable_event_loop();
