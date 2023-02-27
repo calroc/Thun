@@ -111,7 +111,7 @@ main()
 		);
 	}
 	window_draw_frame(wid, frame_buffer);
-	//window_on_keydown(wid, keydown);
+	window_on_keydown(wid, keydown);
 	window_on_mousedown(wid, mousedown);
 	window_on_mousemove(wid, mousemove);
 	enable_event_loop();
