@@ -4,9 +4,6 @@
 #include "/home/sforman/src/Joypy/implementations/uvm-ncc/font/font.h"
 #include "/home/sforman/src/Joypy/implementations/uvm-ncc/graphics.h"
 
-#define   RED 0xFF_00_00
-#define GREEN 0x00_FF_00
-
 size_t FRAME_WIDTH = 768;
 size_t FRAME_HEIGHT = 512;
 u32 frame_buffer[393216];
@@ -42,12 +39,6 @@ draw_char(u8 ch, u64 dest_x, u64 dest_y)
 void
 keydown(u64 window_id, u16 keycode)
 {
-	if (KEY_TAB == keycode) {
-		print_str("bye! ");
-		print_i64(keycode);
-		print_endl();
-		exit(0);
-	}
 	if (KEY_BACKSPACE == keycode) {
 	} else if (KEY_TAB == keycode) {
 	} else if (KEY_RETURN == keycode) {
@@ -110,6 +101,9 @@ main()
 			128 + (ch / 26) * font_Inconsolata_22_height
 		);
 	}
+	u64 w = 3 + 26 * font_Inconsolata_22_width;
+	u64 h = 4 + 4 * font_Inconsolata_22_height;
+	carefree_draw_box(frame_buffer, FRAME_WIDTH, 126, 126, w, h, WHITE);
 	window_draw_frame(wid, frame_buffer);
 	window_on_keydown(wid, keydown);
 	window_on_mousedown(wid, mousedown);
