@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stddef.h>
 
 #define   RED 0xFF_00_00
@@ -76,3 +77,42 @@ carefree_draw_box(u32* dest, size_t dest_stride, u64 y, u64 x, u64 w, u64 h, u32
 }
 
 
+void
+plot_pixel(u32* dest, size_t dest_stride, u64 x, u64 y, u32 color, u8 alpha)
+{
+	if (!alpha) return;
+	u32* pix_ptr = dest + dest_stride * y + x;
+	if (0xFF == alpha) {
+		*pix_ptr = color;
+		return;
+	}
+	u32 dest_pixel = *pix_ptr;
+	u8 unalpha = 0xFF - alpha;
+	u8 red = (((dest_pixel >> 16) & 255) * unalpha + ((color >> 16) & 255) * alpha) / 0xff;
+	u8 green = (((dest_pixel >> 8) & 255) * unalpha + ((color >> 8) & 255) * alpha) / 0xff;
+	u8 blue = ((dest_pixel & 255) * unalpha + (color & 255) * alpha) / 0xff;
+	*pix_ptr = (red << 16) | (green << 8) | blue;
+}
+
+
+void
+carefree_wu_line(u32* dest, size_t dest_stride, u64 x, u64 y, int w, int h, u32 color)
+{
+	// Yeah...  crunchy fun for the whole family.
+	// https://dl.acm.org/doi/pdf/10.1145/127719.122734
+	
+	// > Without loss of generality only lines in the first octant are considered.
+	assert(w > 0 && h > 0 && h >= w);
+
+	// > We translate the point (x0, y0) to the origin,
+	// so y = kx where k = h/w with k <= 1
+	u64 x1 = x + w;
+	u64 y1 = y + h;
+	int d = 0;
+	while (x1 > x) {
+		plot_pixel(dest, dest_stride, x, y, color, 0xFF);
+		plot_pixel(dest, dest_stride, x1, y1, color, 0xFF);
+		++x;
+		--x1;
+	}
+}
