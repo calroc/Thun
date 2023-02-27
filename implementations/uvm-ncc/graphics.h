@@ -96,23 +96,38 @@ plot_pixel(u32* dest, size_t dest_stride, u64 x, u64 y, u32 color, u8 alpha)
 
 
 void
-carefree_wu_line(u32* dest, size_t dest_stride, u64 x, u64 y, int w, int h, u32 color)
+carefree_wu_line(u32* dest, size_t dest_stride, u64 x, u64 y, u64 w, u64 h, u32 color)
 {
 	// Yeah...  crunchy fun for the whole family.
 	// https://dl.acm.org/doi/pdf/10.1145/127719.122734
 	
 	// > Without loss of generality only lines in the first octant are considered.
-	assert(w > 0 && h > 0 && h >= w);
+	assert(w > 0 && h > 0 && w >= h);
 
 	// > We translate the point (x0, y0) to the origin,
 	// so y = kx where k = h/w with k <= 1
+	u16 k = 0xFFFF * h / w;
+	//print_i64(w); print_str(" x ");	print_i64(h); print_endl();
+	print_i64(k>>8); print_endl();
 	u64 x1 = x + w;
 	u64 y1 = y + h;
-	int d = 0;
+	u16 d = 0;
 	while (x1 > x) {
-		plot_pixel(dest, dest_stride, x, y, color, 0xFF);
-		plot_pixel(dest, dest_stride, x1, y1, color, 0xFF);
+		//print_i64(d); print_endl();
+		if (d) {
+			plot_pixel(dest, dest_stride,  x,  y, color, d >> 8);
+			plot_pixel(dest, dest_stride, x1, y1, color, d >> 8);
+		}
+		plot_pixel(dest, dest_stride,  x,  y - 1, color, 0xFF - (d >> 8));
+		plot_pixel(dest, dest_stride, x1, y1 - 1, color, 0xFF - (d >> 8));
 		++x;
 		--x1;
+		d = d + k;
+		if (d > 0xFFFF) {
+			d = 0;
+			// opposite (de-)increment because computer y is negative cartesian y
+			++y;
+			--y1;
+		}
 	}
 }

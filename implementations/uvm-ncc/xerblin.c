@@ -104,7 +104,10 @@ main()
 	u64 w = 3 + 26 * font_Inconsolata_22_width;
 	u64 h = 4 + 4 * font_Inconsolata_22_height;
 	carefree_draw_box(frame_buffer, FRAME_WIDTH, 126, 126, w, h, WHITE);
-	carefree_wu_line(frame_buffer, FRAME_WIDTH, 10, 256, 100, 200, WHITE);
+	w = 200;
+	for (w = 101; w < (FRAME_WIDTH - 10); w = w + 3) {
+		carefree_wu_line(frame_buffer, FRAME_WIDTH, 10, 256, w, 100, WHITE);
+	}
 	window_draw_frame(wid, frame_buffer);
 	window_on_keydown(wid, keydown);
 	window_on_mousedown(wid, mousedown);
