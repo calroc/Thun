@@ -22,16 +22,11 @@ void
 draw_char(u8 ch, u64 dest_x, u64 dest_y)
 {
 	// Check the inputs.
-	if (ch < 0 || ch > font_Inconsolata_22_number_of_characters) {
+	if (ch < 0 || ch > font_Inconsolata_22_number_of_characters
+		|| dest_x < 0 || dest_x >= (FRAME_WIDTH - font_Inconsolata_22_width )
+		|| dest_y < 0 || dest_y >= (FRAME_HEIGHT - font_Inconsolata_22_height))
 		// No error message or anything, just decline to draw.
 		return;
-	}
-	if (dest_x < 0 || dest_x >= (FRAME_WIDTH - font_Inconsolata_22_width)) {
-		return;
-	}
-	if (dest_y < 0 || dest_y >= (FRAME_HEIGHT - font_Inconsolata_22_height)) {
-		return;
-	}
 	carefree_alpha_blend_blit(
 		frame_buffer,
 		font_Inconsolata_22_data[ch],
