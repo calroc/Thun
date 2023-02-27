@@ -106,9 +106,9 @@ main()
 	carefree_draw_box(frame_buffer, FRAME_WIDTH, 126, 126, w, h, WHITE);
 	w = 200;
 	//carefree_wu_line(frame_buffer, FRAME_WIDTH, 10, 256, 200, 100, WHITE);
-	for (w = 101; w < (FRAME_WIDTH - 10); w = w + 50) {
-		carefree_wu_line(frame_buffer, FRAME_WIDTH, 10, 256, w, 100, WHITE);
-	}
+	//for (w = 101; w < (FRAME_WIDTH - 10); w = w + 50) {
+	//	carefree_wu_line(frame_buffer, FRAME_WIDTH, 10, 256, w, 100, WHITE);
+	//}
 	window_draw_frame(wid, frame_buffer);
 	window_on_keydown(wid, keydown);
 	window_on_mousedown(wid, mousedown);

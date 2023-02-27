@@ -20,6 +20,35 @@ draw_background(u32* buffer, size_t w, size_t h)
 }
 
 void
+draw_cicada_bars_background(u32* buffer, size_t w, size_t h)
+{
+	for (size_t x = 0; x < w; ++x) {
+		for (size_t y = 0; y < h; ++y) {
+			u8 blue  = 5*x%17 + 127;
+			u8 green = 5*x%37 + 127;
+			u8 red   = 5*x%43 + 127;
+			u32* pix_ptr = buffer + w * y + x;
+			*pix_ptr = (red << 16) | (green << 8) | blue;
+		}
+	}
+}
+
+
+void
+draw_cicada_bars_background0(u32* buffer, size_t w, size_t h)
+{
+	for (size_t x = 0; x < w; ++x) {
+		for (size_t y = 0; y < h; ++y) {
+			u8 blue  = !((5*x / 17) & 1) ? 100 : 0;
+			u8 green = !((5*x / 37) & 1) ? 100 : 0;
+			u8 red   = !((5*x / 43) & 1) ? 100 : 0;
+			u32* pix_ptr = buffer + w * y + x;
+			*pix_ptr = (red << 16) | (green << 8) | blue;
+		}
+	}
+}
+
+void
 carefree_alpha_blend_blit(u32* dest, u32* source, size_t dest_stride, u64 dest_x, u64 dest_y, u64 w, u64 h)
 {
 	u32* d = dest + dest_stride * dest_y + dest_x;
