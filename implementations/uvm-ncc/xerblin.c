@@ -45,6 +45,32 @@ keydown(u64 window_id, u16 keycode)
 	if (KEY_BACKSPACE == keycode) {
 		exit(0);
 	}
+	if (KEY_BACKSPACE == keycode) {
+	} else if (KEY_TAB == keycode) {
+	} else if (KEY_RETURN == keycode) {
+	} else if (KEY_SPACE == keycode) {
+	} else if (KEY_NUM0 == keycode) {
+	} else if (KEY_NUM1 == keycode) {
+	} else if (KEY_NUM2 == keycode) {
+	} else if (KEY_NUM3 == keycode) {
+	} else if (KEY_NUM4 == keycode) {
+	} else if (KEY_NUM5 == keycode) {
+	} else if (KEY_NUM6 == keycode) {
+	} else if (KEY_NUM7 == keycode) {
+	} else if (KEY_NUM8 == keycode) {
+	} else if (KEY_NUM9 == keycode) {
+	} else if (KEY_A == keycode) {
+	} else if (KEY_B == keycode) {
+	} else if (KEY_C == keycode) {
+	} else if (KEY_D == keycode) {
+	} else if (KEY_S == keycode) {
+	} else if (KEY_W == keycode) {
+	} else if (KEY_LEFT == keycode) {
+	} else if (KEY_RIGHT == keycode) {
+	} else if (KEY_UP == keycode) {
+	} else if (KEY_DOWN == keycode) {
+	} else if (KEY_SHIFT == keycode) {
+	}
 	print_i64(keycode);
 	print_endl();
 }
