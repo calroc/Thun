@@ -142,13 +142,12 @@ carefree_wu_line(u32* dest, size_t dest_stride, u64 x, u64 y, u64 w, u64 h, u32 
 	while (x1 > x) {
 		plot_pixel(dest, dest_stride, x, y + 1, color,         d >> 8);
 		plot_pixel(dest, dest_stride, x, y,     color, 0xFF - (d >> 8));
-		plot_pixel(dest, dest_stride, x1, y1, color,         d >> 8);
-		plot_pixel(dest, dest_stride, x1, y1 + 1,     color, 0xFF - (d >> 8));
+		plot_pixel(dest, dest_stride, x1, y1,     color,         d >> 8);
+		plot_pixel(dest, dest_stride, x1, y1 + 1, color, 0xFF - (d >> 8));
 		++x;
 		x1 = x1 - 1;  // "--x1" didn't work here, x1 remained unchanged.
 		if (d + k >= 0xFFFF) {
 			d = 0;
-			// opposite (de-)increment because computer y is negative cartesian y
 			++y;
 			y1 = y1 - 1;
 		} else {
