@@ -105,7 +105,8 @@ main()
 	u64 h = 4 + 4 * font_Inconsolata_22_height;
 	carefree_draw_box(frame_buffer, FRAME_WIDTH, 126, 126, w, h, WHITE);
 	w = 200;
-	for (w = 101; w < (FRAME_WIDTH - 10); w = w + 3) {
+	//carefree_wu_line(frame_buffer, FRAME_WIDTH, 10, 256, 200, 100, WHITE);
+	for (w = 101; w < (FRAME_WIDTH - 10); w = w + 50) {
 		carefree_wu_line(frame_buffer, FRAME_WIDTH, 10, 256, w, 100, WHITE);
 	}
 	window_draw_frame(wid, frame_buffer);
