@@ -42,7 +42,7 @@ draw_char(u8 ch, u64 dest_x, u64 dest_y)
 void
 keydown(u64 window_id, u16 keycode)
 {
-	if (KEY_BACKSPACE == keycode) {
+	if (KEY_TAB == keycode) {
 		print_str("bye! ");
 		print_i64(keycode);
 		print_endl();
