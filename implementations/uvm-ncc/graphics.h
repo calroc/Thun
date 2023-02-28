@@ -161,9 +161,3 @@ carefree_wu_line(u32* dest, size_t dest_stride, u64 x, u64 y, u64 w, u64 h, u32 
 	}
 }
 
-
-
-
-
-
-
