@@ -1,5 +1,7 @@
 
-FONT=Inconsolata
+#FONT=Inconsolata
+FONT=Public-Pixel
+FFFONT=PublicPixel
 POINTSIZE=22
 FILL=white
 
@@ -20,7 +22,7 @@ all: font.h
 
 
 font.h: $(BMPS) convert.py GNUmakefile
-	python ./convert.py $(FONT) $(POINTSIZE) > font.h
+	python ./convert.py $(FFFONT) $(POINTSIZE) > font.h
 
 $(TXTS): make_txt_files.py GNUmakefile
 	python ./make_txt_files.py
