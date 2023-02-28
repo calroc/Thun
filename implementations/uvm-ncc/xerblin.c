@@ -4,6 +4,11 @@
 #include "/home/sforman/src/Joypy/implementations/uvm-ncc/font/font.h"
 #include "/home/sforman/src/Joypy/implementations/uvm-ncc/graphics.h"
 
+#define font_data font_PublicPixel_22_data
+#define font_width font_PublicPixel_22_width
+#define font_height font_PublicPixel_22_height
+#define font_numchars font_PublicPixel_22_number_of_characters
+
 size_t FRAME_WIDTH = 768;
 size_t FRAME_HEIGHT = 512;
 u32 frame_buffer[393216];
@@ -19,19 +24,19 @@ void
 draw_char(u8 ch, u64 dest_x, u64 dest_y)
 {
 	// Check the inputs.
-	if (ch < 0 || ch > font_PublicPixel_22_number_of_characters
-		|| dest_x < 0 || dest_x >= (FRAME_WIDTH - font_PublicPixel_22_width)
-		|| dest_y < 0 || dest_y >= (FRAME_HEIGHT - font_PublicPixel_22_height))
+	if (ch < 0 || ch > font_numchars
+		|| dest_x < 0 || dest_x >= (FRAME_WIDTH - font_width)
+		|| dest_y < 0 || dest_y >= (FRAME_HEIGHT - font_height))
 		// No error message or anything, just decline to draw.
 		return;
 	carefree_alpha_blend_blit(
 		frame_buffer,
-		font_PublicPixel_22_data[ch],
+		font_data[ch],
 		FRAME_WIDTH,
 		dest_x,
 		dest_y,
-		font_PublicPixel_22_width,
-		font_PublicPixel_22_height
+		font_width,
+		font_height
 	);
 }
 
@@ -73,8 +78,8 @@ keydown(u64 window_id, u16 keycode)
 void
 mousedown(u64 window_id, u8 btn_id)
 {
-	u8 ch = rand() % font_PublicPixel_22_number_of_characters;
-	draw_char(ch, pos_x - font_PublicPixel_22_width, pos_y - font_PublicPixel_22_height);
+	u8 ch = rand() % font_numchars;
+	draw_char(ch, pos_x - font_width, pos_y - font_height);
 	window_draw_frame(window_id, frame_buffer);
 }
 
@@ -94,15 +99,15 @@ main()
 	init_font_data();
 	wid = window_create(FRAME_WIDTH, FRAME_HEIGHT, "Xerblin", 0);
 	draw_background(frame_buffer, FRAME_WIDTH, FRAME_HEIGHT);
-	for (size_t ch = 0; ch < font_PublicPixel_22_number_of_characters; ++ch) {
+	for (size_t ch = 0; ch < font_numchars; ++ch) {
 		draw_char(
 			ch,
-			128 + (ch % 26) * font_PublicPixel_22_width,
-			128 + (ch / 26) * font_PublicPixel_22_height
+			128 + (ch % 26) * font_width,
+			128 + (ch / 26) * font_height
 		);
 	}
-	u64 w = 3 + 26 * font_PublicPixel_22_width;
-	u64 h = 4 + 4 * font_PublicPixel_22_height;
+	u64 w = 3 + 26 * font_width;
+	u64 h = 4 + 4 * font_height;
 	carefree_draw_box(frame_buffer, FRAME_WIDTH, 126, 126, w, h, WHITE);
 	w = 200;
 	carefree_wu_line(frame_buffer, FRAME_WIDTH, 0, 0, FRAME_WIDTH, FRAME_HEIGHT-1, WHITE);
