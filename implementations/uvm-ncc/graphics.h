@@ -107,7 +107,7 @@ carefree_draw_box(u32* dest, size_t dest_stride, u64 y, u64 x, u64 w, u64 h, u32
 
 
 void
-plot_pixel(u32* dest, size_t dest_stride, u64 x, u64 y, u32 color, u8 alpha)
+carefree_alpha_blend_plot_pixel(u32* dest, size_t dest_stride, u64 x, u64 y, u32 color, u8 alpha)
 {
 	if (!alpha) return;
 	u32* pix_ptr = dest + dest_stride * y + x;
@@ -127,29 +127,34 @@ plot_pixel(u32* dest, size_t dest_stride, u64 x, u64 y, u32 color, u8 alpha)
 void
 carefree_wu_line(u32* dest, size_t dest_stride, u64 x, u64 y, u64 w, u64 h, u32 color)
 {
-	// Yeah...  crunchy fun for the whole family.
+	// This isn't quite Wu's algorithm, although it uses the same
+	// fundamental trick of keeping track of both the intensity of
+	// the pixels to draw and the right time to increment the minor
+	// axis in a single error term.
+	//
+	// "An Efficient Antialiasing Technique", Xiaolin Wu
+	// Computer Graphics, Volume 25, Number 4, July 1991
 	// https://dl.acm.org/doi/pdf/10.1145/127719.122734
-	
+	//
+	// "Graphics Programming Black Book" by Michael Abrash, chapter 42
+	// https://archive.org/details/gpbb20
+
 	// > Without loss of generality only lines in the first octant are considered.
-	assert(w > 0 && h > 0 && w >= h);
+	assert(w > 0 && h > 0 && w > h);
 
 	// > We translate the point (x0, y0) to the origin,
 	// so y = kx where k = h/w with k <= 1
 	u16 k = 0xFFFF * h / w;
-	u64 x1 = x + w - 1;
-	u64 y1 = y + h - 1;
-	u16 d = 0;
-	while (x1 > x) {
-		plot_pixel(dest, dest_stride, x, y + 1, color,         d >> 8);
-		plot_pixel(dest, dest_stride, x, y,     color, 0xFF - (d >> 8));
-		plot_pixel(dest, dest_stride, x1, y1,     color,         d >> 8);
-		plot_pixel(dest, dest_stride, x1, y1 + 1, color, 0xFF - (d >> 8));
+	u16 d = k >> 1;
+	while (w) {
+		w = w - 1;
+		u8 intensity = d >> 8;
+		carefree_alpha_blend_plot_pixel(dest, dest_stride, x, y + 1, color,  intensity);
+		carefree_alpha_blend_plot_pixel(dest, dest_stride, x, y,     color, 0xFF - intensity);
 		++x;
-		x1 = x1 - 1;  // "--x1" didn't work here, x1 remained unchanged.
 		if (d + k >= 0xFFFF) {
-			d = 0;
+			d = k - (0xFFFF - d);
 			++y;
-			y1 = y1 - 1;
 		} else {
 			d = d + k;
 		}
