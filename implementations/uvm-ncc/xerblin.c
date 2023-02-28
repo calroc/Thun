@@ -24,17 +24,18 @@ void
 draw_char(u8 ch, u64 dest_x, u64 dest_y)
 {
 	// Check the inputs.
-	if (ch < 0 || ch > font_numchars
-		|| dest_x < 0 || dest_x >= (FRAME_WIDTH - font_width)
-		|| dest_y < 0 || dest_y >= (FRAME_HEIGHT - font_height))
+	if (ch < 0 || dest_x < 0 || dest_y < 0
+			|| ch >= font_numchars
+			|| dest_x >= (FRAME_WIDTH - font_width)
+			|| dest_y >= (FRAME_HEIGHT - font_height))
 		// No error message or anything, just decline to draw.
 		return;
 	carefree_alpha_blend_blit(
-		frame_buffer,
-		font_data[ch],
-		FRAME_WIDTH,
-		dest_x,
-		dest_y,
+		frame_buffer,   // destination
+		font_data[ch],  // source
+		FRAME_WIDTH,    // destination width (or "stride")
+		dest_x,         // top
+		dest_y,         // left
 		font_width,
 		font_height
 	);
