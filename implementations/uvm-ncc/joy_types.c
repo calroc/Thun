@@ -32,7 +32,7 @@ u8 joyList = 1;
 u8 joySymbol = 2;
 u8 joyBool = 3;
 
-u32 empty_list = 0x3fffffff;
+u32 empty_list = 0;
 
 u32
 cons(u32 head, u32 tail)
@@ -64,23 +64,61 @@ print_joy_value(u32 jv)
 		print_joy_list(jv);
 		print_str("]");
 	} else if (type == joySymbol) {
-		// print_str(symbols[VALUE_OF(jv)]);
+		print_str(ht_lookup(VALUE_OF(jv)));
 	}
 }
 
 void
 print_joy_list(u32 list)
 {
-	if (TYPE_OF(list) != joyList) {
-		1/0;
-	}
-	while (list != empty_list) {
+	while (list) {
 		print_joy_value(head(list));
 		list = tail(list);
-		if (list != empty_list) {
+		if (list) {
 			print_str(" ");
 		}
 	}
+}
+
+
+// And now for a hash table.
+// https://benhoyt.com/writings/hash-table-in-c/#hash-tables
+// https://en.wikipedia.org/wiki/Fowler–Noll–Vo_hash_function
+
+#define FNV_OFFSET 0xcbf29ce484222325
+#define FNV_PRIME 0x100000001b3
+
+u64
+hash_key(char* key)
+{
+    u64 hash = FNV_OFFSET;
+    for (char* p = key; *p; ++p) {
+        hash = hash ^ (u64)(unsigned char)(*p);
+        hash = hash * FNV_PRIME;
+    }
+    return hash;
+}
+
+// Capacity is a power of two (10 for now.)
+#define CAPACITY 1024
+#define HASH_MASK 0x3ff
+
+char* hash_table[CAPACITY];
+
+u32
+ht_insert(char *symbol)
+{
+	u32 index = hash_key(symbol) & HASH_MASK;
+	// We're not checking for collisions yet.
+	hash_table[index] = symbol;
+	return index;
+}
+
+char*
+ht_lookup(u64 hash)
+{
+	u64 index = hash & HASH_MASK;
+	return hash_table[index];
 }
 
 void
@@ -89,18 +127,26 @@ main()
 	u32 joy_true = JOY_VALUE(joyBool, 1);
 	u32 joy_false = JOY_VALUE(joyBool, 0);
 
-	u32 el = empty_list;
-	el = cons(48, el);
-	el = cons(el, el);
+	memset(hash_table, 0, sizeof(hash_table));
 
 	u32 stack = empty_list;
 
 	stack = cons(23, stack);
 	stack = cons(joy_true, stack);
 	stack = cons(42, stack);
+
+	u32 word = JOY_VALUE(joySymbol, ht_insert("cats"));
+	stack = cons(word, stack);
+
+	u32 el = empty_list;
+
+	el = cons(48, el);
+	el = cons(el, el);
 	stack = cons(el, stack);
+
 	stack = cons(joy_false, stack);
 	stack = cons(273, stack);
+
 	print_joy_list(stack);
 	print_endl();
 }
