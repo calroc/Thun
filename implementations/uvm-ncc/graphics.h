@@ -144,6 +144,7 @@ carefree_wu_line(u32* dest, size_t dest_stride, u64 x, u64 y, u64 w, u64 h, u32 
 
 	// > We translate the point (x0, y0) to the origin,
 	// so y = kx where k = h/w with k <= 1
+	// (actually k < 1 because 45° lines are special-cased.)
 	u16 k = 0xFFFF * h / w;
 	u16 d = k >> 1;
 	while (w) {

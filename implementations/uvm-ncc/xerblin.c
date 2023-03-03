@@ -2,6 +2,7 @@
 #include <uvm/syscalls.h>
 #include <uvm/utils.h>
 #include "/home/sforman/src/Joypy/implementations/uvm-ncc/font/font.h"
+#include "/home/sforman/src/Joypy/implementations/uvm-ncc/font/monogram.h"
 #include "/home/sforman/src/Joypy/implementations/uvm-ncc/graphics.h"
 
 #define font_data font_PublicPixel_22_data
@@ -39,6 +40,31 @@ draw_char(u8 ch, u64 dest_x, u64 dest_y)
 		font_width,
 		font_height
 	);
+}
+
+
+void
+draw_monogram_char(u8 ch, u64 dest_x, u64 dest_y, u32 color)
+{
+	// Check the inputs.
+	if (ch < 0 || dest_x < 0 || dest_y < 0
+			|| ch > font_monogram_number_of_characters
+			|| dest_x >= (FRAME_WIDTH - font_monogram_width)
+			|| dest_y >= (FRAME_HEIGHT - font_monogram_height))
+		// No error message or anything, just decline to draw.
+		return;
+	u32* d = frame_buffer + FRAME_WIDTH * dest_y + dest_x;
+	for (u64 y = 0; y < font_monogram_height; ++y) {
+		u8 pixel_bits = font_monogram_data[ch][y];
+		for (u64 x = 0; x < font_monogram_width; ++x) {
+			if (!pixel_bits) break;
+			if (pixel_bits & 1) {
+				*(d+x) = color;
+			}
+			pixel_bits = pixel_bits >> 1;
+		}
+		d = d + FRAME_WIDTH;
+	}
 }
 
 
@@ -98,17 +124,27 @@ void
 main()
 {
 	init_font_data();
+	init_monogram_font_data();
 	wid = window_create(FRAME_WIDTH, FRAME_HEIGHT, "Xerblin", 0);
 	draw_background(frame_buffer, FRAME_WIDTH, FRAME_HEIGHT);
-	for (size_t ch = 0; ch < font_numchars; ++ch) {
-		draw_char(
+	for (size_t ch = 0; ch < font_monogram_number_of_characters; ++ch) {
+		draw_monogram_char(
 			ch,
-			128 + (ch % 26) * font_width,
-			128 + (ch / 26) * font_height
+			129 + (ch % 26) * font_monogram_width,
+			129 + (ch / 26) * font_monogram_height,
+			0x00000000
 		);
 	}
-	u64 w = 3 + 26 * font_width;
-	u64 h = 4 + 4 * font_height;
+	for (size_t ch = 0; ch < font_monogram_number_of_characters; ++ch) {
+		draw_monogram_char(
+			ch,
+			128 + (ch % 26) * font_monogram_width,
+			128 + (ch / 26) * font_monogram_height,
+			0x00FFFFFF
+		);
+	}
+	u64 w = 3 + 26 * font_monogram_width;
+	u64 h = 4 + font_monogram_number_of_characters / 26 * font_monogram_height;
 	carefree_draw_box(frame_buffer, FRAME_WIDTH, 126, 126, w, h, WHITE);
 	w = 200;
 	carefree_wu_line(frame_buffer, FRAME_WIDTH, 0, 0, FRAME_WIDTH, FRAME_HEIGHT-1, WHITE);
