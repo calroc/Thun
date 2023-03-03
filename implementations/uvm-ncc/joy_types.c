@@ -100,26 +100,68 @@ hash_key(char* key)
 }
 
 // Capacity is a power of two (10 for now.)
+#define EXPONENT 10
 #define CAPACITY 1024
-#define HASH_MASK 0x3ff
+#define HASH_MASK 1023
 
 char* hash_table[CAPACITY];
 
 u32
 ht_insert(char *symbol)
 {
-	u32 index = hash_key(symbol) & HASH_MASK;
-	// We're not checking for collisions yet.
-	hash_table[index] = symbol;
-	return index;
+	u64 hash = hash_key(symbol);
+	u32 index = hash % CAPACITY;
+
+	char *candidate = hash_table[index];
+	if (!candidate) {
+		hash_table[index] = symbol;
+		return JOY_VALUE(joySymbol, VALUE_OF(hash));
+	}
+
+	// https://en.wikipedia.org/wiki/Double_hashing
+	// Rather than use another hash function I'm going to try
+	// using the extra bits of the same hash.
+	u32 increment = ((VALUE_OF(hash) >> EXPONENT) | 1) % CAPACITY;
+	// If I understand correctly, making the increment odd
+	// means it will traverse the whole (even-sized) table.
+	while (candidate) {
+		// Compare pointers then hashes (since we already have
+		// one hash I'm guessing that that's cheaper or at least
+		// no more expensive than string comparision.)
+		if (candidate == symbol || hash == hash_key(candidate))
+			break;
+		index = (index + increment) % CAPACITY;
+		candidate = hash_table[index];
+	}
+	if (!candidate) {
+		hash_table[index] = symbol;
+	}
+	return JOY_VALUE(joySymbol, VALUE_OF(hash));
 }
 
 char*
-ht_lookup(u64 hash)
+ht_lookup(u32 hash)
 {
-	u64 index = hash & HASH_MASK;
-	return hash_table[index];
+	// Note that hash will be truncated to N (N=30 as it happens) bits
+	// by VALUE_OF().
+	u32 index = hash % CAPACITY;
+	char *candidate = hash_table[index];
+	u32 increment = ((hash >> EXPONENT) | 1) % CAPACITY;
+	while (candidate) {
+		if (hash == VALUE_OF(hash_key(candidate)))
+			return candidate;
+		index = (index + increment) % CAPACITY;
+		candidate = hash_table[index];
+	}
+	return 0;
 }
+
+u32
+push_symbol(char *symbol, u32 stack)
+{
+	return cons(JOY_VALUE(joySymbol, ht_insert(symbol)), stack);
+}
+
 
 void
 main()
@@ -135,8 +177,7 @@ main()
 	stack = cons(joy_true, stack);
 	stack = cons(42, stack);
 
-	u32 word = JOY_VALUE(joySymbol, ht_insert("cats"));
-	stack = cons(word, stack);
+	stack = push_symbol("cats", stack);
 
 	u32 el = empty_list;
 
