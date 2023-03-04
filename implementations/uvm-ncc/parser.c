@@ -93,8 +93,8 @@ ht_insert(char *symbol)
 		candidate = hash_table[index];
 	}
 	if (!candidate) {
-		hash_table[index] = symbol;
 		print_str("interning ");print_str(symbol);print_endl();
+		hash_table[index] = symbol;
 	}
 	return JOY_VALUE(joySymbol, VALUE_OF(hash));
 }
@@ -138,6 +138,7 @@ allocate_string(char *buffer, u32 offset, u32 length)
 	string_heap[end] = '\0';
 	u32 new_string = string_heap_top;
 	string_heap_top = (u32)end + 1;
+	print_str("allocating ");print_str(string_heap + new_string);print_endl();
 	return string_heap + new_string;
 	
 }
@@ -176,6 +177,9 @@ tokenize0(char *str, u32 str_length, u32 index, u32 acc)
 		}
 	}
 	// i == str_length OR str[i] is a delimiter char.
+
+	// TODO: Convert bools and ints here?
+	// Use ht_insert to avoid multiple allocations of the same string!
 	char *token = allocate_string(str, index, i - index);
 	if (!token)
 		return 0;  // OOM
@@ -211,7 +215,7 @@ void
 main()
 {
 	memset(string_heap, 0, sizeof(string_heap));
-	char *buffer = " 1[2[ 3 ]4] cats dogs bunnies";
+	char *buffer = " 1[2[ 3  cats ]4] cats dogs bunnies";
 	/*print_str(allocate_string(buffer, 4, 4)); print_endl();*/
 	/*print_str(allocate_string(buffer, 2, 4)); print_endl();*/
 	/*print_str(allocate_string(buffer, 7, 5)); print_endl();*/
