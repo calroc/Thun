@@ -51,6 +51,13 @@ u32 head(u32 list) { return heads[VALUE_OF(list)]; }
 u32 tail(u32 list) { return tails[VALUE_OF(list)]; }
 
 
+// No setjmp/longjmp, so let's have a global error value and check it after ops.
+u64 error;
+
+#define NO_ERROR 0
+#define UNKNOWN_WORD_ERROR 1
+#define MISSING_CLOSING_BRACKET 2
+
 void
 print_joy_value(u32 jv)
 {
@@ -64,7 +71,10 @@ print_joy_value(u32 jv)
 		print_joy_list(jv);
 		print_str("]");
 	} else if (type == joySymbol) {
-		print_str(ht_lookup(VALUE_OF(jv)));
+		char *str = ht_lookup(VALUE_OF(jv));
+		if (error != NO_ERROR)
+			return;
+		print_str(str);
 	}
 }
 
@@ -73,6 +83,8 @@ print_joy_list(u32 list)
 {
 	while (list) {
 		print_joy_value(head(list));
+		if (error != NO_ERROR)
+			return;
 		list = tail(list);
 		if (list) {
 			print_str(" ");
@@ -153,6 +165,7 @@ ht_lookup(u32 hash)
 		index = (index + increment) % CAPACITY;
 		candidate = hash_table[index];
 	}
+	error = UNKNOWN_WORD_ERROR;
 	return 0;
 }
 
@@ -170,6 +183,8 @@ main()
 	u32 joy_false = JOY_VALUE(joyBool, 0);
 
 	memset(hash_table, 0, sizeof(hash_table));
+	error = NO_ERROR;
+
 
 	u32 stack = empty_list;
 
