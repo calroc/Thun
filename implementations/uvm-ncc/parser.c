@@ -12,15 +12,15 @@
 #define HEAP_SIZE 1024
 u32 heads[HEAP_SIZE];
 u32 tails[HEAP_SIZE];
-u32 free = 0;
+u32 free = 1;  // cell 0 is reserved so that 0 can be the empty list.
 #define TYPE_OF(pointer) (pointer >> 30)
 #define VALUE_OF(pointer) (pointer & 0x3fffffff)
 #define JOY_VALUE(type, value) ((type & 3) << 30) | (value & 0x3fffffff)
-u8 joyInt = 0;
-u8 joyList = 1;
+u32 empty_list = 0;
+u8 joyList = 0;
+u8 joyInt = 1;
 u8 joySymbol = 2;
 u8 joyBool = 3;
-u32 empty_list = 0;
 u32
 cons(u32 head, u32 tail)
 {
@@ -152,20 +152,31 @@ push_symbol(char *symbol, u32 stack)
 
 
 
-#define LEFT_BRACKET 0xffffffff
-#define RIGHT_BRACKET 0xfffffffe
+char* LEFT_BRACKET_symbol = "[";
+char* RIGHT_BRACKET_symbol = "]";
+u32 LEFT_BRACKET;
+u32 RIGHT_BRACKET;
+
 
 u32
 tokenize0(char *str, u32 str_length, u32 index, u32 acc)
 {
-	if (index >= str_length)
+	if (index >= str_length) {
+		print_i64(index);print_str(" : ");print_str("END tokenize");print_endl();
+		print_i64(acc);print_str("<");print_endl();
 		return acc;
+	}
+	print_i64(index);print_str(" : ");print_str(str + index);print_endl();
 	char ch = str[index];
 	if ('[' == ch) {
-		return cons(LEFT_BRACKET, tokenize0(str, str_length, index + 1, acc));
+		acc = cons(LEFT_BRACKET, tokenize0(str, str_length, index + 1, acc));
+		print_i64(acc);print_str("<[");print_endl();
+		return acc;
 	}
 	if (']' == ch) {
-		return cons(RIGHT_BRACKET, tokenize0(str, str_length, index + 1, acc));
+		acc = cons(RIGHT_BRACKET, tokenize0(str, str_length, index + 1, acc));
+		print_i64(acc);print_str("<]");print_endl();
+		return acc;
 	}
 	if (' ' == ch) {
 		return tokenize0(str, str_length, index + 1, acc);
@@ -194,91 +205,38 @@ tokenize(char *str)
 	return tokenize0(str, strlen(str), 0, empty_list);
 }
 
+u32 stack[1000];
+u32 stack_top = 0;
 
 u32
-expect_right_bracket(u32 tokens, u32 acc)
+text_to_expression(char *str)
 {
-	if (!tokens) {
-		print_str("ERROR: Missing closing bracket. B");
-		print_endl();
-		return acc;
+	u32 frame = empty_list;
+	u32 tokens = tokenize(str);
+	print_str("tokens: ");
+	print_joy_list(tokens);
+	print_endl();
+	return tokens;
+	while (tokens) {
+		u32 tok = head(tokens);
+		tokens = tail(tokens);
+		if (LEFT_BRACKET == tok) {
+			print_str("left bracket");print_endl();
+			stack[stack_top] = frame;
+			++stack_top;
+			frame = empty_list;
+			continue;
+		}
+		if (RIGHT_BRACKET == tok) {
+			print_str("right bracket");print_endl();
+			tok = frame;  // as list
+			frame = stack[stack_top];
+			--stack_top;
+		}
+		frame = cons(tok, frame);
 	}
-	u32 jv = head(tokens);
-	tokens = tail(tokens);
-	if (RIGHT_BRACKET == jv) {
-		print_str("found expected ]");print_endl();
-		return cons(acc, tokens);
-	}
-	if (LEFT_BRACKET == jv) {
-		print_str("found [ while expecting ]");
-		print_endl();
-
-		u32 results = expect_right_bracket(tokens, empty_list);
-		if (!results)
-			print_str("ERROR: Missing closing bracket. C");
-			print_endl();
-			return empty_list;
-		jv = head(results);
-		tokens = tail(results);
-
-	} else {
-		print_str("found >");
-		print_str(ht_lookup(VALUE_OF(jv)));
-		print_str("< while expecting ]");
-		print_endl();
-	}
-
-	u32 results = expect_right_bracket(tokens, acc);
-	if (!results)
-		print_str("ERROR: Missing closing bracket. C");
-		print_endl();
-		return empty_list;
-	return cons(cons(head(results), acc), tail(results));
+	return frame;  // as list;
 }
-
-
-u32
-parse0(u32 tokens, u32 acc)
-{
-	if (!tokens)
-		return acc;
-	u32 jv = head(tokens);
-	tokens = tail(tokens);
-	if (RIGHT_BRACKET == jv) {
-		print_str("ERROR: Extra closing bracket.");print_endl();
-		return empty_list;
-	}
-	if (LEFT_BRACKET == jv) {
-		print_str("parsing [");print_endl();
-		//jv, tokens = expect_right_bracket(tokens, empty_list);
-		// We can't return two things from a C function, so...
-		// We could cons the sublist onto the rest of the
-		// tokens in expect_right_bracket() and then split them
-		// out again here?  It wastes a cell?
-		u32 results = expect_right_bracket(tokens, empty_list);
-		if (!results)
-			print_str("ERROR: Missing closing bracket. A");
-			print_endl();
-			return empty_list;
-		jv = JOY_VALUE(joyList, head(results));
-		tokens = tail(results);
-	} else {
-		print_str("parsing >");
-		print_str(ht_lookup(VALUE_OF(jv)));
-		print_str("<");
-		print_endl();
-	}
-	return cons(jv, parse0(tokens, acc));
-}
-
-
-u32
-parse(u32 tokens)
-{
-	return parse0(tokens, empty_list);
-}
-
-
 
 
 void
@@ -306,8 +264,6 @@ print_joy_list(u32 list)
 {
 	while (list) {
 		print_joy_value(head(list));
-		/*if (error != NO_ERROR)*/
-		/*	return;*/
 		list = tail(list);
 		if (list) {
 			print_str(" ");
@@ -319,13 +275,20 @@ void
 main()
 {
 	memset(string_heap, 0, sizeof(string_heap));
+	LEFT_BRACKET = JOY_VALUE(joySymbol, ht_insert(LEFT_BRACKET_symbol));
+	RIGHT_BRACKET = JOY_VALUE(joySymbol, ht_insert(RIGHT_BRACKET_symbol));
+
 	//char *buffer = " 1[2[ 3  cats ]4] cats dogs bunnies";
 	char *buffer = " 1[2]3 bunnies";
 	/*print_str(allocate_string(buffer, 4, 4)); print_endl();*/
 	/*print_str(allocate_string(buffer, 2, 4)); print_endl();*/
 	/*print_str(allocate_string(buffer, 7, 5)); print_endl();*/
-	u32 jv = parse(tokenize(buffer));
-	jv = JOY_VALUE(joyList, jv);
-	print_joy_list(jv);
+	u32 jv = text_to_expression(" 1 [2 3] 3[4]5");
+	if (LEFT_BRACKET == jv) {
+		print_str("boo");
+	} else {
+		//jv = JOY_VALUE(joyList, jv);
+		print_joy_list(jv);
+	}
 	print_endl();
 }
