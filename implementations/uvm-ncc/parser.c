@@ -72,7 +72,7 @@ ht_insert(char *symbol)
 
 	char *candidate = hash_table[index];
 	if (!candidate) {
-		print_str("interning ");print_str(symbol);print_endl();
+		//print_str("interning ");print_str(symbol);print_endl();
 		hash_table[index] = symbol;
 		return JOY_VALUE(joySymbol, VALUE_OF(hash));
 	}
@@ -93,7 +93,7 @@ ht_insert(char *symbol)
 		candidate = hash_table[index];
 	}
 	if (!candidate) {
-		print_str("interning ");print_str(symbol);print_endl();
+		//print_str("interning ");print_str(symbol);print_endl();
 		hash_table[index] = symbol;
 	}
 	return JOY_VALUE(joySymbol, VALUE_OF(hash));
@@ -138,7 +138,7 @@ allocate_string(char *buffer, u32 offset, u32 length)
 	string_heap[end] = '\0';
 	u32 new_string = string_heap_top;
 	string_heap_top = (u32)end + 1;
-	print_str("allocating ");print_str(string_heap + new_string);print_endl();
+	//print_str("allocating ");print_str(string_heap + new_string);print_endl();
 	return string_heap + new_string;
 	
 }
@@ -189,7 +189,7 @@ convert_integer(char *str, u32 index, u32 length)
 		u8 digit = (u8)ch - (u8)'0';
 		result = result * 10 + digit;
 	}
-		print_str("converted integer ");print_i64(result);print_endl();
+	//print_str("converted integer ");print_i64(result);print_endl();
 	return JOY_VALUE(joyInt, result);
 }
 
@@ -204,7 +204,7 @@ tokenate(char *str, u32 index, u32 length)
 		&& *(str + index + 2) == 'u'
 		&& *(str + index + 3) == 'e'
 	) {
-		print_str("tokenate true");print_endl();
+		//print_str("tokenate true");print_endl();
 		return JOY_VALUE(joyBool, 1);
 	}
 	if (5 == length
@@ -214,11 +214,11 @@ tokenate(char *str, u32 index, u32 length)
 		&& *(str + index + 3) == 's'
 		&& *(str + index + 4) == 'e'
 	) {
-		print_str("tokenate false");print_endl();
+		//print_str("tokenate false");print_endl();
 		return JOY_VALUE(joyBool, 0);
 	}
 	if (is_integer(str, index, length)) {
-		print_str("tokenate integer");print_endl();
+		//print_str("tokenate integer");print_endl();
 		return convert_integer(str, index, length);
 	}
 	// TODO: Convert bools and ints here?
@@ -234,20 +234,20 @@ u32
 tokenize0(char *str, u32 str_length, u32 index, u32 acc)
 {
 	if (index >= str_length) {
-		print_i64(index);print_str(" : ");print_str("END tokenize");print_endl();
-		print_i64(acc);print_str("<");print_endl();
+		//print_i64(index);print_str(" : ");print_str("END tokenize");print_endl();
+		//print_i64(acc);print_str("<");print_endl();
 		return acc;
 	}
-	print_i64(index);print_str(" : ");print_str(str + index);print_endl();
+	//print_i64(index);print_str(" : ");print_str(str + index);print_endl();
 	char ch = str[index];
 	if ('[' == ch) {
 		acc = cons(LEFT_BRACKET, tokenize0(str, str_length, index + 1, acc));
-		print_i64(acc);print_str("<[");print_endl();
+		//print_i64(acc);print_str("<[");print_endl();
 		return acc;
 	}
 	if (']' == ch) {
 		acc = cons(RIGHT_BRACKET, tokenize0(str, str_length, index + 1, acc));
-		print_i64(acc);print_str("<]");print_endl();
+		//print_i64(acc);print_str("<]");print_endl();
 		return acc;
 	}
 	if (' ' == ch) {
@@ -306,27 +306,27 @@ text_to_expression(char *str)
 {
 	u32 frame = empty_list;
 	u32 tokens = tokenize(str);
-	print_str("tokens: ");
-	print_joy_list(tokens);
-	print_endl();
-	return tokens;
+	//print_str("tokens: "); print_joy_list(tokens); print_endl();
+	//return tokens;
 	while (tokens) {
 		u32 tok = head(tokens);
 		tokens = tail(tokens);
 		if (LEFT_BRACKET == tok) {
-			print_str("left bracket");print_endl();
+			//print_str("left bracket");print_endl();
 			stack[stack_top] = frame;
 			++stack_top;
 			frame = empty_list;
 			continue;
 		}
 		if (RIGHT_BRACKET == tok) {
-			print_str("right bracket");print_endl();
+			//print_str("right bracket");print_endl();
 			tok = reverse_list_in_place(frame);
+			//print_str("new list: "); print_joy_list(tok); print_endl();
+			--stack_top;  //  This first!  THEN get the old frame!  D'oh!
 			frame = stack[stack_top];
-			--stack_top;
 		}
 		frame = cons(tok, frame);
+		//print_str("t2e frame: "); print_joy_list(frame); print_endl();
 	}
 	return reverse_list_in_place(frame);
 }
@@ -376,8 +376,8 @@ main()
 	/*print_str(allocate_string(buffer, 4, 4)); print_endl();*/
 	/*print_str(allocate_string(buffer, 2, 4)); print_endl();*/
 	/*print_str(allocate_string(buffer, 7, 5)); print_endl();*/
-	u32 jv = text_to_expression(" 1 [2 true 3 bob]false bob 3[4]5");
-	jv = reverse_list_in_place(jv);
+	u32 jv = text_to_expression(" 1[2[true 3][[]]bob]false[]bob 3[4]5");
+	//jv = reverse_list_in_place(jv);
 	if (LEFT_BRACKET == jv) {
 		print_str("boo");
 	} else {
