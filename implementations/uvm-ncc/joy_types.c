@@ -17,6 +17,39 @@
 //
 #include <uvm/syscalls.h>
 #include <string.h>
+/*
+███████╗██████╗ ██████╗  ██████╗ ██████╗                        
+██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔══██╗                       
+█████╗  ██████╔╝██████╔╝██║   ██║██████╔╝                       
+██╔══╝  ██╔══██╗██╔══██╗██║   ██║██╔══██╗                       
+███████╗██║  ██║██║  ██║╚██████╔╝██║  ██║                       
+╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝                       
+                                                                
+██╗  ██╗ █████╗ ███╗   ██╗██████╗ ██╗     ██╗███╗   ██╗ ██████╗ 
+██║  ██║██╔══██╗████╗  ██║██╔══██╗██║     ██║████╗  ██║██╔════╝ 
+███████║███████║██╔██╗ ██║██║  ██║██║     ██║██╔██╗ ██║██║  ███╗
+██╔══██║██╔══██║██║╚██╗██║██║  ██║██║     ██║██║╚██╗██║██║   ██║
+██║  ██║██║  ██║██║ ╚████║██████╔╝███████╗██║██║ ╚████║╚██████╔╝
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ 
+
+No setjmp/longjmp, so let's have a global error value and check it after ops.
+*/
+
+u64 error = 0;
+
+#define NO_ERROR 0
+#define UNKNOWN_WORD_ERROR 1
+#define MISSING_CLOSING_BRACKET 2
+#define CONS_HEAP_OOM 3
+#define STRING_HEAP_OOM 4
+
+/*
+char *error_messages[3] = {
+	"",
+	"Unknown word",
+	"Missing closing bracket"
+}
+*/
 
 /*
  ██████╗ ██████╗ ███╗   ██╗███████╗    ██╗  ██╗███████╗ █████╗ ██████╗ 
@@ -76,9 +109,10 @@ u32 empty_list = 0;
 u32
 cons(u32 head, u32 tail)
 {
-	if (free >= HEAP_SIZE)
+	if (free >= HEAP_SIZE) {
+		error = CONS_HEAP_OOM;
 		return -1;
-
+	}
 	heads[free] = head;
 	tails[free] = tail;
 	u32 cell = JOY_VALUE(joyList, free);
@@ -120,8 +154,10 @@ char*
 allocate_string(char *buffer, u32 offset, u32 length)
 {
 	u64 end = string_heap_top + length + 1;
-	if (end >= STRING_HEAP_SIZE)
+	if (end >= STRING_HEAP_SIZE) {
+		error = STRING_HEAP_OOM;
 		return 0;
+	}
 	memcpy(string_heap + string_heap_top, buffer + offset, length);
 	string_heap[end] = '\0';
 	u32 new_string = string_heap_top;
@@ -129,18 +165,6 @@ allocate_string(char *buffer, u32 offset, u32 length)
 	//print_str("allocating ");print_str(string_heap + new_string);print_endl();
 	return string_heap + new_string;
 }
-
-
-/******************************************************************************/
-
-// No setjmp/longjmp, so let's have a global error value and check it after ops.
-u64 error;
-
-#define NO_ERROR 0
-#define UNKNOWN_WORD_ERROR 1
-#define MISSING_CLOSING_BRACKET 2
-
-/******************************************************************************/
 
 
 /*
@@ -349,6 +373,13 @@ convert_integer(char *str, u32 index, u32 length)
    ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
 Tokenizer
 
+For now this works, but there are a few improvements to be made: the
+tokenizer is recursive but it could be made iterative if it builds the
+expression in reverse, and then the parser should relink the tokens into
+the expression in-place (currently it makes one copy of the list.) Once
+that's done the tokenizer and the parser can be integrated into one pass,
+I think.
+
 */
 
 char* LEFT_BRACKET_symbol = "[";
@@ -386,8 +417,12 @@ tokenate(char *str, u32 index, u32 length)
 	}
 	// TODO: Use ht_insert to avoid multiple allocations of the same string!
 	char *token = allocate_string(str, index, length);
-	if (!token)
-		return 0;  // OOM
+	if (error != NO_ERROR) {
+		print_str("a. Error code: ");print_i64(error);print_endl();
+		return 0;
+	}
+	//if (!token)
+	//	return 0;  // OOM
 	return JOY_VALUE(joySymbol, ht_insert(token));
 }
 
@@ -422,7 +457,12 @@ tokenize0(char *str, u32 str_length, u32 index, u32 acc)
 		}
 	}
 	// i == str_length OR str[i] is a delimiter char.
-	return cons(tokenate(str, index, i - index), tokenize0(str, str_length, i, acc));
+	u32 tok = tokenate(str, index, i - index);
+	if (error != NO_ERROR) {
+		print_str("d. Error code: ");print_i64(error);print_endl();
+		return 0;
+	}
+	return cons(tok, tokenize0(str, str_length, i, acc));
 	
 }
 
@@ -468,7 +508,12 @@ text_to_expression(char *str)
 {
 	u32 frame = empty_list;
 	u32 tokens = tokenize(str);
-	//print_str("tokens: "); print_joy_list(tokens); print_endl();
+	if (error != NO_ERROR) {
+		print_str("Error code: ");print_i64(error);print_endl();
+		return 0;
+	}
+
+	print_str("tokens: "); print_joy_list(tokens); print_endl();
 	//return tokens;
 	while (tokens) {
 		u32 tok = head(tokens);
@@ -497,16 +542,16 @@ text_to_expression(char *str)
 void
 main()
 {
+	memset(hash_table, 0, sizeof(hash_table));
+	memset(string_heap, 0, sizeof(string_heap));
+	memset(t2e_stack, 0, sizeof(t2e_stack));
+	error = NO_ERROR;
+
 	LEFT_BRACKET = JOY_VALUE(joySymbol, ht_insert(LEFT_BRACKET_symbol));
 	RIGHT_BRACKET = JOY_VALUE(joySymbol, ht_insert(RIGHT_BRACKET_symbol));
 	// TODO: these should be global.
 	u32 joy_true = JOY_VALUE(joyBool, 1);
 	u32 joy_false = JOY_VALUE(joyBool, 0);
-
-	memset(hash_table, 0, sizeof(hash_table));
-	memset(string_heap, 0, sizeof(string_heap));
-	memset(t2e_stack, 0, sizeof(t2e_stack));
-	error = NO_ERROR;
 
 	/*
 	u32 stack = empty_list;
