@@ -157,6 +157,78 @@ char* RIGHT_BRACKET_symbol = "]";
 u32 LEFT_BRACKET;
 u32 RIGHT_BRACKET;
 
+bool
+is_integer(char *str, u32 index, u32 length)
+{
+	for (;length; --length) {
+		char ch = *(str + index + length - 1);
+		if (!(ch == '0'
+			|| ch == '1'
+			|| ch == '2'
+			|| ch == '3'
+			|| ch == '4'
+			|| ch == '5'
+			|| ch == '6'
+			|| ch == '7'
+			|| ch == '8'
+			|| ch == '9'))
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+u32
+convert_integer(char *str, u32 index, u32 length)
+{
+	u32 result = 0;
+	length = length + index;
+	for (; index < length; ++index) {
+		char ch = *(str + index);
+		u8 digit = (u8)ch - (u8)'0';
+		result = result * 10 + digit;
+	}
+		print_str("converted integer ");print_i64(result);print_endl();
+	return JOY_VALUE(joyInt, result);
+}
+
+
+
+u32
+tokenate(char *str, u32 index, u32 length)
+{
+	if (4 == length
+		&& *(str + index) == 't'
+		&& *(str + index + 1) == 'r'
+		&& *(str + index + 2) == 'u'
+		&& *(str + index + 3) == 'e'
+	) {
+		print_str("tokenate true");print_endl();
+		return JOY_VALUE(joyBool, 1);
+	}
+	if (5 == length
+		&& *(str + index) == 'f'
+		&& *(str + index + 1) == 'a'
+		&& *(str + index + 2) == 'l'
+		&& *(str + index + 3) == 's'
+		&& *(str + index + 4) == 'e'
+	) {
+		print_str("tokenate false");print_endl();
+		return JOY_VALUE(joyBool, 0);
+	}
+	if (is_integer(str, index, length)) {
+		print_str("tokenate integer");print_endl();
+		return convert_integer(str, index, length);
+	}
+	// TODO: Convert bools and ints here?
+	// Use ht_insert to avoid multiple allocations of the same string!
+	char *token = allocate_string(str, index, length);
+	if (!token)
+		return 0;  // OOM
+	return JOY_VALUE(joySymbol, ht_insert(token));
+}
+
 
 u32
 tokenize0(char *str, u32 str_length, u32 index, u32 acc)
@@ -188,13 +260,7 @@ tokenize0(char *str, u32 str_length, u32 index, u32 acc)
 		}
 	}
 	// i == str_length OR str[i] is a delimiter char.
-
-	// TODO: Convert bools and ints here?
-	// Use ht_insert to avoid multiple allocations of the same string!
-	char *token = allocate_string(str, index, i - index);
-	if (!token)
-		return 0;  // OOM
-	return push_symbol(token, tokenize0(str, str_length, i, acc));
+	return cons(tokenate(str, index, i - index), tokenize0(str, str_length, i, acc));
 	
 }
 
@@ -203,6 +269,33 @@ u32
 tokenize(char *str)
 {
 	return tokenize0(str, strlen(str), 0, empty_list);
+}
+
+u32
+rev(u32 el, u32 end)
+{
+	u32 t = tail(el);
+	tails[el] = end;
+	if (t) {
+		return rev(t, el);
+	}
+	return el;
+}
+
+u32
+reverse_list_in_place(u32 el)
+{
+	if (!el) {  // Empty list.
+		return el;
+	}
+	u32 t = tail(el);
+	if (!t) {  // Length-one list.
+		return el;
+	}
+	// Re-write  tails[el] to point to null
+	tails[el] = empty_list;
+	// reverse the tail of this list and prepend it to [el].
+	return rev(t, el);
 }
 
 u32 stack[1000];
@@ -229,13 +322,13 @@ text_to_expression(char *str)
 		}
 		if (RIGHT_BRACKET == tok) {
 			print_str("right bracket");print_endl();
-			tok = frame;  // as list
+			tok = reverse_list_in_place(frame);
 			frame = stack[stack_top];
 			--stack_top;
 		}
 		frame = cons(tok, frame);
 	}
-	return frame;  // as list;
+	return reverse_list_in_place(frame);
 }
 
 
@@ -283,7 +376,8 @@ main()
 	/*print_str(allocate_string(buffer, 4, 4)); print_endl();*/
 	/*print_str(allocate_string(buffer, 2, 4)); print_endl();*/
 	/*print_str(allocate_string(buffer, 7, 5)); print_endl();*/
-	u32 jv = text_to_expression(" 1 [2 3] 3[4]5");
+	u32 jv = text_to_expression(" 1 [2 true 3 bob]false bob 3[4]5");
+	jv = reverse_list_in_place(jv);
 	if (LEFT_BRACKET == jv) {
 		print_str("boo");
 	} else {
