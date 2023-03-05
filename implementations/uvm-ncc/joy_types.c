@@ -228,9 +228,12 @@ print_joy_list(u32 list)
    ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝
 And now for a hash table.
 
-This table maps between hashes of symbol strings which are used in the tagged pointers in Joy values
-and strings which are stored in the string heap.
+This table maps between hashes of symbol strings which are used in the
+tagged pointers in Joy values and strings which are stored in the string
+heap.
 
+TODO: bool ht_has(char *str, u32 index, u32 length) to see if a fragment
+      of a string buffer is a symbol in the hash table.
 
 FNV hash function.
 
@@ -418,7 +421,7 @@ tokenate(char *str, u32 index, u32 length)
 	// TODO: Use ht_insert to avoid multiple allocations of the same string!
 	char *token = allocate_string(str, index, length);
 	if (error != NO_ERROR) {
-		print_str("a. Error code: ");print_i64(error);print_endl();
+		//print_str("a. Error code: ");print_i64(error);print_endl();
 		return 0;
 	}
 	//if (!token)
@@ -438,16 +441,27 @@ tokenize0(char *str, u32 str_length, u32 index, u32 acc)
 	//print_i64(index);print_str(" : ");print_str(str + index);print_endl();
 	char ch = str[index];
 	if ('[' == ch) {
-		acc = cons(LEFT_BRACKET, tokenize0(str, str_length, index + 1, acc));
+		acc = tokenize0(str, str_length, index + 1, acc);
+		if (error != NO_ERROR) {
+			//print_str("b. Error code: ");print_i64(error);print_endl();
+			return 0;
+		}
+		acc = cons(LEFT_BRACKET, acc);
 		//print_i64(acc);print_str("<[");print_endl();
 		return acc;
 	}
 	if (']' == ch) {
-		acc = cons(RIGHT_BRACKET, tokenize0(str, str_length, index + 1, acc));
+		acc = tokenize0(str, str_length, index + 1, acc);
+		if (error != NO_ERROR) {
+			//print_str("c. Error code: ");print_i64(error);print_endl();
+			return 0;
+		}
+		acc = cons(RIGHT_BRACKET, acc);
 		//print_i64(acc);print_str("<]");print_endl();
 		return acc;
 	}
 	if (' ' == ch) {
+		// delgate error handling to recursive call.
 		return tokenize0(str, str_length, index + 1, acc);
 	}
 	u32 i = index + 1;
@@ -459,10 +473,15 @@ tokenize0(char *str, u32 str_length, u32 index, u32 acc)
 	// i == str_length OR str[i] is a delimiter char.
 	u32 tok = tokenate(str, index, i - index);
 	if (error != NO_ERROR) {
-		print_str("d. Error code: ");print_i64(error);print_endl();
+		//print_str("d. Error code: ");print_i64(error);print_endl();
 		return 0;
 	}
-	return cons(tok, tokenize0(str, str_length, i, acc));
+	acc = tokenize0(str, str_length, i, acc);
+	if (error != NO_ERROR) {
+		//print_str("e. Error code: ");print_i64(error);print_endl();
+		return 0;
+	}
+	return cons(tok, acc);
 	
 }
 
@@ -512,8 +531,7 @@ text_to_expression(char *str)
 		print_str("Error code: ");print_i64(error);print_endl();
 		return 0;
 	}
-
-	print_str("tokens: "); print_joy_list(tokens); print_endl();
+	//print_str("tokens: "); print_joy_list(tokens); print_endl();
 	//return tokens;
 	while (tokens) {
 		u32 tok = head(tokens);
