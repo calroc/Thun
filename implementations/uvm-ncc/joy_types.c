@@ -40,8 +40,9 @@ u64 error = 0;
 #define NO_ERROR 0
 #define UNKNOWN_WORD_ERROR 1
 #define MISSING_CLOSING_BRACKET 2
-#define CONS_HEAP_OOM 3
-#define STRING_HEAP_OOM 4
+#define EXTRA_CLOSING_BRACKET 3
+#define CONS_HEAP_OOM 4
+#define STRING_HEAP_OOM 5
 
 /*
 char *error_messages[3] = {
@@ -471,7 +472,7 @@ u32 t2e_stack[1000];
 u32 t2e_stack_top = 0;
 
 #define T2E_PUSH(thing) t2e_stack[t2e_stack_top] = (thing); ++t2e_stack_top; (thing) = empty_list;
-#define T2E_POP(thing)  --t2e_stack_top; (thing) = t2e_stack[t2e_stack_top];
+#define T2E_POP(thing)  if (!t2e_stack_top) { error = EXTRA_CLOSING_BRACKET; return 0; }; --t2e_stack_top; (thing) = t2e_stack[t2e_stack_top];
 
 u32
 text_to_expression(char *str)
@@ -510,6 +511,10 @@ text_to_expression(char *str)
 		if (!top) top = cell;
 		end = cell;
 	}
+	if (t2e_stack_top) {
+		error = MISSING_CLOSING_BRACKET;
+		return empty_list;
+	}
 	return top;
 }
 
@@ -542,7 +547,7 @@ main()
 	print_endl();
 	*/
 
-	print_joy_list(text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4]5 gary"));
+	print_joy_list(text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry"));
 	print_endl();
 }
 
