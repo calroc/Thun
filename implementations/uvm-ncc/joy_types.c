@@ -48,7 +48,7 @@ char *error_messages[3] = {
 	"",
 	"Unknown word",
 	"Missing closing bracket"
-}
+};
 */
 
 /*
@@ -367,29 +367,17 @@ convert_integer(char *str, u32 index, u32 length)
 
 /******************************************************************************/
 
-/*
-████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗██╗███████╗███████╗██████╗ 
-╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║██║╚══███╔╝██╔════╝██╔══██╗
-   ██║   ██║   ██║█████╔╝ █████╗  ██╔██╗ ██║██║  ███╔╝ █████╗  ██████╔╝
-   ██║   ██║   ██║██╔═██╗ ██╔══╝  ██║╚██╗██║██║ ███╔╝  ██╔══╝  ██╔══██╗
-   ██║   ╚██████╔╝██║  ██╗███████╗██║ ╚████║██║███████╗███████╗██║  ██║
-   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
-Tokenizer
 
-For now this works, but there are a few improvements to be made: the
-tokenizer is recursive but it could be made iterative if it builds the
-expression in reverse, and then the parser should relink the tokens into
-the expression in-place (currently it makes one copy of the list.) Once
-that's done the tokenizer and the parser can be integrated into one pass,
-I think.
+/*
+██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
+██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
+██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝
+██╔═══╝ ██╔══██║██╔══██╗╚════██║██╔══╝  ██╔══██╗
+██║     ██║  ██║██║  ██║███████║███████╗██║  ██║
+╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
+Parser
 
 */
-
-char* LEFT_BRACKET_symbol = "[";
-char* RIGHT_BRACKET_symbol = "]";
-// Filled in in main().
-u32 LEFT_BRACKET;
-u32 RIGHT_BRACKET;
 
 
 u32
@@ -430,130 +418,58 @@ tokenate(char *str, u32 index, u32 length)
 }
 
 
-u32
-tokenize0(char *str, u32 str_length, u32 index, u32 acc)
-{
-	if (index >= str_length) {
-		//print_i64(index);print_str(" : ");print_str("END tokenize");print_endl();
-		//print_i64(acc);print_str("<");print_endl();
-		return acc;
-	}
-	//print_i64(index);print_str(" : ");print_str(str + index);print_endl();
-	char ch = str[index];
-	if ('[' == ch) {
-		acc = tokenize0(str, str_length, index + 1, acc);
-		if (error != NO_ERROR) {
-			//print_str("b. Error code: ");print_i64(error);print_endl();
-			return 0;
-		}
-		acc = cons(LEFT_BRACKET, acc);
-		//print_i64(acc);print_str("<[");print_endl();
-		return acc;
-	}
-	if (']' == ch) {
-		acc = tokenize0(str, str_length, index + 1, acc);
-		if (error != NO_ERROR) {
-			//print_str("c. Error code: ");print_i64(error);print_endl();
-			return 0;
-		}
-		acc = cons(RIGHT_BRACKET, acc);
-		//print_i64(acc);print_str("<]");print_endl();
-		return acc;
-	}
-	if (' ' == ch) {
-		// delgate error handling to recursive call.
-		return tokenize0(str, str_length, index + 1, acc);
-	}
-	u32 i = index + 1;
-	for (; i < str_length; ++i) {
-		if (str[i] == '[' || str[i] == ']' || str[i] == ' ') {
-			break;
-		}
-	}
-	// i == str_length OR str[i] is a delimiter char.
-	u32 tok = tokenate(str, index, i - index);
-	if (error != NO_ERROR) {
-		//print_str("d. Error code: ");print_i64(error);print_endl();
-		return 0;
-	}
-	acc = tokenize0(str, str_length, i, acc);
-	if (error != NO_ERROR) {
-		//print_str("e. Error code: ");print_i64(error);print_endl();
-		return 0;
-	}
-	return cons(tok, acc);
-	
-}
-
-
-u32
-tokenize(char *str)
-{
-	return tokenize0(str, strlen(str), 0, empty_list);
-}
-
-
-
-/*
-██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
-██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
-██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝
-██╔═══╝ ██╔══██║██╔══██╗╚════██║██╔══╝  ██╔══██╗
-██║     ██║  ██║██║  ██║███████║███████╗██║  ██║
-╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
-Parser
-
-*/
-
-u32
-_reverse_list_in_place(u32 el, u32 end)
-{
-	u32 t = tail(el);
-	tails[el] = end;
-	return t ? _reverse_list_in_place(t, el) : el;
-}
-
-u32
-reverse_list_in_place(u32 el)
-{
-	return el ? _reverse_list_in_place(el, empty_list) : el;
-}
-
 u32 t2e_stack[1000];
 u32 t2e_stack_top = 0;
+
 
 u32
 text_to_expression(char *str)
 {
-	u32 frame = empty_list;
-	u32 tokens = tokenize(str);
-	if (error != NO_ERROR) {
-		print_str("Error code: ");print_i64(error);print_endl();
-		return 0;
-	}
-	//print_str("tokens: "); print_joy_list(tokens); print_endl();
-	//return tokens;
-	while (tokens) {
-		u32 tok = head(tokens);
-		tokens = tail(tokens);
-		if (LEFT_BRACKET == tok) {
-			//print_str("left bracket");print_endl();
-			t2e_stack[t2e_stack_top] = frame;
-			++t2e_stack_top;
-			frame = empty_list;
+	u32 index = 0;
+	u32 end = empty_list;
+	u32 top = empty_list;
+	u32 tok = empty_list;
+	u64 str_length = strlen(str);
+	while (index < str_length) {
+		char ch = str[index];
+		if (' ' == ch) {
+			++index;
 			continue;
 		}
-		if (RIGHT_BRACKET == tok) {
-			//print_str("right bracket");print_endl();
-			tok = reverse_list_in_place(frame);
-			//print_str("new list: "); print_joy_list(tok); print_endl();
-			--t2e_stack_top;
-			frame = t2e_stack[t2e_stack_top];
+		if ('[' == ch) {  // start new list
+			++index;
+			t2e_stack[t2e_stack_top] = end;
+			++t2e_stack_top;
+			t2e_stack[t2e_stack_top] = top;
+			++t2e_stack_top;
+			end = empty_list;
+			top = empty_list;
+			continue;
 		}
-		frame = cons(tok, frame);
-		//print_str("t2e frame: "); print_joy_list(frame); print_endl();
+		if (']' == ch) {  // finish list new list
+			++index;
+			tok = top;
+			--t2e_stack_top;
+			top = t2e_stack[t2e_stack_top];
+			--t2e_stack_top;
+			end = t2e_stack[t2e_stack_top];
+		} else {
+			u32 i = index + 1;
+			for (; i < str_length; ++i) {
+				if (str[i] == '[' || str[i] == ']' || str[i] == ' ') {
+					break;
+				}
+			}
+			// i == str_length OR str[i] is a delimiter char.
+			tok = tokenate(str, index, i - index);
+			index = i;
+		}
+		u32 cell = cons(tok, empty_list);
+		if (end) tails[end] = cell;
+		if (!top) top = cell;
+		end = cell;
 	}
-	return reverse_list_in_place(frame);
+	return top;
 }
 
 
@@ -562,11 +478,9 @@ main()
 {
 	memset(hash_table, 0, sizeof(hash_table));
 	memset(string_heap, 0, sizeof(string_heap));
-	memset(t2e_stack, 0, sizeof(t2e_stack));
+	/*memset(t2e_stack, 0, sizeof(t2e_stack));*/
 	error = NO_ERROR;
 
-	LEFT_BRACKET = JOY_VALUE(joySymbol, ht_insert(LEFT_BRACKET_symbol));
-	RIGHT_BRACKET = JOY_VALUE(joySymbol, ht_insert(RIGHT_BRACKET_symbol));
 	// TODO: these should be global.
 	u32 joy_true = JOY_VALUE(joyBool, 1);
 	u32 joy_false = JOY_VALUE(joyBool, 0);
