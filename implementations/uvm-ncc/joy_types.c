@@ -315,10 +315,10 @@ ht_insert(char *symbol)
 char*
 ht_lookup(u32 hash)
 {
+	// Note that hash must be truncated to N (N=30 as it happens) bits
+	// by VALUE_OF().
 	u32 index = hash % CAPACITY;
 	char *candidate = hash_table[index];
-	// Note that hash will be truncated to N (N=30 as it happens) bits
-	// by VALUE_OF().
 	u32 increment = ((hash >> EXPONENT) | 1) % CAPACITY;
 	while (candidate) {
 		if (hash == VALUE_OF(hash_key(candidate)))
@@ -524,7 +524,7 @@ main()
 {
 	memset(hash_table, 0, sizeof(hash_table));
 	memset(string_heap, 0, sizeof(string_heap));
-	/*memset(t2e_stack, 0, sizeof(t2e_stack));*/
+	memset(t2e_stack, 0, sizeof(t2e_stack));
 	error = NO_ERROR;
 
 	// TODO: these should be global.
