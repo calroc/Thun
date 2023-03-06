@@ -163,7 +163,7 @@ allocate_string(char *buffer, u32 offset, u32 length)
 	string_heap[end] = '\0';
 	u32 new_string = string_heap_top;
 	string_heap_top = (u32)end + 1;
-	print_str("allocating ");print_str(string_heap + new_string);print_endl();
+	//print_str("allocating ");print_str(string_heap + new_string);print_endl();
 	return string_heap + new_string;
 }
 
@@ -519,6 +519,29 @@ text_to_expression(char *str)
 }
 
 
+u32
+joy(u32 stack, u32 expression)
+{
+	u32 term;
+	while (expression) {
+		term = head(expression);
+		expression = tail(expression);
+		//print_joy_value(term);print_endl();
+		//print_i64(expression);print_endl();
+		u8 type = TYPE_OF(term);
+		if (type == joyInt || type == joyBool || type == joyList) {
+			stack = cons(term, stack);
+		} else {  // type == joySymbol
+			char *str = ht_lookup(VALUE_OF(term));
+			if (error != NO_ERROR)
+				return 0;
+			print_str(str);print_endl();
+		}
+	}
+	return stack;
+}
+
+
 void
 main()
 {
@@ -547,7 +570,11 @@ main()
 	print_endl();
 	*/
 
-	print_joy_list(text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry"));
+	u32 expression = text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry");
+	print_joy_list(expression);
+	print_endl();
+	u32 stack = joy(empty_list, expression);
+	print_joy_list(stack);
 	print_endl();
 }
 
