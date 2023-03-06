@@ -162,7 +162,7 @@ allocate_string(char *buffer, u32 offset, u32 length)
 	string_heap[end] = '\0';
 	u32 new_string = string_heap_top;
 	string_heap_top = (u32)end + 1;
-	//print_str("allocating ");print_str(string_heap + new_string);print_endl();
+	print_str("allocating ");print_str(string_heap + new_string);print_endl();
 	return string_heap + new_string;
 }
 
@@ -256,6 +256,21 @@ hash_key(char* key)
     return hash;
 }
 
+u64
+hash_fragment(char *str, u32 index, u32 length)
+{
+    u64 hash = FNV_OFFSET;
+    for (char* p = (str + index); length; ++p) {
+	--length;
+        hash = hash ^ (u64)(unsigned char)(*p);
+        hash = hash * FNV_PRIME;
+    }
+    return hash;
+}
+
+
+
+
 // Capacity is a power of two (10 for now.)
 #define EXPONENT 10
 #define CAPACITY 1024
@@ -313,6 +328,25 @@ ht_lookup(u32 hash)
 	error = UNKNOWN_WORD_ERROR;
 	return 0;
 }
+
+
+u32
+ht_has(char *str, u32 index, u32 length)
+{
+	u32 hash = VALUE_OF(hash_fragment(str, index, length));
+	ht_lookup(hash);
+	if (UNKNOWN_WORD_ERROR == error) {
+		error = NO_ERROR;
+		return 0;
+	}
+	return hash;
+}
+
+
+
+
+
+
 
 /******************************************************************************/
 
@@ -381,6 +415,22 @@ Parser
 
 
 u32
+intern(char *str, u32 index, u32 length)
+{
+	u32 symbol_hash = ht_has(str, index, length);
+	if (!symbol_hash) {
+		char *token = allocate_string(str, index, length);
+		if (error != NO_ERROR) {
+			//print_str("a. Error code: ");print_i64(error);print_endl();
+			return 0;
+		}
+		symbol_hash = ht_insert(token);
+	}
+	return JOY_VALUE(joySymbol, symbol_hash);
+}
+
+
+u32
 tokenate(char *str, u32 index, u32 length)
 {
 	if (4 == length
@@ -406,15 +456,7 @@ tokenate(char *str, u32 index, u32 length)
 		//print_str("tokenate integer");print_endl();
 		return convert_integer(str, index, length);
 	}
-	// TODO: Use ht_insert to avoid multiple allocations of the same string!
-	char *token = allocate_string(str, index, length);
-	if (error != NO_ERROR) {
-		//print_str("a. Error code: ");print_i64(error);print_endl();
-		return 0;
-	}
-	//if (!token)
-	//	return 0;  // OOM
-	return JOY_VALUE(joySymbol, ht_insert(token));
+	return intern(str, index, length);
 }
 
 
@@ -501,7 +543,7 @@ main()
 	print_endl();
 	*/
 
-	print_joy_list(text_to_expression(" 1[2[true 3][[]]bob]false[]bob 3[4]5"));
+	print_joy_list(text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4]5"));
 	print_endl();
 }
 
