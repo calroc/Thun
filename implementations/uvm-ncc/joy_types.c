@@ -460,9 +460,18 @@ tokenate(char *str, u32 index, u32 length)
 }
 
 
+int
+is_delimiter(char ch)
+{
+	return ch == '[' || ch == ']' || ch == ' ';
+}
+
+
 u32 t2e_stack[1000];
 u32 t2e_stack_top = 0;
 
+#define T2E_PUSH(thing) t2e_stack[t2e_stack_top] = (thing); ++t2e_stack_top; (thing) = empty_list;
+#define T2E_POP(thing)  --t2e_stack_top; (thing) = t2e_stack[t2e_stack_top];
 
 u32
 text_to_expression(char *str)
@@ -480,28 +489,18 @@ text_to_expression(char *str)
 		}
 		if ('[' == ch) {  // start new list
 			++index;
-			t2e_stack[t2e_stack_top] = end;
-			++t2e_stack_top;
-			t2e_stack[t2e_stack_top] = top;
-			++t2e_stack_top;
-			end = empty_list;
-			top = empty_list;
+			T2E_PUSH(end)
+			T2E_PUSH(top)
 			continue;
 		}
 		if (']' == ch) {  // finish list new list
 			++index;
 			tok = top;
-			--t2e_stack_top;
-			top = t2e_stack[t2e_stack_top];
-			--t2e_stack_top;
-			end = t2e_stack[t2e_stack_top];
+			T2E_POP(top)
+			T2E_POP(end)
 		} else {
 			u32 i = index + 1;
-			for (; i < str_length; ++i) {
-				if (str[i] == '[' || str[i] == ']' || str[i] == ' ') {
-					break;
-				}
-			}
+			for (; i < str_length && !is_delimiter(str[i]); ++i) {}
 			// i == str_length OR str[i] is a delimiter char.
 			tok = tokenate(str, index, i - index);
 			index = i;
@@ -543,7 +542,7 @@ main()
 	print_endl();
 	*/
 
-	print_joy_list(text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4]5"));
+	print_joy_list(text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4]5 gary"));
 	print_endl();
 }
 
