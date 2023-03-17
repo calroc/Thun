@@ -155,6 +155,12 @@ char*
 allocate_string(char *buffer, u32 offset, u32 length)
 {
 	u64 end = string_heap_top + length + 1;
+	// I have already spent more time thinking about avoiding overflow
+	// from the line above, going into the comparison below and goofing
+	// up for "pathological" inputs (string_heap_top + length == MAX_INT_64
+	// or whatever it's called.  In practice, this should never happen,
+	// and we spell that with assert, eh?  I'm not going to add it now,
+	// but it would be something like assert(string_heap_top + length < MAX_INT_64)
 	if (end >= STRING_HEAP_SIZE) {
 		error = STRING_HEAP_OOM;
 		return 0;
@@ -505,7 +511,6 @@ text_to_expression(char *str)
 		} else {
 			u32 i = index + 1;
 			for (; i < str_length && !is_delimiter(str[i]); ++i) {}
-			// i == str_length OR str[i] is a delimiter char.
 			tok = tokenate(str, index, i - index);
 			index = i;
 		}
@@ -521,6 +526,29 @@ text_to_expression(char *str)
 	return top;
 }
 
+/*
+In order to return two "pointers" I'm going to just OR them
+into one u64 value.  It might be conceptually cleaner to define
+an array of two u32 values, eh?
+
+	u32 joy_state[2];
+
+I'll figure it out later, I just want to get something going for now.
+I also don't want to take the time at the moment to figure out if/how
+to call function pointers in NCC C, so a chain of if..else is the
+ticket.
+*/
+
+u64
+joy_eval(char *symbol, u32 stack, u32 expression)
+{
+	if (!strcmp(symbol, "clear")) {
+		return (u64)expression;
+	}
+	print_str(symbol);print_endl();
+	return (u64)stack << 32 | expression;
+}
+
 
 u32
 joy(u32 stack, u32 expression)
@@ -529,16 +557,20 @@ joy(u32 stack, u32 expression)
 	while (expression) {
 		term = head(expression);
 		expression = tail(expression);
-		//print_joy_value(term);print_endl();
-		//print_i64(expression);print_endl();
 		if (TYPE_OF(term) == joySymbol) {
-			char *str = ht_lookup(VALUE_OF(term));
+
+			char *symbol = ht_lookup(VALUE_OF(term));
 			if (error != NO_ERROR)
 				return 0;
-			print_str(str);print_endl();
-		} else {  // type == joyInt || type == joyBool || type == joyList
-			stack = cons(term, stack);
+
+			u64 new_state = joy_eval(symbol, stack, expression);
+			if (error != NO_ERROR)
+				return 0;
+
+			stack = new_state >> 32;
+			expression = new_state & 0xffffffff;
 		}
+		else stack = cons(term, stack);
 	}
 	return stack;
 }
