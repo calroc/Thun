@@ -555,8 +555,9 @@ joy_eval(char *symbol, u32 stack, u32 expression)
 	return (u64)stack << 32 | expression;
 }
 
-u64
-swaack(u32 stack, u32 expression)
+
+u32
+pop_list(u32 stack)
 {
 	if (!stack) {
 		error = NOT_ENOUGH_VALUES_ON_STACK;
@@ -567,6 +568,15 @@ swaack(u32 stack, u32 expression)
 		error = NOT_A_LIST;
 		return 0;
 	}
+	return list;
+}
+
+
+u64
+swaack(u32 stack, u32 expression)
+{
+	u32 list = pop_list(stack);
+	CHECK_ERROR
 	stack = cons(tail(stack), list);
 	CHECK_ERROR
 	return (u64)stack << 32 | expression;
