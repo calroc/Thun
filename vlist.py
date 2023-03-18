@@ -22,32 +22,15 @@ def cons(thing, vlist_ptr):
 
     vlist, pointer_offset = vlist_ptr
     base, _offset, size, last_used_list, data = vlist
-    [last_used] = last_used_list  # Note that we could do this pattern
-    # matching directly in the assignment statement on the previous line,
-    # however, we want to keep that length-one list "last_used_list"
+    last_used = last_used_list[0]
+    # Note that we want to keep that length-one list "last_used_list"
     # around so we can mutate the last_used value of "vlist".
-
-    '''
-    During the consing of (9) the pointer offset is compared with the
-    last used offset, LastUsed. If it is the same and less than the block
-    size then it is simply incremented, the new entry made and LastUsed
-    updated.
-    '''
 
     if pointer_offset == last_used - 1 and last_used < size:
         pointer_offset += 1
         data[pointer_offset] = thing
         last_used_list[0] += 1
         return vlist, pointer_offset
-
-    '''
-    If on the other-hand the pointer offset is less than the LastUsed a
-    cons is being applied to the tail of a longer list, as is the case
-    with the (9). In this case a new list block must be allocated and its
-    Base-Offset pointer set to the tail contained in the original list.
-    The offset part being set to the point in tail that must be extended.
-    The new entry can now be made and additional elements added.
-    '''
 
     # Is this where we increase the size x 2?
     size <<= 1
@@ -95,15 +78,15 @@ def pick(n, vlist_ptr):
     '''
     assert n >= 0
     if not vlist_ptr:
-        raise ValueError("Empty list!")
+        raise ValueError('Empty list!')
     vlist, pointer_offset = vlist_ptr
-    q = pointer_offset - n
-    while q < 0:
+    n = pointer_offset - n
+    while n < 0:
         if not vlist:
-            raise ValueError(f'Pick index {n} greater than length of list.')
+            raise ValueError('Pick index greater than length of list.')
         vlist, offset = vlist[:2]
-        q += offset + 1  # Offsets in the paper count from one, not zero?
-    return vlist[-1][q]
+        n += offset + 1  # Offsets in the paper count from one, not zero?
+    return vlist[-1][n]
 
 
 def length(vlist_ptr):
@@ -116,21 +99,17 @@ def length(vlist_ptr):
     return n
 
 
+if __name__ == '__main__':
+    p = ()
+    for n in range(16):
+        p = cons(n, p)
+        #print(p)
 
-p = ()
-p = cons(3, p)# ; print(p)
-p = cons(4, p)# ; print(p)
-p = cons(5, p)# ; print(p)
-p = cons(6, p)# ; print(p)
-p = cons(7, p)# ; print(p)
-p = cons(8, p)# ; print(p)
+    print(repr_vlist(p))
 
-print(repr_vlist(p))
-
-for n in range(length(p)):
-	print(pick(n, p), end=' ')
-
-print()
+    for n in range(length(p)):
+        print(pick(n, p), end=' ')
+    print()
 
 
 
