@@ -550,8 +550,9 @@ u64
 joy_eval(char *symbol, u32 stack, u32 expression)
 {
 	MATCH("clear") return (u64)expression;
-	MATCH("swaack") return swaack(stack, expression);
-	print_str(symbol);print_endl();
+	MATCH("swaack") { stack = swaack(stack); }
+	CHECK_ERROR
+	//print_str(symbol);print_endl();
 	return (u64)stack << 32 | expression;
 }
 
@@ -573,13 +574,11 @@ pop_list(u32 stack)
 
 
 u64
-swaack(u32 stack, u32 expression)
+swaack(u32 stack)
 {
 	u32 list = pop_list(stack);
 	CHECK_ERROR
-	stack = cons(tail(stack), list);
-	CHECK_ERROR
-	return (u64)stack << 32 | expression;
+	return cons(tail(stack), list);
 }
 
 
