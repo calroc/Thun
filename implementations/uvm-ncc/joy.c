@@ -572,6 +572,7 @@ joy_eval(char *symbol, u32 stack, u32 expression)
 	MATCH("clear") return (u64)expression;
 	MATCH("swaack") { stack = swaack(stack); }
 	else MATCH("pop") { stack = pop(stack); }
+	else MATCH("dup") { stack = dup(stack); }
 	else MATCH("stack") { stack = cons(stack, stack); }
 	//else MATCH("") { stack = (stack); }
 	CHECK_ERROR
@@ -597,6 +598,17 @@ pop(u32 stack)
 		return 0;
 	}
 	return tail(stack);
+}
+
+
+u32
+dup(u32 stack)
+{
+	if (!stack) {
+		error = NOT_ENOUGH_VALUES_ON_STACK;
+		return 0;
+	}
+	return cons(head(stack), stack);
 }
 
 
@@ -649,7 +661,7 @@ main()
 	print_endl();
 	*/
 
-	u32 expression = text_to_expression("1 2 3 [4 5 6] swaack pop 23 stack 18");
+	u32 expression = text_to_expression("1 2 3 stack dup swaack");
 	//u32 expression = text_to_expression("1 2 3 clear 4 5 6");
 	//u32 expression = text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry");
 	print_joy_list(expression);
