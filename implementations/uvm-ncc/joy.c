@@ -43,6 +43,11 @@ u64 error = 0;
 #define EXTRA_CLOSING_BRACKET 3
 #define CONS_HEAP_OOM 4
 #define STRING_HEAP_OOM 5
+#define NOT_ENOUGH_VALUES_ON_STACK 6
+#define NOT_A_LIST 7
+
+#define CHECK_ERROR if (error != NO_ERROR) return 0;
+
 
 /*
 char *error_messages[3] = {
@@ -112,7 +117,7 @@ cons(u32 head, u32 tail)
 {
 	if (free >= HEAP_SIZE) {
 		error = CONS_HEAP_OOM;
-		return -1;
+		return 0;
 	}
 	heads[free] = head;
 	tails[free] = tail;
@@ -553,8 +558,20 @@ joy_eval(char *symbol, u32 stack, u32 expression)
 u64
 swaack(u32 stack, u32 expression)
 {
+	if (!stack) {
+		error = NOT_ENOUGH_VALUES_ON_STACK;
+		return 0;
+	}
+	u32 list = head(stack);
+	if (TYPE_OF(list) != joyList) {
+		error = NOT_A_LIST;
+		return 0;
+	}
+	stack = cons(tail(stack), list);
+	CHECK_ERROR
 	return (u64)stack << 32 | expression;
 }
+
 
 u32
 joy(u32 stack, u32 expression)
@@ -564,15 +581,10 @@ joy(u32 stack, u32 expression)
 		term = head(expression);
 		expression = tail(expression);
 		if (TYPE_OF(term) == joySymbol) {
-
 			char *symbol = ht_lookup(VALUE_OF(term));
-			if (error != NO_ERROR)
-				return 0;
-
+			CHECK_ERROR
 			u64 new_state = joy_eval(symbol, stack, expression);
-			if (error != NO_ERROR)
-				return 0;
-
+			CHECK_ERROR
 			stack = new_state >> 32;
 			expression = new_state & 0xffffffff;
 		}
@@ -610,11 +622,18 @@ main()
 	print_endl();
 	*/
 
-	u32 expression = text_to_expression("1 2 3 clear 4 5 6");
+	u32 expression = text_to_expression("1 2 3 [4 5 6] swaack");
+	//u32 expression = text_to_expression("1 2 3 clear 4 5 6");
 	//u32 expression = text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry");
 	print_joy_list(expression);
 	print_endl();
 	u32 stack = joy(empty_list, expression);
-	print_joy_list(stack);
-	print_endl();
+	if (error) {
+		print_str("error: ");
+		print_i64(error);
+		print_endl();
+	} else {
+		print_joy_list(stack);
+		print_endl();
+	}
 }
