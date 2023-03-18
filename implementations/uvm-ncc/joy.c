@@ -362,16 +362,36 @@ ht_has(char *str, u32 index, u32 length)
 
 /******************************************************************************/
 
+
+u32
+pop_list(u32 stack)
+{
+	if (!stack) {
+		error = NOT_ENOUGH_VALUES_ON_STACK;
+		return 0;
+	}
+	u32 list = head(stack);
+	if (TYPE_OF(list) != joyList) {
+		error = NOT_A_LIST;
+		return 0;
+	}
+	return list;
+}
+
+
 u32
 push_symbol(char *symbol, u32 stack)
 {
 	return cons(JOY_VALUE(joySymbol, ht_insert(symbol)), stack);
 }
+
+
 u32
 push_int(u32 n, u32 stack)
 {
 	return cons(JOY_VALUE(joyInt, n), stack);
 }
+
 
 /******************************************************************************/
 
@@ -554,22 +574,6 @@ joy_eval(char *symbol, u32 stack, u32 expression)
 	CHECK_ERROR
 	//print_str(symbol);print_endl();
 	return (u64)stack << 32 | expression;
-}
-
-
-u32
-pop_list(u32 stack)
-{
-	if (!stack) {
-		error = NOT_ENOUGH_VALUES_ON_STACK;
-		return 0;
-	}
-	u32 list = head(stack);
-	if (TYPE_OF(list) != joyList) {
-		error = NOT_A_LIST;
-		return 0;
-	}
-	return list;
 }
 
 
