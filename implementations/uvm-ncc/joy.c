@@ -363,14 +363,23 @@ ht_has(char *str, u32 index, u32 length)
 /******************************************************************************/
 
 
+
 u32
-pop_list(u32 stack)
+pop_any(u32 stack)
 {
 	if (!stack) {
 		error = NOT_ENOUGH_VALUES_ON_STACK;
 		return 0;
 	}
-	u32 list = head(stack);
+	return head(stack);
+}
+
+
+u32
+pop_list(u32 stack)
+{
+	u32 list = pop_any(stack);
+	CHECK_ERROR
 	if (TYPE_OF(list) != joyList) {
 		error = NOT_A_LIST;
 		return 0;
@@ -593,10 +602,8 @@ swaack(u32 stack)
 u32
 pop(u32 stack)
 {
-	if (!stack) {
-		error = NOT_ENOUGH_VALUES_ON_STACK;
-		return 0;
-	}
+	pop_any(stack);
+	CHECK_ERROR
 	return tail(stack);
 }
 
@@ -604,11 +611,9 @@ pop(u32 stack)
 u32
 dup(u32 stack)
 {
-	if (!stack) {
-		error = NOT_ENOUGH_VALUES_ON_STACK;
-		return 0;
-	}
-	return cons(head(stack), stack);
+	u32 tos = pop_any(stack);
+	CHECK_ERROR
+	return cons(tos, stack);
 }
 
 
