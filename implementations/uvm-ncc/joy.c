@@ -583,6 +583,7 @@ joy_eval(char *symbol, u32 stack, u32 expression)
 	else MATCH("pop") { stack = pop(stack); }
 	else MATCH("dup") { stack = dup(stack); }
 	else MATCH("stack") { stack = cons(stack, stack); }
+	// first, rest, swap, ...
 	//else MATCH("") { stack = (stack); }
 	CHECK_ERROR
 	//print_str(symbol);print_endl();
@@ -632,7 +633,10 @@ joy(u32 stack, u32 expression)
 			stack = new_state >> 32;
 			expression = new_state & 0xffffffff;
 		}
-		else stack = cons(term, stack);
+		else {
+			stack = cons(term, stack);
+			CHECK_ERROR
+		}
 	}
 	return stack;
 }
