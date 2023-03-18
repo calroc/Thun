@@ -539,16 +539,22 @@ to call function pointers in NCC C, so a chain of if..else is the
 ticket.
 */
 
+#define MATCH(name) if (!strcmp(symbol, (name)))
+
 u64
 joy_eval(char *symbol, u32 stack, u32 expression)
 {
-	if (!strcmp(symbol, "clear")) {
-		return (u64)expression;
-	}
+	MATCH("clear") return (u64)expression;
+	MATCH("swaack") return swaack(stack, expression);
 	print_str(symbol);print_endl();
 	return (u64)stack << 32 | expression;
 }
 
+u64
+swaack(u32 stack, u32 expression)
+{
+	return (u64)stack << 32 | expression;
+}
 
 u32
 joy(u32 stack, u32 expression)
@@ -604,7 +610,8 @@ main()
 	print_endl();
 	*/
 
-	u32 expression = text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry");
+	u32 expression = text_to_expression("1 2 3 clear 4 5 6");
+	//u32 expression = text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry");
 	print_joy_list(expression);
 	print_endl();
 	u32 stack = joy(empty_list, expression);
