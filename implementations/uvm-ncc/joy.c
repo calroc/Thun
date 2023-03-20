@@ -560,6 +560,7 @@ text_to_expression(char *str)
 	return top;
 }
 
+
 /*
 In order to return two "pointers" I'm going to just OR them
 into one u64 value.  It might be conceptually cleaner to define
@@ -583,7 +584,8 @@ joy_eval(char *symbol, u32 stack, u32 expression)
 	else MATCH("pop") { stack = pop(stack); }
 	else MATCH("dup") { stack = dup(stack); }
 	else MATCH("stack") { stack = cons(stack, stack); }
-	// first, rest, swap, ...
+	else MATCH("swap") { stack = swap(stack); }
+	// first, rest, ...
 	//else MATCH("") { stack = (stack); }
 	CHECK_ERROR
 	//print_str(symbol);print_endl();
@@ -615,6 +617,23 @@ dup(u32 stack)
 	u32 tos = pop_any(stack);
 	CHECK_ERROR
 	return cons(tos, stack);
+}
+
+
+u32
+swap(u32 stack)
+{
+	u32 tos = pop_any(stack);
+	CHECK_ERROR
+	stack = tail(stack);
+	u32 second = pop_any(stack);
+	CHECK_ERROR
+	stack = tail(stack);
+	stack = cons(tos, stack);
+	CHECK_ERROR
+	stack = cons(second, stack);
+	CHECK_ERROR
+	return stack;
 }
 
 
@@ -670,7 +689,7 @@ main()
 	print_endl();
 	*/
 
-	u32 expression = text_to_expression("1 2 3 stack dup swaack");
+	u32 expression = text_to_expression("1 2 3 stack dup swaack swap");
 	//u32 expression = text_to_expression("1 2 3 clear 4 5 6");
 	//u32 expression = text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry");
 	print_joy_list(expression);
