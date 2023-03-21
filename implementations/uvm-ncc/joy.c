@@ -604,10 +604,8 @@ joy_eval(char *symbol, u32 stack, u32 expression)
 u32
 swaack(u32 stack)
 {
-	u32 list = pop_list(stack);
-	CHECK_ERROR
-	stack = cons(tail(stack), list);
-	CHECK_ERROR
+	u32 list = pop_list(stack);      CHECK_ERROR
+	stack = cons(tail(stack), list); CHECK_ERROR
 	return stack;
 }
 
@@ -615,14 +613,12 @@ swaack(u32 stack)
 u32
 first(u32 stack)
 {
-	u32 list = pop_list(stack);
-	CHECK_ERROR
+	u32 list = pop_list(stack); CHECK_ERROR
 	if (!list) {
 		error = CANNOT_TAKE_FIRST_OF_EMPTY_LIST;
 		return 0;
 	}
-	stack = cons(head(list), tail(stack));
-	CHECK_ERROR
+	stack = cons(head(list), tail(stack)); CHECK_ERROR
 	return stack;
 }
 
@@ -630,14 +626,12 @@ first(u32 stack)
 u32
 rest(u32 stack)
 {
-	u32 list = pop_list(stack);
-	CHECK_ERROR
+	u32 list = pop_list(stack); CHECK_ERROR
 	if (!list) {
 		error = CANNOT_TAKE_REST_OF_EMPTY_LIST;
 		return 0;
 	}
-	stack = cons(tail(list), tail(stack));
-	CHECK_ERROR
+	stack = cons(tail(list), tail(stack)); CHECK_ERROR
 	return stack;
 }
 
@@ -656,10 +650,8 @@ pop(u32 stack)
 u32
 dup(u32 stack)
 {
-	u32 tos = pop_any(stack);
-	CHECK_ERROR
-	stack = cons(tos, stack);
-	CHECK_ERROR
+	u32 tos = pop_any(stack); CHECK_ERROR
+	stack = cons(tos, stack); CHECK_ERROR
 	return stack;
 }
 
@@ -667,16 +659,12 @@ dup(u32 stack)
 u32
 swap(u32 stack)
 {
-	u32 tos = pop_any(stack);
-	CHECK_ERROR
+	u32 tos = pop_any(stack);    CHECK_ERROR
 	stack = tail(stack);
-	u32 second = pop_any(stack);
-	CHECK_ERROR
+	u32 second = pop_any(stack); CHECK_ERROR
 	stack = tail(stack);
-	stack = cons(tos, stack);
-	CHECK_ERROR
-	stack = cons(second, stack);
-	CHECK_ERROR
+	stack = cons(tos, stack);    CHECK_ERROR
+	stack = cons(second, stack); CHECK_ERROR
 	return stack;
 }
 
@@ -689,17 +677,12 @@ joy(u32 stack, u32 expression)
 		term = head(expression);
 		expression = tail(expression);
 		if (TYPE_OF(term) == joySymbol) {
-			char *symbol = ht_lookup(VALUE_OF(term));
-			CHECK_ERROR
-			u64 new_state = joy_eval(symbol, stack, expression);
-			CHECK_ERROR
+			char *symbol = ht_lookup(VALUE_OF(term)); CHECK_ERROR
+			u64 new_state = joy_eval(symbol, stack, expression); CHECK_ERROR
 			stack = new_state >> 32;
 			expression = new_state & 0xffffffff;
 		}
-		else {
-			stack = cons(term, stack);
-			CHECK_ERROR
-		}
+		else { stack = cons(term, stack); CHECK_ERROR }
 	}
 	return stack;
 }
