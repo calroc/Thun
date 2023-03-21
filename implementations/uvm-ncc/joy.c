@@ -45,6 +45,8 @@ u64 error = 0;
 #define STRING_HEAP_OOM 5
 #define NOT_ENOUGH_VALUES_ON_STACK 6
 #define NOT_A_LIST 7
+#define CANNOT_TAKE_REST_OF_EMPTY_LIST 8
+
 
 #define CHECK_ERROR if (error != NO_ERROR) return 0;
 
@@ -598,15 +600,35 @@ swaack(u32 stack)
 {
 	u32 list = pop_list(stack);
 	CHECK_ERROR
-	return cons(tail(stack), list);
+	stack = cons(tail(stack), list);
+	CHECK_ERROR
+	return stack;
+}
+
+
+u32
+rest(u32 stack)
+{
+	u32 list = pop_list(stack);
+	CHECK_ERROR
+	stack = tail(stack);
+	if (!list) {
+		error = CANNOT_TAKE_REST_OF_EMPTY_LIST;
+		return 0;
+	}
+	stack = cons(tail(list), stack);
+	CHECK_ERROR
+	return stack;
 }
 
 
 u32
 pop(u32 stack)
 {
-	pop_any(stack);
-	CHECK_ERROR
+	if (!stack) {
+		error = NOT_ENOUGH_VALUES_ON_STACK;
+		return 0;
+	}
 	return tail(stack);
 }
 
@@ -616,7 +638,9 @@ dup(u32 stack)
 {
 	u32 tos = pop_any(stack);
 	CHECK_ERROR
-	return cons(tos, stack);
+	stack = cons(tos, stack);
+	CHECK_ERROR
+	return stack;
 }
 
 
