@@ -586,18 +586,32 @@ u64
 joy_eval(char *symbol, u32 stack, u32 expression)
 {
 	MATCH("clear") return (u64)expression;
-	MATCH("dup") { stack = dup(stack); }
+	MATCH("cons") { stack = cons_joy_func(stack); }
+	else MATCH("dup") { stack = dup(stack); }
 	else MATCH("first") { stack = first(stack); }
 	else MATCH("pop") { stack = pop(stack); }
 	else MATCH("rest") { stack = rest(stack); }
 	else MATCH("stack") { stack = cons(stack, stack); }
 	else MATCH("swaack") { stack = swaack(stack); }
 	else MATCH("swap") { stack = swap(stack); }
-	// first ...
+	// concat ...
 	//else MATCH("") { stack = (stack); }
 	CHECK_ERROR
 	//print_str(symbol);print_endl();
 	return (u64)stack << 32 | expression;
+}
+
+
+u32
+cons_joy_func(u32 stack)
+{
+	u32 list = pop_list(stack); CHECK_ERROR
+	stack = tail(stack);
+	u32 tos = pop_any(stack);   CHECK_ERROR
+	stack = tail(stack);
+	list = cons(tos, list);     CHECK_ERROR
+	stack = cons(list, stack);  CHECK_ERROR
+	return stack;
 }
 
 
@@ -716,7 +730,7 @@ main()
 	print_endl();
 	*/
 
-	u32 expression = text_to_expression("1 2 3 stack rest first");
+	u32 expression = text_to_expression("1 2 3 stack rest first [] cons cons");
 	//u32 expression = text_to_expression("1 2 3 clear 4 5 6");
 	//u32 expression = text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry");
 	print_joy_list(expression);
