@@ -45,7 +45,8 @@ u64 error = 0;
 #define STRING_HEAP_OOM 5
 #define NOT_ENOUGH_VALUES_ON_STACK 6
 #define NOT_A_LIST 7
-#define CANNOT_TAKE_REST_OF_EMPTY_LIST 8
+#define CANNOT_TAKE_FIRST_OF_EMPTY_LIST 8
+#define CANNOT_TAKE_REST_OF_EMPTY_LIST 9
 
 
 #define CHECK_ERROR if (error != NO_ERROR) return 0;
@@ -585,11 +586,12 @@ u64
 joy_eval(char *symbol, u32 stack, u32 expression)
 {
 	MATCH("clear") return (u64)expression;
-	MATCH("swaack") { stack = swaack(stack); }
+	MATCH("dup") { stack = dup(stack); }
+	else MATCH("first") { stack = first(stack); }
 	else MATCH("pop") { stack = pop(stack); }
-	else MATCH("dup") { stack = dup(stack); }
-	else MATCH("stack") { stack = cons(stack, stack); }
 	else MATCH("rest") { stack = rest(stack); }
+	else MATCH("stack") { stack = cons(stack, stack); }
+	else MATCH("swaack") { stack = swaack(stack); }
 	else MATCH("swap") { stack = swap(stack); }
 	// first ...
 	//else MATCH("") { stack = (stack); }
@@ -611,6 +613,21 @@ swaack(u32 stack)
 
 
 u32
+first(u32 stack)
+{
+	u32 list = pop_list(stack);
+	CHECK_ERROR
+	if (!list) {
+		error = CANNOT_TAKE_FIRST_OF_EMPTY_LIST;
+		return 0;
+	}
+	stack = cons(head(list), tail(stack));
+	CHECK_ERROR
+	return stack;
+}
+
+
+u32
 rest(u32 stack)
 {
 	u32 list = pop_list(stack);
@@ -619,9 +636,7 @@ rest(u32 stack)
 		error = CANNOT_TAKE_REST_OF_EMPTY_LIST;
 		return 0;
 	}
-	stack = tail(stack);
-	list = tail(list);
-	stack = cons(list, stack);
+	stack = cons(tail(list), tail(stack));
 	CHECK_ERROR
 	return stack;
 }
@@ -718,7 +733,7 @@ main()
 	print_endl();
 	*/
 
-	u32 expression = text_to_expression("1 2 3 stack rest");
+	u32 expression = text_to_expression("1 2 3 stack rest first");
 	//u32 expression = text_to_expression("1 2 3 clear 4 5 6");
 	//u32 expression = text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry");
 	print_joy_list(expression);
