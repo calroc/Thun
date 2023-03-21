@@ -59,6 +59,9 @@ char *error_messages[3] = {
 };
 */
 
+#define PRINT_I64(message, number) { print_str(message); print_i64(number); print_endl(); }
+
+
 /*
  ██████╗ ██████╗ ███╗   ██╗███████╗    ██╗  ██╗███████╗ █████╗ ██████╗ 
 ██╔════╝██╔═══██╗████╗  ██║██╔════╝    ██║  ██║██╔════╝██╔══██╗██╔══██╗
@@ -586,8 +589,9 @@ joy_eval(char *symbol, u32 stack, u32 expression)
 	else MATCH("pop") { stack = pop(stack); }
 	else MATCH("dup") { stack = dup(stack); }
 	else MATCH("stack") { stack = cons(stack, stack); }
+	else MATCH("rest") { stack = rest(stack); }
 	else MATCH("swap") { stack = swap(stack); }
-	// first, rest, ...
+	// first ...
 	//else MATCH("") { stack = (stack); }
 	CHECK_ERROR
 	//print_str(symbol);print_endl();
@@ -611,12 +615,13 @@ rest(u32 stack)
 {
 	u32 list = pop_list(stack);
 	CHECK_ERROR
-	stack = tail(stack);
 	if (!list) {
 		error = CANNOT_TAKE_REST_OF_EMPTY_LIST;
 		return 0;
 	}
-	stack = cons(tail(list), stack);
+	stack = tail(stack);
+	list = tail(list);
+	stack = cons(list, stack);
 	CHECK_ERROR
 	return stack;
 }
@@ -713,17 +718,13 @@ main()
 	print_endl();
 	*/
 
-	u32 expression = text_to_expression("1 2 3 stack dup swaack swap");
+	u32 expression = text_to_expression("1 2 3 stack rest");
 	//u32 expression = text_to_expression("1 2 3 clear 4 5 6");
 	//u32 expression = text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry");
 	print_joy_list(expression);
 	print_endl();
 	u32 stack = joy(empty_list, expression);
-	if (error) {
-		print_str("error: ");
-		print_i64(error);
-		print_endl();
-	} else {
+	if (error) PRINT_I64("error: ", error) else {
 		print_joy_list(stack);
 		print_endl();
 	}
