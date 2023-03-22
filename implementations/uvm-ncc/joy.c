@@ -413,21 +413,10 @@ push_int(u32 n, u32 stack)
 bool
 is_integer(char *str, u32 index, u32 length)
 {
+	str = str + index;
 	for (;length; --length) {
-		char ch = *(str + index + length - 1);
-		if (!(ch == '0'
-			|| ch == '1'
-			|| ch == '2'
-			|| ch == '3'
-			|| ch == '4'
-			|| ch == '5'
-			|| ch == '6'
-			|| ch == '7'
-			|| ch == '8'
-			|| ch == '9'))
-		{
-			return 0;
-		}
+		char ch = *(str + length - 1);
+		if (ch < '0' || ch > '9') return 0;
 	}
 	return 1;
 }
@@ -439,8 +428,7 @@ convert_integer(char *str, u32 index, u32 length)
 	length = length + index;
 	for (; index < length; ++index) {
 		char ch = *(str + index);
-		u8 digit = (u8)ch - (u8)'0';
-		result = result * 10 + digit;
+		result = result * 10 + ((u8)ch - (u8)'0');
 	}
 	//print_str("converted integer ");print_i64(result);print_endl();
 	return JOY_VALUE(joyInt, result);
