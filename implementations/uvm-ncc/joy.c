@@ -586,7 +586,14 @@ u64
 joy_eval(char *symbol, u32 stack, u32 expression)
 {
 	MATCH("clear") return (u64)expression;
-	MATCH("concat") { stack = concat(stack); }
+	MATCH("i")
+	//return i_joy_combinator(stack, expression);
+	{
+		u32 list = pop_list(stack); CHECK_ERROR
+		stack = tail(stack);
+		stack = joy(stack, list); CHECK_ERROR
+	}
+	else MATCH("concat") { stack = concat(stack); }
 	else MATCH("cons") { stack = cons_joy_func(stack); }
 	else MATCH("dup") { stack = dup(stack); }
 	else MATCH("first") { stack = first(stack); }
@@ -595,12 +602,26 @@ joy_eval(char *symbol, u32 stack, u32 expression)
 	else MATCH("stack") { stack = cons(stack, stack); }
 	else MATCH("swaack") { stack = swaack(stack); }
 	else MATCH("swap") { stack = swap(stack); }
-	// concat ...
+	// i, dip, branch, loop ...
 	//else MATCH("") { stack = (stack); }
 	CHECK_ERROR
 	//print_str(symbol);print_endl();
 	return (u64)stack << 32 | expression;
 }
+
+/*
+u64
+i_joy_combinator(u32 stack, u32 expression)
+{
+	u32 list = pop_list(stack); CHECK_ERROR
+	stack = tail(stack);
+	// And here we now have to implement expression-as-list-of-lists.
+	expression = cons(list, expression); CHECK_ERROR
+	return (u64)stack << 32 | expression;
+}
+*/
+
+
 
 
 u32
@@ -623,23 +644,21 @@ concat(u32 stack)
 	stack = tail(stack);
 	u32 list_head = pop_list(stack); CHECK_ERROR
 	stack = tail(stack);
-	if (!list_tail) {
-		stack = cons(list_head, stack);  CHECK_ERROR
-	} else if (!list_head) {
-		stack = cons(list_tail, stack);  CHECK_ERROR
-	} else {
-		u32 list = cons(head(list_head), empty_list); CHECK_ERROR
-		u32 h = list;
+	u32 result = empty_list;
+	if (!list_tail) { result = list_head; } else
+	if (!list_head) { result = list_tail; } else
+	{
+		result = cons(head(list_head), empty_list); CHECK_ERROR
 		list_head = tail(list_head);
+		u32 current_cell = result;
 		while (list_head) {
-			u32 j = cons(head(list_head), empty_list); CHECK_ERROR
-			tails[h] = j;
-			h = j;
+			u32 next_cell = cons(head(list_head), empty_list); CHECK_ERROR
 			list_head = tail(list_head);
+			current_cell = tails[current_cell] = next_cell;
 		}
-		tails[h] = list_tail;
-		stack = cons(list, stack);  CHECK_ERROR
+		tails[current_cell] = list_tail;
 	}
+	stack = cons(result, stack); CHECK_ERROR
 	return stack;
 }
 
@@ -759,7 +778,8 @@ main()
 	print_endl();
 	*/
 
-	u32 expression = text_to_expression("1 2 3 stack rest first [] cons cons [99 888 7] concat");
+	u32 expression = text_to_expression("1 2 3 stack i 23 18");
+	//u32 expression = text_to_expression("1 2 3 stack rest first [] cons cons [99 888 7] concat");
 	//u32 expression = text_to_expression("1 2 3 clear 4 5 6");
 	//u32 expression = text_to_expression(" 1[2[true 3][aa[aa bb] aa bb cc]bob]false[]bob 3[4] ga[]ry");
 	print_joy_list(expression);
