@@ -1,6 +1,6 @@
 OBJS=joy.o keywords.o definitions.o linenoise.o
 
-LDFLAGS=-L/usr/local/lib -lgc -lgmp
+LDFLAGS= -Wl,--no-as-needed -L/usr/local/lib -lgc -lgmp
 
 # Hold my hand, in fact, hold both of them, and pat my head too please.
 CFLAGS = -ansi -Wall -Wextra -Werror -pedantic -Wstrict-overflow -fno-strict-aliasing -pedantic-errors

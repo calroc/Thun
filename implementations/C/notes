@@ -32,7 +32,7 @@ VList instead of singly-linked list.)  But I want to tackle efficiency by
 compilation, and write the compiler(s) in Prolog.  I think that avoids
 complexity compared to intricating the guts of the interpreter by hand,
 and moves the unavoidable complexity into formal statements of logic that
-can be evaulated by machine (aka Prolog.)
+can be evaluated by machine (aka Prolog.)
 
 ---------------------------------------
 
@@ -100,3 +100,48 @@ the comparison functions as definitions:
 neq [true] [false] [true] cmp
  le [false] [true] [true] cmp
  ge [true] [true] [false] cmp
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------- 
+Argh!  That was brutal.
+
+I hate staring at the thing that SHOULD work and it just fucking doesn't work.
+
+Why?  Because some fuck-wit somewhere decided to fuck up how things have always been done.
+
+https://stackoverflow.com/questions/12734161/how-to-use-boehm-garbage-collector-in-ubuntu-12-04
+
+> To answer my own question: actually, the Boehm GC library still works the same way as it used to in 12.04.  The problem is that GCC doesn't! GCC has started to default to --as-needed, and it drops -lgc completely if it is at the beginning of the line. This is a very major change!!
+
+> Solution is to move -lgc to the end:
+
+> gcc test.c -lgc
+
+> Or add:
+
+> gcc -Wl,--as-needed -lgc test.c
+
+
+
+Goddamnit!
