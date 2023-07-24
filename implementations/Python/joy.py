@@ -520,7 +520,7 @@ def run(text, stack, dictionary):
     :param str text: Joy code.
     :param stack stack: The stack.
     :param dict dictionary: A ``dict`` mapping names to Joy functions.
-    :rtype: (stack, (), dictionary)
+    :rtype: (stack, dictionary)
 
     '''
     return joy(stack, text_to_expression(text), dictionary)
