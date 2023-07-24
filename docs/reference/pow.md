@@ -4,8 +4,8 @@
 
 Basis Function
 
-Take two numbers `a` and `b` from the stack and raise `a` to the `n`th
-power.  (`b` is on the top of the stack.)
+Take two numbers `a` and `n` from the stack and raise `a` to the `n`th
+power.  (`n` is on the top of the stack.)
 
        a n pow
     -------------

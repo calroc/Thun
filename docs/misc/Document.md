@@ -273,7 +273,7 @@ Which then becomes this:
 
     5 1 >> u sqr u
 
-The interpreter could notice that `5 1 >>` and `u sqr` can proceed in parallel without interfering with each other.  The `dipdip` combinator could be written to somehow hint to the interpreter that it should check for this posibility.
+The interpreter could notice that `5 1 >>` and `u sqr` can proceed in parallel without interfering with each other.  The `dipdip` combinator could be written to somehow hint to the interpreter that it should check for this possibility.
 
 
 ## JIT

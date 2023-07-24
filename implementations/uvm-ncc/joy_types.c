@@ -300,7 +300,7 @@ ht_insert(char *symbol)
 	while (candidate) {
 		// Compare pointers then hashes (since we already have
 		// one hash I'm guessing that that's cheaper or at least
-		// no more expensive than string comparision.)
+		// no more expensive than string comparison.)
 		if (candidate == symbol || hash == hash_key(candidate))
 			break;
 		index = (index + increment) % CAPACITY;
@@ -356,6 +356,7 @@ push_symbol(char *symbol, u32 stack)
 {
 	return cons(JOY_VALUE(joySymbol, ht_insert(symbol)), stack);
 }
+
 u32
 push_int(u32 n, u32 stack)
 {
