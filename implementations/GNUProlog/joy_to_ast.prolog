@@ -1,47 +1,31 @@
 
-stdin_to_codes(Codes) :-
-    % Pass in and discard atom 'code' to prime stdin_to_codes/2.
-    stdin_to_codes(code, [code|Codes]).
-
-stdin_to_codes(-1, []) :- !.
-stdin_to_codes(Code, [Code|Codes]) :-
-    get_code(NextCode),
-    stdin_to_codes(NextCode, Codes).
-
-
-%
-%joy(InputString, StackIn, StackOut) :-
-%    text_to_expression(InputString, Expression),
-%    !,
-%    thun(Expression, StackIn, StackOut).
-%
-
-joy_lex([tok(Token)|Ls]) --> chars(Token), !, joy_lex(Ls).
-joy_lex([  lbracket|Ls]) --> "[",          !, joy_lex(Ls).
-joy_lex([  rbracket|Ls]) --> "]",          !, joy_lex(Ls).
-
-joy_lex(Ls) --> blank, !, joy_lex(Ls).
-
-joy_lex([]) --> [].
-
-
-% Then parse the tokens converting them to Prolog values and building up
-% the list structures (if any.)
-
-joy_parse([J|Js]) --> joy_term(J), !, joy_parse(Js).
-joy_parse([]) --> [].
-
-joy_term(list(J)) --> [lbracket], !, joy_parse(J), [rbracket].
-joy_term(Token) --> [tok(Codes)], {joy_token(Token, Codes)}.
-
-joy_token(int(I), Codes) :- numeric(Codes), atom_codes(I, Codes), !.
-joy_token(bool(true), "true") :- !.
-joy_token(bool(false), "false") :- !.
-joy_token(symbol(S), Codes) :- atom_codes(S, Codes).
 
 text_to_expression(Text, Expression) :-
     phrase(joy_lex(Tokens), Text), !,
     phrase(joy_parse(Expression), Tokens).
+
+
+joy_lex([tok(Token)|Ls]) --> chars(Token), !, joy_lex(Ls).
+joy_lex([  lbracket|Ls]) --> "[",          !, joy_lex(Ls).
+joy_lex([  rbracket|Ls]) --> "]",          !, joy_lex(Ls).
+joy_lex(            Ls ) --> blank,        !, joy_lex(Ls).
+
+joy_lex([]) --> [].
+
+
+joy_parse([J|Js]) --> joy_term(J), !, joy_parse(Js).
+joy_parse([]) --> [].
+
+
+joy_term(list(J)) --> [lbracket], !, joy_parse(J), [rbracket].
+joy_term(Term) --> [tok(Codes)], { joy_term(Term, Codes) }.
+
+
+joy_term(     int(I),   Codes) :- numeric(Codes), !, atom_codes(I, Codes).
+joy_term( bool(true),  "true") :- !.
+joy_term(bool(false), "false") :- !.
+joy_term(  symbol(S),   Codes) :- atom_codes(S, Codes).
+
 
 % Apologies for all the (green, I hope) cuts.  The strength of the Joy
 % syntax is that it's uninteresting.
@@ -62,6 +46,8 @@ digit --> [Code], { digit(Code) }.
 
 digit(Code) :- between(0'0, 0'9, Code).
 
+
+% TODO: code golf this into something more efficient.
 blank --> [9].
 blank --> [10].
 blank --> [11].
@@ -87,6 +73,15 @@ blank --> [226, 128, 169].
 blank --> [226, 128, 175].
 blank --> [226, 129, 159].
 blank --> [227, 128, 128].
+
+
+stdin_to_codes(Codes) :- stdin_to_codes(code, [code|Codes]).
+% Pass in and discard atom 'code' to prime stdin_to_codes/2.    
+
+stdin_to_codes(-1, []) :- !.
+stdin_to_codes(Code, [Code|Codes]) :-
+    get_code(NextCode),
+    stdin_to_codes(NextCode, Codes).
 
 
 :- initialization((
