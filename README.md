@@ -93,6 +93,7 @@ that.  Really you need to run (GNU) make in the `docs/notebooks` and
 
 
 ## Directory structure
+
     Thun
     |-- LICENSE - GPLv3
     |-- README.md - this file
@@ -111,8 +112,9 @@ that.  Really you need to run (GNU) make in the `docs/notebooks` and
     |   |-- defs.txt - common Joy definitions for all interpreters
     |   |-- C - interpreter
     |   |-- GNUProlog - interpreter
-        |               type inference
-        |               work-in-progress compiler
+    |   |               type inference
+    |   |               work-in-progress compiler
+    |   |
     |   |-- Nim - interpreter
     |   |-- Ocaml - work-in-progress interpreter
     |   `-- Python - interpreter
@@ -146,7 +148,7 @@ but the Thun dialect currently only uses four:
 * Integers, signed and unbounded by machine word length (they are
   [bignums](https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic).)
 * Boolean values ``true`` and ``false``.
-* Lists quoted in **[** and **]** brackets.
+* Lists quoted in `[` and `]` brackets.
 * Symbols (names).
 
 Joy is built around three things: a __stack__ of data items, an __expression__
@@ -158,6 +160,22 @@ Joy is [stack-based](https://en.wikipedia.org/wiki/Stack-oriented_programming_la
 There is a single main __stack__ that holds data items, which can be integers, bools,
 symbols (names), or sequences of data items enclosed in square brackets (`[` or `]`).
 
+We use the terms "stack", "quote", "sequence",
+"list", and others to mean the same thing: a simple linear datatype that
+permits certain operations such as iterating and pushing and popping
+values from (at least) one end.
+
+> In describing Joy I have used the term quotation to describe all of the
+> above, because I needed a word to describe the arguments to combinators
+> which fulfill the same role in Joy as lambda abstractions (with
+> variables) fulfill in the more familiar functional languages. I use the
+> term list for those quotations whose members are what I call literals:
+> numbers, characters, truth values, sets, strings and other quotations.
+> All these I call literals because their occurrence in code results in
+> them being pushed onto the stack. But I also call [London Paris] a list.
+> So, [dup *] is a quotation but not a list.
+
+From ["A Conversation with Manfred von Thun" w/ Stevan Apter](http://archive.vector.org.uk/art10000350)
 
 ### Expression
 
@@ -182,33 +200,12 @@ expression, and a dictionary, and it iterates through the expression
 putting values onto the stack and delegating execution to functions which
 it looks up in the dictionary.
 
+![Joy Interpreter Flowchart](https://git.sr.ht/~sforman/Thun/blob/trunk/joy_interpreter_flowchart.svg)
+
 All control flow works by
 [Continuation Passing Style](https://en.wikipedia.org/wiki/Continuation-passing_style).
 __Combinators__ (see below) alter control flow by prepending quoted programs to the pending
 expression (aka "continuation".)
-
-![Joy Interpreter Flowchart](https://git.sr.ht/~sforman/Thun/blob/trunk/joy_interpreter_flowchart.svg)
-
-
-## Stack / Quote / List / Sequence
-
-When talking about Joy we use the terms "stack", "quote", "sequence",
-"list", and others to mean the same thing: a simple linear datatype that
-permits certain operations such as iterating and pushing and popping
-values from (at least) one end.
-
-> In describing Joy I have used the term quotation to describe all of the
-> above, because I needed a word to describe the arguments to combinators
-> which fulfill the same role in Joy as lambda abstractions (with
-> variables) fulfill in the more familiar functional languages. I use the
-> term list for those quotations whose members are what I call literals:
-> numbers, characters, truth values, sets, strings and other quotations.
-> All these I call literals because their occurrence in code results in
-> them being pushed onto the stack. But I also call [London Paris] a list.
-> So, [dup *] is a quotation but not a list.
-
-From ["A Conversation with Manfred von Thun" w/ Stevan Apter](http://archive.vector.org.uk/art10000350)
-
 
 -------------------------------
 
@@ -235,6 +232,36 @@ by changing the pending expression and intermediate state is put there.)
 
     joy? 23 [0 >] [dup --] while
     23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
+
+
+### Core Words
+
+This is the *basis* set of functions, the rest of functions in the Thun 
+dialect of Joy are defined in terms of these:
+
+    branch
+    dip
+    i
+    loop
+
+    clear
+    concat
+    cons
+    dup
+    first
+    pop
+    rest
+    stack
+    swaack
+    swap
+    truthy
+    inscribe
+
+    + - * / %
+
+    < > >= <= != <> = 
+
+    lshift rshift
 
 
 
