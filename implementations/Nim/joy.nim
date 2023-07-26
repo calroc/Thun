@@ -63,6 +63,9 @@ type
   ParseError* = object of ValueError
   UnknownWordError* = object of ValueError
 
+
+let zero = 0.initBigInt
+
 # Singleton values for Boolean type.
 
 let j_true* = JoyType(kind: joyTrue)
