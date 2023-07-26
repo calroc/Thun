@@ -18,5 +18,3 @@ like to replace the dependency on Python with, say, Awk or something.
 - boehm-gc
 - gmp
 
-
-    sudo apt install gperf 
