@@ -59,10 +59,9 @@ For more information see [Square Spiral Example Joy Code](/notebooks/Square_Spir
 It might seem unreadable but with familiarity it becomes as legible as any other notation.
 
 
+## Project Hosted on [SourceHut](https://git.sr.ht/~sforman/Thun)
 
-## Project Hosted on [OSDN](https://osdn.net/projects/joypy/)
-
-* [Source Repository](https://osdn.net/projects/joypy/scm/git/Thun/)
+* [Source Repository](https://git.sr.ht/~sforman/Thun)
   ([mirror](https://github.com/calroc/Thun))
 * [Bug tracker](https://todo.sr.ht/~sforman/thun-der)
   ([old tracker](https://osdn.net/projects/joypy/ticket/))
@@ -159,7 +158,6 @@ Joy is [stack-based](https://en.wikipedia.org/wiki/Stack-oriented_programming_la
 There is a single main __stack__ that holds data items, which can be integers, bools,
 symbols (names), or sequences of data items enclosed in square brackets (`[` or `]`).
 
-    23 dup [21 18 add] true false [1 [2 [3]]] cons
 
 ### Expression
 
@@ -189,7 +187,7 @@ All control flow works by
 __Combinators__ (see below) alter control flow by prepending quoted programs to the pending
 expression (aka "continuation".)
 
-![joy_interpreter_flowchart.svg](/joy_interpreter_flowchart.svg)
+![Joy Interpreter Flowchart](https://git.sr.ht/~sforman/Thun/blob/trunk/joy_interpreter_flowchart.svg)
 
 
 ## Stack / Quote / List / Sequence
