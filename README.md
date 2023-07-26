@@ -45,7 +45,7 @@ Here is an example of Joy code.  This function `square_spiral` accepts
 two integers and increments or decrements one of them such that the new
 pair of numbers is the next coordinate pair in a square spiral (like the
 kind used to construct an [Ulam Spiral](https://en.wikipedia.org/wiki/Ulam_spiral)).
-For more information see [Square Spiral Example Joy Code](/notebooks/Square_Spiral.html).
+For more information see [Square Spiral Example Joy Code](https://joypy.osdn.io/notebooks/Square_Spiral.html).
 
     square_spiral [_p] [_then] [_else] ifte
 
@@ -72,16 +72,16 @@ It might seem unreadable but with familiarity it becomes as legible as any other
 ## Documentation
 
 This document describes Joy in a general way below, however most of the
-documentation is in the form of [Jupyter Notebooks](/notebooks/index.html)
+documentation is in the form of [Jupyter Notebooks](https://joypy.osdn.io/notebooks/index.html)
 that go into more detail.
 
-### [Jupyter Notebooks](/notebooks/index.html)
+** [Jupyter Notebooks](https://joypy.osdn.io/notebooks/index.html) **
 
-There's also a [Function Reference](/FuncRef.html) that lists each
+There's also a [Function Reference](https://git.sr.ht/~sforman/Thun/tree/trunk/item/docs/reference) that lists each
 function and combinator by name and gives a brief description.  (It's
 usually out of date, I'm working on it.)
 
-### [Function Reference](/FuncRef.html)
+** [Function Reference](https://git.sr.ht/~sforman/Thun/tree/trunk/item/docs/reference) **
 
 
 
