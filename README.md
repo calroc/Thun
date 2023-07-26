@@ -75,13 +75,13 @@ This document describes Joy in a general way below, however most of the
 documentation is in the form of [Jupyter Notebooks](https://joypy.osdn.io/notebooks/index.html)
 that go into more detail.
 
-** [Jupyter Notebooks](https://joypy.osdn.io/notebooks/index.html) **
+**[Jupyter Notebooks](https://joypy.osdn.io/notebooks/index.html)**
 
 There's also a [Function Reference](https://git.sr.ht/~sforman/Thun/tree/trunk/item/docs/reference) that lists each
 function and combinator by name and gives a brief description.  (It's
 usually out of date, I'm working on it.)
 
-** [Function Reference](https://git.sr.ht/~sforman/Thun/tree/trunk/item/docs/reference) **
+**[Function Reference](https://git.sr.ht/~sforman/Thun/tree/trunk/item/docs/reference)**
 
 
 
