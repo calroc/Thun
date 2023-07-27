@@ -1,8 +1,13 @@
-# split on Ubuntu doesn't have '-p' option!  Wah!
-joy: joy.py ../defs.txt
-	split -p \'\'\'\.splitlines\(\) joy.py joy.py.
-	cat joy.py.aa ../defs.txt joy.py.ab > joy
-	chmod u+x joy
+SHELL != which python
+.ONESHELL:
 
-clean:
-	$(RM) -fv joy joy.py.*
+joy: joy.py ../defs.txt
+	from pathlib import Path
+	SPLIT_PATTERN = "'''.splitlines()\n"
+	joy_source = Path('joy.py').read_text()
+	defs_source = Path('../defs.txt').read_text()
+	head, sep, tail = joy_source.partition(SPLIT_PATTERN)
+	joy = Path('joy')
+	joy.write_text(''.join((head, defs_source, sep, tail)))
+	joy.chmod(0o775)
+
