@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Thun</title>
+<link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
@@ -48,7 +49,7 @@ interesting aspects.  It's quite a treasure trove.</p>
 two integers and increments or decrements one of them such that the new
 pair of numbers is the next coordinate pair in a square spiral (like the
 kind used to construct an <a href="https://en.wikipedia.org/wiki/Ulam_spiral">Ulam Spiral</a>).
-For more information see <a href="/notebooks/Square_Spiral.html">Square Spiral Example Joy Code</a>.</p>
+For more information see <a href="https://joypy.osdn.io/notebooks/Square_Spiral.html">Square Spiral Example Joy Code</a>.</p>
 <pre><code>square_spiral [_p] [_then] [_else] ifte
 
 _p  [_p0] [_p1] &amp;&amp;
@@ -59,9 +60,9 @@ _then [    !-] [[++]] [[--]] ifte dip
 _else [pop !-]  [--]   [++]  ifte
 </code></pre>
 <p>It might seem unreadable but with familiarity it becomes as legible as any other notation.</p>
-<h2>Project Hosted on <a href="https://osdn.net/projects/joypy/">OSDN</a></h2>
+<h2>Project Hosted on <a href="https://git.sr.ht/~sforman/Thun">SourceHut</a></h2>
 <ul>
-<li><a href="https://osdn.net/projects/joypy/scm/git/Thun/">Source Repository</a>
+<li><a href="https://git.sr.ht/~sforman/Thun">Source Repository</a>
   (<a href="https://github.com/calroc/Thun">mirror</a>)</li>
 <li><a href="https://todo.sr.ht/~sforman/thun-der">Bug tracker</a>
   (<a href="https://osdn.net/projects/joypy/ticket/">old tracker</a>)</li>
@@ -70,13 +71,13 @@ _else [pop !-]  [--]   [++]  ifte
 </ul>
 <h2>Documentation</h2>
 <p>This document describes Joy in a general way below, however most of the
-documentation is in the form of <a href="/notebooks/index.html">Jupyter Notebooks</a>
+documentation is in the form of <a href="https://joypy.osdn.io/notebooks/index.html">Jupyter Notebooks</a>
 that go into more detail.</p>
-<h3><a href="/notebooks/index.html">Jupyter Notebooks</a></h3>
-<p>There's also a <a href="/FuncRef.html">Function Reference</a> that lists each
+<p><strong><a href="https://joypy.osdn.io/notebooks/index.html">Jupyter Notebooks</a></strong></p>
+<p>There's also a <a href="https://git.sr.ht/~sforman/Thun/tree/trunk/item/docs/reference">Function Reference</a> that lists each
 function and combinator by name and gives a brief description.  (It's
 usually out of date, I'm working on it.)</p>
-<h3><a href="/FuncRef.html">Function Reference</a></h3>
+<p><strong><a href="https://git.sr.ht/~sforman/Thun/tree/trunk/item/docs/reference">Function Reference</a></strong></p>
 <h3>Building the Docs</h3>
 <p>Run <code>make</code> in the <code>docs</code> directory.  (This is a lie, it's more complex than
 that.  Really you need to run (GNU) make in the <code>docs/notebooks</code> and
@@ -100,8 +101,9 @@ that.  Really you need to run (GNU) make in the <code>docs/notebooks</code> and
 |   |-- defs.txt - common Joy definitions for all interpreters
 |   |-- C - interpreter
 |   |-- GNUProlog - interpreter
-    |               type inference
-    |               work-in-progress compiler
+|   |               type inference
+|   |               work-in-progress compiler
+|   |
 |   |-- Nim - interpreter
 |   |-- Ocaml - work-in-progress interpreter
 |   `-- Python - interpreter
@@ -129,7 +131,7 @@ but the Thun dialect currently only uses four:</p>
 <li>Integers, signed and unbounded by machine word length (they are
   <a href="https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic">bignums</a>.)</li>
 <li>Boolean values <code>true</code> and <code>false</code>.</li>
-<li>Lists quoted in <strong>[</strong> and <strong>]</strong> brackets.</li>
+<li>Lists quoted in <code>[</code> and <code>]</code> brackets.</li>
 <li>Symbols (names).</li>
 </ul>
 <p>Joy is built around three things: a <strong>stack</strong> of data items, an <strong>expression</strong>
@@ -138,8 +140,22 @@ representing a program to evaluate, and a <strong>dictionary</strong> of named f
 <p>Joy is <a href="https://en.wikipedia.org/wiki/Stack-oriented_programming_language">stack-based</a>.
 There is a single main <strong>stack</strong> that holds data items, which can be integers, bools,
 symbols (names), or sequences of data items enclosed in square brackets (<code>[</code> or <code>]</code>).</p>
-<pre><code>23 dup [21 18 add] true false [1 [2 [3]]] cons
-</code></pre>
+<p>We use the terms "stack", "quote", "sequence",
+"list", and others to mean the same thing: a simple linear datatype that
+permits certain operations such as iterating and pushing and popping
+values from (at least) one end.</p>
+<blockquote>
+<p>In describing Joy I have used the term quotation to describe all of the
+above, because I needed a word to describe the arguments to combinators
+which fulfill the same role in Joy as lambda abstractions (with
+variables) fulfill in the more familiar functional languages. I use the
+term list for those quotations whose members are what I call literals:
+numbers, characters, truth values, sets, strings and other quotations.
+All these I call literals because their occurrence in code results in
+them being pushed onto the stack. But I also call [London Paris] a list.
+So, [dup *] is a quotation but not a list.</p>
+</blockquote>
+<p>From <a href="http://archive.vector.org.uk/art10000350">"A Conversation with Manfred von Thun" w/ Stevan Apter</a></p>
 <h3>Expression</h3>
 <p>A Joy <strong>expression</strong> is just a sequence or list of items.  Sequences
 intended as programs are called "quoted programs".  Evaluation proceeds
@@ -157,28 +173,11 @@ expression, and dictionary are the entire state of the Joy interpreter.</p>
 expression, and a dictionary, and it iterates through the expression
 putting values onto the stack and delegating execution to functions which
 it looks up in the dictionary.</p>
+<p><img alt="Joy Interpreter Flowchart" src="https://git.sr.ht/~sforman/Thun/blob/trunk/joy_interpreter_flowchart.svg"></p>
 <p>All control flow works by
 <a href="https://en.wikipedia.org/wiki/Continuation-passing_style">Continuation Passing Style</a>.
 <strong>Combinators</strong> (see below) alter control flow by prepending quoted programs to the pending
 expression (aka "continuation".)</p>
-<p><img alt="joy_interpreter_flowchart.svg" src="/joy_interpreter_flowchart.svg"></p>
-<h2>Stack / Quote / List / Sequence</h2>
-<p>When talking about Joy we use the terms "stack", "quote", "sequence",
-"list", and others to mean the same thing: a simple linear datatype that
-permits certain operations such as iterating and pushing and popping
-values from (at least) one end.</p>
-<blockquote>
-<p>In describing Joy I have used the term quotation to describe all of the
-above, because I needed a word to describe the arguments to combinators
-which fulfill the same role in Joy as lambda abstractions (with
-variables) fulfill in the more familiar functional languages. I use the
-term list for those quotations whose members are what I call literals:
-numbers, characters, truth values, sets, strings and other quotations.
-All these I call literals because their occurrence in code results in
-them being pushed onto the stack. But I also call [London Paris] a list.
-So, [dup *] is a quotation but not a list.</p>
-</blockquote>
-<p>From <a href="http://archive.vector.org.uk/art10000350">"A Conversation with Manfred von Thun" w/ Stevan Apter</a></p>
 <hr>
 <p>From here it kinda falls apart...</p>
 <h3>Literals and Simple Functions</h3>
@@ -197,6 +196,33 @@ the implementation language, in this joy implementation they work instead
 by changing the pending expression and intermediate state is put there.)</p>
 <pre><code>joy? 23 [0 &gt;] [dup --] while
 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
+</code></pre>
+<h3>Core Words</h3>
+<p>This is the <em>basis</em> set of functions, the rest of functions in the Thun 
+dialect of Joy are defined in terms of these:</p>
+<pre><code>branch
+dip
+i
+loop
+
+clear
+concat
+cons
+dup
+first
+pop
+rest
+stack
+swaack
+swap
+truthy
+inscribe
+
++ - * / %
+
+&lt; &gt; &gt;= &lt;= != &lt;&gt; =
+
+lshift rshift
 </code></pre>
 <hr>
 <p>Copyright © 2014 - 2023 Simon Forman</p>

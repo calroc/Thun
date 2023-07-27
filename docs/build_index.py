@@ -14,6 +14,7 @@ print(f'''\
 <head>
 <meta charset="utf-8">
 <title>Thun</title>
+<link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
@@ -21,3 +22,8 @@ print(f'''\
 </body>
 </html>
 ''')
+
+
+# <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
+# <link rel="stylesheet" href="/css/fonts.css">
+

@@ -1,6 +1,6 @@
 # Docs toplevel makefile.
 
-README=../README.md
+README=./source/index.md
 BUILD_SCRIPT=build_index.py
 GENERATOR=python $(BUILD_SCRIPT)
 HTML_OUTPUT_DIR=./html
