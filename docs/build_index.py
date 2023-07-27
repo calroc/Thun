@@ -1,7 +1,7 @@
 import sys
 import markdown
 
-#filename = '/usr/home/sforman/src/Joypy/README.md'
+#filename = './README.md'
 filename = sys.argv[-1]
 with open(filename) as f:
     text = f.read()
@@ -20,10 +20,5 @@ print(f'''\
 <body>
 {html}
 </body>
-</html>
-''')
-
-
-# <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
-# <link rel="stylesheet" href="/css/fonts.css">
+</html>''')
 
