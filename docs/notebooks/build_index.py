@@ -44,6 +44,7 @@ print(f'''\
 <head>
 <meta charset="utf-8">
 <title>Thun Notebooks</title>
+<link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>

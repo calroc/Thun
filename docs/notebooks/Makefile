@@ -14,7 +14,7 @@ index.html: build_index.py $(docs_html)
 	python build_index.py > index.html
 
 $(docs_html): %.html : %.ipynb
-	jupyter nbconvert --to html --template basic $<
+	jupyter nbconvert --to html --template classic $<
 
 mov: $(docs_html) index.html
 	mv -v $? ../html/notebooks/
