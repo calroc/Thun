@@ -17,3 +17,8 @@ docs/notebooks/.ipynb_checkpoints
 joy.py.*
 joy_to_ast
 tryrax
+*.ast
+parser
+printer
+thun
+

@@ -1,8 +1,8 @@
 
-all: joy_to_ast thun printer
+all: parser thun printer
 
-joy_to_ast: joy_to_ast.prolog
-	gplc --no-top-level joy_to_ast.prolog
+parser: parser.prolog
+	gplc --no-top-level parser.prolog
 
 thun: thun.prolog
 	gplc --no-top-level thun.prolog
