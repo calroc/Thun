@@ -1,3 +1,5 @@
+This is out of date.  The Python implementation was the original one.
+
 ﻿Thun
 
 A Dialect of Joy.
