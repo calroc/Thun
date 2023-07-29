@@ -47,6 +47,7 @@ joy_eval symbol stack expression =
         "cons" -> joy_cons stack expression
         "dup" -> joy_dup stack expression
         "first" -> joy_first stack expression
+        "pop" -> joy_pop stack expression
         "rest" -> joy_rest stack expression
         _ -> Err ("Unknown word: " ++ symbol)
 
@@ -97,6 +98,13 @@ joy_first stack expression =
             case pop_any(a) of
                 Ok (b, _) -> Ok ((push_any b s0), expression)
                 Err _ -> Err "Cannot take first of empty list."
+        Err msg -> Err msg
+
+
+joy_pop : JList -> JList -> Result String (JList, JList)
+joy_pop stack expression =
+    case pop_any(stack) of
+        Ok (_, s0) -> Ok (s0, expression)
         Err msg -> Err msg
 
 
