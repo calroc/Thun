@@ -18,25 +18,38 @@ type alias JList = List JoyType
 type alias JoyDict = Dict String JList
 
 
-joy : JList -> JList -> Result String JList
-joy stack expression =
+joy : JList -> JList -> JoyDict -> Result String (JList, JoyDict)
+joy stack expression dict =
         case expression of
                 [] ->
-                        Ok stack
+                        Ok (stack, dict)
                 term :: rest_of_expression ->
                         case term of
                                 JoySymbol symbol ->
-                                        case joy_eval symbol stack rest_of_expression of
+                                        case joy_eval symbol stack rest_of_expression dict of
                                             Err msg -> Err msg
-                                            Ok (s, e) -> joy s e
+                                            Ok (s, e, dict0) -> joy s e dict0
                                 _ ->
-                                        joy (term :: stack) rest_of_expression
+                                        joy (term :: stack) rest_of_expression dict
 
 
-joy_eval : String -> JList -> JList -> Result String (JList, JList)
-joy_eval symbol stack expression =
+joy_eval : String -> JList -> JList -> JoyDict -> Result String (JList, JList, JoyDict)
+joy_eval symbol stack expression dict =
+    if symbol == "" then
+        Ok (stack, expression, dict)
+    else
+        case joy_function_eval symbol stack expression of
+            Err msg ->
+                if "Unknown word." == msg then
+                    -- Look up word in dictionary.
+                    Err ("Unknown word: " ++ symbol)
+                else
+                    Err msg
+            Ok (stack0, expression0) -> Ok (stack0, expression0, dict)
+
+
+joy_function_eval symbol stack expression =
     case symbol of
-        "" -> Ok (stack, expression)
 
         "branch" -> joy_branch stack expression
         "i" -> joy_i stack expression
@@ -81,7 +94,10 @@ joy_eval symbol stack expression =
         "swap" -> joy_swap stack expression
         "truthy" -> joy_truthy stack expression
 
-        _ -> Err ("Unknown word: " ++ symbol)
+        _ -> Err ("Unknown word.")
+
+
+--        _ -> Err ("Unknown word: " ++ symbol)
 
 
 joy_branch : JList -> JList -> Result String (JList, JList)
@@ -428,12 +444,12 @@ parse tokens = parse0 tokens []
 text_to_expression text = parse (tokenize text)
 
 
-
-doit text =
+doit : String -> JoyDict -> Result String (String, JoyDict)
+doit text dict =
     case text_to_expression text of
         Ok ast ->
-            case joy [] ast of
-                Ok expr -> Ok (joyExpressionToString expr)
+            case joy [] ast dict of
+                Ok (expr, dict0) -> Ok (joyExpressionToString expr, dict0)
                 Err msg -> Err msg
         Err msg -> Err msg
 

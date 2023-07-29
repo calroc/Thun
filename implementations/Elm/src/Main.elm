@@ -52,13 +52,13 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-  case doit model.content of
+  case doit model.content model.dictionary of
     Err msg ->
       div []
         [ input [ placeholder "Text to reverse", value model.content, onInput Change ] []
         , div [] [ text msg ]
         ]
-    Ok message ->
+    Ok (message, dict0) ->
       div []
         [ input [ placeholder "Text to reverse", value model.content, onInput Change ] []
         , div [] [ text message ]
