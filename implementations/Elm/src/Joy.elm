@@ -45,6 +45,7 @@ joy_eval symbol stack expression =
         "clear" -> Ok ([], expression)
         "concat" -> joy_concat stack expression
         "cons" -> joy_cons stack expression
+        "dup" -> joy_dup stack expression
         _ -> Err ("Unknown word: " ++ symbol)
 
 
@@ -79,6 +80,12 @@ joy_cons stack expression =
                 Err msg -> Err msg
         Err msg -> Err msg
 
+
+joy_dup : JList -> JList -> Result String (JList, JList)
+joy_dup stack expression =
+    case pop_any(stack) of
+        Ok (a, s0) -> Ok ((a :: stack), expression)
+        Err msg -> Err msg
 
 
 push_int : Int -> JList -> JList
