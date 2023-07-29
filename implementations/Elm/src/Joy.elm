@@ -62,6 +62,10 @@ joy_eval symbol stack expression =
         "rshift" -> joy_binary_math_op (swap_args Bitwise.shiftRightBy) stack expression
         ">>" -> joy_binary_math_op (swap_args Bitwise.shiftRightBy) stack expression
 
+        "/\\" -> joy_logical_op (&&) stack expression
+        "\\/" -> joy_logical_op (||) stack expression
+        "_\\/_" -> joy_logical_op (xor) stack expression
+
         "clear" -> Ok ([], expression)
         "concat" -> joy_concat stack expression
         "cons" -> joy_cons stack expression
@@ -145,6 +149,17 @@ joy_comparison_op op stack expression =
     case pop_int(stack) of
         Ok (a, s0) ->
             case pop_int(s0) of
+                Ok (b, s1) ->
+                    Ok ((push_bool (op b a) s1), expression)
+                Err msg -> Err msg
+        Err msg -> Err msg
+
+
+joy_logical_op : (Bool -> Bool -> Bool) -> JList -> JList -> Result String (JList, JList)
+joy_logical_op op stack expression =
+    case pop_bool(stack) of
+        Ok (a, s0) ->
+            case pop_bool(s0) of
                 Ok (b, s1) ->
                     Ok ((push_bool (op b a) s1), expression)
                 Err msg -> Err msg
