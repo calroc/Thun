@@ -52,6 +52,7 @@ joy_eval symbol stack expression =
         "stack" -> joy_stack stack expression
         "swaack" -> joy_swaack stack expression
         "swap" -> joy_swap stack expression
+        "truthy" -> joy_truthy stack expression
         _ -> Err ("Unknown word: " ++ symbol)
 
 
@@ -140,6 +141,28 @@ joy_swap stack expression =
             case pop_any(s0) of
                 Ok (b, s1) -> Ok ((b :: a :: s1), expression)
                 Err msg -> Err msg
+        Err msg -> Err msg
+
+
+joy_truthy : JList -> JList -> Result String (JList, JList)
+joy_truthy stack expression =
+    case pop_any(stack) of
+        Ok (a, s0) ->
+            case a of
+                JoyTrue -> Ok (stack, expression)
+                JoyFalse -> Ok (stack, expression)
+                JoyInt i ->
+                    if 0 == i then
+                        Ok (JoyFalse :: s0, expression)
+                    else
+                        Ok (JoyTrue :: s0, expression)
+                JoyList el ->
+                    if [] == el then
+                        Ok (JoyFalse :: s0, expression)
+                    else
+                        Ok (JoyTrue :: s0, expression)
+                JoySymbol _ ->
+                    Err "Cannot Boolify."
         Err msg -> Err msg
 
 
