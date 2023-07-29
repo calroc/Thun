@@ -2,6 +2,7 @@ module Joy exposing (doit)
 
 import String exposing (replace, words)
 import Result exposing (andThen)
+import Bitwise
 
 
 type JoyType
@@ -33,19 +34,29 @@ joy stack expression =
 joy_eval : String -> (List JoyType) -> (List JoyType) -> Result String (List JoyType, List JoyType)
 joy_eval symbol stack expression =
     case symbol of
-        "+" -> joy_add stack expression
+        "+" -> joy_binary_math_op (+) stack expression
+        "-" -> joy_binary_math_op (-) stack expression
+        "*" -> joy_binary_math_op (*) stack expression
+        "/" -> joy_binary_math_op (//) stack expression
+        "%" -> joy_binary_math_op (modBy) stack expression
+        "and" -> joy_binary_math_op (Bitwise.and) stack expression
+        "or" -> joy_binary_math_op (Bitwise.or) stack expression
+        "xor" -> joy_binary_math_op (Bitwise.xor) stack expression
         _ -> Err ("Unknown word: " ++ symbol)
 
 
-joy_add : (List JoyType) -> (List JoyType) -> Result String (List JoyType, List JoyType)
-joy_add stack expression =
+joy_binary_math_op : (Int -> Int -> Int) -> (List JoyType) -> (List JoyType) -> Result String (List JoyType, List JoyType)
+joy_binary_math_op op stack expression =
     case pop_int(stack) of
         Ok (a, s0) ->
             case pop_int(s0) of
                 Ok (b, s1) ->
-                    Ok ((push_int ((+) a b) s1), expression)
+                    Ok ((push_int (op b a) s1), expression)
                 Err msg -> Err msg
         Err msg -> Err msg
+
+
+
 
 
 push_int : Int -> (List JoyType) -> (List JoyType)
