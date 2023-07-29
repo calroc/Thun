@@ -44,6 +44,7 @@ joy_eval symbol stack expression =
         "xor" -> joy_binary_math_op (Bitwise.xor) stack expression
         "clear" -> Ok ([], expression)
         "concat" -> joy_concat stack expression
+        "cons" -> joy_cons stack expression
         _ -> Err ("Unknown word: " ++ symbol)
 
 
@@ -64,6 +65,17 @@ joy_concat stack expression =
             case pop_list(s0) of
                 Ok (b, s1) ->
                     Ok ((push_list (b ++ a) s1), expression)
+                Err msg -> Err msg
+        Err msg -> Err msg
+
+
+joy_cons : JList -> JList -> Result String (JList, JList)
+joy_cons stack expression =
+    case pop_list(stack) of
+        Ok (a, s0) ->
+            case pop_any(s0) of
+                Ok (b, s1) ->
+                    Ok ((push_list (b :: a) s1), expression)
                 Err msg -> Err msg
         Err msg -> Err msg
 
