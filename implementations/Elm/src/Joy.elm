@@ -51,6 +51,7 @@ joy_eval symbol stack expression =
         "rest" -> joy_rest stack expression
         "stack" -> joy_stack stack expression
         "swaack" -> joy_swaack stack expression
+        "swap" -> joy_swap stack expression
         _ -> Err ("Unknown word: " ++ symbol)
 
 
@@ -129,6 +130,16 @@ joy_swaack : JList -> JList -> Result String (JList, JList)
 joy_swaack stack expression =
     case pop_list(stack) of
         Ok (s, s0) -> Ok ((push_list s0 s), expression)
+        Err msg -> Err msg
+
+
+joy_swap : JList -> JList -> Result String (JList, JList)
+joy_swap stack expression =
+    case pop_any(stack) of
+        Ok (a, s0) ->
+            case pop_any(s0) of
+                Ok (b, s1) -> Ok ((b :: a :: s1), expression)
+                Err msg -> Err msg
         Err msg -> Err msg
 
 
