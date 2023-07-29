@@ -57,6 +57,10 @@ joy_eval symbol stack expression =
         "and" -> joy_binary_math_op (Bitwise.and) stack expression
         "or" -> joy_binary_math_op (Bitwise.or) stack expression
         "xor" -> joy_binary_math_op (Bitwise.xor) stack expression
+        "lshift" -> joy_binary_math_op (swap_args Bitwise.shiftLeftBy) stack expression
+        "<<" -> joy_binary_math_op (swap_args Bitwise.shiftLeftBy) stack expression
+        "rshift" -> joy_binary_math_op (swap_args Bitwise.shiftRightBy) stack expression
+        ">>" -> joy_binary_math_op (swap_args Bitwise.shiftRightBy) stack expression
 
         "clear" -> Ok ([], expression)
         "concat" -> joy_concat stack expression
@@ -96,6 +100,7 @@ joy_i stack expression =
         Ok (a, s0) -> Ok (s0, a ++ expression)
         Err msg -> Err msg
 
+
 joy_dip : JList -> JList -> Result String (JList, JList)
 joy_dip stack expression =
     case pop_list(stack) of
@@ -129,6 +134,10 @@ joy_binary_math_op op stack expression =
                     Ok ((push_int (op b a) s1), expression)
                 Err msg -> Err msg
         Err msg -> Err msg
+
+
+swap_args : (Int -> Int -> Int) -> (Int -> Int -> Int)
+swap_args op = (\a b -> op b a)
 
 
 joy_comparison_op : (Int -> Int -> Bool) -> JList -> JList -> Result String (JList, JList)
@@ -292,7 +301,6 @@ isnt_int (item, stack) =
                         Err "Not an integer."
 
 
-
 isnt_list : (JoyType,  JList) -> Result String (JList, JList)
 isnt_list (item, stack) =
         case item of
@@ -310,7 +318,6 @@ isnt_bool (item, stack) =
                 _ -> Err "Not a Boolean value."
 
 
-
 -- Printer
 
 joyTermToString : JoyType -> String
@@ -324,9 +331,6 @@ joyTermToString term =
             "[" ++ (joyExpressionToString list) ++ "]"
 
 joyExpressionToString expr = String.join " " (List.map joyTermToString expr)
-
-
-
 
 
 -- Use the old S-expression lexing trick.
