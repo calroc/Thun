@@ -46,6 +46,8 @@ joy_eval symbol stack expression =
         "concat" -> joy_concat stack expression
         "cons" -> joy_cons stack expression
         "dup" -> joy_dup stack expression
+        "first" -> joy_first stack expression
+        "rest" -> joy_rest stack expression
         _ -> Err ("Unknown word: " ++ symbol)
 
 
@@ -88,12 +90,36 @@ joy_dup stack expression =
         Err msg -> Err msg
 
 
+joy_first : JList -> JList -> Result String (JList, JList)
+joy_first stack expression =
+    case pop_list(stack) of
+        Ok (a, s0) ->
+            case pop_any(a) of
+                Ok (b, _) -> Ok ((push_any b s0), expression)
+                Err _ -> Err "Cannot take first of empty list."
+        Err msg -> Err msg
+
+
+joy_rest : JList -> JList -> Result String (JList, JList)
+joy_rest stack expression =
+    case pop_list(stack) of
+        Ok (a, s0) ->
+            case pop_any(a) of
+                Ok (_, el) -> Ok ((push_list el s0), expression)
+                Err _ -> Err "Cannot take rest of empty list."
+        Err msg -> Err msg
+
+
 push_int : Int -> JList -> JList
 push_int i stack = (JoyInt i) :: stack
 
 
 push_list : JList -> JList -> JList
 push_list el stack = (JoyList el) :: stack
+
+
+push_any : JoyType -> JList -> JList
+push_any j stack = j :: stack
 
 
 pop_int : JList -> Result String (Int, JList)
