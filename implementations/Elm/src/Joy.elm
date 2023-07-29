@@ -14,6 +14,54 @@ type alias JoyList = List JoyType
 
 
 
+joy : (List JoyType) -> (List JoyType) -> Result String (List JoyType)
+joy stack expression =
+        case expression of
+                [] ->
+                        Ok stack
+                term :: rest_of_expression ->
+                        case term of
+                                JoySymbol symbol ->
+                                        case joy_eval symbol stack rest_of_expression of
+                                            Err msg -> Err msg
+                                            Ok (s, e) -> joy s e
+                                _ ->
+                                        joy (term :: stack) rest_of_expression
+
+
+joy_eval : String -> (List JoyType) -> (List JoyType) -> Result String (List JoyType, List JoyType)
+joy_eval symbol stack expression =
+    case symbol of
+        "+" -> joy_add stack expression
+        _ -> Err ("Unknown word: " ++ symbol)
+
+
+joy_add : (List JoyType) -> (List JoyType) -> Result String (List JoyType, List JoyType)
+joy_add stack expression =
+    case pop_int(stack) of
+        Err msg -> Err msg
+        Ok (a, s0) ->
+            case pop_int(s0) of
+                Err msg -> Err msg
+                Ok (b, s1) ->
+                    let c = a + b in
+                    Ok ((push_int c s1), expression)
+
+
+push_int : Int -> (List JoyType) -> (List JoyType)
+push_int i stack = (JoyInt i) :: stack
+
+
+pop_int : (List JoyType) -> Result String (Int, List JoyType)
+pop_int stack =
+    case stack of
+        [] -> Err "Not enough values on Stack"
+        h :: t ->
+            case h of
+                JoyInt i ->
+                    Ok (i, t)
+                _ ->
+                    Err "Not an integer."
 
 -- Printer
 
@@ -114,5 +162,8 @@ text_to_expression text = parse (tokenize text)
 doit text =
     case text_to_expression text of
         Err msg -> Err msg
-        Ok ast -> Ok (joyExpressionToString ast)
+        Ok ast ->
+            case joy [] ast of
+                Err msg -> Err msg
+                Ok expr -> Ok (joyExpressionToString expr)
 
