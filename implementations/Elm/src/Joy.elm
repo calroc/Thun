@@ -46,6 +46,14 @@ joy_eval symbol stack expression =
         "/" -> joy_binary_math_op (//) stack expression
         "%" -> joy_binary_math_op (modBy) stack expression
 
+        "<" -> joy_comparison_op (<) stack expression
+        ">" -> joy_comparison_op (>) stack expression
+        "<=" -> joy_comparison_op (<=) stack expression
+        ">=" -> joy_comparison_op (>=) stack expression
+        "<>" -> joy_comparison_op (/=) stack expression
+        "!=" -> joy_comparison_op (/=) stack expression
+        "=" -> joy_comparison_op (==) stack expression
+
         "and" -> joy_binary_math_op (Bitwise.and) stack expression
         "or" -> joy_binary_math_op (Bitwise.or) stack expression
         "xor" -> joy_binary_math_op (Bitwise.xor) stack expression
@@ -121,6 +129,18 @@ joy_binary_math_op op stack expression =
                     Ok ((push_int (op b a) s1), expression)
                 Err msg -> Err msg
         Err msg -> Err msg
+
+
+joy_comparison_op : (Int -> Int -> Bool) -> JList -> JList -> Result String (JList, JList)
+joy_comparison_op op stack expression =
+    case pop_int(stack) of
+        Ok (a, s0) ->
+            case pop_int(s0) of
+                Ok (b, s1) ->
+                    Ok ((push_bool (op b a) s1), expression)
+                Err msg -> Err msg
+        Err msg -> Err msg
+
 
 joy_concat : JList -> JList -> Result String (JList, JList)
 joy_concat stack expression =
@@ -220,6 +240,14 @@ joy_truthy stack expression =
                 JoySymbol _ ->
                     Err "Cannot Boolify."
         Err msg -> Err msg
+
+
+push_bool : Bool -> JList -> JList
+push_bool flag stack =
+    if flag then
+        JoyTrue :: stack
+    else
+        JoyFalse :: stack
 
 
 push_int : Int -> JList -> JList
