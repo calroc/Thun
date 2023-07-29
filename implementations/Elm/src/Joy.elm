@@ -42,6 +42,8 @@ joy_eval symbol stack expression =
         "and" -> joy_binary_math_op (Bitwise.and) stack expression
         "or" -> joy_binary_math_op (Bitwise.or) stack expression
         "xor" -> joy_binary_math_op (Bitwise.xor) stack expression
+        "clear" -> Ok ([], expression)
+        "concat" -> joy_concat stack expression
         _ -> Err ("Unknown word: " ++ symbol)
 
 
@@ -55,7 +57,15 @@ joy_binary_math_op op stack expression =
                 Err msg -> Err msg
         Err msg -> Err msg
 
-
+joy_concat : JList -> JList -> Result String (JList, JList)
+joy_concat stack expression =
+    case pop_list(stack) of
+        Ok (a, s0) ->
+            case pop_list(s0) of
+                Ok (b, s1) ->
+                    Ok ((push_list (b ++ a) s1), expression)
+                Err msg -> Err msg
+        Err msg -> Err msg
 
 
 
@@ -63,8 +73,16 @@ push_int : Int -> JList -> JList
 push_int i stack = (JoyInt i) :: stack
 
 
+push_list : JList -> JList -> JList
+push_list el stack = (JoyList el) :: stack
+
+
 pop_int : JList -> Result String (Int, JList)
 pop_int stack = pop_any stack |> andThen isnt_int
+
+
+pop_list : JList -> Result String (JList, JList)
+pop_list stack = pop_any stack |> andThen isnt_list
 
 
 pop_any : JList -> Result String (JoyType,  JList)
@@ -83,6 +101,16 @@ isnt_int (item, stack) =
                         Ok (i, stack)
                 _ ->
                         Err "Not an integer."
+
+
+
+isnt_list : (JoyType,  JList) -> Result String (JList, JList)
+isnt_list (item, stack) =
+        case item of
+                JoyList el ->
+                        Ok (el, stack)
+                _ ->
+                        Err "Not a list."
 
 
 
