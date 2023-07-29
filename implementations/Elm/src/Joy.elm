@@ -36,6 +36,7 @@ joy stack expression =
 joy_eval : String -> JList -> JList -> Result String (JList, JList)
 joy_eval symbol stack expression =
     case symbol of
+        "" -> Ok (stack, expression)
 
         "branch" -> joy_branch stack expression
         "i" -> joy_i stack expression
