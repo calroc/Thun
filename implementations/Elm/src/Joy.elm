@@ -1,6 +1,7 @@
 module Joy exposing (doit)
 
 import String exposing (replace, words)
+import Result exposing (andThen)
 
 
 type JoyType
@@ -39,13 +40,12 @@ joy_eval symbol stack expression =
 joy_add : (List JoyType) -> (List JoyType) -> Result String (List JoyType, List JoyType)
 joy_add stack expression =
     case pop_int(stack) of
-        Err msg -> Err msg
         Ok (a, s0) ->
             case pop_int(s0) of
-                Err msg -> Err msg
                 Ok (b, s1) ->
-                    let c = a + b in
-                    Ok ((push_int c s1), expression)
+                    Ok ((push_int ((+) a b) s1), expression)
+                Err msg -> Err msg
+        Err msg -> Err msg
 
 
 push_int : Int -> (List JoyType) -> (List JoyType)
@@ -62,6 +62,11 @@ pop_int stack =
                     Ok (i, t)
                 _ ->
                     Err "Not an integer."
+
+
+
+
+
 
 -- Printer
 
