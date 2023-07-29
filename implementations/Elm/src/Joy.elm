@@ -35,6 +35,7 @@ joy_eval : String -> JList -> JList -> Result String (JList, JList)
 joy_eval symbol stack expression =
     case symbol of
         "i" -> joy_i stack expression
+        "dip" -> joy_dip stack expression
         "+" -> joy_binary_math_op (+) stack expression
         "-" -> joy_binary_math_op (-) stack expression
         "*" -> joy_binary_math_op (*) stack expression
@@ -61,6 +62,15 @@ joy_i : JList -> JList -> Result String (JList, JList)
 joy_i stack expression =
     case pop_list(stack) of
         Ok (a, s0) -> Ok (s0, a ++ expression)
+        Err msg -> Err msg
+
+joy_dip : JList -> JList -> Result String (JList, JList)
+joy_dip stack expression =
+    case pop_list(stack) of
+        Ok (quoted_expression, s0) ->
+            case pop_any(s0) of
+                Ok (x, s1) -> Ok (s1, quoted_expression ++ (x :: expression))
+                Err msg -> Err msg
         Err msg -> Err msg
 
 
