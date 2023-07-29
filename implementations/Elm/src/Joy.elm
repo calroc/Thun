@@ -12,11 +12,11 @@ type JoyType
     | JoyTrue
     | JoyFalse
 
-type alias JoyList = List JoyType
+type alias JList = List JoyType
 
 
 
-joy : (List JoyType) -> (List JoyType) -> Result String (List JoyType)
+joy : JList -> JList -> Result String JList
 joy stack expression =
         case expression of
                 [] ->
@@ -31,7 +31,7 @@ joy stack expression =
                                         joy (term :: stack) rest_of_expression
 
 
-joy_eval : String -> (List JoyType) -> (List JoyType) -> Result String (List JoyType, List JoyType)
+joy_eval : String -> JList -> JList -> Result String (JList, JList)
 joy_eval symbol stack expression =
     case symbol of
         "+" -> joy_binary_math_op (+) stack expression
@@ -45,7 +45,7 @@ joy_eval symbol stack expression =
         _ -> Err ("Unknown word: " ++ symbol)
 
 
-joy_binary_math_op : (Int -> Int -> Int) -> (List JoyType) -> (List JoyType) -> Result String (List JoyType, List JoyType)
+joy_binary_math_op : (Int -> Int -> Int) -> JList -> JList -> Result String (JList, JList)
 joy_binary_math_op op stack expression =
     case pop_int(stack) of
         Ok (a, s0) ->
@@ -59,24 +59,15 @@ joy_binary_math_op op stack expression =
 
 
 
-push_int : Int -> (List JoyType) -> (List JoyType)
+push_int : Int -> JList -> JList
 push_int i stack = (JoyInt i) :: stack
 
 
-pop_int : (List JoyType) -> Result String (Int, List JoyType)
+pop_int : JList -> Result String (Int, JList)
 pop_int stack = pop_any stack |> andThen isnt_int
 
---    case stack of
---        [] -> Err "Not enough values on Stack"
---        h :: t ->
---            case h of
---                JoyInt i ->
---                    Ok (i, t)
---                _ ->
---                    Err "Not an integer."
 
-
-pop_any : (List JoyType) -> Result String (JoyType,  List JoyType)
+pop_any : JList -> Result String (JoyType,  JList)
 pop_any stack =
         case stack of
                 [] ->
@@ -84,7 +75,8 @@ pop_any stack =
                 item :: rest ->
                         Ok (item, rest)
 
-isnt_int : (JoyType,  List JoyType) -> Result String (Int, List JoyType)
+
+isnt_int : (JoyType,  JList) -> Result String (Int, JList)
 isnt_int (item, stack) =
         case item of
                 JoyInt i ->
@@ -132,14 +124,14 @@ tokenator tok =
 
 
 
-expect_right_bracket : (List String) -> (List JoyType) -> Result String (List JoyType, List String)
+expect_right_bracket : (List String) -> JList -> Result String (JList, List String)
 expect_right_bracket tokens acc =
     case tokens of
     [] -> Err "Missing closing bracket."
     h :: t -> expect_right_bracket_one_token_lookahead h t acc
 
 
-expect_right_bracket_one_token_lookahead : String -> (List String) -> (List JoyType) -> Result String (List JoyType, List String)
+expect_right_bracket_one_token_lookahead : String -> (List String) -> JList -> Result String (JList, List String)
 expect_right_bracket_one_token_lookahead token tokens acc =
     case token of
     "]" -> Ok (acc, tokens)
@@ -171,7 +163,7 @@ one_token_lookahead token tokens =
         _ -> Ok (tokenator token, tokens)
 
 
-parse0 : (List String) -> (List JoyType) -> Result String (List JoyType)
+parse0 : (List String) -> JList -> Result String JList
 parse0 tokens acc =
     case tokens of
         [] -> Ok acc
