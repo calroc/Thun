@@ -34,6 +34,7 @@ joy stack expression =
 joy_eval : String -> JList -> JList -> Result String (JList, JList)
 joy_eval symbol stack expression =
     case symbol of
+        "branch" -> joy_branch stack expression
         "i" -> joy_i stack expression
         "dip" -> joy_dip stack expression
         "+" -> joy_binary_math_op (+) stack expression
@@ -56,6 +57,23 @@ joy_eval symbol stack expression =
         "swap" -> joy_swap stack expression
         "truthy" -> joy_truthy stack expression
         _ -> Err ("Unknown word: " ++ symbol)
+
+
+joy_branch : JList -> JList -> Result String (JList, JList)
+joy_branch stack expression =
+    case pop_list(stack) of
+        Ok (true_body, s0) ->
+            case pop_list(s0) of
+                Ok (false_body, s1) ->
+                    case pop_bool(s1) of
+                        Ok (flag, s2) ->
+                            if flag then
+                                Ok (s2, true_body ++ expression)
+                            else
+                                Ok (s2, false_body ++ expression)
+                        Err msg -> Err msg
+                Err msg -> Err msg
+        Err msg -> Err msg
 
 
 joy_i : JList -> JList -> Result String (JList, JList)
@@ -204,6 +222,10 @@ pop_list : JList -> Result String (JList, JList)
 pop_list stack = pop_any stack |> andThen isnt_list
 
 
+pop_bool : JList -> Result String (Bool, JList)
+pop_bool stack = pop_any stack |> andThen isnt_bool
+
+
 pop_any : JList -> Result String (JoyType,  JList)
 pop_any stack =
         case stack of
@@ -230,6 +252,14 @@ isnt_list (item, stack) =
                         Ok (el, stack)
                 _ ->
                         Err "Not a list."
+
+
+isnt_bool : (JoyType,  JList) -> Result String (Bool, JList)
+isnt_bool (item, stack) =
+        case item of
+                JoyTrue -> Ok (True, stack)
+                JoyFalse -> Ok (False, stack)
+                _ -> Err "Not a Boolean value."
 
 
 
