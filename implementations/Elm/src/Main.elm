@@ -1,12 +1,13 @@
 module Main exposing (..)
 
+import Dict
 
 import Browser
 import Html exposing (Html, Attribute, div, input, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 
-import Joy exposing (doit)
+import Joy exposing (doit, JoyDict)
 
 -- MAIN
 
@@ -21,12 +22,13 @@ main =
 
 type alias Model =
   { content : String
+  , dictionary : JoyDict
   }
 
 
 init : Model
 init =
-  { content = "" }
+  { content = "", dictionary = Dict.empty }
 
 
 

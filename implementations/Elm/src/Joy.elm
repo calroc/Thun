@@ -1,6 +1,7 @@
-module Joy exposing (doit)
+module Joy exposing (doit, JoyDict)
 
 import Bitwise
+import Dict exposing (Dict)
 import Result exposing (andThen)
 import String exposing (replace, words)
 
@@ -14,6 +15,7 @@ type JoyType
 
 type alias JList = List JoyType
 
+type alias JoyDict = Dict String JList
 
 
 joy : JList -> JList -> Result String JList
