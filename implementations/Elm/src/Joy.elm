@@ -1,7 +1,7 @@
 module Joy exposing (doit, JoyDict)
 
 import Bitwise
-import Dict exposing (Dict)
+import Dict exposing (Dict, get)
 import Result exposing (andThen)
 import String exposing (replace, words)
 
@@ -42,7 +42,11 @@ joy_eval symbol stack expression dict =
             Err msg ->
                 if "Unknown word." == msg then
                     -- Look up word in dictionary.
-                    Err ("Unknown word: " ++ symbol)
+                    case get symbol dict of
+                        Just definition ->
+                            Ok (stack, definition ++ expression, dict)
+                        Nothing ->
+                            Err ("Unknown word: " ++ symbol)
                 else
                     Err msg
             Ok (stack0, expression0) -> Ok (stack0, expression0, dict)
