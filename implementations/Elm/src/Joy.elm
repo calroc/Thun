@@ -1,8 +1,8 @@
 module Joy exposing (doit)
 
-import String exposing (replace, words)
-import Result exposing (andThen)
 import Bitwise
+import Result exposing (andThen)
+import String exposing (replace, words)
 
 
 type JoyType
@@ -64,18 +64,33 @@ push_int i stack = (JoyInt i) :: stack
 
 
 pop_int : (List JoyType) -> Result String (Int, List JoyType)
-pop_int stack =
-    case stack of
-        [] -> Err "Not enough values on Stack"
-        h :: t ->
-            case h of
+pop_int stack = pop_any stack |> andThen isnt_int
+
+--    case stack of
+--        [] -> Err "Not enough values on Stack"
+--        h :: t ->
+--            case h of
+--                JoyInt i ->
+--                    Ok (i, t)
+--                _ ->
+--                    Err "Not an integer."
+
+
+pop_any : (List JoyType) -> Result String (JoyType,  List JoyType)
+pop_any stack =
+        case stack of
+                [] ->
+                        Err "Not enough values on Stack"
+                item :: rest ->
+                        Ok (item, rest)
+
+isnt_int : (JoyType,  List JoyType) -> Result String (Int, List JoyType)
+isnt_int (item, stack) =
+        case item of
                 JoyInt i ->
-                    Ok (i, t)
+                        Ok (i, stack)
                 _ ->
-                    Err "Not an integer."
-
-
-
+                        Err "Not an integer."
 
 
 
