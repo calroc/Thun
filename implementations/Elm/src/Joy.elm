@@ -34,17 +34,22 @@ joy stack expression =
 joy_eval : String -> JList -> JList -> Result String (JList, JList)
 joy_eval symbol stack expression =
     case symbol of
+
         "branch" -> joy_branch stack expression
         "i" -> joy_i stack expression
         "dip" -> joy_dip stack expression
+        "loop" -> joy_loop stack expression
+
         "+" -> joy_binary_math_op (+) stack expression
         "-" -> joy_binary_math_op (-) stack expression
         "*" -> joy_binary_math_op (*) stack expression
         "/" -> joy_binary_math_op (//) stack expression
         "%" -> joy_binary_math_op (modBy) stack expression
+
         "and" -> joy_binary_math_op (Bitwise.and) stack expression
         "or" -> joy_binary_math_op (Bitwise.or) stack expression
         "xor" -> joy_binary_math_op (Bitwise.xor) stack expression
+
         "clear" -> Ok ([], expression)
         "concat" -> joy_concat stack expression
         "cons" -> joy_cons stack expression
@@ -56,6 +61,7 @@ joy_eval symbol stack expression =
         "swaack" -> joy_swaack stack expression
         "swap" -> joy_swap stack expression
         "truthy" -> joy_truthy stack expression
+
         _ -> Err ("Unknown word: " ++ symbol)
 
 
@@ -88,6 +94,20 @@ joy_dip stack expression =
         Ok (quoted_expression, s0) ->
             case pop_any(s0) of
                 Ok (x, s1) -> Ok (s1, quoted_expression ++ (x :: expression))
+                Err msg -> Err msg
+        Err msg -> Err msg
+
+
+joy_loop : JList -> JList -> Result String (JList, JList)
+joy_loop stack expression =
+    case pop_list(stack) of
+        Ok (loop_body, s0) ->
+            case pop_bool(s0) of
+                Ok (flag, s1) ->
+                    if flag then
+                        Ok (s1, loop_body ++ ((JoyList loop_body) :: (JoySymbol "loop") :: expression))
+                    else
+                        Ok (s1, expression)
                 Err msg -> Err msg
         Err msg -> Err msg
 
