@@ -184,9 +184,9 @@ text_to_expression text = parse (tokenize text)
 
 doit text =
     case text_to_expression text of
-        Err msg -> Err msg
         Ok ast ->
             case joy [] ast of
-                Err msg -> Err msg
                 Ok expr -> Ok (joyExpressionToString expr)
+                Err msg -> Err msg
+        Err msg -> Err msg
 
