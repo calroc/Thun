@@ -22,6 +22,13 @@ type alias JoyDict =
     Dict String JList
 
 
+-- Joy functions take a stack and expression and return a stack and
+-- expression, but something might go wrong, so they really return a
+-- Result value.
+
+type alias JoyFunction = JList -> JList -> Result String ( JList, JList )
+
+
 joy : JList -> JList -> JoyDict -> Result String ( JList, JoyDict )
 joy stack expression dict =
     case expression of
@@ -225,7 +232,7 @@ joy_inscribe stack expression dict =
             Err msg
 
 
-joy_branch : JList -> JList -> Result String ( JList, JList )
+joy_branch : JoyFunction
 joy_branch stack expression =
     case pop_list stack of
         Ok ( true_body, s0 ) ->
@@ -249,7 +256,7 @@ joy_branch stack expression =
             Err msg
 
 
-joy_i : JList -> JList -> Result String ( JList, JList )
+joy_i : JoyFunction
 joy_i stack expression =
     case pop_list stack of
         Ok ( a, s0 ) ->
@@ -259,7 +266,7 @@ joy_i stack expression =
             Err msg
 
 
-joy_dip : JList -> JList -> Result String ( JList, JList )
+joy_dip : JoyFunction
 joy_dip stack expression =
     case pop_list stack of
         Ok ( quoted_expression, s0 ) ->
@@ -274,7 +281,7 @@ joy_dip stack expression =
             Err msg
 
 
-joy_loop : JList -> JList -> Result String ( JList, JList )
+joy_loop : JoyFunction
 joy_loop stack expression =
     case pop_list stack of
         Ok ( loop_body, s0 ) ->
@@ -293,7 +300,7 @@ joy_loop stack expression =
             Err msg
 
 
-joy_binary_math_op : (Int -> Int -> Int) -> JList -> JList -> Result String ( JList, JList )
+joy_binary_math_op : (Int -> Int -> Int) -> JoyFunction
 joy_binary_math_op op stack expression =
     case pop_int stack of
         Ok ( a, s0 ) ->
@@ -313,7 +320,7 @@ swap_args op =
     \a b -> op b a
 
 
-joy_comparison_op : (Int -> Int -> Bool) -> JList -> JList -> Result String ( JList, JList )
+joy_comparison_op : (Int -> Int -> Bool) -> JoyFunction
 joy_comparison_op op stack expression =
     case pop_int stack of
         Ok ( a, s0 ) ->
@@ -328,7 +335,7 @@ joy_comparison_op op stack expression =
             Err msg
 
 
-joy_logical_op : (Bool -> Bool -> Bool) -> JList -> JList -> Result String ( JList, JList )
+joy_logical_op : (Bool -> Bool -> Bool) -> JoyFunction
 joy_logical_op op stack expression =
     case pop_bool stack of
         Ok ( a, s0 ) ->
@@ -343,7 +350,7 @@ joy_logical_op op stack expression =
             Err msg
 
 
-joy_concat : JList -> JList -> Result String ( JList, JList )
+joy_concat : JoyFunction
 joy_concat stack expression =
     case pop_list stack of
         Ok ( a, s0 ) ->
@@ -358,7 +365,7 @@ joy_concat stack expression =
             Err msg
 
 
-joy_cons : JList -> JList -> Result String ( JList, JList )
+joy_cons : JoyFunction
 joy_cons stack expression =
     case pop_list stack of
         Ok ( a, s0 ) ->
@@ -373,7 +380,7 @@ joy_cons stack expression =
             Err msg
 
 
-joy_dup : JList -> JList -> Result String ( JList, JList )
+joy_dup : JoyFunction
 joy_dup stack expression =
     case pop_any stack of
         Ok ( a, s0 ) ->
@@ -383,7 +390,7 @@ joy_dup stack expression =
             Err msg
 
 
-joy_first : JList -> JList -> Result String ( JList, JList )
+joy_first : JoyFunction
 joy_first stack expression =
     case pop_list stack of
         Ok ( a, s0 ) ->
@@ -398,7 +405,7 @@ joy_first stack expression =
             Err msg
 
 
-joy_pop : JList -> JList -> Result String ( JList, JList )
+joy_pop : JoyFunction
 joy_pop stack expression =
     case pop_any stack of
         Ok ( _, s0 ) ->
@@ -408,7 +415,7 @@ joy_pop stack expression =
             Err msg
 
 
-joy_rest : JList -> JList -> Result String ( JList, JList )
+joy_rest : JoyFunction
 joy_rest stack expression =
     case pop_list stack of
         Ok ( a, s0 ) ->
@@ -423,12 +430,12 @@ joy_rest stack expression =
             Err msg
 
 
-joy_stack : JList -> JList -> Result String ( JList, JList )
+joy_stack : JoyFunction
 joy_stack stack expression =
     Ok ( push_list stack stack, expression )
 
 
-joy_swaack : JList -> JList -> Result String ( JList, JList )
+joy_swaack : JoyFunction
 joy_swaack stack expression =
     case pop_list stack of
         Ok ( s, s0 ) ->
@@ -438,7 +445,7 @@ joy_swaack stack expression =
             Err msg
 
 
-joy_swap : JList -> JList -> Result String ( JList, JList )
+joy_swap : JoyFunction
 joy_swap stack expression =
     case pop_any stack of
         Ok ( a, s0 ) ->
@@ -453,7 +460,7 @@ joy_swap stack expression =
             Err msg
 
 
-joy_truthy : JList -> JList -> Result String ( JList, JList )
+joy_truthy : JoyFunction
 joy_truthy stack expression =
     case pop_any stack of
         Ok ( a, s0 ) ->
