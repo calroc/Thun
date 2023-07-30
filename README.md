@@ -261,10 +261,9 @@ dialect of Joy are defined in terms of these:
 
     < > >= <= != <> = 
 
-    and or xor (These are the bitwise ops.)
     lshift rshift
 
-    /\ \/ _\/_ (These are the logical ops.  Booleans)
+    /\ \/ _\/_ (These are the logical ops that work on Booleans.)
 
 
 
