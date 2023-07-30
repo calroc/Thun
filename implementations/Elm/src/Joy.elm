@@ -1,9 +1,9 @@
-module Joy exposing (doit, JoyDict)
+module Joy exposing (doit, JoyDict, initialize)
 
 import Bitwise
-import Dict exposing (Dict, get)
+import Dict exposing (Dict, get, insert)
 import Result exposing (andThen)
-import String exposing (replace, words)
+import String exposing (replace, words, lines)
 
 
 type JoyType
@@ -456,4 +456,22 @@ doit text dict =
                 Ok (expr, dict0) -> Ok (joyExpressionToString expr, dict0)
                 Err msg -> Err msg
         Err msg -> Err msg
+
+
+add_def : String -> JoyDict -> JoyDict
+add_def def dict =
+    case text_to_expression def of
+        Err msg -> dict
+        Ok expr ->
+            case expr of
+                [] -> dict
+                sym :: body ->
+                    -- check that name is a symbol
+                    case sym of
+                        JoySymbol name -> (insert name body dict)
+                        _ -> dict
+
+
+initialize : JoyDict -> JoyDict
+initialize dict = List.foldl (add_def) dict (lines """sqr dup *""")
 

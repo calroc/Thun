@@ -7,7 +7,7 @@ import Html exposing (Html, Attribute, div, input, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 
-import Joy exposing (doit, JoyDict)
+import Joy exposing (doit, JoyDict, initialize)
 
 -- MAIN
 
@@ -28,7 +28,7 @@ type alias Model =
 
 init : Model
 init =
-  { content = "", dictionary = Dict.empty }
+  { content = "", dictionary = initialize Dict.empty }
 
 
 
