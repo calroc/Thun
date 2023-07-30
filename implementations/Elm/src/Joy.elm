@@ -201,10 +201,10 @@ joy_function_eval symbol stack expression =
         "=" ->
             joy_comparison_op (==) stack expression
 
-        "and" ->
+        "&&" ->
             joy_binary_math_op Bitwise.and stack expression
 
-        "or" ->
+        "||" ->
             joy_binary_math_op Bitwise.or stack expression
 
         "xor" ->
