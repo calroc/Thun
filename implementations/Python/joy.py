@@ -933,7 +933,7 @@ def swap(stack):
     return (a1, (a2, stack))
 
 
-def BinaryLogicWrapper(f):
+def BinaryLogicWrapper(f, name=None):
     '''
     Wrap functions that take two numbers and return a single result.
     '''
@@ -945,6 +945,9 @@ def BinaryLogicWrapper(f):
         isnt_bool(b)
         result = f(b, a)
         return (result, stack), expression, dictionary
+
+    if name:
+        BinaryLogicWrapper_inner.__name__ = name
 
     return BinaryLogicWrapper_inner
 
@@ -1030,9 +1033,9 @@ for F in (
     ##╚══════╝ ╚═════╝  ╚═════╝ ╚═╝ ╚═════╝
     UnaryWrapper(bool),  # Convert any value to Boolean.
     # (The only polymorphic function.)
-    BinaryLogicWrapper(operator.xor),
-    BinaryLogicWrapper(operator.and_),
-    BinaryLogicWrapper(operator.or_),
+    BinaryLogicWrapper(operator.xor, name='_\\/_'),
+    BinaryLogicWrapper(operator.and_, name='/\\'),
+    BinaryLogicWrapper(operator.or_, name='\\/'),
     UnaryLogicWrapper(operator.not_),
     ##███╗   ███╗ █████╗ ████████╗██╗  ██╗
     ##████╗ ████║██╔══██╗╚══██╔══╝██║  ██║
