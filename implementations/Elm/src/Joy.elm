@@ -37,6 +37,8 @@ joy_eval : String -> JList -> JList -> JoyDict -> Result String (JList, JList, J
 joy_eval symbol stack expression dict =
     if symbol == "" then
         Ok (stack, expression, dict)
+    else if symbol == "inscribe" then
+        joy_inscribe stack expression dict
     else
         case joy_function_eval symbol stack expression of
             Err msg ->
@@ -64,7 +66,13 @@ joy_function_eval symbol stack expression =
         "-" -> joy_binary_math_op (-) stack expression
         "*" -> joy_binary_math_op (*) stack expression
         "/" -> joy_binary_math_op (//) stack expression
-        "%" -> joy_binary_math_op (modBy) stack expression
+        "%" -> joy_binary_math_op (swap_args remainderBy) stack expression
+
+        "add" -> joy_binary_math_op (+) stack expression
+        "sub" -> joy_binary_math_op (-) stack expression
+        "mul" -> joy_binary_math_op (*) stack expression
+        "div" -> joy_binary_math_op (//) stack expression
+        "mod" -> joy_binary_math_op (swap_args remainderBy) stack expression
 
         "<" -> joy_comparison_op (<) stack expression
         ">" -> joy_comparison_op (>) stack expression
@@ -97,11 +105,26 @@ joy_function_eval symbol stack expression =
         "swaack" -> joy_swaack stack expression
         "swap" -> joy_swap stack expression
         "truthy" -> joy_truthy stack expression
+        "bool" -> joy_truthy stack expression
 
         _ -> Err ("Unknown word.")
 
 
---        _ -> Err ("Unknown word: " ++ symbol)
+joy_inscribe : JList -> JList -> JoyDict -> Result String (JList, JList, JoyDict)
+joy_inscribe stack expression dict =
+    case pop_list(stack) of
+        Ok (def, s0) ->
+
+            case def of
+                [] -> Err "Empty definition."
+                sym :: body ->
+                    -- check that name is a symbol
+                    case sym of
+                        JoySymbol name ->
+                            Ok (s0, expression, (insert name body dict))
+                        _ ->
+                            Err "Def name isn't symbol."
+        Err msg -> Err msg
 
 
 joy_branch : JList -> JList -> Result String (JList, JList)
@@ -473,5 +496,135 @@ add_def def dict =
 
 
 initialize : JoyDict -> JoyDict
-initialize dict = List.foldl (add_def) dict (lines """sqr dup *""")
+initialize dict = List.foldl (add_def) dict (lines """eq [false] [true] [false] cmp
+gt [true] [false] [false] cmp
+lt [false] [false] [true] cmp
+neq [true] [false] [true] cmp
+le [false] [true] [true] cmp
+ge [true] [true] [false] cmp
+-- 1 -
+? dup bool
+and nulco [nullary [false]] dip branch
+++ 1 +
+or nulco [nullary] dip [true] branch
+!- 0 >=
+<{} [] swap
+<<{} [] rollup
+abs dup 0 < [] [neg] branch
+anamorphism [pop []] swap [dip swons] genrec
+app1 grba infrst
+app2 [grba swap grba swap] dip [infrst] cons ii
+app3 3 appN
+appN [grabN] codi map reverse disenstacken
+at drop first
+average [sum] [size] cleave /
+b [i] dip i
+binary unary popd
+ccccons ccons ccons
+ccons cons cons
+clear [] swaack pop
+cleave fork popdd
+clop cleave popdd
+cmp [[>] swap] dipd [ifte] ccons [=] swons ifte
+codi cons dip
+codireco codi reco
+dinfrirst dip infrst
+dipd [dip] codi
+disenstacken swaack pop
+divmod [/] [%] clop
+down_to_zero [0 >] [dup --] while
+drop [rest] times
+dupd [dup] dip
+dupdd [dup] dipd
+dupdip dupd dip
+dupdipd dup dipd
+enstacken stack [clear] dip
+first uncons pop
+flatten <{} [concat] step
+fork [i] app2
+fourth rest third
+gcd true [tuck mod dup 0 >] loop pop
+genrec [[genrec] ccccons] nullary swons concat ifte
+grabN <{} [cons] times
+grba [stack popd] dip
+hypot [sqr] ii + sqrt
+ifte [nullary] dipd swap branch
+ii [dip] dupdip i
+infra swons swaack [i] dip swaack
+infrst infra first
+make_generator [codireco] ccons
+mod %
+neg 0 swap -
+not [true] [false] branch
+nulco [nullary] cons
+null [] concat bool not
+nullary [stack] dinfrirst
+of swap at
+pam [i] map
+pm [+] [-] clop
+popd [pop] dip
+popdd [pop] dipd
+popop pop pop
+popopop pop popop
+popopd [popop] dip
+popopdd [popop] dipd
+product 1 swap [*] step
+quoted [unit] dip
+range [0 <=] [-- dup] anamorphism
+range_to_zero unit [down_to_zero] infra
+reco rest cons
+rest uncons popd
+reverse <{} shunt
+roll> swap swapd
+roll< swapd swap
+rollup roll>
+rolldown roll<
+rrest rest rest
+run <{} infra
+second rest first
+shift uncons [swons] dip
+shunt [swons] step
+size [pop ++] step_zero
+small dup null [rest null] [pop true] branch
+spiral_next [[[abs] ii <=] [[<>] [pop !-] or] and] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
+split_at [drop] [take] clop
+split_list [take reverse] [drop] clop
+sqr dup mul
+stackd [stack] dip
+step_zero 0 roll> step
+stuncons stack uncons
+sum [+] step_zero
+swapd [swap] dip
+swons swap cons
+swoncat swap concat
+tailrec [i] genrec
+take <<{} [shift] times pop
+ternary binary popd
+third rest second
+tuck dup swapd
+unary nullary popd
+uncons [first] [rest] cleave
+unit [] cons
+unquoted [i] dip
+unstack [[] swaack] dip swoncat swaack pop
+unswons uncons swap
+while swap nulco dupdipd concat loop
+x dup i
+step [_step0] x
+_step0 _step1 [popopop] [_stept] branch
+_step1 [?] dipd roll<
+_stept [uncons] dipd [dupdipd] dip x
+times [_times0] x
+_times0 _times1 [popopop] [_timest] branch
+_times1 [dup 0 >] dipd roll<
+_timest [[--] dip dupdipd] dip x
+map [_map0] cons [[] [_map?] [_mape]] dip tailrec
+_map? pop bool not
+_mape popd reverse
+_map0 [_map1] dipd _map2
+_map1 stackd shift
+_map2 [infrst] cons dipd roll< swons
+_\\/_ [not not] [not] branch
+/\\ [not not] ii [pop false] [] branch
+\\/ [not not] ii [] [pop true] branch""")
 

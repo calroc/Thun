@@ -63,3 +63,4 @@ view model =
         [ input [ placeholder "Text to reverse", value model.content, onInput Change ] []
         , div [] [ text message ]
         ]
+
