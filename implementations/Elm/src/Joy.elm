@@ -22,14 +22,72 @@ type alias JoyDict =
     Dict String JList
 
 
+type JoyErr
+    = UnknownWord
+    | EmptyDefinition
+    | DefinitionNameMustBeSymbol
+    | CannotTakeFirstOfEmptyList
+    | CannotTakeRestOfEmptyList
+    | CannotBoolify
+    | NotEnoughValuesOnStack
+    | NotAnInteger
+    | NotAList
+    | NotABooleanValue
+    | MissingClosingBracket
+    | ExtraClosingBracket
+
+
+
 -- Joy functions take a stack and expression and return a stack and
 -- expression, but something might go wrong, so they really return a
 -- Result value.
 
-type alias JoyFunction = JList -> JList -> Result String ( JList, JList )
+
+type alias JoyFunction =
+    JList -> JList -> Result JoyErr ( JList, JList )
 
 
-joy : JList -> JList -> JoyDict -> Result String ( JList, JoyDict )
+joy_err : JoyErr -> String
+joy_err err =
+    case err of
+        UnknownWord ->
+            "Unknown word."
+
+        EmptyDefinition ->
+            "Empty definition."
+
+        DefinitionNameMustBeSymbol ->
+            "Def name isn't symbol."
+
+        CannotTakeFirstOfEmptyList ->
+            "Cannot take first of empty list."
+
+        CannotTakeRestOfEmptyList ->
+            "Cannot take rest of empty list."
+
+        CannotBoolify ->
+            "Cannot Boolify."
+
+        NotEnoughValuesOnStack ->
+            "Not enough values on Stack"
+
+        NotAnInteger ->
+            "Not an integer."
+
+        NotAList ->
+            "Not a list."
+
+        NotABooleanValue ->
+            "Not a Boolean value."
+
+        MissingClosingBracket ->
+            "Missing closing bracket."
+
+        ExtraClosingBracket ->
+            "Extra closing bracket."
+
+
+joy : JList -> JList -> JoyDict -> Result JoyErr ( JList, JoyDict )
 joy stack expression dict =
     case expression of
         [] ->
@@ -49,7 +107,7 @@ joy stack expression dict =
                     joy (term :: stack) rest_of_expression dict
 
 
-joy_eval : String -> JList -> JList -> JoyDict -> Result String ( JList, JList, JoyDict )
+joy_eval : String -> JList -> JList -> JoyDict -> Result JoyErr ( JList, JList, JoyDict )
 joy_eval symbol stack expression dict =
     if symbol == "" then
         Ok ( stack, expression, dict )
@@ -59,18 +117,20 @@ joy_eval symbol stack expression dict =
 
     else
         case joy_function_eval symbol stack expression of
-            Err msg ->
-                if "Unknown word." == msg then
-                    -- Look up word in dictionary.
-                    case get symbol dict of
-                        Just definition ->
-                            Ok ( stack, definition ++ expression, dict )
+            Err err ->
+                case err of
+                    UnknownWord ->
+                        -- Look up word in dictionary.
+                        case get symbol dict of
+                            Just definition ->
+                                Ok ( stack, definition ++ expression, dict )
 
-                        Nothing ->
-                            Err ("Unknown word: " ++ symbol)
+                            Nothing ->
+                                Err UnknownWord
 
-                else
-                    Err msg
+                    -- ("Unknown word: " ++ symbol)
+                    _ ->
+                        Err err
 
             Ok ( stack0, expression0 ) ->
                 Ok ( stack0, expression0, dict )
@@ -208,16 +268,16 @@ joy_function_eval symbol stack expression =
             joy_truthy stack expression
 
         _ ->
-            Err "Unknown word."
+            Err UnknownWord
 
 
-joy_inscribe : JList -> JList -> JoyDict -> Result String ( JList, JList, JoyDict )
+joy_inscribe : JList -> JList -> JoyDict -> Result JoyErr ( JList, JList, JoyDict )
 joy_inscribe stack expression dict =
     case pop_list stack of
         Ok ( def, s0 ) ->
             case def of
                 [] ->
-                    Err "Empty definition."
+                    Err EmptyDefinition
 
                 sym :: body ->
                     -- check that name is a symbol
@@ -226,7 +286,7 @@ joy_inscribe stack expression dict =
                             Ok ( s0, expression, insert name body dict )
 
                         _ ->
-                            Err "Def name isn't symbol."
+                            Err DefinitionNameMustBeSymbol
 
         Err msg ->
             Err msg
@@ -399,7 +459,7 @@ joy_first stack expression =
                     Ok ( push_any b s0, expression )
 
                 Err _ ->
-                    Err "Cannot take first of empty list."
+                    Err CannotTakeFirstOfEmptyList
 
         Err msg ->
             Err msg
@@ -424,7 +484,7 @@ joy_rest stack expression =
                     Ok ( push_list el s0, expression )
 
                 Err _ ->
-                    Err "Cannot take rest of empty list."
+                    Err CannotTakeRestOfEmptyList
 
         Err msg ->
             Err msg
@@ -486,7 +546,7 @@ joy_truthy stack expression =
                         Ok ( JoyTrue :: s0, expression )
 
                 JoySymbol _ ->
-                    Err "Cannot Boolify."
+                    Err CannotBoolify
 
         Err msg ->
             Err msg
@@ -516,52 +576,52 @@ push_any j stack =
     j :: stack
 
 
-pop_int : JList -> Result String ( Int, JList )
+pop_int : JList -> Result JoyErr ( Int, JList )
 pop_int stack =
     pop_any stack |> andThen isnt_int
 
 
-pop_list : JList -> Result String ( JList, JList )
+pop_list : JList -> Result JoyErr ( JList, JList )
 pop_list stack =
     pop_any stack |> andThen isnt_list
 
 
-pop_bool : JList -> Result String ( Bool, JList )
+pop_bool : JList -> Result JoyErr ( Bool, JList )
 pop_bool stack =
     pop_any stack |> andThen isnt_bool
 
 
-pop_any : JList -> Result String ( JoyType, JList )
+pop_any : JList -> Result JoyErr ( JoyType, JList )
 pop_any stack =
     case stack of
         [] ->
-            Err "Not enough values on Stack"
+            Err NotEnoughValuesOnStack
 
         item :: rest ->
             Ok ( item, rest )
 
 
-isnt_int : ( JoyType, JList ) -> Result String ( Int, JList )
+isnt_int : ( JoyType, JList ) -> Result JoyErr ( Int, JList )
 isnt_int ( item, stack ) =
     case item of
         JoyInt i ->
             Ok ( i, stack )
 
         _ ->
-            Err "Not an integer."
+            Err NotAnInteger
 
 
-isnt_list : ( JoyType, JList ) -> Result String ( JList, JList )
+isnt_list : ( JoyType, JList ) -> Result JoyErr ( JList, JList )
 isnt_list ( item, stack ) =
     case item of
         JoyList el ->
             Ok ( el, stack )
 
         _ ->
-            Err "Not a list."
+            Err NotAList
 
 
-isnt_bool : ( JoyType, JList ) -> Result String ( Bool, JList )
+isnt_bool : ( JoyType, JList ) -> Result JoyErr ( Bool, JList )
 isnt_bool ( item, stack ) =
     case item of
         JoyTrue ->
@@ -571,7 +631,7 @@ isnt_bool ( item, stack ) =
             Ok ( False, stack )
 
         _ ->
-            Err "Not a Boolean value."
+            Err NotABooleanValue
 
 
 
@@ -633,17 +693,17 @@ tokenator tok =
 -- instead turning them into symbols!
 
 
-expect_right_bracket : List String -> JList -> Result String ( JList, List String )
+expect_right_bracket : List String -> JList -> Result JoyErr ( JList, List String )
 expect_right_bracket tokens acc =
     case tokens of
         [] ->
-            Err "Missing closing bracket."
+            Err MissingClosingBracket
 
         h :: t ->
             expect_right_bracket_one_token_lookahead h t acc
 
 
-expect_right_bracket_one_token_lookahead : String -> List String -> JList -> Result String ( JList, List String )
+expect_right_bracket_one_token_lookahead : String -> List String -> JList -> Result JoyErr ( JList, List String )
 expect_right_bracket_one_token_lookahead token tokens acc =
     case token of
         "]" ->
@@ -677,11 +737,11 @@ expect_right_bracket_one_token_lookahead token tokens acc =
 ---(* token -> token list -> joy_type * token list *)
 
 
-one_token_lookahead : String -> List String -> Result String ( JoyType, List String )
+one_token_lookahead : String -> List String -> Result JoyErr ( JoyType, List String )
 one_token_lookahead token tokens =
     case token of
         "]" ->
-            Err "Extra closing bracket."
+            Err ExtraClosingBracket
 
         "[" ->
             case expect_right_bracket tokens [] of
@@ -695,7 +755,7 @@ one_token_lookahead token tokens =
             Ok ( tokenator token, tokens )
 
 
-parse0 : List String -> JList -> Result String JList
+parse0 : List String -> JList -> Result JoyErr JList
 parse0 tokens acc =
     case tokens of
         [] ->
@@ -731,11 +791,11 @@ doit text dict =
                 Ok ( expr, dict0 ) ->
                     Ok ( joyExpressionToString expr, dict0 )
 
-                Err msg ->
-                    Err msg
+                Err err ->
+                    Err (joy_err err)
 
-        Err msg ->
-            Err msg
+        Err err ->
+            Err (joy_err err)
 
 
 add_def : String -> JoyDict -> JoyDict
