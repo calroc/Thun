@@ -271,8 +271,8 @@ dialect of Joy are defined in terms of these:
 | op  | Logical (Boolean) | Bitwise (Ints) | Short-Circuiting Combinators |
 |-----|-------------------|----------------|------------------------------|
 | AND |       /\          |     &&         |          and                 |
-|  OR |       \/          |     ||         |           or                 |
-| XOR |     _\/_          |     xor        |                              |
+|  OR |       \\/         |     \|\|       |           or                 |
+| XOR |     _\\/_         |     xor        |                              |
 | NOT |     not           |      ~         |                              |
 
 
