@@ -115,6 +115,7 @@ that.  Really you need to run (GNU) make in the `docs/notebooks` and
     |   |               type inference
     |   |               work-in-progress compiler
     |   |
+    |   |-- Elm - interpreter
     |   |-- Nim - interpreter
     |   |-- Ocaml - work-in-progress interpreter
     |   `-- Python - interpreter
