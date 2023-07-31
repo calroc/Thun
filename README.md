@@ -261,11 +261,40 @@ dialect of Joy are defined in terms of these:
 
     < > >= <= != <> = 
 
-    lshift rshift
+    not
 
-    /\ \/ _\/_ (These are the logical ops that work on Booleans.)
+They could be grouped:
+
+- Combinators (`branch dip i loop`)
+- Stack Chatter (`clear dup pop stack swaack swap`)
+- List Manipulation (`concat cons first rest`)
+- Math (`+ - * / %`)
+- Comparison (`< > >= <= != <> =`)
+- Logic (`truthy not`)
+
+Many of these could be definitions, but we don't want to be completely minimal at the cost of efficiency, eh?
+
+    first == [[clear] dip] infra
+    rest == [pop] infra
+
+Also, custom error messages are nice?  (E.g. `first` and `rest` have distinct errors from `pop` and `dip`, at least in the current design.)
 
 
+### AND, OR, XOR, NOT
+
+There are three families (categories?) of these operations:
+
+1. Logical ops that take and return Boolean values.
+2. Bitwise ops that treat integers as bit-strings.
+3. Short-Circuiting Combinators that accept a Boolean and a quoted program
+   and run the quote *iff* the Boolean doesn't suffice to resolve the clause.
+   (in other words `true [P] and` runs `P` whereas `false [P] and` discards
+   it and leaves `false` on the stack, and similarly for `or` but with the
+   logical polarity, if you will, reversed.)
+
+(So far, only the Elm interpreter implements the bitwise ops.  The others
+two kinds of ops are defined in the `defs.txt` file, but you could implement
+them in host language for greater efficiency if you like.)
 
 | op  | Logical (Boolean) | Bitwise (Ints) | Short-Circuiting Combinators |
 |-----|-------------------|----------------|------------------------------|
