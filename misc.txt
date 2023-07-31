@@ -1,13 +1,4 @@
 
-(I had the Python package set up to upload to PyPI as "Thun", but the
-whole Python distribution story seems unsettled at the moment (2023) so
-I've gone back to the *old ways*: there is a single script ``joy.py``
-that gets modified (``defs.txt`` is inserted) to create a ``joy`` script
-that uses the "shebang" trick to pretend to be a binary.  In other words,
-run ``make`` and put the resulting ``joy`` script in your PATH, if that's
-what you want to do.  In a year or two the Python folks will have sorted
-things out and we can go back to ``pip install Thun`` or whatever.)
-
 
 nim cc \
 -d:release \
@@ -21,3 +12,44 @@ joy.nim
 nim doc --project --index:on --git.url:"https://git.sr.ht/~sforman/Bliss" --git.commit:10b5651ed242fb16c29f2c1f7340d77f65926ca4 --outdir:htmldocs joy.nim
 
 https://git.sr.ht/~sforman/Bliss/tree/10b5651ed242fb16c29f2c1f7340d77f65926ca4/item/types.nim#L26
+
+
+
+
+## Documentation
+
+§.3.1 Jupyter Notebooks
+
+The docs/ folder contains Jupyter notebooks, ... TODO
+
+§.3.2 Sphinx Docs
+
+Some of the documentation is in the form of ReST files
+
+§.3.3 Building the Docs
+
+Building the documentation is a little tricky at the moment.  It involves
+a makefile that uses nbconvert to generate ReST files from some of the
+notebooks, copies those to the sphinx source dir, then builds the HTML
+output using sphinx.
+
+Get the dependencies for (re)building the docs:
+
+    pip install Thun[build-docs]
+    make docs
+
+
+
+
+
+
+
+
+Nothing is done about Python exceptions currently, although it would be
+possible to capture the stack and expression just before the exception
+and build a robust and flexible error handler.  Because they are both
+just datastructures, you could immediately retry them under a debugger,
+or edit either or both of the stack and expression.  All state is in one
+or the other.
+
+
