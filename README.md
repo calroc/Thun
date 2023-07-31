@@ -274,10 +274,9 @@ They could be grouped:
 
 Many of these could be definitions, but we don't want to be completely minimal at the cost of efficiency, eh?
 
-    first == [[clear] dip] infra
     rest == [pop] infra
 
-Also, custom error messages are nice?  (E.g. `first` and `rest` have distinct errors from `pop` and `dip`, at least in the current design.)
+Also, custom error messages are nice?  (E.g. `rest` has a distinct error from `pop`, at least in the current design.)
 
 
 ### AND, OR, XOR, NOT
