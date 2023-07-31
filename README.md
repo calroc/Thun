@@ -14,7 +14,7 @@ precisely match the behaviour of the original version written in C.  It
 started as a Python project called "Joypy", but after someone claimed that
 name on PyPI before me I renamed it to Thun in honor of Manfred Von Thun.
 Now there are interpreters implemented in several additional languages
-(C, Nim, Prolog, Rust).
+(C, Elm, Nim, OCaml, Prolog, Rust).
 
 Joy is:
 
@@ -49,9 +49,9 @@ For more information see [Square Spiral Example Joy Code](https://joypy.osdn.io/
 
     square_spiral [_p] [_then] [_else] ifte
 
-    _p  [_p0] [_p1] &&
+    _p  [_p0] [_p1] and
     _p0 [abs] ii <=
-    _p1 [<>] [pop !-] ||
+    _p1 [<>] [pop !-] or
 
     _then [    !-] [[++]] [[--]] ifte dip
     _else [pop !-]  [--]   [++]  ifte
@@ -126,18 +126,14 @@ that.  Really you need to run (GNU) make in the `docs/notebooks` and
 
 ## Installation
 
-Clone the repo and follow the instructions in the individual
-`implementations` directories.  There isn't really any installation.  You
-can put the binaries in your ``PATH``.
+Clone the repo:
 
-(I had the Python package set up to upload to PyPI as "Thun", but the
-whole Python distribution story seems unsettled at the moment (2023) so
-I've gone back to the *old ways*: there is a single script ``joy.py``
-that gets modified (``defs.txt`` is inserted) to create a ``joy`` script
-that uses the "shebang" trick to pretend to be a binary.  In other words,
-run ``make`` and put the resulting ``joy`` script in your PATH, if that's
-what you want to do.  In a year or two the Python folks will have sorted
-things out and we can go back to ``pip install Thun`` or whatever.)
+    git clone https://git.sr.ht/~sforman/Thun
+
+Then follow the instructions in the individual `implementations` directories.
+
+(There isn't really any installation as such.
+You can put the binaries in your ``PATH``.)
 
 
 ## Basics of Joy
@@ -271,12 +267,15 @@ They could be grouped:
 - Math (`+ - * / %`)
 - Comparison (`< > >= <= != <> =`)
 - Logic (`truthy not`)
+- Programming (`inscribe`)
 
-Many of these could be definitions, but we don't want to be completely minimal at the cost of efficiency, eh?
+Some of these could be definitions, but we don't want to be completely
+minimal at the cost of efficiency, eh?
 
     rest == [pop] infra
 
-Also, custom error messages are nice?  (E.g. `rest` has a distinct error from `pop`, at least in the current design.)
+Also, custom error messages are nice?  (E.g. `rest` has a distinct error
+from `pop`, at least in the current design.)
 
 
 ### AND, OR, XOR, NOT
@@ -285,11 +284,10 @@ There are three families (categories?) of these operations:
 
 1. Logical ops that take and return Boolean values.
 2. Bitwise ops that treat integers as bit-strings.
-3. Short-Circuiting Combinators that accept a Boolean and a quoted program
-   and run the quote *iff* the Boolean doesn't suffice to resolve the clause.
-   (in other words `true [P] and` runs `P` whereas `false [P] and` discards
-   it and leaves `false` on the stack, and similarly for `or` but with the
-   logical polarity, if you will, reversed.)
+3. Short-Circuiting Combinators that accept two quoted programs
+   and run top quote *iff* the second doesn't suffice to resolve the clause.
+   (in other words `[A] [B] and` runs `B` only if `A` evaluates to `true`,
+   and similarly for `or` but only if `A` evaluates to `false`.)
 
 (So far, only the Elm interpreter implements the bitwise ops.  The others
 two kinds of ops are defined in the `defs.txt` file, but you could implement
