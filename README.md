@@ -261,12 +261,12 @@ dialect of Joy are defined in terms of these:
 
 They could be grouped:
 
-- Combinators (`branch dip i loop`)
-- Stack Chatter (`clear dup pop stack swaack swap`)
-- List Manipulation (`concat cons first rest`)
-- Math (`+ - * / %`)
-- Comparison (`< > >= <= != <> =`)
-- Logic (`truthy not`)
+- Combinators (`branch` `dip` `i` `loop`)
+- Stack Chatter (`clear` `dup` `pop` `stack` `swaack` `swap`)
+- List Manipulation (`concat` `cons` `first` `rest`)
+- Math (`+` `-` `*` `/` `%`)
+- Comparison (`<` `>` `>=` `<=` `!=` `<>` `=`)
+- Logic (`truthy` `not`)
 - Programming (`inscribe`)
 
 Some of these could be definitions, but we don't want to be completely
