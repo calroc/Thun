@@ -172,6 +172,8 @@ _mape, def__mape
 _map0, def__map0
 _map1, def__map1
 _map2, def__map2
+_isnt_bool, def__isnt_bool
+_isnt_two_bools, def__isnt_two_bools
 _\/_, def___REVERSE_SOLIDUS_SOLIDUS__
 /\, def_SOLIDUS_REVERSE_SOLIDUS
 \/, def_REVERSE_SOLIDUS_SOLIDUS

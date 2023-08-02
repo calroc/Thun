@@ -99,9 +99,9 @@ in_word_set (register const char *str, register size_t len)
 {
   enum
     {
-      TOTAL_KEYWORDS = 163,
+      TOTAL_KEYWORDS = 165,
       MIN_WORD_LENGTH = 1,
-      MAX_WORD_LENGTH = 14,
+      MAX_WORD_LENGTH = 15,
       MIN_HASH_VALUE = 1,
       MAX_HASH_VALUE = 359
     };
@@ -216,7 +216,7 @@ in_word_set (register const char *str, register size_t len)
       {""},
 #line 132 "KEYWORDS.txt"
       {"second", def_second},
-#line 177 "KEYWORDS.txt"
+#line 179 "KEYWORDS.txt"
       {"\\/", def_REVERSE_SOLIDUS_SOLIDUS},
 #line 131 "KEYWORDS.txt"
       {"run", def_run},
@@ -234,7 +234,7 @@ in_word_set (register const char *str, register size_t len)
       {""},
 #line 137 "KEYWORDS.txt"
       {"spiral_next", def_spiral_next},
-#line 176 "KEYWORDS.txt"
+#line 178 "KEYWORDS.txt"
       {"/\\", def_SOLIDUS_REVERSE_SOLIDUS},
 #line 44 "KEYWORDS.txt"
       {"inscribe", inscribe},
@@ -402,12 +402,15 @@ in_word_set (register const char *str, register size_t len)
       {""},
 #line 94 "KEYWORDS.txt"
       {"fork", def_fork},
-      {""},
+#line 176 "KEYWORDS.txt"
+      {"_isnt_two_bools", def__isnt_two_bools},
 #line 15 "KEYWORDS.txt"
       {"=", def_eq},
 #line 21 "KEYWORDS.txt"
       {">=", def_ge},
-      {""}, {""}, {""},
+      {""}, {""},
+#line 175 "KEYWORDS.txt"
+      {"_isnt_bool", def__isnt_bool},
 #line 163 "KEYWORDS.txt"
       {"_step1", def__step1},
 #line 93 "KEYWORDS.txt"
@@ -454,7 +457,7 @@ in_word_set (register const char *str, register size_t len)
       {"reverse", def_reverse},
 #line 66 "KEYWORDS.txt"
       {"abs", def_abs},
-#line 175 "KEYWORDS.txt"
+#line 177 "KEYWORDS.txt"
       {"_\\/_", def___REVERSE_SOLIDUS_SOLIDUS__},
 #line 136 "KEYWORDS.txt"
       {"small", def_small},

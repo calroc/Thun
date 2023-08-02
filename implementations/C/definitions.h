@@ -126,6 +126,8 @@ void def__mape(JoyListPtr stack, JoyListPtr expression);
 void def__map0(JoyListPtr stack, JoyListPtr expression);
 void def__map1(JoyListPtr stack, JoyListPtr expression);
 void def__map2(JoyListPtr stack, JoyListPtr expression);
+void def__isnt_bool(JoyListPtr stack, JoyListPtr expression);
+void def__isnt_two_bools(JoyListPtr stack, JoyListPtr expression);
 void def___REVERSE_SOLIDUS_SOLIDUS__(JoyListPtr stack, JoyListPtr expression);
 void def_SOLIDUS_REVERSE_SOLIDUS(JoyListPtr stack, JoyListPtr expression);
 void def_REVERSE_SOLIDUS_SOLIDUS(JoyListPtr stack, JoyListPtr expression);

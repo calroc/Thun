@@ -135,6 +135,8 @@ JoyList def__mape_body;
 JoyList def__map0_body;
 JoyList def__map1_body;
 JoyList def__map2_body;
+JoyList def__isnt_bool_body;
+JoyList def__isnt_two_bools_body;
 JoyList def___REVERSE_SOLIDUS_SOLIDUS___body;
 JoyList def_SOLIDUS_REVERSE_SOLIDUS_body;
 JoyList def_REVERSE_SOLIDUS_SOLIDUS_body;
@@ -271,9 +273,11 @@ init_defs(void)
 	def__map0_body = text_to_expression("[_map1] dipd _map2");
 	def__map1_body = text_to_expression("stackd shift");
 	def__map2_body = text_to_expression("[infrst] cons dipd roll< swons");
-	def___REVERSE_SOLIDUS_SOLIDUS___body = text_to_expression("[not not] [not] branch");
-	def_SOLIDUS_REVERSE_SOLIDUS_body = text_to_expression("[not not] ii [pop false] [] branch");
-	def_REVERSE_SOLIDUS_SOLIDUS_body = text_to_expression("[not not] ii [] [pop true] branch");
+	def__isnt_bool_body = text_to_expression("not not");
+	def__isnt_two_bools_body = text_to_expression("[_isnt_bool] ii");
+	def___REVERSE_SOLIDUS_SOLIDUS___body = text_to_expression("[_isnt_bool] [not] branch");
+	def_SOLIDUS_REVERSE_SOLIDUS_body = text_to_expression("_isnt_two_bools [pop false] [] branch");
+	def_REVERSE_SOLIDUS_SOLIDUS_body = text_to_expression("_isnt_two_bools [] [pop true] branch");
 }
 
 
@@ -404,6 +408,8 @@ void def__mape(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) 
 void def__map0(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map0_body, expression); }
 void def__map1(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map1_body, expression); }
 void def__map2(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__map2_body, expression); }
+void def__isnt_bool(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__isnt_bool_body, expression); }
+void def__isnt_two_bools(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__isnt_two_bools_body, expression); }
 void def___REVERSE_SOLIDUS_SOLIDUS__(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def___REVERSE_SOLIDUS_SOLIDUS___body, expression); }
 void def_SOLIDUS_REVERSE_SOLIDUS(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_SOLIDUS_REVERSE_SOLIDUS_body, expression); }
 void def_REVERSE_SOLIDUS_SOLIDUS(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_REVERSE_SOLIDUS_SOLIDUS_body, expression); }

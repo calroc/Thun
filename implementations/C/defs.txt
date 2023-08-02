@@ -126,6 +126,8 @@ _mape popd reverse
 _map0 [_map1] dipd _map2
 _map1 stackd shift
 _map2 [infrst] cons dipd roll< swons
-_\/_ [not not] [not] branch
-/\ [not not] ii [pop false] [] branch
-\/ [not not] ii [] [pop true] branch
+_isnt_bool not not
+_isnt_two_bools [_isnt_bool] ii
+_\/_ [_isnt_bool] [not] branch
+/\ _isnt_two_bools [pop false] [] branch
+\/ _isnt_two_bools [] [pop true] branch
