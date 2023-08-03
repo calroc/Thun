@@ -162,6 +162,42 @@ It's meant for prototyping.  (You could abuse it to make variables by
 storing "functions" in the dictionary that just contain literal values as
 their bodies.)
 
+## Problems
+
+### Symbols as Data
+
+Nothing prevents you from using symbols as data:
+
+    joy? [cats]
+    [cats]
+
+But there's a potential pitfall: you might accidentally get a "bare"
+unquoted symbol on the stack:
+
+    joy? [cats]
+    [cats]
+    joy? first
+    cats
+
+That by itself won't break anything (the stack is just a list.)
+But if you were to use, say, `dip`, in such a way as to put the symbols
+back onto the expression, then when the interpreter encounters it, it
+will attempt to evaluate it, which is almost certainly not what you want.
+
+    cats
+    joy? [23] dip
+    Unknown: cats
+    cats
+
+At the very least you get an "Unknown" error, but if the symbol names a
+function then the interpreter will attempt to evaluate it, probably
+leading to an error.
+
+I don't see an easy way around this.  Be careful?  It's kind of against
+the spirit of the thing to just leave a footgun like that laying around,
+but perhaps in practice it won't come up.  (Because writing Joy code by
+derivation seems to lead to bug-free code, which is the kinda the point.)
+
 
 --------------------------------------------------
 
