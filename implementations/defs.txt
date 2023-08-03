@@ -12,6 +12,8 @@ or nulco [nullary] dip [true] branch
 !- 0 >=
 <{} [] swap
 <<{} [] rollup
+<< lshift
+>> rshift
 abs dup 0 < [] [neg] branch
 anamorphism [pop []] swap [dip swons] genrec
 app1 grba infrst
@@ -62,6 +64,7 @@ nulco [nullary] cons
 null [] concat bool not
 nullary [stack] dinfrirst
 of swap at
+over [dup] dip swap
 pam [i] map
 pm [+] [-] clop
 popd [pop] dip

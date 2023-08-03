@@ -180,7 +180,7 @@ unquoted symbol on the stack:
     cats
 
 That by itself won't break anything (the stack is just a list.)
-But if you were to use, say, `dip`, in such a way as to put the symbols
+But if you were to use, say, `dip`, in such a way as to put the symbol
 back onto the expression, then when the interpreter encounters it, it
 will attempt to evaluate it, which is almost certainly not what you want.
 
