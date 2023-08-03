@@ -17,7 +17,7 @@ codes_to_stream([Code|Codes], Stream) :-
 codes_to_stream([], _).
 
 :- initialization((
-    read_term(AST, [end_of_term(eof)]),
+    read_term(AST, []),
     format_joy_terms(AST, Codes, []),
     codes_to_stream(Codes, user_output), print('\n')
     )).
