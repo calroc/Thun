@@ -53,3 +53,43 @@ or edit either or both of the stack and expression.  All state is in one
 or the other.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### AND, OR, XOR, NOT
+
+There are three families (categories?) of these operations:
+
+1. Logical ops that take and return Boolean values.
+2. Bitwise ops that treat integers as bit-strings.
+3. Short-Circuiting Combinators that accept two quoted programs
+   and run top quote *iff* the second doesn't suffice to resolve the clause.
+   (in other words `[A] [B] and` runs `B` only if `A` evaluates to `true`,
+   and similarly for `or` but only if `A` evaluates to `false`.)
+
+(So far, only the Elm interpreter implements the bitwise ops.  The others
+two kinds of ops are defined in the `defs.txt` file, but you could implement
+them in host language for greater efficiency if you like.)
+
+| op  | Logical (Boolean) | Bitwise (Ints) | Short-Circuiting Combinators |
+|-----|-------------------|----------------|------------------------------|
+| AND |       `/\`        |     `&&`       |          `and `              |
+|  OR |       `\/`        |    `\|\|`      |          `or`                |
+| XOR |      `_\/_`       |    `xor`       |                              |
+| NOT |      `not`        |                |                              |
+
+
