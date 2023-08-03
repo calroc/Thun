@@ -22,13 +22,14 @@ main =
 
 type alias Model =
   { content : String
+  , evaluated : String
   , dictionary : JoyDict
   }
 
 
 init : Model
 init =
-  { content = "", dictionary = initialize Dict.empty }
+  { content = "", evaluated = "", dictionary = initialize Dict.empty }
 
 
 
@@ -43,7 +44,11 @@ update : Msg -> Model -> Model
 update msg model =
   case msg of
     Change newContent ->
-      { model | content = newContent }
+      case doit newContent model.dictionary of
+        Err err ->
+          { model | content = newContent, evaluated = err}
+        Ok (output, dict) ->
+          { content = newContent, evaluated = output, dictionary = dict }
 
 
 
@@ -52,15 +57,8 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-  case doit model.content model.dictionary of
-    Err msg ->
       div []
         [ input [ placeholder "Text to reverse", value model.content, onInput Change ] []
-        , div [] [ text msg ]
-        ]
-    Ok (message, dict0) ->
-      div []
-        [ input [ placeholder "Text to reverse", value model.content, onInput Change ] []
-        , div [] [ text message ]
+        , div [] [ text model.evaluated ]
         ]
 
