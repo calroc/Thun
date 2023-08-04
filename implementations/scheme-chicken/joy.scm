@@ -42,7 +42,8 @@
 
 (define (parse tokens) (parse0 tokens '()))
 
+(define (text-to-expression text) (parse (tokenize text)))
 
-(display (parse (tokenize "ab  cd [[]] 234 [true] false")))
+(display (text-to-expression "ab  cd [[]] 234 [true] false"))
 (newline)
 
