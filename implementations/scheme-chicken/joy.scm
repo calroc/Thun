@@ -1,5 +1,18 @@
 (import (chicken string))
 
+(define (joy stack expression dict)
+  (if (null? expression)
+    (values stack dict)
+    (if (string? (car expression))
+      (receive (s e dict0)
+        (joy-eval (car expression) stack (cdr expression) dict)
+        (joy s e dict0))
+      (joy (cons (car expression) stack) (cdr expression) dict))))
+
+(define (joy-eval symbol stack expression dict)
+  (values (cons symbol stack) expression dict))
+
+
 (define (string-replace str from to)
   (string-intersperse (string-split str from #t) to))
 
@@ -15,7 +28,7 @@
 
 (define (expect-right-bracket tokens acc) 
   (if (null? tokens)
-    (/ 2 0)
+    (error "Missing closing bracket.")
     (expect-right-bracket-lookahead (car tokens) (cdr tokens) acc)))
 
 (define (expect-right-bracket-lookahead token tokens acc)
@@ -29,7 +42,7 @@
             (values (cons (tokenator token) el) rest)))))
 
 (define (one-token-lookahead token tokens)
-  (cond ((string=? token "]") (/ 1 0))
+  (cond ((string=? token "]") (error "Extra closing bracket."))
         ((string=? token "[") (expect-right-bracket tokens '()))
         (else (values (tokenator token) tokens))))
 
@@ -54,7 +67,11 @@
 (define (joy-expression-to-string expr)
   (string-intersperse (map joy-term-to-string expr) " "))
 
+(define (doit text)
+  (receive (stack dict)
+    (joy '() (text-to-expression text) '())
+    (joy-expression-to-string stack)))
 
-(display (joy-expression-to-string (text-to-expression "ab  cd [[  ]] 234 [true] false")))
+(display (doit "ab  cd [[  ]] 234 [true] false"))
 (newline)
 
