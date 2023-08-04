@@ -44,6 +44,17 @@
 
 (define (text-to-expression text) (parse (tokenize text)))
 
-(display (text-to-expression "ab  cd [[]] 234 [true] false"))
+
+(define (joy-term-to-string term)
+  (cond ((boolean? term) (if term "true" "false"))
+        ((number? term) (->string term))
+        ((list? term) (conc "[" (joy-expression-to-string term) "]"))
+        (else term)))
+
+(define (joy-expression-to-string expr)
+  (string-intersperse (map joy-term-to-string expr) " "))
+
+
+(display (joy-expression-to-string (text-to-expression "ab  cd [[  ]] 234 [true] false")))
 (newline)
 
