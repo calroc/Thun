@@ -10,7 +10,14 @@
       (joy (cons (car expression) stack) (cdr expression) dict))))
 
 (define (joy-eval symbol stack expression dict)
-  (values (cons symbol stack) expression dict))
+  (define (is-it? name) (string=? symbol name))
+  (cond
+    ((is-it? "+") (values (joy-add stack) expression dict))
+    ((is-it? "-") (values (joy-sub stack) expression dict))
+    (else (values (cons symbol stack) expression dict))))
+
+(define (joy-add stack) (cons (+ (cadr stack) (car stack)) (cddr stack)))
+(define (joy-sub stack) (cons (- (cadr stack) (car stack)) (cddr stack)))
 
 
 (define (string-replace str from to)
@@ -72,6 +79,6 @@
     (joy '() (text-to-expression text) '())
     (joy-expression-to-string stack)))
 
-(display (doit "ab  cd [[  ]] 234 [true] false"))
+(display (doit "ab  cd [[  ]] 23 4 - [true] false"))
 (newline)
 
