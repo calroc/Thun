@@ -1,4 +1,5 @@
 (import (chicken string))
+(import srfi-69)
 
 (define (joy stack expression dict)
   (if (null? expression)
@@ -81,6 +82,21 @@
     (joy '() (text->expression text) '())
     (joy-expression->string stack)))
 
-(display (doit "ab  cd [[  ]] 23 4 - [true] false"))
+
+(define (initialize defs dict)
+  (map (lambda (def) (add-def dict def)) (string-split defs "\n")))
+
+(define (add-def def dict)
+  (let ((def_list (text->expression def)))
+    (hash-table-set! dict (car def_list) (cdr def_list))))
+
+
+
+
+
+
+
+
+(display (doit "ab  cd [[  ]] 23 4 - dup - [true] false"))
 (newline)
 
