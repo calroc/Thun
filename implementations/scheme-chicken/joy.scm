@@ -1,5 +1,7 @@
+(import (chicken io))
 (import (chicken string))
 (import srfi-69)
+
 
 (define (joy stack expression dict)
   (if (null? expression)
@@ -78,23 +80,24 @@
   (string-intersperse (map joy-term->string expr) " "))
 
 (define (doit text)
-  (receive (stack dict)
-    (joy '() (text->expression text) '())
+  (receive (stack _dict)
+    (joy '() (text->expression text) (initialize))
     (joy-expression->string stack)))
 
 
-(define (initialize defs dict)
-  (map (lambda (def) (add-def dict def)) (string-split defs "\n")))
+(define (initialize)
+  (load-defs
+    ; TODO: load defs at compile-time, not run-time.
+    (with-input-from-file "../defs.txt" read-string)
+    (make-hash-table string=? string-hash)))
+
+(define (load-defs defs dict)
+  (map (lambda (def) (add-def def dict)) (string-split defs "\n"))
+  dict)
 
 (define (add-def def dict)
   (let ((def_list (text->expression def)))
     (hash-table-set! dict (car def_list) (cdr def_list))))
-
-
-
-
-
-
 
 
 (display (doit "ab  cd [[  ]] 23 4 - dup - [true] false"))
