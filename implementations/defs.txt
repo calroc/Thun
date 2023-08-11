@@ -61,7 +61,7 @@ mod %
 neg 0 swap -
 not [true] [false] branch
 nulco [nullary] cons
-null [] concat bool not
+null [] swap concat bool not
 nullary [stack] dinfrirst
 of swap at
 over [dup] dip swap
