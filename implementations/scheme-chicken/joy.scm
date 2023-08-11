@@ -1,8 +1,11 @@
 (import (chicken io))
 (import (chicken string))
 (import srfi-69)
-(load "defs.scm")
 
+;(load "defs.scm") ; csc -prologue defs.scm joy.scm
+(cond-expand
+  (chicken-script (load "defs.scm"))
+  (else))
 
 (define (joy stack expression dict)
   (if (null? expression)
@@ -20,8 +23,9 @@
     ((is-it? "-") (values (joy-sub stack) expression dict))
     ((is-it? "mul") (values (joy-mul stack) expression dict))
     ((is-it? "dup") (values (joy-dup stack) expression dict))
-    ((hash-table-exists? dict symbol) (values stack (append (hash-table-ref dict symbol) expression) dict))
-    (else (values (cons symbol stack) expression dict))))
+    ((hash-table-exists? dict symbol)
+      (values stack (append (hash-table-ref dict symbol) expression) dict))
+    (else (error "Unknown word."))))
 
 (define (joy-add stack) (cons (+ (cadr stack) (car stack)) (cddr stack)))
 (define (joy-sub stack) (cons (- (cadr stack) (car stack)) (cddr stack)))
@@ -101,6 +105,6 @@
     (hash-table-set! dict (car def_list) (cdr def_list))))
 
 
-(display (doit "ab  cd [[  ]] 23 4 - dup - [true] false 23 sqr"))
+(display (doit "12  23 [[  ]] 23 4 - dup - [true] false 23 sqr"))
 (newline)
 
