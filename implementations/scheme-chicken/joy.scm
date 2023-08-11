@@ -1,30 +1,28 @@
-|*
-
-████████╗██╗  ██╗██╗   ██╗███╗   ██╗
-╚══██╔══╝██║  ██║██║   ██║████╗  ██║
-   ██║   ███████║██║   ██║██╔██╗ ██║
-   ██║   ██╔══██║██║   ██║██║╚██╗██║
-   ██║   ██║  ██║╚██████╔╝██║ ╚████║
-   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
-
-Copyright © 2023 Simon Forman
-
-This file is part of Thun
-
-Thun is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Thun is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Thun.  If not see <http://www.gnu.org/licenses/>.
-
-*|
+;
+;████████╗██╗  ██╗██╗   ██╗███╗   ██╗
+;╚══██╔══╝██║  ██║██║   ██║████╗  ██║
+;   ██║   ███████║██║   ██║██╔██╗ ██║
+;   ██║   ██╔══██║██║   ██║██║╚██╗██║
+;   ██║   ██║  ██║╚██████╔╝██║ ╚████║
+;   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+;
+;Copyright © 2023 Simon Forman
+;
+;This file is part of Thun
+;
+;Thun is free software: you can redistribute it and/or modify
+;it under the terms of the GNU General Public License as published by
+;the Free Software Foundation, either version 3 of the License, or
+;(at your option) any later version.
+;
+;Thun is distributed in the hope that it will be useful,
+;but WITHOUT ANY WARRANTY; without even the implied warranty of
+;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;GNU General Public License for more details.
+;
+;You should have received a copy of the GNU General Public License
+;along with Thun.  If not see <http://www.gnu.org/licenses/>.
+;
 
 (import (chicken io))
 (import (chicken string))
@@ -49,8 +47,11 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
   (cond
     ((is-it? "+") (values (joy-add stack) expression dict))
     ((is-it? "-") (values (joy-sub stack) expression dict))
+    ((is-it? "*") (values (joy-mul stack) expression dict))
     ((is-it? "mul") (values (joy-mul stack) expression dict))
-    ((is-it? "dup") (values (joy-dup stack) expression dict))
+    ((is-it? "dup") (values (cons (car stack) stack) expression dict))
+    ((is-it? "stack") (values (cons stack stack) expression dict))
+    ((is-it? "swaack") (values (cons (cdr stack) (car stack)) expression dict))
     ((hash-table-exists? dict symbol)
       (values stack (append (hash-table-ref dict symbol) expression) dict))
     (else (error "Unknown word."))))
@@ -58,7 +59,7 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
 (define (joy-add stack) (cons (+ (cadr stack) (car stack)) (cddr stack)))
 (define (joy-sub stack) (cons (- (cadr stack) (car stack)) (cddr stack)))
 (define (joy-mul stack) (cons (* (cadr stack) (car stack)) (cddr stack)))
-(define (joy-dup stack) (cons (car stack) stack))
+
 
 
 (define (string-replace str from to)
@@ -133,6 +134,6 @@ along with Thun.  If not see <http://www.gnu.org/licenses/>.
     (hash-table-set! dict (car def_list) (cdr def_list))))
 
 
-(display (doit "12  23 [[  ]] 23 4 - dup - [true] false 23 sqr"))
+(display (doit "1 2 3 [4 5 6] swaack stack"))
 (newline)
 
