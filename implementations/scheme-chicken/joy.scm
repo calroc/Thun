@@ -4,9 +4,9 @@
   (if (null? expression)
     (values stack dict)
     (if (string? (car expression))
-      (receive (s e dict0)
+      (receive (s e d)
         (joy-eval (car expression) stack (cdr expression) dict)
-        (joy s e dict0))
+        (joy s e d))
       (joy (cons (car expression) stack) (cdr expression) dict))))
 
 (define (joy-eval symbol stack expression dict)
