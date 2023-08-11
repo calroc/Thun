@@ -14,10 +14,12 @@
   (cond
     ((is-it? "+") (values (joy-add stack) expression dict))
     ((is-it? "-") (values (joy-sub stack) expression dict))
+    ((is-it? "dup") (values (joy-dup stack) expression dict))
     (else (values (cons symbol stack) expression dict))))
 
 (define (joy-add stack) (cons (+ (cadr stack) (car stack)) (cddr stack)))
 (define (joy-sub stack) (cons (- (cadr stack) (car stack)) (cddr stack)))
+(define (joy-dup stack) (cons (car stack) stack))
 
 
 (define (string-replace str from to)
