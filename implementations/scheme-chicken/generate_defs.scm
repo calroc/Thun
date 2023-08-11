@@ -1,0 +1,18 @@
+;(load "joy.scm")
+(import (chicken string) (chicken io))
+
+(let ((source (with-input-from-file "../defs.txt" read-string)))
+  (let ((lines (cons 'list (string-split source "\n"))))
+    ;(let ((def_lists (map text->expression lines)))
+      (let ((code `(define (defs) ,lines))) 
+        (with-output-to-file "defs.scm" (lambda () (write code)))
+      )
+    ;)
+  )
+)
+
+;source = (with-input-from-file "../defs.txt" read-string)
+;lines = (string-split source "\n")
+;def_lists = (map text->expression lines)
+;code = `(define (defs) ,def_lists)
+;(with-output-to-file "defs.scm" (lambda () (write code)))

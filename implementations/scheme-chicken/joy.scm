@@ -1,6 +1,7 @@
 (import (chicken io))
 (import (chicken string))
 (import srfi-69)
+(load "defs.scm")
 
 
 (define (joy stack expression dict)
@@ -86,13 +87,10 @@
 
 
 (define (initialize)
-  (load-defs
-    ; TODO: load defs at compile-time, not run-time.
-    (with-input-from-file "../defs.txt" read-string)
-    (make-hash-table string=? string-hash)))
+  (load-defs (make-hash-table string=? string-hash)))
 
-(define (load-defs defs dict)
-  (map (lambda (def) (add-def def dict)) (string-split defs "\n"))
+(define (load-defs dict)
+  (map (lambda (def) (add-def def dict)) (defs))  ;defs is defined in defs.scm
   dict)
 
 (define (add-def def dict)
