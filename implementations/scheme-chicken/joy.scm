@@ -64,22 +64,22 @@
 
 (define (parse tokens) (parse0 tokens '()))
 
-(define (text-to-expression text) (parse (tokenize text)))
+(define (text->expression text) (parse (tokenize text)))
 
 
-(define (joy-term-to-string term)
+(define (joy-term->string term)
   (cond ((boolean? term) (if term "true" "false"))
         ((number? term) (->string term))
-        ((list? term) (conc "[" (joy-expression-to-string term) "]"))
+        ((list? term) (conc "[" (joy-expression->string term) "]"))
         (else term)))
 
-(define (joy-expression-to-string expr)
-  (string-intersperse (map joy-term-to-string expr) " "))
+(define (joy-expression->string expr)
+  (string-intersperse (map joy-term->string expr) " "))
 
 (define (doit text)
   (receive (stack dict)
-    (joy '() (text-to-expression text) '())
-    (joy-expression-to-string stack)))
+    (joy '() (text->expression text) '())
+    (joy-expression->string stack)))
 
 (display (doit "ab  cd [[  ]] 23 4 - [true] false"))
 (newline)
