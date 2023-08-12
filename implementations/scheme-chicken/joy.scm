@@ -176,7 +176,7 @@
   (load-defs (make-hash-table string=? string-hash)))
 
 (define (load-defs dict)
-  (map (lambda (def) (add-def def dict)) (defs))  ;defs is defined in defs.scm
+  (for-each (lambda (def) (add-def def dict)) (defs))  ;defs is defined in defs.scm
   dict)
 
 (define (add-def def dict)

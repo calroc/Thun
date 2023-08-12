@@ -134,7 +134,7 @@ and run them in various ways.  These combinators reify specific
 control-flow patterns (such as `ifte` which is like `if.. then.. else..`
 in other languages.)  Combinators receive the current expession in
 addition to the stack and return the next expression.  They work by
-changing the pending expression the interpreter is about to execute.  
+changing the pending expression the interpreter is about to execute.
 
 ### Basis Functions
 
