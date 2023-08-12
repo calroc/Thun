@@ -59,6 +59,7 @@
     ((is-it? "i") (joy-i stack expression dict))
     ((is-it? "dip") (joy-dip stack expression dict))
     ((is-it? "branch") (joy-branch stack expression dict))
+    ((is-it? "loop") (joy-loop stack expression dict))
 
     ((hash-table-exists? dict symbol)
       (values stack (append (hash-table-ref dict symbol) expression) dict))
@@ -84,6 +85,13 @@
         (true_body (car stack)))
     (values (cdddr stack)
             (append (if flag true_body false_body) expression)
+            dict)))
+
+(define (joy-loop stack expression dict)
+  (let ((flag (cadr stack))
+        (body (car stack)))
+    (values (cddr stack)
+            (if flag (append body (cons body (cons "loop" expression))) expression)
             dict)))
 
 
@@ -159,6 +167,6 @@
     (hash-table-set! dict (car def_list) (cdr def_list))))
 
 
-(display (doit "true [4] [5] branch false  [4] [5] branch + sqr"))
+(display (doit "1 2 true [4 5 false] loop"))
 (newline)
 
