@@ -171,11 +171,6 @@
 (define (joy-expression->string expr)
   (string-intersperse (map joy-term->string expr) " "))
 
-(define (doit text)
-  (receive (stack _dict)
-    (joy '() (text->expression text) (initialize))
-    (joy-expression->string stack)))
-
 
 (define (initialize)
   (load-defs (make-hash-table string=? string-hash)))
@@ -188,9 +183,29 @@
   (let ((def_list (text->expression def)))
     (hash-table-set! dict (car def_list) (cdr def_list))))
 
-(display (doit "5 [] cons [4] concat first"))
 
+(define (prompt) (display "joy? ") (read-line))
+
+(define DICTIONARY (initialize))
+(define STACK '())
+
+(define (doit text)
+  (receive (stack dict) (joy STACK (text->expression text) DICTIONARY)
+    (set! DICTIONARY dict)
+    (set! STACK stack)
+    (joy-expression->string (reverse stack))))
+
+(define (main-loop)
+  (let ((text (prompt)))
+    (if (not (string=? text ""))
+      ((print (doit text)) (main-loop))
+      (else))))
+
+(main-loop)
+
+
+;(display (doit "5 [] cons [4] concat first"))
 ;(display (doit "5 down_to_zero"))
 ;(display (doit "1 2 true [4 5 false] loop <"))
-(newline)
+;(newline)
 
