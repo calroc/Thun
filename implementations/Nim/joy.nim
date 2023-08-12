@@ -483,27 +483,27 @@ it looks up in the dictionary.
 proc joy_eval(sym: string, stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (JoyListType, JoyListType, JoyMapType) =
   case sym
 
-  of "+":
+  of "+", "add":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_int(a + b, s1), expression, dictionary)
 
-  of "-":
+  of "-", "sub":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_int(b - a, s1), expression, dictionary)
 
-  of "*":
+  of "*", "mul":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_int(a * b, s1), expression, dictionary)
 
-  of "/":
+  of "/", "div":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_int(b div a, s1), expression, dictionary)
 
-  of "%":
+  of "%", "mod":
     let (a, s0) = pop_int(stack)
     let (b, s1) = pop_int(s0)
     return (push_int(b mod a, s1), expression, dictionary)
