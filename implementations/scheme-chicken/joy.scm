@@ -50,6 +50,7 @@
     ((is-it? "*") (values (joy-mul stack) expression dict))
     ((is-it? "mul") (values (joy-mul stack) expression dict))
     ((is-it? "dup") (values (cons (car stack) stack) expression dict))
+    ((is-it? "pop") (values (cdr stack) expression dict))
     ((is-it? "stack") (values (cons stack stack) expression dict))
     ((is-it? "swaack") (values (cons (cdr stack) (car stack)) expression dict))
     ((hash-table-exists? dict symbol)
@@ -134,6 +135,6 @@
     (hash-table-set! dict (car def_list) (cdr def_list))))
 
 
-(display (doit "1 2 3 [4 5 6] swaack stack"))
+(display (doit "1 2 3 [4 5 6] swaack pop stack"))
 (newline)
 
