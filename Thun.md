@@ -158,7 +158,7 @@ file and rebuilding the binaries.  Each line in the file is a definition
 consisting of the new symbol name followed by an expression for the body
 of the function.
 
-The `defs.txt` file is just joy expression, one per line, that have a
+The `defs.txt` file is just joy expressions, one per line, that have a
 symbol followed by the definition for that symbol, e.g.:
 
     sqr dup mul
