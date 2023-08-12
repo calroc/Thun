@@ -50,11 +50,24 @@
     ((is-it? "*") ((joy-func *) stack expression dict))
     ((is-it? "mul") ((joy-func *) stack expression dict))
 
+    ((is-it? "<") ((joy-func <) stack expression dict))
+    ((is-it? ">") ((joy-func >) stack expression dict))
+    ((is-it? "<=") ((joy-func <=) stack expression dict))
+    ((is-it? ">=") ((joy-func >=) stack expression dict))
+    ((is-it? "=") ((joy-func =) stack expression dict))
+    ((is-it? "<>") ((joy-func not-equal) stack expression dict))
+    ((is-it? "!=") ((joy-func not-equal) stack expression dict))
+
     ((is-it? "dup") (values (cons (car stack) stack) expression dict))
     ((is-it? "pop") (values (cdr stack) expression dict))
     ((is-it? "stack") (values (cons stack stack) expression dict))
     ((is-it? "swaack") (values (cons (cdr stack) (car stack)) expression dict))
     ((is-it? "swap") (values (cons (cadr stack) (cons (car stack) (cddr stack))) expression dict))
+
+    ((is-it? "concat") ((joy-func append) stack expression dict))
+    ((is-it? "cons") ((joy-func cons) stack expression dict))
+    ;((is-it? "first") ((joy-func not-equal) stack expression dict))
+    ;((is-it? "rest") ((joy-func not-equal) stack expression dict))
 
     ((is-it? "i") (joy-i stack expression dict))
     ((is-it? "dip") (joy-dip stack expression dict))
@@ -64,7 +77,9 @@
     ((hash-table-exists? dict symbol)
       (values stack (append (hash-table-ref dict symbol) expression) dict))
 
-    (else (error "Unknown word."))))
+    (else (error (conc "Unknown word: " symbol)))))
+
+(define (not-equal a b) (not (= a b)))
 
 (define (joy-func op)
   (lambda (stack expression dict)
@@ -166,7 +181,9 @@
   (let ((def_list (text->expression def)))
     (hash-table-set! dict (car def_list) (cdr def_list))))
 
+(display (doit "5 [] cons [4] concat"))
 
-(display (doit "1 2 true [4 5 false] loop"))
+;(display (doit "5 down_to_zero"))
+;(display (doit "1 2 true [4 5 false] loop <"))
 (newline)
 
