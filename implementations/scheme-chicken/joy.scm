@@ -48,7 +48,14 @@
     ((is-it? "+") ((joy-func +) stack expression dict))
     ((is-it? "-") ((joy-func -) stack expression dict))
     ((is-it? "*") ((joy-func *) stack expression dict))
+    ((is-it? "/") ((joy-func quotient) stack expression dict))  ; but for negative divisor, no!?
+    ((is-it? "%") ((joy-func modulo) stack expression dict))
+
+    ((is-it? "add") ((joy-func +) stack expression dict))
+    ((is-it? "sub") ((joy-func -) stack expression dict))
     ((is-it? "mul") ((joy-func *) stack expression dict))
+    ((is-it? "div") ((joy-func quotient) stack expression dict))  ; but for negative divisor, no!?
+    ((is-it? "mod") ((joy-func modulo) stack expression dict))
 
     ((is-it? "<") ((joy-func <) stack expression dict))
     ((is-it? ">") ((joy-func >) stack expression dict))
