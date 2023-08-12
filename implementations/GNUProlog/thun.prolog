@@ -65,9 +65,9 @@ combo(loop, [list(B),  bool(true)|S], S, Ei, Eo) :- append(B, [list(B), symbol(l
 
 
 
-:- initialization((
-    read_term(AST, []),
-    thun(AST, [], Stack),
-    write_term(Stack, [quoted(true)]), print('.\n')
-    )).
+%:- initialization((
+%    read_term(AST, []),
+%    thun(AST, [], Stack),
+%    write_term(Stack, [quoted(true)]), print('.\n')
+%    )).
 

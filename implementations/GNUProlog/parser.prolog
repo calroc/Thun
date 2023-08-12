@@ -84,8 +84,8 @@ stdin_to_codes(Code, [Code|Codes]) :-
     stdin_to_codes(NextCode, Codes).
 
 
-:- initialization((
-    stdin_to_codes(Codes),
-    text_to_expression(Codes, Expr),
-    write_term(Expr, [quoted(true)]), print('.\n')
-    )).
+%:- initialization((
+%    stdin_to_codes(Codes),
+%    text_to_expression(Codes, Expr),
+%    write_term(Expr, [quoted(true)]), print('.\n')
+%    )).
