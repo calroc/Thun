@@ -66,8 +66,8 @@
 
     ((is-it? "concat") ((joy-func append) stack expression dict))
     ((is-it? "cons") ((joy-func cons) stack expression dict))
-    ;((is-it? "first") ((joy-func not-equal) stack expression dict))
-    ;((is-it? "rest") ((joy-func not-equal) stack expression dict))
+    ((is-it? "first") (values (cons (caar stack) (cdr stack)) expression dict))
+    ((is-it? "rest")  (values (cons (cdar stack) (cdr stack)) expression dict))
 
     ((is-it? "i") (joy-i stack expression dict))
     ((is-it? "dip") (joy-dip stack expression dict))
@@ -181,7 +181,7 @@
   (let ((def_list (text->expression def)))
     (hash-table-set! dict (car def_list) (cdr def_list))))
 
-(display (doit "5 [] cons [4] concat"))
+(display (doit "5 [] cons [4] concat first"))
 
 ;(display (doit "5 down_to_zero"))
 ;(display (doit "1 2 true [4 5 false] loop <"))
