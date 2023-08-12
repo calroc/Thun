@@ -45,24 +45,30 @@
 (define (joy-eval symbol stack expression dict)
   (define (is-it? name) (string=? symbol name))
   (cond
-    ((is-it? "+") (values (joy-add stack) expression dict))
-    ((is-it? "-") (values (joy-sub stack) expression dict))
-    ((is-it? "*") (values (joy-mul stack) expression dict))
-    ((is-it? "mul") (values (joy-mul stack) expression dict))
+    ((is-it? "+") ((joy-func +) stack expression dict))
+    ((is-it? "-") ((joy-func -) stack expression dict))
+    ((is-it? "*") ((joy-func *) stack expression dict))
+    ((is-it? "mul") ((joy-func *) stack expression dict))
+
     ((is-it? "dup") (values (cons (car stack) stack) expression dict))
     ((is-it? "pop") (values (cdr stack) expression dict))
     ((is-it? "stack") (values (cons stack stack) expression dict))
     ((is-it? "swaack") (values (cons (cdr stack) (car stack)) expression dict))
     ((is-it? "swap") (values (cons (cadr stack) (cons (car stack) (cddr stack))) expression dict))
+
     ((is-it? "i") (joy-i stack expression dict))
     ((is-it? "dip") (joy-dip stack expression dict))
+    ((is-it? "branch") (joy-branch stack expression dict))
+
     ((hash-table-exists? dict symbol)
       (values stack (append (hash-table-ref dict symbol) expression) dict))
+
     (else (error "Unknown word."))))
 
-(define (joy-add stack) (cons (+ (cadr stack) (car stack)) (cddr stack)))
-(define (joy-sub stack) (cons (- (cadr stack) (car stack)) (cddr stack)))
-(define (joy-mul stack) (cons (* (cadr stack) (car stack)) (cddr stack)))
+(define (joy-func op)
+  (lambda (stack expression dict)
+    (values (cons (op (cadr stack) (car stack)) (cddr stack)) expression dict)))
+
 
 (define (joy-i stack expression dict)
   (values (cdr stack) (append (car stack) expression) dict))
@@ -71,6 +77,14 @@
   (values (cddr stack)
           (append (car stack) (cons (cadr stack) expression))
           dict))
+
+(define (joy-branch stack expression dict)
+  (let ((flag (caddr stack))
+        (false_body (cadr stack))
+        (true_body (car stack)))
+    (values (cdddr stack)
+            (append (if flag true_body false_body) expression)
+            dict)))
 
 
 (define (string-replace str from to)
@@ -145,6 +159,6 @@
     (hash-table-set! dict (car def_list) (cdr def_list))))
 
 
-(display (doit "1 2 3 [4 5 6] dip"))
+(display (doit "true [4] [5] branch false  [4] [5] branch + sqr"))
 (newline)
 
