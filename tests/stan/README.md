@@ -1,8 +1,8 @@
 # Simple Test Set for Joy Programming Language
 
 Each test consists of a snippet of Joy code along with the expected
-output (stdout and stderr) for a (conforming) Joy implementation.  They
-are run with make.
+output (stdout and stderr) for a conforming Joy implementation.  They
+are run with GNU make.
 
 For the explanation of how this test system works see:
 https://chrismorgan.info/blog/make-and-git-diff-test-harness/
@@ -10,11 +10,11 @@ https://chrismorgan.info/blog/make-and-git-diff-test-harness/
 Set the JOY environment variable to point to the joy interpreter to test,
 e.g.:
 
-    export JOY="python -m joy -q"
+    export JOY="../../implementations/Python/joy -q"
 
 -or-
 
-    setenv JOY "python -m joy -q"
+    setenv JOY "../../implementations/Python/joy -q"
 
 or whatever for your shell.  Then run make.
 
