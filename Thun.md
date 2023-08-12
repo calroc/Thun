@@ -11,6 +11,8 @@ programming language created by Manfred von Thun that is easy to use and
 understand and has many other nice properties.  **Thun** is a dialect of
 Joy that attempts to stay very close to the spirit of Joy but does not
 precisely match the behaviour of the original version written in C.
+(In the rest of this document I'll use the names Joy and Thun
+interchangably.)
 
 
 ## Grammar
@@ -150,10 +152,29 @@ of these:
 
 ### Definitions
 
-Thun can be extended by adding new definitions to the `defs.txt` file and
-rebuilding the binaries.  Each line in the file is a definition
+Thun can be extended by adding new definitions to the
+[defs.txt](https://git.sr.ht/~sforman/Thun/tree/trunk/item/implementations/defs.txt)
+file and rebuilding the binaries.  Each line in the file is a definition
 consisting of the new symbol name followed by an expression for the body
 of the function.
+
+The `defs.txt` file is just joy expression, one per line, that have a
+symbol followed by the definition for that symbol, e.g.:
+
+    sqr dup mul
+
+The definitions form a DAG (Directed Acyclic Graph) (there is actually a
+cycle in the definition of `genrec` but that's the point, it is a cycle
+to itself that captures the cyclical nature of recursive definitions.)
+
+I don't imagine that people will read `defs.txt` to understand Joy code.
+Instead people should read the notebooks that derive the functions to
+understand them.  The reference docs should help, and to that end I'd
+like to cross-link them with the notebooks.  The idea is that the docs
+are the code and the code is just a way to make precise the ideas in the
+docs.
+
+### Adding Functions to the Dictionary with `inscribe`
 
 You can use the `inscribe` command to put new definitions into the
 dictionary at runtime, but they will not persist after the program ends.
@@ -161,6 +182,11 @@ The `inscribe` function is the only function that changes the dictionary.
 It's meant for prototyping.  (You could abuse it to make variables by
 storing "functions" in the dictionary that just contain literal values as
 their bodies.)
+
+    [foo bar baz] inscribe
+
+This will put a definition for `foo` into the dictionary as `bar baz`.
+
 
 ## Problems
 
