@@ -53,6 +53,7 @@
     ((is-it? "pop") (values (cdr stack) expression dict))
     ((is-it? "stack") (values (cons stack stack) expression dict))
     ((is-it? "swaack") (values (cons (cdr stack) (car stack)) expression dict))
+    ((is-it? "swap") (values (cons (cadr stack) (cons (car stack) (cddr stack))) expression dict))
     ((hash-table-exists? dict symbol)
       (values stack (append (hash-table-ref dict symbol) expression) dict))
     (else (error "Unknown word."))))
@@ -135,6 +136,6 @@
     (hash-table-set! dict (car def_list) (cdr def_list))))
 
 
-(display (doit "1 2 3 [4 5 6] swaack pop stack"))
+(display (doit "1 2 3 [4 5 6] swaack pop swap stack"))
 (newline)
 
