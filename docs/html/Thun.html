@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Thun Specification</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+<h1>Thun Specification</h1>
+<p>Version 0.5.0</p>
+<h2>Grammar</h2>
+<p>The grammar of Thun is very simple.  A Thun expression is zero or more Thun
+terms separated by blanks. Terms can be integers in decimal notation,
+Booleans <code>true</code> and <code>false</code>, lists enclosed by square brackets <code>[</code> and <code>]</code>,
+or symbols (names of functions.)</p>
+<pre><code>joy ::= term*
+
+term ::= integer | bool | '[' joy ']' | symbol
+
+integer ::= [ '-' ] ('0'...'9')+
+
+bool ::= 'true' | 'false'
+
+symbol ::= char+
+
+char ::= &lt;Any non-space other than '[' and ']'.&gt;
+</code></pre>
+<p>Symbols can be composed of any characters except blanks and square
+brackets.  Integers can be prefixed with a minus sign to denote negative
+numbers.  The symbols <code>true</code> and <code>false</code> are reserved to denote their
+respective Boolean values.</p>
+<p>That's it.  That's the whole of the grammar.</p>
+<h2>Types</h2>
+<p>The original Joy has several datatypes (such as strings and sets)
+but the Thun dialect currently only uses four:</p>
+<ul>
+<li>Integers, signed and unbounded by machine word length (they are
+  <a href="https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic">bignums</a>.)</li>
+<li>Boolean values <code>true</code> and <code>false</code>.</li>
+<li>Lists quoted in <code>[</code> and <code>]</code> brackets.</li>
+<li>Symbols (names).</li>
+</ul>
+<h2>Stack, Expression, Dictionary</h2>
+<p>Thun is built around three things: a <strong>stack</strong> of data items, an
+<strong>expression</strong> representing a program to evaluate, and a <strong>dictionary</strong>
+of named functions.</p>
+<h3>Stack</h3>
+<p>Thun is
+<a href="https://en.wikipedia.org/wiki/Stack-oriented_programming_language">stack-based</a>.
+There is a single main <strong>stack</strong> that holds data items, which can be
+integers, bools, symbols (names), or sequences of data items enclosed in
+square brackets (<code>[</code> or <code>]</code>).</p>
+<p>We use the terms "stack", "quote", "sequence", "list", and others to mean
+the same thing: a simple linear datatype that permits certain operations
+such as iterating and pushing and popping values from (at least) one end.</p>
+<blockquote>
+<p>In describing Joy I have used the term quotation to describe all of the
+above, because I needed a word to describe the arguments to combinators
+which fulfill the same role in Joy as lambda abstractions (with
+variables) fulfill in the more familiar functional languages. I use the
+term list for those quotations whose members are what I call literals:
+numbers, characters, truth values, sets, strings and other quotations.
+All these I call literals because their occurrence in code results in
+them being pushed onto the stack. But I also call [London Paris] a
+list. So, [dup *] is a quotation but not a list.</p>
+</blockquote>
+<p>From <a href="http://archive.vector.org.uk/art10000350">"A Conversation with Manfred von Thun" w/ Stevan Apter</a></p>
+<h3>Expression</h3>
+<p>A Thun <strong>expression</strong> is just a sequence or list of items.  Sequences
+intended as programs are called "quoted programs".  Evaluation proceeds
+by iterating through the terms in an expression putting all literals
+(integers, bools, or lists) onto the main stack and executing functions
+named by symbols as they are encountered.  Functions receive the current
+stack, expression, and dictionary and return the next stack, expression,
+and dictionary.</p>
+<h3>Dictionary</h3>
+<p>The <strong>dictionary</strong> associates symbols (names) with Thun expressions that
+define the available functions of the Thun system.  Together the stack,
+expression, and dictionary are the entire state of the Thun interpreter.</p>
+<h2>Interpreter</h2>
+<p>The Thun interpreter is extremely simple. It accepts a stack, an
+expression, and a dictionary, and it iterates through the expression
+putting values onto the stack and delegating execution to functions which
+it looks up in the dictionary.</p>
+<p><img alt="Joy Interpreter Flowchart" src="https://git.sr.ht/~sforman/Thun/blob/trunk/joy_interpreter_flowchart.svg"></p>
+<p>All control flow works by
+<a href="https://en.wikipedia.org/wiki/Continuation-passing_style">Continuation Passing Style</a>.
+<strong>Combinators</strong> (see below) alter control flow by prepending quoted programs to the pending
+expression (aka "continuation".)</p>
+<h2>Literals, Functions, Combinators</h2>
+<p>Terms in Thun can be categorized into literal, simple functions that
+operate on the stack only, and combinators that can prepend quoted
+programs onto the pending expression ("continuation").</p>
+<h3>Literals</h3>
+<p>Literal values (integers, Booleans, lists) are put onto the stack.</p>
+<h3>Functions</h3>
+<p>Functions take values from the stack and push results onto it.</p>
+<h3>Combinators</h3>
+<p><strong>Combinators</strong> are functions which accept quoted programs on the stack
+and run them in various ways.  These combinators reify specific
+control-flow patterns (such as <code>ifte</code> which is like <code>if.. then.. else..</code>
+in other languages.)  Combinators receive the current expession in
+addition to the stack and return the next expression.  They work by
+changing the pending expression the interpreter is about to execute.</p>
+<h3>Basis Functions</h3>
+<p>Thun has a set of <em>basis</em> functions which are implemented in the host
+language.  The rest of functions in the Thun dialect are defined in terms
+of these:</p>
+<ul>
+<li>Combinators: <code>branch</code> <code>dip</code> <code>i</code> <code>loop</code></li>
+<li>Stack Chatter: <code>clear</code> <code>dup</code> <code>pop</code> <code>stack</code> <code>swaack</code> <code>swap</code></li>
+<li>List Manipulation: <code>concat</code> <code>cons</code> <code>first</code> <code>rest</code></li>
+<li>Math: <code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code></li>
+<li>Comparison: <code>&lt;</code> <code>&gt;</code> <code>&gt;=</code> <code>&lt;=</code> <code>!=</code> <code>&lt;&gt;</code> <code>=</code></li>
+<li>Logic: <code>truthy</code> <code>not</code></li>
+<li>Programming: <code>inscribe</code></li>
+</ul>
+<h3>Definitions</h3>
+<p>Thun can be extended by adding new definitions to the
+<a href="https://git.sr.ht/~sforman/Thun/tree/trunk/item/implementations/defs.txt">defs.txt</a>
+file and rebuilding the binaries.  Each line in the file is a definition
+consisting of the new symbol name followed by an expression for the body
+of the function.</p>
+<p>The <code>defs.txt</code> file is just joy expressions, one per line, that have a
+symbol followed by the definition for that symbol, e.g.:</p>
+<pre><code>sqr dup mul
+</code></pre>
+<p>The definitions form a DAG (Directed Acyclic Graph) (there is actually a
+cycle in the definition of <code>genrec</code> but that's the point, it is a cycle
+to itself that captures the cyclical nature of recursive definitions.)</p>
+<p>I don't imagine that people will read <code>defs.txt</code> to understand Thun code.
+Instead people should read the notebooks that derive the functions to
+understand them.  The reference docs should help, and to that end I'd
+like to cross-link them with the notebooks.  The idea is that the docs
+are the code and the code is just a way to make precise the ideas in the
+docs.</p>
+<h3>Adding Functions to the Dictionary with <code>inscribe</code></h3>
+<p>You can use the <code>inscribe</code> command to put new definitions into the
+dictionary at runtime, but they will not persist after the program ends.
+The <code>inscribe</code> function is the only function that changes the dictionary.
+It's meant for prototyping.  (You could abuse it to make variables by
+storing "functions" in the dictionary that just contain literal values as
+their bodies.)</p>
+<pre><code>[foo bar baz] inscribe
+</code></pre>
+<p>This will put a definition for <code>foo</code> into the dictionary as <code>bar baz</code>.</p>
+<h2>Problems</h2>
+<h3>Symbols as Data</h3>
+<p>Nothing prevents you from using symbols as data:</p>
+<pre><code>joy? [cats]
+[cats]
+</code></pre>
+<p>But there's a potential pitfall: you might accidentally get a "bare"
+unquoted symbol on the stack:</p>
+<pre><code>joy? [cats]
+[cats]
+joy? first
+cats
+</code></pre>
+<p>That by itself won't break anything (the stack is just a list.)
+But if you were to use, say, <code>dip</code>, in such a way as to put the symbol
+back onto the expression, then when the interpreter encounters it, it
+will attempt to evaluate it, which is almost certainly not what you want.</p>
+<pre><code>cats
+joy? [23] dip
+Unknown: cats
+cats
+</code></pre>
+<p>At the very least you get an "Unknown" error, but if the symbol names a
+function then the interpreter will attempt to evaluate it, probably
+leading to an error.</p>
+<p>I don't see an easy way around this.  Be careful?  It's kind of against
+the spirit of the thing to just leave a footgun like that laying around,
+but perhaps in practice it won't come up.  (Because writing Thun code by
+derivation seems to lead to bug-free code, which is the kinda the point.)</p>
+<hr>
+<p>Copyright © 2014 - 2023 Simon Forman</p>
+<p>This file is part of Thun</p>
+</body>
+</html>
