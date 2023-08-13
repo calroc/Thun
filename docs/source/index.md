@@ -49,9 +49,9 @@ For more information see [Square Spiral Example Joy Code](/notebooks/Square_Spir
 
     square_spiral [_p] [_then] [_else] ifte
 
-    _p  [_p0] [_p1] &&
+    _p  [_p0] [_p1] and
     _p0 [abs] ii <=
-    _p1 [<>] [pop !-] ||
+    _p1 [<>] [pop !-] or
 
     _then [    !-] [[++]] [[--]] ifte dip
     _else [pop !-]  [--]   [++]  ifte
@@ -200,7 +200,7 @@ expression, and a dictionary, and it iterates through the expression
 putting values onto the stack and delegating execution to functions which
 it looks up in the dictionary.
 
-![Joy Interpreter Flowchart](https://git.sr.ht/~sforman/Thun/blob/trunk/joy_interpreter_flowchart.svg)
+![Joy Interpreter Flowchart](/joy_interpreter_flowchart.svg)
 
 All control flow works by
 [Continuation Passing Style](https://en.wikipedia.org/wiki/Continuation-passing_style).

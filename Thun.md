@@ -1,23 +1,10 @@
-# Thun
-
-A Dialect of Joy.
+# Thun Specification
 
 Version 0.5.0
 
-> Simple pleasures are the best.
-
-[Joy](https://en.wikipedia.org/wiki/Joy_%28programming_language%29) is a
-programming language created by Manfred von Thun that is easy to use and
-understand and has many other nice properties.  **Thun** is a dialect of
-Joy that attempts to stay very close to the spirit of Joy but does not
-precisely match the behaviour of the original version written in C.
-(In the rest of this document I'll use the names Joy and Thun
-interchangably.)
-
-
 ## Grammar
 
-The grammar of Joy is very simple.  A Joy expression is zero or more Joy
+The grammar of Thun is very simple.  A Thun expression is zero or more Thun
 terms separated by blanks. Terms can be integers in decimal notation,
 Booleans `true` and `false`, lists enclosed by square brackets `[` and `]`,
 or symbols (names of functions.)
@@ -56,13 +43,13 @@ but the Thun dialect currently only uses four:
 
 ## Stack, Expression, Dictionary
 
-Joy is built around three things: a __stack__ of data items, an
+Thun is built around three things: a __stack__ of data items, an
 __expression__ representing a program to evaluate, and a __dictionary__
 of named functions.
 
 ### Stack
 
-Joy is
+Thun is
 [stack-based](https://en.wikipedia.org/wiki/Stack-oriented_programming_language).
 There is a single main __stack__ that holds data items, which can be
 integers, bools, symbols (names), or sequences of data items enclosed in
@@ -86,7 +73,7 @@ From ["A Conversation with Manfred von Thun" w/ Stevan Apter](http://archive.vec
 
 ### Expression
 
-A Joy __expression__ is just a sequence or list of items.  Sequences
+A Thun __expression__ is just a sequence or list of items.  Sequences
 intended as programs are called "quoted programs".  Evaluation proceeds
 by iterating through the terms in an expression putting all literals
 (integers, bools, or lists) onto the main stack and executing functions
@@ -96,14 +83,14 @@ and dictionary.
 
 ### Dictionary
 
-The __dictionary__ associates symbols (names) with Joy expressions that
-define the available functions of the Joy system.  Together the stack,
-expression, and dictionary are the entire state of the Joy interpreter.
+The __dictionary__ associates symbols (names) with Thun expressions that
+define the available functions of the Thun system.  Together the stack,
+expression, and dictionary are the entire state of the Thun interpreter.
 
 
 ## Interpreter
 
-The Joy interpreter is extrememly simple. It accepts a stack, an
+The Thun interpreter is extremely simple. It accepts a stack, an
 expression, and a dictionary, and it iterates through the expression
 putting values onto the stack and delegating execution to functions which
 it looks up in the dictionary.
@@ -118,6 +105,9 @@ expression (aka "continuation".)
 
 ## Literals, Functions, Combinators
 
+Terms in Thun can be categorized into literal, simple functions that
+operate on the stack only, and combinators that can prepend quoted
+programs onto the pending expression ("continuation").
 
 ### Literals
 
@@ -167,7 +157,7 @@ The definitions form a DAG (Directed Acyclic Graph) (there is actually a
 cycle in the definition of `genrec` but that's the point, it is a cycle
 to itself that captures the cyclical nature of recursive definitions.)
 
-I don't imagine that people will read `defs.txt` to understand Joy code.
+I don't imagine that people will read `defs.txt` to understand Thun code.
 Instead people should read the notebooks that derive the functions to
 understand them.  The reference docs should help, and to that end I'd
 like to cross-link them with the notebooks.  The idea is that the docs
@@ -221,7 +211,7 @@ leading to an error.
 
 I don't see an easy way around this.  Be careful?  It's kind of against
 the spirit of the thing to just leave a footgun like that laying around,
-but perhaps in practice it won't come up.  (Because writing Joy code by
+but perhaps in practice it won't come up.  (Because writing Thun code by
 derivation seems to lead to bug-free code, which is the kinda the point.)
 
 

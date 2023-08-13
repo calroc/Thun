@@ -13,14 +13,16 @@ footer {
 }
 
 pre {
+ background: #eee;
  font-size: large;
  margin-left: 2em;
+ margin-right: 2em;
  margin-bottom: 1em;
  font-family: 'Inconsolata';
+ padding: 0.5em;
 }
 
 blockquote {
- background: #eee;
  background: #eee;
  border-left: 0.2em solid black;
  padding: 0.5em;
