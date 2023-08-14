@@ -1,0 +1,398 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Developing a Joy Program</title>
+<link rel="stylesheet" href="/css/fonts.css">
+<link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+<h1>Developing a Joy Program</h1>
+<p>As a first attempt at writing software in Joy let's tackle
+<a href="https://projecteuler.net/problem=1">Project Euler, first problem: "Multiples of 3 and 5"</a>:</p>
+<blockquote>
+<p>If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.</p>
+<p>Find the sum of all the multiples of 3 or 5 below 1000.</p>
+</blockquote>
+<h2>Filter</h2>
+<p>Let's create a predicate that returns <code>true</code> if a number is a multiple of 3 or 5 and <code>false</code> otherwise.</p>
+<h3><code>multiple-of</code></h3>
+<p>First we write <code>multiple-of</code> which take two numbers and return true if the first is a multiple of the second.  We use the <code>mod</code> operator, convert the remainder to a Boolean value, then invert it to get our answer:</p>
+<pre><code>[multiple-of mod bool not] inscribe
+</code></pre>
+<h3><code>multiple-of-3-or-5</code></h3>
+<p>Next we can use that with <code>app2</code> to get both Boolean values (for 3 and 5) and then use the logical OR function <code>\/</code> on them.  (We use <code>popd</code> to get rid of the original number):</p>
+<pre><code>[multiple-of-3-or-5 3 5 [multiple-of] app2 \/ popd] inscribe
+</code></pre>
+<p>Here it is in action:</p>
+<pre><code>joy? [6 7 8 9 10] [multiple-of-3-or-5] map
+
+[true false false true true]
+</code></pre>
+<p>Given the predicate function <code>multiple-of-3-or-5</code> a suitable program would be:</p>
+<pre><code>1000 range [multiple-of-3-or-5] filter sum
+</code></pre>
+<p>This function generates a list of the integers from 0 to 999, filters
+that list by <code>multiple-of-3-or-5</code>, and then sums the result.  (I should
+mention that the <code>filter</code> function has not yet been implemented.)</p>
+<p>Logically this is fine, but pragmatically we are doing more work than we
+should.  We generate one thousand integers but actually use less than
+half of them.  A better solution would be to generate just the multiples
+we want to sum, and to add them as we go rather than storing them and
+adding summing them at the end.</p>
+<p>At first I had the idea to use two counters and increase them by three
+and five, respectively.  This way we only generate the terms that we
+actually want to sum.  We have to proceed by incrementing the counter
+that is lower, or if they are equal, the three counter, and we have to
+take care not to double add numbers like 15 that are multiples of both
+three and five.</p>
+<p>This seemed a little clunky, so I tried a different approach.</p>
+<h2>Looking for Pattern</h2>
+<p>Consider the first few terms in the series:</p>
+<pre><code>3 5 6 9 10 12 15 18 20 21 ...
+</code></pre>
+<p>Subtract each number from the one after it (subtracting 0 from 3):</p>
+<pre><code>3 5 6 9 10 12 15 18 20 21 24 25 27 30 ...
+0 3 5 6  9 10 12 15 18 20 21 24 25 27 ...
+-------------------------------------------
+3 2 1 3  1  2  3  3  2  1  3  1  2  3 ...
+</code></pre>
+<p>You get this lovely repeating palindromic sequence:</p>
+<pre><code>3 2 1 3 1 2 3
+</code></pre>
+<p>To make a counter that increments by factors of 3 and 5 you just add
+these differences to the counter one-by-one in a loop.</p>
+<h3>Increment a Counter</h3>
+<p>To make use of this sequence to increment a counter and sum terms as we
+go we need a function that will accept the sum, the counter, and the next
+term to add, and that adds the term to the counter and a copy of the
+counter to the running sum.  This function will do that:</p>
+<pre><code>+ [+] dupdip
+</code></pre>
+<p>We start with a sum, the counter, and a term to add:</p>
+<pre><code>joy? 0 0 3
+0 0 3
+</code></pre>
+<p>Here is our function, quoted to let it be run with the <code>trace</code> combinator
+(which is like <code>i</code> but it also prints a trace of evaluation to <code>stdout</code>.)</p>
+<pre><code>joy? [+ [+] dupdip]
+0 0 3 [+ [+] dupdip]
+</code></pre>
+<p>And here we go:</p>
+<pre><code>joy? trace
+
+  0 0 3 • + [+] dupdip
+    0 3 • [+] dupdip
+0 3 [+] • dupdip
+    0 3 • + 3
+      3 • 3
+    3 3 •
+
+3 3
+</code></pre>
+<h3><code>PE1.1</code></h3>
+<p>We can <code>inscribe</code> it for use in later definitions:</p>
+<pre><code>[PE1.1 + [+] dupdip] inscribe
+</code></pre>
+<p>Let's try it out on our palindromic sequence:</p>
+<pre><code>joy? 0 0 [3 2 1 3 1 2 3] [PE1.1] step
+60 15
+</code></pre>
+<p>So one <code>step</code> through all seven terms brings the counter to 15 and the total to 60.</p>
+<h3>How Many Times?</h3>
+<p>We want all the terms less than 1000, and each pass through the palindromic sequence
+will count off 15 so how many is that?</p>
+<pre><code>joy? 1000 15 /
+66
+</code></pre>
+<p>So 66 × 15 bring us to...</p>
+<pre><code>66
+joy? 15 *
+990
+</code></pre>
+<p>That means we want to run the full list of numbers sixty-six times to get to 990 and then, obviously, the first four terms of the palindromic sequence, 3 2 1 3, to get to 999.</p>
+<p>Start with the sum and counter:</p>
+<pre><code>joy? 0 0
+0 0
+</code></pre>
+<p>We will run a program sixty-six times:</p>
+<pre><code>joy? 66
+0 0 66
+</code></pre>
+<p>This is the program we will run sixty-six times, it steps through the
+palindromic sequence and sums up the terms:</p>
+<pre><code>joy? [[3 2 1 3 1 2 3] [PE1.1] step]
+0 0 66 [[3 2 1 3 1 2 3] [PE1.1] step]
+</code></pre>
+<p>Runing that brings us to the sum of the numbers less than 991:</p>
+<pre><code>joy? times
+229185 990
+</code></pre>
+<p>We need to count 9 more to reach the sum of the numbers less than 1000:</p>
+<pre><code>joy? [3 2 1 3] [PE1.1] step
+233168 999
+</code></pre>
+<p>All that remains is the counter, which we can discard:</p>
+<pre><code>joy? pop
+233168
+</code></pre>
+<p>And so we have our answer: <strong>233168</strong></p>
+<p>This form uses no extra storage and produces no unused summands.  It's
+good but there's one more trick we can apply.</p>
+<h2>A Slight Increase of Efficiency</h2>
+<p>The list of seven terms
+takes up at least seven bytes for themselves and a few bytes for their list.
+But notice that all of the terms are less
+than four, and so each can fit in just two bits.  We could store all
+seven terms in just fourteen bits and use masking and shifts to pick out
+each term as we go.  This will use less space and save time loading whole
+integer terms from the list.</p>
+<p>Let's encode the term in 7 × 2 = 14 bits:</p>
+<pre><code>Decimal:    3  2  1  3  1  2  3
+Binary:    11 10 01 11 01 10 11
+</code></pre>
+<p>The number 11100111011011 in binary is 14811 in decimal notation.</p>
+<h3>Recovering the Terms</h3>
+<p>We can recover the terms from this number by <code>4 divmod</code>:</p>
+<pre><code>joy? 14811
+14811
+
+joy? 4 divmod
+3702 3
+</code></pre>
+<p>We want the term below the rest of the terms:</p>
+<pre><code>joy? swap
+3 3702
+</code></pre>
+<h3><code>PE1.2</code></h3>
+<p>Giving us <code>4 divmod swap</code>:</p>
+<pre><code>[PE1.2 4 divmod swap] inscribe
+
+joy? 14811
+14811
+joy? PE1.2
+3 3702
+joy? PE1.2
+3 2 925
+joy? PE1.2
+3 2 1 231
+joy? PE1.2
+3 2 1 3 57
+joy? PE1.2
+3 2 1 3 1 14
+joy? PE1.2
+3 2 1 3 1 2 3
+joy? PE1.2
+3 2 1 3 1 2 3 0
+</code></pre>
+<p>So we want:</p>
+<pre><code>joy? 0 0 14811 PE1.2
+0 0 3 3702
+</code></pre>
+<p>And then:</p>
+<pre><code>joy? [PE1.1] dip
+3 3 3702
+</code></pre>
+<p>Continuing:</p>
+<pre><code>joy? PE1.2 [PE1.1] dip
+8 5 925
+
+joy? PE1.2 [PE1.1] dip
+14 6 231
+
+joy? PE1.2 [PE1.1] dip
+23 9 57
+
+joy? PE1.2 [PE1.1] dip
+33 10 14
+
+joy? PE1.2 [PE1.1] dip
+45 12 3
+
+joy? PE1.2 [PE1.1] dip
+60 15 0
+</code></pre>
+<h3><code>PE1.3</code></h3>
+<p>Let's define:</p>
+<pre><code>[PE1.3 PE1.2 [PE1.1] dip] inscribe
+</code></pre>
+<p>Now:</p>
+<pre><code>14811 7 [PE1.3] times pop
+</code></pre>
+<p>Will add up one set of the palindromic sequence of terms:</p>
+<pre><code>joy? 0 0 
+0 0
+
+joy? 14811 7 [PE1.3] times pop
+60 15
+</code></pre>
+<p>And we want to do that sixty-six times:</p>
+<pre><code>joy? 0 0 
+0 0
+
+joy? 66 [14811 7 [PE1.3] times pop] times
+229185 990
+</code></pre>
+<p>And then four more:</p>
+<pre><code>joy? 14811 4 [PE1.3] times pop
+233168 999
+</code></pre>
+<p>And discard the counter:</p>
+<pre><code>joy? pop
+233168
+</code></pre>
+<p><em>Violà!</em></p>
+<h3>Let's refactor.</h3>
+<p>From these two:</p>
+<pre><code>14811 7 [PE1.3] times pop
+14811 4 [PE1.3] times pop
+</code></pre>
+<p>We can generalize the loop counter:</p>
+<pre><code>14811 n [PE1.3] times pop
+</code></pre>
+<p>And use <code>swap</code> to put it to the left...</p>
+<pre><code>n 14811 swap [PE1.3] times pop
+</code></pre>
+<h3><code>PE1.4</code></h3>
+<p>...and so we have a new definition:</p>
+<pre><code>[PE1.4 14811 swap [PE1.3] times pop] inscribe
+</code></pre>
+<p>Now we can simplify the program from:</p>
+<pre><code>0 0 66 [14811 7 [PE1.3] times pop] times 14811 4 [PE1.3] times pop pop
+</code></pre>
+<p>To:</p>
+<pre><code>0 0 66 [7 PE1.4] times 4 PE1.4 pop
+</code></pre>
+<p>Let's run it and see:</p>
+<pre><code>joy? 0 0 66 [7 PE1.4] times 4 PE1.4 pop
+233168
+</code></pre>
+<h3><code>PE1</code></h3>
+<pre><code>[PE1 0 0 66 [7 PE1.4] times 4 PE1.4 pop] inscribe
+
+joy? PE1
+233168
+</code></pre>
+<p>Here's our joy program all in one place, as it might appear in <code>def.txt</code>:</p>
+<pre><code>PE1.1 + [+] dupdip
+PE1.2 4 divmod swap
+PE1.3 PE1.2 [PE1.1] dip
+PE1.4 14811 swap [PE1.3] times pop
+PE1   0 0 66 [7 PE1.4] times 4 PE1.4 pop
+</code></pre>
+<h2>Generator Version</h2>
+<p>It's a little clunky iterating sixty-six times though the seven numbers then four more.  In the <em>Generator Programs</em> notebook we derive a generator that can be repeatedly driven by the <code>x</code> combinator to produce a stream of the seven numbers repeating over and over again.</p>
+<p>Here it is again:</p>
+<pre><code>[0 swap [? [pop 14811] [] branch PE1.2] dip rest cons]
+</code></pre>
+<p>This self-referential quote contains a bit of state (the initial 0) and a "step"
+function (the rest of the quote) and can be "forced" by the <code>x</code> combinator to
+produce successive terms of our palindromic sequence.  The <code>branch</code> sub-expression
+resets the integer that encodes the terms when it reaches 0.</p>
+<p>Let's <code>inscribe</code> this generator quote to keep it handy.</p>
+<h3><code>PE1.terms</code></h3>
+<pre><code>[PE1.terms [0 swap [? [pop 14811] [] branch PE1.2] dip rest cons]] inscribe
+</code></pre>
+<p>Let's try it out:</p>
+<pre><code>joy? PE1.terms 21 [x] times pop
+3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3
+</code></pre>
+<p>Pretty neat, eh?</p>
+<h3>How Many Terms?</h3>
+<p>We know from above that we need sixty-six times seven then four more terms to reach up to but not over one thousand.</p>
+<pre><code>joy? 7 66 * 4 +
+466
+</code></pre>
+<h3>Here they are...</h3>
+<pre><code>joy? PE1.terms 466 [x] times pop
+</code></pre>
+<blockquote>
+<p>3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3 1 2 3 3 2 1 3</p>
+</blockquote>
+<h3>...and they do sum to 999.</h3>
+<pre><code>joy? [PE1.terms 466 [x] times pop] run sum
+999
+</code></pre>
+<p>Now we can use <code>PE1.1</code> to accumulate the terms as we go, and then <code>pop</code> the
+generator and the counter from the stack when we're done, leaving just the sum.</p>
+<pre><code>joy? 0 0 PE1.terms 466 [x [PE1.1] dip] times popop
+233168
+</code></pre>
+<h2>A Little Further Analysis...</h2>
+<p>A little further analysis renders iteration unnecessary.
+Consider finding the sum of the positive integers less than or equal to ten.</p>
+<pre><code>joy? [10 9 8 7 6 5 4 3 2 1] sum
+55
+</code></pre>
+<p>Gauss famously showed that you can find the sum directly with a simple equation.</p>
+<p><a href="https://en.wikipedia.org/wiki/File:Animated_proof_for_the_formula_giving_the_sum_of_the_first_integers_1%2B2%2B...%2Bn.gif">Observe</a>:</p>
+<pre><code>  10  9  8  7  6
++  1  2  3  4  5
+---- -- -- -- --
+  11 11 11 11 11
+
+  11 × 5 = 55
+</code></pre>
+<p>The sum of the first N positive integers is:</p>
+<pre><code>(𝑛 + 1) × 𝑛 / 2
+</code></pre>
+<p>In Joy this equation could be expressed as:</p>
+<pre><code>dup ++ * 2 /
+</code></pre>
+<p>(Note that <code>(𝑛 + 1) × 𝑛</code> will always be an even number.)</p>
+<h3>Generalizing to Blocks of Terms</h3>
+<p>We can apply the same reasoning to the <code>PE1</code> problem.</p>
+<p>Recall that between 1 and 990 inclusive there are sixty-six "blocks" of seven terms each, starting with:</p>
+<pre><code>3 5 6 9 10 12 15
+</code></pre>
+<p>And ending with:</p>
+<pre><code>978 980 981 984 985 987 990
+</code></pre>
+<p>If we reverse one of these two blocks and sum pairs...</p>
+<pre><code>joy? [3 5 6 9 10 12 15] reverse
+[15 12 10 9 6 5 3]
+
+joy? [978 980 981 984 985 987 990] 
+[15 12 10 9 6 5 3] [978 980 981 984 985 987 990]
+
+joy? zip
+[[978 15] [980 12] [981 10] [984 9] [985 6] [987 5] [990 3]]
+
+joy? [sum] map
+[993 992 991 993 991 992 993]
+</code></pre>
+<p>(Interesting that the sequence of seven numbers appears again in the rightmost digit of each term.)</p>
+<p>...and then sum the sums...</p>
+<pre><code>joy? sum
+6945
+</code></pre>
+<p>We arrive at 6945.</p>
+<h3>Pair Up the Blocks</h3>
+<p>Since there are sixty-six blocks and we are pairing them up, there must be thirty-three pairs, each of which sums to 6945.</p>
+<pre><code>6945
+joy? 33 *
+229185
+</code></pre>
+<p>We also have those four additional terms between 990 and 1000, they are unpaired:</p>
+<pre><code>993 995 996 999
+</code></pre>
+<h3>A Simple Solution</h3>
+<p>I think we can just use those as is, so we can give the "sum of all the multiples of 3 or 5 below 1000" like so:</p>
+<pre><code>joy? 6945 33 * [993 995 996 999] cons sum
+233168
+</code></pre>
+<h3>Generalizing</h3>
+<p>It's worth noting, I think, that this same reasoning holds for any two numbers 𝑛 and 𝑚 the multiples of which we hope to sum.  The multiples would have a cycle of differences of length 𝑘 and so we could compute the sum of 𝑁𝑘 multiples as above.</p>
+<p>The sequence of differences will always be a palindrome.  Consider an interval spanning the least common multiple of 𝑛 and 𝑚:</p>
+<pre><code>|   |   |   |   |   |   |   |
+|      |      |      |      |
+</code></pre>
+<p>Here we have 4 and 7, and you can read off the sequence of differences directly from the diagram: 4 3 1 4 2 2 4 1 3 4.</p>
+<p>Geometrically, the actual values of 𝑛 and 𝑚 and their <em>least common multiple</em> don't matter, the pattern they make will always be symmetrical around its midpoint.  The same reasoning holds for multiples of more than two numbers.</p>
+<h1>The Simplest Program</h1>
+<p>Of course, having done all that, the simplest joy program for the first Project Euler problem is just:</p>
+<pre><code>[PE1 233168] inscribe
+</code></pre>
+<p>Fin.</p>
+</body>
+</html>
