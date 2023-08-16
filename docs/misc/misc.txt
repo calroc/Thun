@@ -93,3 +93,43 @@ them in host language for greater efficiency if you like.)
 | NOT |      `not`        |                |                              |
 
 
+
+
+
+## An Interesting Variation
+
+
+    codireco == cons dip rest cons')
+
+
+    [0 [dup ++] codireco] x
+
+
+                                     . [0 [dup ++] codireco] x
+               [0 [dup ++] codireco] . x
+               [0 [dup ++] codireco] . 0 [dup ++] codireco
+             [0 [dup ++] codireco] 0 . [dup ++] codireco
+    [0 [dup ++] codireco] 0 [dup ++] . codireco
+    [0 [dup ++] codireco] 0 [dup ++] . cons dip rest cons
+    [0 [dup ++] codireco] [0 dup ++] . dip rest cons
+                                     . 0 dup ++ [0 [dup ++] codireco] rest cons
+                                   0 . dup ++ [0 [dup ++] codireco] rest cons
+                                 0 0 . ++ [0 [dup ++] codireco] rest cons
+                                 0 1 . [0 [dup ++] codireco] rest cons
+           0 1 [0 [dup ++] codireco] . rest cons
+             0 1 [[dup ++] codireco] . cons
+             0 [1 [dup ++] codireco] . 
+
+
+
+```python
+define('G == [codireco] cons cons')
+```
+
+
+```python
+J('230 [dup ++] G 5 [x] times pop')
+```
+
+    230 231 232 233 234
+

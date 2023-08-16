@@ -294,66 +294,72 @@ Lastly:
 Putting it all together:
 
     F == + [popdd over] cons infra uncons
-    fib_gen == [1 1 F]
 
-Let's call `F` `fib_gen`:
+### `fib-gen`
 
-    [fib_gen + [popdd over] cons infra uncons] inscribe
+Let's call `F` `fib-gen`:
+
+    [fib-gen + [popdd over] cons infra uncons] inscribe
 
 We can just write the initial quote and then "force" it with `x`:
 
-    joy? [1 1 fib_gen] 10 [x] times
-    1 2 3 5 8 13 21 34 55 89 [144 89 fib_gen]
+    joy? [1 1 fib-gen] 10 [x] times
+    1 2 3 5 8 13 21 34 55 89 [144 89 fib-gen]
 
 It skips the first term (1) but if that bothers you you can just prepend it to the program:
 
-    1 [1 1 fib_gen] 10 [x] times
+    1 [1 1 fib-gen] 10 [x] times
+
 
 ## Project Euler Problem Two
 
 > By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.
 
-Now that we have a generator for the Fibonacci sequence, we need a function that adds a term in the sequence to a sum if it is even, and `pop`s it otherwise.
+Now that we have a generator for the Fibonacci sequence, we need a function that adds
+a term in the sequence to a sum if it is even, and `pop`s it otherwise.
 
+### `even`
 
-```python
-define('PE2.1 == dup 2 % [+] [pop] branch')
-```
+    [even 2 % bool] inscribe
+
+### `PE2.1`
+
+    [PE2.1 dup even [+] [pop] branch] inscribe
 
 And a predicate function that detects when the terms in the series "exceed four million".
 
+### `>4M`
 
-```python
-define('>4M == 4000000 >')
-```
+    [>4M 4000000 >] inscribe
 
-Now it's straightforward to define `PE2` as a recursive function that generates terms in the Fibonacci sequence until they exceed four million and sums the even ones.
+Now it's straightforward to define `PE2` as a recursive function that generates terms
+in the Fibonacci sequence until they exceed four million and sums the even ones.
 
-
-```python
-define('PE2 == 0 fib_gen x [pop >4M] [popop] [[PE2.1] dip x] primrec')
-```
-
-
-```python
-J('PE2')
-```
-
+    joy? 0 [1 1 fib-gen] x [pop >4M] [popop] [[PE2.1] dip x] tailrec
     4613732
 
+### `PE2`
 
-Here's the collected program definitions:
+    [PE2 0 [1 1 fib-gen] x [pop >4M] [popop] [[PE2.1] dip x] tailrec] inscribe
 
-    fib == + swons [popdd over] infra uncons
-    fib_gen == [1 1 fib]
+Here's the collected program definitions (with a little editorializing):
 
-    even == dup 2 %
-    >4M == 4000000 >
+    fib-gen + [popdd over] cons infra uncons
+    even 2 % bool
+    >4M 4000000 >
+    PE2.1 dup even [+] [pop] branch
+    PE2.2 [PE2.1] dip x
+    PE2.init 0 [1 1 fib-gen] x
+    PE2.rec [pop >4M] [popop] [PE2.2] tailrec
+    PE2 PE2.init PE2.rec
 
-    PE2.1 == even [+] [pop] branch
-    PE2 == 0 fib_gen x [pop >4M] [popop] [[PE2.1] dip x] primrec
 
-### Even-valued Fibonacci Terms
+### Hmm...
+
+    fib-gen + swons [popdd over] infra uncons
+
+
+## Even-valued Fibonacci Terms
 
 Using `o` for odd and `e` for even:
 
@@ -363,93 +369,116 @@ Using `o` for odd and `e` for even:
 
 So the Fibonacci sequence considered in terms of just parity would be:
 
-    o o e o o e o o e o o e o o e o o e
-    1 1 2 3 5 8 . . .
+    o o e o o e  o  o  e  o  o   e . . .
+    1 1 2 3 5 8 13 21 34 55 89 144 . . .
 
 Every third term is even.
 
+So what if we drive the generator three times and discard the odd terms?
+We would have to initialize our `fib` generator with 1 0:
 
+    [1 0 fib-gen]
 
-```python
-J('[1 0 fib] x x x')  # To start the sequence with 1 1 2 3 instead of 1 2 3.
-```
+### `third-term`
 
-    1 1 2 [3 2 fib]
+    [third-term x x x [popop] dipd] inscribe
 
+So:
 
-Drive the generator three times and `popop` the two odd terms.
+    joy? [1 0 fib-gen]
+    [1 0 fib-gen]
+    
+    joy? third-term
+    2 [3 2 fib-gen]
+    
+    joy? third-term
+    2 8 [13 8 fib-gen]
+    
+    joy? third-term
+    2 8 34 [55 34 fib-gen]
+    
+    joy? third-term
+    2 8 34 144 [233 144 fib-gen]
 
+So now we need a sum:
 
-```python
-J('[1 0 fib] x x x [popop] dipd')
-```
+    joy? 0
+    0
 
-    2 [3 2 fib]
+And our Fibonacci generator:
 
+    joy? [1 0 fib-gen]
+    0 [1 0 fib-gen]
 
+We want to generate the initial term:
 
-```python
-define('PE2.2 == x x x [popop] dipd')
-```
+    joy? third-term
+    0 2 [3 2 fib-gen]
 
+Now we check if the term is less than four million,
+if so we add it and recur,
+otherwise we discard the term and the generator leaving the sum on the stack:
 
-```python
-J('[1 0 fib] 10 [PE2.2] times')
-```
-
-    2 8 34 144 610 2584 10946 46368 196418 832040 [1346269 832040 fib]
-
-
-Replace `x` with our new driver function `PE2.2` and start our `fib` generator at `1 0`.
-
-
-```python
-J('0 [1 0 fib] PE2.2 [pop >4M] [popop] [[PE2.1] dip PE2.2] primrec')
-```
-
+    joy? [pop >4M] [popop] [[PE2.1] dip third-term] tailrec
     4613732
 
+## Math
 
-## How to compile these?
-You would probably start with a special version of `G`, and perhaps modifications to the default `x`?
+    a      b
+    b      a+b
+    a+b    a+b+b
+    a+b+b  a+a+b+b+b
 
-## An Interesting Variation
+So if (a,b) and a is even then the next even term pair is (a+2b, 2a+3b)
 
+Reconsider:
 
-```python
-define('codireco == cons dip rest cons')
-```
+    [b a F] x
+    [b a F] b a F
 
+From here we want to arrive at:
 
-```python
-V('[0 [dup ++] codireco] x')
-```
+    (a+2b) [(2a+3b) (a+2b) F]
 
-                                     . [0 [dup ++] codireco] x
-               [0 [dup ++] codireco] . x
-               [0 [dup ++] codireco] . 0 [dup ++] codireco
-             [0 [dup ++] codireco] 0 . [dup ++] codireco
-    [0 [dup ++] codireco] 0 [dup ++] . codireco
-    [0 [dup ++] codireco] 0 [dup ++] . cons dip rest cons
-    [0 [dup ++] codireco] [0 dup ++] . dip rest cons
-                                     . 0 dup ++ [0 [dup ++] codireco] rest cons
-                                   0 . dup ++ [0 [dup ++] codireco] rest cons
-                                 0 0 . ++ [0 [dup ++] codireco] rest cons
-                                 0 1 . [0 [dup ++] codireco] rest cons
-           0 1 [0 [dup ++] codireco] . rest cons
-             0 1 [[dup ++] codireco] . cons
-             0 [1 [dup ++] codireco] . 
+    b a F
+    b a [F0] [F1] fork
 
+       b a over [+] ii
+    ---------------------
+            a+2b
 
+And:
 
-```python
-define('G == [codireco] cons cons')
-```
+       b a over [dup + +] ii
+    ---------------------------
+              2a+3b
 
 
-```python
-J('230 [dup ++] G 5 [x] times pop')
-```
+    [over [dup + +] ii] [over [+] ii] clop
+    roll< rrest [tuck] dip ccons
 
-    230 231 232 233 234
+
+    [b a F] b a F
+
+    [b a F] (2a+3b) (a+2b) roll<
+    (2a+3b) (a+2b) [b a F] rrest
+    (2a+3b) (a+2b) [F] [tuck] dip ccons
+
+
+    joy? [1 0 [over [dup + +] ii] [over [+] ii] clop roll< rrest [tuck] dip ccons]
+    [1 0 [over [dup + +] ii] [over [+] ii] clop roll< rrest [tuck] dip ccons]
+    
+    joy? x
+    2 [3 2 [over [dup + +] ii] [over [+] ii] clop roll< rrest [tuck] dip ccons]
+    
+    joy? x
+    2 8 [13 8 [over [dup + +] ii] [over [+] ii] clop roll< rrest [tuck] dip ccons]
+    
+    joy? x
+    2 8 34 [55 34 [over [dup + +] ii] [over [+] ii] clop roll< rrest [tuck] dip ccons]
+    
+    joy? x
+    2 8 34 144 [233 144 [over [dup + +] ii] [over [+] ii] clop roll< rrest [tuck] dip ccons]
+
+And so it goes...
 
