@@ -26,20 +26,22 @@ bit.)</p>
 2147483648
 </code></pre>
 <p>So our digits are not 0..9, but 0..2147483647</p>
-<h3><code>base</code></h3>
+<h3>≡ <code>base</code></h3>
 <p>We can <code>inscribe</code> a constant function <code>base</code> to keep this value handy.</p>
 <pre><code>2147483648
 joy? unit [base] swoncat
 [base 2147483648]
 joy? inscribe
 </code></pre>
-<p>This is sort of like a constant, and it's a little "wrong" to use the
+<p>It's a little "wrong" to use the
 dictionary to store values like this, however, this is how Forth does it
 and if your design is good it works fine.  Just be careful, and wash
-your hand afterward.</p>
+your hands afterward.</p>
 <p>This also permits a kind of parameterization.  E.g. let's say we wanted
 to use base 10 for our digits, maybe during debugging.  All that requires
 is to rebind the symbol <code>base</code> to 10.</p>
+<pre><code>[base 10] inscribe
+</code></pre>
 <h2>Converting Between Host BigNums and Joy BigNums</h2>
 <p>We will work with one of the Joy interpreters that has bignums already so
 we can convert "native" ints to our Joy bignums and vice versa.  This
@@ -48,12 +50,12 @@ and from strings (which this Joy doesn't have anyway, so it's probably
 fine to defer.)</p>
 <p>To get the sign bool we can just use <code>!-</code> ("not negative") and to get the
 list of digits we repeatedly <code>divmod</code> the number by our <code>base</code>:</p>
-<h3><code>moddiv</code></h3>
+<h3>≡ <code>moddiv</code></h3>
 <p>We will want the results in the opposite order, so let's define a little
 helper function to do that:</p>
 <pre><code>[moddiv divmod swap] inscribe
 </code></pre>
-<h3><code>get-digit</code></h3>
+<h3>≡ <code>get-digit</code></h3>
 <pre><code>[get-digit base moddiv] inscribe
 </code></pre>
 <p>We keep it up until we get to zero.  This suggests a <code>while</code> loop:</p>
@@ -80,8 +82,9 @@ joy? [[0 &gt;] [get-digit] while pop]
 joy? infra
 [58 105448366 57659106 1501085485 1312754386]
 </code></pre>
-<p>We could just reverse the list, but it's more efficient to build the result list in the order we want.
-We construct a simple recursive function.  (TODO: link to the recursion combinators notebook.)</p>
+<p>We could just reverse the list, but it's more efficient to build the
+result list in the order we want. We construct a simple recursive
+function.  (TODO: link to the recursion combinators notebook.)</p>
 <p>The predicate will check that our number is yet positive:</p>
 <pre><code>[0 &lt;=]
 </code></pre>
@@ -91,8 +94,8 @@ We construct a simple recursive function.  (TODO: link to the recursion combinat
 <p>But until we do find the zero, get digits:</p>
 <pre><code>[get-digit]
 </code></pre>
-<p>Once we have found all the digits and ditched the zero and put our initial empty list on the stack we
-<code>cons</code> up the digits we have found:</p>
+<p>Once we have found all the digits and ditched the zero and put our
+initial empty list on the stack we <code>cons</code> up the digits we have found:</p>
 <pre><code>[i cons] genrec
 </code></pre>
 <p>Let's try it:</p>
@@ -108,25 +111,27 @@ joy? [0 &lt;=] [pop []] [get-digit] [i cons] genrec
 <pre><code>joy? 0 [0 &lt;=] [pop []] [get-digit] [i cons] genrec
 []
 </code></pre>
-<p>I think this is better than returning <code>[0]</code> because that amounts to a single leading zero.</p>
+<p>I think this is better than returning <code>[0]</code> because that amounts to a
+single leading zero.</p>
 <pre><code>[true]   is "0"
 [true 0] is "00"
 </code></pre>
 <p>Eh?</p>
-<h3><code>digitalize</code></h3>
+<h3>≡ <code>digitalize</code></h3>
 <p>Let's <code>inscribe</code> this function under the name <code>digitalize</code>:</p>
 <pre><code>[digitalize [0 &lt;=] [pop []] [get-digit] [i cons] genrec] inscribe
 </code></pre>
-<p>Putting it all together we have <code>!-</code> for the sign and <code>abs digitalize</code> for the digits, followed by <code>cons</code>:</p>
+<p>Putting it all together we have <code>!-</code> for the sign and <code>abs digitalize</code>
+for the digits, followed by <code>cons</code>:</p>
 <pre><code>[!-] [abs digitalize] cleave cons
 </code></pre>
-<h3><code>to-bignum</code></h3>
+<h3>≡ <code>to-bignum</code></h3>
 <pre><code>[to-bignum [!-] [abs digitalize] cleave cons] inscribe
 </code></pre>
 <h3>Converting from Joy BigNums to Host BigNums</h3>
-<p>To convert a bignum into a host integer we need to keep a "power" value on the stack,
-setting it up and discarding it at the end, as well as an accumulator value starting at zero.
-We will deal with the sign bit later.</p>
+<p>To convert a bignum into a host integer we need to keep a "power" value
+on the stack, setting it up and discarding it at the end, as well as an
+accumulator value starting at zero. We will deal with the sign bit later.</p>
 <pre><code>rest 1 0 rolldown
 </code></pre>
 <p>So the problem is to derive:</p>
@@ -139,18 +144,20 @@ We will deal with the sign bit later.</p>
 ---------------------------------------
    (power*base) (acc + (power*digit)
 </code></pre>
-<p>Now this is an interesting function.
-The first thing I noticed is that it has two results that can be computed independently, suggesting a form like:</p>
+<p>Now this is an interesting function. The first thing I noticed is that it
+has two results that can be computed independently, suggesting a form
+like:</p>
 <pre><code>[G] [H] clop popdd
 </code></pre>
-<p>(Then I noticed that <code>power *</code> is a sub-function of both <code>G</code> and <code>H</code>, but let's not overthink it, eh?)</p>
+<p>(Then I noticed that <code>power *</code> is a sub-function of both <code>G</code> and <code>H</code>, but
+let's not overthink it, eh?)</p>
 <p>So for the first result (the next power) we want:</p>
 <pre><code>G == popop base *
 </code></pre>
 <p>And for the result:</p>
 <pre><code>H == rolldown * +
 </code></pre>
-<h3><code>add-digit</code></h3>
+<h3>≡ <code>add-digit</code></h3>
 <p>Let's call this <code>add-digit</code>:</p>
 <pre><code>[add-digit [popop base *] [rolldown * +] clop popdd] inscribe
 </code></pre>
@@ -166,7 +173,7 @@ joy? [add-digit] step
 joy? popd
 1234567890123456789012345678901234567890
 </code></pre>
-<h3><code>from-bignum′</code></h3>
+<h3>≡ <code>from-bignum′</code></h3>
 <pre><code>[from-bignum′ rest 1 0 rolldown [add-digit] step popd] inscribe
 </code></pre>
 <p>Try it out:</p>
@@ -191,13 +198,11 @@ joy? [from-bignum′] [first] cleave
 <p>Then use the sign flag to negate the int if the bignum was negative:</p>
 <pre><code>[neg] [] branch
 </code></pre>
-<h3><code>from-bignum</code></h3>
+<h3>≡ <code>from-bignum</code></h3>
 <p>This gives:</p>
 <pre><code>[from-bignum [from-bignum′] [first] cleave [neg] [] branch] inscribe
 </code></pre>
 <h2>Our Source Code So Far</h2>
-<p>(Note that this is a list of definitions, and then we can <code>[inscribe] step</code> them into the dictionary all at once.
-This is for convenience when entering definitions into an interpreter as one is following along, eh?)</p>
 <pre><code>[base 2147483648] inscribe
 [moddiv divmod swap] inscribe
 [get-digit base moddiv] inscribe
@@ -211,27 +216,33 @@ This is for convenience when entering definitions into an interpreter as one is 
 </code></pre>
 <h2>Addition of Like Signs</h2>
 <h3><code>add-digits</code></h3>
-<p>Let's figure out how to add two lists of digits.  We will assume that the signs are the same (both lists of digits represent
-numbers of the same sign, both positive or both negative.)
-We're going to want a recursive function, of course, but it's not quite a standard <em>hylomorphism</em> for (at least) two reasons:</p>
+<p>Let's figure out how to add two lists of digits.  We will assume that the
+signs are the same (both lists of digits represent numbers of the same
+sign, both positive or both negative.) We're going to want a recursive
+function, of course, but it's not quite a standard <em>hylomorphism</em> for (at
+least) two reasons:</p>
 <ul>
 <li>We're tearing down two lists simultaneously.</li>
 <li>They might not be the same length.</li>
 </ul>
-<p>There are two base cases: two empty lists or one empty list, the recursive branch is taken only if both lists are non-empty.</p>
-<p>We will also need an inital <code>false</code> value for a carry flag.  This implies the following structure:</p>
+<p>There are two base cases: two empty lists or one empty list, the
+recursive branch is taken only if both lists are non-empty.</p>
+<p>We will also need an inital <code>false</code> value for a carry flag.  This implies
+the following structure:</p>
 <pre><code>false rollup [add-digits.P] [add-digits.THEN] [add-digits.R0] [add-digits.R1] genrec
 </code></pre>
 <h3>The predicate</h3>
-<p>The situation will be like this, a Boolean flag followed by two lists of digits:</p>
+<p>The situation will be like this, a Boolean flag followed by two lists of
+digits:</p>
 <pre><code>bool [a ...] [b ...] add-digits.P
 </code></pre>
 <p>The predicate must evaluate to <code>false</code> <em>iff</em> both lists are non-<code>null</code>:</p>
 <pre><code>add-digits.P == [null] ii \/
 </code></pre>
 <h3>The base cases</h3>
-<p>On the non-recursive branch of the <code>genrec</code> we have to decide between three cases,
-but because addition is commutative we can lump together the first two:</p>
+<p>On the non-recursive branch of the <code>genrec</code> we have to decide between
+three cases, but because addition is commutative we can lump together the
+first two:</p>
 <pre><code>bool [] [b ...] add-digits.THEN
 bool [a ...] [] add-digits.THEN
 
@@ -244,7 +255,8 @@ bool [] [] add-digits.THEN
 <pre><code>add-digits.THEN.P == [null] ii /\
 </code></pre>
 <p>So <code>add-digits.THEN.THEN</code> deals with the case of both lists being empty,
-and the <code>add-digits.THEN.ELSE</code> branch deals with one list of digits being longer than the other.</p>
+and the <code>add-digits.THEN.ELSE</code> branch deals with one list of digits being
+longer than the other.</p>
 <h3>One list empty</h3>
 <p>In the cases where one of the two lists (but not both) is empty:</p>
 <pre><code>carry [a ...] [] add-digits.THEN.ELSE
@@ -253,7 +265,7 @@ carry [] [b ...] add-digits.THEN.ELSE
 <p>We first get rid of the empty list:</p>
 <pre><code>[null] [pop] [popd] ifte
 </code></pre>
-<h3><code>ditch-empty-list</code></h3>
+<h3>≡ <code>ditch-empty-list</code></h3>
 <pre><code>[ditch-empty-list [null] [pop] [popd] ifte] inscribe
 
 add-digits.THEN.ELSE == ditch-empty-list add-digits.THEN.ELSE′
@@ -261,24 +273,29 @@ add-digits.THEN.ELSE == ditch-empty-list add-digits.THEN.ELSE′
 <p>Now we have:</p>
 <pre><code>carry [n ...] add-digits.THEN.ELSE′
 </code></pre>
-<p>This is just <code>add-carry-to-digits</code> which we will derive in a moment, but first a side-quest...</p>
+<p>This is just <code>add-carry-to-digits</code> which we will derive in a moment, but
+first a side-quest...</p>
 <h3><code>add-with-carry</code></h3>
-<p>To get ahead of ourselves a bit,
-we will want some function <code>add-with-carry</code> that accepts a bool and two ints and leaves behind a new int and a new Boolean carry flag.
-With some abuse of notation we can treat bools as ints (type punning as in Python) and write:</p>
+<p>To get ahead of ourselves a bit, we will want some function
+<code>add-with-carry</code> that accepts a bool and two ints and leaves behind a new
+int and a new Boolean carry flag. With some abuse of notation we can
+treat bools as ints (type punning as in Python) and write:</p>
 <pre><code>      carry a b add-with-carry
 ---------------------------------
         (a+b+carry) carry′
 </code></pre>
-<p>(I find it interesting that this function accepts the carry from below the int args but returns it above the result.  Hmm...)</p>
-<h3><code>bool-to-int</code></h3>
+<p>(I find it interesting that this function accepts the carry from below
+the int args but returns it above the result.  Hmm...)</p>
+<h3>≡ <code>bool-to-int</code></h3>
 <pre><code>[bool-to-int [0] [1] branch] inscribe
 </code></pre>
-<p>We can use this function to convert the carry flag to an integer and then add it to the sum of the two digits:</p>
+<p>We can use this function to convert the carry flag to an integer and then
+add it to the sum of the two digits:</p>
 <pre><code>[bool-to-int] dipd + +
 </code></pre>
-<p>So the first part of <code>add-with-carry</code> is <code>[bool-to-int] dipd + +</code> to get the total, then we need to do
-<code>base mod</code> to get the new digit and <code>base &gt;=</code> to get the new carry flag.  Factoring give us:</p>
+<p>So the first part of <code>add-with-carry</code> is <code>[bool-to-int] dipd + +</code> to get
+the total, then we need to do <code>base mod</code> to get the new digit and <code>base &gt;=</code>
+to get the new carry flag.  Factoring give us:</p>
 <pre><code>base [mod] [&gt;=] clop
 </code></pre>
 <p>Put it all together and we have:</p>
@@ -287,10 +304,12 @@ With some abuse of notation we can treat bools as ints (type punning as in Pytho
 [add-with-carry add-with-carry.0 add-with-carry.1] inscribe
 </code></pre>
 <h3>Now back to <code>add-carry-to-digits</code></h3>
-<p>This should be a very simple recursive function.  It accepts a Boolean <code>carry</code> flag
-and a non-empty list of digits (the list is only going to be non-empty on the
-first iteration, after that we have to check it ourselves because we may have emptied
-it of digits and still have a <code>true</code> <code>carry</code> flag) and it returns a list of digits, consuming the carry flag.</p>
+<p>This should be a very simple recursive function.  It accepts a Boolean
+<code>carry</code> flag and a non-empty list of digits (the list is only going to be
+non-empty on the first iteration, after that we have to check it
+ourselves because we may have emptied it of digits and still have a
+<code>true</code> <code>carry</code> flag) and it returns a list of digits, consuming the carry
+flag.</p>
 <pre><code>add-carry-to-digits == [actd.P] [actd.THEN] [actd.R0] [actd.R1] genrec
 </code></pre>
 <p>The predicate is the carry flag itself inverted:</p>
@@ -308,9 +327,9 @@ it of digits and still have a <code>true</code> <code>carry</code> flag) and it 
 <p>-or-</p>
 <pre><code>true [] actd.R0 [add-carry-to-digits] actd.R1
 </code></pre>
-<p>We know that the Boolean value is <code>true</code>.
-We also know that the list will be non-empty, but only on the first iteration of the <code>genrec</code>.
-It may be that the list is empty on a later iteration.</p>
+<p>We know that the Boolean value is <code>true</code>. We also know that the list will
+be non-empty, but only on the first iteration of the <code>genrec</code>. It may be
+that the list is empty on a later iteration.</p>
 <p>The <code>actd.R0</code> function should check the list.</p>
 <pre><code>actd.R0 == [null] [actd.R0.THEN] [actd.R0.ELSE] ifte
 </code></pre>
@@ -319,17 +338,19 @@ It may be that the list is empty on a later iteration.</p>
 --------------------------------------------------------
              1 false [] [add-carry-to-digits] i cons
 </code></pre>
-<p>What we're seeing here is that <code>actd.R0.THEN</code> leaves the empty list of digits on the stack,
-converts the carry flag to <code>false</code> and leave 1 on the stack to be picked up by <code>actd.R1</code>
-and <code>cons</code>'d onto the list of digits (e.g.: 999 -&gt; 1000, it's the new 1.)</p>
+<p>What we're seeing here is that <code>actd.R0.THEN</code> leaves the empty list of
+digits on the stack, converts the carry flag to <code>false</code> and leave 1 on
+the stack to be picked up by <code>actd.R1</code> and <code>cons</code>'d onto the list of
+digits (e.g.: 999 -&gt; 1000, it's the new 1.)</p>
 <p>This implies:</p>
 <pre><code>actd.R1 == i cons
 </code></pre>
 <p>And:</p>
 <pre><code>actd.R0.THEN == popd 1 false rolldown
 </code></pre>
-<p>We have the results in this order <code>1 false []</code> rather than some other arrangement to be compatible (same types and order)
-with the result of the other branch, which we now derive.</p>
+<p>We have the results in this order <code>1 false []</code> rather than some other
+arrangement to be compatible (same types and order) with the result of
+the other branch, which we now derive.</p>
 <h3>If the list of digits isn't empty...</h3>
 <p>With <code>actd.R1 == i cons</code> as above we have:</p>
 <pre><code>true [a ...] actd.R0.ELSE [add-carry-to-digits] i cons
@@ -339,20 +360,21 @@ with the result of the other branch, which we now derive.</p>
 ----------------------------------------------------------------
        (a+1) carry         [...] [add-carry-to-digits] i cons
 </code></pre>
-<p>This leaves behind the new digit (a+1) for <code>actd.R1</code> and the new carry flag for the next iteration.</p>
+<p>This leaves behind the new digit (a+1) for <code>actd.R1</code> and the new carry
+flag for the next iteration.</p>
 <p>So here is the specification of <code>actd.R0.ELSE</code>:</p>
 <pre><code>     true [a ...] actd.R0.ELSE
 -----------------------------------
    true 0 a add-with-carry [...]
 </code></pre>
-<p>It accepts a Boolean value and a non-empty list on the stack and is responsible
-for <code>uncons</code>'ing <code>a</code> and <code>add-with-carry</code> and the initial 0:</p>
+<p>It accepts a Boolean value and a non-empty list on the stack and is
+responsible for <code>uncons</code>'ing <code>a</code> and <code>add-with-carry</code> and the initial 0:</p>
 <pre><code>                 true [a ...] . 0 swap
                true 0 [a ...] . uncons
                true 0 a [...] . [add-with-carry] dip
 true 0 a add-with-carry [...] .
 </code></pre>
-<h3><code>actd.R0.ELSE</code></h3>
+<h3>≡ <code>actd.R0.ELSE</code></h3>
 <pre><code>[actd.R0.ELSE 0 swap uncons [add-with-carry] dip] inscribe
 </code></pre>
 <p>Putting it all together:</p>
@@ -379,7 +401,8 @@ true [9 9 9]
 joy? add-carry-to-digits
 [0 0 0 1]
 </code></pre>
-<p>Not bad!  Recall that our digits are stored in with the Most Significant Digit at the bottom of the list.</p>
+<p>Not bad!  Recall that our digits are stored in with the Most Significant
+Digit at the bottom of the list.</p>
 <p>Let's add another carry:</p>
 <pre><code>joy? true swap
 true [0 0 0 1]
@@ -406,11 +429,13 @@ joy? add-carry-to-digits
 [0 2 0 0 1]
 </code></pre>
 <p>Wonderful!</p>
-<p>So that handles the cases where one of the two lists (but not both) is empty.</p>
+<p>So that handles the cases where one of the two lists (but not both) is
+empty.</p>
 <pre><code>add-digits.THEN.ELSE == ditch-empty-list add-carry-to-digits
 </code></pre>
 <h3>Both lists empty</h3>
-<p>If both lists are empty we discard one list and check the carry to determine our result as described above:</p>
+<p>If both lists are empty we discard one list and check the carry to
+determine our result as described above:</p>
 <pre><code>bool [] [] add-digits.THEN.THEN
 </code></pre>
 <p>Simple enough:</p>
@@ -436,11 +461,14 @@ bool [] . swap
 [add-digits.THEN [[null] ii /\] [add-digits.THEN.THEN] [add-digits.THEN.ELSE] ifte] inscribe
 </code></pre>
 <h2>And recur...</h2>
-<p>Now we go back and derive the recursive branch that is taken only if both lists are non-empty.</p>
+<p>Now we go back and derive the recursive branch that is taken only if both
+lists are non-empty.</p>
 <pre><code>bool [a ...] [b ...] add-digits.R0 [add-digits′] add-digits.R1
 </code></pre>
-<p>We just need to knock out those recursive branch functions <code>add-digits.R0</code> and <code>add-digits.R1</code> and we're done.</p>
-<p>First we will want to <code>uncons</code> the digits.  Let's write a function that just does that:</p>
+<p>We just need to knock out those recursive branch functions
+<code>add-digits.R0</code> and <code>add-digits.R1</code> and we're done.</p>
+<p>First we will want to <code>uncons</code> the digits.  Let's write a function that
+just does that:</p>
 <pre><code>[uncons] ii swapd
 </code></pre>
 <p>Try it:</p>
@@ -450,14 +478,15 @@ bool [] . swap
 joy? [uncons] ii swapd
 1 4 [2 3] [5 6]
 </code></pre>
-<h3><code>uncons-two</code></h3>
+<h3>≡ <code>uncons-two</code></h3>
 <p>We could call this <code>uncons-two</code>:</p>
 <pre><code>[uncons-two [uncons] ii swapd] inscribe
 </code></pre>
 <p>This brings us to:</p>
 <pre><code>bool a b [...] [...] add-digits.R0′ [add-digits′] add-digits.R1
 </code></pre>
-<p>It's at this point that we'll want to employ the <code>add-with-carry</code> function:</p>
+<p>It's at this point that we'll want to employ the <code>add-with-carry</code>
+function:</p>
 <pre><code>bool a b [...] [...] [add-with-carry] dipd add-digits.R0″ [add-digits'] add-digits.R1
 
 bool a b add-with-carry [...] [...] add-digits.R0″ [add-digits'] add-digits.R1
@@ -528,7 +557,8 @@ joy? 12345 999 +
 </code></pre>
 <p>Neat!</p>
 <h3><code>add-bignums</code></h3>
-<p>There is one more thing we have to do to use this: we have to deal with the signs.</p>
+<p>There is one more thing we have to do to use this: we have to deal with
+the signs.</p>
 <pre><code>add-bignums [add-bignums.P] [add-bignums.THEN] [add-bignums.ELSE] ifte
 </code></pre>
 <p>To check are they the same sign?</p>
@@ -539,15 +569,14 @@ joy? 12345 999 +
 <p>We have:</p>
 <pre><code>add-bignums.P == [first] ii nxor
 </code></pre>
-<p>If they are the same sign (both positive or both negative) we can
-use <code>uncons</code> to keep one of the sign Boolean flags around and reuse
-it at the end, and <code>rest</code> to discard the other, then <code>add-digits</code>
-to add the digits, then <code>cons</code> that flag we saved onto the result
-digits list:</p>
+<p>If they are the same sign (both positive or both negative) we can use
+<code>uncons</code> to keep one of the sign Boolean flags around and reuse it at the
+end, and <code>rest</code> to discard the other, then <code>add-digits</code> to add the
+digits, then <code>cons</code> that flag we saved onto the result digits list:</p>
 <pre><code>add-bignums.THEN == [uncons] dip rest add-digits cons
 </code></pre>
-<p>If they are not both positive or both negative then we negate one of
-them and subtract instead (adding unlikes is actually subtraction):</p>
+<p>If they are not both positive or both negative then we negate one of them
+and subtract instead (adding unlikes is actually subtraction):</p>
 <pre><code>add-bignums.ELSE == neg-bignum sub-bignums
 </code></pre>
 <p>So here we go:</p>
@@ -557,36 +586,92 @@ them and subtract instead (adding unlikes is actually subtraction):</p>
 [add-bignums [same-sign] [add-like-bignums] [neg-bignum sub-bignums] ifte] inscribe
 </code></pre>
 <p>But we haven't implemented <code>neg-bignum</code> or <code>sub-bignums</code> yet...</p>
-<pre><code>[actd.R0.ELSE 0 swap uncons [add-with-carry] dip] inscribe
-[actd.R0 [null] [actd.R0.THEN] [actd.R0.ELSE] ifte] inscribe
-[actd.R0.THEN popd 1 false rolldown] inscribe
-[add-bignums [same-sign] [add-like-bignums] [neg-bignum sub-bignums] ifte] inscribe
-[add-carry-to-digits [pop not] [popd] [actd.R0] [i cons] genrec] inscribe
-[add-digit [popop base *] [rolldown * +] clop popdd] inscribe
-[add-digits false rollup add-digits′] inscribe
-[add-digits′ [[null] ii \/] [add-digits.THEN] [add-digits.R0] [i cons] genrec] inscribe
-[add-digits.R0 uncons-two [add-with-carry] dipd] inscribe
-[add-digits.THEN.ELSE ditch-empty-list add-carry-to-digits] inscribe
-[add-digits.THEN [[null] ii /\] [add-digits.THEN.THEN] [add-digits.THEN.ELSE] ifte] inscribe
-[add-digits.THEN.THEN pop swap [] [1 swons] branch] inscribe
-[add-like-bignums [uncons] dip rest add-digits cons] inscribe
-[add-with-carry.0 [bool-to-int] dipd + +] inscribe
-[add-with-carry.1 base [mod] [&gt;=] clop] inscribe
-[add-with-carry add-with-carry.0 add-with-carry.1] inscribe
-[base 10] inscribe
-[bool-to-int [0] [1] branch] inscribe
-[digitalize [0 &lt;=] [pop []] [get-digit] [i cons] genrec] inscribe
-[ditch-empty-list [null] [pop] [popd] ifte] inscribe
-[from-bignum [from-bignum′] [first] cleave [neg] [] branch] inscribe
-[from-bignum′ from-bignum′.prep [add-digit] step popd] inscribe
-[from-bignum′.prep rest 1 0 rolldown] inscribe
-[get-digit base moddiv] inscribe
-[moddiv divmod swap] inscribe
-[nxor xor not] inscribe
-[same-sign [first] ii xor not] inscribe
-[to-bignum [!-] [abs digitalize] cleave cons] inscribe
-[uncons-two [uncons] ii swapd] inscribe
-[xor [] [not] branch] inscribe
+<p>We'll get to those in a moment, but first an interlude.</p>
+<h2>Interlude: <code>list-combiner</code></h2>
+<p>Let's review the form of our function <code>add-digits</code> (eliding the preamble
+<code>false rollup</code>) and <code>add-digits.THEN</code>:</p>
+<pre><code>add-digits′ == [add-digits.P] [add-digits.THEN] [add-digits.R0] [add-digits.R1] genrec
+
+add-digits.THEN == [add-digits.THEN.P] [add-digits.THEN.THEN] [add-digits.THEN.ELSE] ifte
+</code></pre>
+<p>Recall also:</p>
+<pre><code>     add-digits.P == [null] ii \/
+add-digits.THEN.P == [null] ii /\
+</code></pre>
+<p>Generalizing the names:</p>
+<pre><code>   F == [P] [THEN] [R0] [R1] genrec
+THEN == [THEN.P] [THEN.THEN] [THEN.ELSE] ifte
+</code></pre>
+<p>With auxiliary definitions:</p>
+<pre><code>null-two == [null] ii
+both-null == null-two /\
+either-or-both-null == null-two \/
+</code></pre>
+<p>Rename predicates:</p>
+<pre><code>   F == [either-or-both-null] [THEN] [R0] [R1] genrec
+THEN == [both-null] [THEN.THEN] [THEN.ELSE] ifte
+</code></pre>
+<p>Substitute <code>THEN</code>:</p>
+<pre><code>   F == [either-or-both-null] [[both-null] [THEN.THEN] [THEN.ELSE] ifte] [R0] [R1] genrec
+</code></pre>
+<p>This is a little awkward, so let's pretend that we have a new combinator
+<code>two-list-genrec</code> that accepts four quotes and does <code>F</code>:</p>
+<pre><code>F == [THEN.THEN] [THEN.ELSE] [R0] [R1] two-list-genrec
+</code></pre>
+<p>So <code>THEN.THEN</code> handles the (non-recursive) case of both lists being
+empty, <code>THEN.ELSE</code> handles the (non-recursive) case of one or the other
+list being empty, and <code>R0 [F] R1</code> handles the (recursive) case of both
+lists being non-empty.</p>
+<p>Recall that our <code>R1</code> is just <code>i cons</code>, we can fold that in to the
+definition of another new combinator that combines two lists into one:</p>
+<pre><code>list-combiner-genrec == [i cons] two-list-genrec
+</code></pre>
+<p>So:</p>
+<pre><code>F == [both-empty] [one-empty] [both-non-empty] list-combiner-genrec
+</code></pre>
+<p>Then for <code>add-digits′</code> we would have:</p>
+<pre><code>    both-empty == pop swap [] [1 swons] branch
+     one-empty == ditch-empty-list add-carry-to-digits
+both-non-empty == uncons-two [add-with-carry] dipd
+
+add-digits′ == [both-empty] [one-empty] [both-non-empty] list-combiner-genrec
+</code></pre>
+<p>Which would expand into:</p>
+<pre><code>add-digits′ == [either-or-both-null]
+               [[both-null] [both-empty] [one-empty] ifte]
+               [both-non-empty]
+               [i cons]
+               genrec
+</code></pre>
+<p>It's pretty straight forward to make a functions that converts the three
+quotes into the expanded form (a kind of "macro") but you might want to
+separate that from the actual <code>genrec</code> evaluation.  It would be better to
+run the "macro" once, append the <code>[genrec]</code> quote to the resulting form,
+and <code>inscribe</code> that, rather than putting the "macro" into the definition.
+That way you avoid re-evaluating the "macro" on each iteration.</p>
+<p>The simplification of the expanded form to the simpler version by coining
+the <code>list-combiner-genrec</code> function is the "semantic compression" aspect
+of factoring.  If you choose your seams and names well, the code is
+(relatively) self-descriptive.</p>
+<p>In any event, now that we know what's going on, we don't actually need
+the "macro", we can just write out the expanded version directly.</p>
+<p>Source code:</p>
+<pre><code>[null-two [null] ii] inscribe
+[both-null null-two /\] inscribe
+[either-or-both-null null-two \/] inscribe
+
+[add-digits.both-empty pop swap [] [1 swons] branch] inscribe
+[add-digits.one-empty ditch-empty-list add-carry-to-digits] inscribe
+[add-digits.both-non-empty uncons-two [add-with-carry] dipd] inscribe
+
+[add-digits′ [either-or-both-null] [[both-null] [add-digits.both-empty] [add-digits.one-empty] ifte] [add-digits.both-non-empty] [i cons] genrec] inscribe
+</code></pre>
+<h1>===================================================================================</h1>
+<h2>≡ <code>neg-bignum</code></h2>
+<p>Well, that was fun!  And we'll reuse it in a moment when we derive <code>sub-bignums</code>.
+But for now, let's clear our palate with a nice simple function: <code>neg-bignum</code>.</p>
+<p>To negate a Joy bignum you just invert the Boolean value at the head of the list.</p>
+<pre><code>neg-bignum == [not] infra
 </code></pre>
 <h2>Subtraction of Like Signs <code>sub-digits</code></h2>
 <p>Subtraction is similar to addition in that it's a simple recursive algorithm that works digit-by-digit.  It has the same four cases as well, we can reuse <code>P</code> and <code>P'</code>.</p>
