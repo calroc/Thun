@@ -12,9 +12,12 @@ footer {
  text-align: center;
 }
 
+code {
+ background: #eee;
+}
+
 pre {
  background: #eee;
- font-size: large;
  margin-left: 2em;
  margin-right: 2em;
  margin-bottom: 1em;
