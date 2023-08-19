@@ -1,0 +1,33 @@
+
+    [actd.R0.ELSE 0 swap uncons [add-with-carry] dip] inscribe
+    [actd.R0 [null] [actd.R0.THEN] [actd.R0.ELSE] ifte] inscribe
+    [actd.R0.THEN popd 1 false rolldown] inscribe
+    [add-bignums [same-sign] [add-like-bignums] [neg-bignum sub-bignums] ifte] inscribe
+    [add-carry-to-digits [pop not] [popd] [actd.R0] [i cons] genrec] inscribe
+    [add-digit [popop base *] [rolldown * +] clop popdd] inscribe
+    [add-digits false rollup add-digits′] inscribe
+    [add-digits′ [[null] ii \/] [add-digits.THEN] [add-digits.R0] [i cons] genrec] inscribe
+    [add-digits.R0 uncons-two [add-with-carry] dipd] inscribe
+    [add-digits.THEN.ELSE ditch-empty-list add-carry-to-digits] inscribe
+    [add-digits.THEN [[null] ii /\] [add-digits.THEN.THEN] [add-digits.THEN.ELSE] ifte] inscribe
+    [add-digits.THEN.THEN pop swap [] [1 swons] branch] inscribe
+    [add-like-bignums [uncons] dip rest add-digits cons] inscribe
+    [add-with-carry.0 [bool-to-int] dipd + +] inscribe
+    [add-with-carry.1 base [mod] [>=] clop] inscribe
+    [add-with-carry add-with-carry.0 add-with-carry.1] inscribe
+    [base 10] inscribe
+    [bool-to-int [0] [1] branch] inscribe
+    [digitalize [0 <=] [pop []] [get-digit] [i cons] genrec] inscribe
+    [ditch-empty-list [null] [pop] [popd] ifte] inscribe
+    [from-bignum [from-bignum′] [first] cleave [neg] [] branch] inscribe
+    [from-bignum′ from-bignum′.prep [add-digit] step popd] inscribe
+    [from-bignum′.prep rest 1 0 rolldown] inscribe
+    [get-digit base moddiv] inscribe
+    [moddiv divmod swap] inscribe
+    [nxor xor not] inscribe
+    [same-sign [first] ii xor not] inscribe
+    [to-bignum [!-] [abs digitalize] cleave cons] inscribe
+    [uncons-two [uncons] ii swapd] inscribe
+    [xor [] [not] branch] inscribe
+
+
