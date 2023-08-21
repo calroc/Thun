@@ -4,16 +4,15 @@ lt [false] [false] [true] cmp
 neq [true] [false] [true] cmp
 le [false] [true] [true] cmp
 ge [true] [true] [false] cmp
--- 1 -
 ? dup bool
-and nulco [nullary [false]] dip branch
-++ 1 +
-or nulco [nullary] dip [true] branch
 !- 0 >=
+++ 1 +
+-- 1 -
 <{} [] swap
 <<{} [] rollup
 abs dup 0 < [] [neg] branch
 anamorphism [pop []] swap [dip swons] genrec
+and nulco [nullary [false]] dip branch
 app1 grba infrst
 app2 [grba swap grba swap] dip [infrst] cons ii
 app3 3 appN
@@ -36,10 +35,10 @@ disenstacken swaack pop
 divmod [/] [%] clop
 down_to_zero [0 >] [dup --] while
 drop [rest] times
-dupd [dup] dip
 dupdd [dup] dipd
-dupdip dupd dip
+dupd [dup] dip
 dupdipd dup dipd
+dupdip dupd dip
 enstacken stack [clear] dip
 first uncons pop
 flatten <{} [concat] step
@@ -54,22 +53,26 @@ ifte [nullary] dipd swap branch
 ii [dip] dupdip i
 infra swons swaack [i] dip swaack
 infrst infra first
+<< lshift
+lshift [2 *] times
 make_generator [codireco] ccons
 mod %
 neg 0 swap -
 not [true] [false] branch
 nulco [nullary] cons
-null [] concat bool not
 nullary [stack] dinfrirst
+null [] swap concat bool not
 of swap at
+or nulco [nullary] dip [true] branch
+over [dup] dip swap
 pam [i] map
 pm [+] [-] clop
-popd [pop] dip
 popdd [pop] dipd
-popop pop pop
-popopop pop popop
-popopd [popop] dip
+popd [pop] dip
 popopdd [popop] dipd
+popopd [popop] dip
+popopop pop popop
+popop pop pop
 product 1 swap [*] step
 quoted [unit] dip
 range [0 <=] [-- dup] anamorphism
@@ -77,11 +80,13 @@ range_to_zero unit [down_to_zero] infra
 reco rest cons
 rest uncons popd
 reverse <{} shunt
-roll> swap swapd
-roll< swapd swap
-rollup roll>
 rolldown roll<
+roll< swapd swap
+roll> swap swapd
+rollup roll>
 rrest rest rest
+>> rshift
+rshift [2 /] times
 run <{} infra
 second rest first
 shift uncons [swons] dip
@@ -97,8 +102,8 @@ step_zero 0 roll> step
 stuncons stack uncons
 sum [+] step_zero
 swapd [swap] dip
-swons swap cons
 swoncat swap concat
+swons swap cons
 tailrec [i] genrec
 take <<{} [shift] times pop
 ternary binary popd
@@ -131,3 +136,4 @@ _isnt_two_bools [_isnt_bool] ii
 _\/_ [_isnt_bool] [not] branch
 /\ _isnt_two_bools [pop false] [] branch
 \/ _isnt_two_bools [] [pop true] branch
+xor [] [not] branch

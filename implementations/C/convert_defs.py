@@ -33,6 +33,8 @@ SKIP = '''\
 clear
 cmp
 first
+lshift
+rshift
 mod
 rest'''.splitlines()
 
