@@ -11,11 +11,15 @@ Consider the `x` combinator:
 We can apply it to a quoted program consisting of some value `a` and some function `B`:
 
     [a B] x
+    [a B] dup i
+    [a B] [a B] i
     [a B] a B
 
 Let `B` function `swap` the `a` with the quote and run some function `C` on it to generate a new value `b`:
 
     B == swap [C] dip
+
+Evaluation would go like this:
 
     [a B] a B
     [a B] a swap [C] dip
@@ -422,14 +426,16 @@ otherwise we discard the term and the generator leaving the sum on the stack:
     joy? [pop >4M] [popop] [[PE2.1] dip third-term] tailrec
     4613732
 
-## Math
+## Let's Use Math
+
+Consider the Fib seq with algebraic variables:
 
     a      b
     b      a+b
     a+b    a+b+b
     a+b+b  a+a+b+b+b
 
-So if (a,b) and a is even then the next even term pair is (a+2b, 2a+3b)
+So starting with `(a  b)` and assuming `a` is even then the next even term pair is `(a+2b, 2a+3b)`.
 
 Reconsider:
 
@@ -440,30 +446,48 @@ From here we want to arrive at:
 
     (a+2b) [(2a+3b) (a+2b) F]
 
+Let's derive `F`.  We have two values and we want two new values so that's a `clop`:
+
     b a F
-    b a [F0] [F1] fork
+    b a [F0] [F1] clop
 
-       b a over [+] ii
-    ---------------------
-            a+2b
+Where `F0` computes `a+2b`:
 
-And:
+    F0 == over [+] ii
 
-       b a over [dup + +] ii
-    ---------------------------
-              2a+3b
+    b a over [+] ii
+    b a b    [+] ii
+    b a + b +
+    b+a   b +
+    a+2b
 
+And `F1` computes `2a+3b`:
 
-    [over [dup + +] ii] [over [+] ii] clop
-    roll< rrest [tuck] dip ccons
+    F1 == over [dup + +] ii
 
+    b a over [dup + +] ii
+    b a b    [dup + +] ii
+    b a dup + + b dup + +
+    b a a   + + b b   + +
+    ...
+    2a+3b
 
-    [b a F] b a F
+So after that we have
 
-    [b a F] (2a+3b) (a+2b) roll<
-    (2a+3b) (a+2b) [b a F] rrest
-    (2a+3b) (a+2b) [F] [tuck] dip ccons
+    [b a F] (a+2b) (2a+3b) F'
 
+       [b a F] b‴ a‴ roll<
+       b‴ a‴ [b a F] rrest
+       b‴ a‴      [F] [tuck] dip ccons
+       b‴ a‴ tuck [F]            ccons
+    a‴ b‴ a‴     [F]            ccons
+    a‴ [b‴ a‴ F]
+
+Putting it all together (and deferring factoring) we have:
+
+    F == [over [dup + +] ii] [over [+] ii] clop roll< rrest [tuck] dip ccons
+
+Let's try it out:
 
     joy? [1 0 [over [dup + +] ii] [over [+] ii] clop roll< rrest [tuck] dip ccons]
     [1 0 [over [dup + +] ii] [over [+] ii] clop roll< rrest [tuck] dip ccons]
@@ -482,3 +506,6 @@ And:
 
 And so it goes...
 
+## Conclusion
+
+Generator programs like these are fun and interesting.

@@ -15,12 +15,15 @@
 </code></pre>
 <p>We can apply it to a quoted program consisting of some value <code>a</code> and some function <code>B</code>:</p>
 <pre><code>[a B] x
+[a B] dup i
+[a B] [a B] i
 [a B] a B
 </code></pre>
 <p>Let <code>B</code> function <code>swap</code> the <code>a</code> with the quote and run some function <code>C</code> on it to generate a new value <code>b</code>:</p>
 <pre><code>B == swap [C] dip
-
-[a B] a B
+</code></pre>
+<p>Evaluation would go like this:</p>
+<pre><code>[a B] a B
 [a B] a swap [C] dip
 a [a B]      [C] dip
 a C [a B]
@@ -345,45 +348,59 @@ otherwise we discard the term and the generator leaving the sum on the stack:</p
 <pre><code>joy? [pop &gt;4M] [popop] [[PE2.1] dip third-term] tailrec
 4613732
 </code></pre>
-<h2>Math</h2>
+<h2>Let's Use Math</h2>
+<p>Consider the Fib seq with algebraic variables:</p>
 <pre><code>a      b
 b      a+b
 a+b    a+b+b
 a+b+b  a+a+b+b+b
 </code></pre>
-<p>So if (a,b) and a is even then the next even term pair is (a+2b, 2a+3b)</p>
+<p>So starting with <code>(a  b)</code> and assuming <code>a</code> is even then the next even term pair is <code>(a+2b, 2a+3b)</code>.</p>
 <p>Reconsider:</p>
 <pre><code>[b a F] x
 [b a F] b a F
 </code></pre>
 <p>From here we want to arrive at:</p>
 <pre><code>(a+2b) [(2a+3b) (a+2b) F]
-
-b a F
-b a [F0] [F1] fork
-
-   b a over [+] ii
----------------------
-        a+2b
 </code></pre>
-<p>And:</p>
-<pre><code>   b a over [dup + +] ii
----------------------------
-          2a+3b
+<p>Let's derive <code>F</code>.  We have two values and we want two new values so that's a <code>clop</code>:</p>
+<pre><code>b a F
+b a [F0] [F1] clop
+</code></pre>
+<p>Where <code>F0</code> computes <code>a+2b</code>:</p>
+<pre><code>F0 == over [+] ii
 
+b a over [+] ii
+b a b    [+] ii
+b a + b +
+b+a   b +
+a+2b
+</code></pre>
+<p>And <code>F1</code> computes <code>2a+3b</code>:</p>
+<pre><code>F1 == over [dup + +] ii
 
-[over [dup + +] ii] [over [+] ii] clop
-roll&lt; rrest [tuck] dip ccons
+b a over [dup + +] ii
+b a b    [dup + +] ii
+b a dup + + b dup + +
+b a a   + + b b   + +
+...
+2a+3b
+</code></pre>
+<p>So after that we have</p>
+<pre><code>[b a F] (a+2b) (2a+3b) F'
 
-
-[b a F] b a F
-
-[b a F] (2a+3b) (a+2b) roll&lt;
-(2a+3b) (a+2b) [b a F] rrest
-(2a+3b) (a+2b) [F] [tuck] dip ccons
-
-
-joy? [1 0 [over [dup + +] ii] [over [+] ii] clop roll&lt; rrest [tuck] dip ccons]
+   [b a F] b‴ a‴ roll&lt;
+   b‴ a‴ [b a F] rrest
+   b‴ a‴      [F] [tuck] dip ccons
+   b‴ a‴ tuck [F]            ccons
+a‴ b‴ a‴     [F]            ccons
+a‴ [b‴ a‴ F]
+</code></pre>
+<p>Putting it all together (and deferring factoring) we have:</p>
+<pre><code>F == [over [dup + +] ii] [over [+] ii] clop roll&lt; rrest [tuck] dip ccons
+</code></pre>
+<p>Let's try it out:</p>
+<pre><code>joy? [1 0 [over [dup + +] ii] [over [+] ii] clop roll&lt; rrest [tuck] dip ccons]
 [1 0 [over [dup + +] ii] [over [+] ii] clop roll&lt; rrest [tuck] dip ccons]
 
 joy? x
@@ -399,5 +416,7 @@ joy? x
 2 8 34 144 [233 144 [over [dup + +] ii] [over [+] ii] clop roll&lt; rrest [tuck] dip ccons]
 </code></pre>
 <p>And so it goes...</p>
+<h2>Conclusion</h2>
+<p>Generator programs like these are fun and interesting.</p>
 </body>
 </html>
