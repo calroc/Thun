@@ -4,10 +4,10 @@ Version 0.5.0
 
 ## Grammar
 
-The grammar of Thun is very simple.  A Thun expression is zero or more Thun
-terms separated by blanks. Terms can be integers in decimal notation,
-Booleans `true` and `false`, lists enclosed by square brackets `[` and `]`,
-or symbols (names of functions.)
+The grammar of Thun is very simple.  A Thun expression is zero or more
+Thun terms separated by blanks. Terms can be integers in decimal
+notation, Booleans `true` and `false`, lists enclosed by square brackets
+`[` and `]`, or symbols (names of functions.)
 
     joy ::= term*
     
@@ -105,26 +105,30 @@ expression (aka "continuation".)
 
 ## Literals, Functions, Combinators
 
-Terms in Thun can be categorized into literal, simple functions that
-operate on the stack only, and combinators that can prepend quoted
-programs onto the pending expression ("continuation").
+Terms in Thun can be categorized into **literals**, simple **functions**
+that operate on the stack only, and **combinators** that can prepend
+quoted programs onto the pending expression ("continuation").
 
 ### Literals
 
 Literal values (integers, Booleans, lists) are put onto the stack.
+Literals can be thought of as functions that put accept a stack and
+return it with the value they denote on top, if you like.
 
 ### Functions
 
-Functions take values from the stack and push results onto it.
+Functions take values from the stack and push results onto it. There are
+a few kinds of functions: math, comparison, list and stack manipulation.
 
 ### Combinators
 
 __Combinators__ are functions which accept quoted programs on the stack
-and run them in various ways.  These combinators reify specific
-control-flow patterns (such as `ifte` which is like `if.. then.. else..`
-in other languages.)  Combinators receive the current expession in
-addition to the stack and return the next expression.  They work by
-changing the pending expression the interpreter is about to execute.
+and run them in various ways by prepending them (or not) to the pending
+expression.  These combinators reify specific control-flow patterns (such
+as `ifte` which is like `if.. then.. else..` in other languages.)
+Combinators receive the current expession in addition to the stack and
+return the next expression.  They work by changing the pending expression
+the interpreter is about to execute.
 
 ### Basis Functions
 
