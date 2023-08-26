@@ -15,6 +15,17 @@ the list as its stack.  Does not affect the stack (below the list.)
 
 > [swons] [swaack] \[[i]\] [dip] [swaack]
 
+
+    ... [a b c] [F] swons swaack [i] dip swaack
+    ... [[F] a b c]       swaack [i] dip swaack
+
+    c b a [F]   [...] [i] dip swaack
+    c b a [F] i [...]         swaack
+    c b a  F    [...]         swaack
+    d e         [...]         swaack
+    ... [e d]
+
+
 ### Discussion
 
 This is one of the more useful combinators.  It allows a quoted
