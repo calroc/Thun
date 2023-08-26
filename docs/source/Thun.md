@@ -219,6 +219,28 @@ but perhaps in practice it won't come up.  (Because writing Thun code by
 derivation seems to lead to bug-free code, which is the kinda the point.)
 
 
+### Variations between Interpreters
+
+There are several small choices to be made when implementing a Thun
+interpreter (TODO: make a comprehensive list), for example, the Python
+interpreter keeps all of its functions in one dictionary but most of the
+other interpreters have a `case` or `switch` statement for the built-in
+functions and a separate hash table for definitions.  Additionally, of
+the interpreters that have hash tables most of them check the hash table
+after the `case` statement.  This means that one cannot "shadow" built-in
+functions is some interpreters.  You can `inscribe` them, but the
+interpreter will not look for them.
+
+I haven't yet formally made a decision for how Thun *shall* work.
+Letting built-ins be shadowed is fun and useful for exploration, and
+letting them be inviolate is useful for unsurprising behaviour.
+
+Another choice is how to handle duplicate definitions in general. Should
+you be able to reuse a name?  Or should `inscribe` throw some sort of
+error if you try?
+
+
+
 --------------------------------------------------
 
 Copyright © 2014 - 2023 Simon Forman
