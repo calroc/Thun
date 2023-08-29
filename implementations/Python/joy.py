@@ -1340,7 +1340,7 @@ def pick(stack, n):
         try:
             item, stack = stack
         except ValueError:
-            raise IndexError
+            raise IndexError from None
         n -= 1
         if n < 0:
             break
@@ -1405,7 +1405,7 @@ def drop(stack):
         try:
             _, Q = Q
         except ValueError:
-            raise StackUnderflowError
+            raise StackUnderflowError from None
         n -= 1
     return Q, stack
 
@@ -1430,7 +1430,7 @@ def take(stack):
         try:
             item, Q = Q
         except ValueError:
-            raise StackUnderflowError
+            raise StackUnderflowError from None
         x = item, x
         n -= 1
     return x, stack
