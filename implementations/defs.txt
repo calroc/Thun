@@ -73,6 +73,7 @@ popopdd [popop] dipd
 popopd [popop] dip
 popopop pop popop
 popop pop pop
+pow 1 roll> swap [*] cons times
 product 1 swap [*] step
 quoted [unit] dip
 range [0 <=] [-- dup] anamorphism
