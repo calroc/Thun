@@ -1,46 +1,38 @@
-eq [false] [true] [false] cmp
-gt [true] [false] [false] cmp
-lt [false] [false] [true] cmp
-neq [true] [false] [true] cmp
-le [false] [true] [true] cmp
-ge [true] [true] [false] cmp
-? dup bool
-!- 0 >=
-++ 1 +
 -- 1 -
+? dup bool
+&& nulco [nullary [false]] dip branch
+++ 1 +
+|| nulco [nullary] dip [true] branch
+!- 0 >=
 <{} [] swap
-<<{} [] rollup
+<<{} [] rolldown
 abs dup 0 < [] [neg] branch
 anamorphism [pop []] swap [dip swons] genrec
-and nulco [nullary [false]] dip branch
 app1 grba infrst
 app2 [grba swap grba swap] dip [infrst] cons ii
 app3 3 appN
-appN [grabN] codi map reverse disenstacken
+appN [grabN] codi map disenstacken
 at drop first
 average [sum] [size] cleave /
 b [i] dip i
 binary unary popd
 ccccons ccons ccons
 ccons cons cons
-clear [] swaack pop
+clear stack bool [pop stack bool] loop
 cleave fork popdd
 clop cleave popdd
-cmp [[>] swap] dipd [ifte] ccons [=] swons ifte
 codi cons dip
 codireco codi reco
 dinfrirst dip infrst
 dipd [dip] codi
-disenstacken swaack pop
-divmod [/] [%] clop
+disenstacken ? [uncons ?] loop pop
 down_to_zero [0 >] [dup --] while
 drop [rest] times
-dupdd [dup] dipd
 dupd [dup] dip
-dupdipd dup dipd
+dupdd [dup] dipd
 dupdip dupd dip
+dupdipd dup dipd
 enstacken stack [clear] dip
-first uncons pop
 flatten <{} [concat] step
 fork [i] app2
 fourth rest third
@@ -53,60 +45,50 @@ ifte [nullary] dipd swap branch
 ii [dip] dupdip i
 infra swons swaack [i] dip swaack
 infrst infra first
-<< lshift
-lshift [2 *] times
 make_generator [codireco] ccons
 mod %
 neg 0 swap -
 not [true] [false] branch
 nulco [nullary] cons
 nullary [stack] dinfrirst
-null [] swap concat bool not
 of swap at
-or nulco [nullary] dip [true] branch
-over [dup] dip swap
 pam [i] map
 pm [+] [-] clop
-popdd [pop] dipd
 popd [pop] dip
-popopdd [popop] dipd
-popopd [popop] dip
-popopop pop popop
+popdd [pop] dipd
 popop pop pop
-pow 1 roll> swap [*] cons times
+popopop pop popop
+popopd [popop] dip
+popopdd [popop] dipd
 product 1 swap [*] step
 quoted [unit] dip
-range [0 <=] [-- dup] anamorphism
+range [0 <=] [1 - dup] anamorphism
 range_to_zero unit [down_to_zero] infra
 reco rest cons
-rest uncons popd
+rest [pop] infra
 reverse <{} shunt
-rolldown roll<
-roll< swapd swap
 roll> swap swapd
+roll< swapd swap
 rollup roll>
+rolldown roll<
 rrest rest rest
->> rshift
-rshift [2 /] times
 run <{} infra
 second rest first
 shift uncons [swons] dip
 shunt [swons] step
 size [pop ++] step_zero
-small dup null [rest null] [pop true] branch
-spiral_next [[[abs] ii <=] [[<>] [pop !-] or] and] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
+spiral_next [[[abs] ii <=] [[<>] [pop !-] ||] &&] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
 split_at [drop] [take] clop
 split_list [take reverse] [drop] clop
-sqr dup mul
+sqr dup *
 stackd [stack] dip
 step_zero 0 roll> step
-stuncons stack uncons
 sum [+] step_zero
 swapd [swap] dip
-swoncat swap concat
 swons swap cons
+swoncat swap concat
 tailrec [i] genrec
-take <<{} [shift] times pop
+take [] roll> [shift] times pop
 ternary binary popd
 third rest second
 tuck dup swapd
@@ -114,7 +96,6 @@ unary nullary popd
 uncons [first] [rest] cleave
 unit [] cons
 unquoted [i] dip
-unstack [[] swaack] dip swoncat swaack pop
 unswons uncons swap
 while swap nulco dupdipd concat loop
 x dup i
@@ -132,9 +113,3 @@ _mape popd reverse
 _map0 [_map1] dipd _map2
 _map1 stackd shift
 _map2 [infrst] cons dipd roll< swons
-_isnt_bool not not
-_isnt_two_bools [_isnt_bool] ii
-_\/_ [_isnt_bool] [not] branch
-/\ _isnt_two_bools [pop false] [] branch
-\/ _isnt_two_bools [] [pop true] branch
-xor [] [not] branch
