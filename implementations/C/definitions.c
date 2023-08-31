@@ -82,6 +82,7 @@ JoyList def_popopdd_body;
 JoyList def_popopd_body;
 JoyList def_popopop_body;
 JoyList def_popop_body;
+JoyList def_pow_body;
 JoyList def_product_body;
 JoyList def_quoted_body;
 JoyList def_range_body;
@@ -224,6 +225,7 @@ init_defs(void)
 	def_popopd_body = text_to_expression("[popop] dip");
 	def_popopop_body = text_to_expression("pop popop");
 	def_popop_body = text_to_expression("pop pop");
+	def_pow_body = text_to_expression("1 roll> swap [*] cons times");
 	def_product_body = text_to_expression("1 swap [*] step");
 	def_quoted_body = text_to_expression("[unit] dip");
 	def_range_body = text_to_expression("[0 <=] [-- dup] anamorphism");
@@ -363,6 +365,7 @@ void def_popopdd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression
 void def_popopd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_popopd_body, expression); }
 void def_popopop(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_popopop_body, expression); }
 void def_popop(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_popop_body, expression); }
+void def_pow(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_pow_body, expression); }
 void def_product(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_product_body, expression); }
 void def_quoted(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_quoted_body, expression); }
 void def_range(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_range_body, expression); }

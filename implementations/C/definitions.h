@@ -73,6 +73,7 @@ void def_popopdd(JoyListPtr stack, JoyListPtr expression);
 void def_popopd(JoyListPtr stack, JoyListPtr expression);
 void def_popopop(JoyListPtr stack, JoyListPtr expression);
 void def_popop(JoyListPtr stack, JoyListPtr expression);
+void def_pow(JoyListPtr stack, JoyListPtr expression);
 void def_product(JoyListPtr stack, JoyListPtr expression);
 void def_quoted(JoyListPtr stack, JoyListPtr expression);
 void def_range(JoyListPtr stack, JoyListPtr expression);

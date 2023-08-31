@@ -119,6 +119,7 @@ popopdd, def_popopdd
 popopd, def_popopd
 popopop, def_popopop
 popop, def_popop
+pow, def_pow
 product, def_product
 quoted, def_quoted
 range, def_range
