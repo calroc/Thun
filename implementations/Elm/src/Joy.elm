@@ -4,11 +4,12 @@ import Bitwise
 import Dict exposing (Dict, get, insert)
 import Result exposing (andThen)
 import String exposing (lines, replace, words)
+import Integer exposing (Integer)
 
 
 type JoyType
     = JoySymbol String
-    | JoyInt Int
+    | JoyInt Integer
     | JoyList (List JoyType)
     | JoyTrue
     | JoyFalse
@@ -151,46 +152,46 @@ joy_function_eval symbol stack expression =
             joy_loop stack expression
 
         "+" ->
-            joy_binary_math_op (+) stack expression
+            joy_binary_math_op (Integer.add) stack expression
 
         "-" ->
-            joy_binary_math_op (-) stack expression
+            joy_binary_math_op (Integer.sub) stack expression
 
         "*" ->
-            joy_binary_math_op (*) stack expression
+            joy_binary_math_op (Integer.mul) stack expression
 
         "/" ->
-            joy_binary_math_op (//) stack expression
+            joy_binary_math_op (Integer.add) stack expression
 
         "%" ->
-            joy_binary_math_op (swap_args remainderBy) stack expression
+            joy_binary_math_op (swap_args Integer.add) stack expression
 
         "add" ->
-            joy_binary_math_op (+) stack expression
+            joy_binary_math_op (Integer.add) stack expression
 
         "sub" ->
-            joy_binary_math_op (-) stack expression
+            joy_binary_math_op (Integer.sub) stack expression
 
         "mul" ->
-            joy_binary_math_op (*) stack expression
+            joy_binary_math_op (Integer.mul) stack expression
 
         "div" ->
-            joy_binary_math_op (//) stack expression
+            joy_binary_math_op (Integer.add) stack expression
 
         "mod" ->
-            joy_binary_math_op (swap_args remainderBy) stack expression
+            joy_binary_math_op (swap_args Integer.add) stack expression
 
         "<" ->
-            joy_comparison_op (<) stack expression
+            joy_comparison_op (Integer.lt) stack expression
 
         ">" ->
-            joy_comparison_op (>) stack expression
+            joy_comparison_op (Integer.gt) stack expression
 
         "<=" ->
-            joy_comparison_op (<=) stack expression
+            joy_comparison_op (Integer.lt) stack expression
 
         ">=" ->
-            joy_comparison_op (>=) stack expression
+            joy_comparison_op (Integer.gte) stack expression
 
         "<>" ->
             joy_comparison_op (/=) stack expression
@@ -199,28 +200,7 @@ joy_function_eval symbol stack expression =
             joy_comparison_op (/=) stack expression
 
         "=" ->
-            joy_comparison_op (==) stack expression
-
-        "&&" ->
-            joy_binary_math_op Bitwise.and stack expression
-
-        "||" ->
-            joy_binary_math_op Bitwise.or stack expression
-
-        "xor" ->
-            joy_binary_math_op Bitwise.xor stack expression
-
-        "lshift" ->
-            joy_binary_math_op (swap_args Bitwise.shiftLeftBy) stack expression
-
-        "<<" ->
-            joy_binary_math_op (swap_args Bitwise.shiftLeftBy) stack expression
-
-        "rshift" ->
-            joy_binary_math_op (swap_args Bitwise.shiftRightBy) stack expression
-
-        ">>" ->
-            joy_binary_math_op (swap_args Bitwise.shiftRightBy) stack expression
+            joy_comparison_op (Integer.eq) stack expression
 
         "/\\" ->
             joy_logical_op (&&) stack expression
@@ -360,7 +340,7 @@ joy_loop stack expression =
             Err msg
 
 
-joy_binary_math_op : (Int -> Int -> Int) -> JoyFunction
+joy_binary_math_op : (Integer -> Integer -> Integer) -> JoyFunction
 joy_binary_math_op op stack expression =
     case pop_int stack of
         Ok ( a, s0 ) ->
@@ -375,12 +355,12 @@ joy_binary_math_op op stack expression =
             Err msg
 
 
-swap_args : (Int -> Int -> Int) -> (Int -> Int -> Int)
+swap_args : (Integer -> Integer -> Integer) -> (Integer -> Integer -> Integer)
 swap_args op =
     \a b -> op b a
 
 
-joy_comparison_op : (Int -> Int -> Bool) -> JoyFunction
+joy_comparison_op : (Integer -> Integer -> Bool) -> JoyFunction
 joy_comparison_op op stack expression =
     case pop_int stack of
         Ok ( a, s0 ) ->
@@ -532,7 +512,7 @@ joy_truthy stack expression =
                     Ok ( stack, expression )
 
                 JoyInt i ->
-                    if 0 == i then
+                    if Integer.eq Integer.zero i then
                         Ok ( JoyFalse :: s0, expression )
 
                     else
@@ -561,7 +541,7 @@ push_bool flag stack =
         JoyFalse :: stack
 
 
-push_int : Int -> JList -> JList
+push_int : Integer -> JList -> JList
 push_int i stack =
     JoyInt i :: stack
 
@@ -576,7 +556,7 @@ push_any j stack =
     j :: stack
 
 
-pop_int : JList -> Result JoyErr ( Int, JList )
+pop_int : JList -> Result JoyErr ( Integer, JList )
 pop_int stack =
     pop_any stack |> andThen isnt_int
 
@@ -601,7 +581,7 @@ pop_any stack =
             Ok ( item, rest )
 
 
-isnt_int : ( JoyType, JList ) -> Result JoyErr ( Int, JList )
+isnt_int : ( JoyType, JList ) -> Result JoyErr ( Integer, JList )
 isnt_int ( item, stack ) =
     case item of
         JoyInt i ->
@@ -645,7 +625,7 @@ joyTermToString term =
             name
 
         JoyInt n ->
-            String.fromInt n
+            Integer.toString n
 
         JoyTrue ->
             "true"
@@ -680,7 +660,7 @@ tokenator tok =
             JoyFalse
 
         _ ->
-            case String.toInt tok of
+            case Integer.fromString tok of
                 Just i ->
                     JoyInt i
 
