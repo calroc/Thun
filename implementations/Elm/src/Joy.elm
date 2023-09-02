@@ -507,7 +507,17 @@ joy_swaack stack expression =
 
 joy_swap : JoyFunction
 joy_swap stack expression =
-    pop_any stack |> andThen (\(a, s0) -> (pop_any s0 |> andThen (\( b, s1 ) -> Ok ( b :: a :: s1, expression ))))
+    case pop_any stack of
+        Ok ( a, s0 ) ->
+            case pop_any s0 of
+                Ok ( b, s1 ) ->
+                    Ok ( b :: a :: s1, expression )
+
+                Err msg ->
+                    Err msg
+
+        Err msg ->
+            Err msg
 
 
 joy_truthy : JoyFunction
