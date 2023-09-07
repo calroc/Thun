@@ -13,7 +13,7 @@ notation, Booleans `true` and `false`, lists enclosed by square brackets
     
     term ::= integer | bool | '[' joy ']' | symbol
     
-    integer ::= [ '-' ] ('0'...'9')+
+    integer ::= 0 | [ '-' ] ('1'...'9') ('0'...'9')*
     
     bool ::= 'true' | 'false'
     
@@ -27,6 +27,9 @@ numbers.  The symbols `true` and `false` are reserved to denote their
 respective Boolean values.
 
 That's it.  That's the whole of the grammar.
+
+
+![Thun Grammar Railroad Diagram](./images/grammar.png)
 
 
 ## Types
