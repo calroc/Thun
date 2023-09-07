@@ -29,7 +29,7 @@ respective Boolean values.
 That's it.  That's the whole of the grammar.
 
 
-![Thun Grammar Railroad Diagram](./images/grammar.png)
+![Thun Grammar Railroad Diagram](https://git.sr.ht/~sforman/Thun/blob/trunk/docs/html/images/grammar.png)
 
 
 ## Types
