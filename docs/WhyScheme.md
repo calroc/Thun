@@ -25,3 +25,5 @@ Ooo!  And it makes a nice _target_ for compiling Joy expressions!
 
 The Numeric Tower!
 
+
+I think I've settled on #Scheme the host language for my Xerblin project.  Reasons: It's a Lisp; implemented for many platforms, many times; venerable (around for a long time, still going strong, roots in deep places); simple (language and implementation); Well documented. (SICP, 'nuff said); lots of compilers; libs for everything; compact and elegant code;it makes a nice _target_ for compiling Joy expressions; The Numeric Tower!

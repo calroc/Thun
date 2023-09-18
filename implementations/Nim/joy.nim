@@ -606,6 +606,7 @@ proc joy(stack: JoyListType, expression: JoyListType, dictionary: JoyMapType): (
   var term: JoyType
 
   while not e.isEmpty:
+    #echo print_stack(s) & " . " & print_expression(e)
     (term, e) = next_term(e)
     #echo pr_str(term)
     case term.kind

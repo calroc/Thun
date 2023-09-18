@@ -111,7 +111,7 @@ ternary binary popd
 third rest second
 tuck dup swapd
 unary nullary popd
-uncons [first] [rest] cleave
+uncons [first] dupdip rest
 unit [] cons
 unquoted [i] dip
 unstack [[] swaack] dip swoncat swaack pop

@@ -261,7 +261,7 @@ init_defs(void)
 	def_third_body = text_to_expression("rest second");
 	def_tuck_body = text_to_expression("dup swapd");
 	def_unary_body = text_to_expression("nullary popd");
-	def_uncons_body = text_to_expression("[first] [rest] cleave");
+	def_uncons_body = text_to_expression("[first] dupdip rest");
 	def_unit_body = text_to_expression("[] cons");
 	def_unquoted_body = text_to_expression("[i] dip");
 	def_unstack_body = text_to_expression("[[] swaack] dip swoncat swaack pop");
