@@ -231,7 +231,7 @@ other interpreters have a `case` or `switch` statement for the built-in
 functions and a separate hash table for definitions.  Additionally, of
 the interpreters that have hash tables most of them check the hash table
 after the `case` statement.  This means that one cannot "shadow" built-in
-functions is some interpreters.  You can `inscribe` them, but the
+functions in some interpreters.  You can `inscribe` them, but the
 interpreter will not look for them.
 
 I haven't yet formally made a decision for how Thun *shall* work.
