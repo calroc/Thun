@@ -1,19 +1,19 @@
 module Main exposing (..)
 
-import Dict
-
 import Browser
-import Html exposing (Html, Attribute, div, input, text)
+import Dict
+import Html exposing (Attribute, Html, div, input, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
+import Joy exposing (JoyDict, doit, initialize)
 
-import Joy exposing (doit, JoyDict, initialize)
+
 
 -- MAIN
 
 
 main =
-  Browser.sandbox { init = init, update = update, view = view }
+    Browser.sandbox { init = init, update = update, view = view }
 
 
 
@@ -21,15 +21,18 @@ main =
 
 
 type alias Model =
-  { content : String
-  , evaluated : String
-  , dictionary : JoyDict
-  }
+    { content : String
+    , evaluated : String
+    , dictionary : JoyDict
+    }
 
 
 init : Model
 init =
-  { content = "", evaluated = "", dictionary = initialize Dict.empty }
+    { content = ""
+    , evaluated = ""
+    , dictionary = initialize Dict.empty
+    }
 
 
 
@@ -37,18 +40,22 @@ init =
 
 
 type Msg
-  = Change String
+    = Change String
 
 
 update : Msg -> Model -> Model
 update msg model =
-  case msg of
-    Change newContent ->
-      case doit newContent model.dictionary of
-        Err err ->
-          { model | content = newContent, evaluated = err}
-        Ok (output, dict) ->
-          { content = newContent, evaluated = output, dictionary = dict }
+    case msg of
+        Change newContent ->
+            case doit newContent model.dictionary of
+                Err err ->
+                    { model | content = newContent, evaluated = err }
+
+                Ok ( output, dict ) ->
+                    { content = newContent
+                    , evaluated = output
+                    , dictionary = dict
+                    }
 
 
 
@@ -57,8 +64,12 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-      div []
-        [ input [ placeholder "Text to reverse", value model.content, onInput Change ] []
+    div [ attribute "id" "joy_interpreter" ]
+        [ input
+            [ placeholder "Thun expression to evaluate"
+            , value model.content
+            , onInput Change
+            ]
+            []
         , div [] [ text model.evaluated ]
         ]
-

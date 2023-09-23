@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Thun Demo</title>
+		<meta charset="utf-8">
+		<script src="Joy.js"></script>
+	</head>
+	<body>
+		<h1>Thun Demo</h1>
+		<div id="joy_interpreter_hull">
+			<h3>Thun Interpreter</h3>
+			<p>This is an interpreter for the <a href="https://git.sr.ht/~sforman/Thun/tree/trunk/item/docs/source/Thun.md">Thun</a> dialect of the <a href="https://en.wikipedia.org/wiki/Joy_%28programming_language%29">Joy</a> language. Enter a Thun expression in the text input below and the result of evaluation will be displayed beneath it.</p>
+			<div id="joy_interpreter"></div>
+		</div>
+		<script>var joy_interpreter = Elm.Main.init({node: document.getElementById('joy_interpreter')});</script>
+	</body>
+</html>
