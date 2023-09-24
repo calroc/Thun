@@ -6038,6 +6038,84 @@ var $harfangk$elm_bignum$Integer$add = F2(
 			s1,
 			A2($harfangk$elm_bignum$Integer$addMagnitudes, m1, m2));
 	});
+var $harfangk$elm_bignum$Integer$abs = function (i) {
+	if (i.$ === 'Zero') {
+		return $harfangk$elm_bignum$Integer$Zero;
+	} else {
+		if (i.a.$ === 'Positive') {
+			var _v1 = i.a;
+			return i;
+		} else {
+			var _v2 = i.a;
+			var m = i.b;
+			return A2($harfangk$elm_bignum$Integer$Integer, $harfangk$elm_bignum$Integer$Positive, m);
+		}
+	}
+};
+var $harfangk$elm_bignum$Integer$negate = function (i) {
+	if (i.$ === 'Zero') {
+		return $harfangk$elm_bignum$Integer$Zero;
+	} else {
+		if (i.a.$ === 'Positive') {
+			var _v1 = i.a;
+			var m = i.b;
+			return A2($harfangk$elm_bignum$Integer$Integer, $harfangk$elm_bignum$Integer$Negative, m);
+		} else {
+			var _v2 = i.a;
+			var m = i.b;
+			return A2($harfangk$elm_bignum$Integer$Integer, $harfangk$elm_bignum$Integer$Positive, m);
+		}
+	}
+};
+var $harfangk$elm_bignum$Integer$adjustSign = F3(
+	function (dividend, divisor, _v0) {
+		var q = _v0.a;
+		var r = _v0.b;
+		var _v1 = _Utils_Tuple2(dividend, divisor);
+		_v1$3:
+		while (true) {
+			if (_v1.a.$ === 'Integer') {
+				if (_v1.a.a.$ === 'Positive') {
+					if ((_v1.b.$ === 'Integer') && (_v1.b.a.$ === 'Negative')) {
+						var _v2 = _v1.a;
+						var _v3 = _v2.a;
+						var _v4 = _v1.b;
+						var _v5 = _v4.a;
+						return _Utils_Tuple2(
+							$harfangk$elm_bignum$Integer$negate(q),
+							r);
+					} else {
+						break _v1$3;
+					}
+				} else {
+					if (_v1.b.$ === 'Integer') {
+						if (_v1.b.a.$ === 'Positive') {
+							var _v6 = _v1.a;
+							var _v7 = _v6.a;
+							var _v8 = _v1.b;
+							var _v9 = _v8.a;
+							return _Utils_Tuple2(
+								$harfangk$elm_bignum$Integer$negate(q),
+								$harfangk$elm_bignum$Integer$negate(r));
+						} else {
+							var _v10 = _v1.a;
+							var _v11 = _v10.a;
+							var _v12 = _v1.b;
+							var _v13 = _v12.a;
+							return _Utils_Tuple2(
+								q,
+								$harfangk$elm_bignum$Integer$negate(r));
+						}
+					} else {
+						break _v1$3;
+					}
+				}
+			} else {
+				break _v1$3;
+			}
+		}
+		return _Utils_Tuple2(q, r);
+	});
 var $harfangk$elm_bignum$Integer$reverseOrder = function (o) {
 	switch (o.$) {
 		case 'GT':
@@ -6118,6 +6196,412 @@ var $harfangk$elm_bignum$Integer$compare = F2(
 		var ord = A2($harfangk$elm_bignum$Integer$compareMag, m1, m2);
 		return (_Utils_eq(s1, $harfangk$elm_bignum$Integer$Negative) && _Utils_eq(s2, $harfangk$elm_bignum$Integer$Negative)) ? $harfangk$elm_bignum$Integer$reverseOrder(ord) : ord;
 	});
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var $harfangk$elm_bignum$Integer$magnitudeFromInt_ = F2(
+	function (acc, i) {
+		magnitudeFromInt_:
+		while (true) {
+			var q = (i / $harfangk$elm_bignum$Integer$defaultBase) | 0;
+			if (!q) {
+				return $elm$core$List$reverse(
+					A2($elm$core$List$cons, i, acc));
+			} else {
+				var $temp$acc = A2($elm$core$List$cons, i % $harfangk$elm_bignum$Integer$defaultBase, acc),
+					$temp$i = q;
+				acc = $temp$acc;
+				i = $temp$i;
+				continue magnitudeFromInt_;
+			}
+		}
+	});
+var $harfangk$elm_bignum$Integer$magnitudeFromInt = $harfangk$elm_bignum$Integer$magnitudeFromInt_(_List_Nil);
+var $harfangk$elm_bignum$Integer$fromInt = function (i) {
+	var _v0 = A2($elm$core$Basics$compare, i, 0);
+	switch (_v0.$) {
+		case 'GT':
+			return A2(
+				$harfangk$elm_bignum$Integer$Integer,
+				$harfangk$elm_bignum$Integer$Positive,
+				$harfangk$elm_bignum$Integer$magnitudeFromInt(i));
+		case 'EQ':
+			return $harfangk$elm_bignum$Integer$Zero;
+		default:
+			return A2(
+				$harfangk$elm_bignum$Integer$Integer,
+				$harfangk$elm_bignum$Integer$Negative,
+				$harfangk$elm_bignum$Integer$magnitudeFromInt(
+					$elm$core$Basics$abs(i)));
+	}
+};
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$repeatHelp = F3(
+	function (result, n, value) {
+		repeatHelp:
+		while (true) {
+			if (n <= 0) {
+				return result;
+			} else {
+				var $temp$result = A2($elm$core$List$cons, value, result),
+					$temp$n = n - 1,
+					$temp$value = value;
+				result = $temp$result;
+				n = $temp$n;
+				value = $temp$value;
+				continue repeatHelp;
+			}
+		}
+	});
+var $elm$core$List$repeat = F2(
+	function (n, value) {
+		return A3($elm$core$List$repeatHelp, _List_Nil, n, value);
+	});
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $harfangk$elm_bignum$Integer$addScaleToPartialProducts = function (magList) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (m, _v0) {
+				var digit = _v0.a;
+				var acc = _v0.b;
+				return _Utils_Tuple2(
+					digit + 1,
+					A2(
+						$elm$core$List$cons,
+						A2(
+							$elm$core$List$append,
+							A2($elm$core$List$repeat, digit, 0),
+							m),
+						acc));
+			}),
+		_Utils_Tuple2(0, _List_Nil),
+		magList).b;
+};
+var $harfangk$elm_bignum$Integer$calculatePartialProducts = F2(
+	function (m1, m2) {
+		return A2(
+			$elm$core$List$map,
+			function (d) {
+				return A2(
+					$elm$core$List$map,
+					$elm$core$Basics$mul(d),
+					m1);
+			},
+			m2);
+	});
+var $harfangk$elm_bignum$Integer$sumPartialProducts = function (magList) {
+	return A3($elm$core$List$foldl, $harfangk$elm_bignum$Integer$addMagnitudes, _List_Nil, magList);
+};
+var $harfangk$elm_bignum$Integer$multiplyMagnitudes = F2(
+	function (m1, m2) {
+		return $harfangk$elm_bignum$Integer$normalizeMagnitude(
+			$harfangk$elm_bignum$Integer$sumPartialProducts(
+				$harfangk$elm_bignum$Integer$addScaleToPartialProducts(
+					A2($harfangk$elm_bignum$Integer$calculatePartialProducts, m1, m2))));
+	});
+var $harfangk$elm_bignum$Integer$mul = F2(
+	function (i1, i2) {
+		var _v0 = _Utils_Tuple2(i1, i2);
+		if (_v0.a.$ === 'Zero') {
+			var _v1 = _v0.a;
+			return $harfangk$elm_bignum$Integer$Zero;
+		} else {
+			if (_v0.b.$ === 'Zero') {
+				var _v2 = _v0.b;
+				return $harfangk$elm_bignum$Integer$Zero;
+			} else {
+				var _v3 = _v0.a;
+				var s1 = _v3.a;
+				var m1 = _v3.b;
+				var _v4 = _v0.b;
+				var s2 = _v4.a;
+				var m2 = _v4.b;
+				var sign = _Utils_eq(s1, s2) ? $harfangk$elm_bignum$Integer$Positive : $harfangk$elm_bignum$Integer$Negative;
+				var magnitude = function () {
+					var _v5 = A2(
+						$elm$core$Basics$compare,
+						$elm$core$List$length(m1),
+						$elm$core$List$length(m2));
+					if (_v5.$ === 'GT') {
+						return A2($harfangk$elm_bignum$Integer$multiplyMagnitudes, m1, m2);
+					} else {
+						return A2($harfangk$elm_bignum$Integer$multiplyMagnitudes, m2, m1);
+					}
+				}();
+				return A2($harfangk$elm_bignum$Integer$Integer, sign, magnitude);
+			}
+		}
+	});
+var $harfangk$elm_bignum$Integer$one = A2(
+	$harfangk$elm_bignum$Integer$Integer,
+	$harfangk$elm_bignum$Integer$Positive,
+	_List_fromArray(
+		[1]));
+var $harfangk$elm_bignum$Integer$sub = F2(
+	function (i1, i2) {
+		var _v0 = _Utils_Tuple2(i1, i2);
+		if (_v0.a.$ === 'Zero') {
+			var _v1 = _v0.a;
+			return $harfangk$elm_bignum$Integer$negate(i2);
+		} else {
+			if (_v0.b.$ === 'Zero') {
+				var _v2 = _v0.b;
+				return i1;
+			} else {
+				var _v3 = _v0.a;
+				var s1 = _v3.a;
+				var m1 = _v3.b;
+				var _v4 = _v0.b;
+				var s2 = _v4.a;
+				var m2 = _v4.b;
+				return A2(
+					$harfangk$elm_bignum$Integer$add,
+					i1,
+					$harfangk$elm_bignum$Integer$negate(i2));
+			}
+		}
+	});
+var $harfangk$elm_bignum$Integer$divmodPartialDividend = F4(
+	function (dividend, divisor, divExpediter, acc) {
+		divmodPartialDividend:
+		while (true) {
+			var _v0 = A2($harfangk$elm_bignum$Integer$compare, dividend, divisor);
+			switch (_v0.$) {
+				case 'LT':
+					return _Utils_Tuple2(acc, dividend);
+				case 'EQ':
+					return _Utils_Tuple2(
+						A2($harfangk$elm_bignum$Integer$add, acc, $harfangk$elm_bignum$Integer$one),
+						$harfangk$elm_bignum$Integer$Zero);
+				default:
+					var divisorTimesDivExpediter = A2(
+						$harfangk$elm_bignum$Integer$mul,
+						divisor,
+						$harfangk$elm_bignum$Integer$fromInt(divExpediter));
+					var _v1 = A2($harfangk$elm_bignum$Integer$compare, dividend, divisorTimesDivExpediter);
+					switch (_v1.$) {
+						case 'LT':
+							var $temp$dividend = dividend,
+								$temp$divisor = divisor,
+								$temp$divExpediter = (divExpediter / 2) | 0,
+								$temp$acc = acc;
+							dividend = $temp$dividend;
+							divisor = $temp$divisor;
+							divExpediter = $temp$divExpediter;
+							acc = $temp$acc;
+							continue divmodPartialDividend;
+						case 'EQ':
+							return _Utils_Tuple2(
+								A2(
+									$harfangk$elm_bignum$Integer$add,
+									acc,
+									$harfangk$elm_bignum$Integer$fromInt(divExpediter)),
+								$harfangk$elm_bignum$Integer$Zero);
+						default:
+							var dividend_ = A2($harfangk$elm_bignum$Integer$sub, dividend, divisorTimesDivExpediter);
+							var $temp$dividend = dividend_,
+								$temp$divisor = divisor,
+								$temp$divExpediter = divExpediter,
+								$temp$acc = A2(
+								$harfangk$elm_bignum$Integer$add,
+								acc,
+								$harfangk$elm_bignum$Integer$fromInt(divExpediter));
+							dividend = $temp$dividend;
+							divisor = $temp$divisor;
+							divExpediter = $temp$divExpediter;
+							acc = $temp$acc;
+							continue divmodPartialDividend;
+					}
+			}
+		}
+	});
+var $harfangk$elm_bignum$Integer$headAndTail = function (i) {
+	if (i.$ === 'Zero') {
+		return _Utils_Tuple2($harfangk$elm_bignum$Integer$Zero, $harfangk$elm_bignum$Integer$Zero);
+	} else {
+		var s = i.a;
+		var m = i.b;
+		var rM = $elm$core$List$reverse(m);
+		if (!rM.b) {
+			return _Utils_Tuple2($harfangk$elm_bignum$Integer$Zero, $harfangk$elm_bignum$Integer$Zero);
+		} else {
+			if (!rM.b.b) {
+				var d = rM.a;
+				return _Utils_Tuple2(
+					$harfangk$elm_bignum$Integer$fromInt(d),
+					$harfangk$elm_bignum$Integer$Zero);
+			} else {
+				var d = rM.a;
+				var ds = rM.b;
+				return _Utils_Tuple2(
+					$harfangk$elm_bignum$Integer$fromInt(d),
+					A2(
+						$harfangk$elm_bignum$Integer$Integer,
+						s,
+						$elm$core$List$reverse(ds)));
+			}
+		}
+	}
+};
+var $harfangk$elm_bignum$Integer$shiftRightBy = F2(
+	function (n, i) {
+		shiftRightBy:
+		while (true) {
+			if (i.$ === 'Zero') {
+				return $harfangk$elm_bignum$Integer$Zero;
+			} else {
+				var s = i.a;
+				var m = i.b;
+				if (n <= 0) {
+					return i;
+				} else {
+					var $temp$n = n - 1,
+						$temp$i = A2(
+						$harfangk$elm_bignum$Integer$Integer,
+						s,
+						A2($elm$core$List$cons, 0, m));
+					n = $temp$n;
+					i = $temp$i;
+					continue shiftRightBy;
+				}
+			}
+		}
+	});
+var $harfangk$elm_bignum$Integer$divmod_ = F4(
+	function (dividend, divisor, qAcc, prevR) {
+		divmod_:
+		while (true) {
+			var _v0 = _Utils_Tuple2(dividend, divisor);
+			if (_v0.a.$ === 'Zero') {
+				var _v1 = _v0.a;
+				return $elm$core$Maybe$Just(
+					_Utils_Tuple2(qAcc, prevR));
+			} else {
+				var _v2 = $harfangk$elm_bignum$Integer$headAndTail(dividend);
+				var firstDigit = _v2.a;
+				var remainingDigits = _v2.b;
+				var currentDividend = A2(
+					$harfangk$elm_bignum$Integer$add,
+					firstDigit,
+					A2($harfangk$elm_bignum$Integer$shiftRightBy, 1, prevR));
+				var _v3 = A4($harfangk$elm_bignum$Integer$divmodPartialDividend, currentDividend, divisor, $harfangk$elm_bignum$Integer$defaultBase, $harfangk$elm_bignum$Integer$Zero);
+				var q = _v3.a;
+				var r = _v3.b;
+				var qAcc_ = A2(
+					$harfangk$elm_bignum$Integer$add,
+					q,
+					A2($harfangk$elm_bignum$Integer$shiftRightBy, 1, qAcc));
+				var $temp$dividend = remainingDigits,
+					$temp$divisor = divisor,
+					$temp$qAcc = qAcc_,
+					$temp$prevR = r;
+				dividend = $temp$dividend;
+				divisor = $temp$divisor;
+				qAcc = $temp$qAcc;
+				prevR = $temp$prevR;
+				continue divmod_;
+			}
+		}
+	});
+var $harfangk$elm_bignum$Integer$divmod = F2(
+	function (dividend, divisor) {
+		var _v0 = _Utils_Tuple2(dividend, divisor);
+		_v0$0:
+		while (true) {
+			_v0$4:
+			while (true) {
+				if (_v0.b.$ === 'Zero') {
+					if (_v0.a.$ === 'Zero') {
+						break _v0$0;
+					} else {
+						var _v2 = _v0.b;
+						return $elm$core$Maybe$Nothing;
+					}
+				} else {
+					if (_v0.a.$ === 'Zero') {
+						break _v0$0;
+					} else {
+						if (_v0.b.a.$ === 'Positive') {
+							if ((_v0.b.b.b && (_v0.b.b.a === 1)) && (!_v0.b.b.b.b)) {
+								var _v3 = _v0.b;
+								var _v4 = _v3.a;
+								var _v5 = _v3.b;
+								return $elm$core$Maybe$Just(
+									_Utils_Tuple2(dividend, $harfangk$elm_bignum$Integer$Zero));
+							} else {
+								break _v0$4;
+							}
+						} else {
+							if ((_v0.b.b.b && (_v0.b.b.a === 1)) && (!_v0.b.b.b.b)) {
+								var _v6 = _v0.b;
+								var _v7 = _v6.a;
+								var _v8 = _v6.b;
+								return $elm$core$Maybe$Just(
+									_Utils_Tuple2(
+										$harfangk$elm_bignum$Integer$negate(dividend),
+										$harfangk$elm_bignum$Integer$Zero));
+							} else {
+								break _v0$4;
+							}
+						}
+					}
+				}
+			}
+			var _v9 = _v0.a;
+			var s1 = _v9.a;
+			var m1 = _v9.b;
+			var _v10 = _v0.b;
+			var s2 = _v10.a;
+			var m2 = _v10.b;
+			var _v11 = A2($harfangk$elm_bignum$Integer$compareMag, m1, m2);
+			switch (_v11.$) {
+				case 'LT':
+					return $elm$core$Maybe$Just(
+						_Utils_Tuple2($harfangk$elm_bignum$Integer$Zero, dividend));
+				case 'EQ':
+					var sign = _Utils_eq(s1, s2) ? $harfangk$elm_bignum$Integer$Positive : $harfangk$elm_bignum$Integer$Negative;
+					return $elm$core$Maybe$Just(
+						_Utils_Tuple2(
+							A2(
+								$harfangk$elm_bignum$Integer$Integer,
+								sign,
+								_List_fromArray(
+									[1])),
+							$harfangk$elm_bignum$Integer$Zero));
+				default:
+					return A2(
+						$elm$core$Maybe$map,
+						A2($harfangk$elm_bignum$Integer$adjustSign, dividend, divisor),
+						A4(
+							$harfangk$elm_bignum$Integer$divmod_,
+							$harfangk$elm_bignum$Integer$abs(dividend),
+							$harfangk$elm_bignum$Integer$abs(divisor),
+							$harfangk$elm_bignum$Integer$Zero,
+							$harfangk$elm_bignum$Integer$Zero));
+			}
+		}
+		var _v1 = _v0.a;
+		return $elm$core$Maybe$Just(
+			_Utils_Tuple2($harfangk$elm_bignum$Integer$Zero, $harfangk$elm_bignum$Integer$Zero));
+	});
+var $harfangk$elm_bignum$Integer$div = F2(
+	function (dividend, divisor) {
+		return A2(
+			$elm$core$Maybe$map,
+			$elm$core$Tuple$first,
+			A2($harfangk$elm_bignum$Integer$divmod, dividend, divisor));
+	});
 var $harfangk$elm_bignum$Integer$eq = F2(
 	function (i1, i2) {
 		var _v0 = A2($harfangk$elm_bignum$Integer$compare, i1, i2);
@@ -6148,6 +6632,7 @@ var $harfangk$elm_bignum$Integer$gte = F2(
 				return false;
 		}
 	});
+var $author$project$Joy$DivisionByZero = {$: 'DivisionByZero'};
 var $elm$core$Result$andThen = F2(
 	function (callback, result) {
 		if (result.$ === 'Ok') {
@@ -6193,6 +6678,37 @@ var $author$project$Joy$push_int = F2(
 			$elm$core$List$cons,
 			$author$project$Joy$JoyInt(i),
 			stack);
+	});
+var $author$project$Joy$joy_binary_div_op = F3(
+	function (op, stack, expression) {
+		var _v0 = $author$project$Joy$pop_int(stack);
+		if (_v0.$ === 'Ok') {
+			var _v1 = _v0.a;
+			var a = _v1.a;
+			var s0 = _v1.b;
+			var _v2 = $author$project$Joy$pop_int(s0);
+			if (_v2.$ === 'Ok') {
+				var _v3 = _v2.a;
+				var b = _v3.a;
+				var s1 = _v3.b;
+				var _v4 = A2(op, b, a);
+				if (_v4.$ === 'Just') {
+					var n = _v4.a;
+					return $elm$core$Result$Ok(
+						_Utils_Tuple2(
+							A2($author$project$Joy$push_int, n, s1),
+							expression));
+				} else {
+					return $elm$core$Result$Err($author$project$Joy$DivisionByZero);
+				}
+			} else {
+				var msg = _v2.a;
+				return $elm$core$Result$Err(msg);
+			}
+		} else {
+			var msg = _v0.a;
+			return $elm$core$Result$Err(msg);
+		}
 	});
 var $author$project$Joy$joy_binary_math_op = F3(
 	function (op, stack, expression) {
@@ -6681,160 +7197,14 @@ var $harfangk$elm_bignum$Integer$lt = F2(
 			return false;
 		}
 	});
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$core$List$repeatHelp = F3(
-	function (result, n, value) {
-		repeatHelp:
-		while (true) {
-			if (n <= 0) {
-				return result;
-			} else {
-				var $temp$result = A2($elm$core$List$cons, value, result),
-					$temp$n = n - 1,
-					$temp$value = value;
-				result = $temp$result;
-				n = $temp$n;
-				value = $temp$value;
-				continue repeatHelp;
-			}
-		}
-	});
-var $elm$core$List$repeat = F2(
-	function (n, value) {
-		return A3($elm$core$List$repeatHelp, _List_Nil, n, value);
-	});
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
-var $harfangk$elm_bignum$Integer$addScaleToPartialProducts = function (magList) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (m, _v0) {
-				var digit = _v0.a;
-				var acc = _v0.b;
-				return _Utils_Tuple2(
-					digit + 1,
-					A2(
-						$elm$core$List$cons,
-						A2(
-							$elm$core$List$append,
-							A2($elm$core$List$repeat, digit, 0),
-							m),
-						acc));
-			}),
-		_Utils_Tuple2(0, _List_Nil),
-		magList).b;
-};
-var $harfangk$elm_bignum$Integer$calculatePartialProducts = F2(
-	function (m1, m2) {
-		return A2(
-			$elm$core$List$map,
-			function (d) {
-				return A2(
-					$elm$core$List$map,
-					$elm$core$Basics$mul(d),
-					m1);
-			},
-			m2);
-	});
-var $harfangk$elm_bignum$Integer$sumPartialProducts = function (magList) {
-	return A3($elm$core$List$foldl, $harfangk$elm_bignum$Integer$addMagnitudes, _List_Nil, magList);
-};
-var $harfangk$elm_bignum$Integer$multiplyMagnitudes = F2(
-	function (m1, m2) {
-		return $harfangk$elm_bignum$Integer$normalizeMagnitude(
-			$harfangk$elm_bignum$Integer$sumPartialProducts(
-				$harfangk$elm_bignum$Integer$addScaleToPartialProducts(
-					A2($harfangk$elm_bignum$Integer$calculatePartialProducts, m1, m2))));
-	});
-var $harfangk$elm_bignum$Integer$mul = F2(
-	function (i1, i2) {
-		var _v0 = _Utils_Tuple2(i1, i2);
-		if (_v0.a.$ === 'Zero') {
-			var _v1 = _v0.a;
-			return $harfangk$elm_bignum$Integer$Zero;
-		} else {
-			if (_v0.b.$ === 'Zero') {
-				var _v2 = _v0.b;
-				return $harfangk$elm_bignum$Integer$Zero;
-			} else {
-				var _v3 = _v0.a;
-				var s1 = _v3.a;
-				var m1 = _v3.b;
-				var _v4 = _v0.b;
-				var s2 = _v4.a;
-				var m2 = _v4.b;
-				var sign = _Utils_eq(s1, s2) ? $harfangk$elm_bignum$Integer$Positive : $harfangk$elm_bignum$Integer$Negative;
-				var magnitude = function () {
-					var _v5 = A2(
-						$elm$core$Basics$compare,
-						$elm$core$List$length(m1),
-						$elm$core$List$length(m2));
-					if (_v5.$ === 'GT') {
-						return A2($harfangk$elm_bignum$Integer$multiplyMagnitudes, m1, m2);
-					} else {
-						return A2($harfangk$elm_bignum$Integer$multiplyMagnitudes, m2, m1);
-					}
-				}();
-				return A2($harfangk$elm_bignum$Integer$Integer, sign, magnitude);
-			}
-		}
-	});
 var $elm$core$Basics$neq = _Utils_notEqual;
-var $harfangk$elm_bignum$Integer$negate = function (i) {
-	if (i.$ === 'Zero') {
-		return $harfangk$elm_bignum$Integer$Zero;
-	} else {
-		if (i.a.$ === 'Positive') {
-			var _v1 = i.a;
-			var m = i.b;
-			return A2($harfangk$elm_bignum$Integer$Integer, $harfangk$elm_bignum$Integer$Negative, m);
-		} else {
-			var _v2 = i.a;
-			var m = i.b;
-			return A2($harfangk$elm_bignum$Integer$Integer, $harfangk$elm_bignum$Integer$Positive, m);
-		}
-	}
-};
-var $harfangk$elm_bignum$Integer$sub = F2(
-	function (i1, i2) {
-		var _v0 = _Utils_Tuple2(i1, i2);
-		if (_v0.a.$ === 'Zero') {
-			var _v1 = _v0.a;
-			return $harfangk$elm_bignum$Integer$negate(i2);
-		} else {
-			if (_v0.b.$ === 'Zero') {
-				var _v2 = _v0.b;
-				return i1;
-			} else {
-				var _v3 = _v0.a;
-				var s1 = _v3.a;
-				var m1 = _v3.b;
-				var _v4 = _v0.b;
-				var s2 = _v4.a;
-				var m2 = _v4.b;
-				return A2(
-					$harfangk$elm_bignum$Integer$add,
-					i1,
-					$harfangk$elm_bignum$Integer$negate(i2));
-			}
-		}
+var $harfangk$elm_bignum$Integer$remainderBy = F2(
+	function (dividend, divisor) {
+		return A2(
+			$elm$core$Maybe$map,
+			$elm$core$Tuple$second,
+			A2($harfangk$elm_bignum$Integer$divmod, dividend, divisor));
 	});
-var $author$project$Joy$swap_args = function (op) {
-	return F2(
-		function (a, b) {
-			return A2(op, b, a);
-		});
-};
 var $elm$core$Basics$xor = _Basics_xor;
 var $author$project$Joy$joy_function_eval = F3(
 	function (symbol, stack, expression) {
@@ -6854,13 +7224,9 @@ var $author$project$Joy$joy_function_eval = F3(
 			case '*':
 				return A3($author$project$Joy$joy_binary_math_op, $harfangk$elm_bignum$Integer$mul, stack, expression);
 			case '/':
-				return A3($author$project$Joy$joy_binary_math_op, $harfangk$elm_bignum$Integer$add, stack, expression);
+				return A3($author$project$Joy$joy_binary_div_op, $harfangk$elm_bignum$Integer$div, stack, expression);
 			case '%':
-				return A3(
-					$author$project$Joy$joy_binary_math_op,
-					$author$project$Joy$swap_args($harfangk$elm_bignum$Integer$add),
-					stack,
-					expression);
+				return A3($author$project$Joy$joy_binary_div_op, $harfangk$elm_bignum$Integer$remainderBy, stack, expression);
 			case 'add':
 				return A3($author$project$Joy$joy_binary_math_op, $harfangk$elm_bignum$Integer$add, stack, expression);
 			case 'sub':
@@ -6868,13 +7234,9 @@ var $author$project$Joy$joy_function_eval = F3(
 			case 'mul':
 				return A3($author$project$Joy$joy_binary_math_op, $harfangk$elm_bignum$Integer$mul, stack, expression);
 			case 'div':
-				return A3($author$project$Joy$joy_binary_math_op, $harfangk$elm_bignum$Integer$add, stack, expression);
+				return A3($author$project$Joy$joy_binary_div_op, $harfangk$elm_bignum$Integer$div, stack, expression);
 			case 'mod':
-				return A3(
-					$author$project$Joy$joy_binary_math_op,
-					$author$project$Joy$swap_args($harfangk$elm_bignum$Integer$add),
-					stack,
-					expression);
+				return A3($author$project$Joy$joy_binary_div_op, $harfangk$elm_bignum$Integer$remainderBy, stack, expression);
 			case '<':
 				return A3($author$project$Joy$joy_comparison_op, $harfangk$elm_bignum$Integer$lt, stack, expression);
 			case '>':
@@ -7120,6 +7482,8 @@ var $author$project$Joy$joy_err = function (err) {
 			return 'Empty definition.';
 		case 'DefinitionNameMustBeSymbol':
 			return 'Def name isn\'t symbol.';
+		case 'DivisionByZero':
+			return 'Integer division or modulo by zero.';
 		case 'CannotTakeFirstOfEmptyList':
 			return 'Cannot take first of empty list.';
 		case 'CannotTakeRestOfEmptyList':

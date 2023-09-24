@@ -27,6 +27,7 @@ type JoyErr
     = UnknownWord
     | EmptyDefinition
     | DefinitionNameMustBeSymbol
+    | DivisionByZero
     | CannotTakeFirstOfEmptyList
     | CannotTakeRestOfEmptyList
     | CannotBoolify
@@ -59,6 +60,9 @@ joy_err err =
 
         DefinitionNameMustBeSymbol ->
             "Def name isn't symbol."
+
+        DivisionByZero ->
+            "Integer division or modulo by zero."
 
         CannotTakeFirstOfEmptyList ->
             "Cannot take first of empty list."
@@ -161,10 +165,10 @@ joy_function_eval symbol stack expression =
             joy_binary_math_op (Integer.mul) stack expression
 
         "/" ->
-            joy_binary_math_op (Integer.add) stack expression
+            joy_binary_div_op Integer.div stack expression
 
         "%" ->
-            joy_binary_math_op (swap_args Integer.add) stack expression
+            joy_binary_div_op Integer.remainderBy stack expression
 
         "add" ->
             joy_binary_math_op (Integer.add) stack expression
@@ -176,10 +180,10 @@ joy_function_eval symbol stack expression =
             joy_binary_math_op (Integer.mul) stack expression
 
         "div" ->
-            joy_binary_math_op (Integer.add) stack expression
+            joy_binary_div_op Integer.div stack expression
 
         "mod" ->
-            joy_binary_math_op (swap_args Integer.add) stack expression
+            joy_binary_div_op Integer.remainderBy stack expression
 
         "<" ->
             joy_comparison_op (Integer.lt) stack expression
@@ -348,6 +352,24 @@ joy_binary_math_op op stack expression =
                 Ok ( b, s1 ) ->
                     Ok ( push_int (op b a) s1, expression )
 
+                Err msg ->
+                    Err msg
+
+        Err msg ->
+            Err msg
+
+
+joy_binary_div_op : (Integer -> Integer -> Maybe Integer) -> JoyFunction
+joy_binary_div_op op stack expression =
+    case pop_int stack of
+        Ok ( a, s0 ) ->
+            case pop_int s0 of
+                Ok ( b, s1 ) ->
+                    case op b a of
+                        Just n ->
+                            Ok ( push_int n s1, expression )
+                        Nothing ->
+                            Err DivisionByZero
                 Err msg ->
                     Err msg
 
