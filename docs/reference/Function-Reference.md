@@ -1,14 +1,30 @@
+# Thun Function Reference
 
 Version -10.0.0
 
 Each function, combinator, or definition should be documented here.
 
 
---------------
+------------------------------------------------------------------------
 
-## &
+## abs
 
-See [and](#and).
+Function
+
+Return the absolute value of the argument.
+
+### Definition
+
+> [dup](#dup) 0 < [] \[[neg](#neg)\] [branch](#branch)
+
+
+------------------------------------------------------------------------
+
+## add
+
+Basis Function
+
+Add two numbers together: a + b.
 
 
 ------------------------------------------------------------------------
@@ -55,299 +71,9 @@ This is seldom useful, I suspect, but this way you have it.
 
 --------------
 
-## *
+## &
 
-See [mul](#mul).
-
-
---------------
-
-## •
-
-See [id](#id).
-
-
---------------
-
-## ^
-
-See [xor](#xor).
-
-
---------------
-
-## =
-
-See [eq](#eq).
-
-
---------------
-
-## !=
-
-See [ne](#ne).
-
-
-------------------------------------------------------------------------
-
-## !-
-
-Function
-
-Not negative.
-
-
-        n !-
-    ----------- n < 0
-       false
-
-
-       n !-
-    ---------- n >= 0
-       true
-
-
-### Definition
-
-    0 \>=
-
-### Discussion
-
-Return a Boolean value indicating if a number is greater than or equal to
-zero.
-
-
---------------
-
-## >
-
-See [gt](#gt).
-
-
---------------
-
-## >=
-
-See [ge](#ge).
-
-
---------------
-
-## >>
-
-See [rshift](#rshift).
-
-
---------------
-
-## -
-
-See [sub](#sub).
-
-
---------------
-
-## --
-
-See [pred](#pred).
-
-
---------------
-
-## <
-
-See [lt](#lt).
-
-
---------------
-
-## <=
-
-See [le](#le).
-
-
---------------
-
-## <>
-
-See [ne](#ne).
-
-
-------------------------------------------------------------------------
-
-## \<\{\}
-
-Function
-
-
-       ... a <{}
-    ----------------
-       ... [] a
-
-
-### Definition
-
-    [] swap
-
-### Discussion
-
-Tuck an empty list just under the first item on the stack.
-
-### Crosslinks
-
-[<<{}](#section-18)
-
-
---------------
-
-## <<
-
-See [lshift](#lshift).
-
-
-------------------------------------------------------------------------
-
-## \<\<\{\}
-
-Function
-
-
-       ... b a <{}
-    -----------------
-       ... [] b a
-
-
-### Definition
-
-    [] rollup
-
-
-### Discussion
-
-Tuck an empty list just under the first two items on the stack.
-
-### Crosslinks
-
-[<{}](#section-16)
-
-
---------------
-
-## %
-
-See [mod](#mod).
-
-
---------------
-
-## +
-
-See [add](#add).
-
-
---------------
-
-## ++
-
-See [succ](#succ).
-
-
-------------------------------------------------------------------------
-
-## ?
-
-Function
-
-Is the item on the top of the stack "truthy"?
-
-### Definition
-
-> [dup](#dup) [bool](#bool)
-
-### Discussion
-
-You often want to test the truth value of an item on the stack without
-consuming the item.
-
-### Crosslinks
-
-[bool](#bool)
-
-
---------------
-
-## /
-
-See [floordiv](#floordiv).
-
-
---------------
-
-## //
-
-See [floordiv](#floordiv).
-
-
---------------
-
-## /floor
-
-See [floordiv](#floordiv).
-
-
-------------------------------------------------------------------------
-
-## \|\|
-
-Combinator
-
-Short-circuiting Boolean OR
-
-
-### Definition
-
-> [nulco](#nulco) \[[nullary](#nullary)\] [dip](#dip) \[true\] [branch](#branch)
-
-### Discussion
-
-Accept two quoted programs, run the first and expect a Boolean value, if
-it’s `false` pop it and run the second program (which should also return a
-Boolean value) otherwise pop the second program (leaving `true` on the
-stack.)
-
-       [A] [B] ||
-    ---------------- A -> false
-            B
-
-
-       [A] [B] ||
-    ---------------- A -> true
-          true
-
-### Crosslinks
-
-[&&](#section-1)
-
-------------------------------------------------------------------------
-
-## abs
-
-Function
-
-Return the absolute value of the argument.
-
-### Definition
-
-> [dup](#dup) 0 < [] \[[neg](#neg)\] [branch](#branch)
-
-
-------------------------------------------------------------------------
-
-## add
-
-Basis Function
-
-Add two numbers together: a + b.
+See [and](#and).
 
 
 ------------------------------------------------------------------------
@@ -529,6 +255,13 @@ function that many times on that many stack items.  See also [app2].
 
 --------------
 
+## *
+
+See [mul](#mul).
+
+
+--------------
+
 ## at
 
 See [getitem](#getitem).
@@ -561,32 +294,6 @@ See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursi
 
 --------------------
 
-## b
-
-Combinator
-
-Run two quoted programs
-
-       [P] [Q] b
-    ---------------
-          P Q
-
-### Definition
-
-> \[[i]\] [dip] [i]
-
-### Discussion
-
-This combinator may seem trivial but it comes in handy.
-
-### Crosslinks
-
-[dupdip](#dupdip)
-[ii](#ii)
-
-
---------------------
-
 ## binary
 
 Combinator
@@ -612,6 +319,32 @@ consuming exactly two items from the stack.
 [nullary](#nullary)
 [ternary](#ternary)
 [unary](#unary)
+
+
+--------------------
+
+## b
+
+Combinator
+
+Run two quoted programs
+
+       [P] [Q] b
+    ---------------
+          P Q
+
+### Definition
+
+> \[[i]\] [dip] [i]
+
+### Discussion
+
+This combinator may seem trivial but it comes in handy.
+
+### Crosslinks
+
+[dupdip](#dupdip)
+[ii](#ii)
 
 
 ------------------------------------------------------------------------
@@ -665,6 +398,13 @@ terms of [choice] as above).  The more common "if..then..else" construct
 [choice]
 [ifte]
 [select]
+
+
+--------------
+
+## •
+
+See [id](#id).
 
 
 ------------------------------------------------------------------------
@@ -739,6 +479,13 @@ the other way around.
 
 [branch]
 [select]
+
+
+--------------
+
+## ^
+
+See [xor](#xor).
 
 
 ------------------------------------------------------------------------
@@ -1024,6 +771,54 @@ Specialist function (that means I forgot what it does and why.)
 
 ------------------------------------------------------------------------
 
+## dipdd
+
+Combinator
+
+Like [dip] but expects three items. :
+
+       ... z y x [Q] . dip
+    -----------------------------
+                 ... . Q z y x
+### Discussion
+
+See [dip].
+
+### Crosslinks
+
+[dip]
+[dipd]
+[dupdip]
+[dupdipd]
+[infra]
+
+
+------------------------------------------------------------------------
+
+## dipd
+
+Combinator
+
+Like [dip] but expects two items.
+
+       ... y x [Q] . dipd
+    -------------------------
+               ... . Q y x
+
+### Discussion
+
+See [dip].
+
+### Crosslinks
+
+[dip]
+[dipdd]
+[dupdip]
+[dupdipd]
+[infra]
+
+------------------------------------------------------------------------
+
 ## dip
 
 Basis Combinator
@@ -1057,54 +852,6 @@ pending expression (not counting modifications to the dictionary.)
 
 [dipd]
 [dipdd]
-[dupdip]
-[dupdipd]
-[infra]
-
-
-------------------------------------------------------------------------
-
-## dipd
-
-Combinator
-
-Like [dip] but expects two items.
-
-       ... y x [Q] . dipd
-    -------------------------
-               ... . Q y x
-
-### Discussion
-
-See [dip].
-
-### Crosslinks
-
-[dip]
-[dipdd]
-[dupdip]
-[dupdipd]
-[infra]
-
-------------------------------------------------------------------------
-
-## dipdd
-
-Combinator
-
-Like [dip] but expects three items. :
-
-       ... z y x [Q] . dip
-    -----------------------------
-                 ... . Q z y x
-### Discussion
-
-See [dip].
-
-### Crosslinks
-
-[dip]
-[dipd]
 [dupdip]
 [dupdipd]
 [infra]
@@ -1216,50 +963,6 @@ items removed off the top.
 
 ------------------------------------------------------------------------
 
-## dup
-
-Basis Function
-
-"Dup"licate the top item on the stack.
-
-       a dup
-    -----------
-        a a
-
-### Crosslinks
-
-[dupd]
-[dupdd]
-[dupdip]
-[dupdipd]
-
-
-------------------------------------------------------------------------
-
-## dupd
-
-Function
-
-[dup] the second item down on the stack.
-
-       a b dupd
-    --------------
-        a a b
-
-### Definition
-
-> \[[dup]\] [dip]
-
-### Crosslinks
-
-[dup]
-[dupdd]
-[dupdip]
-[dupdipd]
-
-
-------------------------------------------------------------------------
-
 ## dupdd
 
 Function
@@ -1280,6 +983,27 @@ Function
 [dupd]
 [dupdip]
 [dupdipd]
+
+
+------------------------------------------------------------------------
+
+## dupdipd
+
+Combinator
+
+Run a copy of program `F` under the next item down on the stack.
+
+       a [F] dupdipd
+    -------------------
+          F a [F]
+
+### Definition
+
+> [dup] [dipd]
+
+### Crosslinks
+
+[dupdip]
 
 
 ------------------------------------------------------------------------
@@ -1318,23 +1042,46 @@ A very common and useful combinator.
 
 ------------------------------------------------------------------------
 
-## dupdipd
+## dupd
 
-Combinator
+Function
 
-Run a copy of program `F` under the next item down on the stack.
+[dup] the second item down on the stack.
 
-       a [F] dupdipd
-    -------------------
-          F a [F]
+       a b dupd
+    --------------
+        a a b
 
 ### Definition
 
-> [dup] [dipd]
+> \[[dup]\] [dip]
 
 ### Crosslinks
 
+[dup]
+[dupdd]
 [dupdip]
+[dupdipd]
+
+
+------------------------------------------------------------------------
+
+## dup
+
+Basis Function
+
+"Dup"licate the top item on the stack.
+
+       a dup
+    -----------
+        a a
+
+### Crosslinks
+
+[dupd]
+[dupdd]
+[dupdip]
+[dupdipd]
 
 
 ------------------------------------------------------------------------
@@ -1388,6 +1135,49 @@ them with a Boolean value.
 [le]
 [lt]
 [ne]
+
+
+--------------
+
+## =
+
+See [eq](#eq).
+
+
+--------------
+
+## !=
+
+See [ne](#ne).
+
+
+------------------------------------------------------------------------
+
+## !-
+
+Function
+
+Not negative.
+
+
+        n !-
+    ----------- n < 0
+       false
+
+
+       n !-
+    ---------- n >= 0
+       true
+
+
+### Definition
+
+    0 \>=
+
+### Discussion
+
+Return a Boolean value indicating if a number is greater than or equal to
+zero.
 
 
 ------------------------------------------------------------------------
@@ -1487,20 +1277,6 @@ Note that only one "level" of lists is flattened.  In the example above
 
 ------------------------------------------------------------------------
 
-## floor
-
-Basis Function
-
-Return the largest integer \<= x.
-
-### Discussion
-
-This function doesn't make sense (yet) to have because there are (as yet)
-only integers in the system.
-
-
-------------------------------------------------------------------------
-
 ## floordiv
 
 Basis Function
@@ -1520,6 +1296,20 @@ for Thun gets nailed down.
 ### Crosslinks
 
 [divmod]
+
+
+------------------------------------------------------------------------
+
+## floor
+
+Basis Function
+
+Return the largest integer \<= x.
+
+### Discussion
+
+This function doesn't make sense (yet) to have because there are (as yet)
+only integers in the system.
 
 
 ------------------------------------------------------------------------
@@ -1575,6 +1365,23 @@ Replace a list with its fourth item.
 
 ------------------------------------------------------------------------
 
+## gcd2
+
+Function
+
+Compiled GCD function.
+
+### Discussion
+
+See [gcd].
+
+### Crosslinks
+
+[gcd]
+
+
+------------------------------------------------------------------------
+
 ## gcd
 
 Function
@@ -1589,23 +1396,6 @@ Common Denominator.
 ### Discussion
 
 Euclid's Algorithm
-
-
-------------------------------------------------------------------------
-
-## gcd2
-
-Function
-
-Compiled GCD function.
-
-### Discussion
-
-See [gcd].
-
-### Crosslinks
-
-[gcd]
 
 
 ------------------------------------------------------------------------
@@ -1795,6 +1585,27 @@ It's part of the [app2] definition.
 
 [app2]
 
+--------------
+
+## >=
+
+See [ge](#ge).
+
+
+--------------
+
+## >>
+
+See [rshift](#rshift).
+
+
+--------------
+
+## >
+
+See [gt](#gt).
+
+
 ------------------------------------------------------------------------
 
 ## gt
@@ -1835,6 +1646,20 @@ Technically this is equivalent to `pop`, but it will only work if the
 item on the top of the stack is a quoted symbol.
 
 
+--------------
+
+## --
+
+See [pred](#pred).
+
+
+--------------
+
+## -
+
+See [sub](#sub).
+
+
 ------------------------------------------------------------------------
 
 ## hypot
@@ -1856,25 +1681,6 @@ This is another function that has to wait on the numeric tower.
 ### Crosslinks
 
 [sqrt]
-
-
---------------------
-
-## i
-
-Basis Combinator
-
-Append a quoted expression onto the pending expression.
-
-
-       [Q] . i
-    -------------
-           . Q
-
-### Discussion
-
-This is a fundamental combinator.  It is used in all kinds of places.  For
-example, the [x] combinator can be defined as `dup i`.
 
 
 ------------------------------------------------------------------------
@@ -1961,6 +1767,25 @@ In some cases (like the example above) this is the same effect as using [app2] b
 
 --------------------
 
+## i
+
+Basis Combinator
+
+Append a quoted expression onto the pending expression.
+
+
+       [Q] . i
+    -------------
+           . Q
+
+### Discussion
+
+This is a fundamental combinator.  It is used in all kinds of places.  For
+example, the [x] combinator can be defined as `dup i`.
+
+
+--------------------
+
 ## infra
 
 Combinator
@@ -1975,6 +1800,17 @@ the list as its stack.  Does not affect the stack (below the list.)
 ### Definition
 
 > [swons] [swaack] \[[i]\] [dip] [swaack]
+
+
+    ... [a b c] [F] swons swaack [i] dip swaack
+    ... [[F] a b c]       swaack [i] dip swaack
+
+    c b a [F]   [...] [i] dip swaack
+    c b a [F] i [...]         swaack
+    c b a  F    [...]         swaack
+    d e         [...]         swaack
+    ... [e d]
+
 
 ### Discussion
 
@@ -2041,6 +1877,85 @@ stack, replacing them with a Boolean value.
 [gt]
 [lt]
 [ne]
+
+--------------
+
+## <=
+
+See [le](#le).
+
+
+--------------
+
+## <>
+
+See [ne](#ne).
+
+
+------------------------------------------------------------------------
+
+## \<\{\}
+
+Function
+
+
+       ... a <{}
+    ----------------
+       ... [] a
+
+
+### Definition
+
+    [] swap
+
+### Discussion
+
+Tuck an empty list just under the first item on the stack.
+
+### Crosslinks
+
+[<<{}](#section-18)
+
+
+------------------------------------------------------------------------
+
+## \<\<\{\}
+
+Function
+
+
+       ... b a <{}
+    -----------------
+       ... [] b a
+
+
+### Definition
+
+    [] rollup
+
+
+### Discussion
+
+Tuck an empty list just under the first two items on the stack.
+
+### Crosslinks
+
+[<{}](#section-16)
+
+
+--------------
+
+## <<
+
+See [lshift](#lshift).
+
+
+--------------
+
+## <
+
+See [lt](#lt).
+
 
 ------------------------------------------------------------------------
 
@@ -2273,6 +2188,22 @@ Multiply two numbers.
 
 ------------------------------------------------------------------------
 
+## neg
+
+Function
+
+Invert the sign of a number.
+
+       a neg
+    -----------
+        -a
+### Definition
+
+> 0 [swap] [-]
+
+
+------------------------------------------------------------------------
+
 ## ne
 
 Basis Function
@@ -2293,22 +2224,6 @@ stack, replacing them with a Boolean value.
 [gt]
 [le]
 [lt]
-
-------------------------------------------------------------------------
-
-## neg
-
-Function
-
-Invert the sign of a number.
-
-       a neg
-    -----------
-        -a
-### Definition
-
-> 0 [swap] [-]
-
 
 ------------------------------------------------------------------------
 
@@ -2507,9 +2422,30 @@ the underlying [map] function is so implemented, of course.)
 
 --------------
 
+## %
+
+See [mod](#mod).
+
+
+--------------
+
 ## pick
 
 See [getitem](#getitem).
+
+
+--------------
+
+## +
+
+See [add](#add).
+
+
+--------------
+
+## ++
+
+See [succ](#succ).
 
 
 ------------------------------------------------------------------------
@@ -2531,19 +2467,24 @@ Plus or minus.  Replace two numbers with their sum and difference.
 
 ------------------------------------------------------------------------
 
-## pop
+## popdd
 
-Basis Function
+Function
 
-Pop the top item from the stack and discard it.
+[pop] the third item on the stack.
 
-       a pop
-    -----------
+       a b c popdd
+    -----------------
+           b c
+
+### Definition
+
+> [rolldown] [pop]
 
 ### Crosslinks
 
+[pop]
 [popd]
-[popdd]
 [popop]
 [popopd]
 [popopdd]
@@ -2578,24 +2519,19 @@ Function
 
 ------------------------------------------------------------------------
 
-## popdd
+## pop
 
-Function
+Basis Function
 
-[pop] the third item on the stack.
+Pop the top item from the stack and discard it.
 
-       a b c popdd
-    -----------------
-           b c
-
-### Definition
-
-> [rolldown] [pop]
+       a pop
+    -----------
 
 ### Crosslinks
 
-[pop]
 [popd]
+[popdd]
 [popop]
 [popopd]
 [popopdd]
@@ -2604,26 +2540,25 @@ Function
 
 ------------------------------------------------------------------------
 
-## popop
+## popopdd
 
 Function
 
-[pop] two items from the stack.
-
-       a b popop
-    ---------------
+       a b c d popopdd
+    ---------------------
+            c d
 
 ### Definition
 
-> [pop] [pop]
+> \[[popop]\] [dipd]
 
 ### Crosslinks
 
 [pop]
 [popd]
 [popdd]
+[popop]
 [popopd]
-[popopdd]
 [popopop]
 
 
@@ -2655,25 +2590,26 @@ Function
 
 ------------------------------------------------------------------------
 
-## popopdd
+## popop
 
 Function
 
-       a b c d popopdd
-    ---------------------
-            c d
+[pop] two items from the stack.
+
+       a b popop
+    ---------------
 
 ### Definition
 
-> \[[popop]\] [dipd]
+> [pop] [pop]
 
 ### Crosslinks
 
 [pop]
 [popd]
 [popdd]
-[popop]
 [popopd]
+[popopdd]
 [popopop]
 
 
@@ -2708,8 +2644,8 @@ Function
 
 Basis Function
 
-Take two numbers `a` and `b` from the stack and raise `a` to the `n`th
-power.  (`b` is on the top of the stack.)
+Take two numbers `a` and `n` from the stack and raise `a` to the `n`th
+power.  (`n` is on the top of the stack.)
 
        a n pow
     -------------
@@ -2801,6 +2737,28 @@ Or,
 
 > \[1\] \[[mul]\] [primrec]
 
+
+
+------------------------------------------------------------------------
+
+## ?
+
+Function
+
+Is the item on the top of the stack "truthy"?
+
+### Definition
+
+> [dup](#dup) [bool](#bool)
+
+### Discussion
+
+You often want to test the truth value of an item on the stack without
+consuming the item.
+
+### Crosslinks
+
+[bool](#bool)
 
 
 ------------------------------------------------------------------------
@@ -2913,14 +2871,14 @@ Replace the first item in a list with the item under it.
 
 --------------
 
-## rem
+## remainder
 
 See [mod](#mod).
 
 
 --------------
 
-## remainder
+## rem
 
 See [mod](#mod).
 
@@ -2998,6 +2956,20 @@ Function
 [rollup]
 
 
+--------------
+
+## roll>
+
+See [rollup](#rollup).
+
+
+--------------
+
+## roll<
+
+See [rolldown](#rolldown).
+
+
 ------------------------------------------------------------------------
 
 ## rollup
@@ -3015,20 +2987,6 @@ Function
 ### Crosslinks
 
 [rolldown]
-
-
---------------
-
-## roll>
-
-See [rollup](#rollup).
-
-
---------------
-
-## roll<
-
-See [rolldown](#rolldown).
 
 
 ------------------------------------------------------------------------
@@ -3234,6 +3192,27 @@ Replace a list with its size.
 > \[[pop] [++]\] [step_zero]
 
 
+--------------
+
+## /floor
+
+See [floordiv](#floordiv).
+
+
+--------------
+
+## /
+
+See [floordiv](#floordiv).
+
+
+--------------
+
+## //
+
+See [floordiv](#floordiv).
+
+
 ------------------------------------------------------------------------
 
 ## sort
@@ -3353,6 +3332,25 @@ Another "numeric tower" hatch...
 
 ------------------------------------------------------------------------
 
+## stackd
+
+Function
+
+Grab the stack under the top item and put it onto the stack.
+
+### Example
+
+       ... 1 2 3 stackd
+    ------------------------
+      ... 1 2 [2 1 ...] 3
+
+### Definition
+
+> \[[stack]\] [dip]
+
+
+------------------------------------------------------------------------
+
 ## stack
 
 Function
@@ -3377,25 +3375,6 @@ complement to the "destructive" pair [enstacken] and [disenstacken].
 [unstack]
 [enstacken]
 [disenstacken]
-
-
-------------------------------------------------------------------------
-
-## stackd
-
-Function
-
-Grab the stack under the top item and put it onto the stack.
-
-### Example
-
-       ... 1 2 3 stackd
-    ------------------------
-      ... 1 2 [2 1 ...] 3
-
-### Definition
-
-> \[[stack]\] [dip]
 
 
 ------------------------------------------------------------------------
@@ -3581,23 +3560,6 @@ definition of [infra].
 
 ------------------------------------------------------------------------
 
-## swap
-
-Basis Function
-
-Swap the top two items on the stack.
-
-       a b swap
-    --------------
-         b a
-
-### Crosslinks
-
-[swapd]
-
-
-------------------------------------------------------------------------
-
 ## swapd
 
 Function
@@ -3616,6 +3578,23 @@ Swap the second and third items on the stack.
 
 [over]
 [tuck]
+
+
+------------------------------------------------------------------------
+
+## swap
+
+Basis Function
+
+Swap the top two items on the stack.
+
+       a b swap
+    --------------
+         b a
+
+### Crosslinks
+
+[swapd]
 
 
 ------------------------------------------------------------------------
@@ -3935,6 +3914,39 @@ Function
 
 > [uncons] [swap]
 
+
+------------------------------------------------------------------------
+
+## \|\|
+
+Combinator
+
+Short-circuiting Boolean OR
+
+
+### Definition
+
+> [nulco](#nulco) \[[nullary](#nullary)\] [dip](#dip) \[true\] [branch](#branch)
+
+### Discussion
+
+Accept two quoted programs, run the first and expect a Boolean value, if
+it’s `false` pop it and run the second program (which should also return a
+Boolean value) otherwise pop the second program (leaving `true` on the
+stack.)
+
+       [A] [B] ||
+    ---------------- A -> false
+            B
+
+
+       [A] [B] ||
+    ---------------- A -> true
+          true
+
+### Crosslinks
+
+[&&](#section-1)
 
 ------------------------------------------------------------------------
 
