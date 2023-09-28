@@ -115,8 +115,8 @@ quoted programs onto the pending expression ("continuation").
 ### Literals
 
 Literal values (integers, Booleans, lists) are put onto the stack.
-Literals can be thought of as functions that put accept a stack and
-return it with the value they denote on top, if you like.
+Literals can be thought of as functions that accept a stack and
+return it with the value they denote on top.
 
 ### Functions
 

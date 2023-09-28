@@ -20,7 +20,7 @@ other might be bleah.)
 
 - `build_index.py` a crude script to convert Markdown to HTML
 - `html/` output of the HTML creation process.  Serve the contents of
-  this directy.
+  this directly.
 - `_joy_interpreter_flowchart_url.txt`  This is the URL for the SVG
   flowchart image generator service. 
 - `Makefile`  uses `build_index.py` to convert `source/` to `html/`.
