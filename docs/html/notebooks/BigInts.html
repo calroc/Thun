@@ -5,8 +5,10 @@
 <title>BigNums in Joy</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/site.css">
+<script src="/Joy.js"></script>
 </head>
 <body>
+<div id="joy_interpreter"></div>
 <h1>BigNums in Joy</h1>
 <p>Most of the implementations of Thun support 
 <a href="https://en.wikipedia.org/wiki/BigNum">BigNums</a>, either built-in or as
@@ -887,6 +889,8 @@ sub-digits′ == [both-empty] [one-empty] [both-non-empty] list-combiner-genrec
                [both-non-empty]
                [i cons]
                genrec
+
+sub-digits′ == [either-or-both-null] [[both-null] [both-empty] [ditch-empty-list sub-carry-from-digits] ifte] [uncons-two [sub-with-carry] dipd] [i cons] genrec
 </code></pre>
 <p>We just need to define the pieces.</p>
 <h3>≡ <code>sub-with-carry</code></h3>
@@ -1140,5 +1144,6 @@ inscribe
    both? == boolii &amp;
  one-of? == boolii |
 </code></pre>
+<script>var joy_interpreter = Elm.Main.init({node: document.getElementById('joy_interpreter')});</script>
 </body>
 </html>

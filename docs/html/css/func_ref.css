@@ -31,3 +31,8 @@ blockquote {
  border-left: 0.2em solid black;
  padding: 0.5em;
 }
+
+li {
+ font-family: monospace, 'Inconsolata';
+ display: inline list-item;
+}

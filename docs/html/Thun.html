@@ -5,20 +5,22 @@
 <title>Thun Specification</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/site.css">
+<script src="/Joy.js"></script>
 </head>
 <body>
+<div id="joy_interpreter"></div>
 <h1>Thun Specification</h1>
 <p>Version 0.5.0</p>
 <h2>Grammar</h2>
-<p>The grammar of Thun is very simple.  A Thun expression is zero or more Thun
-terms separated by blanks. Terms can be integers in decimal notation,
-Booleans <code>true</code> and <code>false</code>, lists enclosed by square brackets <code>[</code> and <code>]</code>,
-or symbols (names of functions.)</p>
+<p>The grammar of Thun is very simple.  A Thun expression is zero or more
+Thun terms separated by blanks. Terms can be integers in decimal
+notation, Booleans <code>true</code> and <code>false</code>, lists enclosed by square brackets
+<code>[</code> and <code>]</code>, or symbols (names of functions.)</p>
 <pre><code>joy ::= term*
 
 term ::= integer | bool | '[' joy ']' | symbol
 
-integer ::= [ '-' ] ('0'...'9')+
+integer ::= 0 | [ '-' ] ('1'...'9') ('0'...'9')*
 
 bool ::= 'true' | 'false'
 
@@ -31,6 +33,7 @@ brackets.  Integers can be prefixed with a minus sign to denote negative
 numbers.  The symbols <code>true</code> and <code>false</code> are reserved to denote their
 respective Boolean values.</p>
 <p>That's it.  That's the whole of the grammar.</p>
+<p><img alt="Thun Grammar Railroad Diagram" src="https://git.sr.ht/~sforman/Thun/blob/trunk/docs/html/images/grammar.png"></p>
 <h2>Types</h2>
 <p>The original Joy has several datatypes (such as strings and sets)
 but the Thun dialect currently only uses four:</p>
@@ -89,20 +92,24 @@ it looks up in the dictionary.</p>
 <strong>Combinators</strong> (see below) alter control flow by prepending quoted programs to the pending
 expression (aka "continuation".)</p>
 <h2>Literals, Functions, Combinators</h2>
-<p>Terms in Thun can be categorized into literal, simple functions that
-operate on the stack only, and combinators that can prepend quoted
-programs onto the pending expression ("continuation").</p>
+<p>Terms in Thun can be categorized into <strong>literals</strong>, simple <strong>functions</strong>
+that operate on the stack only, and <strong>combinators</strong> that can prepend
+quoted programs onto the pending expression ("continuation").</p>
 <h3>Literals</h3>
-<p>Literal values (integers, Booleans, lists) are put onto the stack.</p>
+<p>Literal values (integers, Booleans, lists) are put onto the stack.
+Literals can be thought of as functions that accept a stack and
+return it with the value they denote on top.</p>
 <h3>Functions</h3>
-<p>Functions take values from the stack and push results onto it.</p>
+<p>Functions take values from the stack and push results onto it. There are
+a few kinds of functions: math, comparison, list and stack manipulation.</p>
 <h3>Combinators</h3>
 <p><strong>Combinators</strong> are functions which accept quoted programs on the stack
-and run them in various ways.  These combinators reify specific
-control-flow patterns (such as <code>ifte</code> which is like <code>if.. then.. else..</code>
-in other languages.)  Combinators receive the current expession in
-addition to the stack and return the next expression.  They work by
-changing the pending expression the interpreter is about to execute.</p>
+and run them in various ways by prepending them (or not) to the pending
+expression.  These combinators reify specific control-flow patterns (such
+as <code>ifte</code> which is like <code>if.. then.. else..</code> in other languages.)
+Combinators receive the current expession in addition to the stack and
+return the next expression.  They work by changing the pending expression
+the interpreter is about to execute.</p>
 <h3>Basis Functions</h3>
 <p>Thun has a set of <em>basis</em> functions which are implemented in the host
 language.  The rest of functions in the Thun dialect are defined in terms
@@ -174,8 +181,25 @@ leading to an error.</p>
 the spirit of the thing to just leave a footgun like that laying around,
 but perhaps in practice it won't come up.  (Because writing Thun code by
 derivation seems to lead to bug-free code, which is the kinda the point.)</p>
+<h3>Variations between Interpreters</h3>
+<p>There are several small choices to be made when implementing a Thun
+interpreter (TODO: make a comprehensive list), for example, the Python
+interpreter keeps all of its functions in one dictionary but most of the
+other interpreters have a <code>case</code> or <code>switch</code> statement for the built-in
+functions and a separate hash table for definitions.  Additionally, of
+the interpreters that have hash tables most of them check the hash table
+after the <code>case</code> statement.  This means that one cannot "shadow" built-in
+functions in some interpreters.  You can <code>inscribe</code> them, but the
+interpreter will not look for them.</p>
+<p>I haven't yet formally made a decision for how Thun <em>shall</em> work.
+Letting built-ins be shadowed is fun and useful for exploration, and
+letting them be inviolate is useful for unsurprising behaviour.</p>
+<p>Another choice is how to handle duplicate definitions in general. Should
+you be able to reuse a name?  Or should <code>inscribe</code> throw some sort of
+error if you try?</p>
 <hr>
 <p>Copyright © 2014 - 2023 Simon Forman</p>
 <p>This file is part of Thun</p>
+<script>var joy_interpreter = Elm.Main.init({node: document.getElementById('joy_interpreter')});</script>
 </body>
 </html>

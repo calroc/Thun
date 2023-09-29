@@ -21,9 +21,12 @@ print(f'''\
 <title>{title_of(html)}</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/site.css">
+<script src="/Joy.js"></script>
 </head>
 <body>
+<div id="joy_interpreter"></div>
 {html}
+<script>var joy_interpreter = Elm.Main.init({{node: document.getElementById('joy_interpreter')}});</script>
 </body>
 </html>''')
 

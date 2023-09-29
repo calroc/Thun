@@ -5,8 +5,10 @@
 <title>Thun</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/site.css">
+<script src="/Joy.js"></script>
 </head>
 <body>
+<div id="joy_interpreter"></div>
 <h1>Thun</h1>
 <p>A Dialect of Joy.</p>
 <p>Version 0.5.0</p>
@@ -52,9 +54,9 @@ kind used to construct an <a href="https://en.wikipedia.org/wiki/Ulam_spiral">Ul
 For more information see <a href="/notebooks/Square_Spiral.html">Square Spiral Example Joy Code</a>.</p>
 <pre><code>square_spiral [_p] [_then] [_else] ifte
 
-_p  [_p0] [_p1] &amp;&amp;
+_p  [_p0] [_p1] and
 _p0 [abs] ii &lt;=
-_p1 [&lt;&gt;] [pop !-] ||
+_p1 [&lt;&gt;] [pop !-] or
 
 _then [    !-] [[++]] [[--]] ifte dip
 _else [pop !-]  [--]   [++]  ifte
@@ -173,7 +175,7 @@ expression, and dictionary are the entire state of the Joy interpreter.</p>
 expression, and a dictionary, and it iterates through the expression
 putting values onto the stack and delegating execution to functions which
 it looks up in the dictionary.</p>
-<p><img alt="Joy Interpreter Flowchart" src="https://git.sr.ht/~sforman/Thun/blob/trunk/joy_interpreter_flowchart.svg"></p>
+<p><img alt="Joy Interpreter Flowchart" src="/joy_interpreter_flowchart.svg"></p>
 <p>All control flow works by
 <a href="https://en.wikipedia.org/wiki/Continuation-passing_style">Continuation Passing Style</a>.
 <strong>Combinators</strong> (see below) alter control flow by prepending quoted programs to the pending
@@ -237,6 +239,6 @@ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 details.</p>
 <p>You should have received a copy of the GNU General Public License along
 with Thun.  If not see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+<script>var joy_interpreter = Elm.Main.init({node: document.getElementById('joy_interpreter')});</script>
 </body>
 </html>
-

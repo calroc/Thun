@@ -5,8 +5,10 @@
 <title>Generator Programs</title>
 <link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/site.css">
+<script src="/Joy.js"></script>
 </head>
 <body>
+<div id="joy_interpreter"></div>
 <h1>Generator Programs</h1>
 <h2>Using <code>x</code> to Generate Values</h2>
 <p>Cf. <a href="https://www.kevinalbrecht.com/code/joy-mirror/jp-reprod.html">Self-reproducing and reproducing programs</a> by Manfred von Thun</p>
@@ -418,5 +420,6 @@ joy? x
 <p>And so it goes...</p>
 <h2>Conclusion</h2>
 <p>Generator programs like these are fun and interesting.</p>
+<script>var joy_interpreter = Elm.Main.init({node: document.getElementById('joy_interpreter')});</script>
 </body>
 </html>

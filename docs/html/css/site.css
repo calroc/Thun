@@ -30,3 +30,27 @@ blockquote {
  border-left: 0.2em solid black;
  padding: 0.5em;
 }
+
+#joy_interpreter {
+ background: #fff;
+ font-family: monospace, Inconsolata;
+ padding: 0.25em;
+ position: sticky;
+ top: 0;
+ border: 2px solid black;
+}
+
+#joy_interpreter > input {
+ box-sizing: border-box;
+ width: 100%;
+ height: 2em;
+}
+
+#joy_interpreter > div {
+ background: #eee;
+ border-left: 1px solid black;
+ padding: 0.5em;
+ height: 1em;
+ margin-left: 0.25em;
+ margin-right: 0.25em;
+}
