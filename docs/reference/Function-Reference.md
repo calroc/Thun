@@ -1,4 +1,5 @@
-# Thun Function Reference
+
+[Home](/)
 
 Version -10.0.0
 

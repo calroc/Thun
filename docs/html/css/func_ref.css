@@ -1,0 +1,33 @@
+
+body {
+ background: #fff;
+ color: black;
+ font-family: 'EB Garamond 12';
+}
+
+footer {
+ margin-top: 2em;
+ font-family: 'EB Garamond SC 08';
+ font-size: x-small;
+ text-align: center;
+}
+
+code {
+ background: #eee;
+}
+
+pre {
+ background: #eee;
+ margin-left: 2em;
+ margin-right: 2em;
+ margin-bottom: 1em;
+ font-family: 'Inconsolata';
+ padding: 0.5em;
+}
+
+blockquote {
+ font-family: monospace, 'Inconsolata';
+ background: #eee;
+ border-left: 0.2em solid black;
+ padding: 0.5em;
+}
