@@ -9,3 +9,5 @@ FuncRef.html: Function-Reference.md
 
 mov: FuncRef.html
 	cp -v $? ../html/
+
+# pandoc --toc --toc-depth=2 --metadata title="Thun Function Reference" --ascii Function-Reference.md
