@@ -49,3 +49,10 @@ a.self_link:hover {
 .func_name {
  font-family: monospace, 'Inconsolata';
 }
+
+
+span.kind {
+ color: #fff;
+ background: #555;
+ padding: 0.1em;
+}

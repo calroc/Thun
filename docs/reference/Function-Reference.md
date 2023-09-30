@@ -23,7 +23,7 @@ Return the absolute value of the argument.
 
 ## add
 
-Basis Function
+Function
 
 Add two numbers together: a + b.
 
@@ -109,7 +109,7 @@ See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursi
 
 ## and
 
-Basis Function
+Function
 
 Logical bit-wise AND.
 
@@ -352,7 +352,7 @@ This combinator may seem trivial but it comes in handy.
 
 ## bool
 
-Basis Function
+Function
 
 Convert the item on the top of the stack to a Boolean value.
 
@@ -370,7 +370,7 @@ empty list is `false` and all other lists are `true`.
 
 ## branch
 
-Basis Combinator
+Combinator
 
 Use a Boolean value to select and run one of two quoted programs.
 
@@ -455,7 +455,7 @@ Do [cons] two times.
 
 ## choice
 
-Basis Function
+Function
 
 Use a Boolean value to select one of two items.
 
@@ -493,7 +493,7 @@ See [xor](#xor).
 
 ## clear
 
-Basis Function
+Function
 
 Clear everything from the stack.
 
@@ -739,7 +739,7 @@ expressions, e.g.:
 
 ## cons
 
-Basis Function
+Function
 
 Given an item and a list, append the item to the list to make a new list.
 
@@ -822,7 +822,7 @@ See [dip].
 
 ## dip
 
-Basis Combinator
+Combinator
 
 The `dip` combinator expects a quoted program on the stack and below it
 some item, it hoists the item into the expression and runs the program
@@ -1069,7 +1069,7 @@ Function
 
 ## dup
 
-Basis Function
+Function
 
 "Dup"licate the top item on the stack.
 
@@ -1118,7 +1118,7 @@ This is a destructive version of [stack].  See the note under
 
 ## eq
 
-Basis Function
+Function
 
 Compare the two items on the top of the stack for equality and replace
 them with a Boolean value.
@@ -1280,7 +1280,7 @@ Note that only one "level" of lists is flattened.  In the example above
 
 ## floordiv
 
-Basis Function
+Function
 
 I don't know why this is called "floor" div, I think it rounds its
 result down (not towards zero or up.)
@@ -1303,7 +1303,7 @@ for Thun gets nailed down.
 
 ## floor
 
-Basis Function
+Function
 
 Return the largest integer \<= x.
 
@@ -1403,7 +1403,7 @@ Euclid's Algorithm
 
 ## ge
 
-Basis Function
+Function
 
 Greater-than-or-equal-to comparison of two numbers.
 
@@ -1611,7 +1611,7 @@ See [gt](#gt).
 
 ## gt
 
-Basis Function
+Function
 
 Greater-than comparison of two numbers.
 
@@ -1688,7 +1688,7 @@ This is another function that has to wait on the numeric tower.
 
 ## id
 
-Basis Function
+Function
 
 The identity function.
 
@@ -1770,7 +1770,7 @@ In some cases (like the example above) this is the same effect as using [app2] b
 
 ## i
 
-Basis Combinator
+Combinator
 
 Append a quoted expression onto the pending expression.
 
@@ -1860,7 +1860,7 @@ know what you're doing.
 
 ## le
 
-Basis Function
+Function
 
 Less-Than-or-Equal-to comparison of the two items on the top of the
 stack, replacing them with a Boolean value.
@@ -1962,7 +1962,7 @@ See [lt](#lt).
 
 ## loop
 
-Basis Combinator
+Combinator
 
 Expect a quoted program `Q` and a Boolean value on the stack.  If the value is false
 discard the quoted program, otherwise run a copy of `Q` and `loop` again.
@@ -1999,7 +1999,7 @@ Just as [branch] has it's more common and convenient form [ifte],
 
 ## lshift
 
-Basis Function
+Function
 
 [Logical Left-Shift](https://en.wikipedia.org/wiki/Logical_shift)
 
@@ -2015,7 +2015,7 @@ Basis Function
 
 ## lt
 
-Basis Function
+Function
 
 Less-Than comparison of the two items on the top of the
 stack, replacing them with a Boolean value.
@@ -2106,7 +2106,7 @@ parallelism combinator due to the "pure" nature of the language.
 
 ## max
 
-Basis Function
+Function
 
 Given a list find the maximum.
 
@@ -2127,7 +2127,7 @@ Given a list find the maximum.
 
 ## min
 
-Basis Function
+Function
 
 Given a list find the minimum.
 
@@ -2148,7 +2148,7 @@ Given a list find the minimum.
 
 ## mod
 
-Basis Function
+Function
 
 Return the remainder of `a` divided by `b`.
 
@@ -2173,7 +2173,7 @@ See [mod](#mod).
 
 ## mul
 
-Basis Function
+Function
 
 Multiply two numbers.
 
@@ -2207,7 +2207,7 @@ Invert the sign of a number.
 
 ## ne
 
-Basis Function
+Function
 
 Not-Equal comparison of the two items on the top of the
 stack, replacing them with a Boolean value.
@@ -2344,7 +2344,7 @@ Like [getitem] but [swap]s the order of arguments.
 
 ## or
 
-Basis Function
+Function
 
 Logical bit-wise OR.
 
@@ -2522,7 +2522,7 @@ Function
 
 ## pop
 
-Basis Function
+Function
 
 Pop the top item from the stack and discard it.
 
@@ -2643,7 +2643,7 @@ Function
 
 ## pow
 
-Basis Function
+Function
 
 Take two numbers `a` and `n` from the stack and raise `a` to the `n`th
 power.  (`n` is on the top of the stack.)
@@ -2907,7 +2907,7 @@ See the ["Remove Function" notebook](https://osdn.net/projects/joypy/scm/git/Thu
 
 ## rest
 
-Basis Function
+Function
 
        [a ...] rest
     ------------------
@@ -3026,7 +3026,7 @@ Function
 
 ## rshift
 
-Basis Function
+Function
 
 [Logical Right-Shift](https://en.wikipedia.org/wiki/Logical_shift)
 
@@ -3082,7 +3082,7 @@ Function
 
 ## select
 
-Basis Function
+Function
 
 Use a Boolean value to select one of two items from a sequence. :
 
@@ -3321,7 +3321,7 @@ Square the number on the top of the stack.
 
 ## sqrt
 
-Basis Function Combinator
+Function Combinator
 
 Return the square root of the number a. Negative numbers return complex
 roots.
@@ -3481,7 +3481,7 @@ Take the [stack] and [uncons] the top two items.
 
 ## sub
 
-Basis Function
+Function
 
 Subtract the number on the top of the stack from the number below it.
 
@@ -3538,7 +3538,7 @@ Given a quoted sequence of numbers return the sum.
 
 ## swaack
 
-Basis Function
+Function
 
 Swap stack.  Take a list from the top of the stack, replace the stack
 with the list, and put the old stack onto it.
@@ -3585,7 +3585,7 @@ Swap the second and third items on the stack.
 
 ## swap
 
-Basis Function
+Function
 
 Swap the top two items on the stack.
 
@@ -3836,7 +3836,7 @@ consuming exactly one item from the stack.
 
 ## uncons
 
-Basis Function
+Function
 
 Removes an item from a list and leaves it on the stack under the rest of
 the list.  You cannot `uncons` an item from an empty list.
@@ -3953,7 +3953,7 @@ stack.)
 
 ## void
 
-Basis Function
+Function
 
 True if the form on TOS is void otherwise False.
 
@@ -3968,7 +3968,7 @@ This represents a binary Boolean logical formula in the arithmetic of the
 
 ## warranty
 
-Basis Function
+Function
 
 Print warranty information.
 
@@ -4002,7 +4002,7 @@ and runs it [nullary].
 
 ## words
 
-Basis Function
+Function
 
 Print all the words in alphabetical order.
 
@@ -4046,7 +4046,7 @@ as well as
 
 ## xor
 
-Basis Function
+Function
 
 Logical bit-wise eXclusive OR.
 
