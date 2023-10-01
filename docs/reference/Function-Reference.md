@@ -10,20 +10,11 @@ Each function, combinator, or definition should be documented here.
 
 ## abs
 
-Function
-
 Return the absolute value of the argument.
-
-### Definition
-
-> [dup](#dup) 0 < [] \[[neg](#neg)\] [branch](#branch)
-
 
 ------------------------------------------------------------------------
 
 ## add
-
-Function
 
 Add two numbers together: a + b.
 
@@ -90,10 +81,6 @@ predicate `P`.
     -----------------------------------------
        [P] [pop []] [G] [dip swons] genrec
 
-### Definition
-
-> \[[pop](#pop) \[\]\] [swap](#swap) \[[dip](#dip) [swons](#swons)\] [genrec](#genrec)
-
 ### Example
 
 The `range` function generates a list of the integers from 0 to n - 1:
@@ -108,8 +95,6 @@ See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursi
 ------------------------------------------------------------------------
 
 ## and
-
-Function
 
 Logical bit-wise AND.
 
@@ -137,10 +122,6 @@ the first result of the program.
 
 This is the same effect as the [unary](#unary) combinator.
 
-### Definition
-
-> [nullary](#nullary) [popd](#popd)
-
 ### Discussion
 
 Just a specialization of `nullary` really.  Its parallelizable cousins
@@ -167,9 +148,6 @@ Like [app1](#app1) with two items.
        ... [y ...] [Q] . infra first
            [x ...] [Q]   infra first
 
-### Definition
-
-> \[[grba] [swap] [grba] [swap]\] [dip] \[[infrst]\] [cons] [ii]
 
 ### Discussion
 
@@ -205,10 +183,6 @@ Like [app1] with three items.
            [y ...] [Q]   infra first
            [x ...] [Q]   infra first
 
-### Definition
-
-> 3 [appN]
-
 ### Discussion
 
 See [app2].
@@ -236,10 +210,6 @@ Like [app1] with any number of items.
            [x2 ...] [Q]   infra first
            [x1 ...] [Q]   infra first
            [x0 ...] [Q]   infra first
-
-### Definition
-
-> \[[grabN]\] [codi] [map] [disenstacken]
 
 ### Discussion
 
@@ -272,15 +242,9 @@ See [getitem](#getitem).
 
 ## average
 
-Function
-
 Compute the average of a list of numbers.
 (Currently broken until I can figure out what to do about "numeric tower"
 in Thun.)
-
-### Definition
-
-> \[[sum]\] \[[size]\] [cleave] [/]
 
 ### Discussion
 
@@ -306,10 +270,6 @@ item of the result on the stack.
     -----------------------
             ... a
 
-### Definition
-
-> [unary] [popd]
-
 ### Discussion
 
 Runs any other quoted function and returns its first result while
@@ -334,10 +294,6 @@ Run two quoted programs
     ---------------
           P Q
 
-### Definition
-
-> \[[i]\] [dip] [i]
-
 ### Discussion
 
 This combinator may seem trivial but it comes in handy.
@@ -351,8 +307,6 @@ This combinator may seem trivial but it comes in handy.
 ------------------------------------------------------------------------
 
 ## bool
-
-Function
 
 Convert the item on the top of the stack to a Boolean value.
 
@@ -384,10 +338,6 @@ Use a Boolean value to select and run one of two quoted programs.
                  T
 
 
-### Definition
-
-> [rolldown] [choice] [i]
-
 ### Discussion
 
 This is one of the fundamental operations (although it can be defined in
@@ -401,18 +351,11 @@ terms of [choice] as above).  The more common "if..then..else" construct
 [select]
 
 
---------------
-
-## •
-
-See [id](#id).
 
 
 ------------------------------------------------------------------------
 
 ## ccccons
-
-Function
 
        a b c d [...] ccccons
     ---------------------------
@@ -420,30 +363,22 @@ Function
 
 Do [cons] four times.
 
-### Definition
-
-> [ccons] [ccons]
-
 ### Crosslinks
 
-[ccons] [cons] [times]
+[ccons]
+[cons]
+[times]
 
 
 --------------------
 
 ## ccons
 
-Function
-
        a b [...] ccons
     ---------------------
           [a b ...]
 
 Do [cons] two times.
-
-### Definition
-
-> [cons] [cons]
 
 ### Crosslinks
 
@@ -455,8 +390,6 @@ Do [cons] two times.
 
 ## choice
 
-Function
-
 Use a Boolean value to select one of two items.
 
        a b false choice
@@ -466,10 +399,6 @@ Use a Boolean value to select one of two items.
        a b true choice
     ---------------------
               b
-
-### Definition
-
-> \[[pop]\] \[[popd]\] [branch]
 
 ### Discussion
 
@@ -493,13 +422,7 @@ See [xor](#xor).
 
 ## clear
 
-Function
-
 Clear everything from the stack.
-
-### Definition
-
-> [stack] [bool] \[[pop] [stack] [bool]\] [loop]
 
 ### Crosslinks
 
@@ -553,10 +476,6 @@ Run two programs in parallel, consuming two additional items, and put their resu
     --------------------------
             ... a b
 
-### Definition
-
-> [cleave] [popdd]
-
 ### Discussion
 
 Like [cleave] but consumes an additional item from the stack.
@@ -606,11 +525,6 @@ Or even:
 
     [GL] [E] over cmp
 
-### Crosslinks
-
-TODO: link to tree notebooks where this was used.
-
-
 ------------------------------------------------------------------------
 
 ## codi
@@ -623,10 +537,6 @@ Take a quoted program from the stack, [cons] the next item onto it, then
        a b [F] . codi
     --------------------
              b . F a
-
-### Definition
-
-> [cons] [dip]
 
 ### Discussion
 
@@ -648,10 +558,6 @@ Combinator
 This is part of the [make_generator] function.  You would not use this
 combinator directly.
 
-### Definition
-
-> [codi] [reco]
-
 ### Discussion
 
 See [make_generator] and the 
@@ -667,8 +573,6 @@ as well as
 ------------------------------------------------------------------------
 
 ## concat
-
-Function
 
 Concatinate two lists.
 
@@ -739,8 +643,6 @@ expressions, e.g.:
 
 ## cons
 
-Function
-
 Given an item and a list, append the item to the list to make a new list.
 
        a [...] cons
@@ -764,11 +666,6 @@ Its inverse operation is [uncons].
 Combinator
 
 Specialist function (that means I forgot what it does and why.)
-
-### Definition
-
-> [dip] [infrst]
-
 
 ------------------------------------------------------------------------
 
@@ -862,18 +759,12 @@ pending expression (not counting modifications to the dictionary.)
 
 ## disenstacken
 
-Function
-
 The `disenstacken` function expects a list on top of the stack and makes
 that the stack discarding the rest of the stack.
 
        1 2 3 [4 5 6] disenstacken
     --------------------------------
                 6 5 4
-
-### Definition
-
-> \[[clear]\] [dip] [reverse] [unstack](#unstack)
 
 ### Discussion
 
@@ -885,7 +776,6 @@ printed with the top or head on the left.
 
 [enstacken]
 [stack]
-[unstack](#unstack)
 
 
 --------------
@@ -899,8 +789,6 @@ See [floordiv](#floordiv).
 
 ## divmod
 
-Function
-
         x y divmod
     ------------------
          q      r
@@ -909,16 +797,9 @@ Function
 Invariant: `qy + r = x`.
 
 
-### Definition
-
-> \[[floordiv]\] \[[mod]\] [clop]
-
-
 ------------------------------------------------------------------------
 
 ## down_to_zero
-
-Function
 
 Given a number greater than zero put all the Natural numbers (including
 zero) less than that onto the stack.
@@ -929,10 +810,6 @@ zero) less than that onto the stack.
     --------------------
           3 2 1 0
 
-### Definition
-
-> \[0 \>\] \[[dup] [--]\] [while]
-
 ### Crosslinks
 
 [range]
@@ -941,8 +818,6 @@ zero) less than that onto the stack.
 ------------------------------------------------------------------------
 
 ## drop
-
-Function
 
 Expects an integer and a quote on the stack and returns the quote with n
 items removed off the top.
@@ -953,10 +828,6 @@ items removed off the top.
     ----------------------
            [c d]
 
-### Definition
-
-> \[[rest]\] [times]
-
 ### Crosslinks
 
 [take]
@@ -966,17 +837,11 @@ items removed off the top.
 
 ## dupdd
 
-Function
-
 [dup] the third item down on the stack.
 
        a b c dupdd
     -----------------
          a a b c
-
-### Definition
-
-> \[[dup]\] [dipd]
 
 ### Crosslinks
 
@@ -998,10 +863,6 @@ Run a copy of program `F` under the next item down on the stack.
     -------------------
           F a [F]
 
-### Definition
-
-> [dup] [dipd]
-
 ### Crosslinks
 
 [dupdip]
@@ -1018,10 +879,6 @@ Apply a function `F` and [dup] the item under it on the stack.
        a [F] dupdip
     ------------------
           a F a
-
-### Definition
-
-> [dupd] [dip]
 
 ### Derivation
 
@@ -1045,17 +902,11 @@ A very common and useful combinator.
 
 ## dupd
 
-Function
-
 [dup] the second item down on the stack.
 
        a b dupd
     --------------
         a a b
-
-### Definition
-
-> \[[dup]\] [dip]
 
 ### Crosslinks
 
@@ -1068,8 +919,6 @@ Function
 ------------------------------------------------------------------------
 
 ## dup
-
-Function
 
 "Dup"licate the top item on the stack.
 
@@ -1089,18 +938,12 @@ Function
 
 ## enstacken
 
-Function
-
 Put the stack onto the stack replacing the contents of the stack.
 
        ... a b c enstacken
     -------------------------
            [c b a ...]
 
-
-### Definition
-
-> [stack] \[[clear]\] [dip]
 
 ### Discussion
 
@@ -1110,15 +953,12 @@ This is a destructive version of [stack].  See the note under
 ### Crosslinks
 
 [stack]
-[unstack]
 [disenstacken]
 
 
 ------------------------------------------------------------------------
 
 ## eq
-
-Function
 
 Compare the two items on the top of the stack for equality and replace
 them with a Boolean value.
@@ -1156,8 +996,6 @@ See [ne](#ne).
 
 ## !-
 
-Function
-
 Not negative.
 
 
@@ -1171,10 +1009,6 @@ Not negative.
        true
 
 
-### Definition
-
-    0 \>=
-
 ### Discussion
 
 Return a Boolean value indicating if a number is greater than or equal to
@@ -1185,17 +1019,11 @@ zero.
 
 ## first
 
-Function
-
 Replace a list with its first item.
 
        [a ...]
     --------------
           a
-
-### Definition
-
-> [uncons] [pop]
 
 ### Crosslinks
 
@@ -1209,17 +1037,11 @@ Replace a list with its first item.
 
 ## first_two
 
-Function
-
 Replace a list with its first two items.
 
        [a b ...] first_two
     -------------------------
                a b
-
-### Definition
-
-> [uncons] [first]
 
 ### Crosslinks
 
@@ -1234,8 +1056,6 @@ Replace a list with its first two items.
 
 ## flatten
 
-Function
-
 Given a list of lists, concatinate them.
 
 ### Example
@@ -1243,10 +1063,6 @@ Given a list of lists, concatinate them.
        [[1 2] [3 [4] 5] [6 7]] flatten
     -------------------------------------
               [1 2 3 [4] 5 6 7]
-
-### Definition
-
-> [\<\{\}] \[[concat]\] [step]
 
 ### Discussion
 
@@ -1280,8 +1096,6 @@ Note that only one "level" of lists is flattened.  In the example above
 
 ## floordiv
 
-Function
-
 I don't know why this is called "floor" div, I think it rounds its
 result down (not towards zero or up.)
 
@@ -1303,8 +1117,6 @@ for Thun gets nailed down.
 
 ## floor
 
-Function
-
 Return the largest integer \<= x.
 
 ### Discussion
@@ -1325,10 +1137,6 @@ Run two quoted programs in parallel and replace them with their results.
     ----------------------
            ... f g
 
-### Definition
-
-> \[[i]\] [app2]
-
 ### Discussion
 
 The basic parallelism combinator, the two programs are run independently.
@@ -1344,17 +1152,11 @@ The basic parallelism combinator, the two programs are run independently.
 
 ## fourth
 
-Function
-
 Replace a list with its fourth item.
 
        [a b c d ...] fourth
     --------------------------
               d
-
-### Definition
-
-> [rest] [third]
 
 ### Crosslinks
 
@@ -1367,8 +1169,6 @@ Replace a list with its fourth item.
 ------------------------------------------------------------------------
 
 ## gcd2
-
-Function
 
 Compiled GCD function.
 
@@ -1385,14 +1185,8 @@ See [gcd].
 
 ## gcd
 
-Function
-
 Take two integers from the stack and replace them with their Greatest
 Common Denominator.
-
-### Definition
-
-> true \[[tuck] [mod] [dup] 0 [>]\] [loop] [pop]
 
 ### Discussion
 
@@ -1402,8 +1196,6 @@ Euclid's Algorithm
 ------------------------------------------------------------------------
 
 ## ge
-
-Function
 
 Greater-than-or-equal-to comparison of two numbers.
 
@@ -1434,16 +1226,12 @@ Combinator
     ---------------------------------------------------------------------
        [if] [then] [rec1 [[if] [then] [rec1] [rec2] genrec] rec2] ifte
 
-### Definition
+### Discussion
 
-> \[\[[genrec]\] [ccccons]\] [nullary] [swons] [concat] [ifte]
-
-(Note that this definition includes the `genrec` symbol itself, it is
+Note that this definition includes the `genrec` symbol itself, it is
 self-referential.  This is possible because the definition machinery does
 not check that symbols in defs are in the dictionary.  `genrec` is the
-only self-referential definition.)
-
-### Discussion
+only self-referential definition.
 
 See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 
@@ -1498,8 +1286,6 @@ Tail recursive functions are those where `R2` is the `i` combinator:
 
 ## getitem
 
-Function
-
 Expects an integer and a quote on the stack and returns the item at the
 nth position in the quote counting from 0.
 
@@ -1508,10 +1294,6 @@ nth position in the quote counting from 0.
        [a b c d] 2 getitem
     -------------------------
             c
-
-### Definition
-
-> [drop] [first]
 
 ### Discussion
 
@@ -1545,8 +1327,6 @@ implementation-dependant.)
 
 ## grabN
 
-Function
-
 Expect a number on the top of the stack and [cons] that many items from under it onto a new list.
 
 ### Example
@@ -1555,15 +1335,9 @@ Expect a number on the top of the stack and [cons] that many items from under it
     -----------------------
           a b [c d e]
 
-### Definition
-
-> [\<\{\}] \[[cons]\] [times]
-
 ------------------------------------------------------------------------
 
 ## grba
-
-Function
 
 A weird function used in [app2] that does this:
 
@@ -1572,10 +1346,6 @@ A weird function used in [app2] that does this:
        ... 1 2 3 [4 3 2 1 ...] 5
 
 It grabs the stack under the top item, and substitutes it for the second item down on the stack.
-
-### Definition
-
-> \[[stack] [popd]\] [dip]
 
 ### Discussion
 
@@ -1611,8 +1381,6 @@ See [gt](#gt).
 
 ## gt
 
-Function
-
 Greater-than comparison of two numbers.
 
        a b gt
@@ -1632,8 +1400,6 @@ Greater-than comparison of two numbers.
 ------------------------------------------------------------------------
 
 ## help
-
-Function
 
 Accepts a quoted symbol on the top of the stack and prints its
 documentation.
@@ -1665,15 +1431,9 @@ See [sub](#sub).
 
 ## hypot
 
-Function
-
              x y hypot
     ---------------------------
        sqrt(sqr(x) + sqr(y))
-
-### Definition
-
-> \[[sqr]\] [ii] [+] [sqrt]
 
 ### Discussion
 
@@ -1687,8 +1447,6 @@ This is another function that has to wait on the numeric tower.
 ------------------------------------------------------------------------
 
 ## id
-
-Function
 
 The identity function.
 
@@ -1708,10 +1466,6 @@ If-Then-Else combinator, a common and convenient specialization of [branch].
     ---------------------------------------
        [if] nullary [else] [then] branch
 
-### Definition
-
-> \[[nullary]\] [dipd] [swap] [branch]
-
 ### Crosslinks
 
 [branch]
@@ -1730,10 +1484,6 @@ top item, then again with the top item.
     ... a [Q] ii
     ------------------
      ... Q a Q
-
-### Definition
-
-> \[[dip]\] [dupdip] [i]
 
 ### Example
 
@@ -1798,10 +1548,6 @@ the list as its stack.  Does not affect the stack (below the list.)
     ---------------------------------
         c b a Q [z y x ...] swaack
 
-### Definition
-
-> [swons] [swaack] \[[i]\] [dip] [swaack]
-
 
     ... [a b c] [F] swons swaack [i] dip swaack
     ... [[F] a b c]       swaack [i] dip swaack
@@ -1833,11 +1579,6 @@ Combinator
 
 Does [infra] and then extracts the [first] item from the resulting list.
 
-### Definition
-
-> [infra] [first]
-
-
 ------------------------------------------------------------------------
 
 ## inscribe
@@ -1859,8 +1600,6 @@ know what you're doing.
 ------------------------------------------------------------------------
 
 ## le
-
-Function
 
 Less-Than-or-Equal-to comparison of the two items on the top of the
 stack, replacing them with a Boolean value.
@@ -1897,17 +1636,11 @@ See [ne](#ne).
 
 ## <{}
 
-Function
-
 
        ... a <{}
     ----------------
        ... [] a
 
-
-### Definition
-
-    [] swap
 
 ### Discussion
 
@@ -1922,17 +1655,10 @@ Tuck an empty list just under the first item on the stack.
 
 ## <<{}
 
-Function
-
 
        ... b a <{}
     -----------------
        ... [] b a
-
-
-### Definition
-
-    [] rollup
 
 
 ### Discussion
@@ -1999,8 +1725,6 @@ Just as [branch] has it's more common and convenient form [ifte],
 
 ## lshift
 
-Function
-
 [Logical Left-Shift](https://en.wikipedia.org/wiki/Logical_shift)
 
        a n lshift
@@ -2014,8 +1738,6 @@ Function
 ------------------------------------------------------------------------
 
 ## lt
-
-Function
 
 Less-Than comparison of the two items on the top of the
 stack, replacing them with a Boolean value.
@@ -2038,8 +1760,6 @@ stack, replacing them with a Boolean value.
 
 ## make_generator
 
-Function
-
 Given an initial state value and a quoted generator function build a
 generator quote.
 
@@ -2058,10 +1778,6 @@ And then:
        [230 [dup ++] codireco] 5 [x] times pop
     ---------------------------------------------
                  230 231 232 233 234
-
-### Definition
-
-> \[[codireco]\] [ccons]
 
 ### Discussion
 
@@ -2106,8 +1822,6 @@ parallelism combinator due to the "pure" nature of the language.
 
 ## max
 
-Function
-
 Given a list find the maximum.
 
 ### Example
@@ -2127,8 +1841,6 @@ Given a list find the maximum.
 
 ## min
 
-Function
-
 Given a list find the minimum.
 
 ### Example
@@ -2147,8 +1859,6 @@ Given a list find the minimum.
 ------------------------------------------------------------------------
 
 ## mod
-
-Function
 
 Return the remainder of `a` divided by `b`.
 
@@ -2173,8 +1883,6 @@ See [mod](#mod).
 
 ## mul
 
-Function
-
 Multiply two numbers.
 
        a b mul
@@ -2191,23 +1899,15 @@ Multiply two numbers.
 
 ## neg
 
-Function
-
 Invert the sign of a number.
 
        a neg
     -----------
         -a
-### Definition
-
-> 0 [swap] [-]
-
 
 ------------------------------------------------------------------------
 
 ## ne
-
-Function
 
 Not-Equal comparison of the two items on the top of the
 stack, replacing them with a Boolean value.
@@ -2230,8 +1930,6 @@ stack, replacing them with a Boolean value.
 
 ## not
 
-Function
-
 Like [bool] but convert the item on the top of the stack to the inverse
 Boolean value.
 
@@ -2243,10 +1941,6 @@ Boolean value.
     ---------------
          true
  
-### Definition
-
-> [bool] \[true\] \[false\] [branch]
-
 ### Crosslinks
 
 [bool]
@@ -2256,17 +1950,11 @@ Boolean value.
 
 ## nulco
 
-Function
-
 Take the item on the top of the stack and [cons] it onto `[nullary]`.
 
          [F] nulco
     -------------------
        [[F] nullary]
-
-### Definition
-
-> \[[nullary]\] [cons]
 
 ### Discussion
 
@@ -2275,7 +1963,7 @@ Helper function for [\|\|] and [&&].
 ### Crosslinks
 
 [&&]
-[\|\|]
+[||]
 
 
 --------------------
@@ -2290,10 +1978,6 @@ item of the result on the stack.
        ... [P] nullary
     ---------------------
             ... a
-
-### Definition
-
-> \[[stack]\] [dip] [infra] [first]
 
 ### Example
 
@@ -2321,8 +2005,6 @@ program.)
 
 ## of
 
-Function
-
 Like [getitem] but [swap]s the order of arguments.
 
 ### Example
@@ -2330,10 +2012,6 @@ Like [getitem] but [swap]s the order of arguments.
        2 [a b c d] of
     --------------------
              c
-
-### Definition
-
-> [swap] [getitem]
 
 ### Crosslinks
 
@@ -2343,8 +2021,6 @@ Like [getitem] but [swap]s the order of arguments.
 ------------------------------------------------------------------------
 
 ## or
-
-Function
 
 Logical bit-wise OR.
 
@@ -2357,8 +2033,6 @@ Logical bit-wise OR.
 ------------------------------------------------------------------------
 
 ## over
-
-Function
 
 [dup] the second item on the stack `over` the first.
 
@@ -2407,10 +2081,6 @@ rest of the stack.)
     -------------------------------
           5 7 [12 -2 35 0 5]
 
-### Definition
-
-> \[[i]\] [map]
-
 ### Discussion
 
 A specialization of [map] that runs a list of functions in parallel (if
@@ -2453,34 +2123,21 @@ See [succ](#succ).
 
 ## pm
 
-Function
-
 Plus or minus.  Replace two numbers with their sum and difference.
 
           a b pm
     -----------------
        (a+b) (a-b)
 
-### Definition
-
-> \[+\] \[-\] [clop]
-
-
 ------------------------------------------------------------------------
 
 ## popdd
-
-Function
 
 [pop] the third item on the stack.
 
        a b c popdd
     -----------------
            b c
-
-### Definition
-
-> [rolldown] [pop]
 
 ### Crosslinks
 
@@ -2496,17 +2153,11 @@ Function
 
 ## popd
 
-Function
-
 [pop] the second item down on the stack.
 
        a b popd
     --------------
           b
-
-### Definition
-
-> [swap] [pop]
 
 ### Crosslinks
 
@@ -2521,8 +2172,6 @@ Function
 ------------------------------------------------------------------------
 
 ## pop
-
-Function
 
 Pop the top item from the stack and discard it.
 
@@ -2543,15 +2192,9 @@ Pop the top item from the stack and discard it.
 
 ## popopdd
 
-Function
-
        a b c d popopdd
     ---------------------
             c d
-
-### Definition
-
-> \[[popop]\] [dipd]
 
 ### Crosslinks
 
@@ -2567,17 +2210,11 @@ Function
 
 ## popopd
 
-Function
-
 [pop] the second and third items from the stack.
 
        a b c popopd
     ------------------
             c
-
-### Definition
-
-> [rollup] [popop]
 
 ### Crosslinks
 
@@ -2593,16 +2230,10 @@ Function
 
 ## popop
 
-Function
-
 [pop] two items from the stack.
 
        a b popop
     ---------------
-
-### Definition
-
-> [pop] [pop]
 
 ### Crosslinks
 
@@ -2618,16 +2249,10 @@ Function
 
 ## popopop
 
-Function
-
 [pop] three items from the stack.
 
        a b c popopop
     -------------------
-
-### Definition
-
-> [pop] [popop]
 
 ### Crosslinks
 
@@ -2642,8 +2267,6 @@ Function
 ------------------------------------------------------------------------
 
 ## pow
-
-Function
 
 Take two numbers `a` and `n` from the stack and raise `a` to the `n`th
 power.  (`n` is on the top of the stack.)
@@ -2663,13 +2286,7 @@ power.  (`n` is on the top of the stack.)
 
 ## pred
 
-Function
-
 Predecessor. Decrement TOS.
-
-### Definition
-
-> 1 -
 
 ### Crosslinks
 
@@ -2725,8 +2342,6 @@ Simple and useful specialization of the [genrec] combinator from the
 
 ## product
 
-Function
-
 Just as [sum] sums a list of numbers, this function multiplies them
 together.
 
@@ -2744,13 +2359,7 @@ Or,
 
 ## ?
 
-Function
-
 Is the item on the top of the stack "truthy"?
-
-### Definition
-
-> [dup](#dup) [bool](#bool)
 
 ### Discussion
 
@@ -2766,17 +2375,11 @@ consuming the item.
 
 ## quoted
 
-Function
-
 "Quote D" Wrap the second item on the stack in a list.
 
        a b quoted
     ----------------
          [a] b
-
-### Definition
-
-> \[[unit]\] [dip]
 
 ### Discussion
 
@@ -2791,8 +2394,6 @@ This comes from the original Joy stuff.
 
 ## range
 
-Function
-
 Expect a number `n` on the stack and replace it with a list:
 `[(n-1)...0]`.
 
@@ -2805,10 +2406,6 @@ Expect a number `n` on the stack and replace it with a list:
        -5 range
     --------------
           []
-
-### Definition
-
-> \[0 \<=\] \[1 - [dup]\] [anamorphism]
 
 ### Discussion
 
@@ -2823,8 +2420,6 @@ If `n` is less than 1 the resulting list is empty.
 
 ## range_to_zero
 
-Function
-
 Take a number `n` from the stack and replace it with a list
 `[0...n]`.
 
@@ -2833,10 +2428,6 @@ Take a number `n` from the stack and replace it with a list
        5 range_to_zero
     ---------------------
         [0 1 2 3 4 5]
-
-### Definition
-
-> [unit] \[[down_to_zero]\] [infra]
 
 ### Discussion
 
@@ -2852,17 +2443,11 @@ Note that the order is reversed compared to [range].
 
 ## reco
 
-Function
-
 Replace the first item in a list with the item under it.
 
        a [b ...] reco
     --------------------
          [a ...]
-
-### Definition
-
-> [rest] [cons]
 
 ### Crosslinks
 
@@ -2888,8 +2473,6 @@ See [mod](#mod).
 
 ## remove
 
-Function
-
 Expects an item on the stack and a quote under it and removes that item
 from the the quote. The item is only removed once. If the list is empty
 or the item isn't in the list then the list is unchanged.
@@ -2907,8 +2490,6 @@ See the ["Remove Function" notebook](https://osdn.net/projects/joypy/scm/git/Thu
 
 ## rest
 
-Function
-
        [a ...] rest
     ------------------
           [...]
@@ -2923,8 +2504,6 @@ Function
 
 ## reverse
 
-Function
-
 Reverse the list on the top of the stack.
 
 ### Example
@@ -2933,24 +2512,14 @@ Reverse the list on the top of the stack.
     ---------------------
            [3 2 1]
 
-### Definition
-
-> [\<\{\}] [shunt]
-
 
 ------------------------------------------------------------------------
 
 ## rolldown
 
-Function
-
        a b c rolldown
     --------------------
            b c a
-
-### Definition
-
-> [swapd] [swap]
 
 ### Crosslinks
 
@@ -2975,15 +2544,9 @@ See [rolldown](#rolldown).
 
 ## rollup
 
-Function
-
        a b c rollup
     ------------------
           c a b
-
-### Definition
-
-> [swap] [swapd]
 
 ### Crosslinks
 
@@ -2993,8 +2556,6 @@ Function
 ------------------------------------------------------------------------
 
 ## round
-
-Function
 
 Round a number to a given precision in decimal digits.
 
@@ -3008,14 +2569,9 @@ down.
 
 ## rrest
 
-Function
-
        [a b ...] rrest
     ---------------------
             [...]
-### Definition
-
-> [rest] [rest]
 
 ### Crosslinks
 
@@ -3025,8 +2581,6 @@ Function
 ------------------------------------------------------------------------
 
 ## rshift
-
-Function
 
 [Logical Right-Shift](https://en.wikipedia.org/wiki/Logical_shift)
 
@@ -3042,8 +2596,6 @@ Function
 
 ## run
 
-Function
-
 Run a quoted program in a list.
 
 ### Example
@@ -3052,24 +2604,13 @@ Run a quoted program in a list.
     -----------------
            [3]
 
-### Definition
-
-> [\<\{\}] [infra]
-
-
 ------------------------------------------------------------------------
 
 ## second
 
-Function
-
        [a b ...] second
     ----------------------
               b
-
-### Definition
-
-> [rest] [first]
 
 ### Crosslinks
 
@@ -3081,8 +2622,6 @@ Function
 ------------------------------------------------------------------------
 
 ## select
-
-Function
 
 Use a Boolean value to select one of two items from a sequence. :
 
@@ -3107,8 +2646,6 @@ The sequence can contain more than two items but not fewer.
 
 ## sharing
 
-Function
-
 Print redistribution information.
 
 ### Discussion
@@ -3125,8 +2662,6 @@ printing out the GPL notice.
 
 ## shift
 
-Function
-
 Move the top item from one list to another.
 
 ### Example
@@ -3134,10 +2669,6 @@ Move the top item from one list to another.
        [x y z] [a b c] shift
     ---------------------------
           [a x y z] [b c]
-
-### Definition
-
-> [uncons] \[[swons]\] [dip]
 
 ### Crosslinks
 
@@ -3148,8 +2679,6 @@ Move the top item from one list to another.
 
 ## shunt
 
-Function
-
 Like [concat] but [reverse] the top list into the second.
 
 ### Example
@@ -3157,10 +2686,6 @@ Like [concat] but [reverse] the top list into the second.
        [a b c] [d e f] shunt
     ---------------------------
            [f e d a b c] 
-
-### Definition
-
-> \[[swons]\] [step]
 
 ### Discussion
 
@@ -3178,8 +2703,6 @@ preserve order.
 
 ## size
 
-Function
-
 Replace a list with its size.
 
 ### Example
@@ -3187,10 +2710,6 @@ Replace a list with its size.
        [23 [cats] 4] size
     ------------------------
                3
-
-### Definition
-
-> \[[pop] [++]\] [step_zero]
 
 
 --------------
@@ -3218,8 +2737,6 @@ See [floordiv](#floordiv).
 
 ## sort
 
-Function
-
 Given a list return it sorted.
 
 ### Example
@@ -3233,8 +2750,6 @@ Given a list return it sorted.
 
 ## spiral_next
 
-Function
-
 Example code.
 
 ### Discussion
@@ -3246,8 +2761,6 @@ See the ["Square Spiral Example Joy Code" notebook](https://joypy.osdn.io/notebo
 
 ## split_at
 
-Function
-
 Split a list (second on the stack) at the position given by the number on
 the top of the stack.
 
@@ -3256,10 +2769,6 @@ the top of the stack.
        [1 2 3 4 5 6 7] 4 split_at
     --------------------------------
            [5 6 7] [4 3 2 1]
-
-### Definition
-
-> \[[drop]\] \[[take]\] [clop]
 
 ### Discussion
 
@@ -3276,8 +2785,6 @@ on the top of the stack.
 
 ## split_list
 
-Function
-
 Split a list (second on the stack) at the position given by the number on
 the top of the stack such that [concat] would reconstruct the original
 list.
@@ -3285,10 +2792,6 @@ list.
        [1 2 3 4 5 6 7] 4 split_list
     ----------------------------------
             [1 2 3 4] [5 6 7]
-
-### Definition
-
-> \[[take] [reverse]\] \[[drop]\] [clop]
 
 ### Discussion
 
@@ -3304,18 +2807,11 @@ Compare with [split_at].  This function does extra work to ensure that
 
 ## sqr
 
-Function
-
 Square the number on the top of the stack.
 
        n  sqr
     ------------
          n²
-
-### Definition
-
-> [dup] [mul]
-
 
 ------------------------------------------------------------------------
 
@@ -3335,8 +2831,6 @@ Another "numeric tower" hatch...
 
 ## stackd
 
-Function
-
 Grab the stack under the top item and put it onto the stack.
 
 ### Example
@@ -3345,26 +2839,16 @@ Grab the stack under the top item and put it onto the stack.
     ------------------------
       ... 1 2 [2 1 ...] 3
 
-### Definition
-
-> \[[stack]\] [dip]
-
 
 ------------------------------------------------------------------------
 
 ## stack
-
-Function
 
 Put the stack onto the stack.
 
           ... c b a stack
     ---------------------------
        ... c b a [a b c ...]
-
-### Definition
-
-> \[\] [swaack] [dup] [swaack] [first]
 
 ### Discussion
 
@@ -3373,7 +2857,6 @@ complement to the "destructive" pair [enstacken] and [disenstacken].
 
 ### Crosslinks
 
-[unstack]
 [enstacken]
 [disenstacken]
 
@@ -3421,10 +2904,6 @@ Like [step] but with 0 as the initial value.
     -------------------------
          0 [...] [F] step
 
-### Definition
-
-> 0 [roll>] [step]
-
 ### Discussion
 
 [size] and [sum] can both be defined in terms of this specialization of
@@ -3439,8 +2918,6 @@ Like [step] but with 0 as the initial value.
 
 ## stuncons
 
-Function
-
 Take the [stack] and [uncons] the top item.
 
 ### Example
@@ -3449,16 +2926,9 @@ Take the [stack] and [uncons] the top item.
     --------------------
        1 2 3 3 [2 1]
 
-### Definition
-
-> [stack] [uncons]
-
-
 ------------------------------------------------------------------------
 
 ## stununcons
-
-Function
 
 Take the [stack] and [uncons] the top two items.
 
@@ -3468,10 +2938,6 @@ Take the [stack] and [uncons] the top two items.
     ----------------------
         1 2 3 3 2 [1]
 
-### Definition
-
-> [stack] [uncons] [uncons]
-
 ### Crosslinks
 
 [stuncons]
@@ -3480,8 +2946,6 @@ Take the [stack] and [uncons] the top two items.
 ------------------------------------------------------------------------
 
 ## sub
-
-Function
 
 Subtract the number on the top of the stack from the number below it.
 
@@ -3498,13 +2962,7 @@ Subtract the number on the top of the stack from the number below it.
 
 ## succ
 
-Function
-
 Successor. Increment TOS.
-
-### Definition
-
-> 1 +
 
 ### Crosslinks
 
@@ -3525,10 +2983,6 @@ Given a quoted sequence of numbers return the sum.
     ---------------------
              15
 
-### Definition
-
-> \[+\] [step_zero]
-
 ### Crosslinks
 
 [size]
@@ -3537,8 +2991,6 @@ Given a quoted sequence of numbers return the sum.
 ------------------------------------------------------------------------
 
 ## swaack
-
-Function
 
 Swap stack.  Take a list from the top of the stack, replace the stack
 with the list, and put the old stack onto it.
@@ -3563,17 +3015,11 @@ definition of [infra].
 
 ## swapd
 
-Function
-
 Swap the second and third items on the stack.
 
        a b c swapd
     -----------------
           b a c
-
-### Definition
-
-> \[[swap]\] [dip]
 
 ### Crosslinks
 
@@ -3584,8 +3030,6 @@ Swap the second and third items on the stack.
 ------------------------------------------------------------------------
 
 ## swap
-
-Function
 
 Swap the top two items on the stack.
 
@@ -3602,13 +3046,7 @@ Swap the top two items on the stack.
 
 ## swoncat
 
-Function
-
 [concat] two lists, but [swap] the lists first.
-
-### Definition
-
-> [swap] [concat]
 
 ### Crosslinks
 
@@ -3619,17 +3057,11 @@ Function
 
 ## swons
 
-Function
-
 Like [cons] but [swap] the item and list.
 
        [...] a swons
     -------------------
           [a ...]
-
-### Definition
-
-> [swap] [cons]
 
 
 ------------------------------------------------------------------------
@@ -3639,10 +3071,6 @@ Like [cons] but [swap] the item and list.
 Combinator
 
 A specialization of the [genrec] combinator.
-
-### Definition
-
-> \[[i]\] [genrec]
 
 ### Discussion
 
@@ -3662,19 +3090,12 @@ See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursi
 
 ## take
 
-Function
-
 Expects an integer `n` and a list on the stack and replace them with a list
 with just the top `n` items in reverse order.
 
        [a b c d] 2 take
     ----------------------
             [b a]
-
-### Definition
-
-> [\<\<\{\}] \[[shift]\] [times] [pop]
-
 
 --------------------
 
@@ -3688,10 +3109,6 @@ item of the result on the stack.
        ... z y x [P] ternary
     -------------------------
              ... a
-
-### Definition
-
-> [binary] [popd]
 
 ### Discussion
 
@@ -3709,15 +3126,9 @@ consuming exactly three items from the stack.
 
 ## third
 
-Function
-
        [a b c ...] third
     -----------------------
                c
-
-### Definition
-
-> [rest] [second]
 
 ### Crosslinks
 
@@ -3748,10 +3159,6 @@ program `n` times.
     -------------------------------------  w/ n > 1
              ... . Q (n-1) [Q] times
 
-### Definition
-
-> \[\-- dip\] cons \[swap\] infra \[0 \>\] swap while pop :
-
 
 ### Discussion
 
@@ -3760,13 +3167,13 @@ This works by building a little [while] program and running it:
                      1 3 [++] • [-- dip] cons [swap] infra [0 >] swap while pop                                                                                                                 
             1 3 [++] [-- dip] • cons [swap] infra [0 >] swap while pop                                                                                                                          
             1 3 [[++] -- dip] • [swap] infra [0 >] swap while pop                                                                                                                               
-     1 3 [[++] -- dip] [swap] • infra [0 >] swap while pop                                                                                                                                      
+     1 3 [[++] -- dip] [swap] • infra [0 >] swap while pop
                   dip -- [++] • swap [3 1] swaack [0 >] swap while pop                                                                                                                          
                   dip [++] -- • [3 1] swaack [0 >] swap while pop                                                                                                                               
             dip [++] -- [3 1] • swaack [0 >] swap while pop                                                                                                                                     
             1 3 [-- [++] dip] • [0 >] swap while pop                                                                                                                                            
-      1 3 [-- [++] dip] [0 >] • swap while pop                                                                                                                                                  
-      1 3 [0 >] [-- [++] dip] • while pop                                                                                                                                                       
+      1 3 [-- [++] dip] [0 >] • swap while pop
+      1 3 [0 >] [-- [++] dip] • while pop
 
 This is a common pattern in Joy.  You accept some parameters from the
 stack which typically include qouted programs and use them to build
@@ -3785,18 +3192,12 @@ See [bool](#bool).
 
 ## tuck
 
-Function
-
 [dup] the item on the top of the stack under the second item on the
 stack.
 
        a b tuck
     --------------
         b a b
-
-### Definition
-
-> [dup] \[[swap]\] [dip]
 
 ### Crosslinks
 
@@ -3816,10 +3217,6 @@ item of the result on the stack.
     ---------------------
            ... a
 
-### Definition
-
-> [nullary] [popd]
-
 ### Discussion
 
 Runs any other quoted function and returns its first result while
@@ -3835,8 +3232,6 @@ consuming exactly one item from the stack.
 --------------------
 
 ## uncons
-
-Function
 
 Removes an item from a list and leaves it on the stack under the rest of
 the list.  You cannot `uncons` an item from an empty list.
@@ -3858,8 +3253,6 @@ This is the inverse of [cons].
 
 ## unique
 
-Function
-
 Given a list remove duplicate items.
 
 
@@ -3867,16 +3260,9 @@ Given a list remove duplicate items.
 
 ## unit
 
-Function
-
        a unit
     ------------
         [a]
-
-### Definition
-
-> \[\] [cons]
-
 
 ------------------------------------------------------------------------
 
@@ -3892,10 +3278,6 @@ Unquote (using [i]) the list that is second on the stack.
     --------------------------
              1 2 3 4 5
 
-### Definition
-
-> \[[i]\] [dip]
-
 ### Crosslinks
 
 [unit]
@@ -3905,15 +3287,9 @@ Unquote (using [i]) the list that is second on the stack.
 
 ## unswons
 
-Function
-
        [a ...] unswons
     ---------------------
            [...] a
-
-### Definition
-
-> [uncons] [swap]
 
 
 ------------------------------------------------------------------------
@@ -3924,10 +3300,6 @@ Combinator
 
 Short-circuiting Boolean OR
 
-
-### Definition
-
-> [nulco](#nulco) \[[nullary](#nullary)\] [dip](#dip) \[true\] [branch](#branch)
 
 ### Discussion
 
@@ -3953,8 +3325,6 @@ stack.)
 
 ## void
 
-Function
-
 True if the form on TOS is void otherwise False.
 
 ### Discussion
@@ -3967,8 +3337,6 @@ This represents a binary Boolean logical formula in the arithmetic of the
 ------------------------------------------------------------------------
 
 ## warranty
-
-Function
 
 Print warranty information.
 
@@ -3989,10 +3357,6 @@ and runs it [nullary].
     --------------------- P -> true
        F [P] [F] while
 
-### Definition
-
-> [swap] [nulco] [dupdipd] [concat] [loop]
-
 ### Crosslinks
 
 [loop]
@@ -4001,8 +3365,6 @@ and runs it [nullary].
 ------------------------------------------------------------------------
 
 ## words
-
-Function
 
 Print all the words in alphabetical order.
 
@@ -4028,10 +3390,6 @@ the stack.
     -----------
        [F] F
 
-### Definition
-
-    dup i
-
 ### Discussion
 
 The simplest recursive pattern.
@@ -4046,8 +3404,6 @@ as well as
 
 ## xor
 
-Function
-
 Logical bit-wise eXclusive OR.
 
 ### Crosslinks
@@ -4059,8 +3415,6 @@ Logical bit-wise eXclusive OR.
 ------------------------------------------------------------------------
 
 ## zip
-
-Function
 
 Replace the two lists on the top of the stack with a list of the pairs
 from each list. The smallest list sets the length of the result list.

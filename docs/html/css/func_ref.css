@@ -2,7 +2,7 @@
 body {
  background: #fff;
  color: black;
- font-family: 'EB Garamond 12';
+ font-family: 'EB Garamond 16';
 }
 
 footer {
@@ -21,7 +21,7 @@ pre {
  margin-left: 2em;
  margin-right: 2em;
  margin-bottom: 1em;
- font-family: 'Inconsolata';
+ font-family: monospace, 'Inconsolata';
  padding: 0.5em;
 }
 
@@ -50,9 +50,12 @@ a.self_link:hover {
  font-family: monospace, 'Inconsolata';
 }
 
-
 span.kind {
  color: #fff;
  background: #555;
  padding: 0.1em;
+}
+
+h3 {
+	margin-bottom: 0.1em;
 }
