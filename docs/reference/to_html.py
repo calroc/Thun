@@ -1,6 +1,8 @@
+import xml.etree.ElementTree as ET
 from collections import defaultdict
 import hashlib, re, sys
 sys.path.append('../../implementations/Python')
+import markdown
 import joy
 from myhtml import HTML
 
@@ -64,6 +66,23 @@ def def_format(to, name):
         to += end
 
 
+
+def foo(to, text):
+    html = markdown.markdown(text, output_format="html5")
+    html = '<div class="notes">' + html + '</div>'
+    try:
+        t = ET.fromstringlist([html])
+    except:
+        print(repr(html))
+        raise
+    to += t
+
+
+basis_functions = set('''\
+i dip branch loop
+cons first rest stack swaack
+dup swap pop clear'''.split())
+
 k = re.split('^-+$', md, flags=re.MULTILINE)
 #k = md.split('------------------------------------------------------------------------\n')
 del k[0]
@@ -78,7 +97,7 @@ k = [section.splitlines() for section in k]
 ##assert not s  # one header per section
 
 def anchor_for(name):
-    return 'function_' + (
+    return (
         name
         if name.isalpha()
         else hashlib.sha256(name.encode()).hexdigest()
@@ -102,8 +121,6 @@ combinators = set(
     )
 for name in combinators:
     sections[name].remove('Combinator')
-
-# Crosslinks
 
 crosslinks = {}
 for name, section in sections.items():
@@ -200,9 +217,15 @@ with doc.body as b:
         title = d.h2(name, id=anchor_id, class_='func_name')
         title += ' '
         title.a('¶', href='#' + anchor_id, class_='self_link')
-        if name in combinators:
-            d.p.span('combinator', class_='kind')
-        d.pre('\n'.join(section))
+        with d.p as tags:
+            if name in combinators:
+                tags.span('combinator', class_='kind')
+                tags += ' '
+            if name in basis_functions:
+                tags.span('built-in', class_='kind')
+
+        foo(d, '\n'.join(section))
+
         def_format(d, name)
         add_discussion(d, name)
         add_crosslinks(d, name)
