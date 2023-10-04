@@ -260,6 +260,14 @@ print(html_string, file=open('../html/FuncRef.html', 'w'))
 ##import pprint
 ##pprint.pprint(crosslinks)
 
-if non:
-    for n in sorted(non):
-        print(n)
+##if non:
+##    for n in sorted(non):
+##        print(n)
+
+D = set(definitions)
+S = set(sections)
+W = D - S
+E = S - D - basis_functions
+
+print('Def but no ref:', ' '.join(sorted(W)))
+print('Ref but no def:', ' '.join(sorted(E)))
