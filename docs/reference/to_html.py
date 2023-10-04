@@ -44,44 +44,32 @@ for el in used_by.values():
     el.sort()
 
 
-def def_format(to, name):
-    try:
-        defi = definitions[name]
-    except KeyError:
-        return
-    to = to.div(class_='definition')
-    to.h3('Definition')
-    to = to.blockquote
-    start = 0
-    for match in re.finditer('[^ [\]]+', defi):
-        b, e = match.span()
-        if b != start:
-            to += defi[start:b]
-        foo = match.group()
-        anchor = anchors.get(foo, '')
-        to.a(foo, href='#' + anchor)
-        start = e
-    end = defi[start:]
-    if end:
-        to += end
 
-
-
-def foo(to, text):
+def foo(to, text, class_='notes'):
     html = markdown.markdown(text, output_format="html5")
-    html = '<div class="notes">' + html + '</div>'
+    html = f'<div class="{class_}">{html}</div>'
     try:
         t = ET.fromstringlist([html])
     except:
-        print(repr(html))
-        raise
+        #######################print(repr(html))
+        #raise
+        t = text
     to += t
 
 
 basis_functions = set('''\
 i dip branch loop
 cons first rest stack swaack
-dup swap pop clear'''.split())
+dup swap pop clear
+add sub mul div rem remainder
++ - * / %
+concat
+truthy
+inscribe
+< > >= <= != <> =
+gt lt ge le neq eq
+<< >>
+lshift rshift'''.split())
 
 k = re.split('^-+$', md, flags=re.MULTILINE)
 #k = md.split('------------------------------------------------------------------------\n')
@@ -105,7 +93,7 @@ def anchor_for(name):
 
 anchors = {}
 sections = {}
-for i, section in enumerate(k):
+for section in k:
     for line in section:
         if line.startswith('## '):
             name = line[3:].strip()
@@ -141,6 +129,38 @@ for name, section in sections.items():
     del section[i:]
 
 
+def add_definition(to, name):
+    try:
+        defi = definitions[name]
+    except KeyError:
+        return
+    to = to.div(class_='definition_wrapper')
+    to.h3('Definition')
+    to = to.div(class_='definition')
+    start = 0
+    for match in re.finditer('[^ [\]]+', defi):
+        b, e = match.span()
+        if b != start:
+            to += defi[start:b]
+        foo = match.group()
+        if foo.isnumeric() or foo == 'true' or foo == 'false':
+            to += foo
+        else:
+            to.a(foo, href='#' + get_anchor(foo))
+        start = e
+    end = defi[start:]
+    if end:
+        to += end
+
+
+non = set()
+def get_anchor(name):
+    if name in anchors:
+        return anchors[name]
+    non.add(name)
+    return ''
+
+
 def add_crosslinks(to, name):
     try:
         links = crosslinks[name]
@@ -168,9 +188,9 @@ def add_discussion(to, name):
         discussion = discussions[name]
     except KeyError:
         return
-    to = to.div(class_='discussion')
+    to = to.div(class_='discussion_wrapper')
     to.h3('Discussion')
-    to += ('\n'.join(discussion))
+    foo(to, '\n'.join(discussion), class_='discussion')
 
 
 def add_backlinks(to, name):
@@ -188,7 +208,7 @@ def add_backlinks(to, name):
             first = not first
         else:
             to += ' '
-        anchor = anchors.get(link_to, '')
+        anchor = get_anchor(link_to)
         to.a(link_to, href='#' + anchor, class_='func_name')
 
 
@@ -197,7 +217,7 @@ doc = HTML()
 with doc.head as h:
     h.meta(charset='utf-8')
     h.title(TITLE)
-    h.link(rel='stylesheet', href='/css/fonts.css')
+    h.link(rel='stylesheet', href='/css/font/fonts.css')
     h.link(rel='stylesheet', href='/css/func_ref.css')
 
 with doc.body as b:
@@ -226,7 +246,7 @@ with doc.body as b:
 
         foo(d, '\n'.join(section))
 
-        def_format(d, name)
+        add_definition(d, name)
         add_discussion(d, name)
         add_crosslinks(d, name)
         add_backlinks(d, name)
@@ -239,3 +259,7 @@ print(html_string, file=open('../html/FuncRef.html', 'w'))
 
 ##import pprint
 ##pprint.pprint(crosslinks)
+
+if non:
+    for n in sorted(non):
+        print(n)

@@ -10,18 +10,17 @@ Each function, combinator, or definition should be documented here.
 
 ## abs
 
-Return the absolute value of the argument.
+Take an integer from the stack and replace it with its absolute value.
 
 ------------------------------------------------------------------------
 
 ## add
 
-Add two numbers together: a + b.
-
+Take two integers from the stack and replace them with their sum.
 
 ------------------------------------------------------------------------
 
-## &&
+## and
 
 Combinator
 
@@ -30,43 +29,24 @@ Short-circuiting Boolean AND
 Accept two quoted programs, run the first and expect a Boolean value, if
 it's `true` pop it and run the second program (which should also return a
 Boolean value) otherwise pop the second program (leaving `false` on the
-stack.)
+stack.)  The quoted programs are run with [nullary].
 
 
-       [A] [B] &&
-    ---------------- true
+       [A] [B] and
+    ----------------- A -> true
             B
 
 
-       [A] [B] &&
-    ---------------- false
+       [A] [B] and
+    ----------------- A -> false
          false
-
-
-### Definition
-
-    nulco [nullary [false]] dip branch
-
-### Derivation
 
 TODO: this is derived in one of the notebooks I think, look it up and
 link to it, or copy the content here.
 
-### Discussion
-
-This is seldom useful, I suspect, but this way you have it.
-
 ### Crosslinks
 
-[||](#section-25)
-
-
---------------
-
-## &
-
-See [and](#and).
-
+[or](#or)
 
 ------------------------------------------------------------------------
 
@@ -85,26 +65,25 @@ predicate `P`.
 
 The `range` function generates a list of the integers from 0 to n - 1:
 
-> \[0 <=\] \[\-\- dup\] anamorphism
+    [0 <=] [-- dup] anamorphism
 
-### Discussion
+> joy? 5 
+> 
+> 5
+> 
+> joy? [0 <=] [-- dup]
+> 
+> 5 [0 <=] [-- dup]
+> 
+> joy? anamorphism
+> 
+> [4 3 2 1 0]
 
+Note that the last value generated (0) is at the bottom of the list.
 See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 
 
 ------------------------------------------------------------------------
-
-## and
-
-Logical bit-wise AND.
-
-### Crosslinks
-
-[or](#or)
-[xor](#xor)
-
-
---------------------
 
 ## app1
 
@@ -113,7 +92,7 @@ Logical bit-wise AND.
 Combinator
 
 Given a quoted program on TOS and anything as the second stack item run
-the program without disturbing the stack and replace the two args with
+the program without disturbing the rest of the stack and replace the two args with
 the first result of the program.
 
              ... x [Q] app1
@@ -1958,12 +1937,12 @@ Take the item on the top of the stack and [cons] it onto `[nullary]`.
 
 ### Discussion
 
-Helper function for [\|\|] and [&&].
+Helper function for [or] and [and].
 
 ### Crosslinks
 
-[&&]
-[||]
+[and]
+[or]
 
 
 --------------------
@@ -3319,7 +3298,7 @@ stack.)
 
 ### Crosslinks
 
-[&&](#section-1)
+[and]
 
 ------------------------------------------------------------------------
 
