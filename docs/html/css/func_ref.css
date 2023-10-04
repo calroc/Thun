@@ -2,7 +2,8 @@
 body {
  background: #fff;
  color: black;
- font-family: 'EB Garamond 16';
+ font-family: 'EB Garamond';
+ font-size: large;
 }
 
 footer {
@@ -59,3 +60,13 @@ span.kind {
 h3 {
 	margin-bottom: 0.1em;
 }
+
+div.definition {
+ font-family: monospace, 'Inconsolata';
+ background: #eee;
+ padding: 0.5em;
+ margin-left: 2em;
+ margin-right: 2em;
+}
+
+
