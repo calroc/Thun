@@ -1,6 +1,7 @@
 python build_index.py ./source/index.md > ./html/index.html
 python build_index.py ./source/Thun.md > ./html/Thun.html
-python build_index.py ./source/notebooks/BigNums.md > ./html/notebooks/BigInts.html 
+python build_index.py ./source/notebooks/BigNums.md > ./html/notebooks/BigInts.html
+python build_index.py ./source/notebooks/NerdSnipe.md > ./html/notebooks/NerdSnipe.html
 python build_index.py ./source/notebooks/Generator_Programs.md > ./html/notebooks/Generator_Programs.html
 (cd ../implementations/Elm/ ; make)
 cp -f ../implementations/Elm/demo/Joy.js ./html/Joy.js

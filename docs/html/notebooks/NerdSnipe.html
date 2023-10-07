@@ -1,0 +1,263 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Nerd Sniped</title>
+<link rel="stylesheet" href="/css/font/fonts.css">
+<link rel="stylesheet" href="/css/site.css">
+<script src="/Joy.js"></script>
+</head>
+<body>
+<div id="joy_interpreter"></div>
+<h1>Nerd Sniped</h1>
+<p>There's <a href="https://youtu.be/JELcdZLre3s?t=2748">an interesting video by Conor Hoekstra</a>
+wherein he presents an example function implemented in BQN.</p>
+<p>It's the Sum of Squares of a list of numbers filtered by whether or not the index of each item in the list modulus the length of list.  It's a weird thing to do, unlikely to come up in practice, but that's alright, it's just to exercise the language.</p>
+<p>I figure it might be fun and informative to derive a similar function in Joy (Thun).</p>
+<p>let's start with an example list on the stack:</p>
+<pre><code>joy? [2 7 1 19 18 3]
+
+[2 7 1 19 18 3]
+</code></pre>
+<p>Following the BQN style, let's get the length (<code>size</code> in Thun) and create a list of indicies:</p>
+<pre><code>[2 7 1 19 18 3]
+
+joy? dup size range
+
+[2 7 1 19 18 3] [5 4 3 2 1 0]
+</code></pre>
+<p>We want to increment each index:</p>
+<pre><code>[2 7 1 19 18 3] [5 4 3 2 1 0]
+
+joy? [++] map
+
+[2 7 1 19 18 3] [6 5 4 3 2 1]
+</code></pre>
+<p>But we will also want the length in a function that calculates an index <code>mod</code> the length:</p>
+<pre><code>[2 7 1 19 18 3]
+
+joy? dup size [swap mod] cons
+
+[2 7 1 19 18 3] [6 swap mod]
+</code></pre>
+<p>Let's do both:</p>
+<pre><code>joy? clear [2 7 1 19 18 3]
+
+[2 7 1 19 18 3]
+
+joy? dup size [range [++] map] [[swap mod] cons] cleave
+
+[2 7 1 19 18 3] [6 5 4 3 2 1] [6 swap mod]
+</code></pre>
+<p>Okay!  Then <code>map</code> the one over the other:</p>
+<pre><code>joy? map
+
+[2 7 1 19 18 3] [0 1 2 0 0 0]
+</code></pre>
+<p>Now we want to make these results into Booleans, but represented as integers (because we are going to multiply by them later):</p>
+<pre><code>[2 7 1 19 18 3] [0 1 2 0 0 0]
+
+joy? [0 = [0] [1] branch] map
+
+[2 7 1 19 18 3] [1 0 0 1 1 1]
+</code></pre>
+<p>Clunky, but we now have our list of filter integers. <code>zip</code> to transpose the two lists to a list of pairs:</p>
+<pre><code>[2 7 1 19 18 3] [1 0 0 1 1 1]
+
+joy? zip
+
+[[1 2] [0 7] [0 1] [1 19] [1 18] [1 3]]
+</code></pre>
+<p>Now, for each pair we want to multiply the pairs (using the duality of Booleans as integers to convert the numbers we want to work on to themselves and the numbers we do not want to work on to zero which is the --I don't recall the jargon!--  zero times anything is zero, and zero plus anything is that thing, and we use that in a moment to get around actually filtering our list!)  As I was saying we multiply the pairs, then square the result, then sum all the results:</p>
+<pre><code>[[1 2] [0 7] [0 1] [1 19] [1 18] [1 3]]
+
+joy? [i * sqr] map
+
+[4 0 0 361 324 9]
+
+joy? sum
+
+698
+</code></pre>
+<p>Oops!  I got the wrong result!  I must have inverted the logic on the mapping to ints above:</p>
+<pre><code>[2 7 1 19 18 3] [0 1 2 0 0 0]
+
+joy? [0 = [1] [0] branch] map
+
+[2 7 1 19 18 3] [0 1 1 0 0 0]
+
+joy? zip
+
+[[0 2] [1 7] [1 1] [0 19] [0 18] [0 3]]
+
+joy? [i * sqr] map
+
+[0 49 1 0 0 0]
+
+joy? sum
+
+50
+</code></pre>
+<p>Hmm, that's not it.  Maybe I'm indexing the items backwards?</p>
+<pre><code>[2 7 1 19 18 3] [0 1 2 0 0 0]
+
+joy? reverse
+
+[2 7 1 19 18 3] [0 0 0 2 1 0]
+
+joy? [0 = [0] [1] branch] map
+
+[2 7 1 19 18 3] [1 1 1 0 0 1]
+
+joy? zip
+
+[[1 2] [1 7] [1 1] [0 19] [0 18] [1 3]]
+
+joy? [i * sqr] map
+
+[4 49 1 0 0 9]
+
+joy? sum
+
+63
+</code></pre>
+<p>Ah!  That was it.  How do you like my debugging strategy here?  Rather than reviewing the original to see that I was getting the right result at each step I just guessed at the "polarity" or "chirality" of the two operations that were (mildly, perhaps) ambiguous.  It had to be one or the other, the function is too simple to hide many opportunities for confusion.)</p>
+<p>Let's examine this monster in all it's glory:</p>
+<pre><code>dup size [range [++] map] [[swap mod] cons] cleave map reverse [0 = [0] [1] branch] map zip [i * sqr] map sum
+</code></pre>
+<p>Gnarly, eh?</p>
+<p>Let's reformat:</p>
+<pre><code>dup size
+[range [++] map] [[swap mod] cons] cleave
+map
+reverse
+[0 = [0] [1] branch] map
+zip
+[i * sqr] map
+sum
+</code></pre>
+<h3>≡ <code>reverse-range-++</code></h3>
+<p>Let's golf it a little.  There is a version of <code>range</code> that generates its result list in reverse order, which would allow us to get rid of that <code>reverse</code> in the expression, and I bet we could modify that to generate them already incremented too.  Let's assume we've done that already and call it <code>reverse-range-++</code>, why not?</p>
+<pre><code>[reverse-range-++ range [++] map reverse] inscribe
+</code></pre>
+<p>Then:</p>
+<pre><code>dup size
+[reverse-range-++] [[swap mod] cons] cleave
+map
+[0 = [0] [1] branch] map
+zip
+[i * sqr] map
+sum
+</code></pre>
+<p>We can also collapse two of the <code>map</code> functions into one:</p>
+<pre><code>dup size
+[reverse-range-++] [[swap mod 0 = [0] [1] branch] cons] cleave
+map
+zip
+[i * sqr] map
+sum
+</code></pre>
+<p>We could extract sub-functions, e.g. <code>[0] [1] branch</code> converts Booleans to integers, we might wind up using that again somewhere, eh?</p>
+<p>But really, following the BQN style, this is about as good as it gets.</p>
+<h2>What's it Look Like in Thun?</h2>
+<p>That's BQN in Thun, what's it look like in Thun?</p>
+<p>One way to approach it is to simplify the desired function in terms of another function, and then to derive that other function.  We know that the desired function is a "catamorphism" (roughly, it accepts a list and returns a single value) and we know that the "combining function" will be <code>sqr +</code> with some filter.  So let's start with a specialization of <code>step</code>:</p>
+<pre><code>0 swap [sqr +] step-indicies-mod-length
+</code></pre>
+<p>E.g.:</p>
+<pre><code>0 [2 7 1 19 18 3] [sqr +] step-indicies-mod-length
+</code></pre>
+<p>So now the problem is to derive an efficient form of <code>step-indicies-mod-length</code></p>
+<p>Let's assume for the moment that we have a function that gives us a predicate for the indicies:</p>
+<pre><code>size [swap mod 0 =] cons
+</code></pre>
+<p>We run that on the list and then we can make something like this (where <code>n</code> is the <code>size</code> of the list):</p>
+<pre><code>n swap mod 0 = [pop] [sqr +] branch
+</code></pre>
+<p>So:</p>
+<pre><code>0 [2 7 1 19 18 3] [F] step
+</code></pre>
+<p>Except we need a counter for the index!</p>
+<h3>≡ <code>step-enumerate</code></h3>
+<p>How about a version of <code>step</code> that also enumerates the list items?</p>
+<pre><code>[...] [F] step-enumerate
+</code></pre>
+<p>If the list is empty, it does nothing:</p>
+<pre><code>   [] [F] step-enumerate
+---------------------------
+</code></pre>
+<p>But if the list has members it starts another function with an index counter initialized to zero.  Since we know the list has at least one element we can set up the first evaluation of <code>F</code>:</p>
+<pre><code>      [a ...] [F] step-enumerate
+---------------------------------------
+   a 0 F [...] [F] 0 step-enumerate′
+</code></pre>
+<p>so</p>
+<pre><code>step-enumerate == over truthy [popop] [FOO] branch
+</code></pre>
+<p><code>FOO</code></p>
+<pre><code>[a ...] [F] FOO
+[a ...] [F] [uncons] dip
+a [...] [F] 0 roll&lt;
+a 0 [...] [F] dupdipd
+a 0 F [...] [F] 0 step-enumerate′
+</code></pre>
+<p>Okay, so:</p>
+<pre><code>FOO == [uncons] dip 0 roll&lt; dupdipd 0 step-enumerate′
+</code></pre>
+<p>And therefore:</p>
+<pre><code>[step-enumerate over truthy [popop] [[uncons] dip 0 roll&lt; dupdipd 0 step-enumerate′] branch] inscribe
+</code></pre>
+<p>This function is like <code>step</code> but it first increments the counter before each evaluation of <code>F</code>.</p>
+<p>If the list has become empty, do nothing:</p>
+<pre><code>   ... [] [F] n step-enumerate′
+----------------------------------
+</code></pre>
+<p>If there are terms yet in the list it increments the counter and runs <code>F</code> with (a copy of) it:</p>
+<pre><code>         ... [b ...] [F] n step-enumerate′
+---------------------------------------------------
+   ... b (n+1) F [...] [F] (n+1) step-enumerate′
+</code></pre>
+<h3>A simple General Recursive Function</h3>
+<pre><code>            ... [] [F] n step-enumerate′
+    -------------------------------------------
+       ... [] [F] n [P] [T] [R0] [R1] genrec
+---------------------------------------------------------
+   ... [] [F] n [P] [T] [R0 [step-enumerate′] R1] ifte
+</code></pre>
+<p>Where:</p>
+<pre><code>P == popop not
+
+E == popopop
+</code></pre>
+<p>Now then:</p>
+<pre><code>... [b ...] [F] n R0 [step-enumerate′] R1
+</code></pre>
+<p>Here's what we're trying to accomplish:</p>
+<pre><code>    ... [b ...]          [F]   n   R0 [step-enumerate′] R1
+    ...  b (n+1) F [...] [F] (n+1)     step-enumerate′
+</code></pre>
+<p><code>R1</code> is trivially <code>i</code> (so this is a <code>tailrec</code> function.)  Let's derive <code>R0</code>:</p>
+<pre><code>... [b ...] [F] n R0
+... [b ...] [F] n ++
+... [b ...] [F] (n+1)
+
+... [b ...] [F] (n+1) [swons] nullary
+... [b ...] [F] (n+1) [(n+1) F]
+</code></pre>
+<h3>- - - - -</h3>
+<pre><code>... [b ...] [F] (n+1)
+... [b ...] [F] (n+1) [uncons] dipd
+... [b ...] uncons [F] (n+1)
+... b [...] [F] (n+1)
+
+... b [...] [F] (n+1) [swons] nullary
+... b [...] [F] (n+1) [(n+1) F] dipddd
+... b (n+1) F [...] [F] (n+1)
+</code></pre>
+<p>It looks like we're done:</p>
+<pre><code>R0 == ++ [uncons] dipd [swons] nullary dipddd
+</code></pre>
+<p>I don't like it, but it should work (provided you write <code>dipddd</code>, eh?)</p>
+<script>var joy_interpreter = Elm.Main.init({node: document.getElementById('joy_interpreter')});</script>
+</body>
+</html>
