@@ -2033,7 +2033,7 @@ def dipdd(stack, expr, dictionary):
              ... Q y x z
 
     '''
-    quote, x, y, z, stack = get_n_items(3, stack)
+    quote, x, y, z, stack = get_n_items(4, stack)
     isnt_stack(quote)
     expr = push_quote((z, (y, (x, ()))), expr)
     expr = push_quote(quote, expr)
