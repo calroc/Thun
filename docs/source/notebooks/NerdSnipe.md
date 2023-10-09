@@ -69,6 +69,14 @@ Clunky, but we now have our list of filter integers. `zip` to transpose the two 
     
     [[1 2] [0 7] [0 1] [1 19] [1 18] [1 3]]
 
+# UGH!  Pairs are in reverse order!  Python vs. our Nice New Definition!
+
+    [[2 1] [7 0] [1 0] [19 1] [18 1] [3 1]]
+
+See [DeriveZip notebook](/notebooks/DeriveZip.html).  Not that it matters
+for this application because we are about to multiply these pairs and,
+of course, multiplication is [commutative](https://en.wikipedia.org/wiki/Commutative).
+
 Now, for each pair we want to multiply the pairs (using the duality of Booleans as integers to convert the numbers we want to work on to themselves and the numbers we do not want to work on to zero which is the --I don't recall the jargon!--  zero times anything is zero, and zero plus anything is that thing, and we use that in a moment to get around actually filtering our list!)  As I was saying we multiply the pairs, then square the result, then sum all the results:
 
     [[1 2] [0 7] [0 1] [1 19] [1 18] [1 3]]

@@ -1981,18 +1981,6 @@ Like [getitem] but [swap]s the order of arguments.
 
 [getitem]
 
-
-------------------------------------------------------------------------
-
-## or
-
-Logical bit-wise OR.
-
-### Crosslinks
-
-[and]
-
-
 ------------------------------------------------------------------------
 
 ## over
@@ -3247,26 +3235,23 @@ Unquote (using [i]) the list that is second on the stack.
 
 ------------------------------------------------------------------------
 
-## ||
+## or
 
 Combinator
 
 Short-circuiting Boolean OR
 
-
-### Discussion
-
 Accept two quoted programs, run the first and expect a Boolean value, if
 it’s `false` pop it and run the second program (which should also return a
 Boolean value) otherwise pop the second program (leaving `true` on the
-stack.)
+stack.)  The quoted programs are run with [nullary].
 
-       [A] [B] ||
+       [A] [B] or
     ---------------- A -> false
             B
 
 
-       [A] [B] ||
+       [A] [B] or
     ---------------- A -> true
           true
 
