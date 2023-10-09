@@ -74,6 +74,7 @@ b, def_b
 binary, def_binary
 ccccons, def_ccccons
 ccons, def_ccons
+choice, def_choice
 cleave, def_cleave
 clop, def_clop
 codi, def_codi
@@ -97,6 +98,7 @@ fork, def_fork
 fourth, def_fourth
 gcd, def_gcd
 genrec, def_genrec
+getitem, def_getitem
 grabN, def_grabN
 grba, def_grba
 ifte, def_ifte
@@ -105,6 +107,7 @@ infra, def_infra
 infrst, def_infrst
 <<, def_LESS_THAN_SIGN_LESS_THAN_SIGN
 make_generator, def_make_generator
+modulus, def_modulus
 neg, def_neg
 not, def_not
 nulco, def_nulco
@@ -114,6 +117,7 @@ of, def_of
 or, def_or
 over, def_over
 pam, def_pam
+pick, def_pick
 pm, def_pm
 popdd, def_popdd
 popd, def_popd
@@ -122,6 +126,7 @@ popopd, def_popopd
 popopop, def_popopop
 popop, def_popop
 pow, def_pow
+pred, def_pred
 product, def_product
 quoted, def_quoted
 range, def_range
@@ -147,6 +152,7 @@ sqr, def_sqr
 stackd, def_stackd
 step_zero, def_step_zero
 stuncons, def_stuncons
+succ, def_succ
 sum, def_sum
 swapd, def_swapd
 swoncat, def_swoncat
@@ -185,6 +191,12 @@ _\/_, def___REVERSE_SOLIDUS_SOLIDUS__
 \/, def_REVERSE_SOLIDUS_SOLIDUS
 _isnt_list, def__isnt_list
 zip, def_zip
-shift-pair, def_shift_HYPHEN_MINUS_pair
+uncons-pair, def_uncons_HYPHEN_MINUS_pair
 uncons-two, def_uncons_HYPHEN_MINUS_two
 quote-two, def_quote_HYPHEN_MINUS_two
+empty?, def_empty_QUESTION_MARK
+max-of-two, def_max_HYPHEN_MINUS_of_HYPHEN_MINUS_two
+max, def_max
+min-of-two, def_min_HYPHEN_MINUS_of_HYPHEN_MINUS_two
+min, def_min
+on-non-empty-list, def_on_HYPHEN_MINUS_non_HYPHEN_MINUS_empty_HYPHEN_MINUS_list

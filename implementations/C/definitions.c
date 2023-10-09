@@ -37,6 +37,7 @@ JoyList def_b_body;
 JoyList def_binary_body;
 JoyList def_ccccons_body;
 JoyList def_ccons_body;
+JoyList def_choice_body;
 JoyList def_cleave_body;
 JoyList def_clop_body;
 JoyList def_codi_body;
@@ -60,6 +61,7 @@ JoyList def_fork_body;
 JoyList def_fourth_body;
 JoyList def_gcd_body;
 JoyList def_genrec_body;
+JoyList def_getitem_body;
 JoyList def_grabN_body;
 JoyList def_grba_body;
 JoyList def_ifte_body;
@@ -68,6 +70,7 @@ JoyList def_infra_body;
 JoyList def_infrst_body;
 JoyList def_LESS_THAN_SIGN_LESS_THAN_SIGN_body;
 JoyList def_make_generator_body;
+JoyList def_modulus_body;
 JoyList def_neg_body;
 JoyList def_not_body;
 JoyList def_nulco_body;
@@ -77,6 +80,7 @@ JoyList def_of_body;
 JoyList def_or_body;
 JoyList def_over_body;
 JoyList def_pam_body;
+JoyList def_pick_body;
 JoyList def_pm_body;
 JoyList def_popdd_body;
 JoyList def_popd_body;
@@ -85,6 +89,7 @@ JoyList def_popopd_body;
 JoyList def_popopop_body;
 JoyList def_popop_body;
 JoyList def_pow_body;
+JoyList def_pred_body;
 JoyList def_product_body;
 JoyList def_quoted_body;
 JoyList def_range_body;
@@ -110,6 +115,7 @@ JoyList def_sqr_body;
 JoyList def_stackd_body;
 JoyList def_step_zero_body;
 JoyList def_stuncons_body;
+JoyList def_succ_body;
 JoyList def_sum_body;
 JoyList def_swapd_body;
 JoyList def_swoncat_body;
@@ -148,9 +154,15 @@ JoyList def_SOLIDUS_REVERSE_SOLIDUS_body;
 JoyList def_REVERSE_SOLIDUS_SOLIDUS_body;
 JoyList def__isnt_list_body;
 JoyList def_zip_body;
-JoyList def_shift_HYPHEN_MINUS_pair_body;
+JoyList def_uncons_HYPHEN_MINUS_pair_body;
 JoyList def_uncons_HYPHEN_MINUS_two_body;
 JoyList def_quote_HYPHEN_MINUS_two_body;
+JoyList def_empty_QUESTION_MARK_body;
+JoyList def_max_HYPHEN_MINUS_of_HYPHEN_MINUS_two_body;
+JoyList def_max_body;
+JoyList def_min_HYPHEN_MINUS_of_HYPHEN_MINUS_two_body;
+JoyList def_min_body;
+JoyList def_on_HYPHEN_MINUS_non_HYPHEN_MINUS_empty_HYPHEN_MINUS_list_body;
 
 
 /*
@@ -186,6 +198,7 @@ init_defs(void)
 	def_binary_body = text_to_expression("unary popd");
 	def_ccccons_body = text_to_expression("ccons ccons");
 	def_ccons_body = text_to_expression("cons cons");
+	def_choice_body = text_to_expression("[pop] [popd] branch");
 	def_cleave_body = text_to_expression("fork popdd");
 	def_clop_body = text_to_expression("cleave popdd");
 	def_codi_body = text_to_expression("cons dip");
@@ -209,6 +222,7 @@ init_defs(void)
 	def_fourth_body = text_to_expression("rest third");
 	def_gcd_body = text_to_expression("true [tuck mod dup 0 >] loop pop");
 	def_genrec_body = text_to_expression("[[genrec] ccccons] nullary swons concat ifte");
+	def_getitem_body = text_to_expression("[rest] times first");
 	def_grabN_body = text_to_expression("<{} [cons] times");
 	def_grba_body = text_to_expression("[stack popd] dip");
 	def_ifte_body = text_to_expression("[nullary] dipd swap branch");
@@ -217,6 +231,7 @@ init_defs(void)
 	def_infrst_body = text_to_expression("infra first");
 	def_LESS_THAN_SIGN_LESS_THAN_SIGN_body = text_to_expression("lshift");
 	def_make_generator_body = text_to_expression("[codireco] ccons");
+	def_modulus_body = text_to_expression("%");
 	def_neg_body = text_to_expression("0 swap -");
 	def_not_body = text_to_expression("[true] [false] branch");
 	def_nulco_body = text_to_expression("[nullary] cons");
@@ -226,6 +241,7 @@ init_defs(void)
 	def_or_body = text_to_expression("nulco [nullary] dip [true] branch");
 	def_over_body = text_to_expression("[dup] dip swap");
 	def_pam_body = text_to_expression("[i] map");
+	def_pick_body = text_to_expression("getitem");
 	def_pm_body = text_to_expression("[+] [-] clop");
 	def_popdd_body = text_to_expression("[pop] dipd");
 	def_popd_body = text_to_expression("[pop] dip");
@@ -234,6 +250,7 @@ init_defs(void)
 	def_popopop_body = text_to_expression("pop popop");
 	def_popop_body = text_to_expression("pop pop");
 	def_pow_body = text_to_expression("1 roll> swap [*] cons times");
+	def_pred_body = text_to_expression("--");
 	def_product_body = text_to_expression("1 swap [*] step");
 	def_quoted_body = text_to_expression("[unit] dip");
 	def_range_body = text_to_expression("[0 <=] [-- dup] anamorphism");
@@ -259,6 +276,7 @@ init_defs(void)
 	def_stackd_body = text_to_expression("[stack] dip");
 	def_step_zero_body = text_to_expression("0 roll> step");
 	def_stuncons_body = text_to_expression("stack uncons");
+	def_succ_body = text_to_expression("--");
 	def_sum_body = text_to_expression("[+] step_zero");
 	def_swapd_body = text_to_expression("[swap] dip");
 	def_swoncat_body = text_to_expression("swap concat");
@@ -296,10 +314,16 @@ init_defs(void)
 	def_SOLIDUS_REVERSE_SOLIDUS_body = text_to_expression("_isnt_two_bools [pop false] [] branch");
 	def_REVERSE_SOLIDUS_SOLIDUS_body = text_to_expression("_isnt_two_bools [] [pop true] branch");
 	def__isnt_list_body = text_to_expression("[] swoncat");
-	def_zip_body = text_to_expression("[null] [pop] [shift-pair] [i cons] genrec");
-	def_shift_HYPHEN_MINUS_pair_body = text_to_expression("uncons-two [quote-two] dipd");
+	def_zip_body = text_to_expression("[null] [pop] [uncons-pair] [i cons] genrec");
+	def_uncons_HYPHEN_MINUS_pair_body = text_to_expression("uncons-two [quote-two] dipd");
 	def_uncons_HYPHEN_MINUS_two_body = text_to_expression("[uncons] ii swapd");
 	def_quote_HYPHEN_MINUS_two_body = text_to_expression("unit cons");
+	def_empty_QUESTION_MARK_body = text_to_expression("dup null");
+	def_max_HYPHEN_MINUS_of_HYPHEN_MINUS_two_body = text_to_expression("[>] [pop] [popd] ifte");
+	def_max_body = text_to_expression("[uncons [max-of-two] step] on-non-empty-list");
+	def_min_HYPHEN_MINUS_of_HYPHEN_MINUS_two_body = text_to_expression("[<] [pop] [popd] ifte");
+	def_min_body = text_to_expression("[uncons [min-of-two] step] on-non-empty-list");
+	def_on_HYPHEN_MINUS_non_HYPHEN_MINUS_empty_HYPHEN_MINUS_list_body = text_to_expression("[empty?] dip [first] branch");
 }
 
 
@@ -332,6 +356,7 @@ void def_b(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { pu
 void def_binary(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_binary_body, expression); }
 void def_ccccons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_ccccons_body, expression); }
 void def_ccons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_ccons_body, expression); }
+void def_choice(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_choice_body, expression); }
 void def_cleave(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_cleave_body, expression); }
 void def_clop(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_clop_body, expression); }
 void def_codi(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_codi_body, expression); }
@@ -355,6 +380,7 @@ void def_fork(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) {
 void def_fourth(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_fourth_body, expression); }
 void def_gcd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_gcd_body, expression); }
 void def_genrec(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_genrec_body, expression); }
+void def_getitem(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_getitem_body, expression); }
 void def_grabN(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_grabN_body, expression); }
 void def_grba(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_grba_body, expression); }
 void def_ifte(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_ifte_body, expression); }
@@ -363,6 +389,7 @@ void def_infra(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) 
 void def_infrst(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_infrst_body, expression); }
 void def_LESS_THAN_SIGN_LESS_THAN_SIGN(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_LESS_THAN_SIGN_LESS_THAN_SIGN_body, expression); }
 void def_make_generator(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_make_generator_body, expression); }
+void def_modulus(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_modulus_body, expression); }
 void def_neg(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_neg_body, expression); }
 void def_not(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_not_body, expression); }
 void def_nulco(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_nulco_body, expression); }
@@ -372,6 +399,7 @@ void def_of(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { p
 void def_or(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_or_body, expression); }
 void def_over(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_over_body, expression); }
 void def_pam(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_pam_body, expression); }
+void def_pick(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_pick_body, expression); }
 void def_pm(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_pm_body, expression); }
 void def_popdd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_popdd_body, expression); }
 void def_popd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_popd_body, expression); }
@@ -380,6 +408,7 @@ void def_popopd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression)
 void def_popopop(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_popopop_body, expression); }
 void def_popop(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_popop_body, expression); }
 void def_pow(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_pow_body, expression); }
+void def_pred(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_pred_body, expression); }
 void def_product(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_product_body, expression); }
 void def_quoted(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_quoted_body, expression); }
 void def_range(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_range_body, expression); }
@@ -405,6 +434,7 @@ void def_sqr(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { 
 void def_stackd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_stackd_body, expression); }
 void def_step_zero(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_step_zero_body, expression); }
 void def_stuncons(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_stuncons_body, expression); }
+void def_succ(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_succ_body, expression); }
 void def_sum(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_sum_body, expression); }
 void def_swapd(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_swapd_body, expression); }
 void def_swoncat(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_swoncat_body, expression); }
@@ -443,6 +473,12 @@ void def_SOLIDUS_REVERSE_SOLIDUS(__attribute__((unused)) JoyListPtr stack, JoyLi
 void def_REVERSE_SOLIDUS_SOLIDUS(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_REVERSE_SOLIDUS_SOLIDUS_body, expression); }
 void def__isnt_list(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def__isnt_list_body, expression); }
 void def_zip(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_zip_body, expression); }
-void def_shift_HYPHEN_MINUS_pair(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_shift_HYPHEN_MINUS_pair_body, expression); }
+void def_uncons_HYPHEN_MINUS_pair(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_uncons_HYPHEN_MINUS_pair_body, expression); }
 void def_uncons_HYPHEN_MINUS_two(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_uncons_HYPHEN_MINUS_two_body, expression); }
 void def_quote_HYPHEN_MINUS_two(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_quote_HYPHEN_MINUS_two_body, expression); }
+void def_empty_QUESTION_MARK(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_empty_QUESTION_MARK_body, expression); }
+void def_max_HYPHEN_MINUS_of_HYPHEN_MINUS_two(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_max_HYPHEN_MINUS_of_HYPHEN_MINUS_two_body, expression); }
+void def_max(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_max_body, expression); }
+void def_min_HYPHEN_MINUS_of_HYPHEN_MINUS_two(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_min_HYPHEN_MINUS_of_HYPHEN_MINUS_two_body, expression); }
+void def_min(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_min_body, expression); }
+void def_on_HYPHEN_MINUS_non_HYPHEN_MINUS_empty_HYPHEN_MINUS_list(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_on_HYPHEN_MINUS_non_HYPHEN_MINUS_empty_HYPHEN_MINUS_list_body, expression); }

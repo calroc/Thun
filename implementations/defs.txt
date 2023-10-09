@@ -150,3 +150,9 @@ zip [null] [pop] [uncons-pair] [i cons] genrec
 uncons-pair uncons-two [quote-two] dipd
 uncons-two [uncons] ii swapd
 quote-two unit cons
+empty? dup null
+max-of-two [>] [pop] [popd] ifte
+max [uncons [max-of-two] step] on-non-empty-list
+min-of-two [<] [pop] [popd] ifte
+min [uncons [min-of-two] step] on-non-empty-list
+on-non-empty-list [empty?] dip [first] branch
