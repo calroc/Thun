@@ -23,6 +23,7 @@ b [i] dip i
 binary unary popd
 ccccons ccons ccons
 ccons cons cons
+choice [pop] [popd] branch
 clear [] swaack pop
 cleave fork popdd
 clop cleave popdd
@@ -49,6 +50,7 @@ fork [i] app2
 fourth rest third
 gcd true [tuck mod dup 0 >] loop pop
 genrec [[genrec] ccccons] nullary swons concat ifte
+getitem [rest] times first
 grabN <{} [cons] times
 grba [stack popd] dip
 ifte [nullary] dipd swap branch
@@ -59,6 +61,7 @@ infrst infra first
 lshift [2 *] times
 make_generator [codireco] ccons
 mod %
+modulus %
 neg 0 swap -
 not [true] [false] branch
 nulco [nullary] cons
@@ -68,6 +71,7 @@ of swap at
 or nulco [nullary] dip [true] branch
 over [dup] dip swap
 pam [i] map
+pick getitem
 pm [+] [-] clop
 popdd [pop] dipd
 popd [pop] dip
@@ -76,6 +80,7 @@ popopd [popop] dip
 popopop pop popop
 popop pop pop
 pow 1 roll> swap [*] cons times
+pred --
 product 1 swap [*] step
 quoted [unit] dip
 range [0 <=] [-- dup] anamorphism
@@ -103,6 +108,7 @@ sqr dup mul
 stackd [stack] dip
 step_zero 0 roll> step
 stuncons stack uncons
+succ --
 sum [+] step_zero
 swapd [swap] dip
 swoncat swap concat
@@ -140,3 +146,7 @@ _\/_ [_isnt_bool] [not] branch
 /\ _isnt_two_bools [pop false] [] branch
 \/ _isnt_two_bools [] [pop true] branch
 _isnt_list [] swoncat
+zip [null] [pop] [uncons-pair] [i cons] genrec
+uncons-pair uncons-two [quote-two] dipd
+uncons-two [uncons] ii swapd
+quote-two unit cons

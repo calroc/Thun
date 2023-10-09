@@ -80,6 +80,8 @@ codi, def_codi
 codireco, def_codireco
 dinfrirst, def_dinfrirst
 dipd, def_dipd
+dipdd, def_dipdd
+dipddd, def_dipddd
 disenstacken, def_disenstacken
 divmod, def_divmod
 down_to_zero, def_down_to_zero
@@ -89,6 +91,7 @@ dupd, def_dupd
 dupdipd, def_dupdipd
 dupdip, def_dupdip
 enstacken, def_enstacken
+first_two, def_first_two
 flatten, def_flatten
 fork, def_fork
 fourth, def_fourth
@@ -96,7 +99,6 @@ gcd, def_gcd
 genrec, def_genrec
 grabN, def_grabN
 grba, def_grba
-hypot, def_hypot
 ifte, def_ifte
 ii, def_ii
 infra, def_infra
@@ -181,4 +183,8 @@ _isnt_two_bools, def__isnt_two_bools
 _\/_, def___REVERSE_SOLIDUS_SOLIDUS__
 /\, def_SOLIDUS_REVERSE_SOLIDUS
 \/, def_REVERSE_SOLIDUS_SOLIDUS
-xor, def_xor
+_isnt_list, def__isnt_list
+zip, def_zip
+shift-pair, def_shift_HYPHEN_MINUS_pair
+uncons-two, def_uncons_HYPHEN_MINUS_two
+quote-two, def_quote_HYPHEN_MINUS_two

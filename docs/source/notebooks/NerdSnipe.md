@@ -149,8 +149,12 @@ Let's reformat:
 
 Let's golf it a little.  There is a version of `range` that generates its result list in reverse order, which would allow us to get rid of that `reverse` in the expression, and I bet we could modify that to generate them already incremented too.  Let's assume we've done that already and call it `reverse-range-++`, why not?
 
-    [reverse-range-++ range [++] map reverse] inscribe
+    reverse-range-++ == range [++] map reverse
 
+See: [`range` with `H4` in the Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html#range-with-h4).
+
+    [reverse-range-++ [] swap [1 <=] [pop] [[swons] dupdip --] tailrec] inscribe
+    
 Then:
 
     dup size

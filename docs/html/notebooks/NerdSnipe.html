@@ -138,7 +138,10 @@ sum
 </code></pre>
 <h3>≡ <code>reverse-range-++</code></h3>
 <p>Let's golf it a little.  There is a version of <code>range</code> that generates its result list in reverse order, which would allow us to get rid of that <code>reverse</code> in the expression, and I bet we could modify that to generate them already incremented too.  Let's assume we've done that already and call it <code>reverse-range-++</code>, why not?</p>
-<pre><code>[reverse-range-++ range [++] map reverse] inscribe
+<pre><code>reverse-range-++ == range [++] map reverse
+</code></pre>
+<p>See: <a href="https://joypy.osdn.io/notebooks/Recursion_Combinators.html#range-with-h4"><code>range</code> with <code>H4</code> in the Recursion Combinators notebook</a>.</p>
+<pre><code>[reverse-range-++ [] swap [1 &lt;=] [pop] [[swons] dupdip --] tailrec] inscribe
 </code></pre>
 <p>Then:</p>
 <pre><code>dup size
