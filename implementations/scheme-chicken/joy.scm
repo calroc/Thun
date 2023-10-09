@@ -43,6 +43,7 @@
 ;Interpreter
 
 (define (joy stack expression dict)
+  ;(joy-trace stack expression)
   (if (null? expression)
     (values stack dict)
     (if (string? (car expression))
@@ -74,6 +75,8 @@
     ((is-it? "<>") ((joy-func not-equal) stack expression dict))
     ((is-it? "!=") ((joy-func not-equal) stack expression dict))
 
+    ((is-it? "bool") (joy-bool stack expression dict))
+
     ((is-it? "dup") (values (cons (car stack) stack) expression dict))
     ((is-it? "pop") (values (cdr stack) expression dict))
     ((is-it? "stack") (values (cons stack stack) expression dict))
@@ -100,6 +103,16 @@
 (define (joy-func op)
   (lambda (stack expression dict)
     (values (cons (op (cadr stack) (car stack)) (cddr stack)) expression dict)))
+
+
+(define (joy-bool stack expression dict)
+  (values (cons (joy-bool-term (car stack)) (cdr stack)) expression dict))
+
+(define (joy-bool-term term)
+    (cond ((boolean? term) term)
+          ((number? term) (not-equal 0 term))
+          ((list? term) (not (null? term)))
+          (else #t)))
 
 
 ; ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ████████╗ ██████╗ ██████╗ ███████╗
@@ -249,6 +262,10 @@
     (if (not (string=? text ""))
       ((print (doit text)) (main-loop))
       (else))))
+
+
+(define (joy-trace stack expression)
+  (print (conc (joy-expression->string (reverse stack)) " . " (joy-expression->string expression))))
 
 (main-loop)
 

@@ -31,6 +31,8 @@ codi cons dip
 codireco codi reco
 dinfrirst dip infrst
 dipd [dip] codi
+dipdd [dip] cons dipd
+dipddd [dipd] cons dipd
 disenstacken swaack pop
 divmod [/] [%] clop
 down_to_zero [0 >] [dup --] while
