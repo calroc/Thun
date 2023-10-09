@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Zip</title>
+<link rel="stylesheet" href="/css/font/fonts.css">
+<link rel="stylesheet" href="/css/site.css">
+<script src="/Joy.js"></script>
+</head>
+<body>
+<div id="joy_interpreter"></div>
+<h1>Zip</h1>
+<p>Let's derive <code>zip</code>.</p>
+<pre><code>   [a b c ...] [e f g ...] zip
+---------------------------------
+     [[a e] [b f] [c g] ...]
+</code></pre>
+<p>It's a <code>genrec</code>:</p>
+<pre><code>zip == [null] [popop []] [R0] [R1] genrec
+</code></pre>
+<p>If the top list is empty, pop both lists and put a new empty list...</p>
+<p>Hmm...</p>
+<pre><code>zip == [null] [pop] [R0] [R1] genrec
+</code></pre>
+<p>We will assume that both lists are the same size, so if the top list is empty the second list shall be too, and we can reuse it to store our pairs.</p>
+<p>Now then, we have two non-empty lists:</p>
+<pre><code>[a b c ...] [e f g ...] R0 [zip] R1
+</code></pre>
+<p>Let's imagine a function <code>shift-pair</code>:</p>
+<pre><code>   [a ...] [e ...] shift-pair
+--------------------------------
+       [a e] [...] [...]
+</code></pre>
+<p>I'm going to defer derivation of that for now.</p>
+<pre><code>[a b c ...] [e f g ...] shift-pair [zip] R1
+
+[a e] [b c ...] [f g ...] [zip] R1
+</code></pre>
+<p>And so <code>R1</code> is <code>i cons</code> (it's a list builder.)</p>
+<pre><code>zip == [null] [pop] [shift-pair] [i cons] genrec
+</code></pre>
+<p>And now:</p>
+<pre><code>shift-pair == uncons-two [quote-two] dipd
+</code></pre>
+<p>w/</p>
+<pre><code>uncons-two == [uncons] ii swapd
+quote-two == unit cons
+
+[zip [null] [pop] [shift-pair] [i cons] genrec] inscribe
+[shift-pair uncons-two [quote-two] dipd] inscribe
+[uncons-two [uncons] ii swapd] inscribe
+[quote-two unit cons] inscribe
+</code></pre>
+<script>var joy_interpreter = Elm.Main.init({node: document.getElementById('joy_interpreter')});</script>
+</body>
+</html>
