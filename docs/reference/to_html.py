@@ -64,7 +64,7 @@ dup swap pop clear
 add sub mul div rem remainder
 + - * / %
 concat
-truthy
+truthy bool
 inscribe
 < > >= <= != <> =
 gt lt ge le neq eq

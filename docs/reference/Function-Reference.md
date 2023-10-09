@@ -8,6 +8,30 @@ Each function, combinator, or definition should be documented here.
 
 ------------------------------------------------------------------------
 
+## /\
+
+Binary Boolean *and*.
+
+### Crosslinks
+
+[bool]
+[not]
+[\/]
+
+------------------------------------------------------------------------
+
+## \/
+
+Binary Boolean *or*.
+
+### Crosslinks
+
+[bool]
+[not]
+[/\]
+
+------------------------------------------------------------------------
+
 ## abs
 
 Take an integer from the stack and replace it with its absolute value.
@@ -390,13 +414,6 @@ the other way around.
 [select]
 
 
---------------
-
-## ^
-
-See [xor](#xor).
-
-
 ------------------------------------------------------------------------
 
 ## clear
@@ -648,13 +665,38 @@ Specialist function (that means I forgot what it does and why.)
 
 ------------------------------------------------------------------------
 
+## dipddd
+
+Combinator
+
+Like [dip] but expects four items. :
+
+       ... z y x w [Q] . dipddd
+    -------------------------------
+                 ... . Q z y x w
+
+### Discussion
+
+See [dip].
+
+### Crosslinks
+
+[dip]
+[dipd]
+[dipdd]
+[dupdip]
+[dupdipd]
+[infra]
+
+------------------------------------------------------------------------
+
 ## dipdd
 
 Combinator
 
 Like [dip] but expects three items. :
 
-       ... z y x [Q] . dip
+       ... z y x [Q] . dipdd
     -----------------------------
                  ... . Q z y x
 ### Discussion
@@ -665,10 +707,10 @@ See [dip].
 
 [dip]
 [dipd]
+[dipddd]
 [dupdip]
 [dupdipd]
 [infra]
-
 
 ------------------------------------------------------------------------
 
@@ -690,6 +732,7 @@ See [dip].
 
 [dip]
 [dipdd]
+[dipddd]
 [dupdip]
 [dupdipd]
 [infra]
@@ -755,13 +798,13 @@ printed with the top or head on the left.
 
 [enstacken]
 [stack]
+[unstack]
 
-
---------------
+--------------------------------------------
 
 ## div
 
-See [floordiv](#floordiv).
+Divide.
 
 
 ------------------------------------------------------------------------
@@ -933,6 +976,7 @@ This is a destructive version of [stack].  See the note under
 
 [stack]
 [disenstacken]
+[unstack]
 
 
 ------------------------------------------------------------------------
@@ -954,7 +998,7 @@ them with a Boolean value.
 [gt]
 [le]
 [lt]
-[ne]
+[neq]
 
 
 --------------
@@ -968,7 +1012,7 @@ See [eq](#eq).
 
 ## !=
 
-See [ne](#ne).
+See [neq](#neq).
 
 
 ------------------------------------------------------------------------
@@ -1073,39 +1117,6 @@ Note that only one "level" of lists is flattened.  In the example above
 
 ------------------------------------------------------------------------
 
-## floordiv
-
-I don't know why this is called "floor" div, I think it rounds its
-result down (not towards zero or up.)
-
-       a b floordiv
-    ------------------
-          (a/b)
-
-### Discussion
-
-All the division commands need to be revisited when the "numeric tower"
-for Thun gets nailed down.
-
-### Crosslinks
-
-[divmod]
-
-
-------------------------------------------------------------------------
-
-## floor
-
-Return the largest integer \<= x.
-
-### Discussion
-
-This function doesn't make sense (yet) to have because there are (as yet)
-only integers in the system.
-
-
-------------------------------------------------------------------------
-
 ## fork
 
 Combinator
@@ -1147,21 +1158,6 @@ Replace a list with its fourth item.
 
 ------------------------------------------------------------------------
 
-## gcd2
-
-Compiled GCD function.
-
-### Discussion
-
-See [gcd].
-
-### Crosslinks
-
-[gcd]
-
-
-------------------------------------------------------------------------
-
 ## gcd
 
 Take two integers from the stack and replace them with their Greatest
@@ -1190,7 +1186,7 @@ Greater-than-or-equal-to comparison of two numbers.
 [gt]
 [le]
 [lt]
-[ne]
+[neq]
 
 
 ------------------------------------------------------------------------
@@ -1374,7 +1370,7 @@ Greater-than comparison of two numbers.
 [ge]
 [le]
 [lt]
-[ne]
+[neq]
 
 ------------------------------------------------------------------------
 
@@ -1404,23 +1400,6 @@ See [pred](#pred).
 ## -
 
 See [sub](#sub).
-
-
-------------------------------------------------------------------------
-
-## hypot
-
-             x y hypot
-    ---------------------------
-       sqrt(sqr(x) + sqr(y))
-
-### Discussion
-
-This is another function that has to wait on the numeric tower.
-
-### Crosslinks
-
-[sqrt]
 
 
 ------------------------------------------------------------------------
@@ -1595,7 +1574,7 @@ stack, replacing them with a Boolean value.
 [ge]
 [gt]
 [lt]
-[ne]
+[neq]
 
 --------------
 
@@ -1608,7 +1587,7 @@ See [le](#le).
 
 ## <>
 
-See [ne](#ne).
+See [neq](#neq).
 
 
 ------------------------------------------------------------------------
@@ -1733,7 +1712,7 @@ stack, replacing them with a Boolean value.
 [ge]
 [gt]
 [le]
-[ne]
+[neq]
 
 ------------------------------------------------------------------------
 
@@ -1886,12 +1865,12 @@ Invert the sign of a number.
 
 ------------------------------------------------------------------------
 
-## ne
+## neq
 
 Not-Equal comparison of the two items on the top of the
 stack, replacing them with a Boolean value.
 
-       a b ne
+       a b neq
     -------------
        Boolean
        (a = b)
@@ -1909,8 +1888,7 @@ stack, replacing them with a Boolean value.
 
 ## not
 
-Like [bool] but convert the item on the top of the stack to the inverse
-Boolean value.
+Invert the Boolean value on the top of the stack.
 
        true not
     --------------
@@ -1923,7 +1901,6 @@ Boolean value.
 ### Crosslinks
 
 [bool]
-
 
 ------------------------------------------------------------------------
 
@@ -1944,6 +1921,14 @@ Helper function for [or] and [and].
 [and]
 [or]
 
+
+--------------------
+
+## null
+
+True if the item on the top of the stack is an empty list,
+false if it's a list but not empty,
+and an error if it's not a list.
 
 --------------------
 
@@ -2006,7 +1991,6 @@ Logical bit-wise OR.
 ### Crosslinks
 
 [and]
-[xor]
 
 
 ------------------------------------------------------------------------
@@ -2534,18 +2518,6 @@ See [rolldown](#rolldown).
 
 ------------------------------------------------------------------------
 
-## round
-
-Round a number to a given precision in decimal digits.
-
-### Discussion
-
-Another one that won't make sense until the "numeric tower" is nailed
-down.
-
-
-------------------------------------------------------------------------
-
 ## rrest
 
        [a b ...] rrest
@@ -2693,24 +2665,22 @@ Replace a list with its size.
 
 --------------
 
-## /floor
-
-See [floordiv](#floordiv).
-
-
---------------
-
 ## /
 
-See [floordiv](#floordiv).
+See [div](#div).
 
 
---------------
+------------------------------------------------------------------------
 
-## //
+## small
 
-See [floordiv](#floordiv).
+Return `true` if the item on the top of the stack is a list with zero or one item in it,
+`false` if it is a list with more than one item in it,
+and an error if it is not a list.
 
+### Crosslinks
+
+[null]
 
 ------------------------------------------------------------------------
 
@@ -2794,20 +2764,6 @@ Square the number on the top of the stack.
 
 ------------------------------------------------------------------------
 
-## sqrt
-
-Function Combinator
-
-Return the square root of the number a. Negative numbers return complex
-roots.
-
-### Discussion
-
-Another "numeric tower" hatch...
-
-
-------------------------------------------------------------------------
-
 ## stackd
 
 Grab the stack under the top item and put it onto the stack.
@@ -2818,6 +2774,9 @@ Grab the stack under the top item and put it onto the stack.
     ------------------------
       ... 1 2 [2 1 ...] 3
 
+### Crosslinks
+
+[stack]
 
 ------------------------------------------------------------------------
 
@@ -2838,6 +2797,8 @@ complement to the "destructive" pair [enstacken] and [disenstacken].
 
 [enstacken]
 [disenstacken]
+[stackd]
+[unstack]
 
 
 ------------------------------------------------------------------------
@@ -3160,13 +3121,6 @@ another program which does the actual work.  This is kind of like macros
 in Lisp, or preprocessor directives in C.
 
 
---------------
-
-## truthy
-
-See [bool](#bool).
-
-
 ------------------------------------------------------------------------
 
 ## tuck
@@ -3242,6 +3196,26 @@ Given a list remove duplicate items.
        a unit
     ------------
         [a]
+
+------------------------------------------------------------------------
+
+## unstack
+
+Take a list from the top of the stack and `concat` it to the stack.
+
+    joy? 1 2 3 [4 5 6]
+    
+    1 2 3 [4 5 6]
+    
+    joy? unstack
+    
+    1 2 3 6 5 4
+
+### Crosslinks
+
+[stack]
+[disenstacken]
+[enstacken]
 
 ------------------------------------------------------------------------
 
@@ -3376,20 +3350,6 @@ The simplest recursive pattern.
 See the [Recursion Combinators notebook](https://joypy.osdn.io/notebooks/Recursion_Combinators.html).
 as well as
 [Recursion Theory and Joy](https://www.kevinalbrecht.com/code/joy-mirror/j05cmp.html) by Manfred von
-
-
-
-------------------------------------------------------------------------
-
-## xor
-
-Logical bit-wise eXclusive OR.
-
-### Crosslinks
-
-[and]
-[or]
-
 
 ------------------------------------------------------------------------
 

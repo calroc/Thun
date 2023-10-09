@@ -43,6 +43,7 @@ dupdipd dup dipd
 dupdip dupd dip
 enstacken stack [clear] dip
 first uncons pop
+first_two uncons first
 flatten <{} [concat] step
 fork [i] app2
 fourth rest third
@@ -50,7 +51,6 @@ gcd true [tuck mod dup 0 >] loop pop
 genrec [[genrec] ccccons] nullary swons concat ifte
 grabN <{} [cons] times
 grba [stack popd] dip
-hypot [sqr] ii + sqrt
 ifte [nullary] dipd swap branch
 ii [dip] dupdip i
 infra swons swaack [i] dip swaack
@@ -63,7 +63,7 @@ neg 0 swap -
 not [true] [false] branch
 nulco [nullary] cons
 nullary [stack] dinfrirst
-null [] swap concat bool not
+null _isnt_list bool not
 of swap at
 or nulco [nullary] dip [true] branch
 over [dup] dip swap
@@ -134,9 +134,9 @@ _mape popd reverse
 _map0 [_map1] dipd _map2
 _map1 stackd shift
 _map2 [infrst] cons dipd roll< swons
-_isnt_bool not not
+_isnt_bool [false] [true] branch
 _isnt_two_bools [_isnt_bool] ii
 _\/_ [_isnt_bool] [not] branch
 /\ _isnt_two_bools [pop false] [] branch
 \/ _isnt_two_bools [] [pop true] branch
-xor [] [not] branch
+_isnt_list [] swoncat
