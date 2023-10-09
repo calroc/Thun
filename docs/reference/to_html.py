@@ -45,7 +45,7 @@ for el in used_by.values():
 
 
 
-def foo(to, text, class_='notes'):
+def marken_down(to, text, class_='notes'):
     html = markdown.markdown(text, output_format="html5")
     html = f'<div class="{class_}">{html}</div>'
     try:
@@ -129,6 +129,12 @@ for name, section in sections.items():
     del section[i:]
 
 
+for name in sections:
+    sections[name] = '\n'.join(sections[name])
+for name in discussions:
+    discussions[name] = '\n'.join(discussions[name])
+
+
 def add_definition(to, name):
     try:
         defi = definitions[name]
@@ -142,11 +148,11 @@ def add_definition(to, name):
         b, e = match.span()
         if b != start:
             to += defi[start:b]
-        foo = match.group()
-        if foo.isnumeric() or foo == 'true' or foo == 'false':
-            to += foo
+        m = match.group()
+        if m.isnumeric() or m == 'true' or m == 'false':
+            to += m
         else:
-            to.a(foo, href='#' + get_anchor(foo))
+            to.a(m, href='#' + get_anchor(m))
         start = e
     end = defi[start:]
     if end:
@@ -190,7 +196,7 @@ def add_discussion(to, name):
         return
     to = to.div(class_='discussion_wrapper')
     to.h3('Discussion')
-    foo(to, '\n'.join(discussion), class_='discussion')
+    marken_down(to, discussion, class_='discussion')
 
 
 def add_backlinks(to, name):
@@ -244,7 +250,7 @@ with doc.body as b:
             if name in basis_functions:
                 tags.span('built-in', class_='kind')
 
-        foo(d, '\n'.join(section))
+        marken_down(d, section)
 
         add_definition(d, name)
         add_discussion(d, name)
@@ -257,8 +263,17 @@ print(html_string, file=open('../html/FuncRef.html', 'w'))
 #from bs4 import BeautifulSoup
 #print(BeautifulSoup(html_string, 'html.parser').prettify())
 
-##import pprint
-##pprint.pprint(crosslinks)
+import pprint
+#pprint.pprint(crosslinks)
+
+##def pprint_data():
+##    print('sections = ', end='')
+##    pprint.pprint(sections)
+##    print()
+##    print('discussions = ', end='')
+##    pprint.pprint(discussions)
+
+
 
 ##if non:
 ##    for n in sorted(non):
@@ -271,3 +286,5 @@ E = S - D - basis_functions
 
 print('Def but no ref:', ' '.join(sorted(W)))
 print('Ref but no def:', ' '.join(sorted(E)))
+
+##pprint_data()

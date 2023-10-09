@@ -1,0 +1,23 @@
+
+    size <- step_zero <- step <- uncons
+
+Somewhere in there it breaks, e.g. (Nim):
+
+    [cats ...]
+    joy? size
+    Unknown: cats
+
+
+
+w/
+    ++d == [++] dip
+
+We can define a "safe" version of `size` like so:
+
+    size == 0 swap ? [++d rest ?] loop pop
+
+But I hate the idea of "safe" here.
+Either it's user error for calling `size` on a quoted program,
+or we should "safe"en the core words?
+
+safe version of uncons == [first] dupdip [rest]
