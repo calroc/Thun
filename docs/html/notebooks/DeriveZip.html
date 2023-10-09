@@ -26,28 +26,28 @@
 <p>Now then, we have two non-empty lists:</p>
 <pre><code>[a b c ...] [e f g ...] R0 [zip] R1
 </code></pre>
-<p>Let's imagine a function <code>shift-pair</code>:</p>
-<pre><code>   [a ...] [e ...] shift-pair
+<p>Let's imagine a function <code>uncons-pair</code>:</p>
+<pre><code>   [a ...] [e ...] uncons-pair
 --------------------------------
        [a e] [...] [...]
 </code></pre>
 <p>I'm going to defer derivation of that for now.</p>
-<pre><code>[a b c ...] [e f g ...] shift-pair [zip] R1
+<pre><code>[a b c ...] [e f g ...] uncons-pair [zip] R1
 
 [a e] [b c ...] [f g ...] [zip] R1
 </code></pre>
 <p>And so <code>R1</code> is <code>i cons</code> (it's a list builder.)</p>
-<pre><code>zip == [null] [pop] [shift-pair] [i cons] genrec
+<pre><code>zip == [null] [pop] [uncons-pair] [i cons] genrec
 </code></pre>
 <p>And now:</p>
-<pre><code>shift-pair == uncons-two [quote-two] dipd
+<pre><code>uncons-pair == uncons-two [quote-two] dipd
 </code></pre>
 <p>w/</p>
 <pre><code>uncons-two == [uncons] ii swapd
 quote-two == unit cons
 
-[zip [null] [pop] [shift-pair] [i cons] genrec] inscribe
-[shift-pair uncons-two [quote-two] dipd] inscribe
+[zip [null] [pop] [uncons-pair] [i cons] genrec] inscribe
+[uncons-pair uncons-two [quote-two] dipd] inscribe
 [uncons-two [uncons] ii swapd] inscribe
 [quote-two unit cons] inscribe
 </code></pre>

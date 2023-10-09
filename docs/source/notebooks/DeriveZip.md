@@ -22,33 +22,33 @@ Now then, we have two non-empty lists:
 
     [a b c ...] [e f g ...] R0 [zip] R1
 
-Let's imagine a function `shift-pair`:
+Let's imagine a function `uncons-pair`:
 
-       [a ...] [e ...] shift-pair
+       [a ...] [e ...] uncons-pair
     --------------------------------
            [a e] [...] [...]
 
 I'm going to defer derivation of that for now.
 
-    [a b c ...] [e f g ...] shift-pair [zip] R1
+    [a b c ...] [e f g ...] uncons-pair [zip] R1
 
     [a e] [b c ...] [f g ...] [zip] R1
 
 And so `R1` is `i cons` (it's a list builder.)
 
-    zip == [null] [pop] [shift-pair] [i cons] genrec
+    zip == [null] [pop] [uncons-pair] [i cons] genrec
 
 And now:
 
-    shift-pair == uncons-two [quote-two] dipd
+    uncons-pair == uncons-two [quote-two] dipd
 
 w/
 
     uncons-two == [uncons] ii swapd
     quote-two == unit cons
 
-    [zip [null] [pop] [shift-pair] [i cons] genrec] inscribe
-    [shift-pair uncons-two [quote-two] dipd] inscribe
+    [zip [null] [pop] [uncons-pair] [i cons] genrec] inscribe
+    [uncons-pair uncons-two [quote-two] dipd] inscribe
     [uncons-two [uncons] ii swapd] inscribe
     [quote-two unit cons] inscribe
 
