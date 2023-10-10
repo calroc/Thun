@@ -227,13 +227,13 @@
 ;Definitions
 
 (define (initialize)
-  (load-defs (make-hash-table string=? string-hash)))
+  (load-defs! (make-hash-table string=? string-hash)))
 
-(define (load-defs dict)
-  (for-each (lambda (def) (add-def def dict)) (defs))  ;defs is defined in defs.scm
+(define (load-defs! dict)
+  (for-each (lambda (def) (add-def! def dict)) (defs))  ;defs is defined in defs.scm
   dict)
 
-(define (add-def def dict)
+(define (add-def! def dict)
   (let ((def_list (text->expression def)))
     (hash-table-set! dict (car def_list) (cdr def_list))))
 
