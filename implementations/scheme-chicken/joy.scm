@@ -254,7 +254,7 @@
       (receive (stack dict) (joy stack0 (text->expression text) dict0)
         (print (joy-expression->string (reverse stack)))
         (main-loop stack dict))
-        (print))))
+      (print))))
 
 (define (joy-trace stack expression)
   (print (conc (joy-expression->string (reverse stack)) " . " (joy-expression->string expression))))
