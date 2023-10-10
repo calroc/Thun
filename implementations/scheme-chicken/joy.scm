@@ -248,26 +248,18 @@
 
 (define (prompt) (display "joy? ") (read-line))
 
-(define DICTIONARY (initialize))
-(define STACK '())
-
-(define (doit text)
-  (receive (stack dict) (joy STACK (text->expression text) DICTIONARY)
-    (set! DICTIONARY dict)
-    (set! STACK stack)
-    (joy-expression->string (reverse stack))))
-
-(define (main-loop)
+(define (main-loop stack0 dict0)
   (let ((text (prompt)))
-    (if (not (string=? text ""))
-      ((print (doit text)) (main-loop))
-      (else))))
-
+    (if (not (eof-object? text))
+      (receive (stack dict) (joy stack0 (text->expression text) dict0)
+        (print (joy-expression->string (reverse stack)))
+        (main-loop stack dict))
+        (print))))
 
 (define (joy-trace stack expression)
   (print (conc (joy-expression->string (reverse stack)) " . " (joy-expression->string expression))))
 
-(main-loop)
+(main-loop '() (initialize))
 
 
 ;(display (doit "5 [] cons [4] concat first"))
