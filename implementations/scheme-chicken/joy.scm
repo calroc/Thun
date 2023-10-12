@@ -55,25 +55,18 @@
 
 (define (joy-eval symbol stack expression dict)
   (match symbol
-    ("+" ((joy-func +) stack expression dict))
-    ("-" ((joy-func -) stack expression dict))
-    ("*" ((joy-func *) stack expression dict))
-    ("/" ((joy-func quotient) stack expression dict))  ; but for negative divisor, no!?
-    ("%" ((joy-func modulo) stack expression dict))
-
-    ("add" ((joy-func +) stack expression dict))
-    ("sub" ((joy-func -) stack expression dict))
-    ("mul" ((joy-func *) stack expression dict))
-    ("div" ((joy-func quotient) stack expression dict))  ; but for negative divisor, no!?
-    ("mod" ((joy-func modulo) stack expression dict))
+    ((or "+" "add") ((joy-func +) stack expression dict))
+    ((or "-" "sub") ((joy-func -) stack expression dict))
+    ((or "*" "mul") ((joy-func *) stack expression dict))
+    ((or "/" "div") ((joy-func quotient) stack expression dict))  ; but for negative divisor, no!?
+    ((or "%" "mod") ((joy-func modulo) stack expression dict))
 
     ("<" ((joy-func <) stack expression dict))
     (">" ((joy-func >) stack expression dict))
     ("<=" ((joy-func <=) stack expression dict))
     (">=" ((joy-func >=) stack expression dict))
     ("=" ((joy-func =) stack expression dict))
-    ("<>" ((joy-func not-equal) stack expression dict))
-    ("!=" ((joy-func not-equal) stack expression dict))
+    ((or "<>" "!=") ((joy-func not-equal) stack expression dict))
 
     ("bool" (joy-bool stack expression dict))
 
@@ -183,9 +176,10 @@
             (values (cons (tokenator token) el) rest)))))
 
 (define (one-token-lookahead token tokens)
-  (cond ((string=? token "]") (error "Extra closing bracket."))
-        ((string=? token "[") (expect-right-bracket tokens '()))
-        (else (values (tokenator token) tokens))))
+  (match token
+    ("]" (error "Extra closing bracket."))
+    ("[" (expect-right-bracket tokens '()))
+    (_ (values (tokenator token) tokens))))
 
 (define (parse0 tokens acc)
   (if (null? tokens)
@@ -229,7 +223,8 @@
   (load-defs! (make-hash-table string=? string-hash)))
 
 (define (load-defs! dict)
-  (for-each (lambda (def) (add-def! def dict)) (defs))  ;defs is defined in defs.scm
+  (for-each (lambda (def) (add-def! def dict)) (defs))
+  ; defs is defined in defs.scm
   dict)
 
 (define (add-def! def dict)
