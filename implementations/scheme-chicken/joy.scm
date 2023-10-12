@@ -27,6 +27,7 @@
 (import (chicken io))
 (import (chicken string))
 (import srfi-69)
+(import matchable)
 
 ;(load "defs.scm") ; csc -prologue defs.scm joy.scm
 (cond-expand
@@ -53,50 +54,48 @@
       (joy (cons (car expression) stack) (cdr expression) dict))))
 
 (define (joy-eval symbol stack expression dict)
-  (define (is-it? name) (string=? symbol name))
-  (cond
-    ((is-it? "+") ((joy-func +) stack expression dict))
-    ((is-it? "-") ((joy-func -) stack expression dict))
-    ((is-it? "*") ((joy-func *) stack expression dict))
-    ((is-it? "/") ((joy-func quotient) stack expression dict))  ; but for negative divisor, no!?
-    ((is-it? "%") ((joy-func modulo) stack expression dict))
+  (match symbol
+    ("+" ((joy-func +) stack expression dict))
+    ("-" ((joy-func -) stack expression dict))
+    ("*" ((joy-func *) stack expression dict))
+    ("/" ((joy-func quotient) stack expression dict))  ; but for negative divisor, no!?
+    ("%" ((joy-func modulo) stack expression dict))
 
-    ((is-it? "add") ((joy-func +) stack expression dict))
-    ((is-it? "sub") ((joy-func -) stack expression dict))
-    ((is-it? "mul") ((joy-func *) stack expression dict))
-    ((is-it? "div") ((joy-func quotient) stack expression dict))  ; but for negative divisor, no!?
-    ((is-it? "mod") ((joy-func modulo) stack expression dict))
+    ("add" ((joy-func +) stack expression dict))
+    ("sub" ((joy-func -) stack expression dict))
+    ("mul" ((joy-func *) stack expression dict))
+    ("div" ((joy-func quotient) stack expression dict))  ; but for negative divisor, no!?
+    ("mod" ((joy-func modulo) stack expression dict))
 
-    ((is-it? "<") ((joy-func <) stack expression dict))
-    ((is-it? ">") ((joy-func >) stack expression dict))
-    ((is-it? "<=") ((joy-func <=) stack expression dict))
-    ((is-it? ">=") ((joy-func >=) stack expression dict))
-    ((is-it? "=") ((joy-func =) stack expression dict))
-    ((is-it? "<>") ((joy-func not-equal) stack expression dict))
-    ((is-it? "!=") ((joy-func not-equal) stack expression dict))
+    ("<" ((joy-func <) stack expression dict))
+    (">" ((joy-func >) stack expression dict))
+    ("<=" ((joy-func <=) stack expression dict))
+    (">=" ((joy-func >=) stack expression dict))
+    ("=" ((joy-func =) stack expression dict))
+    ("<>" ((joy-func not-equal) stack expression dict))
+    ("!=" ((joy-func not-equal) stack expression dict))
 
-    ((is-it? "bool") (joy-bool stack expression dict))
+    ("bool" (joy-bool stack expression dict))
 
-    ((is-it? "dup") (values (cons (car stack) stack) expression dict))
-    ((is-it? "pop") (values (cdr stack) expression dict))
-    ((is-it? "stack") (values (cons stack stack) expression dict))
-    ((is-it? "swaack") (values (cons (cdr stack) (car stack)) expression dict))
-    ((is-it? "swap") (values (cons (cadr stack) (cons (car stack) (cddr stack))) expression dict))
+    ("dup" (values (cons (car stack) stack) expression dict))
+    ("pop" (values (cdr stack) expression dict))
+    ("stack" (values (cons stack stack) expression dict))
+    ("swaack" (values (cons (cdr stack) (car stack)) expression dict))
+    ("swap" (values (cons (cadr stack) (cons (car stack) (cddr stack))) expression dict))
 
-    ((is-it? "concat") ((joy-func append) stack expression dict))
-    ((is-it? "cons") ((joy-func cons) stack expression dict))
-    ((is-it? "first") (values (cons (caar stack) (cdr stack)) expression dict))
-    ((is-it? "rest")  (values (cons (cdar stack) (cdr stack)) expression dict))
+    ("concat" ((joy-func append) stack expression dict))
+    ("cons" ((joy-func cons) stack expression dict))
+    ("first" (values (cons (caar stack) (cdr stack)) expression dict))
+    ("rest"  (values (cons (cdar stack) (cdr stack)) expression dict))
 
-    ((is-it? "i") (joy-i stack expression dict))
-    ((is-it? "dip") (joy-dip stack expression dict))
-    ((is-it? "branch") (joy-branch stack expression dict))
-    ((is-it? "loop") (joy-loop stack expression dict))
+    ("i" (joy-i stack expression dict))
+    ("dip" (joy-dip stack expression dict))
+    ("branch" (joy-branch stack expression dict))
+    ("loop" (joy-loop stack expression dict))
 
-    ((hash-table-exists? dict symbol)
-      (values stack (append (hash-table-ref dict symbol) expression) dict))
-
-    (else (error (conc "Unknown word: " symbol)))))
+    (_ (if (hash-table-exists? dict symbol)
+      (values stack (append (hash-table-ref dict symbol) expression) dict)
+      (error (conc "Unknown word: " symbol))))))
 
 (define (not-equal a b) (not (= a b)))
 
