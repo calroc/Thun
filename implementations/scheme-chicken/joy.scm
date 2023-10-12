@@ -101,10 +101,10 @@
   (values (cons (joy-bool-term (car stack)) (cdr stack)) expression dict))
 
 (define (joy-bool-term term)
-    (cond ((boolean? term) term)
-          ((number? term) (not-equal 0 term))
-          ((list? term) (not (null? term)))
-          (else #t)))
+  (cond ((boolean? term) term)
+        ((number? term) (not-equal 0 term))
+        ((list? term) (not (null? term)))
+        (else #t)))
 
 
 ; ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ████████╗ ██████╗ ██████╗ ███████╗
@@ -166,14 +166,13 @@
     (expect-right-bracket-lookahead (car tokens) (cdr tokens) acc)))
 
 (define (expect-right-bracket-lookahead token tokens acc)
-  (cond ((string=? token "]") (values acc tokens))
-        ((string=? token "[")
-          (receive (sub_list rest) (expect-right-bracket tokens '())
-            (receive (el rrest) (expect-right-bracket rest acc)
-              (values (cons sub_list el) rrest))))
-        (else 
-          (receive (el rest) (expect-right-bracket tokens acc)
-            (values (cons (tokenator token) el) rest)))))
+  (match token
+    ("]" (values acc tokens))
+    ("[" (receive (sub_list rest) (expect-right-bracket tokens '())
+           (receive (el rrest) (expect-right-bracket rest acc)
+             (values (cons sub_list el) rrest))))
+    (_ (receive (el rest) (expect-right-bracket tokens acc)
+       (values (cons (tokenator token) el) rest)))))
 
 (define (one-token-lookahead token tokens)
   (match token
