@@ -99,8 +99,9 @@ run <{} infra
 second rest first
 shift uncons [swons] dip
 shunt [swons] step
+select [first] [second] branch
 size [pop ++] step_zero
-small dup null [rest null] [pop true] branch
+small empty? [rest null] [pop true] branch
 spiral_next [[[abs] ii <=] [[<>] [pop !-] or] and] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte
 split_at [drop] [take] clop
 split_list [take reverse] [drop] clop

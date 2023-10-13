@@ -583,7 +583,6 @@ Concatinate two lists.
 [flatten]
 [fourth]
 [getitem]
-[remove]
 [rest]
 [reverse]
 [rrest]
@@ -591,7 +590,6 @@ Concatinate two lists.
 [shift]
 [shunt]
 [size]
-[sort]
 [split_at]
 [split_list]
 [swaack]
@@ -1099,7 +1097,6 @@ Note that only one "level" of lists is flattened.  In the example above
 [first_two]
 [fourth]
 [getitem]
-[remove]
 [rest]
 [reverse]
 [rrest]
@@ -1107,7 +1104,6 @@ Note that only one "level" of lists is flattened.  In the example above
 [shift]
 [shunt]
 [size]
-[sort]
 [split_at]
 [split_list]
 [swaack]
@@ -1283,7 +1279,6 @@ implementation-dependant.)
 [first_two]
 [flatten]
 [fourth]
-[remove]
 [rest]
 [reverse]
 [rrest]
@@ -1291,7 +1286,6 @@ implementation-dependant.)
 [shift]
 [shunt]
 [size]
-[sort]
 [split_at]
 [split_list]
 [swaack]
@@ -1374,22 +1368,6 @@ Greater-than comparison of two numbers.
 
 ------------------------------------------------------------------------
 
-## help
-
-Accepts a quoted symbol on the top of the stack and prints its
-documentation.
-
-       [foo] help
-    ----------------
-
-### Discussion
-
-Technically this is equivalent to `pop`, but it will only work if the
-item on the top of the stack is a quoted symbol.
-
-
---------------
-
 ## --
 
 See [pred](#pred).
@@ -1401,16 +1379,6 @@ See [pred](#pred).
 
 See [sub](#sub).
 
-
-------------------------------------------------------------------------
-
-## id
-
-The identity function.
-
-### Discussion
-
-Does nothing.  It's kind of a mathematical thing, but it occasionally comes in handy.
 
 ------------------------------------------------------------------------
 
@@ -2338,6 +2306,7 @@ This comes from the original Joy stuff.
 
 ### Crosslinks
 
+[quote-two]
 [unit]
 
 
@@ -2418,23 +2387,6 @@ See [mod](#mod).
 ## rem
 
 See [mod](#mod).
-
-
-------------------------------------------------------------------------
-
-## remove
-
-Expects an item on the stack and a quote under it and removes that item
-from the the quote. The item is only removed once. If the list is empty
-or the item isn't in the list then the list is unchanged.
-
-       [1 2 3 1] 1 remove
-    ------------------------
-            [2 3 1]
-
-### Definition
-
-See the ["Remove Function" notebook](https://osdn.net/projects/joypy/scm/git/Thun/blobs/master/docs/notebooks/Remove-Function.ipynb).
 
 
 ------------------------------------------------------------------------
@@ -2672,19 +2624,6 @@ and an error if it is not a list.
 
 ------------------------------------------------------------------------
 
-## sort
-
-Given a list return it sorted.
-
-### Example
-
-       [4 2 5 7 1] sort
-    ----------------------
-          [1 2 4 5 7]
-
-
-------------------------------------------------------------------------
-
 ## spiral_next
 
 Example code.
@@ -2853,23 +2792,6 @@ Take the [stack] and [uncons] the top item.
        1 2 3 stuncons
     --------------------
        1 2 3 3 [2 1]
-
-------------------------------------------------------------------------
-
-## stununcons
-
-Take the [stack] and [uncons] the top two items.
-
-### Example
-
-       1 2 3 stununcons
-    ----------------------
-        1 2 3 3 2 [1]
-
-### Crosslinks
-
-[stuncons]
-
 
 ------------------------------------------------------------------------
 
@@ -3172,13 +3094,6 @@ This is the inverse of [cons].
 
 ------------------------------------------------------------------------
 
-## unique
-
-Given a list remove duplicate items.
-
-
-------------------------------------------------------------------------
-
 ## unit
 
        a unit
@@ -3261,19 +3176,6 @@ stack.)  The quoted programs are run with [nullary].
 
 ------------------------------------------------------------------------
 
-## void
-
-True if the form on TOS is void otherwise False.
-
-### Discussion
-
-A form is any Joy expression composed solely of lists.
-This represents a binary Boolean logical formula in the arithmetic of the
-"Laws of Form", see [The Markable Mark](http://www.markability.net/)
-
-
-------------------------------------------------------------------------
-
 ## warranty
 
 Print warranty information.
@@ -3298,22 +3200,6 @@ and runs it [nullary].
 ### Crosslinks
 
 [loop]
-
-
-------------------------------------------------------------------------
-
-## words
-
-Print all the words in alphabetical order.
-
-### Discussion
-
-Mathematically this is a form of [id].
-
-### Crosslinks
-
-[help]
-
 
 --------------------
 
@@ -3348,4 +3234,75 @@ from each list. The smallest list sets the length of the result list.
        [1 2 3] [4 5 6] zip
     -------------------------
        [[1 4] [2 5] [3 6]]
+
+
+
+------------------------------------------------------------------------
+
+## empty?
+
+Expects a list on the stack and pushes `true` if it's empty and `false` otherwise.
+It doesn't consume the list.
+
+### Crosslinks
+
+[null]
+
+------------------------------------------------------------------------
+
+## max-of-two
+
+Expects two integers on the stack and removes the lesser of them, if they are equal just remove one.
+
+
+------------------------------------------------------------------------
+
+## min-of-two
+
+Expects two integers on the stack and removes the greater of them, if they are equal just remove one.
+
+------------------------------------------------------------------------
+
+## quote-two
+
+Take two items from the stack and put them into a new list.
+
+    joy? 1 2 3 4
+    
+    1 2 3 4
+    
+    joy? quote-two
+    
+    1 2 [3 4]
+
+
+### Crosslinks
+
+[quoted]
+
+------------------------------------------------------------------------
+
+## uncons-two
+
+Expect two non-empty lists on the stack and `uncons` the first item from each.
+
+    joy? [1 2] [3 4] uncons-two
+    
+    1 3 [2] [4]
+
+------------------------------------------------------------------------
+
+## uncons-pair
+
+Expect two non-empty lists on the stack and `uncons` the first item from each and put them in a new list.
+
+    joy? [1 2] [3 4] uncons-pair
+    
+    [1 3] [2] [4]
+
+
+
+
+
+
 

@@ -55,18 +55,18 @@
 
 (define (joy-eval symbol stack expression dict)
   (match symbol
-    ((or "+" "add") ((joy-func +) stack expression dict))
-    ((or "-" "sub") ((joy-func -) stack expression dict))
-    ((or "*" "mul") ((joy-func *) stack expression dict))
-    ((or "/" "div") ((joy-func quotient) stack expression dict))  ; but for negative divisor, no!?
-    ((or "%" "mod") ((joy-func modulo) stack expression dict))
+    ((or "+" "add") (joy-func + stack expression dict))
+    ((or "-" "sub") (joy-func - stack expression dict))
+    ((or "*" "mul") (joy-func * stack expression dict))
+    ((or "/" "div") (joy-func quotient stack expression dict))  ; but for negative divisor, no!?
+    ((or "%" "mod") (joy-func modulo stack expression dict))
 
-    ("<" ((joy-func <) stack expression dict))
-    (">" ((joy-func >) stack expression dict))
-    ("<=" ((joy-func <=) stack expression dict))
-    (">=" ((joy-func >=) stack expression dict))
-    ("=" ((joy-func =) stack expression dict))
-    ((or "<>" "!=") ((joy-func not-equal) stack expression dict))
+    ((or "<" "lt") (joy-func < stack expression dict))
+    ((or ">" "gt") (joy-func > stack expression dict))
+    ((or "<=" "le") (joy-func <= stack expression dict))
+    ((or ">=" "ge") (joy-func >= stack expression dict))
+    ((or "=" "eq") (joy-func = stack expression dict))
+    ((or "<>" "!=" "neq") (joy-func not-equal stack expression dict))
 
     ("bool" (joy-bool stack expression dict))
 
@@ -76,8 +76,8 @@
     ("swaack" (values (cons (cdr stack) (car stack)) expression dict))
     ("swap" (values (cons (cadr stack) (cons (car stack) (cddr stack))) expression dict))
 
-    ("concat" ((joy-func append) stack expression dict))
-    ("cons" ((joy-func cons) stack expression dict))
+    ("concat" (joy-func append stack expression dict))
+    ("cons" (joy-func cons stack expression dict))
     ("first" (values (cons (caar stack) (cdr stack)) expression dict))
     ("rest"  (values (cons (cdar stack) (cdr stack)) expression dict))
 
@@ -92,9 +92,8 @@
 
 (define (not-equal a b) (not (= a b)))
 
-(define (joy-func op)
-  (lambda (stack expression dict)
-    (values (cons (op (cadr stack) (car stack)) (cddr stack)) expression dict)))
+(define (joy-func op stack expression dict)
+  (values (cons (op (cadr stack) (car stack)) (cddr stack)) expression dict))
 
 
 (define (joy-bool stack expression dict)
