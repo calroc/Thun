@@ -44,7 +44,7 @@
 ;Interpreter
 
 (define (joy stack expression dict)
-  ;(joy-trace stack expression)
+  (joy-trace stack expression)
   (if (null? expression)
     (values stack dict)
     (if (string? (car expression))
@@ -157,7 +157,7 @@
   (cond ((string->number token) (string->number token))
         ((string=? token "true") #t)
         ((string=? token "false") #f)
-        (else token)))
+        (else string->symbol token)))
 
 (define (expect-right-bracket tokens acc) 
   (if (null? tokens)
@@ -203,7 +203,7 @@
   (cond ((boolean? term) (if term "true" "false"))
         ((number? term) (->string term))
         ((list? term) (conc "[" (joy-expression->string term) "]"))
-        (else term)))
+        (else symbol->string term)))
 
 (define (joy-expression->string expr)
   (string-intersperse (map joy-term->string expr) " "))
@@ -254,7 +254,7 @@
 (main-loop '() (initialize))
 
 
-;(display (doit "5 [] cons [4] concat first"))
+;(display (text->expression "5 [] cons [4] concat first"))
 ;(display (doit "5 down_to_zero"))
 ;(display (doit "1 2 true [4 5 false] loop <"))
 ;(newline)
