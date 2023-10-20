@@ -26,6 +26,7 @@
 
 (import (chicken io))
 (import (chicken string))
+(import srfi-12)
 (import srfi-69)
 (import matchable)
 
@@ -79,7 +80,7 @@
     ((concat) (joy-func append stack expression dict))
     ((cons) (joy-func cons stack expression dict))
     ((first) (values (cons (caar stack) (cdr stack)) expression dict))
-    ((rest)  (values (cons (cdar stack) (cdr stack)) expression dict))
+    ((rest)  (values (joy-rest stack) expression dict))
 
     ((i) (joy-i stack expression dict))
     ((dip) (joy-dip stack expression dict))
@@ -104,6 +105,16 @@
         ((number? term) (not-equal 0 term))
         ((list? term) (not (null? term)))
         (else #t)))
+
+
+(define (joy-rest stack)
+  (match stack
+    (() (abort "Not enough values on Stack"))
+    ((head . tail)
+      (match head
+        (() (abort "Cannot take rest of empty list."))
+        ((_ . the_rest) (cons the_rest tail))
+        (_ (abort "Not a list."))))))
 
 
 ; ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ████████╗ ██████╗ ██████╗ ███████╗
@@ -243,7 +254,11 @@
 (define (main-loop stack0 dict0)
   (let ((text (prompt)))
     (if (not (eof-object? text))
-      (receive (stack dict) (joy stack0 (text->expression text) dict0)
+      (receive (stack dict)
+        (handle-exceptions exn
+          (begin (display exn) (newline)
+            (values stack0 dict0))
+          (joy stack0 (text->expression text) dict0))
         (print (joy-expression->string (reverse stack)))
         (main-loop stack dict))
       (print))))
