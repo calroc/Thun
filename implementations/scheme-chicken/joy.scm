@@ -44,49 +44,49 @@
 ;Interpreter
 
 (define (joy stack expression dict)
-  (joy-trace stack expression)
+  ;(joy-trace stack expression)
   (if (null? expression)
     (values stack dict)
-    (if (string? (car expression))
+    (if (symbol? (car expression))
       (receive (s e d)
         (joy-eval (car expression) stack (cdr expression) dict)
         (joy s e d))
       (joy (cons (car expression) stack) (cdr expression) dict))))
 
 (define (joy-eval symbol stack expression dict)
-  (match symbol
-    ((or "+" "add") (joy-func + stack expression dict))
-    ((or "-" "sub") (joy-func - stack expression dict))
-    ((or "*" "mul") (joy-func * stack expression dict))
-    ((or "/" "div") (joy-func quotient stack expression dict))  ; but for negative divisor, no!?
-    ((or "%" "mod") (joy-func modulo stack expression dict))
+  (case symbol
+    ((+ add) (joy-func + stack expression dict))
+    ((- sub) (joy-func - stack expression dict))
+    ((* mul) (joy-func * stack expression dict))
+    ((/ div) (joy-func quotient stack expression dict))  ; but for negative divisor, no!?
+    ((% mod) (joy-func modulo stack expression dict))
 
-    ((or "<" "lt") (joy-func < stack expression dict))
-    ((or ">" "gt") (joy-func > stack expression dict))
-    ((or "<=" "le") (joy-func <= stack expression dict))
-    ((or ">=" "ge") (joy-func >= stack expression dict))
-    ((or "=" "eq") (joy-func = stack expression dict))
-    ((or "<>" "!=" "neq") (joy-func not-equal stack expression dict))
+    ((< lt) (joy-func < stack expression dict))
+    ((> gt) (joy-func > stack expression dict))
+    ((<= le) (joy-func <= stack expression dict))
+    ((>= ge) (joy-func >= stack expression dict))
+    ((= eq) (joy-func = stack expression dict))
+    ((<> != neq) (joy-func not-equal stack expression dict))
 
-    ("bool" (joy-bool stack expression dict))
+    ((bool) (joy-bool stack expression dict))
 
-    ("dup" (values (cons (car stack) stack) expression dict))
-    ("pop" (values (cdr stack) expression dict))
-    ("stack" (values (cons stack stack) expression dict))
-    ("swaack" (values (cons (cdr stack) (car stack)) expression dict))
-    ("swap" (values (cons (cadr stack) (cons (car stack) (cddr stack))) expression dict))
+    ((dup) (values (cons (car stack) stack) expression dict))
+    ((pop) (values (cdr stack) expression dict))
+    ((stack) (values (cons stack stack) expression dict))
+    ((swaack) (values (cons (cdr stack) (car stack)) expression dict))
+    ((swap) (values (cons (cadr stack) (cons (car stack) (cddr stack))) expression dict))
 
-    ("concat" (joy-func append stack expression dict))
-    ("cons" (joy-func cons stack expression dict))
-    ("first" (values (cons (caar stack) (cdr stack)) expression dict))
-    ("rest"  (values (cons (cdar stack) (cdr stack)) expression dict))
+    ((concat) (joy-func append stack expression dict))
+    ((cons) (joy-func cons stack expression dict))
+    ((first) (values (cons (caar stack) (cdr stack)) expression dict))
+    ((rest)  (values (cons (cdar stack) (cdr stack)) expression dict))
 
-    ("i" (joy-i stack expression dict))
-    ("dip" (joy-dip stack expression dict))
-    ("branch" (joy-branch stack expression dict))
-    ("loop" (joy-loop stack expression dict))
+    ((i) (joy-i stack expression dict))
+    ((dip) (joy-dip stack expression dict))
+    ((branch) (joy-branch stack expression dict))
+    ((loop) (joy-loop stack expression dict))
 
-    (_ (if (hash-table-exists? dict symbol)
+    (else (if (hash-table-exists? dict symbol)
       (values stack (append (hash-table-ref dict symbol) expression) dict)
       (error (conc "Unknown word: " symbol))))))
 
@@ -157,7 +157,7 @@
   (cond ((string->number token) (string->number token))
         ((string=? token "true") #t)
         ((string=? token "false") #f)
-        (else string->symbol token)))
+        (else (string->symbol token))))
 
 (define (expect-right-bracket tokens acc) 
   (if (null? tokens)
@@ -203,7 +203,7 @@
   (cond ((boolean? term) (if term "true" "false"))
         ((number? term) (->string term))
         ((list? term) (conc "[" (joy-expression->string term) "]"))
-        (else symbol->string term)))
+        (else (symbol->string term))))
 
 (define (joy-expression->string expr)
   (string-intersperse (map joy-term->string expr) " "))
@@ -218,7 +218,7 @@
 ;Definitions
 
 (define (initialize)
-  (load-defs! (make-hash-table string=? string-hash)))
+  (load-defs! (make-hash-table equal? symbol-hash)))
 
 (define (load-defs! dict)
   (for-each (lambda (def) (add-def! def dict)) (defs))
