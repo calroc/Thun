@@ -257,8 +257,7 @@
     (if (not (eof-object? text))
       (receive (stack dict)
         (handle-exceptions exn
-          (begin (display exn) (newline)
-            (values stack0 dict0))
+          (begin (display exn) (newline) (values stack0 dict0))
           (joy stack0 (text->expression text) dict0))
         (print (joy-expression->string (reverse stack)))
         (main-loop stack dict))
@@ -278,18 +277,18 @@
 
 ; Importing srfi-67 did not actually make available symbol-compare.  Boo!
 
-(define (symbol<? a b) (string<? (symbol->string a) (symbol->string b)))
+;(define (symbol<? a b) (string<? (symbol->string a) (symbol->string b)))
 
 ; a BTree is a four-tuple of (name value left right) | ()
 
-(define (btree-get key btree)
-  (match btree
-    (() (abort "Key not found."))
-    ((k value left right)
-      (if (eq? key k)
-        value
-        (btree-get key (if (symbol<? key k) left right))))
-    (_ (abort "Not a BTree."))))
+;(define (btree-get key btree)
+;  (match btree
+;    (() (abort "Key not found."))
+;    ((k value left right)
+;      (if (eq? key k)
+;        value
+;        (btree-get key (if (symbol<? key k) left right))))
+;    (_ (abort "Not a BTree."))))
 
 
 
