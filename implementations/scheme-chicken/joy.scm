@@ -57,11 +57,11 @@
 
 (define (joy-eval symbol stack expression dict)
   (case symbol
-    ((+ add) (joy-func + stack expression dict))
-    ((- sub) (joy-func - stack expression dict))
-    ((* mul) (joy-func * stack expression dict))
-    ((/ div) (joy-func quotient stack expression dict))  ; but for negative divisor, no!?
-    ((% mod) (joy-func modulo stack expression dict))
+    ((+ add) (values (joy-math-func + stack) expression dict))
+    ((- sub) (values (joy-math-func - stack) expression dict))
+    ((* mul) (values (joy-math-func * stack) expression dict))
+    ((/ div) (values (joy-math-func quotient stack) expression dict))  ; but for negative divisor, no!?
+    ((% mod) (values (joy-math-func modulo stack) expression dict))
 
     ((< lt) (joy-func < stack expression dict))
     ((> gt) (joy-func > stack expression dict))
@@ -92,11 +92,46 @@
       (values stack (append (hash-table-ref dict symbol) expression) dict)
       (error (conc "Unknown word: " symbol))))))
 
+
+;██╗   ██╗████████╗██╗██╗     ███████╗
+;██║   ██║╚══██╔══╝██║██║     ██╔════╝
+;██║   ██║   ██║   ██║██║     ███████╗
+;██║   ██║   ██║   ██║██║     ╚════██║
+;╚██████╔╝   ██║   ██║███████╗███████║
+; ╚═════╝    ╚═╝   ╚═╝╚══════╝╚══════╝
+; Utils
+
 (define (not-equal a b) (not (= a b)))
 
 (define (joy-func op stack expression dict)
   (values (cons (op (cadr stack) (car stack)) (cddr stack)) expression dict))
 
+(define (joy-math-func op stack0)
+  (receive (a stack1) (pop-int stack0)
+  (receive (b stack) (pop-int stack1)
+  (cons (op b a) stack))))
+
+(define (pop-any stack)
+  (if (null-list? stack)
+    (abort "Not enough values on Stack")
+    (car+cdr stack)))
+
+(define (pop-kind stack predicate message)
+  (receive (term rest) (pop-any stack)
+    (if (predicate term) (values term rest) (abort message))))
+
+(define (pop-list stack) (pop-kind stack list? "Not a list."))
+(define (pop-int stack) (pop-kind stack number? "Not an integer."))
+(define (pop-bool stack) (pop-kind stack boolean? "Not a Boolean value."))
+
+
+; ██████╗ ██████╗ ██████╗ ███████╗    ██╗    ██╗ ██████╗ ██████╗ ██████╗ ███████╗
+;██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██║    ██║██╔═══██╗██╔══██╗██╔══██╗██╔════╝
+;██║     ██║   ██║██████╔╝█████╗      ██║ █╗ ██║██║   ██║██████╔╝██║  ██║███████╗
+;██║     ██║   ██║██╔══██╗██╔══╝      ██║███╗██║██║   ██║██╔══██╗██║  ██║╚════██║
+;╚██████╗╚██████╔╝██║  ██║███████╗    ╚███╔███╔╝╚██████╔╝██║  ██║██████╔╝███████║
+; ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝     ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝
+;Core Words
 
 (define (joy-bool stack expression dict)
   (values (cons (joy-bool-term (car stack)) (cdr stack)) expression dict))
@@ -106,7 +141,6 @@
         ((number? term) (not-equal 0 term))
         ((list? term) (not (null? term)))
         (else #t)))
-
 
 (define (joy-rest stack0)
   (receive (el stack) (pop-list stack0)
@@ -119,21 +153,6 @@
     (if (null-list? el)
       (abort "Cannot take first of empty list.")
       (cons (car el) stack))))
-
-
-(define (pop-any stack)
-  (if (null-list? stack)
-    (abort "Not enough values on Stack")
-    (car+cdr stack)))
-
-(define (pop-list stack)
-  (receive (term rest) (pop-any stack)
-    (if (list? term)
-      (values term rest)
-      (abort "Not a list."))))
-
-
-
 
 
 ; ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ████████╗ ██████╗ ██████╗ ███████╗
@@ -291,22 +310,3 @@
 ;(display (doit "5 down_to_zero"))
 ;(display (doit "1 2 true [4 5 false] loop <"))
 ;(newline)
-
-
-; Importing srfi-67 did not actually make available symbol-compare.  Boo!
-
-;(define (symbol<? a b) (string<? (symbol->string a) (symbol->string b)))
-
-; a BTree is a four-tuple of (name value left right) | ()
-
-;(define (btree-get key btree)
-;  (match btree
-;    (() (abort "Key not found."))
-;    ((k value left right)
-;      (if (eq? key k)
-;        value
-;        (btree-get key (if (symbol<? key k) left right))))
-;    (_ (abort "Not a BTree."))))
-
-
-
