@@ -108,14 +108,26 @@
         (else #t)))
 
 
-(define (joy-rest stack)
-  (match stack
-    (() (abort "Not enough values on Stack"))
-    ((head . tail)
-      (match head
-        (() (abort "Cannot take rest of empty list."))
-        ((_ . the_rest) (cons the_rest tail))
-        (_ (abort "Not a list."))))))
+(define (joy-rest stack0)
+  (receive (el stack) (pop-list stack0)
+    (if (null-list? el)
+      (abort "Cannot take rest of empty list.")
+      (cons (cdr el) stack))))
+
+
+(define (pop-any stack)
+  (if (null-list? stack)
+    (abort "Not enough values on Stack")
+    (car+cdr stack)))
+
+(define (pop-list stack)
+  (receive (term rest) (pop-any stack)
+    (if (list? term)
+      (values term rest)
+      (abort "Not a list."))))
+
+
+
 
 
 ; ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ████████╗ ██████╗ ██████╗ ███████╗
@@ -254,14 +266,14 @@
 
 (define (main-loop stack0 dict0)
   (let ((text (prompt)))
-    (if (not (eof-object? text))
+    (if (eof-object? text)
+      (print)
       (receive (stack dict)
         (handle-exceptions exn
           (begin (display exn) (newline) (values stack0 dict0))
           (joy stack0 (text->expression text) dict0))
         (print (joy-expression->string (reverse stack)))
-        (main-loop stack dict))
-      (print))))
+        (main-loop stack dict)))))
 
 (define (joy-trace stack expression)
   (print (conc (joy-expression->string (reverse stack)) " . " (joy-expression->string expression))))
