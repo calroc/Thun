@@ -80,8 +80,8 @@
 
     ((concat) (joy-func append stack expression dict))
     ((cons) (joy-func cons stack expression dict))
-    ((first) (values (cons (caar stack) (cdr stack)) expression dict))
-    ((rest)  (values (joy-rest stack) expression dict))
+    ((first) (values (joy-first stack) expression dict))
+    ((rest)  (values (joy-rest  stack) expression dict))
 
     ((i) (joy-i stack expression dict))
     ((dip) (joy-dip stack expression dict))
@@ -113,6 +113,12 @@
     (if (null-list? el)
       (abort "Cannot take rest of empty list.")
       (cons (cdr el) stack))))
+
+(define (joy-first stack0)
+  (receive (el stack) (pop-list stack0)
+    (if (null-list? el)
+      (abort "Cannot take first of empty list.")
+      (cons (car el) stack))))
 
 
 (define (pop-any stack)
