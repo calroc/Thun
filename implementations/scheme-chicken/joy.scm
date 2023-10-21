@@ -72,7 +72,7 @@
 
     ((bool) (joy-bool stack expression dict))
 
-    ((dup) (values (cons (car stack) stack) expression dict))
+    ((dup) (values (joy-dup stack) expression dict))
     ((pop) (values (cdr stack) expression dict))
     ((stack) (values (cons stack stack) expression dict))
     ((swaack) (values (cons (cdr stack) (car stack)) expression dict))
@@ -121,7 +121,7 @@
     (if (predicate term) (values term rest) (abort message))))
 
 (define (pop-list stack) (pop-kind stack list? "Not a list."))
-(define (pop-int stack) (pop-kind stack number? "Not an integer."))
+(define (pop-int  stack) (pop-kind stack number? "Not an integer."))
 (define (pop-bool stack) (pop-kind stack boolean? "Not a Boolean value."))
 
 
@@ -141,6 +141,10 @@
         ((number? term) (not-equal 0 term))
         ((list? term) (not (null? term)))
         (else #t)))
+
+(define (joy-dup stack)
+  (receive (term _) (pop-any stack) (cons term stack)))
+
 
 (define (joy-rest stack0)
   (receive (el stack) (pop-list stack0)
