@@ -26,6 +26,7 @@
 
 (import (chicken io))
 (import (chicken string))
+(import srfi-1)
 (import srfi-12)
 (import srfi-69)
 (import matchable)
@@ -273,4 +274,22 @@
 ;(display (doit "5 down_to_zero"))
 ;(display (doit "1 2 true [4 5 false] loop <"))
 ;(newline)
+
+
+; Importing srfi-67 did not actually make available symbol-compare.  Boo!
+
+(define (symbol<? a b) (string<? (symbol->string a) (symbol->string b)))
+
+; a BTree is a four-tuple of (name value left right) | ()
+
+(define (btree-get key btree)
+  (match btree
+    (() (abort "Key not found."))
+    ((k value left right)
+      (if (eq? key k)
+        value
+        (btree-get key (if (symbol<? key k) left right))))
+    (_ (abort "Not a BTree."))))
+
+
 
