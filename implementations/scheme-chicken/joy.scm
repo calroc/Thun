@@ -63,12 +63,12 @@
     ((/ div) (values (joy-math-func quotient stack) expression dict))  ; but for negative divisor, no!?
     ((% mod) (values (joy-math-func modulo stack) expression dict))
 
-    ((< lt) (joy-func < stack expression dict))
-    ((> gt) (joy-func > stack expression dict))
-    ((<= le) (joy-func <= stack expression dict))
-    ((>= ge) (joy-func >= stack expression dict))
-    ((= eq) (joy-func = stack expression dict))
-    ((<> != neq) (joy-func not-equal stack expression dict))
+    ((< lt) (values (joy-math-func < stack) expression dict))
+    ((> gt) (values (joy-math-func > stack) expression dict))
+    ((<= le) (values (joy-math-func <= stack) expression dict))
+    ((>= ge) (values (joy-math-func >= stack) expression dict))
+    ((= eq) (values (joy-math-func = stack) expression dict))
+    ((<> != neq) (values (joy-math-func not-equal stack) expression dict))
 
     ((bool) (joy-bool stack expression dict))
 
