@@ -238,7 +238,7 @@
 
 (define (expect-right-bracket tokens acc) 
   (if (null? tokens)
-    (error "Missing closing bracket.")
+    (abort "Missing closing bracket.")
     (expect-right-bracket-lookahead (car tokens) (cdr tokens) acc)))
 
 (define (expect-right-bracket-lookahead token tokens acc)
@@ -252,7 +252,7 @@
 
 (define (one-token-lookahead token tokens)
   (match token
-    ("]" (error "Extra closing bracket."))
+    ("]" (abort "Extra closing bracket."))
     ("[" (expect-right-bracket tokens '()))
     (_ (values (tokenator token) tokens))))
 
