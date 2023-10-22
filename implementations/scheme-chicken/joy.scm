@@ -70,7 +70,7 @@
     ((= eq)  (values (joy-math-func = stack)  expression dict))
     ((<> != neq) (values (joy-math-func not-equal stack) expression dict))
 
-    ((bool) (joy-bool stack expression dict))
+    ((bool) (values (joy-bool stack) expression dict))
 
     ((dup)    (values (joy-dup stack)    expression dict))
     ((pop)    (values (joy-pop stack)    expression dict))
@@ -135,8 +135,9 @@
 ; ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝     ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝
 ;Core Words
 
-(define (joy-bool stack expression dict)
-  (values (cons (joy-bool-term (car stack)) (cdr stack)) expression dict))
+(define (joy-bool stack0)
+  (receive (term stack) (pop-any stack0)
+    (cons (joy-bool-term term) stack)))
 
 (define (joy-bool-term term)
   (cond ((boolean? term) term)
