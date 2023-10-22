@@ -63,34 +63,36 @@
     ((/ div) (values (joy-math-func quotient stack) expression dict))  ; but for negative divisor, no!?
     ((% mod) (values (joy-math-func modulo stack) expression dict))
 
-    ((< lt) (values (joy-math-func < stack) expression dict))
-    ((> gt) (values (joy-math-func > stack) expression dict))
+    ((< lt)  (values (joy-math-func < stack)  expression dict))
+    ((> gt)  (values (joy-math-func > stack)  expression dict))
     ((<= le) (values (joy-math-func <= stack) expression dict))
     ((>= ge) (values (joy-math-func >= stack) expression dict))
-    ((= eq) (values (joy-math-func = stack) expression dict))
+    ((= eq)  (values (joy-math-func = stack)  expression dict))
     ((<> != neq) (values (joy-math-func not-equal stack) expression dict))
 
     ((bool) (joy-bool stack expression dict))
 
-    ((dup) (values (joy-dup stack) expression dict))
-    ((pop) (values (cdr stack) expression dict))
-    ((stack) (values (cons stack stack) expression dict))
-    ((swaack) (values (cons (cdr stack) (car stack)) expression dict))
-    ((swap) (values (cons (cadr stack) (cons (car stack) (cddr stack))) expression dict))
+    ((dup)    (values (joy-dup stack)    expression dict))
+    ((pop)    (values (joy-pop stack)    expression dict))
+    ((stack)  (values (cons stack stack) expression dict))
+    ((swaack) (values (joy-swaack stack) expression dict))
+    ((swap)   (values (joy-swap stack)   expression dict))
 
-    ((concat) (joy-func append stack expression dict))
-    ((cons) (joy-func cons stack expression dict))
-    ((first) (values (joy-first stack) expression dict))
-    ((rest)  (values (joy-rest  stack) expression dict))
+    ((concat) (values (joy-concat stack) expression dict))
+    ((cons)   (values (joy-cons stack)   expression dict))
+    ((first)  (values (joy-first stack)  expression dict))
+    ((rest)   (values (joy-rest stack)   expression dict))
 
     ((i) (joy-i stack expression dict))
     ((dip) (joy-dip stack expression dict))
     ((branch) (joy-branch stack expression dict))
     ((loop) (joy-loop stack expression dict))
 
+    ((inscribe) (joy-inscribe stack expression dict))
+
     (else (if (hash-table-exists? dict symbol)
       (values stack (append (hash-table-ref dict symbol) expression) dict)
-      (error (conc "Unknown word: " symbol))))))
+      (abort (conc "Unknown word: " symbol))))))
 
 
 ;██╗   ██╗████████╗██╗██╗     ███████╗
@@ -145,6 +147,26 @@
 (define (joy-dup stack)
   (receive (term _) (pop-any stack) (cons term stack)))
 
+(define (joy-pop stack0)
+  (receive (_ stack) (pop-any stack0) stack))
+
+(define (joy-swaack stack0)
+  (receive (el stack) (pop-list stack0) (cons stack el)))
+
+(define (joy-swap stack0)
+  (receive (a stack1) (pop-any stack0)
+  (receive (b stack) (pop-any stack1)
+  (cons b (cons a stack)))))
+
+(define (joy-concat stack0)
+  (receive (a stack1) (pop-list stack0)
+  (receive (b stack) (pop-list stack1)
+  (cons (append b a) stack))))
+
+(define (joy-cons stack0)
+  (receive (a stack1) (pop-list stack0)
+  (receive (b stack) (pop-any stack1)
+  (cons (cons b a) stack))))
 
 (define (joy-rest stack0)
   (receive (el stack) (pop-list stack0)
@@ -167,28 +189,29 @@
 ; ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
 ;Combinators
 
-(define (joy-i stack expression dict)
-  (values (cdr stack) (append (car stack) expression) dict))
+(define (joy-i stack0 expression dict)
+  (receive (expr stack) (pop-list stack0)
+    (values stack (append expr expression) dict)))
 
-(define (joy-dip stack expression dict)
-  (values (cddr stack)
-          (append (car stack) (cons (cadr stack) expression))
-          dict))
+(define (joy-dip stack0 expression dict)
+  (receive (expr stack1) (pop-list stack0)
+  (receive (x stack) (pop-any stack1)
+  (values stack (append expr (cons x expression)) dict))))
 
-(define (joy-branch stack expression dict)
-  (let ((flag (caddr stack))
-        (false_body (cadr stack))
-        (true_body (car stack)))
-    (values (cdddr stack)
-            (append (if flag true_body false_body) expression)
-            dict)))
+(define (joy-branch stack0 expression dict)
+  (receive (true_body stack1) (pop-list stack0)
+  (receive (false_body stack2) (pop-list stack1)
+  (receive (flag stack) (pop-bool stack2)
+  (values stack (append (if flag true_body false_body) expression) dict)))))
 
-(define (joy-loop stack expression dict)
-  (let ((flag (cadr stack))
-        (body (car stack)))
-    (values (cddr stack)
-            (if flag (append body (cons body (cons "loop" expression))) expression)
-            dict)))
+(define (joy-loop stack0 expression dict)
+  (receive (body stack1) (pop-list stack0)
+  (receive (flag stack) (pop-bool stack1)
+  (values stack
+    (if flag
+      (append body (cons body (cons 'loop expression)))
+      expression)
+    dict))))
 
 
 ;██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
@@ -281,6 +304,17 @@
 (define (add-def! def dict)
   (let ((def_list (text->expression def)))
     (hash-table-set! dict (car def_list) (cdr def_list))))
+
+(define (joy-inscribe stack0 expression dict0)
+  (receive (def stack) (pop-list stack0)
+    (if (null-list? def)
+      (abort "Empty definition.")
+      (receive (name body) (car+cdr def)
+        (if (symbol? name)
+          (let ((dict (hash-table-copy dict0)))
+            (hash-table-set! dict name body)
+            (values stack expression dict))
+          (abort "Def name isn't symbol."))))))
 
 
 ;██████╗ ███████╗██████╗ ██╗
