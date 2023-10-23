@@ -47,14 +47,14 @@ pair of numbers is the next coordinate pair in a square spiral (like the
 kind used to construct an [Ulam Spiral](https://en.wikipedia.org/wiki/Ulam_spiral)).
 For more information see [Square Spiral Example Joy Code](https://joypy.osdn.io/notebooks/Square_Spiral.html).
 
-    square_spiral [_p] [_then] [_else] ifte
+    square_spiral [p] [then] [else] ifte
 
-    _p  [_p0] [_p1] and
-    _p0 [abs] ii <=
-    _p1 [<>] [pop !-] or
+    p  [p0] [p1] and
+    p0 [abs] ii <=
+    p1 [<>] [pop !-] or
 
-    _then [    !-] [[++]] [[--]] ifte dip
-    _else [pop !-]  [--]   [++]  ifte
+    then [    !-] [[++]] [[--]] ifte dip
+    else [pop !-]  [--]   [++]  ifte
 
 It might seem unreadable but with familiarity it becomes as legible as
 any other notation.
