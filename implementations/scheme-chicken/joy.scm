@@ -268,14 +268,12 @@
 
 (define (joy-inscribe stack0 expression dict0)
   (receive (def stack) (pop-list stack0)
-    (if (null-list? def)
-      (abort "Empty definition.")
+    (if (null-list? def) (abort "Empty definition.")
       (receive (name body) (car+cdr def)
-        (if (symbol? name)
+        (if (not (symbol? name)) (abort "Def name isn't symbol.")
           (let ((dict (hash-table-copy dict0)))
             (hash-table-set! dict name body)
-            (values stack expression dict))
-          (abort "Def name isn't symbol."))))))
+            (values stack expression dict)))))))
 
 
 ;██╗   ██╗████████╗██╗██╗     ███████╗
