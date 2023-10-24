@@ -106,6 +106,7 @@ JoyList def_run_body;
 JoyList def_second_body;
 JoyList def_shift_body;
 JoyList def_shunt_body;
+JoyList def_select_body;
 JoyList def_size_body;
 JoyList def_small_body;
 JoyList def_spiral_next_body;
@@ -267,8 +268,9 @@ init_defs(void)
 	def_second_body = text_to_expression("rest first");
 	def_shift_body = text_to_expression("uncons [swons] dip");
 	def_shunt_body = text_to_expression("[swons] step");
+	def_select_body = text_to_expression("[first] [second] branch");
 	def_size_body = text_to_expression("[pop ++] step_zero");
-	def_small_body = text_to_expression("dup null [rest null] [pop true] branch");
+	def_small_body = text_to_expression("empty? [rest null] [pop true] branch");
 	def_spiral_next_body = text_to_expression("[[[abs] ii <=] [[<>] [pop !-] or] and] [[!-] [[++]] [[--]] ifte dip] [[pop !-] [--] [++] ifte] ifte");
 	def_split_at_body = text_to_expression("[drop] [take] clop");
 	def_split_list_body = text_to_expression("[take reverse] [drop] clop");
@@ -425,6 +427,7 @@ void def_run(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { 
 void def_second(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_second_body, expression); }
 void def_shift(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_shift_body, expression); }
 void def_shunt(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_shunt_body, expression); }
+void def_select(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_select_body, expression); }
 void def_size(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_size_body, expression); }
 void def_small(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_small_body, expression); }
 void def_spiral_next(__attribute__((unused)) JoyListPtr stack, JoyListPtr expression) { push_quote_onto_expression(def_spiral_next_body, expression); }

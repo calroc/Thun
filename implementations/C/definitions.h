@@ -97,6 +97,7 @@ void def_run(JoyListPtr stack, JoyListPtr expression);
 void def_second(JoyListPtr stack, JoyListPtr expression);
 void def_shift(JoyListPtr stack, JoyListPtr expression);
 void def_shunt(JoyListPtr stack, JoyListPtr expression);
+void def_select(JoyListPtr stack, JoyListPtr expression);
 void def_size(JoyListPtr stack, JoyListPtr expression);
 void def_small(JoyListPtr stack, JoyListPtr expression);
 void def_spiral_next(JoyListPtr stack, JoyListPtr expression);

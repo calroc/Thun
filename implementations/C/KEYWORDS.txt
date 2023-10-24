@@ -143,6 +143,7 @@ run, def_run
 second, def_second
 shift, def_shift
 shunt, def_shunt
+select, def_select
 size, def_size
 small, def_small
 spiral_next, def_spiral_next
