@@ -126,6 +126,9 @@
 (define (pop-int  stack) (pop-kind stack number? "Not an integer."))
 (define (pop-bool stack) (pop-kind stack boolean? "Not a Boolean value."))
 
+(define (string-replace str from to)
+  (string-intersperse (string-split str from #t) to))
+
 
 ; ██████╗ ██████╗ ██████╗ ███████╗    ██╗    ██╗ ██████╗ ██████╗ ██████╗ ███████╗
 ;██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██║    ██║██╔═══██╗██╔══██╗██╔══██╗██╔════╝
@@ -223,22 +226,27 @@
 ;╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
 ;Parser
 
-(define (string-replace str from to)
-  (string-intersperse (string-split str from #t) to))
+(define (text->expression text) (parse (tokenize text)))
 
-(define (tokenize str)
-  (string-split
-    (string-replace (string-replace str "]" " ] ") "[" " [ ")))
+(define (tokenize str)  ; Let's do the simple trick.
+  (string-split (string-replace (string-replace str "]" " ] ") "[" " [ ")))
 
-(define (tokenator token)
-  (cond ((string->number token) (string->number token))
-        ((string=? token "true") #t)
-        ((string=? token "false") #f)
-        (else (string->symbol token))))
+(define (parse tokens) (parse0 tokens '()))
+
+(define (parse0 tokens acc)
+  (if (null? tokens) acc
+    (receive (term rest_of_tokens)
+      (one-token-lookahead (car tokens) (cdr tokens))
+      (cons term (parse0 rest_of_tokens acc)))))
+
+(define (one-token-lookahead token tokens)
+  (match token
+    ("]" (abort "Extra closing bracket."))
+    ("[" (expect-right-bracket tokens '()))
+    (_ (values (tokenator token) tokens))))
 
 (define (expect-right-bracket tokens0 acc)
-  (if (null? tokens0)
-    (abort "Missing closing bracket.")
+  (if (null? tokens0) (abort "Missing closing bracket.")
     (receive (token tokens) (car+cdr tokens0)
       (match token
         ("]" (values acc tokens))
@@ -248,22 +256,11 @@
         (_ (receive (el rest) (expect-right-bracket tokens acc)
            (values (cons (tokenator token) el) rest)))))))
 
-(define (one-token-lookahead token tokens)
-  (match token
-    ("]" (abort "Extra closing bracket."))
-    ("[" (expect-right-bracket tokens '()))
-    (_ (values (tokenator token) tokens))))
-
-(define (parse0 tokens acc)
-  (if (null? tokens)
-    acc
-    (receive (term rest_of_tokens)
-      (one-token-lookahead (car tokens) (cdr tokens))
-      (cons term (parse0 rest_of_tokens acc)))))
-
-(define (parse tokens) (parse0 tokens '()))
-
-(define (text->expression text) (parse (tokenize text)))
+(define (tokenator token)
+  (cond ((string->number token) (string->number token))
+        ((string=? token "true") #t)
+        ((string=? token "false") #f)
+        (else (string->symbol token))))
 
 
 ;██████╗ ██████╗ ██╗███╗   ██╗████████╗███████╗██████╗
