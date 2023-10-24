@@ -236,19 +236,17 @@
         ((string=? token "false") #f)
         (else (string->symbol token))))
 
-(define (expect-right-bracket tokens acc) 
-  (if (null? tokens)
+(define (expect-right-bracket tokens0 acc)
+  (if (null? tokens0)
     (abort "Missing closing bracket.")
-    (expect-right-bracket-lookahead (car tokens) (cdr tokens) acc)))
-
-(define (expect-right-bracket-lookahead token tokens acc)
-  (match token
-    ("]" (values acc tokens))
-    ("[" (receive (sub_list rest) (expect-right-bracket tokens '())
-           (receive (el rrest) (expect-right-bracket rest acc)
-             (values (cons sub_list el) rrest))))
-    (_ (receive (el rest) (expect-right-bracket tokens acc)
-       (values (cons (tokenator token) el) rest)))))
+    (receive (token tokens) (car+cdr tokens0)
+      (match token
+        ("]" (values acc tokens))
+        ("[" (receive (sub_list rest) (expect-right-bracket tokens '())
+               (receive (el rrest) (expect-right-bracket rest acc)
+                 (values (cons sub_list el) rrest))))
+        (_ (receive (el rest) (expect-right-bracket tokens acc)
+           (values (cons (tokenator token) el) rest)))))))
 
 (define (one-token-lookahead token tokens)
   (match token
