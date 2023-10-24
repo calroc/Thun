@@ -95,41 +95,6 @@
       (abort (conc "Unknown word: " symbol))))))
 
 
-;██╗   ██╗████████╗██╗██╗     ███████╗
-;██║   ██║╚══██╔══╝██║██║     ██╔════╝
-;██║   ██║   ██║   ██║██║     ███████╗
-;██║   ██║   ██║   ██║██║     ╚════██║
-;╚██████╔╝   ██║   ██║███████╗███████║
-; ╚═════╝    ╚═╝   ╚═╝╚══════╝╚══════╝
-; Utils
-
-(define (not-equal a b) (not (= a b)))
-
-(define (joy-func op stack expression dict)
-  (values (cons (op (cadr stack) (car stack)) (cddr stack)) expression dict))
-
-(define (joy-math-func op stack0)
-  (receive (a stack1) (pop-int stack0)
-  (receive (b stack) (pop-int stack1)
-  (cons (op b a) stack))))
-
-(define (pop-any stack)
-  (if (null-list? stack)
-    (abort "Not enough values on Stack")
-    (car+cdr stack)))
-
-(define (pop-kind stack predicate message)
-  (receive (term rest) (pop-any stack)
-    (if (predicate term) (values term rest) (abort message))))
-
-(define (pop-list stack) (pop-kind stack list? "Not a list."))
-(define (pop-int  stack) (pop-kind stack number? "Not an integer."))
-(define (pop-bool stack) (pop-kind stack boolean? "Not a Boolean value."))
-
-(define (string-replace str from to)
-  (string-intersperse (string-split str from #t) to))
-
-
 ; ██████╗ ██████╗ ██████╗ ███████╗    ██╗    ██╗ ██████╗ ██████╗ ██████╗ ███████╗
 ;██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██║    ██║██╔═══██╗██╔══██╗██╔══██╗██╔════╝
 ;██║     ██║   ██║██████╔╝█████╗      ██║ █╗ ██║██║   ██║██████╔╝██║  ██║███████╗
@@ -313,6 +278,41 @@
           (abort "Def name isn't symbol."))))))
 
 
+;██╗   ██╗████████╗██╗██╗     ███████╗
+;██║   ██║╚══██╔══╝██║██║     ██╔════╝
+;██║   ██║   ██║   ██║██║     ███████╗
+;██║   ██║   ██║   ██║██║     ╚════██║
+;╚██████╔╝   ██║   ██║███████╗███████║
+; ╚═════╝    ╚═╝   ╚═╝╚══════╝╚══════╝
+; Utils
+
+(define (not-equal a b) (not (= a b)))
+
+(define (joy-math-func op stack0)
+  (receive (a stack1) (pop-int stack0)
+  (receive (b stack) (pop-int stack1)
+  (cons (op b a) stack))))
+
+(define (pop-any stack)
+  (if (null-list? stack)
+    (abort "Not enough values on Stack")
+    (car+cdr stack)))
+
+(define (pop-kind stack predicate message)
+  (receive (term rest) (pop-any stack)
+    (if (predicate term) (values term rest) (abort message))))
+
+(define (pop-list stack) (pop-kind stack list? "Not a list."))
+(define (pop-int  stack) (pop-kind stack number? "Not an integer."))
+(define (pop-bool stack) (pop-kind stack boolean? "Not a Boolean value."))
+
+(define (string-replace str from to)
+  (string-intersperse (string-split str from #t) to))
+
+(define (joy-trace stack expression)
+  (print (conc (joy-expression->string (reverse stack)) " . " (joy-expression->string expression))))
+
+
 ;██████╗ ███████╗██████╗ ██╗
 ;██╔══██╗██╔════╝██╔══██╗██║
 ;██████╔╝█████╗  ██████╔╝██║
@@ -325,17 +325,13 @@
 
 (define (main-loop stack0 dict0)
   (let ((text (prompt)))
-    (if (eof-object? text)
-      (print)
+    (if (eof-object? text) (print)
       (receive (stack dict)
         (handle-exceptions exn
           (begin (display exn) (newline) (values stack0 dict0))
           (joy stack0 (text->expression text) dict0))
         (print (joy-expression->string (reverse stack)))
         (main-loop stack dict)))))
-
-(define (joy-trace stack expression)
-  (print (conc (joy-expression->string (reverse stack)) " . " (joy-expression->string expression))))
 
 (main-loop '() (initialize))
 
