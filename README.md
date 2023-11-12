@@ -130,7 +130,7 @@ There is more in the `docs` directory but it's kind of a mess right now
 
 Clone the repo:
 
-    git clone http://ariadne.systems/gogs/sforman/Thun.git
+    git clone https://ariadne.systems/gogs/sforman/Thun.git
 
 Then follow the instructions in the individual `implementations`
 directories.  In most cases you can just run `make` and that will build a
