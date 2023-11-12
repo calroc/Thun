@@ -60,11 +60,11 @@ It might seem unreadable but with familiarity it becomes as legible as
 any other notation.
 
 
-## Project Hosted on [SourceHut](https://git.sr.ht/~sforman/Thun)
+## Project Hosted on [Ariadne Systems](https://ariadne.systems/gogs/sforman/Thun)
 
-* [Source Repository](https://git.sr.ht/~sforman/Thun)
+* [Source Repository](https://ariadne.systems/gogs/sforman/Thun)
   ([mirror](https://github.com/calroc/Thun))
-* [Bug tracker](https://todo.sr.ht/~sforman/thun-der)
+* [Bug tracker](https://ariadne.systems/gogs/sforman/Thun/issues)
   ([old tracker](https://osdn.net/projects/joypy/ticket/))
 * [Forums](https://osdn.net/projects/joypy/forums/)
 * [Mailing list](https://osdn.net/projects/joypy/lists/)
@@ -82,11 +82,11 @@ that go into more detail.
 I had a Joy kernel for the Jupyter Notebook system, but I can no longer
 figure out how to use it, so I'm rewriting the notebooks by hand.
 
-There's also a [Function Reference](https://git.sr.ht/~sforman/Thun/tree/trunk/item/docs/reference) that lists each
+There's also a [Function Reference](https://ariadne.systems/gogs/sforman/Thun/src/trunk/docs/reference/Function-Reference.md) that lists each
 function and combinator by name and gives a brief description.  (It's
 usually out of date, I'm working on it.)
 
-**[Function Reference](https://git.sr.ht/~sforman/Thun/tree/trunk/item/docs/reference)**
+**[Function Reference](https://ariadne.systems/gogs/sforman/Thun/src/trunk/docs/reference/Function-Reference.md)**
 
 There is more in the `docs` directory but it's kind of a mess right now
 (Aug 2023).
@@ -130,7 +130,7 @@ There is more in the `docs` directory but it's kind of a mess right now
 
 Clone the repo:
 
-    git clone https://git.sr.ht/~sforman/Thun
+    git clone http://ariadne.systems/gogs/sforman/Thun.git
 
 Then follow the instructions in the individual `implementations`
 directories.  In most cases you can just run `make` and that will build a
