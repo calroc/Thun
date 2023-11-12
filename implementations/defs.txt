@@ -24,7 +24,7 @@ binary unary popd
 ccccons ccons ccons
 ccons cons cons
 choice [pop] [popd] branch
-clear [] swaack pop
+clear enstacken pop
 cleave fork popdd
 clop cleave popdd
 cmp [[>] swap] dipd [ifte] ccons [=] swons ifte
@@ -42,7 +42,7 @@ dupdd [dup] dipd
 dupd [dup] dip
 dupdipd dup dipd
 dupdip dupd dip
-enstacken stack [clear] dip
+enstacken [] swaack
 first uncons pop
 first_two uncons first
 flatten <{} [concat] step
@@ -106,6 +106,7 @@ spiral_next [[[abs] ii <=] [[<>] [pop !-] or] and] [[!-] [[++]] [[--]] ifte dip]
 split_at [drop] [take] clop
 split_list [take reverse] [drop] clop
 sqr dup mul
+stack enstacken dup cons swaack pop
 stackd [stack] dip
 step_zero 0 roll> step
 stuncons stack uncons
@@ -123,7 +124,7 @@ unary nullary popd
 uncons [first] dupdip rest
 unit [] cons
 unquoted [i] dip
-unstack [[] swaack] dip swoncat swaack pop
+unstack [enstacken] dip swoncat swaack pop
 unswons uncons swap
 while swap nulco dupdipd concat loop
 x dup i

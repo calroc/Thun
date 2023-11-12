@@ -7,7 +7,7 @@ CFLAGS = -ansi -Wall -Wextra -Werror -pedantic -Wstrict-overflow -fno-strict-ali
 
 CFLAGS += -I/usr/local/include
 
-# TODO: move these to KEYWORDS.txt.
+# TODO: move these to KEYWORDS.in.
 GPERF_OPTS = --readonly-tables --enum --includes --hash-function-name=keyword_hash
 #--global-table
 
