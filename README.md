@@ -22,7 +22,7 @@ Joy is:
 * [Stack-based](https://en.wikipedia.org/wiki/Stack-oriented_programming_language)
 * [Concatinative](https://en.wikipedia.org/wiki/Concatenative_programming_language)
   (See also [concatenative.org](http://www.concatenative.org/wiki/view/Concatenative%20language))
-* [Categorical](https://joypy.osdn.io/notebooks/Categorical.html)
+* [Categorical](https://ariadne.systems/pub/~sforman/Thun/notebooks/Categorical.html)
 
 The best source for learning about Joy is the information made available
 at the [website of La Trobe University](http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language)
@@ -45,7 +45,7 @@ Here is an example of Joy code.  This function `square_spiral` accepts
 two integers and increments or decrements one of them such that the new
 pair of numbers is the next coordinate pair in a square spiral (like the
 kind used to construct an [Ulam Spiral](https://en.wikipedia.org/wiki/Ulam_spiral)).
-For more information see [Square Spiral Example Joy Code](https://joypy.osdn.io/notebooks/Square_Spiral.html).
+For more information see [Square Spiral Example Joy Code](https://ariadne.systems/pub/~sforman/Thun/notebooks/Square_Spiral.html).
 
     square_spiral [p] [then] [else] ifte
 
@@ -74,10 +74,10 @@ any other notation.
 
 The `Thun.md` document describes the Thun dialect. Most of the rest of
 documentation is in the form of
-[Jupyter Notebooks](https://joypy.osdn.io/notebooks/index.html)
+[Jupyter Notebooks](https://ariadne.systems/pub/~sforman/Thun/notebooks/index.html)
 that go into more detail.
 
-**[Jupyter Notebooks](https://joypy.osdn.io/notebooks/index.html)**
+**[Jupyter Notebooks](https://ariadne.systems/pub/~sforman/Thun/notebooks/index.html)**
 
 I had a Joy kernel for the Jupyter Notebook system, but I can no longer
 figure out how to use it, so I'm rewriting the notebooks by hand.
@@ -90,6 +90,13 @@ usually out of date, I'm working on it.)
 
 There is more in the `docs` directory but it's kind of a mess right now
 (Aug 2023).
+
+
+### Building the Docs
+
+Run `make` in the `docs` directory.  (This is a lie, it's more complex than
+that.  Really you need to run (GNU) make in the `docs/notebooks` and
+`docs/reference` dirs first, _then_ run `make` in the `docs` directory.)
 
 
 ## Directory structure

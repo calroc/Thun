@@ -11,10 +11,10 @@ programming language created by Manfred von Thun that is easy to use and
 understand and has many other nice properties.  **Thun** is a dialect of
 Joy that attempts to stay very close to the spirit of Joy but does not
 precisely match the behaviour of the original version written in C.  It
-started as a Python project called "Joypy", but after someone claimed that
-name on PyPI before me I renamed it to Thun in honor of Manfred Von Thun.
-Now there are interpreters implemented in several additional languages
-(C, Nim, Prolog, Rust).
+started as a Python project called "Joypy", but after someone claimed
+that name on PyPI before me I renamed it to Thun in honor of Manfred Von
+Thun. Now there are interpreters implemented in several additional
+languages (C, Elm, Nim, OCaml, Prolog, and Scheme).
 
 Joy is:
 
@@ -22,16 +22,16 @@ Joy is:
 * [Stack-based](https://en.wikipedia.org/wiki/Stack-oriented_programming_language)
 * [Concatinative](https://en.wikipedia.org/wiki/Concatenative_programming_language)
   (See also [concatenative.org](http://www.concatenative.org/wiki/view/Concatenative%20language))
-* [Categorical](https://joypy.osdn.io/notebooks/Categorical.html)
+* [Categorical](notebooks/Categorical.html)
 
-The best source (no pun intended) for learning about Joy is the
-information made available at the
-[website of La Trobe University](http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language)
-| [(mirror)](https://www.kevinalbrecht.com/code/joy-mirror/)
-which contains source code for the original C interpreter, Joy language source code for various functions,
-and a great deal of fascinating material mostly written by Von Thun on
-Joy and its deeper facets as well as how to program in it and several
-interesting aspects.  It's quite a treasure trove.
+The best source for learning about Joy is the information made available
+at the [website of La Trobe University](http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language)
+| [(mirror)](https://www.kevinalbrecht.com/code/joy-mirror/) which
+contains source code for the original C interpreter, Joy language source
+code for various functions, and a great deal of fascinating material
+mostly written by Von Thun on Joy and its deeper facets as well as how to
+program in it and several interesting aspects.  It's quite a treasure
+trove.
 
 * [Wikipedia entry for Joy](https://en.wikipedia.org/wiki/Joy_%28programming_language%29)
 * [Homepage at La Trobe University](http://www.latrobe.edu.au/humanities/research/research-projects/past-projects/joy-programming-language)
@@ -45,25 +45,26 @@ Here is an example of Joy code.  This function `square_spiral` accepts
 two integers and increments or decrements one of them such that the new
 pair of numbers is the next coordinate pair in a square spiral (like the
 kind used to construct an [Ulam Spiral](https://en.wikipedia.org/wiki/Ulam_spiral)).
-For more information see [Square Spiral Example Joy Code](/notebooks/Square_Spiral.html).
+For more information see [Square Spiral Example Joy Code](notebooks/Square_Spiral.html).
 
-    square_spiral [_p] [_then] [_else] ifte
+    square_spiral [p] [then] [else] ifte
 
-    _p  [_p0] [_p1] and
-    _p0 [abs] ii <=
-    _p1 [<>] [pop !-] or
+    p  [p0] [p1] and
+    p0 [abs] ii <=
+    p1 [<>] [pop !-] or
 
-    _then [    !-] [[++]] [[--]] ifte dip
-    _else [pop !-]  [--]   [++]  ifte
+    then [    !-] [[++]] [[--]] ifte dip
+    else [pop !-]  [--]   [++]  ifte
 
-It might seem unreadable but with familiarity it becomes as legible as any other notation.
+It might seem unreadable but with familiarity it becomes as legible as
+any other notation.
 
 
-## Project Hosted on [SourceHut](https://git.sr.ht/~sforman/Thun)
+## Project Hosted on [Ariadne Systems](https://ariadne.systems/gogs/sforman/Thun)
 
-* [Source Repository](https://git.sr.ht/~sforman/Thun)
+* [Source Repository](https://ariadne.systems/gogs/sforman/Thun)
   ([mirror](https://github.com/calroc/Thun))
-* [Bug tracker](https://todo.sr.ht/~sforman/thun-der)
+* [Bug tracker](https://ariadne.systems/gogs/sforman/Thun/issues)
   ([old tracker](https://osdn.net/projects/joypy/ticket/))
 * [Forums](https://osdn.net/projects/joypy/forums/)
 * [Mailing list](https://osdn.net/projects/joypy/lists/)
@@ -71,73 +72,19 @@ It might seem unreadable but with familiarity it becomes as legible as any other
 
 ## Documentation
 
-This document describes Joy in a general way below, however most of the
-documentation is in the form of [Jupyter Notebooks](/notebooks/index.html)
+
+The [Thun specification](Thun.html) document describes the Thun dialect,
+however most of the
+documentation is in the form of [Jupyter Notebooks](notebooks/index.html)
 that go into more detail.
 
-**[Jupyter Notebooks](/notebooks/index.html)**
+**[Jupyter Notebooks](notebooks/index.html)**
 
-There's also a [Function Reference](/FuncRef.html) that lists each
+There's also a [Function Reference](FuncRef.html) that lists each
 function and combinator by name and gives a brief description.  (It's
 usually out of date, I'm working on it.)
 
-**[Function Reference](/FuncRef.html)**
-
-
-
-### Building the Docs
-
-Run `make` in the `docs` directory.  (This is a lie, it's more complex than
-that.  Really you need to run (GNU) make in the `docs/notebooks` and
-`docs/reference` dirs first, _then_ run `make` in the `docs` directory.)
-
-
-## Directory structure
-
-    Thun
-    |-- LICENSE - GPLv3
-    |-- README.md - this file
-    |
-    |-- archive
-    |   |-- Joy-Programming.zip
-    |   `-- README
-    |
-    |-- docs
-    |   |-- dep-graphs - Generated dependency graphs.
-    |   |-- html - Generated HTML docs.
-    |   |-- notebooks - Jupyter Notebooks and supporting modules
-    |   `-- reference - Docs for each function.
-    |
-    |-- implementations
-    |   |-- defs.txt - common Joy definitions for all interpreters
-    |   |-- C - interpreter
-    |   |-- GNUProlog - interpreter
-    |   |               type inference
-    |   |               work-in-progress compiler
-    |   |
-    |   |-- Nim - interpreter
-    |   |-- Ocaml - work-in-progress interpreter
-    |   `-- Python - interpreter
-    |
-    `-- joy_code - Source code written in Joy.
-        `-- bigints
-            `-- bigints.joy
-
-
-## Installation
-
-Clone the repo and follow the instructions in the individual
-`implementations` directories.  There isn't really any installation.  You
-can put the binaries in your ``PATH``.
-
-(I had the Python package set up to upload to PyPI as "Thun", but the
-whole Python distribution story seems unsettled at the moment (2023) so
-I've gone back to the *old ways*: there is a single script ``joy.py``
-that gets modified (``defs.txt`` is inserted) to create a ``joy`` script
-that uses the "shebang" trick to pretend to be a binary.  In other words,
-run ``make`` and put the resulting ``joy`` script in your PATH, if that's
-what you want to do.  In a year or two the Python folks will have sorted
-things out and we can go back to ``pip install Thun`` or whatever.)
+**[Function Reference](FuncRef.html)**
 
 
 ## Basics of Joy

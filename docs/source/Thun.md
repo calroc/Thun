@@ -150,7 +150,7 @@ of these:
 ### Definitions
 
 Thun can be extended by adding new definitions to the
-[defs.txt](https://git.sr.ht/~sforman/Thun/tree/trunk/item/implementations/defs.txt)
+[defs.txt](https://ariadne.systems/gogs/sforman/Thun/src/trunk/implementations/defs.txt)
 file and rebuilding the binaries.  Each line in the file is a definition
 consisting of the new symbol name followed by an expression for the body
 of the function.
