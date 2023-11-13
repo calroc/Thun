@@ -21,7 +21,7 @@ print(f'''\
 <title>{title_of(html)}</title>
 <link rel="stylesheet" href="css/font/fonts.css">
 <link rel="stylesheet" href="css/site.css">
-<script src="/Joy.js"></script>
+<script src="Joy.js"></script>
 </head>
 <body>
 <div id="joy_interpreter"></div>
