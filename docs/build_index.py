@@ -13,15 +13,17 @@ def title_of(html):
 
 html = markdown.markdown(text, output_format="html5")
 
+rel = '../' if 'notebooks' in filename else ''
+
 print(f'''\
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
 <title>{title_of(html)}</title>
-<link rel="stylesheet" href="css/font/fonts.css">
-<link rel="stylesheet" href="css/site.css">
-<script src="Joy.js"></script>
+<link rel="stylesheet" href="{rel}css/font/fonts.css">
+<link rel="stylesheet" href="{rel}css/site.css">
+<script src="{rel}Joy.js"></script>
 </head>
 <body>
 <div id="joy_interpreter"></div>

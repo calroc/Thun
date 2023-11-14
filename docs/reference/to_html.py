@@ -32,13 +32,13 @@ def symbols_of(expression):
         return
 
 used_in = {
-    name: sorted(set(symbols_of(joy.text_to_expression(definitions[name]))))
-    for name in definitions
+    name: sorted(set(symbols_of(joy.text_to_expression(def_str))))
+    for name, def_str in definitions.items()
     }
 
 used_by = defaultdict(list)
-for name in used_in:
-    for term in used_in[name]:
+for name, syms in used_in.items():
+    for term in syms:
         used_by[term].append(name)
 for el in used_by.values():
     el.sort()
@@ -71,9 +71,13 @@ gt lt ge le neq eq
 << >>
 lshift rshift'''.split())
 
+
+# Split the file into chunks at the Horizontal Rules.
 k = re.split('^-+$', md, flags=re.MULTILINE)
 #k = md.split('------------------------------------------------------------------------\n')
+
 del k[0]
+
 k = [section.splitlines() for section in k]
 
 ##s = set(range(len(k)))
@@ -104,7 +108,7 @@ for section in k:
 
 combinators = set(
     name
-    for (name, section) in sections.items()
+    for name, section in sections.items()
     if 'Combinator' in section
     )
 for name in combinators:

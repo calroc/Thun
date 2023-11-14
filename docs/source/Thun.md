@@ -1,6 +1,6 @@
 # Thun Specification
 
-Version 0.5.0
+[Thun Version 0.5.0](https://ariadne.systems/pub/~sforman/Thun/)
 
 ## Grammar
 
